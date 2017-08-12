@@ -1,5 +1,5 @@
 {
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "files": [
     "lib"
   ],
@@ -32,17 +32,17 @@
     "test-all": "NODE_ENV=test yarn run lint && yarn run flow && yarn run test"
   },
   "devDependencies": {
-    "gh-pages": "^0.11.0",
-    "git-url-parse": "^6.0.1",
     "ava": "0.19.1",
-    "babel-core": "^6.23.0",
-    "babel-register": "^6.23.0",
     "babel-cli": "^6.23.0",
-    "babel-preset-blueflag": "^0.3.0",
+    "babel-core": "^6.23.0",
     "babel-plugin-istanbul": "4.1.1",
+    "babel-preset-blueflag": "^0.3.0",
+    "babel-register": "^6.23.0",
     "dotenv": "4.0.0",
     "eslint": "^3.9.1",
     "eslint-config-blueflag": "^0.4.0",
+    "gh-pages": "^0.11.0",
+    "git-url-parse": "^6.0.1",
     "jsdoc": "^3.4.3",
     "jsdoc-babel": "^0.3.0",
     "jsdoc-react-proptypes": "^1.0.1",
@@ -91,5 +91,8 @@
     "require": [
       "babel-register"
     ]
+  },
+  "dependencies": {
+    "unmutable": "^0.0.1"
   }
 }

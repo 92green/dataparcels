@@ -1,1 +1,1 @@
-export default () => console.log('parcel');
+export {default as Parcel} from './Parcel.js';

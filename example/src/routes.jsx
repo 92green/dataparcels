@@ -3,10 +3,10 @@ import {Route, IndexRoute} from 'react-router';
 
 import AppHandler from 'components/AppHandler';
 import ErrorHandler from 'components/ErrorHandler';
-import ContentsPage from 'components/ContentsPage';
+import Page from 'components/Page';
 
 const routes = <Route component={AppHandler} path="/">
-    <IndexRoute component={ContentsPage} />
+    <IndexRoute component={Page} />
     <Route path="*" component={ErrorHandler}/>
 </Route>;
 

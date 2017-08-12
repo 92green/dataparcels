@@ -1,4 +1,22 @@
-body, html {
-    margin: 0;
-    padding: 0;
-}
+@import '~bruce/bruce';
+@include bruce-reset();
+@include bruce-box-sizing();
+
+$bruce-zindexList: (
+    'Select',
+    'AppBar',
+    'Overlay'
+);
+
+@import '~obtuse/lib/all';
+@include ObtuseConfig;
+@include ObtuseBase;
+
+@include ObtuseBox;
+@include ObtuseTerminal;
+@include ObtuseText;
+
+@include bruce-component-media;
+@include bruce-classes;
+@include bruce-float;
+@include bruce-widths;
