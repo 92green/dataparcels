@@ -93,6 +93,6 @@
     ]
   },
   "dependencies": {
-    "unmutable": "^0.0.1"
+    "unmutable": "^0.1.0"
   }
 }

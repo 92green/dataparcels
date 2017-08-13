@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Terminal, Text} from 'obtuse';
-import {Input, Label} from 'stampy';
-import {Parcel} from 'parcel';
+import {Input, Label, Button} from 'stampy';
+import Parcel from 'parcel';
 
 export default function Page() {
     return <Box>
@@ -43,12 +43,18 @@ class Example extends React.Component {
     }
 
     render() {
-        var parcel = new Parcel(
+        var parcel = Parcel(
             this.state.value,
             this.handleChange
         );
 
-        console.log(parcel.getIn(['address', 'address']));
+        var pets = parcel.get('pets');
+        console.log(pets);
+
+        var newPet = {
+            name: "New pet",
+            occupation: ""
+        };
 
         return <Box>
             <Box>
@@ -71,8 +77,37 @@ class Example extends React.Component {
 
                 <Text element="p">
                     <Label className="marginRight">address.postcode</Label>
-                    <Input modifier="text" {...parcel.getIn(['address', 'postcode']).spread()} />
+                    <Input modifier="text" {...parcel.getIn(['address', 'postcode']).modify(ii => `${ii}`, ii => ii.replace(/[^0-9]/g, '')).spread()} />
                 </Text>
+
+                {pets.map((pp, key) => {
+                    console.log(`pets[${key}]`, pp);
+
+                    const name = pp.get('name');
+                    const occupation = pp.get('occupation');
+
+                    return <Box key={key} modifier="hairline">
+                        <Text element="p" modifier="strong">pets[{key}]</Text>
+
+                        <Text element="p">
+                            <Label className="marginRight">name</Label>
+                            <Input modifier="text" {...name.spread()} />
+                        </Text>
+
+                        <Text element="p">
+                            <Label className="marginRight">occupation</Label>
+                            <Input modifier="text" {...occupation.spread()} />
+                        </Text>
+
+                        <Text element="p">
+                            <Button>^</Button>
+                            <Button>v</Button>
+                            <Button>x</Button>
+                        </Text>
+                    </Box>;
+                })}
+
+                <Button onClick={() => pets.onChange([...pets.value(), newPet])}>Add pet</Button>
             </Box>
             <Box>
                 <Text modifier="beta">State</Text>
