@@ -4,8 +4,8 @@ module.system.node.resolve_dirname=..
 module.system.node.resolve_dirname=src
 
 [ignore]
-<PROJECT_ROOT>/src/parcel/client.js
-<PROJECT_ROOT>/src/parcel/tracking.js
+<PROJECT_ROOT>/src/parcels/client.js
+<PROJECT_ROOT>/src/parcels/tracking.js
 <PROJECT_ROOT>/coverage/.*
 <PROJECT_ROOT>/.nyc_output/.*
 <PROJECT_ROOT>/scripts/.*

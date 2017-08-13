@@ -3,17 +3,17 @@
   "files": [
     "lib"
   ],
-  "name": "parcel",
+  "name": "parcels",
   "version": "0.0.0",
   "description": "Parcels each contain a value, and a function to change that value. This library provides a parcel class with a set of functional collection manipulation methods to traverse and unwrap parcels.",
   "license": "MIT",
   "author": "Damien Clarke",
   "repository": {
     "type": "git",
-    "url": "git@github.com:blueflag/parcel.git"
+    "url": "git@github.com:blueflag/parcels.git"
   },
   "bugs": {
-    "url": "https://github.com/blueflag/parcel/issues"
+    "url": "https://github.com/blueflag/parcels/issues"
   },
   "private": false,
   "scripts": {

@@ -36,7 +36,7 @@ const development = {
         modulesDirectories: ['/fake-directory-dont-create-a-directory-here'],
         root: [path.resolve(__dirname, './src'), path.resolve(__dirname, './node_modules')],
         alias: {
-            parcel: path.resolve(__dirname, "../")
+            parcels: path.resolve(__dirname, "../")
         },
         fallback: path.resolve(__dirname, '../node_modules')
     },

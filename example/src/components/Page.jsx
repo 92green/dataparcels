@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Terminal, Text} from 'obtuse';
 import {Input, Label, Button} from 'stampy';
-import Parcel from 'parcel';
+import Parcel from 'parcels';
 
 export default function Page() {
     return <Box>

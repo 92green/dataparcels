@@ -11,7 +11,7 @@
         "recurse": true,
         "template": "node_modules/jsdonk",
         "jsdonk": {
-            "title": "parcel",
+            "title": "parcels",
             "sections": {
                 "module": {
                     "typedef": false
