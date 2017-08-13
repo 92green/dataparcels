@@ -4360,9 +4360,9 @@ unique-temp-dir@^1.0.0:
     os-tmpdir "^1.0.1"
     uid2 "0.0.3"
 
-unmutable@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.0.1.tgz#c7fead69b4cf1d9b5ba5b53d8a53ac2176de03c4"
+unmutable@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.1.0.tgz#d5a3c32c549fc62cbded40014418a3099967835c"
   dependencies:
     is-plain-object "^2.0.4"
 

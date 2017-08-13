@@ -11,6 +11,8 @@ class Parcel {
     constructor(value, handleChange) {
         this._value = value;
         this._onChange = handleChange;
+
+        this.onChange = this.onChange.bind(this);
     }
 
     value() {
