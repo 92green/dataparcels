@@ -1,18 +1,24 @@
 import {Wrap} from 'unmutable'; // TODO swap this out with unmutable-lite
 
 export default function ParcelFactory(value, handleChange) {
-    // if(Wrap(value).isIndexed()) {
-    //     return new ListParcel(value, handleChange);
-    // }
+    if(Wrap(value).isIndexed()) {
+        return new ListParcel(value, handleChange);
+    }
     return new Parcel(value, handleChange);
 }
 
 class Parcel {
     constructor(value, handleChange) {
-        this._value = value;
+        this._value = Parcel.unwrap(value);
         this._onChange = handleChange;
 
         this.onChange = this.onChange.bind(this);
+    }
+
+    static unwrap(item) {
+        return typeof item == "object" && item instanceof Parcel
+            ? item.value()
+            : item;
     }
 
     value() {
@@ -55,9 +61,14 @@ class Parcel {
     }
 
     map(mapper) {
-        return Wrap(this._value)
-            .map((value, key) => mapper(this.get(key), key, value, this._value))
-            .done();
+        return ParcelFactory(
+            Wrap(this._value)
+                .map((value, key) => Parcel.unwrap(
+                    mapper(this.get(key), key, value, this._value))
+                )
+                .done(),
+            this._onChange
+        );
     }
 
     spread() {
@@ -68,5 +79,5 @@ class Parcel {
     }
 }
 
-// class ListParcel extends Parcel {
-// }
+class ListParcel extends Parcel {
+}

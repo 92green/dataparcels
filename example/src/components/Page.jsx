@@ -105,7 +105,7 @@ class Example extends React.Component {
                             <Button>x</Button>
                         </Text>
                     </Box>;
-                })}
+                }).value()}
 
                 <Button onClick={() => pets.onChange([...pets.value(), newPet])}>Add pet</Button>
             </Box>
