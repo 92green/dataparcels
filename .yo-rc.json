@@ -3,12 +3,12 @@
     "promptValues": {
       "name": "parcels",
       "description": "Parcels each contain a value, and a function to change that value. This library provides a parcel class with a set of functional collection manipulation methods to traverse and unwrap parcels.",
-      "version": "0.0.0",
+      "version": "0.2.0",
       "license": "MIT",
       "private": false,
       "author": "Damien Clarke",
       "username": "blueflag",
-      "nameConstant": "PARCEL",
+      "nameConstant": "PARCELS",
       "example": true
     }
   }
