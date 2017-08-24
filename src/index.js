@@ -201,7 +201,41 @@ class Parcel {
     });
 }
 
+function NextListKey(listKeys: Array<number>) {
+    if(listKeys.length === 0) {
+        return 0;
+    }
+    return Math.max(...listKeys) + 1;
+}
+
 class ListParcel extends Parcel {
+    constructor(parcelData: ParcelData, handleChange: Function) {
+        var {value, meta} = parcelData;
+        var listKeys = (meta || {}).listKeys || [];
+        var nextKey = NextListKey(listKeys) - 1;
+
+        listKeys = Wrap(value)
+            .map((ii, kk) => {
+                if(typeof listKeys[kk] === "number") {
+                    return listKeys[kk];
+                }
+                nextKey++;
+                return nextKey;
+            })
+            .done();
+
+        super(
+            {
+                value,
+                meta: {
+                    ...meta,
+                    listKeys
+                }
+            },
+            handleChange
+        );
+    }
+
     delete: Function = (index: number) => {
         const {processValue, processMeta} = this._private;
         const del = ii => ii.delete(index);
@@ -218,7 +252,10 @@ class ListParcel extends Parcel {
 
         this._private.handleChange({
             value: processValue(ii => ii.insert(index, parcelData.value)),
-            meta: processMeta(ii => ii.insert(index, parcelData.meta))
+            meta: {
+                ...processMeta((ii, kk) => ii.insert(index, parcelData.meta[kk])),
+                listKeys: NextListKey(this.meta('listKeys'))
+            }
         });
     }
 

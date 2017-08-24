@@ -8,7 +8,10 @@ export default class ExampleEditableArray extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.state = {
-            value: ["A", "BB", "CCC"]
+            value: ["A", "BB", "CCC"],
+            meta: {
+                listKeys: [6]
+            }
         };
     }
 
