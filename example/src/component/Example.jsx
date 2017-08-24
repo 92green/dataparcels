@@ -1,14 +1,15 @@
 import React from 'react';
 import {Box, Column, Grid, Terminal, Text} from 'obtuse';
 
-export default ({children, state, title}) => {
-    return <Box className="marginBottom3">
-        <Text element="h2" modifier="gamma">{title}</Text>
+export default ({children, state, title, description}) => {
+    return <Box modifier="marginRowMega">
+        <Text element="h2" modifier="sizeMega marginMega">{title}</Text>
+        {description && <Box modifier="marginBottomKilo">{description}</Box>}
         <Grid>
             <Column modifier="6">
                 {state &&
-                    <Box>
-                        <Text element="h3" modifier="strong" className="marginBottom05">State</Text>
+                    <Box modifier="marginBottom">
+                        <Text element="h3" modifier="strong marginMilli">State</Text>
                         <Terminal>
                             <pre>{JSON.stringify(state, null, 4)}</pre>
                         </Terminal>

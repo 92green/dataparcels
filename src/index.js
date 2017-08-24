@@ -4,7 +4,13 @@ import {Wrap} from 'unmutable'; // TODO swap this out with unmutable-lite
 type ParcelData = {value: *, meta: Object};
 type ModifyValue = (value: *) => *;
 type OnChangeUpdater = (payload: *) => *;
-type Mapper = (parcel: Parcel, key: string, value: *, iter: *) => *;
+type Mapper = (parcel: Parcel, key: string|number) => *;
+
+function UnwrapParcel(item: *): * {
+    return typeof item == "object" && item instanceof Parcel
+        ? item.value()
+        : item;
+}
 
 function SanitiseParcelData(data: ParcelData): ParcelData {
     if(typeof data !== "object" || !data.hasOwnProperty('value')) {
@@ -29,23 +35,25 @@ function SanitiseParcelData(data: ParcelData): ParcelData {
     }
 
     return {
-        value,
+        value: UnwrapParcel(value),
         meta
     };
 }
 
-export default function ParcelFactory(data: ParcelData, handleChange: Function): Parcel {
-    data = SanitiseParcelData(data);
-    if(Wrap(data.value).isIndexed()) {
-        return new ListParcel(data, handleChange);
+
+
+export default function ParcelFactory(parcelData: ParcelData, handleChange: Function): Parcel {
+    parcelData = SanitiseParcelData(parcelData);
+    if(Wrap(parcelData.value).isIndexed()) {
+        return new ListParcel(parcelData, handleChange);
     }
-    return new Parcel(data, handleChange);
+    return new Parcel(parcelData, handleChange);
 }
 
 class Parcel {
-    constructor(data: ParcelData, handleChange: Function) {
-        this._data = data; //Parcel.unwrap(value);
-        this._handleChange = (newData: ParcelData) => {
+    constructor(parcelData: ParcelData, handleChange: Function) {
+
+        const _handleChange: Function = (newData: ParcelData) => {
             // remove meta object if it is empty
             if(newData.meta && Wrap(newData.meta).size === 0) {
                 newData = Wrap(newData).delete('meta').done();
@@ -53,63 +61,76 @@ class Parcel {
             handleChange(newData);
         };
 
-        this._onChange = (newValue: *) => {
+        const onChange: Function = (newValue: *) => {
             handleChange({
                 value: newValue,
-                meta: data.meta
+                meta: parcelData.meta
             });
         };
-        this._metaChange = (newMeta: Object) => {
+
+        const metaChange: Function = (newMeta: Object) => {
             handleChange({
-                value: data.value,
+                value: parcelData.value,
                 meta: newMeta
             });
         };
 
-        this.onChange = this.onChange.bind(this);
-        this.onChangeDOM = this.onChangeDOM.bind(this);
+        const processValue: Function = (updater: Function): * => {
+            return updater(Wrap(this.value())).done();
+        };
+
+        const processMeta: Function = (updater: Function): * => {
+            return Wrap(this.meta())
+                .map((ii, kk) => updater(Wrap(ii), kk).done())
+                .done();
+        };
+
+        this._private = {
+            ...parcelData,
+            handleChange: _handleChange,
+            onChange,
+            metaChange,
+            processValue,
+            processMeta
+        };
     }
 
-    static unwrap(item: *): * {
-        return typeof item == "object" && item instanceof Parcel
-            ? item.value()
-            : item;
-    }
+    value: Function = (): * => {
+        return this._private.value;
+    };
 
-    value(): * {
-        return this._data.value;
-    }
-
-    meta(key: ?string): * {
+    meta: Function = (key: ?string): * => {
+        const {meta} = this._private;
         if(!key) {
-            return this._data.meta || {};
+            return meta || {};
         }
-        return this._data.meta
-            ? this._data.meta[key]
+        return meta
+            ? meta[key]
             : null;
-    }
+    };
 
-    onChange(newValue: *) {
-        this._onChange(newValue);
-    }
+    onChange: Function = (newValue: *) => {
+        this._private.onChange(newValue);
+    };
 
-    onChangeDOM(event: Object) {
-        this._onChange(event.target.value);
-    }
+    onChangeDOM: Function = (event: Object) => {
+        this.onChange(event.target.value);
+    };
 
-    metaChange(key: ?string): Function {
+    metaChange: Function = (key: ?string): Function => {
+        const {metaChange} = this._private;
         if(!key) {
-            return this._metaChange;
+            return metaChange;
         }
-        return (newMeta) => this._metaChange(
+        return (newMeta) => metaChange(
             Wrap(this.meta()).set(key, newMeta).done()
         );
-    }
+    };
 
     // modifyValue(valueUpdater: ModifyValue): Parcel {
     //     return ParcelFactory(
     //         valueUpdater(this._value),
-    //         this._handleChange
+    //         this._private.handleChange
     //     );
     // }
 
@@ -117,72 +138,147 @@ class Parcel {
     //     return ParcelFactory(
     //         this._value,
     //         onChangeUpdater
-    //             ? (payload) => this._handleChange(onChangeUpdater(payload))
-    //             : this._handleChange
+    //             ? (payload) => this._private.handleChange(onChangeUpdater(payload))
+    //             : this._private.handleChange
     //     );
     // }
 
-    get(key: string, notSetValue: * = undefined): Parcel {
+    get: Function = (key: string, notSetValue: * = undefined): Parcel => {
+        const {processValue, processMeta} = this._private;
         return ParcelFactory(
             {
-                value: Wrap(this.value())
-                    .get(key, notSetValue)
-                    .done(),
-
-                meta: Wrap(this.meta())
-                    .map(ii => Wrap(ii).get(key, {}).done())
-                    .done()
+                value: processValue(ii => ii.get(key, notSetValue)),
+                meta: processMeta(ii => ii.get(key, {}))
             },
             (newData: ParcelData) => {
-                this._handleChange({
-                    value: Wrap(this.value())
-                        .set(key, newData.value)
-                        .done(),
-
-                    meta: Wrap(this.meta())
-                        .map((ii, kk) => Wrap(ii).set(key, newData.meta[kk]).done())
-                        .done()
+                this._private.handleChange({
+                    value: processValue(ii => ii.set(key, newData.value)),
+                    meta: processMeta((ii, kk) => ii.set(key, newData.meta[kk]))
                 });
             }
         );
-    }
+    };
 
-    // getIn(keyPath: Array<string>|List<string>, notSetValue: * = undefined): Parcel {
-    //     return ParcelFactory(
-    //         Wrap(this._value).getIn(keyPath, notSetValue).done(),
-    //         (payload: *) => {
-    //             this._handleChange(
-    //                 Wrap(this._value).setIn(keyPath, payload).done()
-    //             );
-    //         }
-    //     );
-    // }
+    getIn: Function = (keyPath: Array<string>|List<string>, notSetValue: * = undefined): Parcel => {
+        const {processValue, processMeta} = this._private;
+        return ParcelFactory(
+            {
+                value: processValue(ii => ii.getIn(keyPath, notSetValue)),
+                meta: processMeta(ii => ii.getIn(keyPath, {}))
+            },
+            (newData: ParcelData) => {
+                this._private.handleChange({
+                    value: processValue(ii => ii.setIn(keyPath, newData.value)),
+                    meta: processMeta((ii, kk) => ii.setIn(keyPath, newData.meta[kk]))
+                });
+            }
+        );
+    };
 
-    // map(mapper: Mapper): Parcel {
-    //     return ParcelFactory(
-    //         Wrap(this._value)
-    //             .map((value, key) => Parcel.unwrap(
-    //                 mapper(this.get(key), key, value, this._value))
-    //             )
-    //             .done(),
-    //         this._handleChange
-    //     );
-    // }
+    map: Function = (mapper: Mapper): Parcel => {
+        const {processValue} = this._private;
+        return ParcelFactory(
+            {
+                value: processValue((ii: UnmutableWrapper): UnmutableWrapper => {
+                    return ii.map((value, key) => UnwrapParcel(
+                        mapper(this.get(key), key))
+                    );
+                }),
+                meta: this.meta()
+            },
+            this._private.handleChange
+        );
+    };
 
-    spread(): Object {
-        return {
-            value: this.value(),
-            onChange: this.onChange
-        };
-    }
+    spread: Function = (): Object => ({
+        value: this.value(),
+        onChange: this.onChange
+    });
 
-    spreadDOM(): Object {
-        return {
-            value: this.value(),
-            onChange: this.onChangeDOM
-        };
-    }
+    spreadDOM: Function = (): Object => ({
+        value: this.value(),
+        onChange: this.onChangeDOM
+    });
 }
 
 class ListParcel extends Parcel {
+    delete: Function = (index: number) => {
+        const {processValue, processMeta} = this._private;
+        const del = ii => ii.delete(index);
+
+        this._private.handleChange({
+            value: processValue(del),
+            meta: processMeta(del)
+        });
+    }
+
+    insert: Function = (index: number, parcelData: ParcelData) => {
+        const {processValue, processMeta} = this._private;
+        parcelData = SanitiseParcelData(parcelData);
+
+        this._private.handleChange({
+            value: processValue(ii => ii.insert(index, parcelData.value)),
+            meta: processMeta(ii => ii.insert(index, parcelData.meta))
+        });
+    }
+
+    push: Function = (parcelData: ParcelData) => {
+        const {processValue, processMeta} = this._private;
+        parcelData = SanitiseParcelData(parcelData);
+
+        this._private.handleChange({
+            value: processValue(ii => ii.push(parcelData.value)),
+            meta: processMeta(ii => ii.push(parcelData.meta))
+        });
+    }
+
+    pop: Function = () => {
+        const {processValue, processMeta} = this._private;
+        const pop = ii => ii.pop();
+
+        this._private.handleChange({
+            value: processValue(pop),
+            meta: processMeta(pop)
+        });
+    }
+
+    shift: Function = () => {
+        const {processValue, processMeta} = this._private;
+        const shift = ii => ii.shift();
+
+        this._private.handleChange({
+            value: processValue(shift),
+            meta: processMeta(shift)
+        });
+    }
+
+    swap: Function = (indexA: number, indexB: number) => {
+        const {processValue, processMeta} = this._private;
+        const swap = ii => ii
+            .set(indexA, ii.get(indexB).done())
+            .set(indexB, ii.get(indexA).done());
+
+        this._private.handleChange({
+            value: processValue(swap),
+            meta: processMeta(swap)
+        });
+    }
+
+    swapNext: Function = (index: number) => {
+        this.swap(index, index + 1);
+    }
+
+    swapPrev: Function = (index: number) => {
+        this.swap(index, index - 1);
+    }
+
+    unshift: Function = (parcelData: ParcelData) => {
+        const {processValue, processMeta} = this._private;
+        parcelData = SanitiseParcelData(parcelData);
+
+        this._private.handleChange({
+            value: processValue(ii => ii.unshift(parcelData.value)),
+            meta: processMeta(ii => ii.unshift(parcelData.meta))
+        });
+    }
 }

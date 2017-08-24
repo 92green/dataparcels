@@ -1,18 +1,26 @@
 import React from 'react';
 import Parcel from 'parcels';
-import {Map} from 'immutable';
 import Example from '../component/Example';
 import {Box, Code, Paragraph} from 'obtuse';
 
-export default class ExampleImmutableMap extends React.Component {
+function Input(props) {
+    return <input
+        type="text"
+        className="Input"
+        value={props.value}
+        onChange={(event) => props.onChange(event.target.value)}
+    />;
+}
+
+export default class ExampleCustomInputs extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.state = {
-            value: Map({
-                firstname: "Bobbert",
-                lastname: "Helmsfire"
-            })
+            value: {
+                firstname: "Helix",
+                lastname: "Robertson"
+            }
         };
     }
 
@@ -27,21 +35,21 @@ export default class ExampleImmutableMap extends React.Component {
         );
 
         const description = <Box>
-            <Paragraph>Parcels work with Immutable.js <Code>Map</Code>s and <Code>List</Code>s, as well as normal objects and arrays.</Paragraph>
+            <Paragraph>If you have your own <Code>Input</Code> components, it's nice to pass the new value as the first argument to <Code>onChange</Code> instead of passing the HTML event. If you're using this pattern, use <Code>.spread()</Code> instead of <Code>.spreadDOM()</Code>.</Paragraph>
         </Box>;
 
         return <Example
-            title="Immutable Map"
+            title="Custom Inputs"
             description={description}
             state={this.state}
         >
             <div>
                 <label className="Label">firstname</label>
-                <input className="Input" type="text" {...parcel.get('firstname').spreadDOM()} />
+                <Input {...parcel.get('firstname').spread()} />
             </div>
             <div>
                 <label className="Label">lastname</label>
-                <input className="Input" type="text" {...parcel.get('lastname').spreadDOM()} />
+                <Input {...parcel.get('lastname').spread()} />
             </div>
         </Example>;
     }

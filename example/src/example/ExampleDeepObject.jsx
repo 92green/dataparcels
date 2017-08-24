@@ -1,6 +1,7 @@
 import React from 'react';
 import Parcel from 'parcels';
 import Example from '../component/Example';
+import {Box, Code, Paragraph} from 'obtuse';
 
 export default class ExampleDeepObject extends React.Component {
     constructor(props) {
@@ -30,7 +31,15 @@ export default class ExampleDeepObject extends React.Component {
             this.handleChange
         );
 
-        return <Example title="Deep Object" state={this.state}>
+        const description = <Box>
+            <Paragraph>You can create parcels from properties of nested objects by using <Code>.getIn()</Code>.</Paragraph>
+        </Box>;
+
+        return <Example
+            title="Deep Object"
+            description={description}
+            state={this.state}
+        >
             <div>
                 <label className="Label">mother.firstname</label>
                 <input className="Input" type="text" {...parcel.getIn(['mother', 'firstname']).spreadDOM()} />
