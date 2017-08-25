@@ -21,7 +21,7 @@ function SanitiseParcelData(data: ParcelData): ParcelData {
     }
 
     var value = null;
-    var meta = null;
+    var meta = {};
 
     if(data.hasOwnProperty('value')) {
         value = data.value;
@@ -102,7 +102,7 @@ class Parcel {
     meta: Function = (key: ?string): * => {
         const {meta} = this._private;
         if(!key) {
-            return meta || {};
+            return meta;
         }
         return meta
             ? meta[key]
@@ -148,7 +148,7 @@ class Parcel {
         return ParcelFactory(
             {
                 value: processValue(ii => ii.get(key, notSetValue)),
-                meta: processMeta(ii => ii.get(key, {}))
+                meta: processMeta(ii => ii.get(key))
             },
             (newData: ParcelData) => {
                 this._private.handleChange({
@@ -164,7 +164,7 @@ class Parcel {
         return ParcelFactory(
             {
                 value: processValue(ii => ii.getIn(keyPath, notSetValue)),
-                meta: processMeta(ii => ii.getIn(keyPath, {}))
+                meta: processMeta(ii => ii.getIn(keyPath))
             },
             (newData: ParcelData) => {
                 this._private.handleChange({
@@ -173,6 +173,10 @@ class Parcel {
                 });
             }
         );
+    };
+
+    key: Function = (): number => {
+        return this.meta('listKeys');
     };
 
     map: Function = (mapper: Mapper): Parcel => {
@@ -201,21 +205,29 @@ class Parcel {
     });
 }
 
-function NextListKey(listKeys: Array<number>) {
+function NextListKey(listKeys: Array<number>): number {
     if(listKeys.length === 0) {
         return 0;
     }
     return Math.max(...listKeys) + 1;
 }
 
+function NumberWrap(val: number, min: number, max: number): number {
+    var range = max - min;
+    val = (val - min) % range;
+    return val < 0 ? val + range : val;
+}
+
 class ListParcel extends Parcel {
     constructor(parcelData: ParcelData, handleChange: Function) {
         var {value, meta} = parcelData;
-        var listKeys = (meta || {}).listKeys || [];
+        var listKeys = meta.listKeys || [];
         var nextKey = NextListKey(listKeys) - 1;
 
+        // add list keys for each indexed item
+        // from meta, or if that doesnt exist generate new ones
         listKeys = Wrap(value)
-            .map((ii, kk) => {
+            .map((ii: *, kk: number): number => {
                 if(typeof listKeys[kk] === "number") {
                     return listKeys[kk];
                 }
@@ -234,6 +246,16 @@ class ListParcel extends Parcel {
             },
             handleChange
         );
+
+        this._private = {
+            ...this._private,
+            metaWithListKey: (parcelData: ParcelData): Object => {
+                return {
+                    ...parcelData.meta,
+                    listKeys: NextListKey(this.meta('listKeys'))
+                };
+            }
+        };
     }
 
     delete: Function = (index: number) => {
@@ -244,7 +266,7 @@ class ListParcel extends Parcel {
             value: processValue(del),
             meta: processMeta(del)
         });
-    }
+    };
 
     insert: Function = (index: number, parcelData: ParcelData) => {
         const {processValue, processMeta} = this._private;
@@ -252,12 +274,9 @@ class ListParcel extends Parcel {
 
         this._private.handleChange({
             value: processValue(ii => ii.insert(index, parcelData.value)),
-            meta: {
-                ...processMeta((ii, kk) => ii.insert(index, parcelData.meta[kk])),
-                listKeys: NextListKey(this.meta('listKeys'))
-            }
+            meta: processMeta((ii, kk) => ii.insert(index, this._private.metaWithListKey(parcelData)[kk]))
         });
-    }
+    };
 
     push: Function = (parcelData: ParcelData) => {
         const {processValue, processMeta} = this._private;
@@ -265,9 +284,9 @@ class ListParcel extends Parcel {
 
         this._private.handleChange({
             value: processValue(ii => ii.push(parcelData.value)),
-            meta: processMeta(ii => ii.push(parcelData.meta))
+            meta: processMeta((ii, kk) => ii.push(this._private.metaWithListKey(parcelData)[kk]))
         });
-    }
+    };
 
     pop: Function = () => {
         const {processValue, processMeta} = this._private;
@@ -277,7 +296,7 @@ class ListParcel extends Parcel {
             value: processValue(pop),
             meta: processMeta(pop)
         });
-    }
+    };
 
     shift: Function = () => {
         const {processValue, processMeta} = this._private;
@@ -287,10 +306,19 @@ class ListParcel extends Parcel {
             value: processValue(shift),
             meta: processMeta(shift)
         });
-    }
+    };
+
+    size: Function = (): number => {
+        return Wrap(this.value()).size;
+    };
 
     swap: Function = (indexA: number, indexB: number) => {
         const {processValue, processMeta} = this._private;
+
+        const size = this.size();
+        indexA = NumberWrap(indexA, 0, size);
+        indexB = NumberWrap(indexB, 0, size);
+
         const swap = ii => ii
             .set(indexA, ii.get(indexB).done())
             .set(indexB, ii.get(indexA).done());
@@ -299,15 +327,15 @@ class ListParcel extends Parcel {
             value: processValue(swap),
             meta: processMeta(swap)
         });
-    }
+    };
 
     swapNext: Function = (index: number) => {
         this.swap(index, index + 1);
-    }
+    };
 
     swapPrev: Function = (index: number) => {
         this.swap(index, index - 1);
-    }
+    };
 
     unshift: Function = (parcelData: ParcelData) => {
         const {processValue, processMeta} = this._private;
@@ -315,7 +343,7 @@ class ListParcel extends Parcel {
 
         this._private.handleChange({
             value: processValue(ii => ii.unshift(parcelData.value)),
-            meta: processMeta(ii => ii.unshift(parcelData.meta))
+            meta: processMeta((ii, kk) => ii.unshift(this._private.metaWithListKey(parcelData)[kk]))
         });
-    }
+    };
 }

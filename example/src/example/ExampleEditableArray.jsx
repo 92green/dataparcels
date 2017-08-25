@@ -8,10 +8,7 @@ export default class ExampleEditableArray extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.state = {
-            value: ["A", "BB", "CCC"],
-            meta: {
-                listKeys: [6]
-            }
+            value: ["A", "BB", "CCC"]
         };
     }
 
@@ -58,6 +55,12 @@ export default class ExampleEditableArray extends React.Component {
                             <Text modifier="strong">shift()</Text>
                         </Text>
                         <Text element="p">Deletes the item at the start of the array / list.</Text>
+                    </ListItem>
+                    <ListItem className="marginBottom">
+                        <Text element="p">
+                            <Text modifier="strong">size()</Text>
+                        </Text>
+                        <Text element="p">Returns the length of the array / list.</Text>
                     </ListItem>
                     <ListItem className="marginBottom">
                         <Text element="p">
@@ -109,8 +112,8 @@ export default class ExampleEditableArray extends React.Component {
             <button className="Button Button-inline" onClick={() => parcel.swap(0, 1)}>Swap 0 and 1</button>
 
             {parcel.map((itemParcel, index) => {
-                return <div key={index}>
-                    <label className="Label">item {index}</label>
+                return <div key={itemParcel.key()}>
+                    <label className="Label">item {itemParcel.key()}</label>
                     <div className="Grid Grid-auto">
                         <div className="Grid_column Grid_column-always">
                             <input className="Input" type="text" {...itemParcel.spreadDOM()} />

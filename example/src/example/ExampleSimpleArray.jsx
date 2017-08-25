@@ -34,12 +34,14 @@ export default class ExampleSimpleArray extends React.Component {
                     </ListItem>
                     <ListItem className="marginBottom">
                         <Text element="p">
-                            <Text modifier="strong">key:</Text> <Text modifier="primary">number|string</Text>
+                            <Text modifier="strong">index:</Text> <Text modifier="primary">number|string</Text>
                         </Text>
-                        <Text element="p">The key of the current item.</Text>
+                        <Text element="p">The index of the current item.</Text>
                     </ListItem>
                 </List>
             </Box>
+            <Paragraph>Each item in a <Code>ListParcel</Code> has a unique key given to it. These are generated automatically on your first <Code>onChange</Code>. Try editing an item below.</Paragraph>
+            <Paragraph>You can get the item's key by calling <Code>.key()</Code>. This becomes useful once you have editable and sortable lists.</Paragraph>
         </Box>;
 
         return <Example
@@ -47,9 +49,9 @@ export default class ExampleSimpleArray extends React.Component {
             state={this.state}
             description={description}
         >
-            {parcel.map((itemParcel, key) => {
-                return <div key={key}>
-                    <label className="Label">item {key}</label>
+            {parcel.map((itemParcel) => {
+                return <div key={itemParcel.key()}>
+                    <label className="Label">item {itemParcel.key()}</label>
                     <input className="Input" type="text" {...itemParcel.spreadDOM()} />
                 </div>;
             }).value()}
