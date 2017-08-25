@@ -104,6 +104,7 @@ export default class ExampleEditableArray extends React.Component {
             title="Editable Array"
             state={this.state}
             description={description}
+            source={this.props.source}
         >
             <button className="Button Button-inline" onClick={() => parcel.push({value: makeRandomLetters()})}>Push</button>
             <button className="Button Button-inline" onClick={() => parcel.pop()}>Pop</button>

@@ -42,6 +42,7 @@ export default class ExampleObjectWithMeta extends React.Component {
             title="Object with Meta"
             description={description}
             state={this.state}
+            source={this.props.source}
         >
             <div className="marginBottom2">
                 <label className="Label">address</label>

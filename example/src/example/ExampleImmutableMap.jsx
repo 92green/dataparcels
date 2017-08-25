@@ -34,6 +34,7 @@ export default class ExampleImmutableMap extends React.Component {
             title="Immutable Map"
             description={description}
             state={this.state}
+            source={this.props.source}
         >
             <div>
                 <label className="Label">firstname</label>

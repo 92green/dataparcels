@@ -39,6 +39,7 @@ export default class ExampleDeepObject extends React.Component {
             title="Deep Object"
             description={description}
             state={this.state}
+            source={this.props.source}
         >
             <div>
                 <label className="Label">mother.firstname</label>

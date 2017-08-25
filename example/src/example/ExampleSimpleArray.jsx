@@ -48,6 +48,7 @@ export default class ExampleSimpleArray extends React.Component {
             title="Simple Array"
             state={this.state}
             description={description}
+            source={this.props.source}
         >
             {parcel.map((itemParcel) => {
                 return <div key={itemParcel.key()}>

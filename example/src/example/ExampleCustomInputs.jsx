@@ -42,6 +42,7 @@ export default class ExampleCustomInputs extends React.Component {
             title="Custom Inputs"
             description={description}
             state={this.state}
+            source={this.props.source}
         >
             <div>
                 <label className="Label">firstname</label>

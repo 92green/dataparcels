@@ -1,7 +1,9 @@
 import React from 'react';
 import Parcel from 'parcels';
+/*nosrc*/
 import {Box, Code, List, ListItem, Paragraph, Text} from 'obtuse';
 import Example from '../component/Example';
+/*endnosrc*/
 
 export default class ExampleSimpleObject extends React.Component {
     constructor(props) {
@@ -21,7 +23,7 @@ export default class ExampleSimpleObject extends React.Component {
             this.state,
             this.handleChange
         );
-
+        /*nosrc*/
         const description = <Box>
             <Paragraph>To make a parcel, call <Code>new Parcel()</Code> and pass it two arguments:</Paragraph>
             <Box modifier="padding">
@@ -46,16 +48,16 @@ export default class ExampleSimpleObject extends React.Component {
             <Paragraph>You can request to change the value by calling <Code>.onChange(newValue)</Code>. This wont change the value directly, but will call the parcel's <Code>handleChange</Code> function with your updated value. This becomes very useful with nested data structures, because parcels will call their parent's <Code>handleChange</Code> functions.</Paragraph>
             <Paragraph><Code>.spreadDOM()</Code> is used to conveniently create <Code>value</Code> and <Code>onChange</Code> props to spread onto your inputs.</Paragraph>
         </Box>;
+        /*endnosrc*/
 
-        return <Example
+        return /*nosrc*/<Example
             title="The Simplest Parcel"
             description={description}
             state={this.state}
-        >
-            <div>
-                <label className="Label">value</label>
-                <input className="Input" type="text" {...parcel.spreadDOM()} />
-            </div>
-        </Example>;
+            source={this.props.source}
+        >{/*endnosrc*/}<div>
+            <label className="Label">value</label>
+            <input className="Input" type="text" {...parcel.spreadDOM()} />
+        </div>{/*nosrc*/}</Example>/*endnosrc*/;
     }
 }
