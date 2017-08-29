@@ -17,7 +17,7 @@
   },
   "private": false,
   "scripts": {
-    "build": "rm -rf lib && babel src --out-dir lib",
+    "build": "rm -rf lib && babel src --out-dir lib && node ./scripts/flow.js",
     "build-examples": "cd example && yarn install && yarn run build && cd -",
     "deploy-to-gh-pages": "yarn run build && yarn run build-examples && yarn run docs && node scripts/publish.js",
     "prepublish": "yarn run build",
@@ -43,6 +43,7 @@
     "eslint": "^3.9.1",
     "eslint-config-blueflag": "^0.5.0",
     "flow-bin": "^0.39.0",
+    "fs-extra": "^4.0.1",
     "gh-pages": "^0.11.0",
     "git-url-parse": "^6.0.1",
     "jsdoc": "^3.4.3",

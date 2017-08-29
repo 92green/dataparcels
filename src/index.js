@@ -1,7 +1,11 @@
 // @flow
 import {Wrap} from 'unmutable'; // TODO swap this out with unmutable-lite
 
-type ParcelData = {value: *, meta: Object};
+type ParcelData = {
+    value: *,
+    meta: Object
+};
+
 //type ModifyValue = (value: *) => *;
 //type OnChangeUpdater = (payload: *) => *;
 type Mapper = (parcel: Parcel, key: string|number) => *;
@@ -16,7 +20,8 @@ function SanitiseParcelData(data: ParcelData): ParcelData {
     if(typeof data !== "object" || !data.hasOwnProperty('value')) {
         console.warn(`Parcel must be passed an object with "value" (any type) and optional "meta" object`);
         return {
-            value: null
+            value: null,
+            meta: {}
         };
     }
 
@@ -51,6 +56,8 @@ export default function ParcelFactory(parcelData: ParcelData, handleChange: Func
 }
 
 class Parcel {
+    _private: Object;
+
     constructor(parcelData: ParcelData, handleChange: Function) {
 
         const _handleChange: Function = (newData: ParcelData) => {
@@ -159,7 +166,7 @@ class Parcel {
         );
     };
 
-    getIn: Function = (keyPath: Array<string>|List<string>, notSetValue: * = undefined): Parcel => {
+    getIn: Function = (keyPath: Array<string>, notSetValue: * = undefined): Parcel => {
         const {processValue, processMeta} = this._private;
         return ParcelFactory(
             {
@@ -183,7 +190,7 @@ class Parcel {
         const {processValue} = this._private;
         return ParcelFactory(
             {
-                value: processValue((ii: UnmutableWrapper): UnmutableWrapper => {
+                value: processValue((ii: *): * => { // TODO -these should be typed as UnmutableWrappers
                     return ii.map((value, key) => UnwrapParcel(
                         mapper(this.get(key), key))
                     );
