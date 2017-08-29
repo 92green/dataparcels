@@ -2,8 +2,8 @@
 import {Wrap} from 'unmutable'; // TODO swap this out with unmutable-lite
 
 type ParcelData = {value: *, meta: Object};
-type ModifyValue = (value: *) => *;
-type OnChangeUpdater = (payload: *) => *;
+//type ModifyValue = (value: *) => *;
+//type OnChangeUpdater = (payload: *) => *;
 type Mapper = (parcel: Parcel, key: string|number) => *;
 
 function UnwrapParcel(item: *): * {
