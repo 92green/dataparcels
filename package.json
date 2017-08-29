@@ -4,7 +4,7 @@
     "lib"
   ],
   "name": "parcels",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Parcels each contain a value, and a function to change that value. This library provides a parcel class with a set of functional collection manipulation methods to traverse and unwrap parcels.",
   "license": "MIT",
   "author": "Damien Clarke",
