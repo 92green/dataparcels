@@ -31,8 +31,8 @@ test:
 deployment:
   master:
     branch: master
-    owner: bigdatr
+    owner: blueflag
     commands:
-      - git config --global user.email Damien Clarke
-      - git config --global user.name Damien Clarke
+      - git config --global user.email blueflag
+      - git config --global user.name blueflag
       - yarn run deploy-to-gh-pages
