@@ -1,10 +1,15 @@
 // @flow
 import {Wrap} from 'unmutable'; // TODO swap this out with unmutable-lite
 
+type Keys = {
+    key: number,
+    children?: *
+};
+
 type ParcelData = {
     value: *,
     meta: Object,
-    listKeys?: number|number[]
+    keys?: Keys
 };
 
 //type ModifyValue = (value: *) => *;
@@ -42,8 +47,8 @@ function SanitiseParcelData(data: ParcelData): ParcelData {
         }
     }
 
-    if(data.hasOwnProperty('listKeys')) {
-        result.listKeys = data.listKeys;
+    if(data.hasOwnProperty('keys')) {
+        result.keys = data.keys;
     }
 
     return result;
@@ -66,10 +71,15 @@ class Parcel {
         console.log('parcelData', parcelData);
 
         const _handleChange: Function = (newData: ParcelData) => {
-            // remove meta object if it is empty
-            if(newData.meta && Wrap(newData.meta).size === 0) {
-                newData = Wrap(newData).delete('meta').done();
-            }
+            // console.log('...', newData);
+            // // remove meta object if it is empty
+            // if(newData.meta && Wrap(newData.meta).size === 0) {
+            //     newData = Wrap(newData).delete('meta').done();
+            // }
+            // // remove keys if it is empty
+            // if(newData.keys && Wrap(newData.keys).size === 0) {
+            //     newData = Wrap(newData).delete('keys').done();
+            // }
             handleChange(newData);
         };
 
@@ -98,7 +108,7 @@ class Parcel {
         };
 
         const processListKeys: Function = (updater: Function): * => {
-            return updater(Wrap(this.key())).done();
+            return updater(Wrap(this._private.keys || {})).done();
         };
 
         this._private = {
@@ -127,7 +137,7 @@ class Parcel {
     };
 
     key: Function = (): number => {
-        return this._private.listKeys;
+        return this._private.keys.key;
     };
 
     onChange: Function = (newValue: *) => {
@@ -170,13 +180,13 @@ class Parcel {
             {
                 value: processValue(ii => ii.get(key, notSetValue)),
                 meta: processMeta(ii => ii.get(key)),
-                listKeys: processListKeys(ii => ii.get(key))
+                keys: processListKeys(ii => ii.get(key))
             },
             (newData: ParcelData) => {
                 this._private.handleChange({
                     value: processValue(ii => ii.set(key, newData.value)),
                     meta: processMeta((ii, kk) => ii.set(key, newData.meta[kk])),
-                    listKeys: processListKeys(ii => ii.set(key, newData.listKeys))
+                    keys: processListKeys(ii => ii.set(key, newData.keys))
                 });
             }
         );
@@ -188,13 +198,13 @@ class Parcel {
             {
                 value: processValue(ii => ii.getIn(keyPath, notSetValue)),
                 meta: processMeta(ii => ii.getIn(keyPath)),
-                listKeys: processListKeys(ii => ii.getIn(keyPath))
+                keys: processListKeys(ii => ii.getIn(keyPath))
             },
             (newData: ParcelData) => {
                 this._private.handleChange({
                     value: processValue(ii => ii.setIn(keyPath, newData.value)),
                     meta: processMeta((ii, kk) => ii.setIn(keyPath, newData.meta[kk])),
-                    listKeys: processListKeys(ii => ii.setIn(keyPath, newData.listKeys))
+                    keys: processListKeys(ii => ii.setIn(keyPath, newData.keys))
                 });
             }
         );
@@ -210,7 +220,7 @@ class Parcel {
                     );
                 }),
                 meta: this.meta(),
-                listKeys: this.key()
+                keys: this._private.keys
             },
             this._private.handleChange
         );
@@ -227,12 +237,11 @@ class Parcel {
     });
 }
 
-function NextListKey(listKeys: Array<number>): number {
-    console.log(listKeys);
-    if(listKeys.length === 0) {
+function NextListKey(keys: Array<number>): number {
+    if(keys.length === 0) {
         return 0;
     }
-    return Math.max(...listKeys) + 1;
+    return Math.max(...keys.map(ii => ii.key)) + 1;
 }
 
 function NumberWrap(val: number, min: number, max: number): number {
@@ -244,20 +253,22 @@ function NumberWrap(val: number, min: number, max: number): number {
 class ListParcel extends Parcel {
     constructor(parcelData: ParcelData, handleChange: Function) {
         console.log("????", parcelData);
-        var {value, meta, listKeys} = parcelData;
+        var {value, meta, keys} = parcelData;
 
-        listKeys = listKeys || [];
-        var nextKey = NextListKey(listKeys) - 1;
+        keys = keys || [];
+        var nextKey = NextListKey(keys) - 1;
 
         // add list keys for each indexed item
         // from meta, or if that doesnt exist generate new ones
-        listKeys = Wrap(value)
+        keys = Wrap(value)
             .map((ii: *, kk: number): number => {
-                if(typeof listKeys[kk] === "number") {
-                    return listKeys[kk];
+                if(keys[kk]) {
+                    return keys[kk];
                 }
                 nextKey++;
-                return nextKey;
+                return {
+                    key: nextKey
+                };
             })
             .done();
 
@@ -265,7 +276,7 @@ class ListParcel extends Parcel {
             {
                 value,
                 meta,
-                listKeys
+                keys
             },
             handleChange
         );
@@ -273,7 +284,9 @@ class ListParcel extends Parcel {
         this._private = {
             ...this._private,
             newListKey: (): number => {
-                return NextListKey(this.key());
+                return {
+                    key: NextListKey(this._private.keys)
+                };
             }
         };
     }
@@ -285,7 +298,7 @@ class ListParcel extends Parcel {
         this._private.handleChange({
             value: processValue(del),
             meta: processMeta(del),
-            listKeys: processListKeys(del)
+            keys: processListKeys(del)
         });
     };
 
@@ -296,7 +309,7 @@ class ListParcel extends Parcel {
         this._private.handleChange({
             value: processValue(ii => ii.insert(index, parcelData.value)),
             meta: processMeta((ii, kk) => ii.insert(index, parcelData[kk])),
-            listKeys: processListKeys((ii) => ii.insert(index, this._private.newListKey()))
+            keys: processListKeys((ii) => ii.insert(index, this._private.newListKey()))
         });
     };
 
@@ -307,7 +320,7 @@ class ListParcel extends Parcel {
         this._private.handleChange({
             value: processValue(ii => ii.push(parcelData.value)),
             meta: processMeta((ii, kk) => ii.push(parcelData[kk])),
-            listKeys: processListKeys((ii) => ii.push(this._private.newListKey()))
+            keys: processListKeys((ii) => ii.push(this._private.newListKey()))
         });
     };
 
@@ -318,7 +331,7 @@ class ListParcel extends Parcel {
         this._private.handleChange({
             value: processValue(pop),
             meta: processMeta(pop),
-            listKeys: processListKeys(pop)
+            keys: processListKeys(pop)
         });
     };
 
@@ -329,7 +342,7 @@ class ListParcel extends Parcel {
         this._private.handleChange({
             value: processValue(shift),
             meta: processMeta(shift),
-            listKeys: processListKeys(shift)
+            keys: processListKeys(shift)
         });
     };
 
@@ -351,7 +364,7 @@ class ListParcel extends Parcel {
         this._private.handleChange({
             value: processValue(swap),
             meta: processMeta(swap),
-            listKeys: processListKeys(swap)
+            keys: processListKeys(swap)
         });
     };
 
@@ -370,7 +383,7 @@ class ListParcel extends Parcel {
         this._private.handleChange({
             value: processValue(ii => ii.unshift(parcelData.value)),
             meta: processMeta((ii, kk) => ii.unshift(parcelData[kk])),
-            listKeys: processListKeys((ii) => ii.unshift(this._private.newListKey()))
+            keys: processListKeys((ii) => ii.unshift(this._private.newListKey()))
         });
     };
 }
