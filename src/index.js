@@ -2,17 +2,6 @@
 import {Wrap} from 'unmutable'; // TODO swap this out with unmutable-lite
 import recursiveFilter from './util/recursiveFilter';
 
-type Keys = {
-    key?: number,
-    children?: *
-};
-
-type ParcelData = {
-    value: *,
-    meta: Object,
-    keys?: Keys
-};
-
 //type ModifyValue = (value: *) => *;
 //type OnChangeUpdater = (payload: *) => *;
 type Mapper = (parcel: Parcel, key: string|number) => *;
@@ -157,21 +146,35 @@ class Parcel {
         );
     };
 
-    // modifyValue(valueUpdater: ModifyValue): Parcel {
-    //     return ParcelFactory(
-    //         valueUpdater(this._value),
-    //         this._private.handleChange
-    //     );
-    // }
+    modifyValue: Function = (valueUpdater: ValueUpdater): Parcel => {
+        const {processValue, processMeta, processKeys} = this._private;
+        return ParcelFactory(
+            {
+                value: processValue(ii => Wrap(valueUpdater(ii.done()))),
+                meta: processMeta(ii => Wrap(valueUpdater(ii.done()))),
+                keys: processKeys(ii => ii)
+            },
+            this._private.handleChange
+        );
+    };
 
-    // modifyChange(onChangeUpdater: OnChangeUpdater): Parcel {
-    //     return ParcelFactory(
-    //         this._value,
-    //         onChangeUpdater
-    //             ? (payload) => this._private.handleChange(onChangeUpdater(payload))
-    //             : this._private.handleChange
-    //     );
-    // }
+    modifyChange: Function = (onChangeUpdater: OnChangeUpdater): Parcel => {
+        const {processValue, processMeta, processKeys} = this._private;
+        return ParcelFactory(
+            {
+                value: processValue(ii => ii),
+                meta: processMeta(ii => ii),
+                keys: processKeys(ii => ii)
+            },
+            (newData: ParcelData) => {
+                this._private.handleChange({
+                    value: processValue(ii => Wrap(onChangeUpdater(newData.value))),
+                    meta: processMeta((ii, kk) => Wrap(onChangeUpdater(newData.meta[kk]))),
+                    keys: processKeys(ii => ii)
+                });
+            }
+        );
+    };
 
     get: Function = (key: string, notSetValue: * = undefined): Parcel => {
         const {processValue, processMeta, processKeys} = this._private;

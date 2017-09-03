@@ -9,6 +9,7 @@ import ExampleSimpleObjectSource from '!raw!../example/ExampleSimpleObject';
 import ExampleDeepObject from '../example/ExampleDeepObject';
 import ExampleImmutableMap from '../example/ExampleImmutableMap';
 import ExampleCustomInputs from '../example/ExampleCustomInputs';
+import ExampleModify from '../example/ExampleModify';
 import ExampleObjectWithMeta from '../example/ExampleObjectWithMeta';
 import ExampleSimpleArray from '../example/ExampleSimpleArray';
 import ExampleEditableArray from '../example/ExampleEditableArray';
@@ -23,6 +24,7 @@ export default () => {
         <ExampleDeepObject />
         <ExampleImmutableMap />
         <ExampleCustomInputs />
+        <ExampleModify />
         <ExampleObjectWithMeta />
         <ExampleSimpleArray />
         <ExampleEditableArray />
