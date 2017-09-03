@@ -63,11 +63,12 @@ class Parcel {
                 newData = Wrap(newData).delete('meta').done();
             }
 
-            // remove keys if it is not defined
+            // remove keys object / map if it is not defined
             const isDefined: Function = ii => typeof ii !== "undefined";
-            if(!isDefined(recursiveFilter(newData.keys, isDefined, undefined))) {
+            if(!isDefined(recursiveFilter(newData.keys, isDefined, undefined)) && Wrap(newData.keys).isKeyed()) {
                 newData = Wrap(newData).delete('keys').done();
             }
+
             handleChange(newData);
         };
 

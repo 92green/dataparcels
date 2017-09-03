@@ -13,6 +13,7 @@ import ExampleModify from '../example/ExampleModify';
 import ExampleObjectWithMeta from '../example/ExampleObjectWithMeta';
 import ExampleSimpleArray from '../example/ExampleSimpleArray';
 import ExampleEditableArray from '../example/ExampleEditableArray';
+import ExampleComplexNesting from '../example/ExampleComplexNesting';
 
 export default () => {
     return <Box modifier="padding">
@@ -28,5 +29,6 @@ export default () => {
         <ExampleObjectWithMeta />
         <ExampleSimpleArray />
         <ExampleEditableArray />
+        <ExampleComplexNesting />
     </Box>
 }
