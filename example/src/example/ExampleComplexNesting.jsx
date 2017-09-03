@@ -52,14 +52,18 @@ export default class ExampleComplexNesting extends React.Component {
         </Box>;
 
         const newPerson = () => ({
-            firstname: "",
-            lastname: "",
-            pets: []
+            value: {
+                firstname: "",
+                lastname: "",
+                pets: []
+            }
         });
 
         const newPet = () => ({
-            name: "",
-            animal: ""
+            value: {
+                name: "",
+                animal: ""
+            }
         });
 
         return <Example
@@ -112,12 +116,12 @@ export default class ExampleComplexNesting extends React.Component {
                             </div>;
                         }).value()}
 
-                        <button className="Button Button-inline" onClick={() => pets.push({value: newPet()})}>Add pet</button>
+                        <button className="Button Button-inline" onClick={() => pets.push(newPet())}>Add pet</button>
                     </div>
                 </div>;
             }).value()}
 
-            <button className="Button Button-inline" onClick={() => people.push({value: newPerson()})}>Add person</button>
+            <button className="Button Button-inline" onClick={() => people.push(newPerson())}>Add person</button>
 
         </Example>;
     }
