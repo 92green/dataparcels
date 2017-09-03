@@ -9,9 +9,12 @@ import ExampleSimpleObjectSource from '!raw!../example/ExampleSimpleObject';
 import ExampleDeepObject from '../example/ExampleDeepObject';
 import ExampleImmutableMap from '../example/ExampleImmutableMap';
 import ExampleCustomInputs from '../example/ExampleCustomInputs';
+import ExampleModify from '../example/ExampleModify';
 import ExampleObjectWithMeta from '../example/ExampleObjectWithMeta';
 import ExampleSimpleArray from '../example/ExampleSimpleArray';
 import ExampleEditableArray from '../example/ExampleEditableArray';
+import ExampleComplexNesting from '../example/ExampleComplexNesting';
+import ExampleActionsAndReducers from '../example/ExampleActionsAndReducers';
 
 export default () => {
     return <Box modifier="padding">
@@ -23,8 +26,11 @@ export default () => {
         <ExampleDeepObject />
         <ExampleImmutableMap />
         <ExampleCustomInputs />
+        <ExampleModify />
         <ExampleObjectWithMeta />
         <ExampleSimpleArray />
         <ExampleEditableArray />
+        <ExampleComplexNesting />
+        <ExampleActionsAndReducers />
     </Box>
 }

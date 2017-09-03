@@ -31,7 +31,7 @@
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
-    "obtuse": "^0.4.0",
+    "obtuse": "^0.5.1",
     "prismjs": "^1.6.0",
     "raw-loader": "^0.5.1",
     "react": "^15.6.1",

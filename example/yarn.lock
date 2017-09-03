@@ -3033,9 +3033,9 @@ object.omit@^2.0.0:
     for-own "^0.1.4"
     is-extendable "^0.1.1"
 
-obtuse@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/obtuse/-/obtuse-0.4.0.tgz#9ba9a50ec28ce633ebaa18a593ef6e9399ed50bd"
+obtuse@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/obtuse/-/obtuse-0.5.1.tgz#547bf7330d48dc6e7620789621e238b0fac4c19e"
   dependencies:
     goose-css "^0.8.0"
     moment "^2.18.1"
