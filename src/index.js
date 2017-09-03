@@ -1,8 +1,9 @@
 // @flow
 import {Wrap} from 'unmutable'; // TODO swap this out with unmutable-lite
+import recursiveFilter from './util/recursiveFilter';
 
 type Keys = {
-    key: number,
+    key?: number,
     children?: *
 };
 
@@ -54,8 +55,6 @@ function SanitiseParcelData(data: ParcelData): ParcelData {
     return result;
 }
 
-
-
 export default function ParcelFactory(parcelData: ParcelData, handleChange: Function): Parcel {
     parcelData = SanitiseParcelData(parcelData);
     if(Wrap(parcelData.value).isIndexed()) {
@@ -68,30 +67,30 @@ class Parcel {
     _private: Object;
 
     constructor(parcelData: ParcelData, handleChange: Function) {
-        console.log('parcelData', parcelData);
-
         const _handleChange: Function = (newData: ParcelData) => {
-            // console.log('...', newData);
-            // // remove meta object if it is empty
-            // if(newData.meta && Wrap(newData.meta).size === 0) {
-            //     newData = Wrap(newData).delete('meta').done();
-            // }
-            // // remove keys if it is empty
-            // if(newData.keys && Wrap(newData.keys).size === 0) {
-            //     newData = Wrap(newData).delete('keys').done();
-            // }
+
+            // remove meta object if it is empty
+            if(newData.meta && Wrap(newData.meta).isEmpty()) {
+                newData = Wrap(newData).delete('meta').done();
+            }
+
+            // remove keys if it is not defined
+            const isDefined: Function = ii => typeof ii !== "undefined";
+            if(!isDefined(recursiveFilter(newData.keys, isDefined, undefined))) {
+                newData = Wrap(newData).delete('keys').done();
+            }
             handleChange(newData);
         };
 
         const onChange: Function = (newValue: *) => {
-            handleChange({
+            _handleChange({
                 ...parcelData,
                 value: newValue
             });
         };
 
         const metaChange: Function = (newMeta: Object) => {
-            handleChange({
+            _handleChange({
                 ...parcelData,
                 meta: newMeta
             });
@@ -107,7 +106,7 @@ class Parcel {
                 .done();
         };
 
-        const processListKeys: Function = (updater: Function): * => {
+        const processKeys: Function = (updater: Function): * => {
             return updater(Wrap(this._private.keys || {})).done();
         };
 
@@ -118,7 +117,7 @@ class Parcel {
             metaChange,
             processValue,
             processMeta,
-            processListKeys
+            processKeys
         };
     }
 
@@ -175,36 +174,37 @@ class Parcel {
     // }
 
     get: Function = (key: string, notSetValue: * = undefined): Parcel => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
         return ParcelFactory(
             {
                 value: processValue(ii => ii.get(key, notSetValue)),
                 meta: processMeta(ii => ii.get(key)),
-                keys: processListKeys(ii => ii.get(key))
+                keys: processKeys(ii => ii.get(key))
             },
             (newData: ParcelData) => {
                 this._private.handleChange({
                     value: processValue(ii => ii.set(key, newData.value)),
                     meta: processMeta((ii, kk) => ii.set(key, newData.meta[kk])),
-                    keys: processListKeys(ii => ii.set(key, newData.keys))
+                    keys: processKeys(ii => ii.set(key, newData.keys))
                 });
             }
         );
     };
 
     getIn: Function = (keyPath: Array<string>, notSetValue: * = undefined): Parcel => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
+        const keysKeyPath = Wrap(keyPath).interpose("children").done();
         return ParcelFactory(
             {
                 value: processValue(ii => ii.getIn(keyPath, notSetValue)),
                 meta: processMeta(ii => ii.getIn(keyPath)),
-                keys: processListKeys(ii => ii.getIn(keyPath))
+                keys: processKeys(ii => ii.getIn(keysKeyPath))
             },
             (newData: ParcelData) => {
                 this._private.handleChange({
                     value: processValue(ii => ii.setIn(keyPath, newData.value)),
                     meta: processMeta((ii, kk) => ii.setIn(keyPath, newData.meta[kk])),
-                    keys: processListKeys(ii => ii.setIn(keyPath, newData.keys))
+                    keys: processKeys(ii => ii.setIn(keysKeyPath, newData.keys))
                 });
             }
         );
@@ -252,7 +252,6 @@ function NumberWrap(val: number, min: number, max: number): number {
 
 class ListParcel extends Parcel {
     constructor(parcelData: ParcelData, handleChange: Function) {
-        console.log("????", parcelData);
         var {value, meta, keys} = parcelData;
 
         keys = keys || [];
@@ -283,7 +282,7 @@ class ListParcel extends Parcel {
 
         this._private = {
             ...this._private,
-            newListKey: (): number => {
+            newKey: (): number => {
                 return {
                     key: NextListKey(this._private.keys)
                 };
@@ -292,57 +291,57 @@ class ListParcel extends Parcel {
     }
 
     delete: Function = (index: number) => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
         const del = ii => ii.delete(index);
 
         this._private.handleChange({
             value: processValue(del),
             meta: processMeta(del),
-            keys: processListKeys(del)
+            keys: processKeys(del)
         });
     };
 
     insert: Function = (index: number, parcelData: ParcelData) => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
         parcelData = SanitiseParcelData(parcelData);
 
         this._private.handleChange({
             value: processValue(ii => ii.insert(index, parcelData.value)),
             meta: processMeta((ii, kk) => ii.insert(index, parcelData[kk])),
-            keys: processListKeys((ii) => ii.insert(index, this._private.newListKey()))
+            keys: processKeys((ii) => ii.insert(index, this._private.newKey()))
         });
     };
 
     push: Function = (parcelData: ParcelData) => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
         parcelData = SanitiseParcelData(parcelData);
 
         this._private.handleChange({
             value: processValue(ii => ii.push(parcelData.value)),
             meta: processMeta((ii, kk) => ii.push(parcelData[kk])),
-            keys: processListKeys((ii) => ii.push(this._private.newListKey()))
+            keys: processKeys((ii) => ii.push(this._private.newKey()))
         });
     };
 
     pop: Function = () => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
         const pop = ii => ii.pop();
 
         this._private.handleChange({
             value: processValue(pop),
             meta: processMeta(pop),
-            keys: processListKeys(pop)
+            keys: processKeys(pop)
         });
     };
 
     shift: Function = () => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
         const shift = ii => ii.shift();
 
         this._private.handleChange({
             value: processValue(shift),
             meta: processMeta(shift),
-            keys: processListKeys(shift)
+            keys: processKeys(shift)
         });
     };
 
@@ -351,7 +350,7 @@ class ListParcel extends Parcel {
     };
 
     swap: Function = (indexA: number, indexB: number) => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
 
         const size = this.size();
         indexA = NumberWrap(indexA, 0, size);
@@ -364,7 +363,7 @@ class ListParcel extends Parcel {
         this._private.handleChange({
             value: processValue(swap),
             meta: processMeta(swap),
-            keys: processListKeys(swap)
+            keys: processKeys(swap)
         });
     };
 
@@ -377,13 +376,13 @@ class ListParcel extends Parcel {
     };
 
     unshift: Function = (parcelData: ParcelData) => {
-        const {processValue, processMeta, processListKeys} = this._private;
+        const {processValue, processMeta, processKeys} = this._private;
         parcelData = SanitiseParcelData(parcelData);
 
         this._private.handleChange({
             value: processValue(ii => ii.unshift(parcelData.value)),
             meta: processMeta((ii, kk) => ii.unshift(parcelData[kk])),
-            keys: processListKeys((ii) => ii.unshift(this._private.newListKey()))
+            keys: processKeys((ii) => ii.unshift(this._private.newKey()))
         });
     };
 }

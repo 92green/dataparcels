@@ -4485,9 +4485,9 @@ universalify@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.1.tgz#fa71badd4437af4c148841e3b3b165f9e9e590b7"
 
-unmutable@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.2.0.tgz#e93af848a88e783d544bc15bced8b4b7b77a5649"
+unmutable@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.4.0.tgz#6945b1c716d8bf1290d9dc3c0677fa5dfc8b7979"
   dependencies:
     is-plain-object "^2.0.4"
 

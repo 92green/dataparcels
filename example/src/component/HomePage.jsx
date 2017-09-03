@@ -18,9 +18,9 @@ export default () => {
         <Text element="h1" modifier="sizeGiga marginGiga">Parcels</Text>
         <Paragraph>Parcels wrap up values and the functions that change them, and provides a set of chainable methods for splitting and iterating over your data.</Paragraph>
         <Paragraph>This becomes extremely powerful for handling user input in forms, especially if you have nested data structures.</Paragraph>
-        {/*<ExampleSimplestParcel source={ExampleSimplestParcelSource} />
+        <ExampleSimplestParcel source={ExampleSimplestParcelSource} />
         <ExampleSimpleObject source={ExampleSimpleObjectSource} />
-        <ExampleDeepObject />*/}
+        <ExampleDeepObject />
         <ExampleImmutableMap />
         <ExampleCustomInputs />
         <ExampleObjectWithMeta />
