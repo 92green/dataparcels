@@ -12,7 +12,7 @@ suppress_comment= \\(.\\|\n\\)*\\$FlowBug
 <PROJECT_ROOT>/scripts/.*
 <PROJECT_ROOT>/example/.*
 <PROJECT_ROOT>/node_modules/documentation
-<PROJECT_ROOT>/node_modules/graphql
 <PROJECT_ROOT>/node_modules/unmutable
 <PROJECT_ROOT>/.*/gatsby-node.js
+<PROJECT_ROOT>/packages/parcels/node_modules/.*
 <PROJECT_ROOT>/packages/parcels-docs/.*
