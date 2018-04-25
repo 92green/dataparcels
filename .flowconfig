@@ -1,15 +1,18 @@
 [options]
+module.file_ext=.js
+module.file_ext=.jsx
 module.system.node.resolve_dirname=node_modules
-module.system.node.resolve_dirname=..
 module.system.node.resolve_dirname=src
+suppress_comment= \\(.\\|\n\\)*\\$FlowBug
+
 
 [ignore]
-<PROJECT_ROOT>/src/parcels/client.js
-<PROJECT_ROOT>/src/parcels/tracking.js
 <PROJECT_ROOT>/coverage/.*
 <PROJECT_ROOT>/.nyc_output/.*
 <PROJECT_ROOT>/scripts/.*
-<PROJECT_ROOT>/dist/.*
-
-[libs]
-./decls/
+<PROJECT_ROOT>/example/.*
+<PROJECT_ROOT>/node_modules/documentation
+<PROJECT_ROOT>/node_modules/unmutable
+<PROJECT_ROOT>/.*/gatsby-node.js
+<PROJECT_ROOT>/packages/parcels/node_modules/.*
+<PROJECT_ROOT>/packages/parcels-docs/.*

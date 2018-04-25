@@ -2,11 +2,14 @@
     "presets": [
         ["blueflag", {"browser": true, "library": true}]
     ],
-    "ignore": ["./lib"],
+    "ignore": [
+        "./lib",
+        "./example"
+    ],
     "env": {
-        "test": {
+        "production": {
             "plugins": [
-                "istanbul"
+                ["proto-babel-plugin-extract-flow-types", {"outDir": "lib"}]
             ]
         }
     }
