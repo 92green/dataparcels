@@ -8,7 +8,8 @@
     "test": "blueflag-test test",
     "coverage": "blueflag-test coverage",
     "test-all": "yarn lint && yarn coverage",
-    "deploy-docs": "yarn lerna --scope parcels-docs run deploy"
+    "deploy-docs": "yarn lerna --scope parcels-docs run deploy",
+    "watch": "lerna run watch --parallel --"
   },
   "workspaces": [
     "packages/*"

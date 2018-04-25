@@ -4,16 +4,22 @@
 @import '~obtuse/lib/all';
 @include ObtuseConfig;
 
+@include BruceGrid;
 
 @include ObtuseBase;
-// @include ObtuseBase;
 @include ObtuseLink;
 @include ObtuseBox;
 @include ObtuseTable;
+@include ObtuseTerminal;
 @include ObtuseText {
     &-definition {
         background-color: grey(94);
         padding: 1rem;
+    }
+    &-code {
+        background-color: color('alternativeBackground');
+        padding: 0 .25rem;
+        border-radius: 3px;
     }
 };
 @include ObtuseTypography;
@@ -24,8 +30,6 @@ body {
 }
 
 .Navigation {
-
-
     @include BruceBreakpoint(72rem) {
         position: fixed;
         top: 0;
