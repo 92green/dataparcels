@@ -6,7 +6,7 @@
     "flow": "blueflag-test flow",
     "lint": "blueflag-test lint",
     "test": "blueflag-test test",
-    "coverage": "blueflag-test coverage",
+    "coverage": "yarn nyc --all --check-coverage --branches=100 --functions=100 --lines=100 --statements=100 --include=packages/*/src --exclude=packages/parcels-docs --exclude=**/__test__/*-test.js --extension=jsx --reporter=text --reporter=lcov node_modules/.bin/blueflag-test test",
     "test-all": "yarn lint && yarn coverage",
     "deploy-docs": "yarn lerna --scope parcels-docs run deploy",
     "watch": "lerna run watch --parallel --"
@@ -18,7 +18,7 @@
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.0",
     "babel-preset-blueflag": "^0.6.0",
-    "blueflag-test": "^0.13.2",
+    "blueflag-test": "^0.16.0",
     "enzyme": "^3.3.0",
     "gatsby": "^1.9.223",
     "lerna": "^2.9.0",
