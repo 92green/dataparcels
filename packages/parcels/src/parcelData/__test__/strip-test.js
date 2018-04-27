@@ -1,10 +1,10 @@
 // @flow
 import test from 'ava';
-import stripParcelData from '../stripParcelData';
+import strip from '../strip';
 
-test('stripParcelData should pass through value', tt => {
+test('strip should pass through value', tt => {
     tt.deepEqual(
-        stripParcelData({
+        strip()({
             value: 123
         }),
         {
@@ -13,9 +13,9 @@ test('stripParcelData should pass through value', tt => {
     );
 });
 
-test('stripParcelData should remove empty child', tt => {
+test('strip should remove empty child', tt => {
     tt.deepEqual(
-        stripParcelData({
+        strip()({
             value: 123,
             child: []
         }),
@@ -25,9 +25,9 @@ test('stripParcelData should remove empty child', tt => {
     );
 });
 
-test('stripParcelData should remove undefined child', tt => {
+test('strip should remove undefined child', tt => {
     tt.deepEqual(
-        stripParcelData({
+        strip()({
             value: 123,
             child: undefined
         }),
@@ -37,9 +37,9 @@ test('stripParcelData should remove undefined child', tt => {
     );
 });
 
-test('stripParcelData should remove undefined key', tt => {
+test('strip should remove undefined key', tt => {
     tt.deepEqual(
-        stripParcelData({
+        strip()({
             value: 123,
             key: undefined
         }),

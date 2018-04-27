@@ -2,7 +2,7 @@
 
 import idModifier from '../parcelId/modifier';
 import Action from '../action/Action';
-import stripParcelData from '../util/stripParcelData';
+import strip from '../parcelData/strip';
 
 import set from 'unmutable/lib/set';
 import pipeWith from 'unmutable/lib/util/pipeWith';
@@ -17,7 +17,7 @@ export default (_this: Parcel): Object => ({
     modify: (updater: Function): Parcel => {
         return pipeWith(
             _this._parcelData,
-            stripParcelData,
+            strip(),
             updater,
             parcelData => ({parcelData}),
             set('idAppend', idModifier('ud')),
