@@ -1,7 +1,6 @@
 // @flow
 import test from 'ava';
-import BaseParcel from '../BaseParcel';
-import Parcel from '../../ParcelFactory';
+import Parcel from '../Parcel';
 
 test('IndexedParcel.delete() should delete', tt => {
     tt.plan(4);
@@ -17,6 +16,7 @@ test('IndexedParcel.delete() should delete', tt => {
 
     var expectedData = {
         value: [2,3],
+        key: '^',
         child: [
             {key: "#b"},
             {key: "#c"}
@@ -35,7 +35,7 @@ test('IndexedParcel.delete() should delete', tt => {
         payload: {}
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
@@ -43,7 +43,7 @@ test('IndexedParcel.delete() should delete', tt => {
         }
     }).delete(0);
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
@@ -70,9 +70,9 @@ test('IndexedParcel.get(hashkey) should return a new child Parcel', tt => {
         }
     };
 
-    var childParcel = Parcel(data).get("#a");
+    var childParcel = new Parcel(data).get("#a");
 
-    tt.true(childParcel instanceof BaseParcel, 'get(hashkey) returns a child Parcel');
+    tt.true(childParcel instanceof Parcel, 'get(hashkey) returns a child Parcel');
     tt.is(childParcel.value(), expectedValue, 'child parcel has correct value');
 });
 
@@ -90,6 +90,7 @@ test('IndexedParcel.insert() should insert', tt => {
 
     var expectedData = {
         value: [1,4,2,3],
+        key: '^',
         child: [
             {key: "#a"},
             {key: "#d"},
@@ -114,7 +115,7 @@ test('IndexedParcel.insert() should insert', tt => {
         }
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
@@ -122,7 +123,7 @@ test('IndexedParcel.insert() should insert', tt => {
         }
     }).insert(1, 4);
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
@@ -145,6 +146,7 @@ test('IndexedParcel.push() should push', tt => {
 
     var expectedData = {
         value: [1,2,3,4],
+        key: '^',
         child: [
             {key: "#a"},
             {key: "#b"},
@@ -161,7 +163,7 @@ test('IndexedParcel.push() should push', tt => {
         }
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
@@ -184,6 +186,7 @@ test('IndexedParcel.pop() should pop', tt => {
 
     var expectedData = {
         value: [1,2],
+        key: '^',
         child: [
             {key: "#a"},
             {key: "#b"}
@@ -196,7 +199,7 @@ test('IndexedParcel.pop() should pop', tt => {
         payload: {}
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
@@ -219,6 +222,7 @@ test('IndexedParcel.shift() should shift', tt => {
 
     var expectedData = {
         value: [2,3],
+        key: '^',
         child: [
             {key: "#b"},
             {key: "#c"}
@@ -231,7 +235,7 @@ test('IndexedParcel.shift() should shift', tt => {
         payload: {}
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
@@ -254,6 +258,7 @@ test('IndexedParcel.swap() should swap', tt => {
 
     var expectedData = {
         value: [3,2,1],
+        key: '^',
         child: [
             {key: "#c"},
             {key: "#b"},
@@ -269,7 +274,7 @@ test('IndexedParcel.swap() should swap', tt => {
         }
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with indexes');
@@ -292,6 +297,7 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
 
     var expectedData = {
         value: [2,1,3],
+        key: '^',
         child: [
             {key: "#b"},
             {key: "#a"},
@@ -305,7 +311,7 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
         payload: {}
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
@@ -319,7 +325,7 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
         payload: {}
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
@@ -343,6 +349,7 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
 
     var expectedData = {
         value: [2,1,3],
+        key: '^',
         child: [
             {key: "#b"},
             {key: "#a"},
@@ -356,7 +363,7 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
         payload: {}
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
@@ -370,7 +377,7 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
         payload: {}
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
@@ -393,6 +400,7 @@ test('IndexedParcel.unshift() should unshift', tt => {
 
     var expectedData = {
         value: [4,1,2,3],
+        key: '^',
         child: [
             {key: "#d"},
             {key: "#a"},
@@ -409,7 +417,7 @@ test('IndexedParcel.unshift() should unshift', tt => {
         }
     };
 
-    Parcel({
+    new Parcel({
         ...data,
         handleChange: (parcel, action) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');

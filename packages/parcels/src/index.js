@@ -1,3 +1,3 @@
 // @flow
-import ParcelFactory from './ParcelFactory';
-export default ParcelFactory;
+import Parcel from './parcel/Parcel';
+export default Parcel;

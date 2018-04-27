@@ -1,15 +1,7 @@
 // @flow
 
-import concat from 'unmutable/lib/concat';
-import pipeWith from 'unmutable/lib/util/pipeWith';
-import toArray from './toArray';
-import toString from './toString';
+import {SEPARATOR} from './config';
 
-export default (item: string|string[]) => (id: string|string[]): string => {
-    return pipeWith(
-        id,
-        toArray(),
-        concat(item),
-        ii => typeof id === "string" ? toString()(ii) : ii
-    );
+export default (item: string) => (id: string): string => {
+    return `${id}${SEPARATOR}${item}`;
 };

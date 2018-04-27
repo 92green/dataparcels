@@ -1,14 +1,24 @@
 // @flow
+import type {
+    Key,
+    Index
+} from '../types/Types';
 import Action from './Action';
 
-const del: Function = (key: Key): Action => {
+const del: Function = (key: Key|Index): Action => {
     return new Action({
         type: "delete",
         keyPath: [key]
     });
 };
 
-const insert: Function = (key: Key, value: Value): Action => {
+const deleteSelf: Function = (): Action => {
+    return new Action({
+        type: "delete"
+    });
+};
+
+const insert: Function = (key: Key|Index, value: *): Action => {
     return new Action({
         type: "insert",
         keyPath: [key],
@@ -18,7 +28,7 @@ const insert: Function = (key: Key, value: Value): Action => {
     });
 };
 
-const push: Function = (value: Value): Action => {
+const push: Function = (value: *): Action => {
     return new Action({
         type: "push",
         payload: {
@@ -33,7 +43,7 @@ const pop: Function = (): Action => {
     });
 };
 
-const set: Function = (value: Value): Action => {
+const setSelf: Function = (value: *): Action => {
     return new Action({
         type: "set",
         payload: {
@@ -48,7 +58,7 @@ const shift: Function = (): Action => {
     });
 };
 
-const swap: Function = (keyA: Key, keyB: Key): Action => {
+const swap: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
     return new Action({
         type: "swap",
         keyPath: [keyA],
@@ -58,21 +68,21 @@ const swap: Function = (keyA: Key, keyB: Key): Action => {
     });
 };
 
-const swapNext: Function = (key: Key): Action => {
+const swapNext: Function = (key: Key|Index): Action => {
     return new Action({
         type: "swapNext",
         keyPath: [key]
     });
 };
 
-const swapPrev: Function = (key: Key): Action => {
+const swapPrev: Function = (key: Key|Index): Action => {
     return new Action({
         type: "swapPrev",
         keyPath: [key]
     });
 };
 
-const unshift: Function = (value: Value): Action => {
+const unshift: Function = (value: *): Action => {
     return new Action({
         type: "unshift",
         payload: {
@@ -83,10 +93,11 @@ const unshift: Function = (value: Value): Action => {
 
 export default {
     delete: del,
+    deleteSelf,
     insert,
     push,
     pop,
-    set,
+    setSelf,
     shift,
     swap,
     swapNext,

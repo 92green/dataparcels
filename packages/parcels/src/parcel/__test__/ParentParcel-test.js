@@ -1,12 +1,11 @@
 // @flow
 import test from 'ava';
-import Parcel from '../../ParcelFactory';
-import BaseParcel from '../BaseParcel';
+import Parcel from '../Parcel';
 import map from 'unmutable/lib/map';
 
 let handleChange = ii => {};
 
-test('CollectionParcel.size() should return size of parcel', tt => {
+test('ParentParcel.size() should return size of parcel', tt => {
     var data = {
         value: {
             a: 1,
@@ -15,11 +14,11 @@ test('CollectionParcel.size() should return size of parcel', tt => {
         handleChange
     };
 
-    tt.is(Parcel(data).size(), 2);
+    tt.is(new Parcel(data).size(), 2);
 });
 
 
-test('CollectionParcel.get(key) should return a new child Parcel', tt => {
+test('ParentParcel.get(key) should return a new child Parcel', tt => {
     tt.plan(4);
 
     var data = {
@@ -28,8 +27,8 @@ test('CollectionParcel.get(key) should return a new child Parcel', tt => {
             b: 4
         },
         handleChange: (parcel, action) => {
-            tt.deepEqual(expectedValue, parcel.value(), 'child parcel onChange updates original parcels value correctly');
             tt.deepEqual(expectedAction, action[0].toJS(), 'child parcel onChange passes correct action');
+            tt.deepEqual(expectedValue, parcel.value(), 'child parcel onChange updates original parcels value correctly');
         }
     };
 
@@ -46,14 +45,14 @@ test('CollectionParcel.get(key) should return a new child Parcel', tt => {
         }
     };
 
-    var childParcel = Parcel(data).get("a");
+    var childParcel = new Parcel(data).get("a");
 
-    tt.true(childParcel instanceof BaseParcel, 'get(key) returns a child Parcel');
+    tt.true(childParcel instanceof Parcel, 'get(key) returns a child Parcel');
     tt.is(childParcel.value(), 1, 'child parcel has correct value');
     childParcel.onChange(2);
 });
 
-test('CollectionParcel.get(key).value() should return the same instance of the nested piece of data', tt => {
+test('ParentParcel.get(key).value() should return the same instance of the nested piece of data', tt => {
     var myObject = {a:1,b:2};
 
     var data = {
@@ -64,10 +63,10 @@ test('CollectionParcel.get(key).value() should return the same instance of the n
         handleChange
     };
 
-    tt.is(Parcel(data).get("a").value(), myObject);
+    tt.is(new Parcel(data).get("a").value(), myObject);
 });
 
-test('CollectionParcel.get(key).get(key) should return a new child Parcel and chain onChanges', tt => {
+test('ParentParcel.get(key).get(key) should return a new child Parcel and chain onChanges', tt => {
     tt.plan(4);
 
     var data = {
@@ -98,14 +97,14 @@ test('CollectionParcel.get(key).get(key) should return a new child Parcel and ch
         }
     };
 
-    var childParcel = Parcel(data).get("a").get("b");
+    var childParcel = new Parcel(data).get("a").get("b");
 
-    tt.true(childParcel instanceof BaseParcel, 'get(key).get(key) returns a grandchild Parcel');
+    tt.true(childParcel instanceof Parcel, 'get(key).get(key) returns a grandchild Parcel');
     tt.is(childParcel.value(), 2, 'grandchild parcel has correct value');
     childParcel.onChange(6);
 });
 
-test('CollectionParcel.get(keyDoesntExist) should return undefined', tt => {
+test('ParentParcel.get(keyDoesntExist) should return undefined', tt => {
     var data = {
         value: {
             a: {
@@ -116,10 +115,10 @@ test('CollectionParcel.get(keyDoesntExist) should return undefined', tt => {
         handleChange
     };
 
-    tt.true(typeof Parcel(data).get("z") === "undefined");
+    tt.true(typeof new Parcel(data).get("z") === "undefined");
 });
 
-test('CollectionParcel.getIn(keyPath) should return a new descendant Parcel', tt => {
+test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', tt => {
     tt.plan(4);
 
     var data = {
@@ -154,14 +153,14 @@ test('CollectionParcel.getIn(keyPath) should return a new descendant Parcel', tt
         }
     };
 
-    var descendantParcel = Parcel(data).getIn(["a", "c", "d"]);
+    var descendantParcel = new Parcel(data).getIn(["a", "c", "d"]);
 
-    tt.true(descendantParcel instanceof BaseParcel, 'getIn(keyPath) returns a descendant Parcel');
+    tt.true(descendantParcel instanceof Parcel, 'getIn(keyPath) returns a descendant Parcel');
     tt.is(descendantParcel.value(), 123, 'descendant parcel has correct value');
     descendantParcel.onChange(456);
 });
 
-test('CollectionParcel.getIn(keyPath) should cope with non existent keypaths', tt => {
+test('ParentParcel.getIn(keyPath) should cope with non existent keypaths', tt => {
     var data = {
         value: {
             a: {
@@ -174,11 +173,11 @@ test('CollectionParcel.getIn(keyPath) should cope with non existent keypaths', t
         handleChange
     };
 
-    var descendantParcel = Parcel(data).getIn(["x", "y", "z"]);
+    var descendantParcel = new Parcel(data).getIn(["x", "y", "z"]);
     tt.deepEqual(descendantParcel, undefined);
 });
 
-test('CollectionParcel.toObject() should make an object', (tt: Object) => {
+test('ParentParcel.toObject() should make an object', (tt: Object) => {
     var data = {
         value: {a:1,b:2,c:3},
         meta: {
@@ -188,14 +187,14 @@ test('CollectionParcel.toObject() should make an object', (tt: Object) => {
     };
 
     var expectedObject = {a:1,b:2,c:3};
-    var parcel = Parcel(data);
+    var parcel = new Parcel(data);
     var obj = map(ii => ii.value())(parcel.toObject());
 
     tt.deepEqual(expectedObject, obj, 'value is correct');
 
 });
 
-test('CollectionParcel.toObject() should make an object with a mapper', (tt: Object) => {
+test('ParentParcel.toObject() should make an object with a mapper', (tt: Object) => {
     var data = {
         value: {a:1,b:2,c:3},
         meta: {
@@ -205,7 +204,7 @@ test('CollectionParcel.toObject() should make an object with a mapper', (tt: Obj
     };
 
     var expectedObject = {a:2,b:3,c:4};
-    var parcel = Parcel(data);
+    var parcel = new Parcel(data);
     var expectedPassedArgs = [
         {value: 1, key: "a", iter: parcel},
         {value: 2, key: "b", iter: parcel},
@@ -224,7 +223,7 @@ test('CollectionParcel.toObject() should make an object with a mapper', (tt: Obj
 
 });
 
-test('CollectionParcel.toArray() should make an array', (tt: Object) => {
+test('ParentParcel.toArray() should make an array', (tt: Object) => {
     var data = {
         value: [1,2,3],
         meta: {
@@ -234,7 +233,7 @@ test('CollectionParcel.toArray() should make an array', (tt: Object) => {
     };
 
     var expectedArray = [1,2,3];
-    var parcel = Parcel(data);
+    var parcel = new Parcel(data);
     var array = map(ii => ii.value())(parcel.toArray());
 
     tt.deepEqual(expectedArray, array, 'value is correct');
@@ -242,7 +241,7 @@ test('CollectionParcel.toArray() should make an array', (tt: Object) => {
 });
 
 
-test('CollectionParcel.toArray() should make an array with a mapper', (tt: Object) => {
+test('ParentParcel.toArray() should make an array with a mapper', (tt: Object) => {
     var data = {
         value: [1,2,3],
         meta: {
@@ -252,7 +251,7 @@ test('CollectionParcel.toArray() should make an array with a mapper', (tt: Objec
     };
 
     var expectedArray = [2,3,4];
-    var parcel = Parcel(data);
+    var parcel = new Parcel(data);
     var expectedPassedArgs = [
         {value: 1, key: 0, iter: parcel},
         {value: 2, key: 1, iter: parcel},
@@ -271,7 +270,7 @@ test('CollectionParcel.toArray() should make an array with a mapper', (tt: Objec
 
 });
 
-test('CollectionParcel.set() should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
+test('ParentParcel.setSelf() should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
     tt.plan(1);
 
     var data = {
@@ -284,10 +283,10 @@ test('CollectionParcel.set() should call the Parcels handleChange function with 
         }
     };
 
-    Parcel(data).set("???");
+    new Parcel(data).setSelf("???");
 });
 
-test('CollectionParcel.update() should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
+test('ParentParcel.updateSelf() should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
     tt.plan(2);
 
     var data = {
@@ -304,14 +303,13 @@ test('CollectionParcel.update() should call the Parcels handleChange function wi
         a: "!!!"
     };
 
-    Parcel(data).update((ii) => {
-        tt.deepEqual(expectedArg, ii, 'update passes correct argument to updater');
+    new Parcel(data).updateSelf((ii) => {
+        tt.deepEqual(expectedArg, ii, 'updateSelf passes correct argument to updater');
         return "???";
     });
 });
 
-
-test('CollectionParcel.set(key) should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
+test('ParentParcel.set(key) should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
     tt.plan(1);
 
     var data = {
@@ -324,10 +322,10 @@ test('CollectionParcel.set(key) should call the Parcels handleChange function wi
         }
     };
 
-    Parcel(data).set("a", "???");
+    new Parcel(data).set("a", "???");
 });
 
-test('CollectionParcel.update(key) should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
+test('ParentParcel.update(key) should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
     tt.plan(2);
 
     var data = {
@@ -340,13 +338,13 @@ test('CollectionParcel.update(key) should call the Parcels handleChange function
         }
     };
 
-    Parcel(data).update("a", ii => {
+    new Parcel(data).update("a", ii => {
         tt.is("!!!", ii, 'update passes correct value to updater');
         return "???";
     });
 });
 
-test('CollectionParcel.setIn(keyPath) should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
+test('ParentParcel.setIn(keyPath) should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
     tt.plan(1);
 
     var data = {
@@ -361,10 +359,10 @@ test('CollectionParcel.setIn(keyPath) should call the Parcels handleChange funct
         }
     };
 
-    Parcel(data).setIn(["a", "b"], "???");
+    new Parcel(data).setIn(["a", "b"], "???");
 });
 
-test('CollectionParcel.updateIn(keyPath) should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
+test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
     tt.plan(2);
 
     var data = {
@@ -379,7 +377,7 @@ test('CollectionParcel.updateIn(keyPath) should call the Parcels handleChange fu
         }
     };
 
-    Parcel(data).updateIn(["a", "b"], ii => {
+    new Parcel(data).updateIn(["a", "b"], ii => {
         tt.is("!!!", ii, 'update passes correct value to updater');
         return "???";
     });

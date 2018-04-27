@@ -13,6 +13,7 @@ test('Action should build an action with a payload', tt => {
 test('Action should build an action with a default payload', tt => {
     tt.deepEqual({}, new Action({type: "???"}).payload);
 });
+
 test('Action should build an action with a keyPath', tt => {
     tt.deepEqual(['a', 'b'], new Action({type: "???", keyPath: ['a', 'b']}).keyPath);
 });

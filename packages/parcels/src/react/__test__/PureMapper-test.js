@@ -8,17 +8,16 @@ configure({adapter: new Adapter()});
 
 import {shallow} from 'enzyme';
 import PureMapper from '../PureMapper';
-import ParcelFactory from '../../ParcelFactory';
+import Parcel from '../../parcel/Parcel';
 
 test('PureMapper should pass correct args around', tt => {
     tt.plan(5);
     let config = {
         value: "???",
-        key: "keeey",
         handleChange: () => {}
     };
 
-    let parcel = ParcelFactory(config);
+    let parcel = new Parcel(config, {id: "keeey", key: "keeey"});
 
     let index = 0;
     let iter = {};
@@ -31,20 +30,19 @@ test('PureMapper should pass correct args around', tt => {
         return render;
     })(parcel, index, iter);
 
-    tt.is(config.key, e.key, `Key should be set`);
+    tt.is("keeey", e.key, `Key should be set`);
     tt.is(parcel, e.props.parcel, `Parcel should be passed as prop`);
 
-    e.props.render();
+    e.props.render(parcel);
 });
 
 test('PureMapper should pass extra props', tt => {
     let config = {
         value: "???",
-        key: "keeey",
         handleChange: () => {}
     };
 
-    let parcel = ParcelFactory(config);
+    let parcel = new Parcel(config, {id: "keeey", key: "keeey"});
 
     let index = 0;
     let iter = {};

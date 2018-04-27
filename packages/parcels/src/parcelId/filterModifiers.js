@@ -6,7 +6,7 @@ import toArray from './toArray';
 import toString from './toString';
 import isModifier from './isModifier';
 
-export default () => (id: string|string[]): string|string[] => {
+export default () => <T: string|string[]>(id: T): T => {
     return pipeWith(
         id,
         toArray(),
