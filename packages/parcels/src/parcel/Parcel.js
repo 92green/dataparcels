@@ -19,13 +19,15 @@ import ParcelRegistry from '../registry/ParcelRegistry';
 type CreateParcelConfigType = {
     handleChange?: Function,
     id: ParcelId,
-    parcelData: ParcelData
+    parcelData: ParcelData,
+    parent?: Parcel
 };
 
 const DEFAULT_CONFIG_INTERNAL = {
     child: undefined,
     id: new ParcelId(),
-    registry: undefined
+    registry: undefined,
+    parent: undefined
 };
 
 export default class Parcel {
@@ -53,7 +55,8 @@ export default class Parcel {
         let {
             child,
             id,
-            registry
+            registry,
+            parent
         } = _parcelConfigInternal || DEFAULT_CONFIG_INTERNAL;
 
         this._handleChange = handleChange;
@@ -64,7 +67,7 @@ export default class Parcel {
         };
 
         // types
-        this._parcelTypes = new ParcelTypes(value);
+        this._parcelTypes = new ParcelTypes(value, parent && parent._parcelTypes);
         this._id = id.setTypeCode(this._parcelTypes.toTypeCode());
 
         // registry
@@ -90,7 +93,8 @@ export default class Parcel {
             parcelData: {
                 child,
                 value
-            }
+            },
+            parent
         } = createParcelConfig;
 
         return new Parcel(
@@ -101,7 +105,8 @@ export default class Parcel {
             {
                 child,
                 id,
-                registry: this._registry
+                registry: this._registry,
+                parent
             }
         );
     };

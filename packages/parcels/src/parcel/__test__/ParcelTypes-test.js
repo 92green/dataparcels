@@ -12,6 +12,8 @@ test('ParcelTypes should correctly identify primitive values', tt => {
     };
     tt.false(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.false(new Parcel(data).isChild());
+    tt.false(new Parcel(data).isElement());
     tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
 });
 
@@ -22,6 +24,8 @@ test('ParcelTypes should correctly identify primitive date', tt => {
     };
     tt.false(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.false(new Parcel(data).isChild());
+    tt.false(new Parcel(data).isElement());
     tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
 });
 
@@ -34,6 +38,8 @@ test('ParcelTypes should correctly identify object values', tt => {
     };
     tt.true(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.false(new Parcel(data).isChild());
+    tt.false(new Parcel(data).isElement());
     tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiP");
 });
 
@@ -47,7 +53,10 @@ test('ParcelTypes should correctly identify class instance values', tt => {
     };
     tt.false(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.false(new Parcel(data).isChild());
+    tt.false(new Parcel(data).isElement());
     tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
+    // TODO - may have to allow unmutable to recognise class instances as ValueObjects for this to change
 });
 
 test('ParcelTypes should correctly identify Immutable.js Map values', tt => {
@@ -59,6 +68,8 @@ test('ParcelTypes should correctly identify Immutable.js Map values', tt => {
     };
     tt.true(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.false(new Parcel(data).isChild());
+    tt.false(new Parcel(data).isElement());
     tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiP");
 });
 
@@ -70,6 +81,8 @@ test('ParcelTypes should correctly identify array values', tt => {
     };
     tt.true(new Parcel(data).isParent());
     tt.true(new Parcel(data).isIndexed());
+    tt.false(new Parcel(data).isChild());
+    tt.false(new Parcel(data).isElement());
     tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIP");
 });
 
@@ -80,8 +93,38 @@ test('ParcelTypes should correctly identify Immutable.js List values', tt => {
     };
     tt.true(new Parcel(data).isParent());
     tt.true(new Parcel(data).isIndexed());
+    tt.false(new Parcel(data).isChild());
+    tt.false(new Parcel(data).isElement());
     tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIP");
 });
+
+test('ParcelTypes should correctly identify child values', tt => {
+    var data = {
+        handleChange,
+        value: {
+            a: "A"
+        }
+    };
+    tt.false(new Parcel(data).get("a").isParent());
+    tt.false(new Parcel(data).get("a").isIndexed());
+    tt.true(new Parcel(data).get("a").isChild());
+    tt.false(new Parcel(data).get("a").isElement());
+    tt.is(new Parcel(data).get("a")._parcelTypes.toTypeCode(), "Ceip");
+});
+
+test('ParcelTypes should correctly identify element values', tt => {
+    var data = {
+        handleChange,
+        value: [1,2,3]
+    };
+    tt.false(new Parcel(data).get(0).isParent());
+    tt.false(new Parcel(data).get(0).isIndexed());
+    tt.true(new Parcel(data).get(0).isChild());
+    tt.true(new Parcel(data).get(0).isElement());
+    tt.is(new Parcel(data).get(0)._parcelTypes.toTypeCode(), "CEip");
+});
+
+// method creators
 
 test('Correct methods are created for primitive values', tt => {
     var data = {

@@ -4,14 +4,16 @@ import isValueObject from 'unmutable/lib/util/isValueObject';
 
 export default class ParcelTypes {
 
-    _isChild: boolean = false; // TODO
-    _isElement: boolean = false; // TODO
+    _isChild: boolean = false;
+    _isElement: boolean = false;
     _isIndexed: boolean = false;
     _isParent: boolean = false;
 
-    constructor(value: *) {
+    constructor(value: *, parentParcelTypes: ?ParcelTypes) {
         this._isIndexed = isIndexed(value);
         this._isParent = isValueObject(value);
+        this._isChild = !!parentParcelTypes;
+        this._isElement = !!(parentParcelTypes && parentParcelTypes.isIndexed());
     }
 
     isChild: Function = (): boolean => this._isChild;

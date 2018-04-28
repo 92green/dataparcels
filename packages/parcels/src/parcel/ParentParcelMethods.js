@@ -47,7 +47,8 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
         return _this._create({
             parcelData: childParcelData,
             handleChange: _this._skipReducer(childHandleChange),
-            id: _this._id.push(childParcelData.key, _this.isIndexed())
+            id: _this._id.push(childParcelData.key, _this.isIndexed()),
+            parent: _this
         });
     },
 
