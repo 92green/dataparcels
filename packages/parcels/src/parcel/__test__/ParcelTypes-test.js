@@ -5,25 +5,27 @@ import Parcel from '../Parcel';
 
 const handleChange = ii => {};
 
-test('Parcel should return a ValueParcel given a parcelData shaped object', tt => {
+test('ParcelTypes should correctly identify primitive values', tt => {
     var data = {
         handleChange,
         value: 123
     };
     tt.false(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
 });
 
-test('Parcel should return a ValueParcel given a parcelData shaped object with Date value', tt => {
+test('ParcelTypes should correctly identify primitive date', tt => {
     var data = {
         handleChange,
         value: new Date()
     };
     tt.false(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
 });
 
-test('Parcel should return a ParentParcel given a parcelData shaped object with an object value', tt => {
+test('ParcelTypes should correctly identify object values', tt => {
     var data = {
         handleChange,
         value: {
@@ -32,9 +34,10 @@ test('Parcel should return a ParentParcel given a parcelData shaped object with 
     };
     tt.true(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiP");
 });
 
-test('Parcel should return a ValueParcel given a parcelData shaped object with class instance value', tt => {
+test('ParcelTypes should correctly identify class instance values', tt => {
     class Thing {
         foo = "123"
     }
@@ -44,9 +47,10 @@ test('Parcel should return a ValueParcel given a parcelData shaped object with c
     };
     tt.false(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
 });
 
-test('Parcel should return a ParentParcel given a parcelData shaped object with a Map value', tt => {
+test('ParcelTypes should correctly identify Immutable.js Map values', tt => {
     var data = {
         handleChange,
         value: Map({
@@ -55,23 +59,26 @@ test('Parcel should return a ParentParcel given a parcelData shaped object with 
     };
     tt.true(new Parcel(data).isParent());
     tt.false(new Parcel(data).isIndexed());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiP");
 });
 
 
-test('Parcel should return an IndexedParcel given a parcelData shaped object with an Array value', tt => {
+test('ParcelTypes should correctly identify array values', tt => {
     var data = {
         handleChange,
         value: [1,2,3]
     };
     tt.true(new Parcel(data).isParent());
     tt.true(new Parcel(data).isIndexed());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIP");
 });
 
-test('Parcel should return an IndexedParcel given a parcelData shaped object with a List value', tt => {
+test('ParcelTypes should correctly identify Immutable.js List values', tt => {
     var data = {
         handleChange,
         value: List([1,2,3])
     };
     tt.true(new Parcel(data).isParent());
     tt.true(new Parcel(data).isIndexed());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIP");
 });

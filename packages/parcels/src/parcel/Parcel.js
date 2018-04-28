@@ -7,7 +7,6 @@ import type {
 import type Action from '../action/Action';
 
 import ActionMethods from './ActionMethods';
-import IdMethods from './IdMethods';
 import IndexedParcel from './IndexedParcel';
 import ModifyMethods from './ModifyMethods';
 import ParcelTypes from './ParcelTypes';
@@ -58,12 +57,13 @@ export default class Parcel {
             key: id.key()
         };
 
-        this._id = id;
-        this._registry = registry || new ParcelRegistry(); // TODO ParcelTree?
-        this._registry.set(id.id(), this);
-
         // types
         this._parcelTypes = new ParcelTypes(value);
+        this._id = id.setTypeCode(this._parcelTypes.toTypeCode());
+
+        // registry
+        this._registry = registry || new ParcelRegistry(); // TODO ParcelTree?
+        this._registry.set(id.id(), this);
 
         // remaining initialization
         this._actionBuffer = [];
@@ -100,6 +100,7 @@ export default class Parcel {
     _buffer: Function = (...args) => ActionMethods(this)._buffer(...args);
     _flush: Function = (...args) => ActionMethods(this)._flush(...args);
     _skipReducer: Function = (...args) => ActionMethods(this)._skipReducer(...args);
+    _typedPathString: Function = () => this._id.typedPathString();
 
     //
     // public
@@ -114,9 +115,9 @@ export default class Parcel {
 
     // id methods
 
-    key: Function = (...args) => IdMethods(this).key(...args);
-    id: Function = (...args) => IdMethods(this).id(...args);
-    path: Function = (...args) => IdMethods(this).path(...args);
+    key: Function = () => this._id.key();
+    id: Function = () => this._id.id();
+    path: Function = () => this._id.path();
 
     // get methods
     // - value parcel

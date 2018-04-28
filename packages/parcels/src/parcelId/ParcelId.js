@@ -2,8 +2,11 @@
 import type {Key} from '../types/Types';
 
 import last from 'unmutable/lib/last';
+import join from 'unmutable/lib/join';
 import push from 'unmutable/lib/push';
+import rest from 'unmutable/lib/rest';
 import update from 'unmutable/lib/update';
+import updateIn from 'unmutable/lib/updateIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 type ParcelIdData = {
@@ -13,9 +16,9 @@ type ParcelIdData = {
 };
 
 const DEFAULT_PARCELID_DATA = {
-    id: [],
-    path: [],
-    typedPath: []
+    id: ["^"],
+    path: ["^"],
+    typedPath: ["^"]
 };
 
 export default class ParcelId {
@@ -34,28 +37,36 @@ export default class ParcelId {
     };
 
     key: Function = (): Key => {
-        if(this._path.length === 0) {
-            return "^";
-        }
         return last()(this._path);
     };
 
     id: Function = (): string => {
-        if(this._id.length === 0) {
-            return "^";
+        if(this._id.length === 1) {
+            return this._id[0];
         }
-        return this._id.join("/");
+        return pipeWith(
+            this._id,
+            rest(),
+            join("/")
+        );
     };
 
     path: Function = (): Array<Key> => {
-        return this._path;
+        return pipeWith(
+            this._path,
+            rest()
+        );
     };
 
     typedPathString: Function = (): string => {
-        if(this._typedPath.length === 0) {
-            return "^";
+        if(this._typedPath.length === 1) {
+            return this._typedPath[0];
         }
-        return this._typedPath.join("/");
+        return pipeWith(
+            this._typedPath,
+            rest(),
+            join("/")
+        );
     };
 
     push: Function = (key: Key): ParcelId => {
@@ -63,7 +74,7 @@ export default class ParcelId {
             this.toJS(),
             update('id', push(key)),
             update('path', push(key)),
-            update('typedPath', push(`${key}:abcde`)), // TODO types
+            update('typedPath', push(key)),
             this._create
         );
     };
@@ -81,4 +92,12 @@ export default class ParcelId {
         path: this._path,
         typedPath: this._typedPath
     });
+
+    setTypeCode: Function = (typeCode: string): ParcelId => {
+        return pipeWith(
+            this.toJS(),
+            updateIn(['typedPath', -1], ii => `${ii}:${typeCode}`),
+            this._create
+        );
+    };
 }

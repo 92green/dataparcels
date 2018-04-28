@@ -38,3 +38,16 @@ test('Parcel.path() should return the Parcels path', (tt: Object) => {
     tt.deepEqual(new Parcel(data).getIn(["a",0]).path(), ["a","#a"]);
     //tt.is(new Parcel(data).get("a").modifyValue(ii => ii).get(1).path(), "^.a.#b");
 });
+
+test('Parcel._typedPathString() should return the Parcels typed path', (tt: Object) => {
+    var data = {
+        value: {
+            a: [1,2,3]
+        },
+        handleChange
+    };
+    tt.deepEqual(new Parcel(data)._typedPathString(), "^:ceiP");
+    tt.deepEqual(new Parcel(data).get("a")._typedPathString(), "a:ceIP");
+    tt.deepEqual(new Parcel(data).getIn(["a",0])._typedPathString(), "a:ceIP/#a:ceip");
+    //tt.is(new Parcel(data).get("a").modifyValue(ii => ii).get(1).path(), "^.a.#b");
+});
