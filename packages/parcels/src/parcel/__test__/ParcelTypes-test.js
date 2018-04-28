@@ -134,6 +134,8 @@ test('Correct methods are created for primitive values', tt => {
     tt.notThrows(() => new Parcel(data).value());
     tt.true(tt.throws(() => new Parcel(data).has('a'), Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1);
     tt.true(tt.throws(() => new Parcel(data).pop(), Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1);
+    tt.true(tt.throws(() => new Parcel(data).deleteSelf(), Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1);
+    tt.true(tt.throws(() => new Parcel(data).swapNextWithSelf(), Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1);
 });
 
 test('Correct methods are created for object values', tt => {
@@ -144,6 +146,8 @@ test('Correct methods are created for object values', tt => {
     tt.notThrows(() => new Parcel(data).value());
     tt.notThrows(() => new Parcel(data).has('a'));
     tt.true(tt.throws(() => new Parcel(data).pop(), Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1);
+    tt.true(tt.throws(() => new Parcel(data).deleteSelf(), Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1);
+    tt.true(tt.throws(() => new Parcel(data).swapNextWithSelf(), Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1);
 });
 
 test('Correct methods are created for array values', tt => {
@@ -154,5 +158,31 @@ test('Correct methods are created for array values', tt => {
     tt.notThrows(() => new Parcel(data).value());
     tt.notThrows(() => new Parcel(data).has('a'));
     tt.notThrows(() => new Parcel(data).pop());
+    tt.true(tt.throws(() => new Parcel(data).deleteSelf(), Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1);
+    tt.true(tt.throws(() => new Parcel(data).swapNextWithSelf(), Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1);
+});
+
+test('Correct methods are created for object child values', tt => {
+    var data = {
+        handleChange,
+        value: {a: 123}
+    };
+    tt.notThrows(() => new Parcel(data).get("a").value());
+    tt.true(tt.throws(() => new Parcel(data).get("a").has('a'), Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1);
+    tt.true(tt.throws(() => new Parcel(data).get("a").pop(), Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1);
+    tt.notThrows(() => new Parcel(data).get("a").deleteSelf());
+    tt.true(tt.throws(() => new Parcel(data).get("a").swapNextWithSelf(), Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1);
+});
+
+test('Correct methods are created for array element values', tt => {
+    var data = {
+        handleChange,
+        value: [1,2,3]
+    };
+    tt.notThrows(() => new Parcel(data).get(0).value());
+    tt.true(tt.throws(() => new Parcel(data).get(0).has('a'), Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1);
+    tt.true(tt.throws(() => new Parcel(data).get(0).pop(), Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1);
+    tt.notThrows(() => new Parcel(data).get(0).deleteSelf());
+    tt.notThrows(() => new Parcel(data).get(0).swapNextWithSelf());
 });
 
