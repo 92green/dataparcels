@@ -6,7 +6,8 @@ import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 import parcelDelete from '../parcelData/delete';
-import parcelInsert from '../parcelData/insert';
+import parcelInsertAfter from '../parcelData/insertAfter';
+import parcelInsertBefore from '../parcelData/insertBefore';
 import parcelPop from '../parcelData/pop';
 import parcelPush from '../parcelData/push';
 import parcelSet from '../parcelData/set';
@@ -59,13 +60,23 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
             );
         }
 
-        case "insert": {
+        case "insertAfter": {
             if(keyPathIsEmpty) {
-                throw new Error(`Insert actions must have a keyPath with at least one key`);
+                throw new Error(`InsertAfter actions must have a keyPath with at least one key`);
             }
             return updateIn(
                 keyPathButLast,
-                parcelInsert(keyPathLast, {value: action.payload.value})
+                parcelInsertAfter(keyPathLast, {value: action.payload.value})
+            );
+        }
+
+        case "insertBefore": {
+            if(keyPathIsEmpty) {
+                throw new Error(`InsertBefore actions must have a keyPath with at least one key`);
+            }
+            return updateIn(
+                keyPathButLast,
+                parcelInsertBefore(keyPathLast, {value: action.payload.value})
             );
         }
 

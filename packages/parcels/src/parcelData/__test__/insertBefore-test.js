@@ -1,8 +1,8 @@
 // @flow
 import test from 'ava';
-import insert from '../insert';
+import insertBefore from '../insertBefore';
 
-test('insert should work', (tt: Object) => {
+test('insertBefore should work', (tt: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -23,10 +23,10 @@ test('insert should work', (tt: Object) => {
     };
 
 
-    tt.deepEqual(expectedParcelData, insert(1, {value: 4})(parcelData));
+    tt.deepEqual(expectedParcelData, insertBefore(1, {value: 4})(parcelData));
 });
 
-test('insert should work with hashKey', (tt: Object) => {
+test('insertBefore should work with hashKey', (tt: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -47,5 +47,5 @@ test('insert should work with hashKey', (tt: Object) => {
     };
 
 
-    tt.deepEqual(expectedParcelData, insert("#b", {value: 4})(parcelData));
+    tt.deepEqual(expectedParcelData, insertBefore("#b", {value: 4})(parcelData));
 });

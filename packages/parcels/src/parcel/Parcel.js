@@ -8,6 +8,7 @@ import type Action from '../action/Action';
 
 import ActionMethods from './ActionMethods';
 import ChildParcelMethods from './ChildParcelMethods';
+import ElementParcelMethods from './ElementParcelMethods';
 import IndexedParcelMethods from './IndexedParcelMethods';
 import ModifyMethods from './ModifyMethods';
 import ParcelTypes from './ParcelTypes';
@@ -105,7 +106,8 @@ export default class Parcel {
     updateIn: Function;
     // - indexed parcel methods
     delete: Function;
-    insert: Function;
+    insertAfter: Function;
+    insertBefore: Function;
     push: Function;
     pop: Function;
     shift: Function;
@@ -115,6 +117,12 @@ export default class Parcel {
     unshift: Function;
     // - child parcel methods
     deleteSelf: Function;
+    // - element parcel methods
+    insertAfterSelf: Function;
+    insertBeforeSelf: Function;
+    swapWithSelf: Function;
+    swapNextWithSelf: Function;
+    swapPrevWithSelf: Function;
 
     //
     // public modify methods
@@ -171,6 +179,7 @@ export default class Parcel {
         addMethods({
             ...ActionMethods(this),
             ...ChildParcelMethods(this),
+            ...ElementParcelMethods(this),
             ...IndexedParcelMethods(this),
             ...ModifyMethods(this),
             ...ParentParcelMethods(this),

@@ -115,10 +115,10 @@ test('Reducer should delete array key', tt => {
 });
 
 //
-// insert
+// insertAfter
 //
 
-test('Reducer insert action should throw error if keyPath is empty', tt => {
+test('Reducer insertAfter action should throw error if keyPath is empty', tt => {
     var data = {
         value: [
             0,
@@ -127,16 +127,16 @@ test('Reducer insert action should throw error if keyPath is empty', tt => {
         ]
     };
     var action = new Action({
-        type: "insert",
+        type: "insertAfter",
         payload: {
             value: 3
         }
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `Insert actions must have a keyPath with at least one key`);
+    tt.is(tt.throws(() => Reducer(data, action), Error).message, `InsertAfter actions must have a keyPath with at least one key`);
 });
 
-test('Reducer should insert by array index', tt => {
+test('Reducer should insertAfter by array index', tt => {
     var data = {
         value: [
             0,
@@ -145,7 +145,113 @@ test('Reducer should insert by array index', tt => {
         ]
     };
     var action = new Action({
-        type: "insert",
+        type: "insertAfter",
+        keyPath: [1],
+        payload: {
+            value: 3
+        }
+    });
+
+    var expectedValue = [
+        0,
+        1,
+        3,
+        2
+    ];
+    tt.deepEqual(expectedValue, Reducer(data, action).value);
+});
+
+test('Reducer should insertAfter by array key', tt => {
+    var data = {
+        value: [
+            0,
+            1,
+            2
+        ]
+    };
+    var action = new Action({
+        type: "insertAfter",
+        keyPath: ["#c"],
+        payload: {
+            value: 3
+        }
+    });
+    var expectedValue = [
+        0,
+        1,
+        2,
+        3
+    ];
+    tt.deepEqual(expectedValue, Reducer(data, action).value);
+});
+
+test('Reducer should insertAfter by array index deeply', tt => {
+    var data = {
+        value: [
+            null,
+            {
+                thing: [
+                    0,
+                    1,
+                    2
+                ]
+            }
+        ]
+    };
+    var action = new Action({
+        type: "insertAfter",
+        keyPath: [1, "thing", 1],
+        payload: {
+            value: 3
+        }
+    });
+
+    var expectedValue = [
+        null,
+        {
+            thing: [
+                0,
+                1,
+                3,
+                2
+            ]
+        }
+    ];
+    tt.deepEqual(expectedValue, Reducer(data, action).value);
+});
+
+//
+// insertBefore
+//
+
+test('Reducer insertBefore action should throw error if keyPath is empty', tt => {
+    var data = {
+        value: [
+            0,
+            1,
+            2
+        ]
+    };
+    var action = new Action({
+        type: "insertBefore",
+        payload: {
+            value: 3
+        }
+    });
+
+    tt.is(tt.throws(() => Reducer(data, action), Error).message, `InsertBefore actions must have a keyPath with at least one key`);
+});
+
+test('Reducer should insertBefore by array index', tt => {
+    var data = {
+        value: [
+            0,
+            1,
+            2
+        ]
+    };
+    var action = new Action({
+        type: "insertBefore",
         keyPath: [1],
         payload: {
             value: 3
@@ -161,7 +267,7 @@ test('Reducer should insert by array index', tt => {
     tt.deepEqual(expectedValue, Reducer(data, action).value);
 });
 
-test('Reducer should insert by array key', tt => {
+test('Reducer should insertBefore by array key', tt => {
     var data = {
         value: [
             0,
@@ -170,7 +276,7 @@ test('Reducer should insert by array key', tt => {
         ]
     };
     var action = new Action({
-        type: "insert",
+        type: "insertBefore",
         keyPath: ["#c"],
         payload: {
             value: 3
@@ -185,7 +291,7 @@ test('Reducer should insert by array key', tt => {
     tt.deepEqual(expectedValue, Reducer(data, action).value);
 });
 
-test('Reducer should insert by array index deeply', tt => {
+test('Reducer should insertBefore by array index deeply', tt => {
     var data = {
         value: [
             null,
@@ -199,7 +305,7 @@ test('Reducer should insert by array index deeply', tt => {
         ]
     };
     var action = new Action({
-        type: "insert",
+        type: "insertBefore",
         keyPath: [1, "thing", 1],
         payload: {
             value: 3

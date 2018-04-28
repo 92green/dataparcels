@@ -18,10 +18,38 @@ const deleteSelf: Function = (): Action => {
     });
 };
 
-const insert: Function = (key: Key|Index, value: *): Action => {
+const insertAfter: Function = (key: Key|Index, value: *): Action => {
     return new Action({
-        type: "insert",
+        type: "insertAfter",
         keyPath: [key],
+        payload: {
+            value
+        }
+    });
+};
+
+const insertAfterSelf: Function = (value: *): Action => {
+    return new Action({
+        type: "insertAfter",
+        payload: {
+            value
+        }
+    });
+};
+
+const insertBefore: Function = (key: Key|Index, value: *): Action => {
+    return new Action({
+        type: "insertBefore",
+        keyPath: [key],
+        payload: {
+            value
+        }
+    });
+};
+
+const insertBeforeSelf: Function = (value: *): Action => {
+    return new Action({
+        type: "insertBefore",
         payload: {
             value
         }
@@ -75,10 +103,31 @@ const swapNext: Function = (key: Key|Index): Action => {
     });
 };
 
+const swapNextWithSelf: Function = (): Action => {
+    return new Action({
+        type: "swapNext"
+    });
+};
+
 const swapPrev: Function = (key: Key|Index): Action => {
     return new Action({
         type: "swapPrev",
         keyPath: [key]
+    });
+};
+
+const swapPrevWithSelf: Function = (): Action => {
+    return new Action({
+        type: "swapPrev"
+    });
+};
+
+const swapWithSelf: Function = (keyB: Key|Index): Action => {
+    return new Action({
+        type: "swap",
+        payload: {
+            swapIndex: keyB
+        }
     });
 };
 
@@ -94,13 +143,19 @@ const unshift: Function = (value: *): Action => {
 export default {
     delete: del,
     deleteSelf,
-    insert,
+    insertAfter,
+    insertAfterSelf,
+    insertBefore,
+    insertBeforeSelf,
     push,
     pop,
     setSelf,
     shift,
     swap,
     swapNext,
+    swapNextWithSelf,
     swapPrev,
+    swapPrevWithSelf,
+    swapWithSelf,
     unshift
 };

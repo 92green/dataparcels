@@ -16,8 +16,12 @@ export default MethodCreator("Indexed", (_this: Parcel): Object => ({
         _this.dispatch(ActionCreators.delete(key));
     },
 
-    insert: (key: Key|Index, value: *) => {
-        _this.dispatch(ActionCreators.insert(key, value));
+    insertAfter: (key: Key|Index, value: *) => {
+        _this.dispatch(ActionCreators.insertAfter(key, value));
+    },
+
+    insertBefore: (key: Key|Index, value: *) => {
+        _this.dispatch(ActionCreators.insertBefore(key, value));
     },
 
     push: (value: *) => {
