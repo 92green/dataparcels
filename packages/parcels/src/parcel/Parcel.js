@@ -130,6 +130,7 @@ export default class Parcel {
 
     // - parent parcel
 
+    has: Function = (...args) => ParentParcel(this).has(...args);
     get: Function = (...args) => ParentParcel(this).get(...args);
     getIn: Function = (...args) => ParentParcel(this).getIn(...args);
     toObject: Function = (...args) => ParentParcel(this).toObject(...args);

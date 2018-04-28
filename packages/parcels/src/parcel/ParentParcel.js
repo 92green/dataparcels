@@ -30,12 +30,12 @@ export default (_this: Parcel): Object => {
 
         // get methods
 
-        get: (key: Key|Index, notSetValue: * = undefined): ?Parcel => { // TODO notSetValue to be wrapped in a parcel
-            if(!parcelHas(key)(_this._parcelData)) {
-                return notSetValue;
-            }
+        has: (key: Key|Index): boolean => {
+            return parcelHas(key)(_this._parcelData);
+        },
 
-            let childParcelData: ParcelData = parcelGet(key)(_this._parcelData);
+        get: (key: Key|Index, notSetValue: * = undefined): Parcel => {
+            let childParcelData: ParcelData = parcelGet(key, notSetValue)(_this._parcelData);
 
             let childHandleChange: Function = (parcelData: ParcelData, actions: Action[]) => {
                 pipeWith(
@@ -56,13 +56,10 @@ export default (_this: Parcel): Object => {
             });
         },
 
-        getIn: (keyPath: Array<Key|Index>, notSetValue: * = undefined): ?Parcel => { // TODO notSetValue to be wrapped in a parcel
+        getIn: (keyPath: Array<Key|Index>, notSetValue: * = undefined): Parcel => {
             var parcel = _this;
-            for(let key of keyPath) {
-                if(!parcel) {
-                    return notSetValue;
-                }
-                parcel = parcel.get(key, notSetValue);
+            for(let i = 0; i < keyPath.length; i++) {
+                parcel = parcel.get(keyPath[i], i < keyPath.length - 1 ? {} : notSetValue);
             }
             return parcel;
         },

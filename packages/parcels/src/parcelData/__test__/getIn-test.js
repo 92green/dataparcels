@@ -21,7 +21,7 @@ test('getIn should work with objects', (tt: Object) => {
         value: undefined
     };
 
-    tt.is(undefined, getIn(['z', 'b'])(parcelData));
+    tt.deepEqual(expectedParcelData2, getIn(['z', 'b'])(parcelData));
 });
 
 test('getIn should not clone value', (tt: Object) => {

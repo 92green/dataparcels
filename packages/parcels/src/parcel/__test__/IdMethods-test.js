@@ -30,7 +30,7 @@ test('Parcel.id() should return the Parcels id', (tt: Object) => {
     tt.is(new Parcel(data).get("a").id(), "a");
     tt.is(new Parcel(data).getIn(["a",0]).id(), "a/#a");
     tt.is(new Parcel(data).get("something@@@").id(), "something%40%40%40");
-    //tt.is(new Parcel(data).get("a").modifyValue(ii => ii).get(1).id(), "^.a.&uv&.#b");
+    //tt.is(new Parcel(data).get("a").modifyValue(ii => ii).get(1).id(), "^.a.&uv&.#b"); TODO
 });
 
 test('Parcel.path() should return the Parcels path', (tt: Object) => {

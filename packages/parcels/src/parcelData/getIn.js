@@ -1,14 +1,21 @@
 // @flow
+import type {
+    Index,
+    Key,
+    ParcelData
+} from '../types/Types';
 
 import get from './get';
 import has from './has';
 
-export default (keyPath: Key[]) => (parcelData: ParcelData): ParcelData => {
+export default (keyPath: Array<Key|Index>, notSetValue: * = undefined) => (parcelData: ParcelData): ParcelData => {
     for(let key of keyPath) {
         if(!has(key)(parcelData)) {
-            return undefined;
+            return {
+                value: undefined
+            };
         }
-        parcelData = get(key)(parcelData);
+        parcelData = get(key, notSetValue)(parcelData);
     }
     return parcelData;
 };

@@ -17,6 +17,19 @@ test('ParentParcel.size() should return size of parcel', tt => {
     tt.is(new Parcel(data).size(), 2);
 });
 
+test('ParentParcel.has(key) should return a boolean indicating if key exists', tt => {
+    var data = {
+        value: {
+            a: 1,
+            b: 4
+        },
+        handleChange
+    };
+
+    tt.true(new Parcel(data).has('a'));
+    tt.false(new Parcel(data).has('z'));
+});
+
 
 test('ParentParcel.get(key) should return a new child Parcel', tt => {
     tt.plan(4);
@@ -146,7 +159,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
     childParcel.onChange(6);
 });
 
-test('ParentParcel.get(keyDoesntExist) should return undefined', tt => {
+test('ParentParcel.get(keyDoesntExist) should return a parcel with value of undefined', tt => {
     var data = {
         value: {
             a: {
@@ -157,7 +170,7 @@ test('ParentParcel.get(keyDoesntExist) should return undefined', tt => {
         handleChange
     };
 
-    tt.true(typeof new Parcel(data).get("z") === "undefined");
+    tt.true(typeof new Parcel(data).get("z").value() === "undefined");
 });
 
 test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', tt => {
@@ -216,7 +229,10 @@ test('ParentParcel.getIn(keyPath) should cope with non existent keypaths', tt =>
     };
 
     var descendantParcel = new Parcel(data).getIn(["x", "y", "z"]);
-    tt.deepEqual(descendantParcel, undefined);
+    tt.deepEqual(descendantParcel.value(), undefined);
+
+    var descendantParcel2 = new Parcel(data).getIn(["x", "y", "z"], "!!!");
+    tt.deepEqual(descendantParcel2.value(), "!!!");
 });
 
 test('ParentParcel.toObject() should make an object', (tt: Object) => {
