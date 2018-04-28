@@ -69,12 +69,16 @@ export default class ParcelId {
         );
     };
 
-    push: Function = (key: Key): ParcelId => {
+    push: Function = (key: Key, isElement: boolean): ParcelId => {
+        let encodePush: Function = isElement
+            ? push(key)
+            : push(encodeURIComponent(`${key}`));
+            
         return pipeWith(
             this.toJS(),
-            update('id', push(key)),
+            update('id', encodePush),
             update('path', push(key)),
-            update('typedPath', push(key)),
+            update('typedPath', encodePush),
             this._create
         );
     };

@@ -35,9 +35,9 @@ export default (_this: Parcel): Object => {
                 return notSetValue;
             }
 
-            const childParcelData: ParcelData = parcelGet(key)(_this._parcelData);
+            let childParcelData: ParcelData = parcelGet(key)(_this._parcelData);
 
-            const childHandleChange: Function = (parcelData: ParcelData, actions: Action[]) => {
+            let childHandleChange: Function = (parcelData: ParcelData, actions: Action[]) => {
                 pipeWith(
                     actions,
                     map(pipe(
@@ -52,7 +52,7 @@ export default (_this: Parcel): Object => {
             return _this._create({
                 parcelData: childParcelData,
                 handleChange: _this._skipReducer(childHandleChange),
-                id: _this._id.push(get('key', key)(childParcelData))
+                id: _this._id.push(childParcelData.key, _this.isIndexed())
             });
         },
 
