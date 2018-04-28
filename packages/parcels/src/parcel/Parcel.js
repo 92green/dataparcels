@@ -10,28 +10,22 @@ import ActionMethods from './ActionMethods';
 import IdMethods from './IdMethods';
 import IndexedParcel from './IndexedParcel';
 import ModifyMethods from './ModifyMethods';
+import ParcelTypes from './ParcelTypes';
 import ParentParcel from './ParentParcel';
 import ValueParcel from './ValueParcel';
 
-import {ROOT_MARK} from '../parcelId/config';
-import idPush from '../parcelId/push';
-
+import ParcelId from '../parcelId/ParcelId';
 import ParcelRegistry from '../registry/ParcelRegistry';
-
-import isIndexed from 'unmutable/lib/util/isIndexed';
-import isValueObject from 'unmutable/lib/util/isValueObject';
 
 type CreateParcelConfigType = {
     handleChange?: Function,
-    id: string,
-    idAppend?: string,
+    id: ParcelId,
     parcelData: ParcelData
 };
 
 const DEFAULT_CONFIG_INTERNAL = {
     child: undefined,
-    id: ROOT_MARK,
-    key: ROOT_MARK,
+    id: new ParcelId(),
     registry: undefined
 };
 
@@ -39,16 +33,11 @@ export default class Parcel {
 
     _handleChange: Function;
     _parcelData: ParcelData;
-    _id: string;
+    _id: ParcelId;
     _registry: ParcelRegistry;
     _actionBuffer: Action[];
     _actionBufferOn: boolean;
-
-    _isChild: boolean = false; // TODO
-    _isElement: boolean = false; // TODO
-    _isIndexed: boolean = false;
-    _isParent: boolean = false;
-    _isRoot: boolean = false; // TODO
+    _parcelTypes: ParcelTypes;
 
     constructor(parcelConfig: ParcelConfig, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
@@ -59,7 +48,6 @@ export default class Parcel {
         let {
             child,
             id,
-            key,
             registry
         } = _parcelConfigInternal || DEFAULT_CONFIG_INTERNAL;
 
@@ -67,16 +55,15 @@ export default class Parcel {
         this._parcelData = {
             value,
             child,
-            key
+            key: id.key()
         };
 
         this._id = id;
         this._registry = registry || new ParcelRegistry(); // TODO ParcelTree?
-        this._registry.set(id, this);
+        this._registry.set(id.id(), this);
 
         // types
-        this._isIndexed = isIndexed(value);
-        this._isParent = isValueObject(value);
+        this._parcelTypes = new ParcelTypes(value);
 
         // remaining initialization
         this._actionBuffer = [];
@@ -90,18 +77,12 @@ export default class Parcel {
     _create: Function = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
             handleChange = this._handleChange,
-            idAppend,
-            id,
+            id = this._id,
             parcelData: {
                 child,
-                key,
                 value
             }
         } = createParcelConfig;
-
-        if(idAppend) {
-            id = idPush(idAppend)(this._id);
-        }
 
         return new Parcel(
             {
@@ -110,7 +91,6 @@ export default class Parcel {
             },
             {
                 child,
-                key,
                 id,
                 registry: this._registry
             }
@@ -127,17 +107,16 @@ export default class Parcel {
 
     // type methods
 
-    isChild: Function = (): boolean => this._isChild;
-    isElement: Function = (): boolean => this._isElement;
-    isIndexed: Function = (): boolean => this._isIndexed;
-    isParent: Function = (): boolean => this._isParent;
-    isRoot: Function = (): boolean => this._isRoot;
+    isChild: Function = () => this._parcelTypes.isChild();
+    isElement: Function = () => this._parcelTypes.isElement();
+    isIndexed: Function = () => this._parcelTypes.isIndexed();
+    isParent: Function = () => this._parcelTypes.isParent();
 
     // id methods
 
     key: Function = (...args) => IdMethods(this).key(...args);
     id: Function = (...args) => IdMethods(this).id(...args);
-    pathId: Function = (...args) => IdMethods(this).pathId(...args);
+    path: Function = (...args) => IdMethods(this).path(...args);
 
     // get methods
     // - value parcel

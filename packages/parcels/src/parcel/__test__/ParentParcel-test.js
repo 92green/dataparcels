@@ -66,6 +66,48 @@ test('ParentParcel.get(key).value() should return the same instance of the neste
     tt.is(new Parcel(data).get("a").value(), myObject);
 });
 
+test('ParentParcel.get(key).key() on object should return the key', tt => {
+    var data = {
+        value: {
+            a: {
+                a:1,
+                b:2
+            },
+            b: 2
+        },
+        handleChange
+    };
+
+    tt.is(new Parcel(data).get("a").key(), "a");
+});
+
+test('ParentParcel.get(index).value() on array should return the first element', tt => {
+    var data = {
+        value: [1,2,3],
+        handleChange
+    };
+
+    tt.is(new Parcel(data).get(0).value(), 1);
+});
+
+test('ParentParcel.get(key).value() on array should return the first element', tt => {
+    var data = {
+        value: [1,2,3],
+        handleChange
+    };
+
+    tt.is(new Parcel(data).get("#a").value(), 1);
+});
+
+test('ParentParcel.get(key).key() on array should return the key, not the index', tt => {
+    var data = {
+        value: [1,2,3],
+        handleChange
+    };
+
+    tt.is(new Parcel(data).get(0).key(), "#a");
+});
+
 test('ParentParcel.get(key).get(key) should return a new child Parcel and chain onChanges', tt => {
     tt.plan(4);
 

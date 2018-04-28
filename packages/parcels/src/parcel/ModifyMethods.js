@@ -1,6 +1,5 @@
 // @flow
 
-import idModifier from '../parcelId/modifier';
 import Action from '../action/Action';
 import strip from '../parcelData/strip';
 
@@ -20,7 +19,7 @@ export default (_this: Parcel): Object => ({
             strip(),
             updater,
             parcelData => ({parcelData}),
-            set('idAppend', idModifier('ud')),
+            set('id', _this._id.pushModifier('ud')),
             _this._create
         );
     },
@@ -30,7 +29,7 @@ export default (_this: Parcel): Object => ({
             _this._parcelData,
             set('value', updater(_this._parcelData.value, _this)),
             parcelData => ({parcelData}),
-            set('idAppend', idModifier('uv')),
+            set('id', _this._id.pushModifier('uv')),
             _this._create
         );
     },
@@ -49,7 +48,7 @@ export default (_this: Parcel): Object => ({
                     });
                 });
             }),
-            set('idAppend', idModifier('ucd')),
+            set('id', _this._id.pushModifier('ucd')),
             _this._create
         );
     }

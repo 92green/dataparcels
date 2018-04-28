@@ -1,5 +1,7 @@
 // @flow
 
+import type ParcelId from '../parcelId/ParcelId';
+
 export type ParcelData = {
 	value: *,
 	child?: *,
@@ -12,10 +14,9 @@ export type ParcelConfig = {
 };
 
 export type ParcelConfigInternal = {
-	child?: *,
-	id: string,
-	key: string,
-	registry?: *
+	child: *,
+	id: ParcelId,
+	registry: *
 };
 
 export type Key = string;

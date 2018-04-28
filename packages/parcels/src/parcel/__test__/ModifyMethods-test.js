@@ -20,7 +20,7 @@ test('Parcel.chain() should return the result of chains updater', (tt: Object) =
     });
 
     tt.is(modifiedParcel, chained, 'chain returns modified parcel');
-    tt.is(223, modifiedParcel.value(), 'chain returns modified parcel value');
+    tt.is(223, modifiedParcel && modifiedParcel.value(), 'chain returns modified parcel value');
 });
 
 test('Parcel.modify() should return a new parcel with updated parcelData', (tt: Object) => {
@@ -36,7 +36,8 @@ test('Parcel.modify() should return a new parcel with updated parcelData', (tt: 
         .data();
 
     var expectedData = {
-        value: "???"
+        value: "???",
+        key: "^"
     };
     tt.deepEqual(expectedData, updated);
 });
@@ -44,10 +45,10 @@ test('Parcel.modify() should return a new parcel with updated parcelData', (tt: 
 test('Parcel.modifyValue() should return a new parcel with updated parcelData', (tt: Object) => {
     tt.plan(2);
     var data = {
-        value: 123,
+        value: [123],
         handleChange
     };
-    var parcel = new Parcel(data, {id: "#a", key: "#a"});
+    var parcel = new Parcel(data).get(0);
     var updated = parcel
         .modifyValue((value: *, parcelData: Parcel) => {
             tt.is(parcelData, parcel, "modifyValue is passed the Parcel as the second argument");

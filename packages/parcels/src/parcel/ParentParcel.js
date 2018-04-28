@@ -23,15 +23,14 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel): Object => {
     if(!_this.isParent()) {
-        console.log("............................", _this.value());
-        throw new Error("!!!???");
+        throw new Error("!!!???"); // TODO proper error with tests
     }
 
     return {
 
         // get methods
 
-        get: (key: Key|Index, notSetValue: * = undefined): ?Parcel => {
+        get: (key: Key|Index, notSetValue: * = undefined): ?Parcel => { // TODO notSetValue to be wrapped in a parcel
             if(!parcelHas(key)(_this._parcelData)) {
                 return notSetValue;
             }
@@ -53,11 +52,11 @@ export default (_this: Parcel): Object => {
             return _this._create({
                 parcelData: childParcelData,
                 handleChange: _this._skipReducer(childHandleChange),
-                idAppend: get('key', key)(childParcelData)
+                id: _this._id.push(get('key', key)(childParcelData))
             });
         },
 
-        getIn: (keyPath: Array<Key|Index>, notSetValue: * = undefined): * => {
+        getIn: (keyPath: Array<Key|Index>, notSetValue: * = undefined): ?Parcel => { // TODO notSetValue to be wrapped in a parcel
             var parcel = _this;
             for(let key of keyPath) {
                 if(!parcel) {

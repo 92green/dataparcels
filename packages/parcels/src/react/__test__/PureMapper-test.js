@@ -17,20 +17,21 @@ test('PureMapper should pass correct args around', tt => {
         handleChange: () => {}
     };
 
-    let parcel = new Parcel(config, {id: "keeey", key: "keeey"});
+    let parcel = new Parcel(config);
+    let parcelKey = parcel.key();
 
     let index = 0;
     let iter = {};
     let render = () => "?";
 
     let e = PureMapper((pp, ii, it) => {
-        tt.is(parcel, pp, `PureMapper shjould pass parcel`);
+        tt.is(parcel, pp, `PureMapper should pass parcel`);
         tt.is(index, ii, `PureMapper should pass index`);
         tt.is(iter, it, `PureMapper should pass iter`);
         return render;
     })(parcel, index, iter);
 
-    tt.is("keeey", e.key, `Key should be set`);
+    tt.is(parcelKey, e.key, `Key should be set`);
     tt.is(parcel, e.props.parcel, `Parcel should be passed as prop`);
 
     e.props.render(parcel);
@@ -42,7 +43,7 @@ test('PureMapper should pass extra props', tt => {
         handleChange: () => {}
     };
 
-    let parcel = new Parcel(config, {id: "keeey", key: "keeey"});
+    let parcel = new Parcel(config);
 
     let index = 0;
     let iter = {};
