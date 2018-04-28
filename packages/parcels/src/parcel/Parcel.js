@@ -7,6 +7,7 @@ import type {
 import type Action from '../action/Action';
 
 import ActionMethods from './ActionMethods';
+import ChildParcelMethods from './ChildParcelMethods';
 import IndexedParcelMethods from './IndexedParcelMethods';
 import ModifyMethods from './ModifyMethods';
 import ParcelTypes from './ParcelTypes';
@@ -41,6 +42,7 @@ export default class Parcel {
     _parcelTypes: ParcelTypes;
 
     _actionMethods: Object;
+    _childParcelMethods: Object;
     _indexedParcelMethods: Object;
     _modifyMethods: Object;
     _parentParcelMethods: Object;
@@ -76,6 +78,7 @@ export default class Parcel {
 
         // methods
         this._actionMethods = ActionMethods(this);
+        this._childParcelMethods = ChildParcelMethods(this);
         this._indexedParcelMethods = IndexedParcelMethods(this);
         this._modifyMethods = ModifyMethods(this);
         this._parentParcelMethods = ParentParcelMethods(this);
@@ -180,6 +183,10 @@ export default class Parcel {
     swapNext: Function = (...args) => this._indexedParcelMethods.swapNext(...args);
     swapPrev: Function = (...args) => this._indexedParcelMethods.swapPrev(...args);
     unshift: Function = (...args) => this._indexedParcelMethods.unshift(...args);
+
+    // - child parcel
+
+    deleteSelf: Function = (...args) => this._childParcelMethods.deleteSelf(...args);
 
     // modify methods
 
