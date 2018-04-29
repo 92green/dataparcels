@@ -18,8 +18,10 @@ export default (_this: Parcel): Object => ({
             _this._parcelData,
             strip(),
             updater,
-            parcelData => ({parcelData}),
-            set('id', _this._id.pushModifier('ud')),
+            parcelData => ({
+                parcelData,
+                id: _this._id.pushModifier('ud')
+            }),
             _this._create
         );
     },
@@ -28,8 +30,10 @@ export default (_this: Parcel): Object => ({
         return pipeWith(
             _this._parcelData,
             set('value', updater(_this._parcelData.value, _this)),
-            parcelData => ({parcelData}),
-            set('id', _this._id.pushModifier('uv')),
+            parcelData => ({
+                parcelData,
+                id: _this._id.pushModifier('uv')
+            }),
             _this._create
         );
     },
@@ -37,18 +41,20 @@ export default (_this: Parcel): Object => ({
     modifyChange: (batcher: Function): Parcel => {
         return pipeWith(
             _this._parcelData,
-            parcelData => ({parcelData}),
-            set('handleChange', (newParcel: Parcel, actions: Action[]) => {
-                _this.batch((parcel: Parcel) => {
-                    batcher({
-                        parcel,
-                        newParcelData: newParcel.data(),
-                        apply: () => _this.dispatch(actions),
-                        actions
+            parcelData => ({
+                parcelData,
+                id: _this._id.pushModifier('ucd'),
+                handleChange: (newParcel: Parcel, actions: Action[]) => {
+                    _this.batch((parcel: Parcel) => {
+                        batcher({
+                            parcel,
+                            newParcelData: newParcel.data(),
+                            apply: () => _this.dispatch(actions),
+                            actions
+                        });
                     });
-                });
+                }
             }),
-            set('id', _this._id.pushModifier('ucd')),
             _this._create
         );
     }
