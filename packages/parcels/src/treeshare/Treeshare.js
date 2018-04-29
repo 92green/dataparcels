@@ -1,6 +1,6 @@
 // @flow
-export default class ParcelRegistry {
-    _registry = {};
+class TreeshareRegistry {
+	_registry: Object = {};
 
     get = (id: string): Object => {
         return this._registry[id];
@@ -9,4 +9,8 @@ export default class ParcelRegistry {
     set = (id: string, reference: Object) => {
         this._registry[id] = reference;
     };
+}
+
+export default class Treeshare {
+    registry: Object = new TreeshareRegistry();
 }

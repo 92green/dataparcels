@@ -16,7 +16,7 @@ import ParentParcelMethods from './ParentParcelMethods';
 import ValueParcelMethods from './ValueParcelMethods';
 
 import ParcelId from '../parcelId/ParcelId';
-import ParcelRegistry from '../registry/ParcelRegistry';
+import Treeshare from '../treeshare/Treeshare';
 
 import map from 'unmutable/lib/map';
 
@@ -30,7 +30,7 @@ type CreateParcelConfigType = {
 const DEFAULT_CONFIG_INTERNAL = {
     child: undefined,
     id: new ParcelId(),
-    registry: undefined,
+    treeshare: undefined,
     parent: undefined
 };
 
@@ -43,7 +43,7 @@ export default class Parcel {
     _handleChange: Function;
     _parcelData: ParcelData;
     _id: ParcelId;
-    _registry: ParcelRegistry;
+    _treeshare: Treeshare;
     _actionBuffer: Action[] = [];
     _actionBufferOn: boolean = false;
     _parcelTypes: ParcelTypes;
@@ -142,7 +142,7 @@ export default class Parcel {
         let {
             child,
             id,
-            registry,
+            treeshare,
             parent
         } = _parcelConfigInternal || DEFAULT_CONFIG_INTERNAL;
 
@@ -157,9 +157,9 @@ export default class Parcel {
         this._parcelTypes = new ParcelTypes(value, parent && parent._parcelTypes);
         this._id = id.setTypeCode(this._parcelTypes.toTypeCode());
 
-        // registry
-        this._registry = registry || new ParcelRegistry(); // TODO ParcelTree?
-        this._registry.set(id.id(), this);
+        // treeshare
+        this._treeshare = treeshare || new Treeshare();
+        this._treeshare.registry.set(id.id(), this);
 
         // parcel type methods
         this.isChild = this._parcelTypes.isChild;
@@ -210,7 +210,7 @@ export default class Parcel {
             {
                 child,
                 id,
-                registry: this._registry,
+                treeshare: this._treeshare,
                 parent
             }
         );

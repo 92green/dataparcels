@@ -2,6 +2,7 @@
 
 import type Parcel from '../parcel/Parcel';
 import type ParcelId from '../parcelId/ParcelId';
+import type Treeshare from '../treeshare/Treeshare';
 
 export type ParcelData = {
 	value: *,
@@ -17,7 +18,7 @@ export type ParcelConfig = {
 export type ParcelConfigInternal = {
 	child: *,
 	id: ParcelId,
-	registry: *,
+	treeshare: Treeshare,
 	parent?: Parcel
 };
 

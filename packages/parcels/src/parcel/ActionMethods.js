@@ -27,7 +27,8 @@ export default (_this: Parcel): Object => ({
             return;
         }
 
-        let parcelDataFromRegistry = _this._registry
+        let parcelDataFromRegistry = _this._treeshare
+            .registry
             .get(_this._id.id())
             .raw();
 
