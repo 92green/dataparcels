@@ -9,6 +9,13 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 import type Parcel from './Parcel';
 
 export default (_this: Parcel): Object => ({
+
+    // private methods
+    _applyModifiers: (): Parcel => {
+        return _this._modifiers.applyTo(_this);
+    },
+
+    // modify methods
     chain: (updater: Function): Parcel => {
         return updater(_this);
     },
@@ -54,6 +61,18 @@ export default (_this: Parcel): Object => ({
                         });
                     });
                 }
+            }),
+            _this._create
+        );
+    },
+
+    addDescendantModifier: (modifier: Function, glob: ?string): Parcel => {
+        return pipeWith(
+            _this._parcelData,
+            parcelData => ({
+                parcelData,
+                id: _this._id.pushModifier('am'),
+                modifiers: _this._modifiers.add(modifier, glob)
             }),
             _this._create
         );

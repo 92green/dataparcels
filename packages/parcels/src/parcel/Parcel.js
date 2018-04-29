@@ -6,6 +6,8 @@ import type {
 } from '../types/Types';
 import type Action from '../action/Action';
 
+import Modifiers from '../modifiers/Modifiers';
+
 import ActionMethods from './ActionMethods';
 import ChildParcelMethods from './ChildParcelMethods';
 import ElementParcelMethods from './ElementParcelMethods';
@@ -23,6 +25,7 @@ import map from 'unmutable/lib/map';
 type CreateParcelConfigType = {
     handleChange?: Function,
     id: ParcelId,
+    modifiers: Modifiers,
     parcelData: ParcelData,
     parent?: Parcel
 };
@@ -30,8 +33,9 @@ type CreateParcelConfigType = {
 const DEFAULT_CONFIG_INTERNAL = {
     child: undefined,
     id: new ParcelId(),
-    treeshare: undefined,
-    parent: undefined
+    modifiers: undefined,
+    parent: undefined,
+    treeshare: undefined
 };
 
 export default class Parcel {
@@ -43,6 +47,7 @@ export default class Parcel {
     _handleChange: Function;
     _parcelData: ParcelData;
     _id: ParcelId;
+    _modifiers: Modifiers;
     _treeshare: Treeshare;
     _actionBuffer: Action[] = [];
     _actionBufferOn: boolean = false;
@@ -132,6 +137,7 @@ export default class Parcel {
     modify: Function;
     modifyValue: Function;
     modifyChange: Function;
+    addDescendantModifier: Function;
 
     constructor(parcelConfig: ParcelConfig, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
@@ -142,8 +148,9 @@ export default class Parcel {
         let {
             child,
             id,
-            treeshare,
-            parent
+            modifiers,
+            parent,
+            treeshare
         } = _parcelConfigInternal || DEFAULT_CONFIG_INTERNAL;
 
         this._handleChange = handleChange;
@@ -156,6 +163,9 @@ export default class Parcel {
         // types
         this._parcelTypes = new ParcelTypes(value, parent && parent._parcelTypes);
         this._id = id.setTypeCode(this._parcelTypes.toTypeCode());
+
+        // modifiers
+        this._modifiers = modifiers || new Modifiers();
 
         // treeshare
         this._treeshare = treeshare || new Treeshare();
@@ -199,10 +209,11 @@ export default class Parcel {
                 child,
                 value
             },
+            modifiers = this._modifiers,
             parent
         } = createParcelConfig;
 
-        return new Parcel(
+        let parcel: Parcel = new Parcel(
             {
                 handleChange,
                 value
@@ -210,9 +221,14 @@ export default class Parcel {
             {
                 child,
                 id,
-                treeshare: this._treeshare,
-                parent
+                modifiers,
+                parent,
+                treeshare: this._treeshare
             }
         );
+
+        return parent
+            ? parcel._applyModifiers()
+            : parcel;
     };
 }
