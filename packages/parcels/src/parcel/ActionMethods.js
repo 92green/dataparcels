@@ -37,6 +37,10 @@ export default (_this: Parcel): Object => ({
             parcel = _this._create({
                 parcelData: Reducer(parcelDataFromRegistry, action)
             });
+
+            if(_this._rootModifier && _this.id() === "^") {
+                parcel = _this._rootModifier(parcel);
+            }
         }
 
         _this._handleChange(parcel, [].concat(action));

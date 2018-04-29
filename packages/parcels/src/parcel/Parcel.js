@@ -2,7 +2,8 @@
 import type {
     ParcelData,
     ParcelConfig,
-    ParcelConfigInternal
+    ParcelConfigInternal,
+    CreateParcelConfigType
 } from '../types/Types';
 import type Action from '../action/Action';
 
@@ -22,14 +23,6 @@ import Treeshare from '../treeshare/Treeshare';
 
 import map from 'unmutable/lib/map';
 
-type CreateParcelConfigType = {
-    handleChange?: Function,
-    id: ParcelId,
-    modifiers: Modifiers,
-    parcelData: ParcelData,
-    parent?: Parcel
-};
-
 const DEFAULT_CONFIG_INTERNAL = {
     child: undefined,
     id: new ParcelId(),
@@ -46,6 +39,7 @@ export default class Parcel {
 
     _handleChange: Function;
     _parcelData: ParcelData;
+    _rootModifier: ?Function;
     _id: ParcelId;
     _modifiers: Modifiers;
     _treeshare: Treeshare;
@@ -142,6 +136,7 @@ export default class Parcel {
     constructor(parcelConfig: ParcelConfig, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
             handleChange,
+            rootModifier,
             value
         } = parcelConfig;
 

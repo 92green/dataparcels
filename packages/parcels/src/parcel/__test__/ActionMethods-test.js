@@ -82,3 +82,21 @@ test('Parcel.batch() should not fire handleChange if no actions called within ba
     new Parcel(data).batch((parcel) => {});
     tt.false(handleChangeCalled);
 });
+
+// test('Parcel should apply rootModifier', (tt: Object) => {
+//     tt.plan(1);
+
+//     var data = {
+//         value: 123,
+//         handleChange: (parcel) => {
+//             tt.is(parcel.id(), "&mv&", "id() of parcel given in handleChange proves that rootModifier have been applied already");
+//         },
+//         rootModifier: (parcel) => parcel.modifyValue(ii => ii)
+//     };
+
+//     let parcel = new Parcel(data);
+//     tt.is(parcel.id(), "&mv&", "id() of constructed parcel proves that rootModifier have been applied already");
+//     parcel.onChange(456);
+// });
+
+// PROBLEM TODO - how can new Parcel() auto apply rootModifier? Is a parcel factory necessary?

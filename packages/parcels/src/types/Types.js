@@ -13,7 +13,8 @@ export type ParcelData = {
 
 export type ParcelConfig = {
 	handleChange: Function,
-	value: *
+	value: *,
+	rootModifier?: Function
 };
 
 export type ParcelConfigInternal = {
@@ -22,6 +23,14 @@ export type ParcelConfigInternal = {
 	modifiers?: Modifiers,
 	parent?: Parcel,
 	treeshare: Treeshare
+};
+
+export type CreateParcelConfigType = {
+    handleChange?: Function,
+    id: ParcelId,
+    modifiers: Modifiers,
+    parcelData: ParcelData,
+    parent?: Parcel
 };
 
 export type Key = string;
