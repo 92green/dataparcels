@@ -1,4 +1,8 @@
 // @flow
+import type {
+    ModifierFunction,
+    ModifierObject
+} from '../type/Types';
 
 import Action from '../action/Action';
 import strip from '../parcelData/strip';
@@ -66,13 +70,19 @@ export default (_this: Parcel): Object => ({
         );
     },
 
-    addDescendantModifier: (modifier: Function, glob: ?string): Parcel => {
+    addPreModifier: (modifier: ModifierFunction): Parcel => {
+        _this._treeshare.setPreModifier(modifier);
+        return modifier(_this);
+    },
+
+    // TODO - non-descendent version
+    addDescendantModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
         return pipeWith(
             _this._parcelData,
             parcelData => ({
                 parcelData,
-                id: _this._id.pushModifier('am'),
-                modifiers: _this._modifiers.add(modifier, glob)
+                id: _this._id.pushModifier('adm'),
+                modifiers: _this._modifiers.add(modifier)
             }),
             _this._create
         );

@@ -75,7 +75,7 @@ test('Parcel.batch() should not fire handleChange if no actions called within ba
     var data = {
         value: 123,
         handleChange: (parcel) => {
-            handleChangeCalled = true; 
+            handleChangeCalled = true;
         }
     };
 
@@ -83,20 +83,21 @@ test('Parcel.batch() should not fire handleChange if no actions called within ba
     tt.false(handleChangeCalled);
 });
 
-// test('Parcel should apply rootModifier', (tt: Object) => {
-//     tt.plan(1);
+test('Parcel should apply preModifier', (tt: Object) => {
+    tt.plan(4);
 
-//     var data = {
-//         value: 123,
-//         handleChange: (parcel) => {
-//             tt.is(parcel.id(), "&mv&", "id() of parcel given in handleChange proves that rootModifier have been applied already");
-//         },
-//         rootModifier: (parcel) => parcel.modifyValue(ii => ii)
-//     };
+    var data = {
+        value: 123,
+        handleChange: (parcel) => {
+            tt.is(parcel.id(), "&uv&", "id() of handleChange parcel proves that preModifier have been applied already");
+            tt.is(parcel.value(), 457, "handleChange parcel value proves that modifier has been applied");
+        }
+    };
 
-//     let parcel = new Parcel(data);
-//     tt.is(parcel.id(), "&mv&", "id() of constructed parcel proves that rootModifier have been applied already");
-//     parcel.onChange(456);
-// });
+    let parcel = new Parcel(data)
+        .addPreModifier((parcel) => parcel.modifyValue(ii => ii + 1));
 
-// PROBLEM TODO - how can new Parcel() auto apply rootModifier? Is a parcel factory necessary?
+    tt.is(parcel.id(), "&uv&", "id() of constructed parcel proves that preModifier have been applied already");
+    tt.is(parcel.value(), 124, "constructed parcel value proves that modifier has been applied");
+    parcel.onChange(456);
+});

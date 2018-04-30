@@ -5,6 +5,7 @@ import type {
     ParcelConfigInternal,
     CreateParcelConfigType
 } from '../types/Types';
+
 import type Action from '../action/Action';
 
 import Modifiers from '../modifiers/Modifiers';
@@ -39,13 +40,13 @@ export default class Parcel {
 
     _handleChange: Function;
     _parcelData: ParcelData;
-    _rootModifier: ?Function;
     _id: ParcelId;
     _modifiers: Modifiers;
     _treeshare: Treeshare;
     _actionBuffer: Action[] = [];
     _actionBufferOn: boolean = false;
     _parcelTypes: ParcelTypes;
+    _applyModifiers: Function;
 
     //
     // private methods
@@ -131,12 +132,12 @@ export default class Parcel {
     modify: Function;
     modifyValue: Function;
     modifyChange: Function;
+    addPreModifier: Function;
     addDescendantModifier: Function;
 
     constructor(parcelConfig: ParcelConfig, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
             handleChange,
-            rootModifier,
             value
         } = parcelConfig;
 
@@ -197,8 +198,12 @@ export default class Parcel {
     //
 
     _create: Function = (createParcelConfig: CreateParcelConfigType): Parcel => {
+        let defaultHandleChange = this._skipReducer((parcel: Parcel, action: Action|Action[]) => {
+            this.dispatch(action);
+        });
+
         let {
-            handleChange = this._handleChange,
+            handleChange = defaultHandleChange,
             id = this._id,
             parcelData: {
                 child,

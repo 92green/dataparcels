@@ -1,32 +1,33 @@
 // @flow
-
+import type {
+    ModifierFunction,
+    ModifierObject
+} from '../types/Types';
 import type Parcel from '../parcel/Parcel';
 
 import filter from 'unmutable/lib/filter';
+import map from 'unmutable/lib/map';
 import push from 'unmutable/lib/push';
 import reduce from 'unmutable/lib/reduce';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-type Modifier = {
-    glob?: string,
-    modifier: Function
-};
-
 export default class Modifiers {
 
-    _modifiers: Modifier[];
+    _modifiers: Array<ModifierObject>;
 
-    constructor(modifiers: Modifier[] = []) {
+    constructor(modifiers: Array<ModifierFunction|ModifierObject> = []) {
         this._modifiers = modifiers;
     }
 
-    add: Function = (modifier: Function, glob: ?string): Modifiers => {
+    _toModifierObject: Function = (modifier: ModifierFunction|ModifierObject): ModifierObject => {
+        return typeof modifier === "function" ? {modifier} : modifier;
+    };
+
+    add: Function = (modifier: ModifierFunction|ModifierObject): Modifiers => {
+        // TODO - add validation
         return pipeWith(
             this._modifiers,
-            push({
-                glob,
-                modifier
-            }),
+            push(this._toModifierObject(modifier)),
             ii => new Modifiers(ii)
         );
     };
@@ -36,9 +37,22 @@ export default class Modifiers {
             this._modifiers,
             filter(modifier => !modifier.glob || true), // TODO - add glob matching
             reduce(
-                (parcel, modifier) => modifier(parcel),
+                (parcel, modifier) => modifier.modifier(parcel),
                 parcel
             )
         );
     }
+
+    isEmpty: Function = (): boolean => {
+        return this._modifiers.length === 0;
+    };
+
+    set: Function = (modifiers: Array<ModifierFunction|ModifierObject>): Modifiers => {
+        // TODO - add validation
+        return pipeWith(
+            modifiers,
+            map(this._toModifierObject),
+            ii => new Modifiers(ii)
+        );
+    };
 }

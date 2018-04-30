@@ -38,8 +38,8 @@ export default (_this: Parcel): Object => ({
                 parcelData: Reducer(parcelDataFromRegistry, action)
             });
 
-            if(_this._rootModifier && _this.id() === "^") {
-                parcel = _this._rootModifier(parcel);
+            if(_this._treeshare.hasPreModifier() && _this.id() === "^") {
+                parcel = _this._treeshare.preModifier.applyTo(parcel);
             }
         }
 
