@@ -9,7 +9,7 @@ export default class ExampleSimpleObject extends React.Component {
     constructor(props) {
         super(props);
 
-        let parcel = Parcel({
+        let parcel = new Parcel({
             value: "A value",
             handleChange: (parcel) => this.setState({parcel})
         });
@@ -21,25 +21,23 @@ export default class ExampleSimpleObject extends React.Component {
         let {parcel} = this.state;
         /*nosrc*/
         const description = <Box>
-            <Paragraph>To make a parcel, call <Code>Parcel()</Code> and pass an object with the following contents:</Paragraph>
+            <Paragraph>To make a parcel, call <Code>new Parcel()</Code> and pass an object with the following contents:</Paragraph>
             <Box modifier="padding">
-                {/*<List element="ol" modifier="ordered">
+                <List element="ol" modifier="ordered">
                     <ListItem modifier="marginKilo">
                         <Text element="p">
-                            <Text modifier="strong">parcelData:</Text> <Text modifier="primary">Object {"{"}value: *, ?meta: Object{"}"}</Text>
+                            <Text modifier="strong">value:</Text> <Text modifier="primary">*</Text>
                         </Text>
-                        <Text element="p">An object containing the parcel's <Code>value</Code> as a property.</Text>
-                        <Text element="p">It may also have a <Code>meta</Code> property, we'll get to that in a minute.</Text>
+                        <Text element="p">The value you want to manipulate.</Text>
                     </ListItem>
                     <ListItem modifier="marginKilo">
                         <Text element="p">
-                            <Text modifier="strong">handleChange:</Text> <Text modifier="primary">Function (newParcelData: *, action: Object) => {"{}"}</Text>
+                            <Text modifier="strong">handleChange:</Text> <Text modifier="primary">Function (newParcelData: *, action: Action) => {"{}"}</Text>
                         </Text>
-                        <Text element="p">A function that will be called when the parcel's value changes. The function will be passed the updated parcel data.</Text>
-                        <Text element="p">Do what you will with this function. Often you'll want to use it to store the data in state somewhere.</Text>
+                        <Text element="p">A function that will be called when the parcel's value changes. The function will be passed a new parcel containing the updated value.</Text>
+                        <Text element="p">Do what you will with this function. When using React you'll likely want to store the new parcel in state somewhere.</Text>
                     </ListItem>
-                </List>*/}
-                TODO
+                </List>
             </Box>
             <Paragraph>Your new parcel contains your value, which you can retrieve by calling <Code>.value()</Code>.</Paragraph>
             <Paragraph>You can request to change the value by calling <Code>.onChange(newValue)</Code>. This wont change the value directly but will call the parcel's <Code>handleChange</Code> function, which creates a new parcel containing your updated value. This becomes very useful with nested data structures, because parcels will call their parent's <Code>handleChange</Code> functions.</Paragraph>
