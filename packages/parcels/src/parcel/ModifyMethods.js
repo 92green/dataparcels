@@ -79,7 +79,7 @@ export default (_this: Parcel): Object => ({
         return pipeWith(
             modifier,
             _this.addDescendantModifier,
-            _this._modifiers.toModifierFunction(modifier)
+            parcel => parcel._applyModifiers()
         );
     },
 

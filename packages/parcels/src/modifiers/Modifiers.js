@@ -46,19 +46,19 @@ export default class Modifiers {
         }
         return glob
             .split('/')
-            .map(part => {
+            .map((part: string): string => {
                 let [name, type] = part.split(':');
                 if(!type) {
                     return `${name}:*`;
                 }
                 let types = type
                     .split('|')
-                    .sort((a, b) => {
+                    .sort((a: string, b: string): number => {
                         if (a < b) return -1;
                         else if (a > b) return 1;
                         return 0;
                     })
-                    .map(tt => {
+                    .map((tt: string): string => {
                         let typeSelector = TYPE_SELECTORS[tt];
                         if(!typeSelector) {
                             throw new Error(`"${tt}" is not a valid type selector. Choose one of ${typeSelector.join(", ")}`);
@@ -93,7 +93,7 @@ export default class Modifiers {
         let typedPathString = parcel._typedPathString();
         return pipeWith(
             this._modifiers,
-            filter(({modifier, glob}) => !glob || micromatch.isMatch(typedPathString, glob)),
+            filter(({glob}) => !glob || micromatch.isMatch(typedPathString, glob)),
             reduce(
                 (parcel, modifier) => modifier.modifier(parcel),
                 parcel
