@@ -1726,9 +1726,9 @@ bluebird@3.5.1, bluebird@^3.0.0, bluebird@^3.0.5, bluebird@^3.3.4, bluebird@^3.5
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
 
-blueflag-test@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/blueflag-test/-/blueflag-test-0.16.0.tgz#f24b0da89dddda6efb9d0ecafc6dce1f8b5a7e9f"
+blueflag-test@^0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/blueflag-test/-/blueflag-test-0.16.1.tgz#1e654f98efe15338016bcf17f914b7b06fd50eb8"
   dependencies:
     app-module-path "^2.2.0"
     ava "^0.25.0"
