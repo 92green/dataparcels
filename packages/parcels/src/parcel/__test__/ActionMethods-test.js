@@ -82,22 +82,3 @@ test('Parcel.batch() should not fire handleChange if no actions called within ba
     new Parcel(data).batch((parcel) => {});
     tt.false(handleChangeCalled);
 });
-
-test('Parcel should apply preModifier', (tt: Object) => {
-    tt.plan(4);
-
-    var data = {
-        value: 123,
-        handleChange: (parcel) => {
-            tt.is(parcel.id(), "&uv&", "id() of handleChange parcel proves that preModifier have been applied already");
-            tt.is(parcel.value(), 457, "handleChange parcel value proves that modifier has been applied");
-        }
-    };
-
-    let parcel = new Parcel(data)
-        .addPreModifier((parcel) => parcel.modifyValue(ii => ii + 1));
-
-    tt.is(parcel.id(), "&uv&", "id() of constructed parcel proves that preModifier have been applied already");
-    tt.is(parcel.value(), 124, "constructed parcel value proves that modifier has been applied");
-    parcel.onChange(456);
-});

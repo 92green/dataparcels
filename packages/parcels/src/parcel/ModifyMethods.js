@@ -31,7 +31,7 @@ export default (_this: Parcel): Object => ({
             updater,
             parcelData => ({
                 parcelData,
-                id: _this._id.pushModifier('ud')
+                id: _this._id.pushModifier('md')
             }),
             _this._create
         );
@@ -43,7 +43,7 @@ export default (_this: Parcel): Object => ({
             set('value', updater(_this._parcelData.value, _this)),
             parcelData => ({
                 parcelData,
-                id: _this._id.pushModifier('uv')
+                id: _this._id.pushModifier('mv')
             }),
             _this._create
         );
@@ -54,7 +54,7 @@ export default (_this: Parcel): Object => ({
             _this._parcelData,
             parcelData => ({
                 parcelData,
-                id: _this._id.pushModifier('ucd'),
+                id: _this._id.pushModifier('mc'),
                 handleChange: (newParcel: Parcel, actions: Action[]) => {
                     _this.batch((parcel: Parcel) => {
                         batcher({
@@ -75,13 +75,20 @@ export default (_this: Parcel): Object => ({
         return modifier(_this);
     },
 
-    // TODO - non-descendent version
+    addModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
+        return pipeWith(
+            modifier,
+            _this.addDescendantModifier,
+            _this._modifiers.toModifierFunction(modifier)
+        );
+    },
+
     addDescendantModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
         return pipeWith(
             _this._parcelData,
             parcelData => ({
                 parcelData,
-                id: _this._id.pushModifier('adm'),
+                id: _this._id.pushModifier('am'),
                 modifiers: _this._modifiers.add(modifier)
             }),
             _this._create

@@ -96,3 +96,59 @@ test('Parcel.modifyChange() should allow you to call apply to continue without m
         .modifyChange(({apply}) => apply())
         .onChange(456);
 });
+
+test('Parcel should addPreModifier', (tt: Object) => {
+    tt.plan(4);
+
+    var data = {
+        value: 123,
+        handleChange: (parcel) => {
+            tt.is(parcel.id(), "~mv", "id() of handleChange parcel proves that preModifier have been applied already");
+            tt.is(parcel.value(), 457, "handleChange parcel value proves that modifier has been applied");
+        }
+    };
+
+    let parcel = new Parcel(data)
+        .addPreModifier((parcel) => parcel.modifyValue(ii => ii + 1));
+
+    tt.is(parcel.id(), "~mv", "id() of constructed parcel proves that preModifier have been applied already");
+    tt.is(parcel.value(), 124, "constructed parcel value proves that modifier has been applied");
+    parcel.onChange(456);
+});
+
+
+test('Parcel should addModifier', (tt: Object) => {
+    var data = {
+        value: [1,2,3],
+        handleChange
+    };
+
+    let parcel = new Parcel(data)
+        .addModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
+
+    tt.is(parcel.id(), "~am/~mv", "id() of parcel proves that modifier has been applied already");
+    tt.deepEqual(parcel.value(), [1,2,3,4], "parcel value proves that modifier has been applied to current parcel");
+
+    let element = parcel.get(0);
+
+    tt.is(element.id(), "~am/~mv/#a/~mv", "id() of element parcel proves that modifier has been applied already");
+    tt.deepEqual(element.value(), 11, "element parcel value proves that modifier has been applied to current parcel");
+});
+
+test('Parcel should addDescendantModifier', (tt: Object) => {
+    var data = {
+        value: [1,2,3],
+        handleChange
+    };
+
+    let parcel = new Parcel(data)
+        .addDescendantModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
+
+    tt.is(parcel.id(), "~am", "id() of parcel proves that modifier has NOT been applied already");
+    tt.deepEqual(parcel.value(), [1,2,3], "parcel value proves that modifier has NOT been applied to current parcel");
+
+    let element = parcel.get(0);
+
+    tt.is(element.id(), "~am/#a/~mv", "id() of element parcel proves that modifier has been applied already");
+    tt.deepEqual(element.value(), 11, "element parcel value proves that modifier has been applied to current parcel");
+});

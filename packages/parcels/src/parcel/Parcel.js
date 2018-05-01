@@ -133,6 +133,7 @@ export default class Parcel {
     modifyValue: Function;
     modifyChange: Function;
     addPreModifier: Function;
+    addModifier: Function;
     addDescendantModifier: Function;
 
     constructor(parcelConfig: ParcelConfig, _parcelConfigInternal: ?ParcelConfigInternal) {

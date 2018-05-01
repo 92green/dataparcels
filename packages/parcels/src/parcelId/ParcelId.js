@@ -73,7 +73,7 @@ export default class ParcelId {
         let encodePush: Function = isElement
             ? push(key)
             : push(encodeURIComponent(`${key}`));
-            
+
         return pipeWith(
             this.toJS(),
             update('id', encodePush),
@@ -86,7 +86,7 @@ export default class ParcelId {
     pushModifier: Function = (modifierTypeId: string): ParcelId => {
         return pipeWith(
             this.toJS(),
-            update('id', push(`&${modifierTypeId}&`)),
+            update('id', push(`~${modifierTypeId}`)),
             this._create
         );
     };

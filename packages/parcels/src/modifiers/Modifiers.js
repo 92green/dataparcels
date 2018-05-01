@@ -19,7 +19,11 @@ export default class Modifiers {
         this._modifiers = modifiers;
     }
 
-    _toModifierObject: Function = (modifier: ModifierFunction|ModifierObject): ModifierObject => {
+    toModifierFunction: Function = (modifier: ModifierFunction|ModifierObject): ModifierFunction => {
+        return typeof modifier === "function" ? modifier : modifier.modifier;
+    };
+
+    toModifierObject: Function = (modifier: ModifierFunction|ModifierObject): ModifierObject => {
         return typeof modifier === "function" ? {modifier} : modifier;
     };
 
@@ -27,7 +31,7 @@ export default class Modifiers {
         // TODO - add validation
         return pipeWith(
             this._modifiers,
-            push(this._toModifierObject(modifier)),
+            push(this.toModifierObject(modifier)),
             ii => new Modifiers(ii)
         );
     };
@@ -51,7 +55,7 @@ export default class Modifiers {
         // TODO - add validation
         return pipeWith(
             modifiers,
-            map(this._toModifierObject),
+            map(this.toModifierObject),
             ii => new Modifiers(ii)
         );
     };
