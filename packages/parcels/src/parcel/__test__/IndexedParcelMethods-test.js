@@ -20,7 +20,8 @@ test('IndexedParcel.delete() should delete', tt => {
         child: [
             {key: "#b"},
             {key: "#c"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -96,7 +97,8 @@ test('IndexedParcel.insertBefore() should insertBefore', tt => {
             {key: "#d"},
             {key: "#b"},
             {key: "#c"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -152,7 +154,8 @@ test('IndexedParcel.insertAfter() should insertAfter', tt => {
             {key: "#b"},
             {key: "#d"},
             {key: "#c"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -208,7 +211,8 @@ test('IndexedParcel.push() should push', tt => {
             {key: "#b"},
             {key: "#c"},
             {key: "#d"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -246,7 +250,8 @@ test('IndexedParcel.pop() should pop', tt => {
         child: [
             {key: "#a"},
             {key: "#b"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -282,7 +287,8 @@ test('IndexedParcel.shift() should shift', tt => {
         child: [
             {key: "#b"},
             {key: "#c"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -319,7 +325,8 @@ test('IndexedParcel.swap() should swap', tt => {
             {key: "#c"},
             {key: "#b"},
             {key: "#a"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -358,7 +365,8 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
             {key: "#b"},
             {key: "#a"},
             {key: "#c"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -410,7 +418,8 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
             {key: "#b"},
             {key: "#a"},
             {key: "#c"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {
@@ -462,7 +471,8 @@ test('IndexedParcel.unshift() should unshift', tt => {
             {key: "#a"},
             {key: "#b"},
             {key: "#c"}
-        ]
+        ],
+        meta: {}
     };
 
     var expectedAction = {

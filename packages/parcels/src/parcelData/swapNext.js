@@ -1,4 +1,8 @@
 // @flow
+import type {
+    Key,
+    ParcelData
+} from '../types/Types';
 
 import decodeHashKey from './decodeHashKey';
 import wrapNumber from '../util/wrapNumber';

@@ -1,4 +1,5 @@
 // @flow
+import type {ParcelData} from '../types/Types';
 
 import parcelGet from './get';
 import map from 'unmutable/lib/map';

@@ -18,7 +18,8 @@ test('getIn should work with objects', (tt: Object) => {
     tt.deepEqual(expectedParcelData, getIn(['a', 'b'])(parcelData));
 
     let expectedParcelData2 = {
-        value: undefined
+        value: undefined,
+        key: 'z'
     };
 
     tt.deepEqual(expectedParcelData2, getIn(['z', 'b'])(parcelData));

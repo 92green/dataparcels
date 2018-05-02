@@ -79,6 +79,7 @@ export default class Parcel {
     value: Function;
     spread: Function;
     spreadDOM: Function;
+    meta: Function;
     // - parent parcel methods
     has: Function;
     get: Function;
@@ -99,6 +100,8 @@ export default class Parcel {
     updateSelf: Function;
     onChange: Function;
     onChangeDOM: Function;
+    setMeta: Function;
+    updateMeta: Function;
     // - parent parcel methods
     set: Function;
     setIn: Function;
@@ -154,7 +157,8 @@ export default class Parcel {
         this._parcelData = {
             value,
             child,
-            key: id.key()
+            key: id.key(),
+            meta: {}
         };
 
         // types

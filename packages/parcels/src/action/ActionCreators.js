@@ -71,6 +71,15 @@ const pop: Function = (): Action => {
     });
 };
 
+const setMeta: Function = (value: *): Action => {
+    return new Action({
+        type: "setMeta",
+        payload: {
+            value
+        }
+    });
+};
+
 const setSelf: Function = (value: *): Action => {
     return new Action({
         type: "set",
@@ -149,6 +158,7 @@ export default {
     insertBeforeSelf,
     push,
     pop,
+    setMeta,
     setSelf,
     shift,
     swap,
