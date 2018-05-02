@@ -5,7 +5,7 @@ import type {
 } from '../types/Types';
 import type Parcel from '../parcel/Parcel';
 
-import micromatch from 'micromatch';
+import minimatch from 'minimatch';
 
 import filter from 'unmutable/lib/filter';
 import map from 'unmutable/lib/map';
@@ -96,7 +96,7 @@ export default class Modifiers {
         let typedPathString = parcel._typedPathString();
         return pipeWith(
             this._modifiers,
-            filter(({match}) => !match || micromatch.isMatch(typedPathString, match)),
+            filter(({match}) => !match || minimatch(typedPathString, match)),
             reduce(
                 (parcel, modifier) => modifier.modifier(parcel),
                 parcel
