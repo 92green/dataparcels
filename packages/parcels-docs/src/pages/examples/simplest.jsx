@@ -2,7 +2,7 @@ import React from 'react';
 import Parcel from 'parcels';
 /*nosrc*/
 import {Box, Code, List, ListItem, Paragraph, Text} from 'obtuse';
-import Example from '../../components/Navigation2';
+import Example from '../../components/Example';
 /*endnosrc*/
 
 export default class ExampleSimpleObject extends React.Component {

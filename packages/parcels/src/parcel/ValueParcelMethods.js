@@ -37,6 +37,10 @@ export default (_this: Parcel): Object => ({
         onChange: _this.onChangeDOM
     }),
 
+    meta: (metaKey: ?string = undefined): * => {
+        return "?";
+    },
+
     // change methods
 
     setSelf: (value: *) => {

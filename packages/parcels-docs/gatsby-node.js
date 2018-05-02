@@ -149,3 +149,15 @@ general:
 exports.onPostBuild = () => {
     fs.writeFileSync(`${__dirname}/public/circle.yml`, circleYml);
 }
+
+exports.onCreatePage = async ({ page, boundActionCreators }) => {
+   const { createPage } = boundActionCreators;
+
+   return new Promise((resolve, reject) => {
+       if(page.path.match(/^\/examples/)) {
+           page.layout = "fullwidth";
+           createPage(page);
+       }
+       resolve();
+   });
+};

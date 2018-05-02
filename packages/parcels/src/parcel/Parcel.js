@@ -79,6 +79,7 @@ export default class Parcel {
     value: Function;
     spread: Function;
     spreadDOM: Function;
+    meta: Function;
     // - parent parcel methods
     has: Function;
     get: Function;
@@ -99,6 +100,7 @@ export default class Parcel {
     updateSelf: Function;
     onChange: Function;
     onChangeDOM: Function;
+    setMeta: Function;
     // - parent parcel methods
     set: Function;
     setIn: Function;
@@ -199,12 +201,8 @@ export default class Parcel {
     //
 
     _create: Function = (createParcelConfig: CreateParcelConfigType): Parcel => {
-        let defaultHandleChange = this._skipReducer((parcel: Parcel, action: Action|Action[]) => {
-            this.dispatch(action);
-        });
-
         let {
-            handleChange = defaultHandleChange,
+            handleChange,
             id = this._id,
             parcelData: {
                 child,
@@ -213,6 +211,12 @@ export default class Parcel {
             modifiers = this._modifiers,
             parent
         } = createParcelConfig;
+
+        if(!handleChange) {
+            handleChange = this._skipReducer((parcel: Parcel, action: Action|Action[]) => {
+                this.dispatch(action);
+            });
+        }
 
         let parcel: Parcel = new Parcel(
             {
