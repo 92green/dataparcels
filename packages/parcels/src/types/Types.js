@@ -7,8 +7,9 @@ import type Treeshare from '../treeshare/Treeshare';
 
 export type ParcelData = {
 	value: *,
-	child?: *,
-	key: string
+	child: *,
+	key: string,
+	meta: Object
 };
 
 export type ParcelConfig = {

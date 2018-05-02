@@ -38,7 +38,8 @@ export default (_this: Parcel): Object => ({
     }),
 
     meta: (metaKey: ?string = undefined): * => {
-        return "?";
+        let {meta} = _this._parcelData;
+        return metaKey ? meta[metaKey] : {...meta};
     },
 
     // change methods
@@ -57,5 +58,14 @@ export default (_this: Parcel): Object => ({
 
     onChangeDOM: (event: Object) => {
         _this.onChange(event.target.value);
+    },
+
+    setMeta: (partialMeta: Object) => {
+        _this.dispatch(ActionCreators.setMeta(partialMeta));
+    },
+
+    updateMeta: (updater: Function) => {
+        let {meta} = _this._parcelData;
+        _this.setMeta(updater(meta));
     }
 });

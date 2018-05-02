@@ -1,4 +1,9 @@
 // @flow
+import type {
+    Key,
+    ParcelData
+} from '../types/Types';
+
 import decodeHashKey from './decodeHashKey';
 import updateChild from './updateChild';
 import updateChildKeys from './updateChildKeys';

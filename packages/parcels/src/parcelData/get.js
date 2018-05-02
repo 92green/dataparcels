@@ -1,6 +1,5 @@
 // @flow
 import type {
-    Index,
     Key,
     ParcelData
 } from '../types/Types';
@@ -12,7 +11,7 @@ import updateChildKeys from './updateChildKeys';
 import getIn from 'unmutable/lib/getIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index, notSetValue: * = undefined) => (parcelData: ParcelData): ParcelData => {
+export default (key: Key, notSetValue: * = undefined) => (parcelData: ParcelData): ParcelData => {
 
     if(!parcelData.child) {
         parcelData = pipeWith(

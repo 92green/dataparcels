@@ -1,4 +1,9 @@
 // @flow
+import type {
+    Index,
+    Key,
+    ParcelData
+} from '../types/Types';
 
 import clear from 'unmutable/lib/clear';
 import del from 'unmutable/lib/delete';
@@ -32,7 +37,7 @@ export default overload({
             )
         };
     },
-    ["1"]: () => (key: Key) => (parcelData: ParcelData): ParcelData => {
+    ["1"]: () => (key: Key|Index) => (parcelData: ParcelData): ParcelData => {
         let {value} = parcelData;
 
         if(!isValueObject(value)) {

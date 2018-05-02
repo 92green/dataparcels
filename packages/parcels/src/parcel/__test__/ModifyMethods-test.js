@@ -37,7 +37,8 @@ test('Parcel.modify() should return a new parcel with updated parcelData', (tt: 
 
     var expectedData = {
         value: "???",
-        key: "^"
+        key: "^",
+        meta: {}
     };
     tt.deepEqual(expectedData, updated);
 });
@@ -58,7 +59,8 @@ test('Parcel.modifyValue() should return a new parcel with updated parcelData', 
 
     var expectedData = {
         value: 124,
-        key: "#a"
+        key: "#a",
+        meta: {}
     };
     tt.deepEqual(expectedData, updated);
 });

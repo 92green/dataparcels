@@ -20,7 +20,7 @@
     "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore **/*-test.js"
   },
   "dependencies": {
-    "micromatch": "^3.1.10",
+    "minimatch": "^3.0.4",
     "unmutable": "^0.26.0"
   },
   "devDependencies": {

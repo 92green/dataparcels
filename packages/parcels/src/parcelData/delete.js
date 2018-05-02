@@ -1,4 +1,6 @@
 // @flow
+import type {Key} from '../types/Types';
+
 import del from 'unmutable/lib/delete';
 import update from 'unmutable/lib/update';
 import pipe from 'unmutable/lib/util/pipe';

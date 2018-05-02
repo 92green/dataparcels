@@ -1,4 +1,5 @@
 // @flow
+import type {ParcelData} from '../types/Types';
 
 import updateChildKeys from './updateChildKeys';
 
