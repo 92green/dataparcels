@@ -70,7 +70,7 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
         value: 123,
         handleChange: (parcel: Parcel) => {
             let {value} = parcel.data();
-            tt.is(value, 457, "original handleChange should receive updated value");
+            tt.is(457, value, "original handleChange should receive updated value");
         }
     };
 
@@ -88,7 +88,7 @@ test('Parcel.modifyChange() should allow you to call apply to continue without m
         value: 123,
         handleChange: (parcel: Parcel) => {
             let {value} = parcel.data();
-            tt.is(value, 456, "original handleChange should receive updated value");
+            tt.is(456, value, "original handleChange should receive updated value");
         }
     };
 
@@ -111,8 +111,8 @@ test('Parcel should addPreModifier', (tt: Object) => {
     let parcel = new Parcel(data)
         .addPreModifier((parcel) => parcel.modifyValue(ii => ii + 1));
 
-    tt.is(parcel.id(), "~mv", "id() of constructed parcel proves that preModifier have been applied already");
-    tt.is(parcel.value(), 124, "constructed parcel value proves that modifier has been applied");
+    tt.is("~mv", parcel.id(), "id() of constructed parcel proves that preModifier have been applied already");
+    tt.is(124, parcel.value(), "constructed parcel value proves that modifier has been applied");
     parcel.onChange(456);
 });
 
@@ -126,13 +126,13 @@ test('Parcel should addModifier', (tt: Object) => {
     let parcel = new Parcel(data)
         .addModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
 
-    tt.is(parcel.id(), "~am/~mv", "id() of parcel proves that modifier has been applied already");
-    tt.deepEqual(parcel.value(), [1,2,3,4], "parcel value proves that modifier has been applied to current parcel");
+    tt.is("~am/~mv", parcel.id(), "id() of parcel proves that modifier has been applied already");
+    tt.deepEqual([1,2,3,4], parcel.value(), "parcel value proves that modifier has been applied to current parcel");
 
     let element = parcel.get(0);
 
-    tt.is(element.id(), "~am/~mv/#a/~mv", "id() of element parcel proves that modifier has been applied already");
-    tt.deepEqual(element.value(), 11, "element parcel value proves that modifier has been applied to current parcel");
+    tt.is("~am/~mv/#a/~mv", element.id(), "id() of element parcel proves that modifier has been applied already");
+    tt.deepEqual(11, element.value(), "element parcel value proves that modifier has been applied to current parcel");
 });
 
 test('Parcel should addDescendantModifier', (tt: Object) => {
@@ -144,16 +144,16 @@ test('Parcel should addDescendantModifier', (tt: Object) => {
     let parcel = new Parcel(data)
         .addDescendantModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
 
-    tt.is(parcel.id(), "~am", "id() of parcel proves that modifier has NOT been applied already");
-    tt.deepEqual(parcel.value(), [1,2,3], "parcel value proves that modifier has NOT been applied to current parcel");
+    tt.is("~am", parcel.id(), "id() of parcel proves that modifier has NOT been applied already");
+    tt.deepEqual([1,2,3], parcel.value(), "parcel value proves that modifier has NOT been applied to current parcel");
 
     let element = parcel.get(0);
 
-    tt.is(element.id(), "~am/#a/~mv", "id() of element parcel proves that modifier has been applied already");
-    tt.deepEqual(element.value(), 11, "element parcel value proves that modifier has been applied to current parcel");
+    tt.is("~am/#a/~mv", element.id(), "id() of element parcel proves that modifier has been applied already");
+    tt.deepEqual( 11,element.value(), "element parcel value proves that modifier has been applied to current parcel");
 });
 
-test('Parcel should addModifier with simple glob', (tt: Object) => {
+test('Parcel should addModifier with simple match', (tt: Object) => {
     var data = {
         value: {
             abc: 123,
@@ -165,17 +165,17 @@ test('Parcel should addModifier with simple glob', (tt: Object) => {
     let parcel = new Parcel(data)
         .addModifier({
             modifier: (parcel) => parcel.modifyValue(ii => ii + 1),
-            glob: "abc"
+            match: "abc"
         });
 
-    tt.is(parcel.get('abc').id(), "~am/abc/~mv", "id() of abc parcel proves that modifier has been applied already");
-    tt.is(parcel.get('abc').value(), 124, "abc parcel value proves that modifier has been applied");
+    tt.is("~am/abc/~mv", parcel.get('abc').id(), "id() of abc parcel proves that modifier has been applied already");
+    tt.is(124, parcel.get('abc').value(), "abc parcel value proves that modifier has been applied");
 
-    tt.is(parcel.get('def').id(), "~am/def", "id() of def parcel proves that modifier has NOT been applied");
-    tt.is(parcel.get('def').value(), 456, "def parcel value proves that modifier has NOT been applied");
+    tt.is("~am/def", parcel.get('def').id(), "id() of def parcel proves that modifier has NOT been applied");
+    tt.is(456, parcel.get('def').value(), "def parcel value proves that modifier has NOT been applied");
 });
 
-test('Parcel should addModifier with deep glob', (tt: Object) => {
+test('Parcel should addModifier with deep match', (tt: Object) => {
     var data = {
         value: {
             abc: {
@@ -189,12 +189,64 @@ test('Parcel should addModifier with deep glob', (tt: Object) => {
     let parcel = new Parcel(data)
         .addModifier({
             modifier: (parcel) => parcel.modifyValue(ii => ii + 1),
-            glob: "abc/ghi"
+            match: "abc/ghi"
         });
 
-    tt.is(parcel.getIn(['abc', 'ghi']).id(), "~am/abc/ghi/~mv", "id() of abc/ghi parcel proves that modifier has been applied already");
-    tt.is(parcel.getIn(['abc', 'ghi']).value(), 124, "abc/ghi parcel value proves that modifier has been applied");
+    tt.is("~am/abc/ghi/~mv", parcel.getIn(['abc', 'ghi']).id(), "id() of abc/ghi parcel proves that modifier has been applied already");
+    tt.is(124, parcel.getIn(['abc', 'ghi']).value(), "abc/ghi parcel value proves that modifier has been applied");
 
-    tt.is(parcel.get('def').id(), "~am/def", "id() of def parcel proves that modifier has NOT been applied");
-    tt.is(parcel.get('def').value(), 456, "def parcel value proves that modifier has NOT been applied");
+    tt.is("~am/def", parcel.get('def').id(), "id() of def parcel proves that modifier has NOT been applied");
+    tt.is(456, parcel.get('def').value(), "def parcel value proves that modifier has NOT been applied");
+});
+
+test('Parcel should addModifier with globstar', (tt: Object) => {
+    var data = {
+        value: {
+            abc: {
+                ghi: 123
+            },
+            def: 456
+        },
+        handleChange
+    };
+
+    let parcel = new Parcel(data)
+        .addModifier({
+            modifier: (parcel) => parcel.modifyValue(ii => typeof ii === "number" ?  ii + 1 : {...ii, woo: true}),
+            match: "**/*"
+        });
+
+    // TODO  id of undefined parcel!
+
+    tt.is("~am/~mv/abc/~mv", parcel.get('abc').id(), "id() of abc parcel proves that modifier has been applied already");
+
+    tt.is("~am/~mv/abc/~mv/ghi/~mv", parcel.getIn(['abc', 'ghi']).id(), "id() of abc/ghi parcel proves that modifier has been applied already");
+    tt.is(124, parcel.getIn(['abc', 'ghi']).value(), "abc/ghi parcel value proves that modifier has been applied");
+
+    tt.is("~am/~mv/def/~mv", parcel.get('def').id(), "id() of def parcel proves that modifier has been applied");
+    tt.is(457, parcel.get('def').value(), "def parcel value proves that modifier has been applied");
+});
+
+test('Parcel should addModifier with typed match', (tt: Object) => {
+    var data = {
+        value: {
+            abc: {
+                ghi: [1,2,3],
+                jkl: 123
+            },
+            def: 456,
+            mno: [4,5,6]
+        },
+        handleChange
+    };
+
+    let parcel = new Parcel(data)
+        .addModifier({
+            modifier: (parcel) => parcel.modifyValue(ii => [...ii, 999]),
+            match: "**/*:Indexed"
+        });
+
+    tt.deepEqual([1,2,3,999], parcel.getIn(['abc', 'ghi']).value(), "abc/ghi parcel value proves that modifier has been applied");
+    tt.is(456, parcel.get('def').value(), "def parcel value proves that modifier has NOT been applied");
+    tt.deepEqual([4,5,6,999], parcel.get('mno').value(), "mno parcel value proves that modifier has been applied");
 });

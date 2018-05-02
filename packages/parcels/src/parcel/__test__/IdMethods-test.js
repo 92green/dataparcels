@@ -12,10 +12,12 @@ test('Parcel.key() should return the Parcels key', (tt: Object) => {
         },
         handleChange
     };
-    tt.is(new Parcel(data).key(), "^");
-    tt.is(new Parcel(data).get("a").key(), "a");
-    tt.is(new Parcel(data).getIn(["a",0]).key(), "#a");
-    tt.is(new Parcel(data).get("something@@@").key(), "something@@@");
+    tt.is("^", new Parcel(data).key());
+    tt.is("a", new Parcel(data).get("a").key());
+    tt.is("#a", new Parcel(data).getIn(["a",0]).key());
+    tt.is("something@@@", new Parcel(data).get("something@@@").key());
+    // tt.is("b", new Parcel(data).get("b").key()); TODO
+    // tt.is("#a", new Parcel(data).getIn(["a",?????]).key()); TODO
 });
 
 test('Parcel.id() should return the Parcels id', (tt: Object) => {
@@ -26,10 +28,12 @@ test('Parcel.id() should return the Parcels id', (tt: Object) => {
         },
         handleChange
     };
-    tt.is(new Parcel(data).id(), "^");
-    tt.is(new Parcel(data).get("a").id(), "a");
-    tt.is(new Parcel(data).getIn(["a",0]).id(), "a/#a");
-    tt.is(new Parcel(data).get("something@@@").id(), "something%40%40%40");
+    tt.is("^", new Parcel(data).id());
+    tt.is("a", new Parcel(data).get("a").id());
+    tt.is("a/#a", new Parcel(data).getIn(["a",0]).id());
+    tt.is("something%40%40%40", new Parcel(data).get("something@@@").id());
+    // tt.is("b", new Parcel(data).get("b").id()); TODO
+    // tt.is("#a", new Parcel(data).getIn(["a",?????]).id()); TODO
     //tt.is(new Parcel(data).get("a").modifyValue(ii => ii).get(1).id(), "^.a.&uv&.#b"); TODO
 });
 
@@ -41,10 +45,12 @@ test('Parcel.path() should return the Parcels path', (tt: Object) => {
         },
         handleChange
     };
-    tt.deepEqual(new Parcel(data).path(), []);
-    tt.deepEqual(new Parcel(data).get("a").path(), ["a"]);
-    tt.deepEqual(new Parcel(data).getIn(["a",0]).path(), ["a","#a"]);
-    tt.deepEqual(new Parcel(data).get("something@@@").path(), ["something@@@"]);
+    tt.deepEqual([], new Parcel(data).path());
+    tt.deepEqual(["a"], new Parcel(data).get("a").path());
+    tt.deepEqual(["a","#a"], new Parcel(data).getIn(["a",0]).path());
+    tt.deepEqual(["something@@@"], new Parcel(data).get("something@@@").path());
+    // tt.is("b", new Parcel(data).get("b").path()); TODO
+    // tt.is("#a", new Parcel(data).getIn(["a",?????]).path()); TODO
     //tt.is(new Parcel(data).get("a").modifyValue(ii => ii).get(1).path(), "^.a.#b");
 });
 
@@ -56,9 +62,11 @@ test('Parcel._typedPathString() should return the Parcels typed path', (tt: Obje
         },
         handleChange
     };
-    tt.deepEqual(new Parcel(data)._typedPathString(), "^:ceiP");
-    tt.deepEqual(new Parcel(data).get("a")._typedPathString(), "a:CeIP");
-    tt.deepEqual(new Parcel(data).getIn(["a",0])._typedPathString(), "a:CeIP/#a:CEip");
-    tt.deepEqual(new Parcel(data).get("something@@@")._typedPathString(), "something%40%40%40:Ceip");
+    tt.deepEqual("^:ceiP", new Parcel(data)._typedPathString());
+    tt.deepEqual("a:CeIP", new Parcel(data).get("a")._typedPathString());
+    tt.deepEqual("a:CeIP/#a:CEip", new Parcel(data).getIn(["a",0])._typedPathString());
+    tt.deepEqual("something%40%40%40:Ceip", new Parcel(data).get("something@@@")._typedPathString());
+    // tt.is("b", new Parcel(data).get("b")._typedPathString()); TODO
+    // tt.is("#a", new Parcel(data).getIn(["a",?????])._typedPathString()); TODO
     //tt.is(new Parcel(data).get("a").modifyValue(ii => ii).get(1).path(), "^.a.#b");
 });

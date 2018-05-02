@@ -6,11 +6,11 @@ test('Modifiers should accept and return modifier objects', (tt: Object) => {
     let modifiers = [
         {
             modifier: () => {},
-            glob: undefined
+            match: undefined
         },
         {
             modifier: () => {},
-            glob: undefined
+            match: undefined
         }
     ];
 
@@ -21,7 +21,7 @@ test('Modifiers should turn modifier functions into modifier objects', (tt: Obje
     let modifier = () => {};
     let expectedModifier = [{
         modifier,
-        glob: undefined
+        match: undefined
     }];
 
     tt.deepEqual(expectedModifier, new Modifiers([modifier]).toJS());
@@ -37,11 +37,11 @@ test('Modifiers should add()', (tt: Object) => {
     let expectedModifier = [
         {
             modifier,
-            glob: undefined
+            match: undefined
         },
         {
             modifier: modifier2,
-            glob: undefined
+            match: undefined
         }
     ];
 
@@ -65,7 +65,7 @@ test('Modifiers should set()', (tt: Object) => {
     let expectedModifier = [
         {
             modifier: modifier2,
-            glob: undefined
+            match: undefined
         }
     ];
 
@@ -80,5 +80,6 @@ test('Modifiers should _processGlob()', (tt: Object) => {
     tt.is("*:*I*", new Modifiers()._processGlob("*:Indexed"), "_processGlob() can cope with a type");
     tt.is("*:*i*", new Modifiers()._processGlob("*:!Indexed"), "_processGlob() can cope with a not type");
     tt.is("hello:*C*P*", new Modifiers()._processGlob("hello:Parent|Child"), "_processGlob() can cope with a multi type");
+    tt.is("**/*:*", new Modifiers()._processGlob("**/*"), "_processGlob() can cope with a globstar");
     //tt.is(tt.throws(() => new Modifiers()._processGlob("*:Notexist"), Error).message, `"Notexist" is not a valid type selector.`); TODO!
 });

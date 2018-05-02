@@ -35,7 +35,7 @@ export type CreateParcelConfigType = {
 export type ModifierFunction = Function;
 
 export type ModifierObject = {
-    glob?: string,
+    match?: string,
     modifier: ModifierFunction
 };
 

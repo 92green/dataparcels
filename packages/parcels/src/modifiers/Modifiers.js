@@ -35,19 +35,22 @@ export default class Modifiers {
             modifiers,
             map(pipe(
                 this.toModifierObject,
-                update('glob', this._processGlob)
+                update('match', this._processGlob)
             ))
         );
     }
 
-    _processGlob: Function = (glob: string): ?string => {
-        if(!glob) {
+    _processGlob: Function = (match: string): ?string => {
+        if(!match) {
             return undefined;
         }
-        return glob
+        return match
             .split('/')
             .map((part: string): string => {
                 let [name, type] = part.split(':');
+                if(name === "**") {
+                    return name;
+                }
                 if(!type) {
                     return `${name}:*`;
                 }
@@ -93,7 +96,7 @@ export default class Modifiers {
         let typedPathString = parcel._typedPathString();
         return pipeWith(
             this._modifiers,
-            filter(({glob}) => !glob || micromatch.isMatch(typedPathString, glob)),
+            filter(({match}) => !match || micromatch.isMatch(typedPathString, match)),
             reduce(
                 (parcel, modifier) => modifier.modifier(parcel),
                 parcel
