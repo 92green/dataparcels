@@ -13,12 +13,6 @@ export default class ExampleObjectWithMeta extends React.Component {
                 address: "12 Hammy Grove",
                 email: "pumpersnipe@eudoramail.com"
             },
-            // meta: {
-            //     correct: {
-            //         address: true,
-            //         email: false
-            //     }
-            // },
             handleChange: (parcel) => this.setState({parcel})
         });
 
@@ -50,16 +44,22 @@ export default class ExampleObjectWithMeta extends React.Component {
             <div className="marginBottom2">
                 <label className="Label">address</label>
                 <input className="Input" type="text" {...address.spreadDOM()} />
-                <span className="Text Text--Button">Is this correct? {address.meta('correct') ? 'true' : 'false'}</span>
-                <button className="Button Button-inline" onClick={() => address.setMeta({correct: true})}>Set to true</button>
-                <button className="Button Button-inline" onClick={() => address.setMeta({correct: false})}>Set to false</button>
+                <div>
+                    <span className="Text Text-marginRight">Is this correct? {address.meta('correct') ? 'true' : 'false'}</span>
+                    <button className="Button Button-inline" onClick={() => address.setMeta({correct: !address.meta('correct')})}>Toggle</button>
+                </div>
+                <div>
+                    <span className="Text Text-marginRight">Is this a nice place? {address.meta('nice') ? 'true' : 'false'}</span>
+                    <button className="Button Button-inline" onClick={() => address.setMeta({nice: !address.meta('nice')})}>Toggle</button>
+                </div>
             </div>
             <div className="marginBottom2">
                 <label className="Label">email</label>
                 <input className="Input" type="text" {...email.spreadDOM()} />
-                <span className="Text Text--Button">Is this correct? {email.meta('correct') ? 'true' : 'false'}</span>
-                <button className="Button Button-inline" onClick={() => address.setMeta({correct: true})}>Set to true</button>
-                <button className="Button Button-inline" onClick={() => address.setMeta({correct: false})}>Set to false</button>
+                <div>
+                    <span className="Text Text-marginRight">Is this correct? {email.meta('correct') ? 'true' : 'false'}</span>
+                    <button className="Button Button-inline" onClick={() => email.setMeta({correct: !email.meta('correct')})}>Toggle</button>
+                </div>
             </div>
         </div>{/*nosrc*/}</Example>/*endnosrc*/;
     }

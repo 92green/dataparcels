@@ -570,6 +570,135 @@ test('Reducer should set by array key', tt => {
 });
 
 //
+// setMeta
+//
+
+test('Reducer should setMeta with empty keyPath', tt => {
+    var data = {
+        value: {
+            a: 1,
+            b: 2
+        },
+        meta: {}
+    };
+    var action = new Action({
+        type: "setMeta",
+        keyPath: [],
+        payload: {
+            meta: {
+                abc: 123
+            }
+        }
+    });
+    var expectedMeta = {
+        abc: 123
+    };
+
+    tt.deepEqual(expectedMeta, Reducer(data, action).meta);
+});
+
+test('Reducer should setMeta merge', tt => {
+    var data = {
+        value: {
+            a: 1,
+            b: 2
+        },
+        meta: {
+            def: 456
+        }
+    };
+    var action = new Action({
+        type: "setMeta",
+        keyPath: [],
+        payload: {
+            meta: {
+                abc: 123
+            }
+        }
+    });
+    var expectedMeta = {
+        abc: 123,
+        def: 456
+    };
+
+    tt.deepEqual(expectedMeta, Reducer(data, action).meta);
+});
+
+test('Reducer should setMeta with keyPath', tt => {
+    var data = {
+        value: {
+            a: 1,
+            b: 2
+        },
+        meta: {}
+    };
+    var action = new Action({
+        type: "setMeta",
+        keyPath: ["a"],
+        payload: {
+            meta: {
+                abc: 123
+            }
+        }
+    });
+    var expectedChild = {
+        a: {
+            key: "a",
+            meta: {
+                abc: 123
+            }
+        },
+        b: {
+            key: "b"
+        }
+    };
+
+    tt.deepEqual(expectedChild, Reducer(data, action).child);
+});
+
+test('Reducer should merge setMeta with keyPath', tt => {
+    var data = {
+        value: {
+            a: 1,
+            b: 2
+        },
+        child: {
+            a: {
+                key: "a",
+                meta: {
+                    abc: 123
+                }
+            }
+        },
+        meta: {}
+    };
+    var action = new Action({
+        type: "setMeta",
+        keyPath: ["a"],
+        payload: {
+            meta: {
+                def: 456
+            }
+        }
+    });
+    var expectedChild = {
+        a: {
+            key: "a",
+            meta: {
+                abc: 123,
+                def: 456
+            }
+        },
+        b: {
+            key: "b"
+        }
+    };
+
+    tt.deepEqual(expectedChild, Reducer(data, action).child);
+});
+
+
+//
 // shift
 //
 

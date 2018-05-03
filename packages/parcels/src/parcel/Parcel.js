@@ -24,8 +24,9 @@ import Treeshare from '../treeshare/Treeshare';
 
 import map from 'unmutable/lib/map';
 
-const DEFAULT_CONFIG_INTERNAL = {
+const DEFAULT_CONFIG_INTERNAL: ParcelConfigInternal = {
     child: undefined,
+    meta: {},
     id: new ParcelId(),
     modifiers: undefined,
     parent: undefined,
@@ -147,6 +148,7 @@ export default class Parcel {
 
         let {
             child,
+            meta,
             id,
             modifiers,
             parent,
@@ -158,7 +160,7 @@ export default class Parcel {
             value,
             child,
             key: id.key(),
-            meta: {}
+            meta
         };
 
         // types
@@ -208,7 +210,8 @@ export default class Parcel {
             id = this._id,
             parcelData: {
                 child,
-                value
+                value,
+                meta
             },
             modifiers = this._modifiers,
             parent
@@ -227,6 +230,7 @@ export default class Parcel {
             },
             {
                 child,
+                meta,
                 id,
                 modifiers,
                 parent,

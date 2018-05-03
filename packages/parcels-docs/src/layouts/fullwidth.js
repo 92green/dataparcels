@@ -4,6 +4,7 @@ import type {Node} from "react";
 import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import Navigation from '../components/Navigation';
+import {Column, Grid} from 'obtuse';
 
 import "./index.scss";
 
@@ -17,8 +18,14 @@ function TemplateWrapper(props: Object): Node {
                 //{name: "keywords", content: "sample, something"}
             ]}
         />
-        <Navigation allSitePage={allSitePage}/>
-        {props.children()}
+        <Grid modifier="auto">
+            <Column modifier="shrink padding">
+                <Navigation allSitePage={allSitePage}/>
+            </Column>
+            <Column modifier="padding">
+                {props.children()}
+            </Column>
+        </Grid>
     </div>;
 }
 

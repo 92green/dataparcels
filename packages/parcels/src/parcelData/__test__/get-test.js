@@ -11,6 +11,7 @@ test('get should work with objects', (tt: Object) => {
         }
     };
     let expectedParcelData = {
+        meta: {},
         value: {
             b: 1
         },
@@ -20,7 +21,8 @@ test('get should work with objects', (tt: Object) => {
     tt.deepEqual(expectedParcelData, get('a')(parcelData));
 
     let expectedParcelData2 = {
-        value: undefined
+        value: undefined,
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData2, get('z')(parcelData));
@@ -43,6 +45,7 @@ test('get should work with arrays that dont have keys yet', (tt: Object) => {
     };
 
     let expectedParcelData = {
+        meta: {},
         value: 'abc',
         key: "#a"
     };
@@ -56,6 +59,7 @@ test('get should work with arrays that dont have keys yet with hashkey', (tt: Ob
     };
 
     let expectedParcelData = {
+        meta: {},
         value: 'def',
         key: "#b"
     };
@@ -77,6 +81,7 @@ test('get should work with objects that already have children, and not recreate 
         }
     };
     let expectedParcelData = {
+        meta: {},
         value: {
             b: 1
         },
@@ -86,3 +91,4 @@ test('get should work with objects that already have children, and not recreate 
     tt.deepEqual(expectedParcelData, get('a')(parcelData));
 });
 
+// TODO test meta

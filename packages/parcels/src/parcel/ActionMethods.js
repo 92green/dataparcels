@@ -34,8 +34,9 @@ export default (_this: Parcel): Object => ({
 
         let parcel = null;
         if(!_this._handleChange.SKIP_REDUCER) {
+            let parcelData = Reducer(parcelDataFromRegistry, action);
             parcel = _this._create({
-                parcelData: Reducer(parcelDataFromRegistry, action)
+                parcelData
             });
 
             if(_this._treeshare.hasPreModifier() && _this.id() === "^") {

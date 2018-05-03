@@ -21,6 +21,7 @@
 }
 
 @include ObtuseBase;
+@include ObtuseLabel;
 @include ObtuseLink;
 @include ObtuseBox;
 @include ObtuseButton;
@@ -43,16 +44,6 @@
 
 body {
     padding: 2rem;
-}
-
-.Navigation {
-    @include BruceBreakpoint(72rem) {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        padding: 2rem;
-    }
 }
 
 .Code {

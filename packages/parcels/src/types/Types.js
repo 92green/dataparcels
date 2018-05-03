@@ -12,6 +12,13 @@ export type ParcelData = {
 	meta: Object
 };
 
+export type PartialParcelData = {
+    value?: *,
+    child?: *,
+    key?: string,
+    meta?: Object
+};
+
 export type ParcelConfig = {
 	handleChange: Function,
 	value: *
@@ -19,6 +26,7 @@ export type ParcelConfig = {
 
 export type ParcelConfigInternal = {
 	child: *,
+    meta: Object,
 	id: ParcelId,
 	modifiers?: Modifiers,
 	parent?: Parcel,

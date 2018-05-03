@@ -4,7 +4,6 @@ import type Parcel from './Parcel';
 import strip from '../parcelData/strip';
 import ActionCreators from '../action/ActionCreators';
 
-import del from 'unmutable/lib/delete';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel): Object => ({
@@ -18,8 +17,7 @@ export default (_this: Parcel): Object => ({
     data: (): ParcelData => {
         return pipeWith(
             _this._parcelData,
-            strip(),
-            del('handleChange')
+            strip()
         );
     },
 

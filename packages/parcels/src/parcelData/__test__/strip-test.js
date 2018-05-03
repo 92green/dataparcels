@@ -49,3 +49,26 @@ test('strip should remove undefined key', tt => {
     );
 });
 
+test('strip should remove empty meta', tt => {
+    tt.deepEqual(
+        strip()({
+            value: 123,
+            meta: {}
+        }),
+        {
+            value: 123
+        }
+    );
+});
+
+test('strip should remove undefined meta', tt => {
+    tt.deepEqual(
+        strip()({
+            value: 123,
+            meta: undefined
+        }),
+        {
+            value: 123
+        }
+    );
+});

@@ -71,11 +71,11 @@ const pop: Function = (): Action => {
     });
 };
 
-const setMeta: Function = (value: *): Action => {
+const setMeta: Function = (meta: *): Action => {
     return new Action({
         type: "setMeta",
         payload: {
-            value
+            meta
         }
     });
 };

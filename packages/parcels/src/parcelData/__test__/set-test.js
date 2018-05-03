@@ -19,7 +19,8 @@ test('set should work', (tt: Object) => {
             b: {key:"b"},
             c: {key:"c"},
             d: {key:"d"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, set('d', {value: 4})(parcelData));
@@ -41,7 +42,8 @@ test('set should work with existing child', (tt: Object) => {
             a: {key:"a", child: {z:1}},
             b: {key:"b"},
             c: {key:"c"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, set('a', {value: 4})(parcelData));
@@ -90,7 +92,8 @@ test('set should work when setting a child', (tt: Object) => {
             c: {
                 key:"c"
             }
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, set('a', {value: {d:4}, child: {d:{key: 'd'}} })(parcelData));
@@ -112,7 +115,8 @@ test('set should work with hashKey', (tt: Object) => {
             {key:"#a"},
             {key:"#b"},
             {key:"#c"}
-        ]
+        ],
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, set('#b', {value: 4})(parcelData));

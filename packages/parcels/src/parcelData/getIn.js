@@ -12,7 +12,8 @@ export default (keyPath: Array<Key>, notSetValue: * = undefined) => (parcelData:
         if(!has(key)(parcelData)) {
             return {
                 value: undefined,
-                key
+                key,
+                meta: {}
             };
         }
         parcelData = get(key, notSetValue)(parcelData);

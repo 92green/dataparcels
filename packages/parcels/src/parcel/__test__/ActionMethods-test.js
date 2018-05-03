@@ -28,10 +28,10 @@ test('Parcel._buffer() should buffer any actions and _flush() should dispatch th
     parcel._buffer();
     functionCalls.push("_buffer");
     parcel.onChange(456);
-    tt.deepEqual({value: 456}, parcel.data(), 'parcel contains correct data after first onchange');
+    tt.is(456, parcel.value(), 'parcel contains correct value after first onchange');
     functionCalls.push("onChange(456)");
     parcel.onChange(789);
-    tt.deepEqual({value: 789}, parcel.data(), 'parcel contains correct data after second onchange');
+    tt.is(789, parcel.value(), 'parcel contains correct value after second onchange');
     functionCalls.push("onChange(789)");
     parcel._flush();
 

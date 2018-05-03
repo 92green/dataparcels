@@ -11,6 +11,7 @@ import parcelInsertBefore from '../parcelData/insertBefore';
 import parcelPop from '../parcelData/pop';
 import parcelPush from '../parcelData/push';
 import parcelSet from '../parcelData/set';
+import parcelSetSelf from '../parcelData/setSelf';
 import parcelShift from '../parcelData/shift';
 import parcelSwap from '../parcelData/swap';
 import parcelSwapNext from '../parcelData/swapNext';
@@ -32,7 +33,15 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
         throw new Error(`Reducer must receive an Action`);
     }
 
-    let {keyPath} = action;
+    let {
+        keyPath,
+        payload: {
+            value,
+            meta
+        },
+        type
+    } = action;
+
     let keyPathLast: Key[] = last()(keyPath);
     let keyPathButLast: Key[] = butLast()(keyPath);
     let keyPathIsEmpty: boolean = isEmpty()(keyPath);
@@ -49,7 +58,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
         )
     );
 
-    switch(action.type) {
+    switch(type) {
         case "delete": {
             if(keyPathIsEmpty) {
                 throw new Error(`Delete actions must have a keyPath with at least one key`);
@@ -66,7 +75,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
             }
             return updateIn(
                 keyPathButLast,
-                parcelInsertAfter(keyPathLast, {value: action.payload.value})
+                parcelInsertAfter(keyPathLast, {value})
             );
         }
 
@@ -76,7 +85,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
             }
             return updateIn(
                 keyPathButLast,
-                parcelInsertBefore(keyPathLast, {value: action.payload.value})
+                parcelInsertBefore(keyPathLast, {value})
             );
         }
 
@@ -90,18 +99,29 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
         case "push": {
             return updateIn(
                 keyPath,
-                parcelPush({value: action.payload.value})
+                parcelPush({value})
             );
         }
 
         case "set": {
             if(keyPathIsEmpty) {
-                return {value: action.payload.value};
+                return parcelSetSelf({value})(parcelData);
             }
 
             return updateIn(
                 keyPathButLast,
-                parcelSet(keyPathLast, {value: action.payload.value})
+                parcelSet(keyPathLast, {value})
+            );
+        }
+
+        case "setMeta": {
+            if(keyPathIsEmpty) {
+                return parcelSetSelf({meta})(parcelData);
+            }
+
+            return updateIn(
+                keyPathButLast,
+                parcelSet(keyPathLast, {meta})
             );
         }
 
@@ -152,7 +172,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
         case "unshift": {
             return updateIn(
                 keyPath,
-                parcelUnshift({value: action.payload.value})
+                parcelUnshift({value})
             );
         }
     }

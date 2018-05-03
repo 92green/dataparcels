@@ -19,7 +19,8 @@ test('setIn should work', (tt: Object) => {
             b: {key:"b"},
             c: {key:"c"},
             d: {key:"d"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, setIn(['d'], {value: 4})(parcelData));
@@ -41,7 +42,8 @@ test('setIn should work with existing child', (tt: Object) => {
             a: {key:"a", child: {z:1}},
             b: {key:"b"},
             c: {key:"c"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, setIn(['a'], {value: 4})(parcelData));
@@ -76,11 +78,13 @@ test('setIn should work deeply', (tt: Object) => {
                     d: {
                         key: "d"
                     }
-                }
+                },
+                meta: {} // TODO this might be wrong - should set() make meta: {} s?
             },
             b: {key:"b"},
             c: {key:"c"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, setIn(['a', 'd'], {value: 4})(parcelData));
@@ -124,11 +128,13 @@ test('setIn should work deeply with existing child', (tt: Object) => {
                     d: {
                         key: "d"
                     }
-                }
+                },
+                meta: {} // TODO this might be wrong - should set() make meta: {} s?
             },
             b: {key:"b"},
             c: {key:"c"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, setIn(['a', 'd'], {value: 4})(parcelData));

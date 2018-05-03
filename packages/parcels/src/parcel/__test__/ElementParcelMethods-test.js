@@ -22,8 +22,7 @@ test('ElementParcel.insertBeforeSelf() should insert', tt => {
             {key: "#d"},
             {key: "#b"},
             {key: "#c"}
-        ],
-        meta: {}
+        ]
     };
 
     var expectedAction = {
@@ -83,8 +82,7 @@ test('ElementParcel.insertAfterSelf() should insert', tt => {
             {key: "#b"},
             {key: "#d"},
             {key: "#c"}
-        ],
-        meta: {}
+        ]
     };
 
     var expectedAction = {
@@ -143,8 +141,7 @@ test('ElementParcel.swapWithSelf() should swap', tt => {
             {key: "#c"},
             {key: "#b"},
             {key: "#a"}
-        ],
-        meta: {}
+        ]
     };
 
     var expectedAction = {
@@ -185,8 +182,7 @@ test('ElementParcel.swapNextWithSelf() should swapNext', tt => {
             {key: "#b"},
             {key: "#a"},
             {key: "#c"}
-        ],
-        meta: {}
+        ]
     };
 
     var expectedAction = {
@@ -240,8 +236,7 @@ test('ElementParcel.swapPrevWithSelf() should swapPrev', tt => {
             {key: "#b"},
             {key: "#a"},
             {key: "#c"}
-        ],
-        meta: {}
+        ]
     };
 
     var expectedAction = {

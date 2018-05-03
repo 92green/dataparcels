@@ -12,8 +12,7 @@ test('Parcel.data() should return the Parcels data', (tt: Object) => {
 
     var expectedData = {
         key: '^',
-        value: 123,
-        meta: {}
+        value: 123
     };
 
     tt.deepEqual(expectedData, new Parcel(data).data());
@@ -27,8 +26,7 @@ test('Parcel.data() should strip the returned Parcel data', (tt: Object) => {
 
     var expectedData = {
         key: '^',
-        value: 123,
-        meta: {}
+        value: 123
     };
 
     tt.deepEqual(new Parcel(data).data(), expectedData);
@@ -77,8 +75,7 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
 
     var expectedData = {
         value: 456,
-        key: '^',
-        meta: {}
+        key: '^'
     };
 
     var expectedAction = {
@@ -109,8 +106,7 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
 
     var expectedData = {
         value: 456,
-        key: '^',
-        meta: {}
+        key: '^'
     };
 
     var expectedAction = {
@@ -142,8 +138,7 @@ test('Parcel.onChange() should work like set that only accepts a single argument
 
     var expectedData = {
         value: 456,
-        key: '^',
-        meta: {}
+        key: '^'
     };
 
     var expectedAction = {
@@ -172,8 +167,7 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
 
     var expectedData = {
         value: 456,
-        key: '^',
-        meta: {}
+        key: '^'
     };
 
     var expectedAction = {
