@@ -1,9 +1,5 @@
 // @flow
-import type {
-    Index,
-    Key,
-    ParcelData
-} from '../types/Types';
+import type {ParcelData} from '../types/Types';
 
 import clear from 'unmutable/lib/clear';
 import del from 'unmutable/lib/delete';
@@ -13,7 +9,6 @@ import set from 'unmutable/lib/set';
 import update from 'unmutable/lib/update';
 import isValueObject from 'unmutable/lib/util/isValueObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
-import overload from 'unmutable/lib/util/overload';
 
 export default () => (parcelData: ParcelData): ParcelData => {
     let {value, child} = parcelData;

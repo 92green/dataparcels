@@ -11,7 +11,6 @@ import updateMeta from './updateMeta';
 import updateChildKeys from './updateChildKeys';
 
 import getIn from 'unmutable/lib/getIn';
-import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (key: Key|Index, notSetValue: * = undefined) => (parcelData: ParcelData): ParcelData => {

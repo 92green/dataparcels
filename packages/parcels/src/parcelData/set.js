@@ -8,7 +8,6 @@ import decodeHashKey from './decodeHashKey';
 import updateChild from './updateChild';
 import updateChildKeys from './updateChildKeys';
 
-import doIf from 'unmutable/lib/doIf';
 import identity from 'unmutable/lib/identity';
 import has from 'unmutable/lib/has';
 import merge from 'unmutable/lib/merge';

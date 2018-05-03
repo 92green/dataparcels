@@ -1,6 +1,7 @@
 // @flow
 import type {
     Key,
+    Index,
     ParcelData
 } from '../types/Types';
 
@@ -12,7 +13,7 @@ import swap from 'unmutable/lib/swap';
 import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: number) => (parcelData: ParcelData): ParcelData => {
+export default (key: Key|Index) => (parcelData: ParcelData): ParcelData => {
     let keyA = decodeHashKey(key)(parcelData);
     let keyB = wrapNumber(keyA + 1, size()(parcelData.value));
     return pipeWith(
