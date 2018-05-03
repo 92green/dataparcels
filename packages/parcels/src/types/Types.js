@@ -6,10 +6,10 @@ import type Modifiers from '../modifiers/Modifiers';
 import type Treeshare from '../treeshare/Treeshare';
 
 export type ParcelData = {
-	value: *,
-	child: *,
-	key: string,
-	meta: Object
+    value: *,
+    child: *,
+    key: string,
+    meta: Object
 };
 
 export type PartialParcelData = {
@@ -20,17 +20,17 @@ export type PartialParcelData = {
 };
 
 export type ParcelConfig = {
-	handleChange: Function,
-	value: *
+    handleChange: Function,
+    value: *
 };
 
 export type ParcelConfigInternal = {
-	child: *,
+    child: *,
     meta: Object,
-	id: ParcelId,
-	modifiers?: Modifiers,
-	parent?: Parcel,
-	treeshare: Treeshare
+    id: ParcelId,
+    modifiers?: Modifiers,
+    parent?: Parcel,
+    treeshare: Treeshare
 };
 
 export type CreateParcelConfigType = {

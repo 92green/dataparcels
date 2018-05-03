@@ -3,7 +3,7 @@ import type {ModifierFunction} from '../types/Types';
 import Modifiers from '../modifiers/Modifiers';
 
 class TreeshareRegistry {
-	_registry: Object = {};
+    _registry: Object = {};
 
     get = (id: string): Object => {
         return this._registry[id];
