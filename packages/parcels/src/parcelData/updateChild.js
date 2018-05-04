@@ -6,6 +6,7 @@ import del from 'unmutable/lib/delete';
 import get from 'unmutable/lib/get';
 import reduce from 'unmutable/lib/reduce';
 import set from 'unmutable/lib/set';
+import shallowToJS from 'unmutable/lib/shallowToJS';
 import update from 'unmutable/lib/update';
 import isValueObject from 'unmutable/lib/util/isValueObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
@@ -31,7 +32,11 @@ export default () => (parcelData: ParcelData): ParcelData => {
                     red,
                     set(key, child ? get(key, {})(child) : {})
                 ),
-                clear()(value)
+                pipeWith(
+                    value,
+                    shallowToJS(),
+                    clear()
+                )
             )
         )),
         addMeta
