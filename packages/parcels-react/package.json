@@ -1,7 +1,7 @@
 {
-  "name": "parcels",
-  "version": "0.4.2",
-  "description": "Flexible forms and user input that work really well with React",
+  "name": "parcels-react",
+  "version": "0.0.1",
+  "description": "Parcels + a couple of helpful React components for optimal rendering",
   "main": "lib/index.js",
   "license": "UNLICENSED",
   "author": "Damien Clarke",
@@ -20,7 +20,16 @@
     "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore **/*-test.js"
   },
   "dependencies": {
-    "minimatch": "^3.0.4",
+    "parcels": "^0.4.2",
     "unmutable": "^0.26.0"
+  },
+  "devDependencies": {
+    "enzyme-adapter-react-16": "^1.1.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0"
   }
 }

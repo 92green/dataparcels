@@ -2,7 +2,7 @@
 import React from 'react';
 import type {Element} from 'react';
 import PropTypes from 'prop-types';
-import Parcel from '../parcel/Parcel';
+import Parcel from 'parcels';
 
 import shallowEquals from 'unmutable/lib/shallowEquals';
 import del from 'unmutable/lib/delete';

@@ -8,7 +8,7 @@ configure({adapter: new Adapter()});
 
 import {shallow} from 'enzyme';
 import PureMapper from '../PureMapper';
-import Parcel from '../../parcel/Parcel';
+import Parcel from 'parcels';
 
 test('PureMapper should pass correct args around', tt => {
     tt.plan(5);
