@@ -1,6 +1,6 @@
 {
   "name": "parcels-devtools",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Parcels Devtools",
   "main": "lib/index.js",
   "license": "UNLICENSED",
