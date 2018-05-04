@@ -75,10 +75,6 @@ export default class Modifiers {
             .join('/');
     };
 
-    toModifierFunction: Function = (modifier: ModifierFunction|ModifierObject): ModifierFunction => {
-        return typeof modifier === "function" ? modifier : modifier.modifier;
-    };
-
     toModifierObject: Function = (modifier: ModifierFunction|ModifierObject): ModifierObject => {
         return typeof modifier === "function" ? {modifier} : modifier;
     };
