@@ -18,7 +18,8 @@ export default function Navigation(): Node {
 
     return <ul className="Navigation">
         <NavHeading>Parcels</NavHeading>
-        <NavItem to="/">Introduction</NavItem>
+        <NavItem to="/">Home</NavItem>
+        <NavItem to="/examples">Examples</NavItem>
     </ul>;
 }
 

@@ -4,16 +4,39 @@
 @import '~obtuse/lib/all';
 @include ObtuseConfig;
 
+@include BruceGrid {
+    &_item {
+        @include BruceBreakpoint('small') {
+            &-padding {
+                border-left: 1rem solid transparent;
+                border-right: 1rem solid transparent;
+            }
+
+            &-paddingMilli {
+                border-left: .5rem solid transparent;
+                border-right: .5rem solid transparent;
+            }
+        }
+    }
+}
 
 @include ObtuseBase;
-// @include ObtuseBase;
+@include ObtuseLabel;
 @include ObtuseLink;
 @include ObtuseBox;
+@include ObtuseButton;
+@include ObtuseInput;
 @include ObtuseTable;
+@include ObtuseTerminal;
 @include ObtuseText {
     &-definition {
         background-color: grey(94);
         padding: 1rem;
+    }
+    &-code {
+        background-color: color('alternativeBackground');
+        padding: 0 .25rem;
+        border-radius: 3px;
     }
 };
 @include ObtuseTypography;
@@ -21,18 +44,6 @@
 
 body {
     padding: 2rem;
-}
-
-.Navigation {
-
-
-    @include BruceBreakpoint(72rem) {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        padding: 2rem;
-    }
 }
 
 .Code {

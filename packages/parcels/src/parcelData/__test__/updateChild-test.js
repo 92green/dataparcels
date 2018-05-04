@@ -4,7 +4,8 @@ import updateChild from '../updateChild';
 
 test('updateChild() doesnt add child nodes for non-collections', tt => {
     let data = {
-        value: 123
+        value: 123,
+        meta: {}
     };
 
     tt.deepEqual(data, updateChild()(data));
@@ -17,7 +18,8 @@ test('updateChild() removes child nodes from non-collections', tt => {
     };
 
     let expectedData = {
-        value: 123
+        value: 123,
+        meta: {}
     };
 
     tt.deepEqual(expectedData, updateChild()(data));
@@ -39,7 +41,8 @@ test('updateChild() adds child nodes for objects if they dont exist', tt => {
         child: {
             a: {},
             b: {}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedData, updateChild()(data));
@@ -58,7 +61,8 @@ test('updateChild() keeps child nodes for objects if they exist', tt => {
             b: {
                 key: "b"
             }
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(data, updateChild()(data));
@@ -77,7 +81,8 @@ test('updateChild() updates child nodes for objects if they are wrong', tt => {
             b: {
                 key: "b"
             }
-        }
+        },
+        meta: {}
     };
 
     let expectedData = {
@@ -90,7 +95,8 @@ test('updateChild() updates child nodes for objects if they are wrong', tt => {
                 key: "b"
             },
             c: {}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedData, updateChild()(data));
@@ -103,7 +109,8 @@ test('updateChild() adds child nodes for arrays if they dont exist', tt => {
 
     let expectedData = {
         value: [1,2,3],
-        child: [{}, {}, {}]
+        child: [{}, {}, {}],
+        meta: {}
     };
 
     tt.deepEqual(expectedData, updateChild()(data));
@@ -112,73 +119,21 @@ test('updateChild() adds child nodes for arrays if they dont exist', tt => {
 test('updateChild() keeps child nodes for arrays if they exist', tt => {
     let data = {
         value: [1,2,3],
-        child: [{key: "#a"}, {}, {}]
+        child: [{key: "#a"}, {}, {}],
+        meta: {}
     };
 
     tt.deepEqual(data, updateChild()(data));
 });
 
-//
-// with key
-//
-
-test('updateChild(key) doesnt add child nodes for non-collections', tt => {
+test('updateChild() passes through meta if it exists', tt => {
     let data = {
-        value: 123
-    };
-
-    tt.deepEqual(data, updateChild('a')(data));
-});
-
-test('updateChild(key) removes child nodes from non-collections', tt => {
-    let data = {
-        value: 123,
-        child: {}
-    };
-
-    let expectedData = {
-        value: 123
-    };
-
-    tt.deepEqual(expectedData, updateChild('a')(data));
-});
-
-test('updateChild(key) adds child nodes for objects if they dont exist', tt => {
-    let data = {
-        value: {
-            a: 1,
-            b: 2
+        value: [1,2,3],
+        child: [{key: "#a"}, {}, {}],
+        meta: {
+            a: 123
         }
     };
 
-    let expectedData = {
-        value: {
-            a: 1,
-            b: 2
-        },
-        child: {
-            a: {}
-        }
-    };
-
-    tt.deepEqual(expectedData, updateChild('a')(data));
-});
-
-test('updateChild(key) keeps child nodes for objects if they exist', tt => {
-    let data = {
-        value: {
-            a: 1,
-            b: 2
-        },
-        child: {
-            a: {
-                key: "a"
-            },
-            b: {
-                key: "b"
-            }
-        }
-    };
-
-    tt.deepEqual(data, updateChild('a')(data));
+    tt.deepEqual(data, updateChild()(data));
 });

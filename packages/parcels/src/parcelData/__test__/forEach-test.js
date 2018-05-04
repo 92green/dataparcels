@@ -11,21 +11,24 @@ test('forEach should work on objects', (tt: Object) => {
         {
             parcelData: {
                 value: 1,
-                key: "a"
+                key: "a",
+                meta: {}
             },
             key: "a"
         },
         {
             parcelData: {
                 value: 2,
-                key: "b"
+                key: "b",
+                meta: {}
             },
             key: "b"
         },
         {
             parcelData: {
                 value: 3,
-                key: "c"
+                key: "c",
+                meta: {}
             },
             key: "c"
         }
@@ -46,21 +49,24 @@ test('forEach should work on arrays', (tt: Object) => {
         {
             parcelData: {
                 value: 1,
-                key: "#a"
+                key: "#a",
+                meta: {}
             },
             key: 0
         },
         {
             parcelData: {
                 value: 2,
-                key: "#b"
+                key: "#b",
+                meta: {}
             },
             key: 1
         },
         {
             parcelData: {
                 value: 3,
-                key: "#c"
+                key: "#c",
+                meta: {}
             },
             key: 2
         }

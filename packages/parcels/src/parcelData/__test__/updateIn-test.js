@@ -24,7 +24,8 @@ test('updateIn should work', (tt: Object) => {
             b: {key:"b"},
             c: {key:"c"},
             d: {key:"d"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, updateIn(['d'], () => ({value: 4}))(parcelData));
@@ -43,10 +44,11 @@ test('updateIn should work with existing child', (tt: Object) => {
     let expectedParcelData = {
         value: {a:4,b:2,c:3},
         child: {
-            a: {key:"a", child: {z:1}},
+            a: {key:"a", child: {z:1}, meta:{}},
             b: {key:"b"},
             c: {key:"c"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, updateIn(['a'], addThree)(parcelData));
@@ -81,11 +83,13 @@ test('updateIn should work deeply', (tt: Object) => {
                     d: {
                         key: "d"
                     }
-                }
+                },
+                meta: {}
             },
             b: {key:"b"},
             c: {key:"c"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, updateIn(['a', 'd'], () => ({value: 4}))(parcelData));
@@ -127,13 +131,16 @@ test('updateIn should work deeply with existing child', (tt: Object) => {
                 key:"a",
                 child: {
                     d: {
-                        key: "d"
+                        key: "d",
+                        meta: {}
                     }
-                }
+                },
+                meta: {}
             },
             b: {key:"b"},
             c: {key:"c"}
-        }
+        },
+        meta: {}
     };
 
     tt.deepEqual(expectedParcelData, updateIn(['a', 'd'], addThree)(parcelData));

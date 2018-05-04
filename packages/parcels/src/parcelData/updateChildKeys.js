@@ -1,4 +1,5 @@
 // @flow
+import type {ParcelData} from '../types/Types';
 
 import {toString26, toInt26} from './convert26';
 
@@ -19,11 +20,12 @@ function toStringKey(num: number): string {
     return `#${toString26(num)}`;
 }
 
-function isKey(str: string): boolean {
-    return str && str[0] === "#";
+function isKey(str: ?string): boolean {
+    return str ? str[0] === "#" : false;
 }
 
-function toIntKey(str: string): ?number {
+function toIntKey(str: ?string): ?number {
+    // $FlowFixMe - isKey() prevents .slice() from being called on null
     return isKey(str) ? toInt26(str.slice(1)) : undefined;
 }
 

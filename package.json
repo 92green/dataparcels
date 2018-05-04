@@ -4,11 +4,13 @@
     "prepublishOnly": "yarn build",
     "build": "lerna run build --parallel --",
     "flow": "blueflag-test flow",
-    "lint": "blueflag-test lint",
-    "test": "blueflag-test test",
-    "coverage": "blueflag-test coverage",
+    "lint": "blueflag-test lint --monorepo",
+    "test": "blueflag-test test --monorepo",
+    "coverage": "blueflag-test coverage --min-coverage=85 --monorepo",
     "test-all": "yarn lint && yarn coverage",
-    "deploy-docs": "yarn lerna --scope parcels-docs run deploy"
+    "deploy-docs": "yarn lerna --scope parcels-docs run deploy",
+    "view-coverage": "yarn run check-coverage; open ./coverage/lcov-report/index.html",
+    "watch": "lerna run watch --parallel --"
   },
   "workspaces": [
     "packages/*"
@@ -17,7 +19,7 @@
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.0",
     "babel-preset-blueflag": "^0.6.0",
-    "blueflag-test": "^0.13.2",
+    "blueflag-test": "0.17.0",
     "enzyme": "^3.3.0",
     "gatsby": "^1.9.223",
     "lerna": "^2.9.0",

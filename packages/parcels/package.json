@@ -20,15 +20,7 @@
     "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore **/*-test.js"
   },
   "dependencies": {
+    "minimatch": "^3.0.4",
     "unmutable": "^0.26.0"
-  },
-  "devDependencies": {
-    "enzyme-adapter-react-16": "^1.1.1",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2"
-  },
-  "peerDependencies": {
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
   }
 }

@@ -1,0 +1,14 @@
+// @flow
+import React from 'react';
+import type {Element} from 'react';
+import type Parcel from 'parcels';
+import PureParcel from './PureParcel';
+
+export default (render: Function, extraProps: Object = {}) => (parcel: Parcel, index: string|number, iter: *): Element<*> => {
+    return <PureParcel
+        parcel={parcel}
+        key={parcel.key()}
+        render={() => render(parcel, index, iter)}
+        {...extraProps}
+    />;
+};

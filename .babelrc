@@ -3,8 +3,7 @@
         ["blueflag", {"browser": true, "library": true}]
     ],
     "ignore": [
-        "./lib",
-        "./example"
+        "./lib"
     ],
     "env": {
         "production": {
