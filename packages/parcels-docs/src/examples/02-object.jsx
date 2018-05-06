@@ -2,7 +2,7 @@ import React from 'react';
 import Parcel from 'parcels';
 /*nosrc*/
 import {Box, Code, Paragraph} from 'obtuse';
-import Example from '../../components/Example';
+import Example from '../components/Example';
 /*endnosrc*/
 
 export default class ExampleSimpleObject extends React.Component {
@@ -32,7 +32,7 @@ export default class ExampleSimpleObject extends React.Component {
             title="Simple Object"
             description={description}
             state={this.state}
-            source={this.props.source}
+            exampleProps={this.props}
         >{/*endnosrc*/}<div>
             <div>
                 <label className="Label">firstname</label>

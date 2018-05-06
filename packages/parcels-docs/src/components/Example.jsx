@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
-import {Box, Button, Column, Grid, Terminal, Text} from 'obtuse';
+import {Box, Column, Grid, Terminal, Text} from 'obtuse';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
+import Link from 'gatsby-link';
 
 const printState = (state) => {
     const parcelContents = JSON.stringify({parcel: state.parcel.data()}, null, 4);
@@ -22,52 +23,55 @@ export default (props: ExampleProps): Node => {
     const {
         children,
         description,
-        source,
+        exampleProps,
         state,
         title
     } = props;
 
-    const cleanedSource = source && source
-        .replace(/{?\/\*nosrc\*\/}?([\s\S]*?){?\/\*endnosrc\*\/}?\n?/gi, '')
-        .replace(/ className=".*?"/gi, '');
+    // const cleanedSource = source && source
+    //     .replace(/{?\/\*nosrc\*\/}?([\s\S]*?){?\/\*endnosrc\*\/}?\n?/gi, '')
+    //     .replace(/ className=".*?"/gi, '');
 
-    return <Box modifier="marginRowGiga">
-        <Grid>
-            <Column modifier="1">
-                <Text element="div" modifier="center"><Button>{"<"} Prev</Button></Text>
-            </Column>
-            <Column modifier="10">
-                <Text element="h2" modifier="sizeGiga marginGiga">{title}</Text>
-                {description && <Box modifier="marginBottomKilo">{description}</Box>}
-                <Box modifier="marginRowKilo">
-                    <Grid>
-                        <Column modifier="6 padding">
-                            {children}
-                        </Column>
-                        <Column modifier="6 padding">
-                            {state &&
-                                <Box modifier="marginBottom">
-                                    <Text element="h3" modifier="strong marginMilli">State</Text>
-                                    <Terminal>
-                                        <pre>{printState(state)}</pre>
-                                    </Terminal>
-                                </Box>
-                            }
-                        </Column>
-                    </Grid>
+    let {
+        next,
+        previous
+    } = exampleProps.pathContext;
+
+    return <div className="Example">
+        <div className="Example_prev">
+            {previous && <Link className="Button" to={previous}>{"<"} Prev</Link>}
+        </div>
+        <div className="Example_content">
+            <Text element="h2" modifier="sizeGiga marginGiga">{title}</Text>
+            {description && <Box modifier="marginBottomKilo">{description}</Box>}
+            <Box modifier="marginRowKilo">
+                <Grid>
+                    <Column modifier="6 padding">
+                        {children}
+                    </Column>
+                    <Column modifier="6 padding">
+                        {state &&
+                            <Box modifier="marginBottom">
+                                <Text element="h3" modifier="strong marginMilli">State</Text>
+                                <Terminal>
+                                    <pre>{printState(state)}</pre>
+                                </Terminal>
+                            </Box>
+                        }
+                    </Column>
+                </Grid>
+            </Box>
+            {/*cleanedSource &&
+                <Box>
+                    <Text element="h3" modifier="strong marginMilli">Example code</Text>
+                    <Terminal modifier="code prism">
+                        <pre dangerouslySetInnerHTML={{__html: Prism.highlight(cleanedSource, Prism.languages.jsx)}}/>
+                    </Terminal>
                 </Box>
-                {cleanedSource &&
-                    <Box>
-                        <Text element="h3" modifier="strong marginMilli">Example code</Text>
-                        <Terminal modifier="code prism">
-                            <pre dangerouslySetInnerHTML={{__html: Prism.highlight(cleanedSource, Prism.languages.jsx)}}/>
-                        </Terminal>
-                    </Box>
-                }
-            </Column>
-            <Column modifier="1">
-                <Text element="div" modifier="center"><Button modifier="primary">Next {">"}</Button></Text>
-            </Column>
-        </Grid>
-    </Box>
+            */}
+        </div>
+        <div className="Example_next">
+            {next && <Link className="Button" to={next}>Next {">"}</Link>}
+        </div>
+    </div>
 }
