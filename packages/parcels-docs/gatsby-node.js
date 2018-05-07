@@ -161,14 +161,16 @@ exports.createPages = ({graphql, boundActionCreators}) => {
 
                 let getPath = (node) => `/examples/${node.name.split("-")[1]}`;
                 result.data.allFile.edges.forEach(({next, node, previous}, index) => {
+                    let component = path.resolve(`src/examples/${node.relativePath}`);
+
                     createPage({
                         path: getPath(node),
-                        component: path.resolve(`src/examples/${node.relativePath}`),
+                        component,
                         context: {
                             next: next ? getPath(next) : null,
                             previous: previous ? getPath(previous) : null
                         },
-                        layout: "fullwidth"
+                        layout: "example"
                     });
                 });
             });

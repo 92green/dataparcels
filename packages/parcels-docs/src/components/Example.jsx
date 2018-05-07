@@ -1,13 +1,14 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
+import type {ComponentType, Element, Node} from 'react';
 import {Box, Column, Grid, Terminal, Text} from 'obtuse';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import Link from 'gatsby-link';
+//import Markdown from './Markdown';
 
-const printState = (state) => {
-    const parcelContents = JSON.stringify({parcel: state.parcel.data()}, null, 4);
+const printParcelState = (parcel) => {
+    const parcelContents = JSON.stringify({parcel: parcel.data()}, null, 4);
     return parcelContents.replace(`"parcel": {`, `"parcel": Parcel {`);
 };
 
@@ -15,17 +16,15 @@ type ExampleProps = {
     children?: *,
     description?: Node,
     source?: string,
-    state?: Object,
-    title?: string
+    parcelState?: Object
 };
 
-export default (props: ExampleProps): Node => {
+const Example = (props: ExampleProps): Node => {
     const {
         children,
         description,
-        exampleProps,
-        state,
-        title
+        //exampleProps,
+        parcelState
     } = props;
 
     // const cleanedSource = source && source
@@ -35,26 +34,25 @@ export default (props: ExampleProps): Node => {
     let {
         next,
         previous
-    } = exampleProps.pathContext;
+    } = {}; //exampleProps.pathContext;
 
     return <div className="Example">
         <div className="Example_prev">
             {previous && <Link className="Button" to={previous}>{"<"} Prev</Link>}
         </div>
         <div className="Example_content">
-            <Text element="h2" modifier="sizeGiga marginGiga">{title}</Text>
-            {description && <Box modifier="marginBottomKilo">{description}</Box>}
+            {/*description && <Markdown data={description} />*/}
             <Box modifier="marginRowKilo">
                 <Grid>
                     <Column modifier="6 padding">
                         {children}
                     </Column>
                     <Column modifier="6 padding">
-                        {state &&
+                        {parcelState &&
                             <Box modifier="marginBottom">
                                 <Text element="h3" modifier="strong marginMilli">State</Text>
                                 <Terminal>
-                                    <pre>{printState(state)}</pre>
+                                    <pre>{printParcelState(parcelState)}</pre>
                                 </Terminal>
                             </Box>
                         }
@@ -75,3 +73,11 @@ export default (props: ExampleProps): Node => {
         </div>
     </div>
 }
+
+export default (component: Object, copy: Object, rendered: Element<*>): Element<*> => {
+    return <Example
+        children={rendered}
+        description={copy}
+        parcelState={component.state.parcel}
+    />;
+};
