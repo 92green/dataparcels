@@ -1,58 +1,80 @@
 // @flow
 import React from 'react';
 import type {ComponentType, Element, Node} from 'react';
-import {Box, Column, Grid, Terminal, Text} from 'obtuse';
+import {Box, Column, Grid, Tab, TabSet, Terminal, Text} from 'obtuse';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import Link from 'gatsby-link';
-//import Markdown from './Markdown';
+import Markdown from './Markdown';
+import Parcel from 'parcels';
+import QueryStringHock from 'stampy/lib/hock/QueryStringHock';
 
-const printParcelState = (parcel) => {
-    const parcelContents = JSON.stringify({parcel: parcel.data()}, null, 4);
-    return parcelContents.replace(`"parcel": {`, `"parcel": Parcel {`);
+import filter from 'unmutable/lib/filter';
+import keyArray from 'unmutable/lib/keyArray';
+import map from 'unmutable/lib/map';
+import pipeWith from 'unmutable/lib/util/pipeWith';
+
+const printParcelState = (state) => {
+    return pipeWith(
+        state,
+        map(ii => ii instanceof Parcel ? ii.data() : ii),
+        state => JSON.stringify(state, null, 4),
+        ...pipeWith(
+            state,
+            filter(ii => ii instanceof Parcel),
+            keyArray(),
+            map(key => (ii) => ii.replace(`"${key}": {`, `"${key}": Parcel {`))
+        )
+    );
 };
 
 type ExampleProps = {
     children?: *,
     description?: Node,
     source?: string,
-    parcelState?: Object
+    state?: Object
 };
 
 const Example = (props: ExampleProps): Node => {
     const {
         children,
         description,
-        //exampleProps,
-        parcelState
+        state,
+        pathContext: {
+            next,
+            previous
+        },
+        query,
+        updateQuery
     } = props;
 
     // const cleanedSource = source && source
     //     .replace(/{?\/\*nosrc\*\/}?([\s\S]*?){?\/\*endnosrc\*\/}?\n?/gi, '')
     //     .replace(/ className=".*?"/gi, '');
 
-    let {
-        next,
-        previous
-    } = {}; //exampleProps.pathContext;
-
     return <div className="Example">
         <div className="Example_prev">
             {previous && <Link className="Button" to={previous}>{"<"} Prev</Link>}
         </div>
         <div className="Example_content">
-            {/*description && <Markdown data={description} />*/}
+            {description && <Markdown data={description} />}
             <Box modifier="marginRowKilo">
                 <Grid>
                     <Column modifier="6 padding">
                         {children}
                     </Column>
                     <Column modifier="6 padding">
-                        {parcelState &&
+                        {/*<TabSet>
+                            <Tab onClick>State</Tab>
+                            <Tab onClick>Source</Tab>
+                            <Tab onClick>Logs</Tab>
+                            <Tab onClick>Tree</Tab>
+                        </TabSet>*/}
+                        {state &&
                             <Box modifier="marginBottom">
                                 <Text element="h3" modifier="strong marginMilli">State</Text>
                                 <Terminal>
-                                    <pre>{printParcelState(parcelState)}</pre>
+                                    <pre>{printParcelState(state)}</pre>
                                 </Terminal>
                             </Box>
                         }
@@ -74,10 +96,13 @@ const Example = (props: ExampleProps): Node => {
     </div>
 }
 
+const ExampleWithQuery = QueryStringHock()(Example);
+
 export default (component: Object, copy: Object, rendered: Element<*>): Element<*> => {
-    return <Example
+    return <ExampleWithQuery
         children={rendered}
         description={copy}
-        parcelState={component.state.parcel}
+        state={component.state}
+        {...component.props}
     />;
 };

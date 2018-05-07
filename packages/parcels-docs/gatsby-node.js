@@ -168,7 +168,8 @@ exports.createPages = ({graphql, boundActionCreators}) => {
                         component,
                         context: {
                             next: next ? getPath(next) : null,
-                            previous: previous ? getPath(previous) : null
+                            previous: previous ? getPath(previous) : null,
+                            file: node.relativePath
                         },
                         layout: "example"
                     });

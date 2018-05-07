@@ -30,8 +30,8 @@ function TemplateWrapper(props: Object): Node {
             </Column>
             <Column modifier="padding">
                 {wrapper 
-                    ? children()
-                    : <Wrapper>{children()}</Wrapper>
+                    ? <Wrapper>{children()}</Wrapper>
+                    : children()
                 }
             </Column>
         </Grid>

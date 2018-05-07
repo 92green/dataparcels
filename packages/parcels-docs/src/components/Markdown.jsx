@@ -4,7 +4,7 @@ import RemarkableReactRenderer from 'remarkable-react';
 import map from 'unmutable/lib/map';
 
 import {
-    // Box,
+    Box,
     // Image,
     // Link,
     // List,
