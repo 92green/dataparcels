@@ -27,13 +27,13 @@ export default (_this: Parcel): Object => ({
             return;
         }
 
-        let parcelDataFromRegistry = _this._treeshare
-            .registry
-            .get(_this._id.id())
-            .raw();
-
         let parcel = null;
         if(!_this._handleChange.SKIP_REDUCER) {
+            let parcelDataFromRegistry = _this._treeshare
+                .registry
+                .get(_this._id.id())
+                .raw();
+
             let parcelData = Reducer(parcelDataFromRegistry, action);
             parcel = _this._create({
                 parcelData
