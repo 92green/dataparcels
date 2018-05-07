@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
+import type {Node} from 'react';
 import Parcel from 'parcels';
 
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
-type RenderFunction = (parcel: Parcel) => Element<*>;
+type RenderFunction = (parcel: Parcel) => Node;
 
 type Props = {
     children: RenderFunction,
@@ -25,7 +25,7 @@ export default class PureParcel extends React.Component<Props> {
         return !shallowEquals(aa)(bb);
     }
 
-    render(): Element<*> {
+    render(): Node {
         let {children, parcel} = this.props;
         return children(parcel);
     }

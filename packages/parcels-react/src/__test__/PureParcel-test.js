@@ -8,69 +8,20 @@ configure({adapter: new Adapter()});
 
 import {shallow} from 'enzyme';
 import PureParcel from '../PureParcel';
-
-let render = () => {};
+import Parcel from 'parcels';
 
 test('PureParcel shouldComponentUpdate should be pure', tt => {
-    let props = {
-        element: "div",
-        a: 123,
-        render
-    };
+    let parcel = new Parcel();
+    let children = (parcel) => "...";
 
-    let comp = shallow(<PureParcel {...props} />);
+    let comp = shallow(<PureParcel parcel={parcel}>
+        {children}
+    </PureParcel>);
+
     let shouldUpdate = comp.instance().shouldComponentUpdate({
-        element: "div",
-        a: 123,
-        render
-    })
-
-    tt.false(shouldUpdate);
-
-    shouldUpdate = comp.instance().shouldComponentUpdate({
-        element: "div",
-        a: 123,
-        b: 456,
-        render
-    })
-
-    tt.true(shouldUpdate);
-});
-
-test('PureParcel shouldComponentUpdate should use parcel.value() for comparison', tt => {
-    let parcelValue = {
-        b:456
-    };
-
-    let props = {
-        element: "div",
-        a: 123,
-        parcel: {
-            value: () => parcelValue
-        },
-        render
-    };
-
-    let comp = shallow(<PureParcel {...props} />);
-    let shouldUpdate = comp.instance().shouldComponentUpdate({
-        element: "div",
-        a: 123,
-        parcel: {
-            value: () => parcelValue
-        },
-        render
+        parcel,
+        children
     });
 
     tt.false(shouldUpdate);
-
-    shouldUpdate = comp.instance().shouldComponentUpdate({
-        element: "div",
-        a: 123,
-        parcel: {
-            value: () => 2111
-        },
-        render
-    })
-
-    tt.true(shouldUpdate);
 });
