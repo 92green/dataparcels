@@ -10,6 +10,11 @@ import {Column, Grid} from 'obtuse';
 import "./index.scss";
 
 function TemplateWrapper(props: Object): Node {
+    const {
+        children,
+        wrapper = true
+    } = props;
+
     const {allSitePage} = props.data;
     return <div>
         <Helmet
@@ -24,9 +29,10 @@ function TemplateWrapper(props: Object): Node {
                 <Navigation allSitePage={allSitePage}/>
             </Column>
             <Column modifier="padding">
-                <Wrapper>
-                    {props.children()}
-                </Wrapper>
+                {wrapper 
+                    ? <Wrapper>{children()}</Wrapper>
+                    : children()
+                }
             </Column>
         </Grid>
     </div>;
