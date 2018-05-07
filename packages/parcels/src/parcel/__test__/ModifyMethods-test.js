@@ -81,7 +81,7 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
         .onChange(456);
 });
 
-test('Parcel.modifyChange() should allow you to call apply to continue without modification', (tt: Object) => {
+test('Parcel.modifyChange() should allow you to call continueChange to continue without modification', (tt: Object) => {
     tt.plan(1);
 
     var data = {
@@ -93,7 +93,7 @@ test('Parcel.modifyChange() should allow you to call apply to continue without m
     };
 
     new Parcel(data)
-        .modifyChange(({apply}) => apply())
+        .modifyChange(({continueChange}) => continueChange())
         .onChange(456);
 });
 

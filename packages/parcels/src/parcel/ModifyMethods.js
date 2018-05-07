@@ -60,7 +60,7 @@ export default (_this: Parcel): Object => ({
                         batcher({
                             parcel,
                             newParcelData: newParcel.data(),
-                            apply: () => _this.dispatch(actions),
+                            continueChange: () => _this.dispatch(actions),
                             actions
                         });
                     });
