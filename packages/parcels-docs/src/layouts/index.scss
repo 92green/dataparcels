@@ -94,3 +94,50 @@ red         #C55B4E
 
 
 .token.comment {color: #6D6D6D;}
+
+.Example {
+
+    @include BruceBreakpoint('small') {
+        display: table;
+        margin-top: 3rem;
+    }
+
+    &_prev {
+        box-sizing: border-box;
+        text-align: left;
+
+        @include BruceBreakpoint('small') {
+            display: table-cell;
+            padding: 10rem .5rem .5rem;
+            text-align: center;
+            vertical-align: top;
+            width: 10rem;
+        }
+    }
+
+    &_content {
+        box-sizing: border-box;
+
+        @include BruceBreakpoint('small') {
+            display: table-cell;
+            padding: .5rem;
+        }
+    }
+
+    &_next {
+        box-sizing: border-box;
+        text-align: right;
+
+        @include BruceBreakpoint('small') {
+            display: table-cell;
+            padding: 10rem .5rem .5rem;
+            text-align: center;
+            vertical-align: top;
+            width: 10rem;
+        }
+    }
+}
+
+.Navigation {
+    margin-bottom: 3rem;
+}

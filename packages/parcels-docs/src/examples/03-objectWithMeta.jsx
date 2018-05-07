@@ -1,7 +1,7 @@
 import React from 'react';
 import Parcel from 'parcels';
 /*nosrc*/
-import Example from '../../components/Example';
+import Example from '../components/Example';
 import {Box, Code, Paragraph} from 'obtuse';
 /*endnosrc*/
 
@@ -39,7 +39,7 @@ export default class ExampleObjectWithMeta extends React.Component {
             title="Object with Meta"
             description={description}
             state={this.state}
-            source={this.props.source}
+            exampleProps={this.props}
         >{/*endnosrc*/}<div>
             <div className="marginBottom2">
                 <label className="Label">address</label>

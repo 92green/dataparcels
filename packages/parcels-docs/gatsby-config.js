@@ -23,6 +23,13 @@ module.exports = {
             }
         },
         {
+            resolve: 'gatsby-source-filesystem',
+            options: {
+                path: `${__dirname}/src/examples`,
+                name: 'example-pages'
+            }
+        },
+        {
             resolve: 'gatsby-transformer-remark',
             options: {
                 plugins: [
