@@ -140,10 +140,10 @@ export default class Parcel {
     addModifier: Function;
     addDescendantModifier: Function;
 
-    constructor(parcelConfig: ParcelConfig, _parcelConfigInternal: ?ParcelConfigInternal) {
+    constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
-            handleChange,
-            value
+            handleChange = () => {},
+            value = undefined
         } = parcelConfig;
 
         let {
