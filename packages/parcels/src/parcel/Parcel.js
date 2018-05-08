@@ -132,8 +132,8 @@ export default class Parcel {
     // public modify methods
     //
 
-    chain: Function;
     modify: Function;
+    modifyData: Function;
     modifyValue: Function;
     modifyChange: Function;
     addPreModifier: Function;

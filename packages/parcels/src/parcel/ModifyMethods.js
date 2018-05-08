@@ -2,7 +2,7 @@
 import type {
     ModifierFunction,
     ModifierObject
-} from '../type/Types';
+} from '../types/Types';
 
 import Action from '../action/Action';
 import strip from '../parcelData/strip';
@@ -20,11 +20,11 @@ export default (_this: Parcel): Object => ({
     },
 
     // modify methods
-    chain: (updater: Function): Parcel => {
+    modify: (updater: Function): Parcel => {
         return updater(_this);
     },
 
-    modify: (updater: Function): Parcel => {
+    modifyData: (updater: Function): Parcel => {
         return pipeWith(
             _this._parcelData,
             strip(),
@@ -59,7 +59,7 @@ export default (_this: Parcel): Object => ({
                     _this.batch((parcel: Parcel) => {
                         batcher({
                             parcel,
-                            newParcelData: newParcel.data(),
+                            newParcelData: newParcel.raw(),
                             continueChange: () => _this.dispatch(actions),
                             actions
                         });
