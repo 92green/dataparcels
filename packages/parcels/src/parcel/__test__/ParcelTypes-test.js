@@ -14,7 +14,8 @@ test('ParcelTypes should correctly identify primitive values', tt => {
     tt.false(new Parcel(data).isIndexed());
     tt.false(new Parcel(data).isChild());
     tt.false(new Parcel(data).isElement());
-    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
+    tt.true(new Parcel(data).isTopLevel());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceipT");
 });
 
 test('ParcelTypes should correctly identify primitive date', tt => {
@@ -26,7 +27,8 @@ test('ParcelTypes should correctly identify primitive date', tt => {
     tt.false(new Parcel(data).isIndexed());
     tt.false(new Parcel(data).isChild());
     tt.false(new Parcel(data).isElement());
-    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
+    tt.true(new Parcel(data).isTopLevel());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceipT");
 });
 
 test('ParcelTypes should correctly identify object values', tt => {
@@ -40,7 +42,8 @@ test('ParcelTypes should correctly identify object values', tt => {
     tt.false(new Parcel(data).isIndexed());
     tt.false(new Parcel(data).isChild());
     tt.false(new Parcel(data).isElement());
-    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiP");
+    tt.true(new Parcel(data).isTopLevel());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiPT");
 });
 
 test('ParcelTypes should correctly identify class instance values', tt => {
@@ -55,7 +58,8 @@ test('ParcelTypes should correctly identify class instance values', tt => {
     tt.false(new Parcel(data).isIndexed());
     tt.false(new Parcel(data).isChild());
     tt.false(new Parcel(data).isElement());
-    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceip");
+    tt.true(new Parcel(data).isTopLevel());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceipT");
     // TODO - may have to allow unmutable to recognise class instances as ValueObjects for this to change
 });
 
@@ -70,7 +74,8 @@ test('ParcelTypes should correctly identify Immutable.js Map values', tt => {
     tt.false(new Parcel(data).isIndexed());
     tt.false(new Parcel(data).isChild());
     tt.false(new Parcel(data).isElement());
-    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiP");
+    tt.true(new Parcel(data).isTopLevel());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiPT");
 });
 
 
@@ -83,7 +88,8 @@ test('ParcelTypes should correctly identify array values', tt => {
     tt.true(new Parcel(data).isIndexed());
     tt.false(new Parcel(data).isChild());
     tt.false(new Parcel(data).isElement());
-    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIP");
+    tt.true(new Parcel(data).isTopLevel());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIPT");
 });
 
 test('ParcelTypes should correctly identify Immutable.js List values', tt => {
@@ -95,7 +101,8 @@ test('ParcelTypes should correctly identify Immutable.js List values', tt => {
     tt.true(new Parcel(data).isIndexed());
     tt.false(new Parcel(data).isChild());
     tt.false(new Parcel(data).isElement());
-    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIP");
+    tt.true(new Parcel(data).isTopLevel());
+    tt.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIPT");
 });
 
 test('ParcelTypes should correctly identify child values', tt => {
@@ -109,7 +116,8 @@ test('ParcelTypes should correctly identify child values', tt => {
     tt.false(new Parcel(data).get("a").isIndexed());
     tt.true(new Parcel(data).get("a").isChild());
     tt.false(new Parcel(data).get("a").isElement());
-    tt.is(new Parcel(data).get("a")._parcelTypes.toTypeCode(), "Ceip");
+    tt.false(new Parcel(data).get("a").isTopLevel());
+    tt.is(new Parcel(data).get("a")._parcelTypes.toTypeCode(), "Ceipt");
 });
 
 test('ParcelTypes should correctly identify element values', tt => {
@@ -121,7 +129,16 @@ test('ParcelTypes should correctly identify element values', tt => {
     tt.false(new Parcel(data).get(0).isIndexed());
     tt.true(new Parcel(data).get(0).isChild());
     tt.true(new Parcel(data).get(0).isElement());
-    tt.is(new Parcel(data).get(0)._parcelTypes.toTypeCode(), "CEip");
+    tt.false(new Parcel(data).get(0).isTopLevel());
+    tt.is(new Parcel(data).get(0)._parcelTypes.toTypeCode(), "CEipt");
+});
+
+test('ParcelTypes should correctly identify top level values after modifiers', tt => {
+    var data = {
+        handleChange,
+        value: [1,2,3]
+    };
+    tt.true(new Parcel(data).modifyValue(ii => ii).isTopLevel());
 });
 
 // method creators

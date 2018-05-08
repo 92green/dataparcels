@@ -70,6 +70,7 @@ export default class Parcel {
     isElement: Function;
     isIndexed: Function;
     isParent: Function;
+    isTopLevel: Function;
     // - id methods
     key: Function;
     id: Function;
@@ -164,7 +165,12 @@ export default class Parcel {
         };
 
         // types
-        this._parcelTypes = new ParcelTypes(value, parent && parent._parcelTypes);
+        this._parcelTypes = new ParcelTypes(
+            value,
+            parent && parent._parcelTypes,
+            id
+        );
+        
         this._id = id.setTypeCode(this._parcelTypes.toTypeCode());
 
         // modifiers
@@ -179,6 +185,7 @@ export default class Parcel {
         this.isElement = this._parcelTypes.isElement;
         this.isIndexed = this._parcelTypes.isIndexed;
         this.isParent = this._parcelTypes.isParent;
+        this.isTopLevel = this._parcelTypes.isTopLevel;
 
         // id methods
         this._typedPathString = this._id.typedPathString;

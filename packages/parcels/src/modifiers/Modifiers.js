@@ -24,7 +24,9 @@ const TYPE_SELECTORS = {
     ["Indexed"]: "I",
     ["!Indexed"]: "i",
     ["Parent"]: "P",
-    ["!Parent"]: "p"
+    ["!Parent"]: "p",
+    ["TopLevel"]: "T",
+    ["!TopLevel"]: "t"
 };
 
 export default class Modifiers {
