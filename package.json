@@ -14,7 +14,10 @@
   },
   "workspaces": {
     "packages": ["packages/*"],
-    "nohoist": ["**/*"]
+    "nohoist": [
+      "**/gatsby*",
+      "**/gatsby*/**"
+    ]
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
