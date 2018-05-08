@@ -25,7 +25,7 @@ jobs:
       - run: yarn test-all
       - deploy:
           command: |
-            if [ "${CIRCLE_BRANCH}" == "feature/pure-parcel" ]; then
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               git config --global -l && git config --global user.email circleci@circleci && git config --global user.name CircleCI && yarn deploy-docs
             fi
 
