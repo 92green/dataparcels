@@ -68,7 +68,19 @@ export default (_this: Parcel): Object => ({
     },
 
     refresh: () => {
-        // todo
-        console.log(_this._treeshare.registry.list());
+        let thisId: string = _this.id();
+        let list = _this
+            ._treeshare
+            .registry
+            .list()
+            .filter((parcel: Parcel): boolean => {
+                let id: string = parcel.id();
+                return id.startsWith(thisId); // AND if a child is called, none of its parents should be
+            })
+            .forEach((parcel: Parcel) => {
+                parcel.dispatch(ActionCreators.noop());
+            });
+
+        console.log("list", list);
     }
 });

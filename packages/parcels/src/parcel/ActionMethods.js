@@ -21,6 +21,7 @@ export default (_this: Parcel): Object => ({
     },
 
     dispatch: (action: Action|Action[]) => {
+        // add dispatcher id to action / action array
         if(_this._actionBufferOn) {
             _this._actionBuffer = _this._actionBuffer.concat(action);
             _this._parcelData = Reducer(_this._parcelData, action);

@@ -424,11 +424,17 @@ test('Parcel should refresh()', (tt: Object) => {
             },
             y: "Y!"
         },
-        handleChange
+        handleChange: (parcel, actions) => {
+            // once actions have dispatcher ids, check to see if they are the right ones in the right order
+            console.log(actions);
+        }
     };
 
     let z = new Parcel(data).get('z');
     z.get('c');
-    z.get('b').get(0);
+    z.get('b').modifyChange(({continueChange, parcel, newParcelData}) => {
+        parcel.setMeta({a:1});
+        continueChange();
+    }).get(0);
     z.refresh();
 });
