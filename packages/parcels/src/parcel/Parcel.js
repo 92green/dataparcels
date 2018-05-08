@@ -128,18 +128,22 @@ export default class Parcel {
     swapWithSelf: Function;
     swapNextWithSelf: Function;
     swapPrevWithSelf: Function;
+    // - top level methods
+    refresh: Function;
 
     //
     // public modify methods
     //
 
+    // - modify methods
     modify: Function;
     modifyData: Function;
     modifyValue: Function;
     modifyChange: Function;
-    addPreModifier: Function;
     addModifier: Function;
     addDescendantModifier: Function;
+    // - top level methods
+    addPreModifier: Function;
 
     constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
@@ -170,7 +174,7 @@ export default class Parcel {
             parent && parent._parcelTypes,
             id
         );
-        
+
         this._id = id.setTypeCode(this._parcelTypes.toTypeCode());
 
         // modifiers
