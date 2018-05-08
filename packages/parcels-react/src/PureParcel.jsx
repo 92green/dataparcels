@@ -15,10 +15,10 @@ type Props = {
 
 export default class PureParcel extends React.Component<Props> {
     shouldComponentUpdate(nextProps: Object): boolean {
-        let withParcelValue = ({parcel, forceUpdate = []}) => [
-            parcel.value(),
+        let withParcelValue = ({parcel, forceUpdate = []}) => ({
+            ...parcel.data(),
             ...forceUpdate
-        ];
+        });
 
         let aa = withParcelValue(this.props);
         let bb = withParcelValue(nextProps);
