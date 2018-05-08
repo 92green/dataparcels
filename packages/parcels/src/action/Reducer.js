@@ -25,7 +25,12 @@ import Action from './Action';
 
 export default function MultiReducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
     let actionArray: Action[] = Array.isArray(action) ? action : [action];
-    return actionArray.reduce(Reducer, parcelData);
+    let reduced: PartialParcelData = actionArray.reduce(Reducer, parcelData);
+    return {
+        value: undefined,
+        meta: {},
+        ...reduced
+    };
 }
 
 function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
