@@ -327,6 +327,31 @@ test('Reducer should insertBefore by array index deeply', tt => {
 });
 
 //
+// noop
+//
+
+test('Reducer should noop', tt => {
+    var data = {
+        value: [
+            0,
+            1,
+            2
+        ]
+    };
+    var action = new Action({
+        type: "noop"
+    });
+
+    var expectedValue = [
+        0,
+        1,
+        2
+    ];
+    tt.deepEqual(expectedValue, Reducer(data, action).value);
+});
+
+
+//
 // pop
 //
 

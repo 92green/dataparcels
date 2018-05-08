@@ -56,6 +56,12 @@ const insertBeforeSelf: Function = (value: *): Action => {
     });
 };
 
+const noop: Function = (): Action => {
+    return new Action({
+        type: "noop"
+    });
+};
+
 const push: Function = (value: *): Action => {
     return new Action({
         type: "push",
@@ -156,6 +162,7 @@ export default {
     insertAfterSelf,
     insertBefore,
     insertBeforeSelf,
+    noop,
     push,
     pop,
     setMeta,
