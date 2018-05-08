@@ -29,10 +29,10 @@ test('Parcel.id() should return the Parcels id', (tt: Object) => {
         handleChange
     };
     tt.is("^", new Parcel(data).id());
-    tt.is("a", new Parcel(data).get("a").id());
-    tt.is("~mv/a", new Parcel(data).modifyValue(ii => ii).get("a").id());
-    tt.is("a/#a", new Parcel(data).getIn(["a",0]).id());
-    tt.is("something%40%40%40", new Parcel(data).get("something@@@").id());
+    tt.is("^.a", new Parcel(data).get("a").id());
+    tt.is("^.~mv.a", new Parcel(data).modifyValue(ii => ii).get("a").id());
+    tt.is("^.a.#a", new Parcel(data).getIn(["a",0]).id());
+    tt.is("^.something%40%40%40", new Parcel(data).get("something@@@").id());
     // tt.is("b", new Parcel(data).get("b").id()); TODO
     // tt.is("#a", new Parcel(data).getIn(["a",?????]).id()); TODO
 });
@@ -65,7 +65,7 @@ test('Parcel._typedPathString() should return the Parcels typed path', (tt: Obje
     tt.deepEqual("^:ceiPT", new Parcel(data)._typedPathString());
     tt.deepEqual("a:CeIPt", new Parcel(data).get("a")._typedPathString());
     tt.deepEqual("a:CeIPt", new Parcel(data).modifyValue(ii => ii).get("a")._typedPathString());
-    tt.deepEqual("a:CeIPt/#a:CEipt", new Parcel(data).getIn(["a",0])._typedPathString());
+    tt.deepEqual("a:CeIPt.#a:CEipt", new Parcel(data).getIn(["a",0])._typedPathString());
     tt.deepEqual("something%40%40%40:Ceipt", new Parcel(data).get("something@@@")._typedPathString());
     // tt.is("b", new Parcel(data).get("b")._typedPathString()); TODO
     // tt.is("#a", new Parcel(data).getIn(["a",?????])._typedPathString()); TODO

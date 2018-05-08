@@ -106,12 +106,12 @@ test('Parcel should addModifier', (tt: Object) => {
     let parcel = new Parcel(data)
         .addModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
 
-    tt.is("~am/~mv", parcel.id(), "id() of parcel proves that modifier has been applied already");
+    tt.is("^.~am.~mv", parcel.id(), "id() of parcel proves that modifier has been applied already");
     tt.deepEqual([1,2,3,4], parcel.value(), "parcel value proves that modifier has been applied to current parcel");
 
     let element = parcel.get(0);
 
-    tt.is("~am/~mv/#a/~mv", element.id(), "id() of element parcel proves that modifier has been applied already");
+    tt.is("^.~am.~mv.#a.~mv", element.id(), "id() of element parcel proves that modifier has been applied already");
     tt.deepEqual(11, element.value(), "element parcel value proves that modifier has been applied to current parcel");
 });
 
@@ -124,12 +124,12 @@ test('Parcel should addDescendantModifier', (tt: Object) => {
     let parcel = new Parcel(data)
         .addDescendantModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
 
-    tt.is("~am", parcel.id(), "id() of parcel proves that modifier has NOT been applied already");
+    tt.is("^.~am", parcel.id(), "id() of parcel proves that modifier has NOT been applied already");
     tt.deepEqual([1,2,3], parcel.value(), "parcel value proves that modifier has NOT been applied to current parcel");
 
     let element = parcel.get(0);
 
-    tt.is("~am/#a/~mv", element.id(), "id() of element parcel proves that modifier has been applied already");
+    tt.is("^.~am.#a.~mv", element.id(), "id() of element parcel proves that modifier has been applied already");
     tt.deepEqual( 11,element.value(), "element parcel value proves that modifier has been applied to current parcel");
 });
 
@@ -148,10 +148,10 @@ test('Parcel should addModifier with simple match', (tt: Object) => {
             match: "abc"
         });
 
-    tt.is("~am/abc/~mv", parcel.get('abc').id(), "id() of abc parcel proves that modifier has been applied already");
+    tt.is("^.~am.abc.~mv", parcel.get('abc').id(), "id() of abc parcel proves that modifier has been applied already");
     tt.is(124, parcel.get('abc').value(), "abc parcel value proves that modifier has been applied");
 
-    tt.is("~am/def", parcel.get('def').id(), "id() of def parcel proves that modifier has NOT been applied");
+    tt.is("^.~am.def", parcel.get('def').id(), "id() of def parcel proves that modifier has NOT been applied");
     tt.is(456, parcel.get('def').value(), "def parcel value proves that modifier has NOT been applied");
 });
 
@@ -172,10 +172,10 @@ test('Parcel should addModifier with deep match', (tt: Object) => {
             match: "abc.ghi"
         });
 
-    tt.is("~am/abc/ghi/~mv", parcel.getIn(['abc', 'ghi']).id(), "id() of abc/ghi parcel proves that modifier has been applied already");
-    tt.is(124, parcel.getIn(['abc', 'ghi']).value(), "abc/ghi parcel value proves that modifier has been applied");
+    tt.is("^.~am.abc.ghi.~mv", parcel.getIn(['abc', 'ghi']).id(), "id() of abc.ghi parcel proves that modifier has been applied already");
+    tt.is(124, parcel.getIn(['abc', 'ghi']).value(), "abc.ghi parcel value proves that modifier has been applied");
 
-    tt.is("~am/def", parcel.get('def').id(), "id() of def parcel proves that modifier has NOT been applied");
+    tt.is("^.~am.def", parcel.get('def').id(), "id() of def parcel proves that modifier has NOT been applied");
     tt.is(456, parcel.get('def').value(), "def parcel value proves that modifier has NOT been applied");
 });
 
@@ -198,12 +198,12 @@ test('Parcel should addModifier with globstar', (tt: Object) => {
 
     // TODO  id of undefined parcel!
 
-    tt.is("~am/~mv/abc/~mv", parcel.get('abc').id(), "id() of abc parcel proves that modifier has been applied already");
+    tt.is("^.~am.~mv.abc.~mv", parcel.get('abc').id(), "id() of abc parcel proves that modifier has been applied already");
 
-    tt.is("~am/~mv/abc/~mv/ghi/~mv", parcel.getIn(['abc', 'ghi']).id(), "id() of abc/ghi parcel proves that modifier has been applied already");
-    tt.is(124, parcel.getIn(['abc', 'ghi']).value(), "abc/ghi parcel value proves that modifier has been applied");
+    tt.is("^.~am.~mv.abc.~mv.ghi.~mv", parcel.getIn(['abc', 'ghi']).id(), "id() of abc.ghi parcel proves that modifier has been applied already");
+    tt.is(124, parcel.getIn(['abc', 'ghi']).value(), "abc.ghi parcel value proves that modifier has been applied");
 
-    tt.is("~am/~mv/def/~mv", parcel.get('def').id(), "id() of def parcel proves that modifier has been applied");
+    tt.is("^.~am.~mv.def.~mv", parcel.get('def').id(), "id() of def parcel proves that modifier has been applied");
     tt.is(457, parcel.get('def').value(), "def parcel value proves that modifier has been applied");
 });
 
@@ -226,7 +226,7 @@ test('Parcel should addModifier with typed match', (tt: Object) => {
             match: "**.*:Indexed"
         });
 
-    tt.deepEqual([1,2,3,999], parcel.getIn(['abc', 'ghi']).value(), "abc/ghi parcel value proves that modifier has been applied");
+    tt.deepEqual([1,2,3,999], parcel.getIn(['abc', 'ghi']).value(), "abc.ghi parcel value proves that modifier has been applied");
     tt.is(456, parcel.get('def').value(), "def parcel value proves that modifier has NOT been applied");
     tt.deepEqual([4,5,6,999], parcel.get('mno').value(), "mno parcel value proves that modifier has been applied");
 });
@@ -237,15 +237,15 @@ test('Parcel should addPreModifier', (tt: Object) => {
     var data = {
         value: 123,
         handleChange: (parcel) => {
-            tt.is(parcel.id(), "~mv", "id() of handleChange parcel proves that preModifier have been applied already");
-            tt.is(parcel.value(), 457, "handleChange parcel value proves that modifier has been applied");
+            tt.is("^.~mv", parcel.id(), "id() of handleChange parcel proves that preModifier have been applied already");
+            tt.is(457, parcel.value(), "handleChange parcel value proves that modifier has been applied");
         }
     };
 
     let parcel = new Parcel(data)
         .addPreModifier((parcel) => parcel.modifyValue(ii => ii + 1));
 
-    tt.is("~mv", parcel.id(), "id() of constructed parcel proves that preModifier have been applied already");
+    tt.is("^.~mv", parcel.id(), "id() of constructed parcel proves that preModifier have been applied already");
     tt.is(124, parcel.value(), "constructed parcel value proves that modifier has been applied");
     parcel.onChange(456);
 });

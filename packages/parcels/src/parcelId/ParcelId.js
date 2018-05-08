@@ -41,14 +41,7 @@ export default class ParcelId {
     };
 
     id: Function = (): string => {
-        if(this._id.length === 1) {
-            return this._id[0];
-        }
-        return pipeWith(
-            this._id,
-            rest(),
-            join("/")
-        );
+        return this._id.join(".");
     };
 
     path: Function = (): Array<Key> => {
@@ -65,7 +58,7 @@ export default class ParcelId {
         return pipeWith(
             this._typedPath,
             rest(),
-            join("/")
+            join(".")
         );
     };
 

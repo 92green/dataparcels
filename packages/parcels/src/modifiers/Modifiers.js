@@ -106,7 +106,9 @@ export default class Modifiers {
         let typedPathString = parcel._typedPathString();
         return pipeWith(
             this._processedModifiers,
-            filter(({match}) => !match || minimatch(typedPathString, match.replace(/\./g, "/"))),
+            filter(({match}: Object): boolean => {
+                return !match || minimatch(typedPathString.replace(/\./g, "/"), match.replace(/\./g, "/"));
+            }),
             reduce(
                 (parcel, modifier) => modifier.modifier(parcel),
                 parcel
