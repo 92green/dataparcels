@@ -4,13 +4,21 @@ import Modifiers from '../modifiers/Modifiers';
 
 class TreeshareRegistry {
     _registry: Object = {};
+    _registryOrder: string[] = [];
 
     get = (id: string): Object => {
         return this._registry[id];
     };
 
+    list = (): Object[] => {
+        return this
+            ._registryOrder
+            .map(id => this._registry[id]);
+    };
+
     set = (id: string, reference: Object) => {
         this._registry[id] = reference;
+        this._registryOrder.push(id);
     };
 }
 
