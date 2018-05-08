@@ -14,7 +14,6 @@ import map from 'unmutable/lib/map';
 import push from 'unmutable/lib/push';
 import reduce from 'unmutable/lib/reduce';
 import update from 'unmutable/lib/update';
-import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 const TYPE_SELECTORS = {
