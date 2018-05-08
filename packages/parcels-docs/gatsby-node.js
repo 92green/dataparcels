@@ -136,7 +136,7 @@ exports.createPages = ({graphql, boundActionCreators}) => {
     function createExamples() {
         return graphql(`
             {
-              allFile(filter: {sourceInstanceName: {eq: "example-pages"}}) {
+              allFile(filter: {sourceInstanceName: {eq: "example-pages"}}, sort: {fields: relativePath, order: ASC}) {
                 edges {
                   next {
                     name

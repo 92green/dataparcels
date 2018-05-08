@@ -5,6 +5,7 @@ import map from 'unmutable/lib/map';
 
 import {
     Box,
+    Code,
     // Image,
     // Link,
     // List,
@@ -22,6 +23,7 @@ let removeOptions = map(fn => ({options, ...props}) => fn(props));
 
 let components = {
     // a: props => <Link {...props} />,
+    code: props => <Code {...props} />,
     em: props => <Text modifier="emphasis" {...props} />,
     h1: props => <Text element="h1" modifier="sizeGiga marginGiga" {...props} />,
     h2: props => <Text element="h2" modifier="sizeMega marginMega" {...props} />,

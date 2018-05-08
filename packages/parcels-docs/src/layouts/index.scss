@@ -25,7 +25,9 @@
 @include ObtuseLink;
 @include ObtuseBox;
 @include ObtuseButton;
-@include ObtuseInput;
+@include ObtuseInput {
+    background-color: color('background');
+};
 @include ObtuseTable;
 @include ObtuseTerminal;
 @include ObtuseText {
