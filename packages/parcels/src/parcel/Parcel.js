@@ -104,6 +104,7 @@ export default class Parcel {
     onChangeDOM: Function;
     setMeta: Function;
     updateMeta: Function;
+    refresh: Function;
     // - parent parcel methods
     set: Function;
     setIn: Function;
@@ -128,8 +129,6 @@ export default class Parcel {
     swapWithSelf: Function;
     swapNextWithSelf: Function;
     swapPrevWithSelf: Function;
-    // - top level methods
-    refresh: Function;
 
     //
     // public modify methods
@@ -140,10 +139,9 @@ export default class Parcel {
     modifyData: Function;
     modifyValue: Function;
     modifyChange: Function;
+    addPreModifier: Function;
     addModifier: Function;
     addDescendantModifier: Function;
-    // - top level methods
-    addPreModifier: Function;
 
     constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {

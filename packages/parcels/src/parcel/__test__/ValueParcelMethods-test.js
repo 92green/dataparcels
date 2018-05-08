@@ -413,3 +413,22 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
         };
     });
 });
+
+test('Parcel should refresh()', (tt: Object) => {
+    var data = {
+        value: {
+            z: {
+                a: 123,
+                b: [1,2,3],
+                c: "!"
+            },
+            y: "Y!"
+        },
+        handleChange
+    };
+
+    let z = new Parcel(data).get('z');
+    z.get('c');
+    z.get('b').get(0);
+    z.refresh();
+});
