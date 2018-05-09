@@ -415,6 +415,7 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
 });
 
 test('Parcel should refresh()', (tt: Object) => {
+    tt.plan(1);
     var data = {
         value: {
             z: {
@@ -425,8 +426,18 @@ test('Parcel should refresh()', (tt: Object) => {
             y: "Y!"
         },
         handleChange: (parcel, actions) => {
-            // once actions have dispatcher ids, check to see if they are the right ones in the right order
-            console.log(actions);
+            let expectedActions = [
+                {type: 'noop', keyPath: ['z','c']},
+                {type: 'setMeta', keyPath: ['z','b']},
+                {type: 'noop', keyPath: ['z','b',0]}
+            ];
+
+            let processedActions = actions.map(ii => {
+                let {type, keyPath} = ii.toJS();
+                return {type, keyPath};
+            });
+
+            tt.deepEqual(expectedActions, processedActions, `previously created LEAF parcels should each fire a noop, catching modifyChange()s along the way`);
         }
     };
 

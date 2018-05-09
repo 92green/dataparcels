@@ -13,6 +13,24 @@ While parcels is useful for any kind of user input, capturing user input in form
 Here's where I try to make parcels-modifier-form...
 `;
 
+const AddSubmitModifier = () => (parcel) => {
+    let ref = {};
+
+    let newParcel = parcel.initialMeta(() => ({
+        submitted: false,
+        submit: () => ref.submit()
+    }));
+
+    ref.submit = () => {
+        newParcel.refresh();
+        newParcel.setMeta({
+            submitted: true
+        });
+    };
+
+    return newParcel;
+};
+
 const AddTouchedModifier = (match = "") => (parcel) => {
     return parcel.addModifier({
         modifier: ii => ii.modifyChange(({parcel, continueChange}) => {
@@ -98,6 +116,7 @@ export default class ExampleMeta extends React.Component {
         let isQuantity = (value) => /^\d+$/.test(value) ? null : "This field must contain a whole number";
 
         let lunch = this.state.lunch
+            .modify(AddSubmitModifier())
             .modify(AddTouchedModifier())
             .modify(AddOriginalValueModifier())
             .modify(AddDirtyModifier())
@@ -108,12 +127,7 @@ export default class ExampleMeta extends React.Component {
                 "food.quantity": [isRequired, isQuantity]
             }));
 
-        let onSubmit = () => {
-            lunch.setMeta({
-                submitted: true
-            });
-            lunch.refresh();
-        };
+        console.log("lunch", lunch._typedPathString());
 
         let renderError = (parcel) => {
             let error = parcel.meta('error');
@@ -156,7 +170,7 @@ export default class ExampleMeta extends React.Component {
                 </div>}
             </PureParcel>
 
-            <button className="Button Button-primary" onClick={onSubmit}>Submit</button>
+            <button className="Button Button-primary" onClick={lunch.meta('submit')}>Submit</button>
         </div>);
     }
 }

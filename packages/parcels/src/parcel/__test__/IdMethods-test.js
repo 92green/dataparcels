@@ -63,6 +63,7 @@ test('Parcel._typedPathString() should return the Parcels typed path', (tt: Obje
         handleChange
     };
     tt.deepEqual("^:ceiPT", new Parcel(data)._typedPathString());
+    tt.deepEqual("^:ceiPT", new Parcel(data).modifyValue(ii => ii)._typedPathString());
     tt.deepEqual("a:CeIPt", new Parcel(data).get("a")._typedPathString());
     tt.deepEqual("a:CeIPt", new Parcel(data).modifyValue(ii => ii).get("a")._typedPathString());
     tt.deepEqual("a:CeIPt.#a:CEipt", new Parcel(data).getIn(["a",0])._typedPathString());
