@@ -68,8 +68,9 @@ export default (_this: Parcel): Object => ({
     },
 
     refresh: () => {
+        _this._buffer();
         let thisId: string = _this.id();
-        let list = _this
+        _this
             ._treeshare
             .registry
             .list()
@@ -80,7 +81,6 @@ export default (_this: Parcel): Object => ({
             .forEach((parcel: Parcel) => {
                 parcel.dispatch(ActionCreators.noop());
             });
-
-        console.log("list", list);
+        _this._flush();
     }
 });
