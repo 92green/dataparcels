@@ -87,7 +87,7 @@ export default class ExampleMeta extends React.Component {
                 email: "",
                 food: {
                     type: "Apples",
-                    quantity: 1
+                    quantity: "1"
                 }
             },
             handleChange: (lunch) => this.setState({lunch})
@@ -118,6 +118,14 @@ export default class ExampleMeta extends React.Component {
             lunch.setMeta({
                 submitted: true
             });
+            lunch.refresh();
+        };
+
+        let renderError = (parcel) => {
+            let error = parcel.meta('error');
+            if(lunch.meta('submitted') && error) {
+                return <p className="Text Text-failure Text-margin">{error}</p>;
+            }
         };
 
         return example(this, desc, <div>
@@ -126,7 +134,7 @@ export default class ExampleMeta extends React.Component {
                 {(name) => <div>
                     <label className="Label">what is your name?</label>
                     <input className="Input" type="text" {...name.spreadDOM()} />
-                    {name.meta('error') && <p className="Text Text-failure Text-margin">{name.meta('error')}</p>}
+                    {renderError(name)}
                 </div>}
             </PureParcel>
 
@@ -134,7 +142,7 @@ export default class ExampleMeta extends React.Component {
                 {(email) => <div>
                     <label className="Label">what is your email?</label>
                     <input className="Input" type="tel" {...email.spreadDOM()} />
-                    {email.meta('error') && <p className="Text Text-failure Text-margin">{email.meta('error')}</p>}
+                    {renderError(email)}
                 </div>}
             </PureParcel>
 
@@ -142,7 +150,7 @@ export default class ExampleMeta extends React.Component {
                 {(type) => <div>
                     <label className="Label">what type of food would you like?</label>
                     <input className="Input" type="text" {...type.spreadDOM()} />
-                    {type.meta('error') && <p className="Text Text-failure Text-margin">{type.meta('error')}</p>}
+                    {renderError(type)}
                 </div>}
             </PureParcel>
 
@@ -150,7 +158,7 @@ export default class ExampleMeta extends React.Component {
                 {(quantity) => <div>
                     <label className="Label">how many would you like?</label>
                     <input className="Input" type="tel" {...quantity.spreadDOM()} />
-                    {quantity.meta('error') && <p className="Text Text-failure Text-margin">{quantity.meta('error')}</p>}
+                    {renderError(quantity)}
                 </div>}
             </PureParcel>
 
