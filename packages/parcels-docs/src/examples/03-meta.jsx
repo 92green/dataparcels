@@ -26,30 +26,21 @@ export default class ExampleMeta extends React.Component {
     }
 
     render() {
-        let details = this.state.details
-            .addModifier({
-                modifier: ii => ii.modifyData(({meta, ...data}) => {
-                    let initialMeta = {
-                        correct: true,
-                        nice: true
-                    };
+        let {details} = this.state;
 
-                    return {
-                        ...data,
-                        meta: {
-                            ...initialMeta,
-                            ...meta
-                        }
-                    };
-                }),
-                match: "email"
-            });
+        let address = details
+            .get('address')
+            .initialMeta(() => ({
+                correct: true,
+                nice: true
+            }));
 
-        console.log(details.get('address').id());
-
-        let address = details.get('address');
-        let email = details.get('email');
-
+        let email = details
+            .get('email')
+            .initialMeta(() => ({
+                correct: false
+            }));
+        
         return example(this, desc, <div>
 
             <PureParcel parcel={address}>

@@ -7,7 +7,10 @@ import type {
 import Action from '../action/Action';
 import strip from '../parcelData/strip';
 
+import isEmpty from 'unmutable/lib/isEmpty';
 import set from 'unmutable/lib/set';
+import setIn from 'unmutable/lib/setIn';
+import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 import type Parcel from './Parcel';
@@ -60,12 +63,38 @@ export default (_this: Parcel): Object => ({
                         batcher({
                             parcel,
                             newParcelData: newParcel.raw(),
-                            continueChange: () => _this.dispatch(actions),
+                            continueChange: () => parcel.dispatch(actions),
                             actions
                         });
                     });
                 }
             }),
+            _this._create
+        );
+    },
+
+    initialMeta: (metaCreator: Function): Parcel => {
+        let metaSetter: Function = ii => ii;
+        if(isEmpty()(_this._parcelData.meta)) {
+            let initialMeta: Object = metaCreator(_this);
+            metaSetter = pipe(
+                setIn(['parcelData', 'meta'], initialMeta),
+                set('handleChange', (newParcel: Parcel, actions: Action[]) => {
+                    _this.batch((parcel: Parcel) => {
+                        parcel.setMeta(initialMeta);
+                        parcel.dispatch(actions);
+                    });
+                })
+            );
+        }
+
+        return pipeWith(
+            _this._parcelData,
+            parcelData => ({
+                parcelData,
+                id: _this._id.pushModifier('im')
+            }),
+            metaSetter,
             _this._create
         );
     },

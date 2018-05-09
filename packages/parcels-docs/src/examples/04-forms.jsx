@@ -26,16 +26,10 @@ const AddTouchedModifier = (match = "") => (parcel) => {
 };
 
 const AddOriginalValueModifier = (match = "") => (parcel) => {
-    // TODO make addInitalMetaModifier('key', (originalParcel) => Meta)
     return parcel.addModifier({
-        modifier: ii => ii.modifyChange(({parcel, continueChange}) => {
-            if(!parcel.meta().hasOwnProperty('originalValue')) {
-                parcel.setMeta({
-                    originalValue: parcel.value()
-                });
-            }
-            continueChange();
-        }),
+        modifier: ii => ii.initialMeta((parcel) => ({
+            originalValue: parcel.value()
+        })),
         match: match || "**/*:!Parent"
     });
 };

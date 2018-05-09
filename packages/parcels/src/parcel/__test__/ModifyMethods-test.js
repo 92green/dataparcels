@@ -97,6 +97,29 @@ test('Parcel.modifyChange() should allow you to call continueChange to continue 
         .onChange(456);
 });
 
+test('Parcel.initialMeta() should work', (tt: Object) => {
+    tt.plan(3);
+
+    var data = {
+        value: 123,
+        handleChange: (parcel: Parcel) => {
+            let {meta} = parcel.data();
+            tt.deepEqual({a:1, b:3}, meta, `meta changes in actions take precedence over initial meta`);
+        }
+    };
+
+    let parcel = new Parcel(data);
+    let meta = {a:1, b:2};
+
+    let parcel2 = parcel.initialMeta((pp) => {
+        tt.is(parcel, pp, `initialMeta should pass parcel to metaCreator`);
+        return meta;
+    });
+    tt.deepEqual(meta, parcel2.meta(), `initialMeta should be applied to returned parcel`);
+    parcel2.setMeta({
+        b: 3
+    });
+});
 test('Parcel should addModifier', (tt: Object) => {
     var data = {
         value: [1,2,3],
