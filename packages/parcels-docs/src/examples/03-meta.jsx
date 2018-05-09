@@ -26,10 +26,33 @@ export default class ExampleMeta extends React.Component {
     }
 
     render() {
-        let {details} = this.state;
+        let details = this.state.details
+            .addModifier({
+                modifier: ii => ii.modifyData(({meta, ...data}) => {
+                    let initialMeta = {
+                        correct: true,
+                        nice: true
+                    };
+
+                    return {
+                        ...data,
+                        meta: {
+                            ...initialMeta,
+                            ...meta
+                        }
+                    };
+                }),
+                match: "email"
+            });
+
+        console.log(details.get('address').id());
+
+        let address = details.get('address');
+        let email = details.get('email');
+
         return example(this, desc, <div>
 
-            <PureParcel parcel={details.get('address')}>
+            <PureParcel parcel={address}>
                 {(address) => <div>
                     <label className="Label">address</label>
                     <input className="Input" type="text" {...address.spreadDOM()} />
@@ -44,7 +67,7 @@ export default class ExampleMeta extends React.Component {
                 </div>}
             </PureParcel>
 
-            <PureParcel parcel={details.get('email')}>
+            <PureParcel parcel={email}>
                 {(email) => <div>
                     <label className="Label">email</label>
                     <input className="Input" type="text" {...email.spreadDOM()} />
