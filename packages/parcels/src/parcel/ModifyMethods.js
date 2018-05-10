@@ -73,10 +73,9 @@ export default (_this: Parcel): Object => ({
         );
     },
 
-    initialMeta: (metaCreator: Function): Parcel => {
+    initialMeta: (initialMeta: Object): Parcel => {
         let metaSetter: Function = ii => ii;
         if(isEmpty()(_this._parcelData.meta)) {
-            let initialMeta: Object = metaCreator(_this);
             metaSetter = pipe(
                 setIn(['parcelData', 'meta'], initialMeta),
                 set('handleChange', (newParcel: Parcel, actions: Action[]) => {

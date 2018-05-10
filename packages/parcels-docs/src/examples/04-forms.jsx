@@ -16,10 +16,10 @@ Here's where I try to make parcels-modifier-form...
 const AddSubmitModifier = () => (parcel) => {
     let ref = {};
 
-    let newParcel = parcel.initialMeta(() => ({
+    let newParcel = parcel.initialMeta({
         submitted: false,
         submit: () => ref.submit()
-    }));
+    });
 
     ref.submit = () => {
         newParcel.refresh();
@@ -45,9 +45,9 @@ const AddTouchedModifier = (match = "") => (parcel) => {
 
 const AddOriginalValueModifier = (match = "") => (parcel) => {
     return parcel.addModifier({
-        modifier: ii => ii.initialMeta((parcel) => ({
+        modifier: ii => ii.initialMeta({
             originalValue: parcel.value()
-        })),
+        }),
         match: match || "**/*:!Parent"
     });
 };

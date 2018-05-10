@@ -30,17 +30,17 @@ export default class ExampleMeta extends React.Component {
 
         let address = details
             .get('address')
-            .initialMeta(() => ({
+            .initialMeta({
                 correct: true,
                 nice: true
-            }));
+            });
 
         let email = details
             .get('email')
-            .initialMeta(() => ({
+            .initialMeta({
                 correct: false
-            }));
-        
+            });
+
         return example(this, desc, <div>
 
             <PureParcel parcel={address}>
