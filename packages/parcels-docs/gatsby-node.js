@@ -133,9 +133,54 @@ exports.createPages = ({graphql, boundActionCreators}) => {
             });
     }
 
+    function createExamples() {
+        return graphql(`
+            {
+              allFile(filter: {sourceInstanceName: {eq: "example-pages"}}, sort: {fields: relativePath, order: ASC}) {
+                edges {
+                  next {
+                    name
+                    relativePath
+                  }
+                  node {
+                    name
+                    relativePath
+                  }
+                  previous {
+                    name
+                    relativePath
+                  }
+                }
+              }
+            }
+        `)
+            .then(result => {
+                if (result.errors) {
+                    return Promise.reject(result.errors);
+                }
+
+                let getPath = (node) => `/examples/${node.name.split("-")[1]}`;
+                result.data.allFile.edges.forEach(({next, node, previous}, index) => {
+                    let component = path.resolve(`src/examples/${node.relativePath}`);
+
+                    createPage({
+                        path: getPath(node),
+                        component,
+                        context: {
+                            next: next ? getPath(next) : null,
+                            previous: previous ? getPath(previous) : null,
+                            file: node.relativePath
+                        },
+                        layout: "example"
+                    });
+                });
+            });
+    }
+
     return Promise.resolve()
         //.then(createDocumentation)
         .then(createMarkdown)
+        .then(createExamples)
     ;
 };
 
@@ -149,15 +194,3 @@ general:
 exports.onPostBuild = () => {
     fs.writeFileSync(`${__dirname}/public/circle.yml`, circleYml);
 }
-
-exports.onCreatePage = async ({ page, boundActionCreators }) => {
-   const { createPage } = boundActionCreators;
-
-   return new Promise((resolve, reject) => {
-       if(page.path.match(/^\/examples/)) {
-           page.layout = "fullwidth";
-           createPage(page);
-       }
-       resolve();
-   });
-};

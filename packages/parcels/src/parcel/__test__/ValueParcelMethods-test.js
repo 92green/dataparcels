@@ -66,6 +66,31 @@ test('Parcel.value() should return the same instance of the Parcels value', (tt:
     tt.is(new Parcel(data).value(), myObject);
 });
 
+
+test('Parcels should be able to accept no config', (tt: Object) => {
+    let parcel = new Parcel();
+    tt.deepEqual(undefined, parcel.value());
+    parcel.onChange(123);
+});
+
+test('Parcels should be able to accept just value in config', (tt: Object) => {
+    let parcel = new Parcel({
+        value: 123
+    });
+    tt.deepEqual(123, parcel.value());
+    parcel.onChange(456);
+});
+
+test('Parcels should be able to accept just handleChange in config', (tt: Object) => {
+    let parcel = new Parcel({
+        handleChange: (parcel) => {
+            tt.is(456, parcel.value());
+        }
+    });
+    tt.deepEqual(undefined, parcel.value());
+    parcel.onChange(456);
+});
+
 test('Parcel.setSelf() should call the Parcels handleChange function with the new parcelData', (tt: Object) => {
     tt.plan(2);
 

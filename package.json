@@ -12,16 +12,19 @@
     "view-coverage": "yarn run check-coverage; open ./coverage/lcov-report/index.html",
     "watch": "lerna run watch --parallel --"
   },
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": ["packages/*"],
+    "nohoist": [
+      "**/gatsby*",
+      "**/gatsby*/**"
+    ]
+  },
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.0",
     "babel-preset-blueflag": "^0.6.0",
     "blueflag-test": "0.17.0",
     "enzyme": "^3.3.0",
-    "gatsby": "^1.9.223",
     "lerna": "^2.9.0",
     "proto-babel-plugin-extract-flow-types": "git+ssh://git@github.com/blueflag/proto-babel-plugin-extract-flow-types.git#v0.1.1"
   }

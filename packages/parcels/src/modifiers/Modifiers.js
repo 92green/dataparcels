@@ -8,11 +8,12 @@ import type Parcel from '../parcel/Parcel';
 import minimatch from 'minimatch';
 
 import filter from 'unmutable/lib/filter';
+import join from 'unmutable/lib/join';
+import keyArray from 'unmutable/lib/keyArray';
 import map from 'unmutable/lib/map';
 import push from 'unmutable/lib/push';
 import reduce from 'unmutable/lib/reduce';
 import update from 'unmutable/lib/update';
-import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 const TYPE_SELECTORS = {
@@ -29,31 +30,37 @@ const TYPE_SELECTORS = {
 export default class Modifiers {
 
     _modifiers: Array<ModifierObject>;
+    _processedModifiers: Array<ModifierObject>;
 
     constructor(modifiers: Array<ModifierFunction|ModifierObject> = []) {
-        this._modifiers = pipeWith(
+        this._modifiers = this._processedModifiers = pipeWith(
             modifiers,
-            map(pipe(
-                this.toModifierObject,
-                update('match', this._processGlob)
-            ))
+            map(this.toModifierObject)
+        );
+
+        this._processedModifiers = pipeWith(
+            this._modifiers,
+            map(update('match', this._processMatch))
         );
     }
 
-    _processGlob: Function = (match: string): ?string => {
+    _processMatch: Function = (match: string): ?string => {
         if(!match) {
             return undefined;
         }
         return match
-            .split('/')
+            .split('.')
             .map((part: string): string => {
                 let [name, type] = part.split(':');
+                // dont allow types on globstar
                 if(name === "**") {
                     return name;
                 }
+                // if no type, match any type selector
                 if(!type) {
                     return `${name}:*`;
                 }
+                // split types apart and replace with type selectors
                 let types = type
                     .split('|')
                     .sort((a: string, b: string): number => {
@@ -64,7 +71,12 @@ export default class Modifiers {
                     .map((tt: string): string => {
                         let typeSelector = TYPE_SELECTORS[tt];
                         if(!typeSelector) {
-                            throw new Error(`"${tt}" is not a valid type selector. Choose one of ${typeSelector.join(", ")}`);
+                            let choices = pipeWith(
+                                TYPE_SELECTORS,
+                                keyArray(),
+                                join(", ")
+                            );
+                            throw new Error(`"${tt}" is not a valid type selector. Choose one of ${choices}`);
                         }
                         return typeSelector;
                     })
@@ -72,7 +84,7 @@ export default class Modifiers {
 
                 return `${name}:*${types}*`;
             })
-            .join('/');
+            .join('.');
     };
 
     toModifierObject: Function = (modifier: ModifierFunction|ModifierObject): ModifierObject => {
@@ -91,8 +103,8 @@ export default class Modifiers {
     applyTo: Function = (parcel: Parcel): Parcel => {
         let typedPathString = parcel._typedPathString();
         return pipeWith(
-            this._modifiers,
-            filter(({match}) => !match || minimatch(typedPathString, match)),
+            this._processedModifiers,
+            filter(({match}) => !match || minimatch(typedPathString, match.replace(/\./g, "/"))),
             reduce(
                 (parcel, modifier) => modifier.modifier(parcel),
                 parcel

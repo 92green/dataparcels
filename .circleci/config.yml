@@ -26,6 +26,6 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              yarn deploy-docs
+              git config --global -l && git config --global user.email circleci@circleci && git config --global user.name CircleCI && yarn deploy-docs
             fi
 

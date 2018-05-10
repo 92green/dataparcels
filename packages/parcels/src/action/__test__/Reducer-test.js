@@ -1051,3 +1051,48 @@ test('Reducer should throw error if action is not valid', tt => {
 
     tt.is(tt.throws(() => Reducer(data, action), Error).message, `"fake" is not a valid action`);
 });
+
+//
+// meta
+//
+
+test('Reducer should set meta if not provided', tt => {
+    var data = {
+        value: {
+            a: 1,
+            b: 2
+        }
+    };
+    var action = new Action({
+        type: "set",
+        keyPath: ["b"],
+        payload: {
+            value: 3
+        }
+    });
+
+    tt.deepEqual({}, Reducer(data, action).meta);
+});
+
+test('Reducer should pass through meta if provided', tt => {
+    var meta = {
+        abc: 123
+    };
+
+    var data = {
+        value: {
+            a: 1,
+            b: 2
+        },
+        meta
+    };
+    var action = new Action({
+        type: "set",
+        keyPath: ["b"],
+        payload: {
+            value: 3
+        }
+    });
+
+    tt.deepEqual(meta, Reducer(data, action).meta);
+});

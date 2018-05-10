@@ -132,18 +132,18 @@ export default class Parcel {
     // public modify methods
     //
 
-    chain: Function;
     modify: Function;
+    modifyData: Function;
     modifyValue: Function;
     modifyChange: Function;
     addPreModifier: Function;
     addModifier: Function;
     addDescendantModifier: Function;
 
-    constructor(parcelConfig: ParcelConfig, _parcelConfigInternal: ?ParcelConfigInternal) {
+    constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
-            handleChange,
-            value
+            handleChange = () => {},
+            value = undefined
         } = parcelConfig;
 
         let {

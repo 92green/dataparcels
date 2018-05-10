@@ -4,7 +4,7 @@ import Parcel from '../Parcel';
 
 const handleChange = ii => {};
 
-test('Parcel.chain() should return the result of chains updater', (tt: Object) => {
+test('Parcel.modify() should return the result of modifys updater', (tt: Object) => {
     var data = {
         value: 123,
         handleChange
@@ -13,24 +13,24 @@ test('Parcel.chain() should return the result of chains updater', (tt: Object) =
     let parcel = new Parcel(data);
     let modifiedParcel = null;
 
-    let chained = parcel.chain(ii => {
-        tt.is(ii, parcel, 'chain is passed parcel');
+    let modified = parcel.modify(ii => {
+        tt.is(ii, parcel, 'modify is passed parcel');
         modifiedParcel = ii.modifyValue(ii => ii + 100);
         return modifiedParcel;
     });
 
-    tt.is(modifiedParcel, chained, 'chain returns modified parcel');
-    tt.is(223, modifiedParcel && modifiedParcel.value(), 'chain returns modified parcel value');
+    tt.is(modifiedParcel, modified, 'modify returns modified parcel');
+    tt.is(223, modifiedParcel && modifiedParcel.value(), 'modify returns modified parcel value');
 });
 
-test('Parcel.modify() should return a new parcel with updated parcelData', (tt: Object) => {
+test('Parcel.modifyData() should return a new parcel with updated parcelData', (tt: Object) => {
     var data = {
         value: 123,
         key: "#a",
         handleChange
     };
     var updated = new Parcel(data)
-        .modify((parcelData) => ({
+        .modifyData((parcelData) => ({
             value: "???"
         }))
         .data();
@@ -81,7 +81,7 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
         .onChange(456);
 });
 
-test('Parcel.modifyChange() should allow you to call apply to continue without modification', (tt: Object) => {
+test('Parcel.modifyChange() should allow you to call continueChange to continue without modification', (tt: Object) => {
     tt.plan(1);
 
     var data = {
@@ -93,7 +93,7 @@ test('Parcel.modifyChange() should allow you to call apply to continue without m
     };
 
     new Parcel(data)
-        .modifyChange(({apply}) => apply())
+        .modifyChange(({continueChange}) => continueChange())
         .onChange(456);
 });
 
@@ -189,7 +189,7 @@ test('Parcel should addModifier with deep match', (tt: Object) => {
     let parcel = new Parcel(data)
         .addModifier({
             modifier: (parcel) => parcel.modifyValue(ii => ii + 1),
-            match: "abc/ghi"
+            match: "abc.ghi"
         });
 
     tt.is("~am/abc/ghi/~mv", parcel.getIn(['abc', 'ghi']).id(), "id() of abc/ghi parcel proves that modifier has been applied already");
@@ -213,7 +213,7 @@ test('Parcel should addModifier with globstar', (tt: Object) => {
     let parcel = new Parcel(data)
         .addModifier({
             modifier: (parcel) => parcel.modifyValue(ii => typeof ii === "number" ?  ii + 1 : {...ii, woo: true}),
-            match: "**/*"
+            match: "**.*"
         });
 
     // TODO  id of undefined parcel!
@@ -243,7 +243,7 @@ test('Parcel should addModifier with typed match', (tt: Object) => {
     let parcel = new Parcel(data)
         .addModifier({
             modifier: (parcel) => parcel.modifyValue(ii => [...ii, 999]),
-            match: "**/*:Indexed"
+            match: "**.*:Indexed"
         });
 
     tt.deepEqual([1,2,3,999], parcel.getIn(['abc', 'ghi']).value(), "abc/ghi parcel value proves that modifier has been applied");

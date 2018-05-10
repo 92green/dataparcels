@@ -7,4 +7,15 @@ export default (props: Object): Node => {
     return <Index {...props} wrapper={false} />;
 }
 
-export const query = indexQuery;
+export const query = graphql`
+    query NavigationQueryExample {
+      allSitePage {
+        edges {
+          node {
+            id
+            path
+          }
+        }
+      }
+    }
+`;
