@@ -55,8 +55,9 @@ const AddOriginalValueModifier = (match = "") => (parcel) => {
 const AddDirtyModifier = (match = "") => (parcel) => {
     return parcel.addModifier({
         modifier: ii => ii.modifyChange(({parcel, continueChange, newParcelData}) => {
+            let {value, meta} = newParcelData();
             parcel.setMeta({
-                dirty: newParcelData.value !== newParcelData.meta.originalValue
+                dirty: value !== meta.originalValue
             });
             continueChange();
         }),
@@ -77,7 +78,7 @@ const AddValidModifier = (validators) => (parcel) => {
                                 if(error) {
                                     return error;
                                 }
-                                return validator(newParcelData.value)
+                                return validator(newParcelData().value)
                             }, null)
                         )
                     });

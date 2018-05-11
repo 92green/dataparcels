@@ -57,6 +57,7 @@ export default class Parcel {
     _buffer: Function;
     _flush: Function;
     _skipReducer: Function;
+    _thunkReducer: Function;
     // - id methods
     _typedPathString: Function;
 

@@ -76,7 +76,7 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
 
     new Parcel(data)
         .modifyChange(({parcel, newParcelData}: Object) => {
-            parcel.setSelf(newParcelData.value + 1);
+            parcel.setSelf(newParcelData().value + 1);
         })
         .onChange(456);
 });

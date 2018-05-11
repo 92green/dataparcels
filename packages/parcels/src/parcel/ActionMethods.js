@@ -20,6 +20,11 @@ export default (_this: Parcel): Object => ({
         return handleChange;
     },
 
+    _thunkReducer: (handleChange: Function): Function => {
+        handleChange.THUNK_REDUCER = true;
+        return handleChange;
+    },
+
     dispatch: (action: Action|Action[]) => {
         if(_this._actionBufferOn) {
             _this._actionBuffer = _this._actionBuffer.concat(action);
@@ -27,21 +32,32 @@ export default (_this: Parcel): Object => ({
             return;
         }
 
-        let parcel = null;
+        let parcel: ?Function|Parcel = null;
+
         if(!_this._handleChange.SKIP_REDUCER) {
-            let parcelDataFromRegistry = _this._treeshare
-                .registry
-                .get(_this._id.id())
-                .raw();
 
-            let parcelData = Reducer(parcelDataFromRegistry, action);
-            parcel = _this._create({
-                parcelData
-            });
+            let reducerThunk: Function = (): Parcel => {
+                let parcelDataFromRegistry = _this._treeshare
+                    .registry
+                    .get(_this._id.id())
+                    .raw();
 
-            if(_this._treeshare.hasPreModifier() && _this.id() === "^") {
-                parcel = _this._treeshare.preModifier.applyTo(parcel);
-            }
+                let parcelData = Reducer(parcelDataFromRegistry, action);
+
+                let parcel: parcelData = _this._create({
+                    parcelData
+                });
+
+                if(_this._treeshare.hasPreModifier() && _this.id() === "^") {
+                    parcel = _this._treeshare.preModifier.applyTo(parcel);
+                }
+
+                return parcel;
+            };
+
+            parcel = _this._handleChange.THUNK_REDUCER
+                ? reducerThunk
+                : reducerThunk();
         }
 
         _this._handleChange(parcel, [].concat(action));

@@ -58,16 +58,16 @@ export default (_this: Parcel): Object => ({
             parcelData => ({
                 parcelData,
                 id: _this._id.pushModifier('mc'),
-                handleChange: (newParcel: Parcel, actions: Action[]) => {
+                handleChange: _this._thunkReducer((parcelThunk: Function, actions: Action[]) => {
                     _this.batch((parcel: Parcel) => {
                         batcher({
                             parcel,
-                            newParcelData: newParcel.raw(),
+                            newParcelData: () => parcelThunk().raw(),
                             continueChange: () => parcel.dispatch(actions),
                             actions
                         });
                     });
-                }
+                })
             }),
             _this._create
         );
