@@ -125,14 +125,11 @@ let matchTests = [
             "greatGrandchild"
         ]
     },
-    // {
-    //     name: "match globstar end",
-    //     match: "ghi**",
-    //     shouldMatch: [
-    //         "childArray",
-    //         "grandchildArray"
-    //     ]
-    // },
+    {
+        name: "match globstar end",
+        match: "ghi.**",
+        shouldMatch: ["grandchildElement"]
+    },
     {
         name: "match root with type",
         match: "^:Parent",
@@ -324,19 +321,12 @@ pipeWith(
     matchTests,
     map(({name, match, matchParsed, shouldMatch}) => {
         test(`${name}`, (tt: Object) => {
-            //let parsedMatch: string = parseMatch(match);
-
-            //tt.deepEqual(parsedMatch, matchParsed, `parseMatch should parse ${match} correctly`);
-
             let matched: string[] = pipeWith(
                 typedPathStrings,
                 map((typedPathString, name) => Matcher(typedPathString, match)),
                 filter(identity()),
                 keyArray()
             );
-
-            console.log(matched);
-
             tt.deepEqual(shouldMatch, matched, `"${match}" should match correctly`);
         });
     })
