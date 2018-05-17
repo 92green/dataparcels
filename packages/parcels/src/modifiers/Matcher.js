@@ -7,21 +7,78 @@
 
 // import minimatch from 'minimatch';
 
+import escapeStringRegexp from 'escape-string-regexp';
+
 // import filter from 'unmutable/lib/filter';
-// import join from 'unmutable/lib/join';
-// import keyArray from 'unmutable/lib/keyArray';
-// import map from 'unmutable/lib/map';
+import join from 'unmutable/lib/join';
+import keyArray from 'unmutable/lib/keyArray';
 // import push from 'unmutable/lib/push';
 // import reduce from 'unmutable/lib/reduce';
 // import update from 'unmutable/lib/update';
-// import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export const parseMatch = (match: string): ?string => {
-    return match;
+// import map from 'unmutable/lib/map';
+import pipeWith from 'unmutable/lib/util/pipeWith';
+
+const TYPE_SELECTORS = {
+    ["Child"]: "C",
+    ["!Child"]: "c",
+    ["Element"]: "E",
+    ["!Element"]: "e",
+    ["Indexed"]: "I",
+    ["!Indexed"]: "i",
+    ["Parent"]: "P",
+    ["!Parent"]: "p",
+    ["TopLevel"]: "T",
+    ["!TopLevel"]: "t"
 };
 
-export const match = (typedPathString: string, parsedMatchString: string): boolean => {
-    return true;
+export const match = (typedPathString: string, match: string): boolean => {
+    let something = match
+        // .replace(/%\./g, "%0")
+        // .replace(/%:/g, "%1")
+        // .replace(/%|/g, "%2")
+        .split(".")
+        .map((part: string): string => {
+            let [name, type] = part.split(":");
+
+            name = escapeStringRegexp(name);
+
+            // if no type, match any type selector
+            if(!type) {
+                return `${name}:*`;
+            }
+
+            // split types apart and replace with type selectors
+            let types = type
+                .split('|')
+                .sort((a: string, b: string): number => {
+                    if (a < b) return -1;
+                    else if (a > b) return 1;
+                    return 0;
+                })
+                .map((tt: string): string => {
+                    let typeSelector = TYPE_SELECTORS[tt];
+                    if(!typeSelector) {
+                        let choices = pipeWith(
+                            TYPE_SELECTORS,
+                            keyArray(),
+                            join(", ")
+                        );
+                        throw new Error(`"${tt}" is not a valid type selector. Choose one of ${choices}`);
+                    }
+                    return typeSelector;
+                })
+                .join("*");
+
+            return `${name}:*${types}*`;
+        })
+        .join("\\.");
+
+    console.log("something", something);
+
+    // escapeStringRegexp()
+
+    return new RegExp(something, "g").test(typedPathString);
 };
 
 // const TYPE_SELECTORS = {
