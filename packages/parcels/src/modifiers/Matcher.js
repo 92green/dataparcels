@@ -9,14 +9,12 @@
 
 import escapeStringRegexp from 'escape-string-regexp';
 
-// import filter from 'unmutable/lib/filter';
 import join from 'unmutable/lib/join';
 import keyArray from 'unmutable/lib/keyArray';
-// import push from 'unmutable/lib/push';
-// import reduce from 'unmutable/lib/reduce';
-// import update from 'unmutable/lib/update';
+import log from 'unmutable/lib/log';
+import map from 'unmutable/lib/map';
 
-// import map from 'unmutable/lib/map';
+import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 const TYPE_SELECTORS = {
@@ -32,53 +30,74 @@ const TYPE_SELECTORS = {
     ["!TopLevel"]: "t"
 };
 
-export const match = (typedPathString: string, match: string): boolean => {
-    let something = match
-        // .replace(/%\./g, "%0")
-        // .replace(/%:/g, "%1")
-        // .replace(/%|/g, "%2")
-        .split(".")
-        .map((part: string): string => {
-            let [name, type] = part.split(":");
+const SPLIT_CHARS = ["\\.", ":", "\\|", "%\\*"];
 
-            name = escapeStringRegexp(name);
-
-            // if no type, match any type selector
-            if(!type) {
-                return `${name}:*`;
-            }
-
-            // split types apart and replace with type selectors
-            let types = type
-                .split('|')
-                .sort((a: string, b: string): number => {
-                    if (a < b) return -1;
-                    else if (a > b) return 1;
-                    return 0;
-                })
-                .map((tt: string): string => {
-                    let typeSelector = TYPE_SELECTORS[tt];
-                    if(!typeSelector) {
-                        let choices = pipeWith(
-                            TYPE_SELECTORS,
-                            keyArray(),
-                            join(", ")
-                        );
-                        throw new Error(`"${tt}" is not a valid type selector. Choose one of ${choices}`);
-                    }
-                    return typeSelector;
-                })
-                .join("*");
-
-            return `${name}:*${types}*`;
+const escapeSplitChars = pipe(
+    ...pipeWith(
+        SPLIT_CHARS,
+        map((chr: string, index: number): Function => {
+            return str => str.replace(new RegExp(`%${chr}`, "g"), `%${index}`);
         })
-        .join("\\.");
+    )
+);
 
-    console.log("something", something);
+const regexifyGlobstars = str => str.replace(/\\\*\\\*/g, ".*?");
+const regexifyWildcards = str => str.replace(/\\\*/g, "[^^.]*?");
 
-    // escapeStringRegexp()
+const regexifyPart = (part: string): string => {
+    let [name, type] = part.split(":");
 
-    return new RegExp(something, "g").test(typedPathString);
+    // if no type, match any type selector
+    if(!type) {
+        return `${name}:*`;
+    }
+
+    // split types apart and replace with type selectors
+    let types = type
+        .split('|')
+        .sort((a: string, b: string): number => {
+            if (a < b) return -1;
+            else if (a > b) return 1;
+            return 0;
+        })
+        .map((tt: string): string => {
+            let typeSelector = TYPE_SELECTORS[tt];
+            if(!typeSelector) {
+                let choices = pipeWith(
+                    TYPE_SELECTORS,
+                    keyArray(),
+                    join(", ")
+                );
+                throw new Error(`"${tt}" is not a valid type selector. Choose one of ${choices}`);
+            }
+            return typeSelector;
+        })
+        .join("*");
+
+    return `${name}:*${types}*`;
+};
+
+export default (typedPathString: string, match: string): boolean => {
+    return pipeWith(
+        match,
+        log("1"),
+        escapeSplitChars,
+        log("2"),
+        ii => ii.split("."),
+        map(regexifyPart),
+        log("3"),
+        join("."),
+        escapeStringRegexp,
+        log("4"),
+        regexifyGlobstars,
+        regexifyWildcards,
+        regex => `^${regex}$`,
+        log("regex"),
+        (regex: string): boolean => {
+            let test = escapeSplitChars(typedPathString);
+            return new RegExp(regex, "g").test(test);
+        }
+    );
 };
 
 // const TYPE_SELECTORS = {
