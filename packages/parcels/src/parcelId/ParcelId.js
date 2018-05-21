@@ -93,7 +93,11 @@ export default class ParcelId {
     setTypeCode: Function = (typeCode: string): ParcelId => {
         return pipeWith(
             this.toJS(),
-            updateIn(['typedPath', -1], ii => `${ii}:${typeCode}`),
+            updateIn(
+                ['typedPath', -1],
+                // TODO - once matcher is in, improve this logic to cope with escaped colons
+                ii => ii.indexOf(":") === -1 ? `${ii}:${typeCode}` : ii
+            ),
             this._create
         );
     };
