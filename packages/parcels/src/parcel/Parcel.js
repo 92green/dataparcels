@@ -201,12 +201,19 @@ export default class Parcel {
         // $FlowFixMe - I want to use compued properties, go away flow
         let addMethods = map((fn, name) => this[name] = fn);
         addMethods({
+            // $FlowFixMe
             ...ActionMethods(this),
+            // $FlowFixMe
             ...ChildParcelMethods(this),
+            // $FlowFixMe
             ...ElementParcelMethods(this),
+            // $FlowFixMe
             ...IndexedParcelMethods(this),
+            // $FlowFixMe
             ...ModifyMethods(this),
+            // $FlowFixMe
             ...ParentParcelMethods(this),
+            // $FlowFixMe
             ...ValueParcelMethods(this)
         });
     }
