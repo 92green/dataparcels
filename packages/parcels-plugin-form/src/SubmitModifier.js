@@ -1,6 +1,5 @@
 // @flow
 import type Parcel from 'parcels';
-import type {ParcelData} from 'parcels';
 
 import filter from 'unmutable/lib/filter';
 import getIn from 'unmutable/lib/getIn';
@@ -42,7 +41,7 @@ export default (onSubmit: ?Function) => (parcel: Parcel): Parcel => {
             submitting: false, // TODO - actionMeta can replace this
             submit: () => ref.submit()
         })
-        .modifyChange(({parcel, continueChange, newParcelData, actions}: Object) => {
+        .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
             let parcelData = newParcelData();
             if(!parcelData.meta.submitting) { // TODO - actionMeta can replace this
                 continueChange();

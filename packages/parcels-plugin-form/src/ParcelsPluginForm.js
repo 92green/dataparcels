@@ -1,5 +1,4 @@
 // @flow
-import type Parcel from 'parcels';
 import pipe from 'unmutable/lib/util/pipe';
 
 import SubmitModifier from './SubmitModifier';
