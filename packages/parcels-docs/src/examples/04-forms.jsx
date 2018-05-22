@@ -1,5 +1,7 @@
 import React from 'react';
 import Parcel, {PureParcel} from 'parcels-react';
+import ParcelsPluginForm from 'parcels-plugin-form';
+
 import example from '../components/Example';
 
 import reduce from 'unmutable/lib/reduce';
@@ -10,85 +12,8 @@ const desc = `
 
 While parcels is useful for any kind of user input, capturing user input in forms is a common use case with a specific set of formy needs.
 
-Here's where I try to make parcels-modifier-form...
+Here's where I try to make parcels-plugin-form...
 `;
-
-const AddSubmitModifier = () => (parcel) => {
-    let ref = {};
-
-    let newParcel = parcel.initialMeta({
-        submitted: false,
-        submit: () => ref.submit()
-    });
-
-    ref.submit = () => {
-        newParcel.refresh();
-        newParcel.setMeta({
-            submitted: true
-        });
-    };
-
-    return newParcel;
-};
-
-const AddTouchedModifier = (match = "") => (parcel) => {
-    return parcel.addModifier({
-        modifier: ii => ii.modifyChange(({parcel, continueChange}) => {
-            parcel.setMeta({
-                touched: true
-            });
-            continueChange();
-        }),
-        match
-    })
-};
-
-const AddOriginalValueModifier = (match = "") => (parcel) => {
-    return parcel.addModifier({
-        modifier: ii => ii.initialMeta({
-            originalValue: parcel.value()
-        }),
-        match: match || "**/*:!Parent"
-    });
-};
-
-const AddDirtyModifier = (match = "") => (parcel) => {
-    return parcel.addModifier({
-        modifier: ii => ii.modifyChange(({parcel, continueChange, newParcelData}) => {
-            let {value, meta} = newParcelData();
-            parcel.setMeta({
-                dirty: value !== meta.originalValue
-            });
-            continueChange();
-        }),
-        match: match || "**/*:!Parent"
-    });
-};
-
-const AddValidModifier = (validators) => (parcel) => {
-    return pipeWith(
-        validators,
-        reduce((parcel, validatorArray, match) => {
-            return parcel.addModifier({
-                modifier: ii => ii.modifyChange(({parcel, continueChange, newParcelData}) => {
-                    parcel.setMeta({
-                        error: pipeWith(
-                            validatorArray,
-                            reduce((error, validator) => {
-                                if(error) {
-                                    return error;
-                                }
-                                return validator(newParcelData().value)
-                            }, null)
-                        )
-                    });
-                    continueChange();
-                }),
-                match
-            });
-        }, parcel)
-    );
-};
 
 export default class ExampleMeta extends React.Component {
     constructor(props) {
@@ -116,23 +41,23 @@ export default class ExampleMeta extends React.Component {
         let isEmail = (value) => /.+@.+\..+/.test(value) ? null : "This field must contain an email address";
         let isQuantity = (value) => /^\d+$/.test(value) ? null : "This field must contain a whole number";
 
-        let lunch = this.state.lunch
-            .modify(AddSubmitModifier())
-            .modify(AddTouchedModifier())
-            .modify(AddOriginalValueModifier())
-            .modify(AddDirtyModifier())
-            .modify(AddValidModifier({
-                "name": [isRequired],
-                "email": [isRequired, isEmail],
-                "food.type": [isRequired],
-                "food.quantity": [isRequired, isQuantity]
-            }));
-
-        console.log("lunch", lunch._typedPathString());
+        let lunch = this.state.lunch.modify(
+            ParcelsPluginForm({
+                onSubmit: (value) => {
+                    console.log("submitted:", value);
+                },
+                validators: {
+                    "name": [isRequired],
+                    "email": [isRequired, isEmail],
+                    "food.type": [isRequired],
+                    "food.quantity": [isRequired, isQuantity]
+                }
+            })
+        );
 
         let renderError = (parcel) => {
             let error = parcel.meta('error');
-            if(lunch.meta('submitted') && error) {
+            if(lunch.meta('attemptedSubmit') && error) {
                 return <p className="Text Text-failure Text-margin">{error}</p>;
             }
         };

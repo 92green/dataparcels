@@ -1,0 +1,31 @@
+{
+  "name": "parcels-plugin-form",
+  "version": "0.0.2",
+  "description": "Parcels modifiers to add classic web form behaviours like submit, hooks for validators etc.",
+  "main": "lib/index.js",
+  "license": "UNLICENSED",
+  "author": "Damien Clarke",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blueflag/parcels.git"
+  },
+  "files": [
+    "lib"
+  ],
+  "bugs": {
+    "url": "https://github.com/blueflag/parcels/issues"
+  },
+  "private": false,
+  "scripts": {
+    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore **/*-test.js",
+    "watch": "yarn run build -w"
+  },
+  "devDependencies": {
+    "parcels": "^0.5.0",
+    "unmutable": "0.27.0"
+  },
+  "peerDependencies": {
+    "parcels": "^0.5.0",
+    "unmutable": "0.27.0"
+  }
+}
