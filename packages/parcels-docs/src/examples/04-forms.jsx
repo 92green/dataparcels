@@ -1,5 +1,7 @@
 import React from 'react';
 import Parcel, {PureParcel} from 'parcels-react';
+import ParcelsPluginForm from 'parcels-plugin-form';
+
 import example from '../components/Example';
 
 import reduce from 'unmutable/lib/reduce';
@@ -10,72 +12,8 @@ const desc = `
 
 While parcels is useful for any kind of user input, capturing user input in forms is a common use case with a specific set of formy needs.
 
-Here's where I try to make parcels-modifier-form...
+Here's where I try to make parcels-plugin-form...
 `;
-
-const AddTouchedModifier = (match = "") => (parcel) => {
-    return parcel.addModifier({
-        modifier: ii => ii.modifyChange(({parcel, continueChange}) => {
-            parcel.setMeta({
-                touched: true
-            });
-            continueChange();
-        }),
-        match
-    })
-};
-
-const AddOriginalValueModifier = (match = "") => (parcel) => {
-    // TODO make addInitalMetaModifier('key', (originalParcel) => Meta)
-    return parcel.addModifier({
-        modifier: ii => ii.modifyChange(({parcel, continueChange}) => {
-            if(!parcel.meta().hasOwnProperty('originalValue')) {
-                parcel.setMeta({
-                    originalValue: parcel.value()
-                });
-            }
-            continueChange();
-        }),
-        match: match || "**/*:!Parent"
-    });
-};
-
-const AddDirtyModifier = (match = "") => (parcel) => {
-    return parcel.addModifier({
-        modifier: ii => ii.modifyChange(({parcel, continueChange, newParcelData}) => {
-            parcel.setMeta({
-                dirty: newParcelData.value !== newParcelData.meta.originalValue
-            });
-            continueChange();
-        }),
-        match: match || "**/*:!Parent"
-    });
-};
-
-const AddValidModifier = (validators) => (parcel) => {
-    return pipeWith(
-        validators,
-        reduce((parcel, validatorArray, match) => {
-            return parcel.addModifier({
-                modifier: ii => ii.modifyChange(({parcel, continueChange, newParcelData}) => {
-                    parcel.setMeta({
-                        error: pipeWith(
-                            validatorArray,
-                            reduce((error, validator) => {
-                                if(error) {
-                                    return error;
-                                }
-                                return validator(newParcelData.value)
-                            }, null)
-                        )
-                    });
-                    continueChange();
-                }),
-                match
-            });
-        }, parcel)
-    );
-};
 
 export default class ExampleMeta extends React.Component {
     constructor(props) {
@@ -87,7 +25,7 @@ export default class ExampleMeta extends React.Component {
                 email: "",
                 food: {
                     type: "Apples",
-                    quantity: 1
+                    quantity: "1"
                 }
             },
             handleChange: (lunch) => this.setState({lunch})
@@ -103,23 +41,25 @@ export default class ExampleMeta extends React.Component {
         let isEmail = (value) => /.+@.+\..+/.test(value) ? null : "This field must contain an email address";
         let isQuantity = (value) => /^\d+$/.test(value) ? null : "This field must contain a whole number";
 
-        let lunch = this.state.lunch
-            .modify(AddTouchedModifier())
-            .modify(AddOriginalValueModifier())
-            .modify(AddDirtyModifier())
-            .modify(AddValidModifier({
-                "name": [isRequired],
-                "email": [isRequired, isEmail],
-                "food.type": [isRequired],
-                "food.quantity": [isRequired, isQuantity]
-            }));
+        let lunch = this.state.lunch.modify(
+            ParcelsPluginForm({
+                onSubmit: (value) => {
+                    console.log("submitted:", value);
+                },
+                validators: {
+                    "name": [isRequired],
+                    "email": [isRequired, isEmail],
+                    "food.type": [isRequired],
+                    "food.quantity": [isRequired, isQuantity]
+                }
+            })
+        );
 
-        let submitted = lunch.meta('submitted');
-
-        let onSubmit = () => {
-            lunch.setMeta({
-                submitted: true
-            });
+        let renderError = (parcel) => {
+            let error = parcel.meta('error');
+            if(lunch.meta('attemptedSubmit') && error) {
+                return <p className="Text Text-failure Text-margin">{error}</p>;
+            }
         };
 
         return example(this, desc, <div>
@@ -128,7 +68,7 @@ export default class ExampleMeta extends React.Component {
                 {(name) => <div>
                     <label className="Label">what is your name?</label>
                     <input className="Input" type="text" {...name.spreadDOM()} />
-                    {submitted && name.meta('error') && <p className="Text Text-failure Text-margin">{name.meta('error')}</p>}
+                    {renderError(name)}
                 </div>}
             </PureParcel>
 
@@ -136,7 +76,7 @@ export default class ExampleMeta extends React.Component {
                 {(email) => <div>
                     <label className="Label">what is your email?</label>
                     <input className="Input" type="tel" {...email.spreadDOM()} />
-                    {submitted && email.meta('error') && <p className="Text Text-failure Text-margin">{email.meta('error')}</p>}
+                    {renderError(email)}
                 </div>}
             </PureParcel>
 
@@ -144,7 +84,7 @@ export default class ExampleMeta extends React.Component {
                 {(type) => <div>
                     <label className="Label">what type of food would you like?</label>
                     <input className="Input" type="text" {...type.spreadDOM()} />
-                    {submitted && type.meta('error') && <p className="Text Text-failure Text-margin">{type.meta('error')}</p>}
+                    {renderError(type)}
                 </div>}
             </PureParcel>
 
@@ -152,11 +92,11 @@ export default class ExampleMeta extends React.Component {
                 {(quantity) => <div>
                     <label className="Label">how many would you like?</label>
                     <input className="Input" type="tel" {...quantity.spreadDOM()} />
-                    {submitted && quantity.meta('error') && <p className="Text Text-failure Text-margin">{quantity.meta('error')}</p>}
+                    {renderError(quantity)}
                 </div>}
             </PureParcel>
 
-            <button className="Button Button-primary" onClick={onSubmit}>Submit</button>
+            <button className="Button Button-primary" onClick={lunch.meta('submit')}>Submit</button>
         </div>);
     }
 }

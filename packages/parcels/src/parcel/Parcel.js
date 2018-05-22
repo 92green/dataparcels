@@ -44,8 +44,7 @@ export default class Parcel {
     _id: ParcelId;
     _modifiers: Modifiers;
     _treeshare: Treeshare;
-    _actionBuffer: Action[] = [];
-    _actionBufferOn: boolean = false;
+    _actionBuffer: Action[][] = [];
     _parcelTypes: ParcelTypes;
     _applyModifiers: Function;
 
@@ -57,6 +56,7 @@ export default class Parcel {
     _buffer: Function;
     _flush: Function;
     _skipReducer: Function;
+    _thunkReducer: Function;
     // - id methods
     _typedPathString: Function;
 
@@ -70,6 +70,7 @@ export default class Parcel {
     isElement: Function;
     isIndexed: Function;
     isParent: Function;
+    isTopLevel: Function;
     // - id methods
     key: Function;
     id: Function;
@@ -103,6 +104,7 @@ export default class Parcel {
     onChangeDOM: Function;
     setMeta: Function;
     updateMeta: Function;
+    refresh: Function;
     // - parent parcel methods
     set: Function;
     setIn: Function;
@@ -132,10 +134,12 @@ export default class Parcel {
     // public modify methods
     //
 
+    // - modify methods
     modify: Function;
     modifyData: Function;
     modifyValue: Function;
     modifyChange: Function;
+    initialMeta: Function;
     addPreModifier: Function;
     addModifier: Function;
     addDescendantModifier: Function;
@@ -164,7 +168,12 @@ export default class Parcel {
         };
 
         // types
-        this._parcelTypes = new ParcelTypes(value, parent && parent._parcelTypes);
+        this._parcelTypes = new ParcelTypes(
+            value,
+            parent && parent._parcelTypes,
+            id
+        );
+
         this._id = id.setTypeCode(this._parcelTypes.toTypeCode());
 
         // modifiers
@@ -179,6 +188,7 @@ export default class Parcel {
         this.isElement = this._parcelTypes.isElement;
         this.isIndexed = this._parcelTypes.isIndexed;
         this.isParent = this._parcelTypes.isParent;
+        this.isTopLevel = this._parcelTypes.isTopLevel;
 
         // id methods
         this._typedPathString = this._id.typedPathString;
@@ -190,12 +200,19 @@ export default class Parcel {
         // $FlowFixMe - I want to use compued properties, go away flow
         let addMethods = map((fn, name) => this[name] = fn);
         addMethods({
+            // $FlowFixMe
             ...ActionMethods(this),
+            // $FlowFixMe
             ...ChildParcelMethods(this),
+            // $FlowFixMe
             ...ElementParcelMethods(this),
+            // $FlowFixMe
             ...IndexedParcelMethods(this),
+            // $FlowFixMe
             ...ModifyMethods(this),
+            // $FlowFixMe
             ...ParentParcelMethods(this),
+            // $FlowFixMe
             ...ValueParcelMethods(this)
         });
     }

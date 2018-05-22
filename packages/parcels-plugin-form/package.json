@@ -1,7 +1,7 @@
 {
-  "name": "parcels-devtools",
+  "name": "parcels-plugin-form",
   "version": "0.0.2",
-  "description": "Parcels Devtools",
+  "description": "Parcels modifiers to add classic web form behaviours like submit, hooks for validators etc.",
   "main": "lib/index.js",
   "license": "UNLICENSED",
   "author": "Damien Clarke",
@@ -17,17 +17,15 @@
   },
   "private": false,
   "scripts": {
-    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore **/*-test.js"
-  },
-  "dependencies": {
-    "unmutable": "^0.26.0"
+    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore **/*-test.js",
+    "watch": "yarn run build -w"
   },
   "devDependencies": {
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2"
+    "parcels": "^0.5.0",
+    "unmutable": "0.27.0"
   },
   "peerDependencies": {
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "parcels": "^0.5.0",
+    "unmutable": "0.27.0"
   }
 }

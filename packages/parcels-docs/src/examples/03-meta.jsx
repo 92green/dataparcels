@@ -27,9 +27,23 @@ export default class ExampleMeta extends React.Component {
 
     render() {
         let {details} = this.state;
+
+        let address = details
+            .get('address')
+            .initialMeta({
+                correct: true,
+                nice: true
+            });
+
+        let email = details
+            .get('email')
+            .initialMeta({
+                correct: false
+            });
+
         return example(this, desc, <div>
 
-            <PureParcel parcel={details.get('address')}>
+            <PureParcel parcel={address}>
                 {(address) => <div>
                     <label className="Label">address</label>
                     <input className="Input" type="text" {...address.spreadDOM()} />
@@ -44,7 +58,7 @@ export default class ExampleMeta extends React.Component {
                 </div>}
             </PureParcel>
 
-            <PureParcel parcel={details.get('email')}>
+            <PureParcel parcel={email}>
                 {(email) => <div>
                     <label className="Label">email</label>
                     <input className="Input" type="text" {...email.spreadDOM()} />

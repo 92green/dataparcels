@@ -41,14 +41,7 @@ export default class ParcelId {
     };
 
     id: Function = (): string => {
-        if(this._id.length === 1) {
-            return this._id[0];
-        }
-        return pipeWith(
-            this._id,
-            rest(),
-            join("/")
-        );
+        return this._id.join(".");
     };
 
     path: Function = (): Array<Key> => {
@@ -65,7 +58,7 @@ export default class ParcelId {
         return pipeWith(
             this._typedPath,
             rest(),
-            join("/")
+            join(".")
         );
     };
 
@@ -100,7 +93,11 @@ export default class ParcelId {
     setTypeCode: Function = (typeCode: string): ParcelId => {
         return pipeWith(
             this.toJS(),
-            updateIn(['typedPath', -1], ii => `${ii}:${typeCode}`),
+            updateIn(
+                ['typedPath', -1],
+                // TODO - once matcher is in, improve this logic to cope with escaped colons
+                ii => ii.indexOf(":") === -1 ? `${ii}:${typeCode}` : ii
+            ),
             this._create
         );
     };

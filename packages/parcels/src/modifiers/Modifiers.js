@@ -24,7 +24,9 @@ const TYPE_SELECTORS = {
     ["Indexed"]: "I",
     ["!Indexed"]: "i",
     ["Parent"]: "P",
-    ["!Parent"]: "p"
+    ["!Parent"]: "p",
+    ["TopLevel"]: "T",
+    ["!TopLevel"]: "t"
 };
 
 export default class Modifiers {
@@ -104,7 +106,9 @@ export default class Modifiers {
         let typedPathString = parcel._typedPathString();
         return pipeWith(
             this._processedModifiers,
-            filter(({match}) => !match || minimatch(typedPathString, match.replace(/\./g, "/"))),
+            filter(({match}: Object): boolean => {
+                return !match || minimatch(typedPathString.replace(/\./g, "/"), match.replace(/\./g, "/"));
+            }),
             reduce(
                 (parcel, modifier) => modifier.modifier(parcel),
                 parcel

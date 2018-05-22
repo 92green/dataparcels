@@ -65,5 +65,17 @@ export default (_this: Parcel): Object => ({
     updateMeta: (updater: Function) => {
         let {meta} = _this._parcelData;
         _this.setMeta(updater(meta));
+    },
+
+    refresh: () => {
+        _this._buffer();
+        _this
+            ._treeshare
+            .registry
+            .leaves(_this.id())
+            .forEach((parcel: Parcel) => {
+                parcel.dispatch(ActionCreators.noop());
+            });
+        _this._flush();
     }
 });

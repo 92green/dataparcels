@@ -94,6 +94,10 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
             );
         }
 
+        case "noop": {
+            return parcelData;
+        }
+
         case "pop": {
             return updateIn(
                 keyPath,

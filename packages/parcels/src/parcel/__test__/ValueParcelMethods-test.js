@@ -413,3 +413,39 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
         };
     });
 });
+
+test('Parcel should refresh()', (tt: Object) => {
+    tt.plan(1);
+    var data = {
+        value: {
+            z: {
+                a: 123,
+                b: [1,2,3],
+                c: "!"
+            },
+            y: "Y!"
+        },
+        handleChange: (parcel, actions) => {
+            let expectedActions = [
+                {type: 'noop', keyPath: ['z','c']},
+                {type: 'setMeta', keyPath: ['z','b']},
+                {type: 'noop', keyPath: ['z','b',0]}
+            ];
+
+            let processedActions = actions.map(ii => {
+                let {type, keyPath} = ii.toJS();
+                return {type, keyPath};
+            });
+
+            tt.deepEqual(expectedActions, processedActions, `previously created LEAF parcels should each fire a noop, catching modifyChange()s along the way`);
+        }
+    };
+
+    let z = new Parcel(data).get('z');
+    z.get('c');
+    z.get('b').modifyChange(({continueChange, parcel, newParcelData}) => {
+        parcel.setMeta({a:1});
+        continueChange();
+    }).get(0);
+    z.refresh();
+});
