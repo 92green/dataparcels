@@ -38,6 +38,48 @@ test('Parcel._buffer() should buffer any actions and _flush() should dispatch th
     tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
 });
 
+test('Parcel._buffer() calls should be nestable', (tt: Object) => {
+    tt.plan(4);
+
+    var functionCalls = [];
+    var expectedFunctionCalls = [
+        '_buffer',
+        'onChange(456)',
+        '_buffer 2',
+        'onChange(789)',
+        'handleChange'
+    ];
+
+    var data = {
+        value: 123,
+        handleChange: (parcel) => {
+            let {value} = parcel.data();
+            tt.is(value, 789);
+            functionCalls.push("handleChange");
+        }
+    };
+
+    let parcel = new Parcel(data);
+    parcel._buffer();
+    functionCalls.push("_buffer");
+    parcel.onChange(456);
+    tt.is(456, parcel.value(), 'parcel contains correct value after first onchange');
+    functionCalls.push("onChange(456)");
+
+    parcel._buffer();
+    functionCalls.push("_buffer 2");
+
+    parcel.onChange(789);
+    tt.is(789, parcel.value(), 'parcel contains correct value after second onchange');
+    functionCalls.push("onChange(789)");
+
+    parcel._flush();
+    parcel._flush();
+
+    tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
+});
+
+
 test('Parcel.batch() should batch actions', (tt: Object) => {
     tt.plan(2);
 

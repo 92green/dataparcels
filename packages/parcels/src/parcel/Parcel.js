@@ -44,8 +44,7 @@ export default class Parcel {
     _id: ParcelId;
     _modifiers: Modifiers;
     _treeshare: Treeshare;
-    _actionBuffer: Action[] = [];
-    _actionBufferOn: boolean = false;
+    _actionBuffer: Action[][] = [];
     _parcelTypes: ParcelTypes;
     _applyModifiers: Function;
 

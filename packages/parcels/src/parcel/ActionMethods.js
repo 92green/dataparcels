@@ -3,16 +3,19 @@ import type Parcel from './Parcel';
 import type Action from '../action/Action';
 import Reducer from '../action/Reducer';
 
+import concat from 'unmutable/lib/concat';
+import isNotEmpty from 'unmutable/lib/isNotEmpty';
+import last from 'unmutable/lib/last';
+import update from 'unmutable/lib/update';
+import pipeWith from 'unmutable/lib/util/pipeWith';
+
 export default (_this: Parcel): Object => ({
     _buffer: () => {
-        _this._actionBuffer = [];
-        _this._actionBufferOn = true;
+        _this._actionBuffer.push([]);
     },
 
     _flush: () => {
-        _this._actionBufferOn = false;
-        _this.dispatch(_this._actionBuffer);
-        _this._actionBuffer = [];
+        _this.dispatch(_this._actionBuffer.pop());
     },
 
     _skipReducer: (handleChange: Function): Function => {
@@ -26,8 +29,12 @@ export default (_this: Parcel): Object => ({
     },
 
     dispatch: (action: Action|Action[]) => {
-        if(_this._actionBufferOn) {
-            _this._actionBuffer = _this._actionBuffer.concat(action);
+        if(_this._actionBuffer.length > 0) {
+            _this._actionBuffer = pipeWith(
+                _this._actionBuffer,
+                update(-1, concat(action))
+            );
+
             _this._parcelData = Reducer(_this._parcelData, action);
             return;
         }
@@ -66,8 +73,17 @@ export default (_this: Parcel): Object => ({
     batch: (batcher: Function) => {
         _this._buffer();
         batcher(_this);
-        if(_this._actionBuffer.length > 0) {
+
+        let shouldFlush: boolean = pipeWith(
+            _this._actionBuffer,
+            last(),
+            isNotEmpty()
+        );
+
+        if(shouldFlush) {
             _this._flush();
+        } else {
+            _this._actionBuffer.pop();
         }
     }
 });
