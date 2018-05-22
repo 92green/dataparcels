@@ -4,7 +4,7 @@ import Parcel from '../Parcel';
 
 const handleChange = ii => {};
 
-test('Parcel.modify() should return the result of modifys updater', (tt: Object) => {
+test('Parcel.modify() should return the result of modifys updaters', (tt: Object) => {
     var data = {
         value: 123,
         handleChange
@@ -13,15 +13,23 @@ test('Parcel.modify() should return the result of modifys updater', (tt: Object)
     let parcel = new Parcel(data);
     let modifiedParcel = null;
 
-    let modified = parcel.modify(ii => {
-        tt.is(ii, parcel, 'modify is passed parcel');
-        modifiedParcel = ii.modifyValue(ii => ii + 100);
-        return modifiedParcel;
-    });
+    let modified = parcel.modify(
+        ii => {
+            tt.is(ii, parcel, 'modify is passed parcel (1st modifier)');
+            modifiedParcel = ii.modifyValue(ii => ii + 100);
+            return modifiedParcel;
+        },
+        ii => {
+            tt.is(ii, modifiedParcel, 'modify is passed parcel from 1st modifier (2nd modifier)');
+            modifiedParcel = ii.modifyValue(ii => ii + 100);
+            return modifiedParcel;
+        }
+    );
 
     tt.is(modifiedParcel, modified, 'modify returns modified parcel');
-    tt.is(223, modifiedParcel && modifiedParcel.value(), 'modify returns modified parcel value');
+    tt.is(323, modifiedParcel && modifiedParcel.value(), 'modify returns modified parcel value');
 });
+
 
 test('Parcel.modifyData() should return a new parcel with updated parcelData', (tt: Object) => {
     var data = {

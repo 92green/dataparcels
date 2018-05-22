@@ -23,8 +23,11 @@ export default (_this: Parcel): Object => ({
     },
 
     // modify methods
-    modify: (updater: Function): Parcel => {
-        return updater(_this);
+    modify: (...updaters: Function[]): Parcel => {
+        return pipeWith(
+            _this,
+            ...updaters
+        );
     },
 
     modifyData: (updater: Function): Parcel => {
