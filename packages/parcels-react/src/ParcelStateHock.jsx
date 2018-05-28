@@ -10,13 +10,15 @@ type State = {
 type ChildProps = {};
 type ParcelStateHockConfig = {
     initialValue?: (props: Object) => *,
-    prop?: string
+    prop?: string,
+    modify?: (parcel: Parcel) => Parcel
 };
 
 export default (config: ParcelStateHockConfig): Function => {
     let {
         initialValue = () => undefined,
-        prop = "parcel"
+        prop = "parcel",
+        modify = ii => ii
     } = config;
 
     return (Component: ComponentType<ChildProps>) => class ParcelStateHock extends React.Component<Props, State> {
@@ -35,10 +37,16 @@ export default (config: ParcelStateHockConfig): Function => {
         }
 
         render(): Node {
+            let {parcel} = this.state;
+            if(modify) {
+                parcel = parcel.modify(modify);
+            }
+
             let props = {
                 ...this.props,
-                [prop]: this.state.parcel
+                [prop]: parcel
             };
+
             return <Component {...props} />;
         }
     };
