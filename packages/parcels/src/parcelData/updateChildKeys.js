@@ -12,7 +12,7 @@ import set from 'unmutable/lib/set';
 import take from 'unmutable/lib/take';
 import toArray from 'unmutable/lib/toArray';
 import update from 'unmutable/lib/update';
-import isValueObject from 'unmutable/lib/util/isValueObject';
+import isIndexed from 'unmutable/lib/util/isIndexed';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
@@ -32,7 +32,7 @@ function toIntKey(str: ?string): ?number {
 export default () => (parcelData: ParcelData): ParcelData => {
     let {value, child} = parcelData;
 
-    if(isValueObject(value)) {
+    if(!isIndexed(value)) {
         let updateChild = map((node, key) => set('key', key)(node));
 
         return pipeWith(
