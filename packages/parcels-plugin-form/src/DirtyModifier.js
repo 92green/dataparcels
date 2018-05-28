@@ -5,7 +5,7 @@ export default (match: string = "") => (parcel: Parcel): Parcel => {
     return parcel.addModifier({
         modifier: ii => ii
             .initialMeta({
-                originalValue: parcel.value()
+                originalValue: ii.value()
             })
             .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
                 let {value, meta} = newParcelData();
