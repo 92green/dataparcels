@@ -1,6 +1,6 @@
 {
   "name": "parcels-react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Parcels + a couple of helpful React components for optimal rendering",
   "main": "lib/index.js",
   "license": "UNLICENSED",
@@ -20,7 +20,7 @@
     "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore **/*-test.js"
   },
   "dependencies": {
-    "parcels": "^0.6.0",
+    "parcels": "^0.6.1",
     "unmutable": "^0.26.0"
   },
   "devDependencies": {
