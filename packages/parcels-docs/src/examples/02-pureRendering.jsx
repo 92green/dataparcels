@@ -69,9 +69,9 @@ export default class ExamplePureRendering extends React.Component {
                 </div>}
             </PureParcel>
 
-            <PureParcel parcel={person.getIn(['address', 'city'])}>
+            <PureParcel parcel={person.getIn(['address', 'city'])} debounce={100}>
                 {(city) => <div style={this.randomBackground()}>
-                    <label className="Label">city</label>
+                    <label className="Label">city (with 100ms debounce)</label>
                     <input className="Input" type="text" {...city.spreadDOM()} />
                 </div>}
             </PureParcel>
