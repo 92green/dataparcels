@@ -14,11 +14,12 @@ type ParcelsPluginFormConfig = {
 export default (config: ParcelsPluginFormConfig = {}): Function => {
     let {
         onSubmit,
+        onError,
         validators
     } = config;
 
     return pipe(
-        SubmitModifier(onSubmit),
+        SubmitModifier({onSubmit, onError}),
         TouchedModifier(),
         DirtyModifier(),
         ValidModifier(validators)

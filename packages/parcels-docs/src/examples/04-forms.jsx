@@ -46,6 +46,9 @@ export default class ExampleMeta extends React.Component {
                 onSubmit: (value) => {
                     console.log("submitted:", value);
                 },
+                onError: (errors) => {
+                    console.log("errors", errors);
+                },
                 validators: {
                     "name": [isRequired],
                     "email": [isRequired, isEmail],
@@ -61,6 +64,8 @@ export default class ExampleMeta extends React.Component {
                 return <p className="Text Text-failure Text-margin">{error}</p>;
             }
         };
+
+        // TODO - does initialMeta() work together with forms?
 
         return example(this, desc, <div>
 

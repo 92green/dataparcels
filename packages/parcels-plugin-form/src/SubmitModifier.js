@@ -2,9 +2,10 @@
 import type Parcel from 'parcels';
 
 import filter from 'unmutable/lib/filter';
+import get from 'unmutable/lib/get';
 import getIn from 'unmutable/lib/getIn';
-import identity from 'unmutable/lib/identity';
 import map from 'unmutable/lib/map';
+import update from 'unmutable/lib/update';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
@@ -27,17 +28,22 @@ const specialFlatten = (keyPath: string[]) => (value: *): Array<Object> => {
 
 let getErrors = pipe(
     specialFlatten(['child']),
-    map(getIn(['value', 'meta', 'error'])),
-    filter(identity())
+    map(pipe(
+        update('value', getIn(['meta', 'error'])),
+        update('label', getIn(['meta', 'label'])),
+        update('path', filter((ii, index) => index % 2 === 1))
+    )),
+    filter(get('value'))
 );
 
-export default (onSubmit: ?Function) => (parcel: Parcel): Parcel => {
+export default ({onSubmit, onError}: Object) => (parcel: Parcel): Parcel => {
     let ref = {};
 
 
     let newParcel = parcel
         .initialMeta({
             attemptedSubmit: false,
+            errors: [],
             submitting: false, // TODO - actionMeta can replace this
             submit: () => ref.submit()
         })
@@ -48,16 +54,17 @@ export default (onSubmit: ?Function) => (parcel: Parcel): Parcel => {
                 return;
             }
 
-            if(onSubmit) {
-                let errors = getErrors(parcelData);
-                if(errors.length === 0) {
-                    onSubmit(parcelData.value, parcelData);
-                }
+            let errors = getErrors(parcelData);
+            if(errors.length === 0) {
+                onSubmit && onSubmit(parcelData.value, parcelData);
+            } else {
+                onError && onError(errors, parcelData);
             }
 
             continueChange();
             parcel.setMeta({ // TODO - actionMeta can replace this
-                submitting: false
+                submitting: false,
+                errors
             });
         });
 
