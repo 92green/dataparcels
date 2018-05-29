@@ -8,4 +8,4 @@ Parcels are data containers that bundle your data with the functions that can ch
 
 Using Parcels it becomes very simple to set up user interfaces that edit parts of complex data shapes.
 
-[Check out the examples](/parcels/examples/simpleObjects)
+[Check out the examples](/examples/simpleObjects)
