@@ -30,6 +30,7 @@ export default class PureParcel extends React.Component<Props, State> {
     }
 
     shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+        // BUG - meta object is blatting my stuff? Time to add tests...
         let withParcelValue = ({forceUpdate = []}, {parcel}) => ({
             ...parcel.data(),
             ...forceUpdate
