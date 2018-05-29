@@ -14,15 +14,11 @@ type Props = {
 };
 
 export default class PureParcel extends React.Component<Props> {
-    shouldComponentUpdate(nextProps: Object): boolean {
-        let withParcelValue = ({parcel, forceUpdate = []}) => ({
-            ...parcel.data(),
-            ...forceUpdate
-        });
 
-        let aa = withParcelValue(this.props);
-        let bb = withParcelValue(nextProps);
-        return !shallowEquals(aa)(bb);
+    shouldComponentUpdate(nextProps: Object): boolean {
+        let parcelDataChanged: boolean = !this.props.parcel.equals(nextProps.parcel);
+        let forceUpdateChanged: boolean = !shallowEquals(this.props.forceUpdate || [])(nextProps.forceUpdate || []);
+        return parcelDataChanged || forceUpdateChanged;
     }
 
     debugRenderStyle: Function = (): Object => {

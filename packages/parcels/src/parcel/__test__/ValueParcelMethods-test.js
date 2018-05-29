@@ -449,3 +449,27 @@ test('Parcel should refresh()', (tt: Object) => {
     }).get(0);
     z.refresh();
 });
+
+test('Parcel.equals() should compare two parcels data', (tt: Object) => {
+    var child = {};
+    var parcelCreator = (merge = {}) => {
+        let p = new Parcel();
+        p._parcelData = {
+            value: 123,
+            meta: {
+                abc: 123,
+                def: 456
+            },
+            key: "a",
+            child,
+            ...merge
+        };
+        return p;
+    };
+
+    tt.true(parcelCreator().equals(parcelCreator()), 'parcel equals self');
+    tt.false(parcelCreator().equals(parcelCreator({value: 456})), 'parcel doesnt equals different value');
+    tt.false(parcelCreator().equals(parcelCreator({meta: {abc: 123}})), 'parcel doesnt equals different meta contents');
+    tt.false(parcelCreator().equals(parcelCreator({child: {}})), 'parcel doesnt equals different child');
+    tt.false(parcelCreator().equals(parcelCreator({key: "b"})), 'parcel doesnt equals different key');
+});

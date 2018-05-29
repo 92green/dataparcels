@@ -82,6 +82,7 @@ export default class Parcel {
     spread: Function;
     spreadDOM: Function;
     meta: Function;
+    equals: Function;
     // - parent parcel methods
     has: Function;
     get: Function;

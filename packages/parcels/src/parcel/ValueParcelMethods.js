@@ -4,6 +4,7 @@ import type Parcel from './Parcel';
 import strip from '../parcelData/strip';
 import ActionCreators from '../action/ActionCreators';
 
+import shallowEquals from 'unmutable/lib/shallowEquals';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel): Object => ({
@@ -38,6 +39,16 @@ export default (_this: Parcel): Object => ({
     meta: (metaKey: ?string = undefined): * => {
         let {meta} = _this._parcelData;
         return metaKey ? meta[metaKey] : {...meta};
+    },
+
+    equals: (otherParcel: Parcel): boolean => {
+        let aa: Object = _this.raw();
+        let bb: Object = otherParcel.raw();
+
+        return aa.value === bb.value
+            && aa.key === bb.key
+            && aa.child === bb.child
+            && shallowEquals(aa.meta)(bb.meta);
     },
 
     // change methods
