@@ -21,7 +21,8 @@ export type PartialParcelData = {
 
 export type ParcelConfig = {
     handleChange?: Function,
-    value?: *
+    value?: *,
+    debugRender?: boolean
 };
 
 export type ParcelConfigInternal = {

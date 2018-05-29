@@ -7,7 +7,7 @@ const desc = `
 
 Before we go any further, if you're using parcels with React you'll care about render performance. By default all parcels in the tree will always re-render. This can be bad for render performance. The \`PureParcel\` component will only re-render when the \`parcel\` passed into it changes its data*.
 
-The colors in the example below will change on each re-render to demonstrate which elements are being re-rendered.
+The colors in the example below will change on each re-render to demonstrate which elements are being re-rendered. You can turn this on by passing \`debugRender: true\` to your Parcel's config.
 
 **Using PureParcel is VERY recommended.**
 
@@ -27,7 +27,8 @@ export default class ExamplePureRendering extends React.Component {
                     city: "Floopsville"
                 }
             },
-            handleChange: (person) => this.setState({person})
+            handleChange: (person) => this.setState({person}),
+            debugRender: true
         });
 
         this.state = {
@@ -35,42 +36,33 @@ export default class ExamplePureRendering extends React.Component {
         };
     }
 
-    randomBackground: Function = () => {
-        let rand = () => Math.floor((Math.random() * 0.75 + 0.25) * 256);
-        return {
-            backgroundColor: `rgb(${rand()},${rand()},${rand()})`,
-            padding: "1rem",
-            marginBottom: "1rem"
-        };
-    };
-
     render() {
         let {person} = this.state;
         return example(this, desc, <div>
 
             <PureParcel parcel={person.get('firstname')}>
-                {(firstname) => <div style={this.randomBackground()}>
+                {(firstname) => <div>
                     <label className="Label">firstname</label>
                     <input className="Input" type="text" {...firstname.spreadDOM()} />
                 </div>}
             </PureParcel>
 
             <PureParcel parcel={person.get('lastname')}>
-                {(lastname) => <div style={this.randomBackground()}>
+                {(lastname) => <div>
                     <label className="Label">lastname</label>
                     <input className="Input" type="text" {...lastname.spreadDOM()} />
                 </div>}
             </PureParcel>
 
             <PureParcel parcel={person.getIn(['address', 'streetAddress'])}>
-                {(streetAddress) => <div style={this.randomBackground()}>
+                {(streetAddress) => <div>
                     <label className="Label">street address</label>
                     <input className="Input" type="text" {...streetAddress.spreadDOM()} />
                 </div>}
             </PureParcel>
 
             <PureParcel parcel={person.getIn(['address', 'city'])} debounce={100}>
-                {(city) => <div style={this.randomBackground()}>
+                {(city) => <div>
                     <label className="Label">city (with 100ms debounce)</label>
                     <input className="Input" type="text" {...city.spreadDOM()} />
                 </div>}

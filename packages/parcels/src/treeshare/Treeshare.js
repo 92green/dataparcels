@@ -70,14 +70,27 @@ class TreeshareRegistry {
 }
 
 export default class Treeshare {
+    _debugRender: boolean = false;
+    _preModifier: Modifiers = new Modifiers();
     registry: Object = new TreeshareRegistry();
-    preModifier: Modifiers = new Modifiers();
+
+    constructor({debugRender}: Object) {
+        this._debugRender = debugRender;
+    }
+
+    getDebugRender: Function = (): boolean => {
+        return this._debugRender;
+    }
 
     hasPreModifier: Function = (): boolean => {
-        return !this.preModifier.isEmpty();
+        return !this._preModifier.isEmpty();
+    };
+
+    getPreModifier: Function = (): Modifiers => {
+        return this._preModifier;
     };
 
     setPreModifier: Function = (modifier: ModifierFunction) => {
-        this.preModifier = this.preModifier.set([modifier]);
+        this._preModifier = this._preModifier.set([modifier]);
     };
 }

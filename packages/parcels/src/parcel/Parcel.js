@@ -24,7 +24,7 @@ import Treeshare from '../treeshare/Treeshare';
 
 import map from 'unmutable/lib/map';
 
-const DEFAULT_CONFIG_INTERNAL: ParcelConfigInternal = {
+const DEFAULT_CONFIG_INTERNAL = {
     child: undefined,
     meta: {},
     id: new ParcelId(),
@@ -147,7 +147,8 @@ export default class Parcel {
     constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
             handleChange = () => {},
-            value = undefined
+            value = undefined,
+            debugRender = false
         } = parcelConfig;
 
         let {
@@ -180,7 +181,7 @@ export default class Parcel {
         this._modifiers = modifiers || new Modifiers();
 
         // treeshare
-        this._treeshare = treeshare || new Treeshare();
+        this._treeshare = treeshare || new Treeshare({debugRender});
         this._treeshare.registry.set(id.id(), this);
 
         // parcel type methods
@@ -223,22 +224,18 @@ export default class Parcel {
 
     _create: Function = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
-            handleChange,
-            id = this._id,
             parcelData: {
                 child,
                 value,
                 meta
             },
-            modifiers = this._modifiers,
-            parent
-        } = createParcelConfig;
-
-        if(!handleChange) {
             handleChange = this._skipReducer((parcel: Parcel, action: Action|Action[]) => {
                 this.dispatch(action);
-            });
-        }
+            }),
+            id = this._id,
+            modifiers = this._modifiers,
+            parent = undefined
+        } = createParcelConfig;
 
         let parcel: Parcel = new Parcel(
             {
