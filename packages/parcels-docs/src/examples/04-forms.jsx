@@ -28,7 +28,8 @@ export default class ExampleMeta extends React.Component {
                     quantity: "1"
                 }
             },
-            handleChange: (lunch) => this.setState({lunch})
+            handleChange: (lunch) => this.setState({lunch}),
+            debugRender: true
         });
 
         this.state = {

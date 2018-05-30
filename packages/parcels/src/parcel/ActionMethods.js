@@ -56,7 +56,7 @@ export default (_this: Parcel): Object => ({
                 });
 
                 if(_this._treeshare.hasPreModifier() && _this.id() === "^") {
-                    parcel = _this._treeshare.preModifier.applyTo(parcel);
+                    parcel = _this._treeshare.getPreModifier().applyTo(parcel);
                 }
 
                 return parcel;
