@@ -21,35 +21,23 @@ test('PureParcel should pass a *value equivalent* parcel to children', tt => {
     </PureParcel>);
 });
 
-test('PureParcel should send correct changes back up', async tt => {
+test('PureParcel should send correct changes back up when debounce = 0', tt => {
     tt.plan(2);
-    return new Promise((resolve) => {
-        let parcel = new Parcel({
-            value: 456,
-            handleChange: (newParcel) => {
-                tt.is(newParcel.value(), 123);
-            }
-        });
-
-        let renders = 0;
-
-        let wrapper = shallow(<PureParcel parcel={parcel}>
-            {(pp) => {
-                if(renders === 0) {
-                    pp.onChange(123);
-                } else if(renders === 1) {
-                    tt.is(pp.value(), 123);
-                }
-                renders++;
-            }}
-        </PureParcel>);
-
-        setTimeout(() => {
-            wrapper.instance().forceUpdate();
-            wrapper.update().render();
-            resolve();
-        }, 1000);
+    let hasChanged = false;
+    let parcel = new Parcel({
+        value: 456,
+        handleChange: (newParcel) => {
+            hasChanged = true;
+            tt.is(123, newParcel.value(), `handleChange receives correct value`);
+        }
     });
+
+    let wrapper = shallow(<PureParcel parcel={parcel}>
+        {(pp) => {
+            pp.onChange(123);
+            tt.true(hasChanged, `onChange works synchronously when debounce = 0 (handleChange should already be called by this point)`)
+        }}
+    </PureParcel>);
 });
 
 test('PureParcel should pass a NEW *value equivalent* parcel to children when props change', tt => {
@@ -113,13 +101,13 @@ test('PureParcel should rerender if parcel has not changed value but forceUpdate
 });
 
 test('PureParcel should debounce', async tt => {
-    tt.plan(3);
+    tt.plan(5);
     return new Promise((resolve) => {
         let handleChangeCalls = 0;
         let parcel = new Parcel({
             handleChange: (newParcel) => {
                 handleChangeCalls++;
-                tt.is(newParcel.value(), 789);
+                tt.is(newParcel.value(), 789, 'parcel should send correct changes back up when debouncing');
             }
         });
 
@@ -130,11 +118,13 @@ test('PureParcel should debounce', async tt => {
                 if(renders === 0) {
                     pp.onChange(123);
                 } else if(renders === 1) {
+                    tt.is(123, pp.value(), 'parcel should receive correct value on 1st re-render');
                     pp.onChange(456);
                 } else if(renders === 2) {
+                    tt.is(456, pp.value(), 'parcel should receive correct value on 2nd re-render');
                     pp.onChange(789);
                 } else if(renders === 3) {
-                    tt.is(pp.value(), 789);
+                    tt.is(789, pp.value(), 'parcel should receive correct value on 3rd re-render');
                 }
                 renders++;
             }}
@@ -156,7 +146,7 @@ test('PureParcel should debounce', async tt => {
         }, 60);
 
         setTimeout(() => {
-            tt.is(handleChangeCalls, 1);
+            tt.is(handleChangeCalls, 1, 'handleChange should have been called just once');
             wrapper.instance().forceUpdate();
             wrapper.update().render();
             resolve();

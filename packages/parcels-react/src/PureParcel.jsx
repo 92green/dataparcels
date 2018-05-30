@@ -30,7 +30,10 @@ export default class PureParcel extends React.Component<Props, State> {
     }
 
     shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
-        let parcelDataChanged: boolean = !this.state.parcel.equals(nextState.parcel);
+        let parcelDataChanged: boolean = nextProps.debounce
+            ? !this.state.parcel.equals(nextState.parcel)
+            : !this.props.parcel.equals(nextProps.parcel);
+
         let forceUpdateChanged: boolean = !shallowEquals(this.props.forceUpdate || [])(nextProps.forceUpdate || []);
         return parcelDataChanged || forceUpdateChanged;
     }
@@ -53,13 +56,16 @@ export default class PureParcel extends React.Component<Props, State> {
         };
     };
 
-    render(): Node {
+    getParcel: Function = (): Parcel => {
         let {
-            children,
             debounce = 0
         } = this.props;
 
-        let parcel = this.state.parcel
+        if(!debounce) {
+            return this.props.parcel;
+        }
+
+        return this.state.parcel
             .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
                 let parcelData = newParcelData();
                 this.setState({
@@ -76,8 +82,13 @@ export default class PureParcel extends React.Component<Props, State> {
                     }
                 }, debounce);
             });
+    };
 
+    render(): Node {
+        let {children} = this.props;
+        let parcel = this.getParcel();
         let element = children(parcel);
+
         if(parcel._treeshare.getDebugRender()) {
             return <div style={this.debugRenderStyle()}>{element}</div>;
         }
