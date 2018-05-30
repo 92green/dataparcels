@@ -1,6 +1,6 @@
 {
   "name": "parcels-react",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Parcels + a couple of helpful React components for optimal rendering",
   "main": "lib/index.js",
   "license": "UNLICENSED",
