@@ -126,6 +126,9 @@ function NodeName({node}: Object): Node {
 }
 
 function TypeLink({type}: Object): Node {
+    if(!type) {
+        return null;
+    }
     const {expression, applications, elements, name} = type;
     const typeAllLiteral = ii => ii.type === 'AllLiteral' ? '*' : ii.name;
 
@@ -188,7 +191,7 @@ function TypeLink({type}: Object): Node {
 
 const extend = (node: Object): Node => {
     const {augments} = node;
-    if(augments.length) {
+    if(augments && augments.length) {
         return <Text>extends {augments.map(({name}) =>
             <Text key={name}>
                 <Text> </Text>
@@ -212,7 +215,7 @@ export default function Doclet(props: Object): Node {
         {<Text element="h2" modifier={`${primary ? 'sizeGiga' : 'sizeMega'} marginGiga`}>{name}</Text>}
         <Text modifier="block muted marginGiga">
             <Text>{scope} {kind} </Text>
-            {augments.length > 0 && <Text>{extend(node)}</Text>}
+            {augments && augments.length > 0 && <Text>{extend(node)}</Text>}
         </Text>
         <Typography dangerouslySetInnerHTML={{__html: getIn(['childMarkdownRemark', 'html'])(description)}}/>
         <Text element="pre" modifier="marginGiga definition">

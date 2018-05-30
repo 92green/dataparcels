@@ -35,6 +35,19 @@ const DEFAULT_CONFIG_INTERNAL = {
     treeshare: undefined
 };
 
+/**
+ * The Parcel class is a something.
+ *
+ * @example
+ * new Parcel({
+ *     value: 123,
+ *     handleChange: () => {}
+ * });
+ *
+ * @param {ParcelConfig} parcelConfig Config
+ *
+ */
+
 export default class Parcel {
 
     //
@@ -67,6 +80,14 @@ export default class Parcel {
 
     // get methods
     // - type methods
+
+    /**
+     *  Woo
+     *
+     *  @param {Object} name - A name for the type of thing
+     *  @return {ParcelData} Something
+     */
+
     isChild: Function;
     isElement: Function;
     isIndexed: Function;

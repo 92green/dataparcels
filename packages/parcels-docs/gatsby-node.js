@@ -79,10 +79,6 @@ exports.createPages = ({graphql, boundActionCreators}) => {
 
     function createDocumentation() {
         return graphql(DOCUMENTATION_QUERY)
-            .then(ii => {
-                console.log("ii", ii);
-                return ii;
-            })
             .then(({data}) => data.allDocumentationJs.edges.map(({node}) => {
                 createPage({
                     path: node.fields.slug,
@@ -178,7 +174,7 @@ exports.createPages = ({graphql, boundActionCreators}) => {
     }
 
     return Promise.resolve()
-        //.then(createDocumentation)
+        .then(createDocumentation)
         .then(createMarkdown)
         .then(createExamples)
     ;

@@ -20,6 +20,14 @@ export default function Navigation(): Node {
         <NavHeading>Parcels</NavHeading>
         <NavItem to="/">Home</NavItem>
         <NavItem to="/examples">Examples</NavItem>
+
+        <NavHeading>API</NavHeading>
+        <NavItem to="/api/EntityApi">EntityApi</NavItem>
+        <NavItem to="/api/EntityQueryHock">EntityQueryHock</NavItem>
+        <NavItem to="/api/EntityMutationHock">EntityMutationHock</NavItem>
+
+        <NavHeading>Misc</NavHeading>
+        <NavItem to="/types">All Types</NavItem>
     </ul>;
 }
 
