@@ -9,16 +9,18 @@ type State = {
 };
 type ChildProps = {};
 type ParcelStateHockConfig = {
+    debugRender?: boolean,
     initialValue?: (props: Object) => *,
-    prop?: string,
-    modify?: (parcel: Parcel) => Parcel
+    modify?: (parcel: Parcel) => Parcel,
+    prop?: string
 };
 
 export default (config: ParcelStateHockConfig): Function => {
     let {
         initialValue = () => undefined,
         prop = "parcel",
-        modify = ii => ii
+        modify = ii => ii,
+        debugRender = false
     } = config;
 
     return (Component: ComponentType<ChildProps>) => class ParcelStateHock extends React.Component<Props, State> {
@@ -28,7 +30,8 @@ export default (config: ParcelStateHockConfig): Function => {
             let parcel = new Parcel({
                 // $FlowFixMe - props is not an unused function argument - this is only true for the default initialValue
                 value: initialValue(props),
-                handleChange: (parcel) => this.setState({parcel})
+                handleChange: (parcel) => this.setState({parcel}),
+                debugRender
             });
 
             this.state = {
