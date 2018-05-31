@@ -81,13 +81,6 @@ export default class Parcel {
     // get methods
     // - type methods
 
-    /**
-     *  Woo
-     *
-     *  @param {Object} name - A name for the type of thing
-     *  @return {ParcelData} Something
-     */
-
     isChild: Function;
     isElement: Function;
     isIndexed: Function;

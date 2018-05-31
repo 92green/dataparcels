@@ -4,6 +4,95 @@ const digest = str => crypto.createHash(`md5`).update(str).digest(`hex`);
 const remark = require(`remark`);
 const Prism = require(`prismjs`);
 
+//
+// use records!!
+//
+
+class Tag {
+    description: ?string;
+    kind: ?string;
+    lineNumber: ?number;
+    name: ?string;
+    title: ?string;
+}
+
+class Error {
+    commentLineNumber: ?number;
+    message: ?string;
+}
+
+class Example {
+    highlighted: ?string;
+    raw: ?string;
+}
+
+class Param {
+    default: ?string;
+    name: ?string;
+    title: ?string;
+    type: ?Type;
+}
+
+class Return {
+    name: ?string;
+    type: ?Type;
+}
+
+class Property {
+    name: ?string;
+    type: ?Type;
+}
+
+class Path {
+    kind: ?string;
+    name: ?string;
+    scope: ?string;
+}
+
+class Internal {
+    contentDigest: ?*;
+    owner: ?*;
+    type: ?*;
+}
+
+class Field {
+    name: ?string;
+    kind: ?string;
+    slug: ?string;
+    sortBy: ?string;
+}
+
+class Type {
+    name: ?string;
+    type: ?string;
+}
+
+class DocNode {
+    augments: ?string;
+    children: ?*;
+    context: ?*;
+    description: ?*;
+    errors: ?Error[] = [];
+    examples: ?Example[] = [];
+    fields: ?Field[] = [];
+    id: ?string;
+    internal: ?internal;
+    kind: ?string;
+    loc: ?*;
+    memberof: ?string;
+    name: ?string;
+    namespace: ?string;
+    namespace: ?string;
+    params: ?Param[] = [];
+    parent: ?*;
+    path: ?Path;
+    properties: ?Property[] = [];
+    returns: ?Return[] = [];
+    scope: ?string;
+    tags: ?Tag[];
+    type: ?Type;
+}
+
 const stringifyMarkdownAST = (node = ``) => {
     if (typeof node === 'string') {
         return node
@@ -45,11 +134,15 @@ function createDescriptionNode(
 }
 
 function createDoclet(docsJson, i, node, boundActionCreators) {
-    console.log('====createDoclet===:', i);
-    console.log(docsJson);
-    console.log('\n');
+    //console.log('====createDoclet===:', i);
+    //console.log(docsJson);
+    //console.log('\n');
 
-    const { createNode, createParentChildLink } = boundActionCreators;
+    const {
+        createNode,
+        createParentChildLink
+    } = boundActionCreators;
+
     const picked = {
         kind: undefined,
         memberof: undefined,
@@ -62,6 +155,9 @@ function createDoclet(docsJson, i, node, boundActionCreators) {
         type: undefined,
         ...docsJson
     };
+
+    // const docNode = new DocNode(docsJson);
+    // console.log("docNode", docNode);
 
     // Defaults
     picked.params = [{ name: ``, type: { type: ``, name: `` } }]
