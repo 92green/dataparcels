@@ -2,11 +2,10 @@ const documentation = require(`documentation`);
 const crypto = require(`crypto`);
 const digest = str => crypto.createHash(`md5`).update(str).digest(`hex`);
 const remark = require(`remark`);
-const _ = require(`lodash`);
 const Prism = require(`prismjs`);
 
 const stringifyMarkdownAST = (node = ``) => {
-    if (_.isString(node)) {
+    if (typeof node === 'string') {
         return node
     } else {
         return remark().stringify(node)
@@ -46,11 +45,23 @@ function createDescriptionNode(
 }
 
 function createDoclet(docsJson, i, node, boundActionCreators) {
-    // console.log('====createDoclet===:', i);
-    // console.log(docsJson);
-    // console.log('\n')
+    console.log('====createDoclet===:', i);
+    console.log(docsJson);
+    console.log('\n');
+
     const { createNode, createParentChildLink } = boundActionCreators;
-    const picked = _.pick(docsJson, [`kind`, `memberof`, `name`, `scope`, `members`, `augments`, `namespace`, `properties`, `type`])
+    const picked = {
+        kind: undefined,
+        memberof: undefined,
+        name: undefined,
+        scope: undefined,
+        members: undefined,
+        augments: undefined,
+        namespace: undefined,
+        properties: undefined,
+        type: undefined,
+        ...docsJson
+    };
 
     // Defaults
     picked.params = [{ name: ``, type: { type: ``, name: `` } }]
