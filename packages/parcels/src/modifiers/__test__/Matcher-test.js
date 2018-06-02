@@ -186,6 +186,11 @@ let matchTests = [
         shouldMatch: []
     },
     {
+        name: "match wildcard children with multiple types",
+        match: "*:Element|Child",
+        shouldMatch: ["childValue", "childObject", "childArray", "escapeChars"]
+    },
+    {
         name: "match wildcard children with negative type",
         match: "*:!Child",
         shouldMatch: []

@@ -46,12 +46,12 @@ const regexifyPart = (part: string): string => {
 
     // if no type, match any type selector
     if(!type) {
-        return `${name}:*`;
+        return `${name}:[^^.]*?`;
     }
 
     // split types apart and replace with type selectors
     let types = pipeWith(
-        type.split('|'),
+        type.split('\\|'),
         sort(),
         map((tt: string): string => {
             let typeSelector = TYPE_SELECTORS[tt];
@@ -65,10 +65,10 @@ const regexifyPart = (part: string): string => {
             }
             return typeSelector;
         }),
-        join("*")
+        join()
     );
 
-    return `${name}:*${types}*`;
+    return `${name}:[^^.]*?[${types}][^^.]*?`;
 };
 
 export default (typedPathString: string, match: string): boolean => {
@@ -76,10 +76,10 @@ export default (typedPathString: string, match: string): boolean => {
         match,
         addImpliedCarat,
         escapeSplitChars,
-        ii => ii.split("."),
-        map(regexifyPart),
-        join("."),
         escapeStringRegexp,
+        ii => ii.split("\\."),
+        map(regexifyPart),
+        join("\\."),
         regexifyGlobstars,
         regexifyWildcards,
         regex => `^${regex}$`,
