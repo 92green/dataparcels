@@ -5,6 +5,7 @@ import doIf from 'unmutable/lib/doIf';
 import join from 'unmutable/lib/join';
 import keyArray from 'unmutable/lib/keyArray';
 import map from 'unmutable/lib/map';
+import sort from 'unmutable/lib/sort';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
@@ -49,14 +50,10 @@ const regexifyPart = (part: string): string => {
     }
 
     // split types apart and replace with type selectors
-    let types = type
-        .split('|')
-        .sort((a: string, b: string): number => {
-            if (a < b) return -1;
-            else if (a > b) return 1;
-            return 0;
-        })
-        .map((tt: string): string => {
+    let types = pipeWith(
+        type.split('|'),
+        sort(),
+        map((tt: string): string => {
             let typeSelector = TYPE_SELECTORS[tt];
             if(!typeSelector) {
                 let choices = pipeWith(
@@ -67,8 +64,9 @@ const regexifyPart = (part: string): string => {
                 throw new Error(`"${tt}" is not a valid type selector. Choose one of ${choices}`);
             }
             return typeSelector;
-        })
-        .join("*");
+        }),
+        join("*")
+    );
 
     return `${name}:*${types}*`;
 };
