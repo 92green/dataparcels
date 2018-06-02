@@ -14,14 +14,14 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let typedPathStrings = {
     top: "^:ceiPT",
-    childValue: "abc:Ceipt",
-    childObject: "def:CeiPt",
-    grandchildValue: "def:CeiPt.defkid:Ceipt",
-    grandchildWithDot: "def:CeiPt.dot%.dot:Ceipt",
-    greatGrandchild: "def:CeiPt.more:CeiPt.abc:Ceipt",
-    childArray: "ghi:CeIPt",
-    grandchildElement: "ghi:CeIPt.#a:CEipt",
-    escapeChars: "jkl%.%:%|%#%,:Ceipt"
+    childValue: "^:ceiPT.abc:Ceipt",
+    childObject: "^:ceiPT.def:CeiPt",
+    grandchildValue: "^:ceiPT.def:CeiPt.defkid:Ceipt",
+    grandchildWithDot: "^:ceiPT.def:CeiPt.dot%.dot:Ceipt",
+    greatGrandchild: "^:ceiPT.def:CeiPt.more:CeiPt.abc:Ceipt",
+    childArray: "^:ceiPT.ghi:CeIPt",
+    grandchildElement: "^:ceiPT.ghi:CeIPt.#a:CEipt",
+    escapeChars: "^:ceiPT.jkl%.%:%|%#%,:Ceipt"
 };
 
 let matchTests = [
@@ -210,20 +210,6 @@ let matchTests = [
         match: "*:!TopLevel",
         shouldMatch: ["childValue", "childObject", "childArray", "escapeChars"]
     },
-    // {
-    //     name: "match globstar with type",
-    //     match: "**.*:Child",
-    //     shouldMatch: [
-    //         "childValue",
-    //         "childObject",
-    //         "grandchildValue",
-    //         "grandchildWithDot",
-    //         "greatGrandchild",
-    //         "childArray",
-    //         "grandchildElement",
-    //         "escapeChars"
-    //     ]
-    // },
     {
         name: "match globstar with type",
         match: "**:Parent",
@@ -233,14 +219,38 @@ let matchTests = [
             "childArray"
         ]
     },
-    // {
-    //     name: "match globstar and wildcard with type",
-    //     match: "**.*:Parent",
-    //     shouldMatch: [
-    //         "childObject",
-    //         "childArray"
-    //     ]
-    // },
+    {
+        name: "match globstar with wildcard",
+        match: "**.*",
+        shouldMatch: [
+            "childValue",
+            "childObject",
+            "grandchildValue",
+            "grandchildWithDot",
+            "greatGrandchild",
+            "childArray",
+            "grandchildElement",
+            "escapeChars"
+        ]
+    },
+    {
+        name: "match globstar with two wildcards",
+        match: "**.*.*",
+        shouldMatch: [
+            "grandchildValue",
+            "grandchildWithDot",
+            "greatGrandchild",
+            "grandchildElement"
+        ]
+    },
+    {
+        name: "match globstar and wildcard with type",
+        match: "**.*:Parent",
+        shouldMatch: [
+            "childObject",
+            "childArray"
+        ]
+    },
     {
         name: "match globstar with type",
         match: "**:Indexed",

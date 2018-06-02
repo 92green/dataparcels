@@ -1,6 +1,7 @@
 // @flow
 import escapeStringRegexp from 'escape-string-regexp';
 
+import doIf from 'unmutable/lib/doIf';
 import join from 'unmutable/lib/join';
 import keyArray from 'unmutable/lib/keyArray';
 import map from 'unmutable/lib/map';
@@ -21,6 +22,11 @@ const TYPE_SELECTORS = {
 };
 
 const SPLIT_CHARS = ["\\.", ":", "\\|", "%\\*"];
+
+const addImpliedCarat = doIf(
+    ii => ii[0] !== "^" && `${ii[0]}${ii[1]}` !== "**",
+    ii => `^.${ii}`
+);
 
 const escapeSplitChars = pipe(
     ...pipeWith(
@@ -70,6 +76,7 @@ const regexifyPart = (part: string): string => {
 export default (typedPathString: string, match: string): boolean => {
     return pipeWith(
         match,
+        addImpliedCarat,
         escapeSplitChars,
         ii => ii.split("."),
         map(regexifyPart),

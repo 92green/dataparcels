@@ -19,13 +19,6 @@ test('get should work with objects', (tt: Object) => {
     };
 
     tt.deepEqual(expectedParcelData, get('a')(parcelData));
-
-    let expectedParcelData2 = {
-        value: undefined,
-        meta: {}
-    };
-
-    tt.deepEqual(expectedParcelData2, get('z')(parcelData));
 });
 
 test('get should not clone value', (tt: Object) => {
@@ -91,4 +84,27 @@ test('get should work with objects that already have children, and not recreate 
     tt.deepEqual(expectedParcelData, get('a')(parcelData));
 });
 
-// TODO test meta
+test('get should work with non existent keys', (tt: Object) => {
+    let parcelData = {
+        value: {
+            a: {
+                b: 1
+            }
+        }
+    };
+    let expectedParcelData = {
+        meta: {},
+        value: undefined,
+        key: "z"
+    };
+
+    tt.deepEqual(expectedParcelData, get('z')(parcelData));
+
+    let expectedParcelData2 = {
+        meta: {},
+        value: "!!!",
+        key: "z"
+    };
+
+    tt.deepEqual(expectedParcelData2, get('z', "!!!")(parcelData));
+});

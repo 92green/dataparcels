@@ -29,7 +29,7 @@ export default (key: Key|Index, notSetValue: * = undefined) => (parcelData: Parc
         value: getIn(['value', key], notSetValue)(parcelData),
         ...pipeWith(
             parcelData,
-            getIn(['child', key], {})
+            getIn(['child', key], {key})
         )
     });
 };
