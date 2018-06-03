@@ -85,7 +85,7 @@ export default (_this: Parcel): Object => ({
             .registry
             .leaves(_this.id())
             .forEach((parcel: Parcel) => {
-                parcel.dispatch(ActionCreators.noop());
+                parcel.dispatch(ActionCreators.ping());
             });
         _this._flush();
     }
