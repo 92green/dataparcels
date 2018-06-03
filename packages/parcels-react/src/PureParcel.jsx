@@ -66,7 +66,8 @@ export default class PureParcel extends React.Component<Props, State> {
         }
 
         return this.state.parcel
-            .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
+            .modifyChange(({parcel, continueChange, newParcelData, actions}: Object) => {
+
                 let parcelData = newParcelData();
                 this.setState({
                     parcel: parcel._create({
@@ -74,8 +75,15 @@ export default class PureParcel extends React.Component<Props, State> {
                     })
                 });
 
+                let shouldBeSynchronous: boolean = actions.some(action => action.shouldBeSynchronous());
+
                 this.changeCount++;
                 let originalChangeCount = this.changeCount;
+                if(shouldBeSynchronous) {
+                    continueChange();
+                    return;
+                }
+
                 setTimeout(() => {
                     if(originalChangeCount === this.changeCount) {
                         continueChange();
