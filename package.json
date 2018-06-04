@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "lerna run build --parallel --",
+    "build": "cp README.md packages/parcels/README.md && cp README.md packages/parcels-react/README.md && lerna run build --parallel --",
     "flow": "blueflag-test flow",
     "lint": "blueflag-test lint --monorepo",
     "test": "blueflag-test test --monorepo",

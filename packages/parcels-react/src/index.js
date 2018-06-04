@@ -1,10 +1,8 @@
 // @flow
 import parcels from 'parcels';
-import ParcelStateHock from './ParcelStateHock';
-import PureParcel from './PureParcel';
 export default parcels;
 
-export {
-    ParcelStateHock,
-    PureParcel
-};
+export {Action} from 'parcels';
+export {ActionCreators} from 'parcels';
+export {default as ParcelStateHock} from './ParcelStateHock';
+export {default as PureParcel} from './PureParcel';

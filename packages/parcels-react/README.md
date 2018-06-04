@@ -4,7 +4,7 @@ A super declarative user input library that works really well with React.
 
 *Almost done!*
 
-### (https://blueflag.github.io/parcels)[See the docs]
+### [See the very very unfinished docs](https://blueflag.github.io/parcels)
 
 ## Installation
 

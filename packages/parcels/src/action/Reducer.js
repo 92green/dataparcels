@@ -94,7 +94,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
             );
         }
 
-        case "noop": {
+        case "ping": {
             return parcelData;
         }
 

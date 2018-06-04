@@ -327,10 +327,10 @@ test('Reducer should insertBefore by array index deeply', tt => {
 });
 
 //
-// noop
+// ping
 //
 
-test('Reducer should noop', tt => {
+test('Reducer should ping', tt => {
     var data = {
         value: [
             0,
@@ -339,7 +339,7 @@ test('Reducer should noop', tt => {
         ]
     };
     var action = new Action({
-        type: "noop"
+        type: "ping"
     });
 
     var expectedValue = [

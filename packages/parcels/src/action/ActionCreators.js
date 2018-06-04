@@ -56,9 +56,9 @@ const insertBeforeSelf: Function = (value: *): Action => {
     });
 };
 
-const noop: Function = (): Action => {
+const ping: Function = (): Action => {
     return new Action({
-        type: "noop"
+        type: "ping"
     });
 };
 
@@ -162,7 +162,7 @@ export default {
     insertAfterSelf,
     insertBefore,
     insertBeforeSelf,
-    noop,
+    ping,
     push,
     pop,
     setMeta,
