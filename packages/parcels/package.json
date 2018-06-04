@@ -21,7 +21,7 @@
     "watch": "yarn run build -w"
   },
   "dependencies": {
-    "minimatch": "^3.0.4",
-    "unmutable": "0.27.0"
+    "escape-string-regexp": "^1.0.5",
+    "unmutable": "0.29.2"
   }
 }

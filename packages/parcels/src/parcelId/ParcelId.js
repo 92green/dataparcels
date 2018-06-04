@@ -1,13 +1,15 @@
 // @flow
 import type {Key} from '../types/Types';
 
+import doIf from 'unmutable/lib/doIf';
 import last from 'unmutable/lib/last';
-import join from 'unmutable/lib/join';
 import push from 'unmutable/lib/push';
 import rest from 'unmutable/lib/rest';
 import update from 'unmutable/lib/update';
 import updateIn from 'unmutable/lib/updateIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
+
+const escapeKey = key => key.replace(/([^\w])/g, "%$1");
 
 type ParcelIdData = {
     id: string[],
@@ -45,33 +47,23 @@ export default class ParcelId {
     };
 
     path: Function = (): Array<Key> => {
-        return pipeWith(
-            this._path,
-            rest()
-        );
+        return rest()(this._path);
     };
 
     typedPathString: Function = (): string => {
-        if(this._typedPath.length === 1) {
-            return this._typedPath[0];
-        }
-        return pipeWith(
-            this._typedPath,
-            rest(),
-            join(".")
-        );
+        return this._typedPath.join(".");
     };
 
     push: Function = (key: Key, isElement: boolean): ParcelId => {
-        let encodePush: Function = isElement
+        let escapeAndPush: Function = isElement
             ? push(key)
-            : push(encodeURIComponent(`${key}`));
+            : push(escapeKey(key));
 
         return pipeWith(
             this.toJS(),
-            update('id', encodePush),
+            update('id', escapeAndPush),
             update('path', push(key)),
-            update('typedPath', encodePush),
+            update('typedPath', escapeAndPush),
             this._create
         );
     };
@@ -93,11 +85,10 @@ export default class ParcelId {
     setTypeCode: Function = (typeCode: string): ParcelId => {
         return pipeWith(
             this.toJS(),
-            updateIn(
-                ['typedPath', -1],
-                // TODO - once matcher is in, improve this logic to cope with escaped colons
-                ii => ii.indexOf(":") === -1 ? `${ii}:${typeCode}` : ii
-            ),
+            updateIn(['typedPath', -1], doIf(
+                ii => ii.replace(/%:/g, "").indexOf(":") === -1,
+                ii =>`${ii}:${typeCode}`
+            )),
             this._create
         );
     };
