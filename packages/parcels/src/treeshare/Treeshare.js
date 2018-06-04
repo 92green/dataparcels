@@ -6,6 +6,7 @@ import filter from 'unmutable/lib/filter';
 import keyArray from 'unmutable/lib/keyArray';
 import map from 'unmutable/lib/map';
 import reduce from 'unmutable/lib/reduce';
+import sortBy from 'unmutable/lib/sortBy';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 class TreeshareRegistry {
@@ -17,13 +18,7 @@ class TreeshareRegistry {
         this._registryLeaves = pipeWith(
             this._registryLeaves,
             keyArray(),
-            ii => ii.sort((a: string, b: string): number => {
-                let alen = a.length;
-                let blen = b.length;
-                if (alen < blen) return 1;
-                else if (alen > blen) return -1;
-                return 0;
-            }),
+            sortBy(str => -str.length),
             reduce((leaves: string[], id: string): string[] => {
                 if(leaves.some(leaf => leaf.startsWith(id))) {
                     return leaves;

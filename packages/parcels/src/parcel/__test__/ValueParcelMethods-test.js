@@ -427,9 +427,9 @@ test('Parcel should refresh()', (tt: Object) => {
         },
         handleChange: (parcel, actions) => {
             let expectedActions = [
-                {type: 'noop', keyPath: ['z','c']},
+                {type: 'ping', keyPath: ['z','c']},
                 {type: 'setMeta', keyPath: ['z','b']},
-                {type: 'noop', keyPath: ['z','b',0]}
+                {type: 'ping', keyPath: ['z','b',0]}
             ];
 
             let processedActions = actions.map(ii => {
@@ -437,7 +437,7 @@ test('Parcel should refresh()', (tt: Object) => {
                 return {type, keyPath};
             });
 
-            tt.deepEqual(expectedActions, processedActions, `previously created LEAF parcels should each fire a noop, catching modifyChange()s along the way`);
+            tt.deepEqual(expectedActions, processedActions, `previously created LEAF parcels should each fire a ping, catching modifyChange()s along the way`);
         }
     };
 

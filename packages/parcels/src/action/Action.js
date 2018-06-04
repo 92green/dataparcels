@@ -21,6 +21,10 @@ export default class Action {
         this.keyPath = actionData.keyPath || [];
     }
 
+    shouldBeSynchronous(): boolean {
+        return this.type === "ping";
+    }
+
     toJS(): Object {
         let {type, payload, keyPath} = this;
         return {type, payload, keyPath};

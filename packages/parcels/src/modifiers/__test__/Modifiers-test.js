@@ -84,15 +84,3 @@ test('Modifiers should set()', (tt: Object) => {
     tt.deepEqual(expectedModifier, new Modifiers([modifier]).set([modifier2]).toJS());
     tt.deepEqual(expectedModifier, new Modifiers([modifier]).set([modifier2Object]).toJS());
 });
-
-test('Modifiers should _processMatch()', (tt: Object) => {
-    tt.is(undefined, new Modifiers()._processMatch(undefined), "_processMatch() can cope with undefined");
-    tt.is("abc:*", new Modifiers()._processMatch("abc"), "_processMatch() can cope with simple key");
-    tt.is("abc:*.def:*.ghi:*", new Modifiers()._processMatch("abc.def.ghi"), "_processMatch() can cope with deep key");
-    tt.is("*:*I*", new Modifiers()._processMatch("*:Indexed"), "_processMatch() can cope with a type");
-    tt.is("*:*i*", new Modifiers()._processMatch("*:!Indexed"), "_processMatch() can cope with a not type");
-    tt.is("hello:*C*P*", new Modifiers()._processMatch("hello:Parent|Child"), "_processMatch() can cope with a multi type");
-    tt.is("**.*:*", new Modifiers()._processMatch("**.*"), "_processMatch() can cope with a globstar");
-    //tt.is(tt.throws(() => new Modifiers()._processMatch("*:Notexist"), Error).message, `"Notexist" is not a valid type selector.`); TODO!
-});
-
