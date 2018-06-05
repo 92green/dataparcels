@@ -54,13 +54,13 @@ export default class ExampleMeta extends React.Component {
                 onError: (errors) => {
                     console.log("errors", errors);
                 },
-                validators: {
+                validators: (parcel) => ({
                     "name": [isRequired],
                     "email": [isRequired, isEmail],
                     "food.type": [isRequired],
                     "food.quantity": [isRequired, isQuantity],
                     "pets.*.name": [isRequired]
-                }
+                })
             })
         );
 
