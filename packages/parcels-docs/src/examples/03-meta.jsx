@@ -48,12 +48,12 @@ export default class ExampleMeta extends React.Component {
                     <label className="Label">address</label>
                     <input className="Input" type="text" {...address.spreadDOM()} />
                     <div>
-                        <span className="Text Text-marginRight">Is this correct? {String(address.meta('correct'))}</span>
-                        <button className="Button Button-inline" onClick={() => address.setMeta({correct: !address.meta('correct')})}>Toggle</button>
+                        <span className="Text Text-marginRight">Is this correct? {String(address.meta().correct)}</span>
+                        <button className="Button Button-inline" onClick={() => address.setMeta({correct: !address.meta().correct})}>Toggle</button>
                     </div>
                     <div>
-                        <span className="Text Text-marginRight">Is this a nice place? {String(address.meta('nice'))}</span>
-                        <button className="Button Button-inline" onClick={() => address.setMeta({nice: !address.meta('nice')})}>Toggle</button>
+                        <span className="Text Text-marginRight">Is this a nice place? {String(address.meta().nice)}</span>
+                        <button className="Button Button-inline" onClick={() => address.setMeta({nice: !address.meta().nice})}>Toggle</button>
                     </div>
                 </div>}
             </PureParcel>
@@ -63,8 +63,8 @@ export default class ExampleMeta extends React.Component {
                     <label className="Label">email</label>
                     <input className="Input" type="text" {...email.spreadDOM()} />
                     <div>
-                        <span className="Text Text-marginRight">Is this correct? {String(email.meta('correct'))}</span>
-                        <button className="Button Button-inline" onClick={() => email.setMeta({correct: !email.meta('correct')})}>Toggle</button>
+                        <span className="Text Text-marginRight">Is this correct? {String(email.meta().correct)}</span>
+                        <button className="Button Button-inline" onClick={() => email.setMeta({correct: !email.meta().correct})}>Toggle</button>
                     </div>
                 </div>}
             </PureParcel>

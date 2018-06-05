@@ -332,25 +332,6 @@ test('Parcel.meta() should return meta', (tt: Object) => {
     var parcel = new Parcel(data).setMeta(meta);
 });
 
-test('Parcel.meta(key) should return meta', (tt: Object) => {
-    var meta = {
-        abc: 123,
-        def: 456
-    };
-
-    var data = {
-        value: 123,
-        handleChange: (parcel) => {
-            // the see if it is returned correctly
-            tt.deepEqual(meta.abc, parcel.meta('abc'), 'meta is returned');
-        }
-    };
-
-    // first set the meta
-    var parcel = new Parcel(data).setMeta(meta);
-});
-
-
 test('Parcel.updateMeta() should call the Parcels handleChange function with the new meta merged in', (tt: Object) => {
     tt.plan(5);
 

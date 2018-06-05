@@ -36,9 +36,9 @@ export default (_this: Parcel): Object => ({
         onChange: _this.onChangeDOM
     }),
 
-    meta: (metaKey: ?string = undefined): * => {
+    meta: (): * => {
         let {meta} = _this._parcelData;
-        return metaKey ? meta[metaKey] : {...meta};
+        return {...meta};
     },
 
     equals: (otherParcel: Parcel): boolean => {
