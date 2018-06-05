@@ -115,14 +115,8 @@ export default (_this: Parcel): Object => ({
     },
 
     addDescendantModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
-        return pipeWith(
-            _this._parcelData,
-            parcelData => ({
-                parcelData,
-                id: _this._id.pushModifier('am'),
-                modifiers: _this._modifiers.add(modifier)
-            }),
-            _this._create
-        );
+        // explicitly mutate, see https://github.com/blueflag/parcels/issues/43
+        _this._modifiers =_this._modifiers.add(modifier);
+        return _this;
     }
 });
