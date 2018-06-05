@@ -26,7 +26,11 @@ export default class ExampleMeta extends React.Component {
                 food: {
                     type: "Apples",
                     quantity: "1"
-                }
+                },
+                pets: [
+                    {name: "Gustav"},
+                    {name: ""}
+                ]
             },
             handleChange: (lunch) => this.setState({lunch}),
             debugRender: true
@@ -54,7 +58,8 @@ export default class ExampleMeta extends React.Component {
                     "name": [isRequired],
                     "email": [isRequired, isEmail],
                     "food.type": [isRequired],
-                    "food.quantity": [isRequired, isQuantity]
+                    "food.quantity": [isRequired, isQuantity],
+                    "pets.*.name": [isRequired]
                 }
             })
         );
@@ -65,8 +70,6 @@ export default class ExampleMeta extends React.Component {
                 return <p className="Text Text-failure Text-margin">{error}</p>;
             }
         };
-
-        // TODO - does initialMeta() work together with forms?
 
         return example(this, desc, <div>
 
@@ -101,6 +104,19 @@ export default class ExampleMeta extends React.Component {
                     {renderError(quantity)}
                 </div>}
             </PureParcel>
+
+            {/*lunch.get('pets').toArray((pet) => {
+                return <PureParcel parcel={pet} key={pet.key()}>
+                    {(pet) => {
+                        let name = pet.get('name');
+                        return <div>
+                            <label className="Label">Pet name</label>
+                            <input className="Input" type="tel" {...name.spreadDOM()} />
+                            {renderError(name)}
+                        </div>;
+                    }}
+                </PureParcel>;
+            })*/}
 
             <button className="Button Button-primary" onClick={lunch.meta('submit')}>Submit</button>
         </div>);
