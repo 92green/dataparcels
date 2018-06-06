@@ -6,7 +6,6 @@ import ActionCreators from '../action/ActionCreators';
 import {containsWildcard, split} from '../modifiers/Matcher';
 
 import flatMap from 'unmutable/lib/flatMap';
-import log from 'unmutable/lib/log';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 import take from 'unmutable/lib/take';
 import pipeWith from 'unmutable/lib/util/pipeWith';
