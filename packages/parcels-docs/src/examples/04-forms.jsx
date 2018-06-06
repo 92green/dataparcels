@@ -64,9 +64,11 @@ export default class ExampleMeta extends React.Component {
             })
         );
 
+        console.log(lunch.meta());
+
         let renderError = (parcel) => {
-            let error = parcel.meta().error;
-            if(lunch.meta().attemptedSubmit && error) {
+            let {error} = parcel.meta();
+            if(/*lunch.meta().attemptedSubmit && */error) {
                 return <p className="Text Text-failure Text-margin">{error}</p>;
             }
         };
@@ -78,6 +80,7 @@ export default class ExampleMeta extends React.Component {
                     <label className="Label">what is your name?</label>
                     <input className="Input" type="text" {...name.spreadDOM()} />
                     {renderError(name)}
+                    {"dispatched: " + name.hasDispatched()}
                 </div>}
             </PureParcel>
 
