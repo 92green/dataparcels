@@ -55,6 +55,10 @@ export default (_this: Parcel): Object => ({
         return _this._treeshare.dispatch.hasPathDispatched(_this.path());
     },
 
+    getInternalLocationShareData: (): Object => {
+        return _this._treeshare.locationShare.get(_this.path());
+    },
+
     // change methods
 
     setSelf: (value: *) => {
@@ -84,5 +88,11 @@ export default (_this: Parcel): Object => ({
 
     ping: () => {
         _this.dispatch(ActionCreators.ping());
+    },
+
+    // mutation methods
+
+    setInternalLocationShareData: (partialData: Object) => {
+        _this._treeshare.locationShare.set(_this.path(), partialData);
     }
 });

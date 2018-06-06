@@ -3,7 +3,7 @@ import type {ModifierFunction} from '../types/Types';
 import Modifiers from '../modifiers/Modifiers';
 import {stringifyPath} from '../parcelId/ParcelId';
 
-class TreeshareParcelRegistry {
+class ParcelRegistry {
     _registry: Object = {};
     _registryOrder: string[] = [];
 
@@ -25,7 +25,7 @@ class TreeshareParcelRegistry {
     };
 }
 
-class TreeshareDispatchRegistry {
+class DispatchRegistry {
     _dispatchedPaths: Object = {};
 
     hasPathDispatched = (path: string[]): boolean => {
@@ -37,12 +37,27 @@ class TreeshareDispatchRegistry {
     };
 }
 
+class LocationShareRegistry {
+    _locationShareData: Object = {};
+
+    get = (path: string[]): * => {
+        return this._locationShareData[stringifyPath(path)] || {};
+    };
+
+    set = (path: string[], partialData: Object) => {
+        this._locationShareData[stringifyPath(path)] = {
+            ...this.get(path),
+            ...partialData
+        };
+    };
+}
 
 export default class Treeshare {
     _debugRender: boolean = false;
     _preModifier: Modifiers = new Modifiers();
-    registry: Object = new TreeshareParcelRegistry();
-    dispatch: Object = new TreeshareDispatchRegistry();
+    registry: ParcelRegistry = new ParcelRegistry();
+    dispatch: DispatchRegistry = new DispatchRegistry();
+    locationShare: LocationShareRegistry = new LocationShareRegistry();
 
     constructor({debugRender}: Object) {
         this._debugRender = debugRender;

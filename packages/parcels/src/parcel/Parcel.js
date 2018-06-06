@@ -84,6 +84,7 @@ export default class Parcel {
     meta: Function;
     equals: Function;
     hasDispatched: Function;
+    getInternalLocationShareData: Function;
     // - parent parcel methods
     has: Function;
     get: Function;
@@ -145,6 +146,13 @@ export default class Parcel {
     addPreModifier: Function;
     addModifier: Function;
     addDescendantModifier: Function;
+
+    //
+    // public mutation methods
+    //
+
+    // - value parcel methods
+    setInternalLocationShareData: Function;
 
     constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {

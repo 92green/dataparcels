@@ -461,3 +461,26 @@ test('Parcel.ping() should call the Parcels handleChange function with no change
     }).ping(456);
 });
 
+test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', (tt: Object) => {
+
+    let p = new Parcel({
+        value: {
+            abc: 123,
+            def: 456
+        }
+    });
+
+    tt.deepEqual({}, p.getInternalLocationShareData(), 'getInternalLocationShareData() should default to empty object');
+
+    p.get('abc').setInternalLocationShareData({x:1});
+    tt.deepEqual({x:1}, p.get('abc').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at abc');
+
+    p.get('abc').setInternalLocationShareData({y:2});
+    tt.deepEqual({x:1, y:2}, p.get('abc').getInternalLocationShareData(), 'setInternalLocationShareData() should merge data at abc');
+
+    tt.deepEqual({}, p.get('def').getInternalLocationShareData(), 'getInternalLocationShareData() at another location should be empty');
+
+    p.get('def').setInternalLocationShareData({x:1});
+    tt.deepEqual({x:1}, p.get('def').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at def');
+
+});
