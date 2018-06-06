@@ -9,6 +9,19 @@ import sort from 'unmutable/lib/sort';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
+export const split = (match: string): string[] => pipeWith(
+    match,
+    escapeSplitChars,
+    ii => ii.split("."),
+    map(unescapeSplitChars)
+);
+
+export const containsWildcard = (match: string): boolean => pipeWith(
+    match,
+    escapeSplitChars,
+    ii => ii.indexOf("*") !== -1
+);
+
 const TYPE_SELECTORS = {
     ["Child"]: "C",
     ["!Child"]: "c",
@@ -34,6 +47,15 @@ const escapeSplitChars = pipe(
         SPLIT_CHARS,
         map((chr: string, index: number): Function => {
             return str => str.replace(new RegExp(`%${chr}`, "g"), `%${index}`);
+        })
+    )
+);
+
+const unescapeSplitChars = pipe(
+    ...pipeWith(
+        SPLIT_CHARS,
+        map((chr: string, index: number): Function => {
+            return str => str.replace(new RegExp(`%${index}`, "g"), `%${chr}`);
         })
     )
 );

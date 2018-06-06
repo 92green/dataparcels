@@ -84,6 +84,7 @@ export default class Parcel {
     meta: Function;
     equals: Function;
     hasDispatched: Function;
+    findAllMatching: Function;
     getInternalLocationShareData: Function;
     // - parent parcel methods
     has: Function;
