@@ -81,7 +81,7 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
             .initialMeta({
                 errors: []
             })
-            .modifyChange(({parcel, continueChange, newParcelData, actions}: Object) => {
+            .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
                 continueChange();
                 let parcelData = newParcelData();
                 let errors = getErrors(parcelData);
