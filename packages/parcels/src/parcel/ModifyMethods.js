@@ -7,7 +7,10 @@ import type {
 import Action from '../action/Action';
 import strip from '../parcelData/strip';
 
+import filterNot from 'unmutable/lib/filterNot';
+import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
+import merge from 'unmutable/lib/merge';
 import set from 'unmutable/lib/set';
 import setIn from 'unmutable/lib/setIn';
 import pipe from 'unmutable/lib/util/pipe';
@@ -76,19 +79,26 @@ export default (_this: Parcel): Object => ({
         );
     },
 
-    initialMeta: (initialMeta: Object): Parcel => {
-        let metaSetter: Function = ii => ii;
-        if(isEmpty()(_this._parcelData.meta)) {
-            metaSetter = pipe(
-                setIn(['parcelData', 'meta'], initialMeta),
+    initialMeta: (initialMeta: Object = {}): Parcel => {
+
+        let {meta} = _this._parcelData;
+
+        let partialMetaToSet = pipeWith(
+            initialMeta,
+            filterNot((value, key) => has(key)(meta))
+        );
+
+        let metaSetter = isEmpty()(partialMetaToSet)
+            ? ii => ii
+            : pipe(
+                setIn(['parcelData', 'meta'], merge(partialMetaToSet)(meta)),
                 set('handleChange', (newParcel: Parcel, actions: Action[]) => {
                     _this.batch((parcel: Parcel) => {
-                        parcel.setMeta(initialMeta);
+                        parcel.setMeta(partialMetaToSet);
                         parcel.dispatch(actions);
                     });
                 })
             );
-        }
 
         return pipeWith(
             _this._parcelData,
