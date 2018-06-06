@@ -395,42 +395,6 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
     });
 });
 
-test('Parcel should refresh()', (tt: Object) => {
-    tt.plan(1);
-    var data = {
-        value: {
-            z: {
-                a: 123,
-                b: [1,2,3],
-                c: "!"
-            },
-            y: "Y!"
-        },
-        handleChange: (parcel, actions) => {
-            let expectedActions = [
-                {type: 'ping', keyPath: ['z','c']},
-                {type: 'setMeta', keyPath: ['z','b']},
-                {type: 'ping', keyPath: ['z','b',0]}
-            ];
-
-            let processedActions = actions.map(ii => {
-                let {type, keyPath} = ii.toJS();
-                return {type, keyPath};
-            });
-
-            tt.deepEqual(expectedActions, processedActions, `previously created LEAF parcels should each fire a ping, catching modifyChange()s along the way`);
-        }
-    };
-
-    let z = new Parcel(data).get('z');
-    z.get('c');
-    z.get('b').modifyChange(({continueChange, parcel, newParcelData}) => {
-        parcel.setMeta({a:1});
-        continueChange();
-    }).get(0);
-    z.refresh();
-});
-
 test('Parcel.equals() should compare two parcels data', (tt: Object) => {
     var child = {};
     var parcelCreator = (merge = {}) => {
@@ -454,3 +418,26 @@ test('Parcel.equals() should compare two parcels data', (tt: Object) => {
     tt.false(parcelCreator().equals(parcelCreator({child: {}})), 'parcel doesnt equals different child');
     tt.false(parcelCreator().equals(parcelCreator({key: "b"})), 'parcel doesnt equals different key');
 });
+
+test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', (tt: Object) => {
+    tt.plan(6);
+
+    let p = new Parcel({
+        value: {
+            abc: 123,
+            def: 456
+        },
+        handleChange: (p2) => {
+            tt.true(p2.hasDispatched(), `top parcel should have dispatched`);
+            tt.true(p2.get('abc').hasDispatched(), `abc parcel should have dispatched`);
+            tt.false(p2.get('def').hasDispatched(), `def parcel should not have dispatched`);
+        }
+    });
+
+    tt.false(p.hasDispatched(), `top parcel should not have dispatched initially`);
+    tt.false(p.get('abc').hasDispatched(), `abc parcel should not have dispatched initially`);
+    tt.false(p.get('def').hasDispatched(), `def parcel should not have dispatched initially`);
+
+    p.get('abc').onChange(789);
+});
+

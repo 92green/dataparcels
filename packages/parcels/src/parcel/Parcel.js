@@ -83,6 +83,7 @@ export default class Parcel {
     spreadDOM: Function;
     meta: Function;
     equals: Function;
+    hasDispatched: Function;
     // - parent parcel methods
     has: Function;
     get: Function;
@@ -105,7 +106,6 @@ export default class Parcel {
     onChangeDOM: Function;
     setMeta: Function;
     updateMeta: Function;
-    refresh: Function;
     // - parent parcel methods
     set: Function;
     setIn: Function;
