@@ -80,5 +80,9 @@ export default (_this: Parcel): Object => ({
     updateMeta: (updater: Function) => {
         let {meta} = _this._parcelData;
         _this.setMeta(updater(meta));
+    },
+
+    ping: () => {
+        _this.dispatch(ActionCreators.ping());
     }
 });

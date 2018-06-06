@@ -106,6 +106,7 @@ export default class Parcel {
     onChangeDOM: Function;
     setMeta: Function;
     updateMeta: Function;
+    ping: Function;
     // - parent parcel methods
     set: Function;
     setIn: Function;

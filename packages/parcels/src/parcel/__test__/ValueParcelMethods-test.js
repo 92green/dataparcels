@@ -441,3 +441,23 @@ test('Parcel.hasDispatched() should say if a parcel has dispatched from the curr
     p.get('abc').onChange(789);
 });
 
+test('Parcel.ping() should call the Parcels handleChange function with no change', (tt: Object) => {
+    tt.plan(1);
+
+    var data = {
+        value: 123
+    };
+
+    var expectedData = {
+        value: 123,
+        key: '^'
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel, action) => {
+            tt.deepEqual(expectedData, parcel.data(), 'data is correct');
+        }
+    }).ping(456);
+});
+
