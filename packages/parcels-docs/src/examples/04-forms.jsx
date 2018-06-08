@@ -26,7 +26,11 @@ export default class ExampleMeta extends React.Component {
                 food: {
                     type: "Apples",
                     quantity: "1"
-                }
+                },
+                pets: [
+                    {name: "Gustav"},
+                    {name: ""}
+                ]
             },
             handleChange: (lunch) => this.setState({lunch}),
             debugRender: true
@@ -50,23 +54,24 @@ export default class ExampleMeta extends React.Component {
                 onError: (errors) => {
                     console.log("errors", errors);
                 },
-                validators: {
+                validators: (parcel) => ({
                     "name": [isRequired],
                     "email": [isRequired, isEmail],
                     "food.type": [isRequired],
-                    "food.quantity": [isRequired, isQuantity]
-                }
+                    "food.quantity": [isRequired, isQuantity],
+                    "pets.*.name": [isRequired]
+                })
             })
         );
 
+        console.log(lunch.meta());
+
         let renderError = (parcel) => {
-            let error = parcel.meta('error');
-            if(lunch.meta('attemptedSubmit') && error) {
+            let {error} = parcel.meta();
+            if(/*lunch.meta().attemptedSubmit && */error) {
                 return <p className="Text Text-failure Text-margin">{error}</p>;
             }
         };
-
-        // TODO - does initialMeta() work together with forms?
 
         return example(this, desc, <div>
 
@@ -75,6 +80,7 @@ export default class ExampleMeta extends React.Component {
                     <label className="Label">what is your name?</label>
                     <input className="Input" type="text" {...name.spreadDOM()} />
                     {renderError(name)}
+                    {"dispatched: " + name.hasDispatched()}
                 </div>}
             </PureParcel>
 
@@ -102,7 +108,20 @@ export default class ExampleMeta extends React.Component {
                 </div>}
             </PureParcel>
 
-            <button className="Button Button-primary" onClick={lunch.meta('submit')}>Submit</button>
+            {/*lunch.get('pets').toArray((pet) => {
+                return <PureParcel parcel={pet} key={pet.key()}>
+                    {(pet) => {
+                        let name = pet.get('name');
+                        return <div>
+                            <label className="Label">Pet name</label>
+                            <input className="Input" type="tel" {...name.spreadDOM()} />
+                            {renderError(name)}
+                        </div>;
+                    }}
+                </PureParcel>;
+            })*/}
+
+            <button className="Button Button-primary" onClick={lunch.meta().submit}>Submit</button>
         </div>);
     }
 }

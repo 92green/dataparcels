@@ -29,6 +29,8 @@ export default (_this: Parcel): Object => ({
     },
 
     dispatch: (action: Action|Action[]) => {
+        _this._treeshare.dispatch.markPathAsDispatched(_this.path());
+
         if(_this._actionBuffer.length > 0) {
             _this._actionBuffer = pipeWith(
                 _this._actionBuffer,

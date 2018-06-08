@@ -106,25 +106,47 @@ test('Parcel.modifyChange() should allow you to call continueChange to continue 
 });
 
 test('Parcel.initialMeta() should work', (tt: Object) => {
-    tt.plan(2);
+    tt.plan(3);
+
+    let meta = {a:1, b:2};
 
     var data = {
         value: 123,
         handleChange: (parcel: Parcel) => {
             let {meta} = parcel.data();
             tt.deepEqual({a:1, b:3}, meta, `meta changes in actions take precedence over initial meta`);
+            tt.deepEqual({a:1, b:3}, parcel.initialMeta().meta(), `applying initial meta a second time has no effect`);
         }
     };
 
-    let parcel = new Parcel(data);
-    let meta = {a:1, b:2};
-
-    let parcel2 = parcel.initialMeta(meta);
-    tt.deepEqual(meta, parcel2.meta(), `initialMeta should be applied to returned parcel`);
-    parcel2.setMeta({
+    let parcel = new Parcel(data).initialMeta(meta);
+    tt.deepEqual(meta, parcel.meta(), `initialMeta should be applied to returned parcel`);
+    parcel.setMeta({
         b: 3
     });
 });
+
+test('Parcel.initialMeta() should merge', (tt: Object) => {
+    tt.plan(2);
+
+    let meta = {a:1, b:2};
+    let meta2 = {b:1, c:3}; // this b will be ignored because it will have already been set by the time this is applied
+
+    var data = {
+        value: 123,
+        handleChange: (parcel: Parcel) => {
+            let {meta} = parcel.data();
+            tt.deepEqual({a:1, b:3, c:3}, meta, `meta changes in actions take precedence over initial meta`);
+        }
+    };
+
+    let parcel = new Parcel(data).initialMeta(meta).initialMeta(meta2);
+    tt.deepEqual({a:1, b:2, c:3}, parcel.meta(), `initialMeta should be applied to returned parcel`);
+    parcel.setMeta({
+        b: 3
+    });
+});
+
 test('Parcel should addModifier', (tt: Object) => {
     var data = {
         value: [1,2,3],

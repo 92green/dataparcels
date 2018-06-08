@@ -332,25 +332,6 @@ test('Parcel.meta() should return meta', (tt: Object) => {
     var parcel = new Parcel(data).setMeta(meta);
 });
 
-test('Parcel.meta(key) should return meta', (tt: Object) => {
-    var meta = {
-        abc: 123,
-        def: 456
-    };
-
-    var data = {
-        value: 123,
-        handleChange: (parcel) => {
-            // the see if it is returned correctly
-            tt.deepEqual(meta.abc, parcel.meta('abc'), 'meta is returned');
-        }
-    };
-
-    // first set the meta
-    var parcel = new Parcel(data).setMeta(meta);
-});
-
-
 test('Parcel.updateMeta() should call the Parcels handleChange function with the new meta merged in', (tt: Object) => {
     tt.plan(5);
 
@@ -414,42 +395,6 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
     });
 });
 
-test('Parcel should refresh()', (tt: Object) => {
-    tt.plan(1);
-    var data = {
-        value: {
-            z: {
-                a: 123,
-                b: [1,2,3],
-                c: "!"
-            },
-            y: "Y!"
-        },
-        handleChange: (parcel, actions) => {
-            let expectedActions = [
-                {type: 'ping', keyPath: ['z','c']},
-                {type: 'setMeta', keyPath: ['z','b']},
-                {type: 'ping', keyPath: ['z','b',0]}
-            ];
-
-            let processedActions = actions.map(ii => {
-                let {type, keyPath} = ii.toJS();
-                return {type, keyPath};
-            });
-
-            tt.deepEqual(expectedActions, processedActions, `previously created LEAF parcels should each fire a ping, catching modifyChange()s along the way`);
-        }
-    };
-
-    let z = new Parcel(data).get('z');
-    z.get('c');
-    z.get('b').modifyChange(({continueChange, parcel, newParcelData}) => {
-        parcel.setMeta({a:1});
-        continueChange();
-    }).get(0);
-    z.refresh();
-});
-
 test('Parcel.equals() should compare two parcels data', (tt: Object) => {
     var child = {};
     var parcelCreator = (merge = {}) => {
@@ -472,4 +417,94 @@ test('Parcel.equals() should compare two parcels data', (tt: Object) => {
     tt.false(parcelCreator().equals(parcelCreator({meta: {abc: 123}})), 'parcel doesnt equals different meta contents');
     tt.false(parcelCreator().equals(parcelCreator({child: {}})), 'parcel doesnt equals different child');
     tt.false(parcelCreator().equals(parcelCreator({key: "b"})), 'parcel doesnt equals different key');
+});
+
+test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', (tt: Object) => {
+    tt.plan(6);
+
+    let p = new Parcel({
+        value: {
+            abc: 123,
+            def: 456
+        },
+        handleChange: (p2) => {
+            tt.true(p2.hasDispatched(), `top parcel should have dispatched`);
+            tt.true(p2.get('abc').hasDispatched(), `abc parcel should have dispatched`);
+            tt.false(p2.get('def').hasDispatched(), `def parcel should not have dispatched`);
+        }
+    });
+
+    tt.false(p.hasDispatched(), `top parcel should not have dispatched initially`);
+    tt.false(p.get('abc').hasDispatched(), `abc parcel should not have dispatched initially`);
+    tt.false(p.get('def').hasDispatched(), `def parcel should not have dispatched initially`);
+
+    p.get('abc').onChange(789);
+});
+
+test('Parcel.ping() should call the Parcels handleChange function with no change', (tt: Object) => {
+    tt.plan(1);
+
+    var data = {
+        value: 123
+    };
+
+    var expectedData = {
+        value: 123,
+        key: '^'
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel, action) => {
+            tt.deepEqual(expectedData, parcel.data(), 'data is correct');
+        }
+    }).ping(456);
+});
+
+test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', (tt: Object) => {
+
+    let p = new Parcel({
+        value: {
+            abc: 123,
+            def: 456
+        }
+    });
+
+    tt.deepEqual({}, p.getInternalLocationShareData(), 'getInternalLocationShareData() should default to empty object');
+
+    p.get('abc').setInternalLocationShareData({x:1});
+    tt.deepEqual({x:1}, p.get('abc').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at abc');
+
+    p.get('abc').setInternalLocationShareData({y:2});
+    tt.deepEqual({x:1, y:2}, p.get('abc').getInternalLocationShareData(), 'setInternalLocationShareData() should merge data at abc');
+
+    tt.deepEqual({}, p.get('def').getInternalLocationShareData(), 'getInternalLocationShareData() at another location should be empty');
+
+    p.get('def').setInternalLocationShareData({x:1});
+    tt.deepEqual({x:1}, p.get('def').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at def');
+
+});
+
+test('Parcel.findAllMatching() returns all parcels matching the match string at or below the current parcels depth', (tt: Object) => {
+
+    let p = new Parcel({
+        value: {
+            abc: {
+                def: 123,
+                ghi: 456
+            },
+            jkl: {
+                mno: 789
+            }
+        }
+    });
+
+    tt.deepEqual(["abc"], p.findAllMatching("abc").map(ii => ii.path().join(".")));
+    tt.deepEqual(["abc.def"], p.findAllMatching("abc.def").map(ii => ii.path().join(".")));
+    tt.deepEqual([], p.findAllMatching("abc.woo").map(ii => ii.path().join(".")));
+    tt.deepEqual([], p.findAllMatching("asdf%.kasd.asdasd.asd").map(ii => ii.path().join(".")));
+    tt.deepEqual(["abc.def", "abc.ghi"], p.findAllMatching("abc.*").map(ii => ii.path().join(".")));
+    tt.deepEqual(["abc.def"], p.get('abc').findAllMatching("abc.def").map(ii => ii.path().join(".")));
+    tt.deepEqual([], p.get('mno').findAllMatching("abc.def").map(ii => ii.path().join(".")));
+    tt.deepEqual(["abc.def","abc.ghi","jkl.mno"], p.findAllMatching("*.*").map(ii => ii.path().join(".")));
 });

@@ -9,7 +9,8 @@ import update from 'unmutable/lib/update';
 import updateIn from 'unmutable/lib/updateIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-const escapeKey = key => key.replace(/([^\w])/g, "%$1");
+export const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
+export const stringifyPath = (path: string[]): string => path.map(escapeKey).join(".");
 
 type ParcelIdData = {
     id: string[],

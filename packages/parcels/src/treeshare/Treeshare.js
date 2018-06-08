@@ -1,51 +1,14 @@
 // @flow
 import type {ModifierFunction} from '../types/Types';
 import Modifiers from '../modifiers/Modifiers';
+import {stringifyPath} from '../parcelId/ParcelId';
 
-import filter from 'unmutable/lib/filter';
-import keyArray from 'unmutable/lib/keyArray';
-import map from 'unmutable/lib/map';
-import reduce from 'unmutable/lib/reduce';
-import sortBy from 'unmutable/lib/sortBy';
-import pipeWith from 'unmutable/lib/util/pipeWith';
-
-class TreeshareRegistry {
+class ParcelRegistry {
     _registry: Object = {};
     _registryOrder: string[] = [];
-    _registryLeaves: Object = {};
-
-    _updateLeaves = () => {
-        this._registryLeaves = pipeWith(
-            this._registryLeaves,
-            keyArray(),
-            sortBy(str => -str.length),
-            reduce((leaves: string[], id: string): string[] => {
-                if(leaves.some(leaf => leaf.startsWith(id))) {
-                    return leaves;
-                }
-                leaves.push(id);
-                return leaves;
-            }, []),
-            reduce((leaves: Object, id: string): Object => {
-                leaves[id] = true;
-                return leaves;
-            }, {})
-        );
-    };
 
     get = (id: string): Object => {
         return this._registry[id];
-    };
-
-    leaves = (beneath: ?string): Object[] => {
-        return pipeWith(
-            this._registryOrder,
-            filter(id => this._registryLeaves[id]),
-            beneath
-                ? filter(id => id.startsWith(beneath))
-                : ii => ii,
-            map(id => this._registry[id])
-        );
     };
 
     list = (): Object[] => {
@@ -57,17 +20,44 @@ class TreeshareRegistry {
     set = (id: string, reference: Object) => {
         if(!this._registry[id]) {
             this._registryOrder.push(id);
-            this._registryLeaves[id] = true;
-            this._updateLeaves();
         }
         this._registry[id] = reference;
+    };
+}
+
+class DispatchRegistry {
+    _dispatchedPaths: Object = {};
+
+    hasPathDispatched = (path: string[]): boolean => {
+        return !!this._dispatchedPaths[stringifyPath(path)];
+    };
+
+    markPathAsDispatched = (path: string[]) => {
+        this._dispatchedPaths[stringifyPath(path)] = true;
+    };
+}
+
+class LocationShareRegistry {
+    _locationShareData: Object = {};
+
+    get = (path: string[]): * => {
+        return this._locationShareData[stringifyPath(path)] || {};
+    };
+
+    set = (path: string[], partialData: Object) => {
+        this._locationShareData[stringifyPath(path)] = {
+            ...this.get(path),
+            ...partialData
+        };
     };
 }
 
 export default class Treeshare {
     _debugRender: boolean = false;
     _preModifier: Modifiers = new Modifiers();
-    registry: Object = new TreeshareRegistry();
+    registry: ParcelRegistry = new ParcelRegistry();
+    dispatch: DispatchRegistry = new DispatchRegistry();
+    locationShare: LocationShareRegistry = new LocationShareRegistry();
 
     constructor({debugRender}: Object) {
         this._debugRender = debugRender;

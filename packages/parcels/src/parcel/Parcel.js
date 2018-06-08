@@ -83,6 +83,9 @@ export default class Parcel {
     spreadDOM: Function;
     meta: Function;
     equals: Function;
+    hasDispatched: Function;
+    findAllMatching: Function;
+    getInternalLocationShareData: Function;
     // - parent parcel methods
     has: Function;
     get: Function;
@@ -105,7 +108,7 @@ export default class Parcel {
     onChangeDOM: Function;
     setMeta: Function;
     updateMeta: Function;
-    refresh: Function;
+    ping: Function;
     // - parent parcel methods
     set: Function;
     setIn: Function;
@@ -144,6 +147,13 @@ export default class Parcel {
     addPreModifier: Function;
     addModifier: Function;
     addDescendantModifier: Function;
+
+    //
+    // public mutation methods
+    //
+
+    // - value parcel methods
+    setInternalLocationShareData: Function;
 
     constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {

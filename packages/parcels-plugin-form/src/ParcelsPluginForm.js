@@ -1,4 +1,6 @@
 // @flow
+import type Parcel from 'parcels';
+import identity from 'unmutable/lib/identity';
 import pipe from 'unmutable/lib/util/pipe';
 
 import SubmitModifier from './SubmitModifier';
@@ -6,9 +8,12 @@ import TouchedModifier from './TouchedModifier';
 import DirtyModifier from './DirtyModifier';
 import ValidModifier from './ValidModifier';
 
+type ValidModifierConfig = (parcel: Parcel) => Object; // TODO - move to types file
+
 type ParcelsPluginFormConfig = {
     onSubmit?: Function,
-    validators?: Object
+    onError?: Function,
+    validators?: ValidModifierConfig
 };
 
 export default (config: ParcelsPluginFormConfig = {}): Function => {
@@ -22,6 +27,6 @@ export default (config: ParcelsPluginFormConfig = {}): Function => {
         SubmitModifier({onSubmit, onError}),
         TouchedModifier(),
         DirtyModifier(),
-        ValidModifier(validators)
+        validators ? ValidModifier(validators) : identity()
     );
 };
