@@ -64,7 +64,7 @@ export default (_this: Parcel): Object => ({
             parcelData => ({
                 parcelData,
                 id: _this._id.pushModifier('mc'),
-                handleChange: _this._thunkReducer((parcelThunk: Function, actions: Action[]) => {
+                onDispatch: _this._thunkReducer((parcelThunk: Function, actions: Action[]) => {
                     _this.batch((parcel: Parcel) => {
                         batcher({
                             parcel,
@@ -92,7 +92,7 @@ export default (_this: Parcel): Object => ({
             ? ii => ii
             : pipe(
                 setIn(['parcelData', 'meta'], merge(partialMetaToSet)(meta)),
-                set('handleChange', (newParcel: Parcel, actions: Action[]) => {
+                set('onDispatch', (newParcel: Parcel, actions: Action[]) => {
                     _this.batch((parcel: Parcel) => {
                         parcel.setMeta(partialMetaToSet);
                         parcel.dispatch(actions);

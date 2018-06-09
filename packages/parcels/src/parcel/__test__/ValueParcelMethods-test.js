@@ -2,12 +2,9 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-const handleChange = ii => {};
-
 test('Parcel.data() should return the Parcels data', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
 
     var expectedData = {
@@ -20,8 +17,7 @@ test('Parcel.data() should return the Parcels data', (tt: Object) => {
 
 test('Parcel.data() should strip the returned Parcel data', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
 
     var expectedData = {
@@ -35,8 +31,7 @@ test('Parcel.data() should strip the returned Parcel data', (tt: Object) => {
 test('Parcel.raw() should return the Parcels data without stripping', (tt: Object) => {
     var data = {
         value: 123,
-        child: undefined,
-        handleChange
+        child: undefined
     };
 
     var expectedData = {
@@ -51,8 +46,7 @@ test('Parcel.raw() should return the Parcels data without stripping', (tt: Objec
 
 test('Parcel.value() should return the Parcels value', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
     tt.is(new Parcel(data).value(), 123);
 });
@@ -60,8 +54,7 @@ test('Parcel.value() should return the Parcels value', (tt: Object) => {
 test('Parcel.value() should return the same instance of the Parcels value', (tt: Object) => {
     var myObject = {a:1,b:2};
     var data = {
-        value: myObject,
-        handleChange
+        value: myObject
     };
     tt.is(new Parcel(data).value(), myObject);
 });

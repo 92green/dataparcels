@@ -1,6 +1,7 @@
 // @flow
 import type Parcel from './Parcel';
 import type Action from '../change/Action';
+import ChangeRequest from '../change/ChangeRequest';
 import Reducer from '../change/Reducer';
 
 import concat from 'unmutable/lib/concat';
@@ -18,17 +19,24 @@ export default (_this: Parcel): Object => ({
         _this.dispatch(_this._actionBuffer.pop());
     },
 
-    _skipReducer: (handleChange: Function): Function => {
-        handleChange.SKIP_REDUCER = true;
-        return handleChange;
+    _skipReducer: (onDispatch: Function): Function => {
+        onDispatch.SKIP_REDUCER = true;
+        return onDispatch;
     },
 
-    _thunkReducer: (handleChange: Function): Function => {
-        handleChange.THUNK_REDUCER = true;
-        return handleChange;
+    _thunkReducer: (onDispatch: Function): Function => {
+        onDispatch.THUNK_REDUCER = true;
+        return onDispatch;
     },
 
-    dispatch: (action: Action|Action[]) => {
+    dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
+        if(dispatchable instanceof ChangeRequest) {
+            // do nothing with change requests for now
+            return;
+        }
+
+        let action = dispatchable;
+
         _this._treeshare.dispatch.markPathAsDispatched(_this.path());
 
         if(_this._actionBuffer.length > 0) {
@@ -43,7 +51,7 @@ export default (_this: Parcel): Object => ({
 
         let parcel: ?Function|Parcel = null;
 
-        if(!_this._handleChange.SKIP_REDUCER) {
+        if(!_this._onDispatch.SKIP_REDUCER) {
 
             let reducerThunk: Function = (): Parcel => {
                 let parcelDataFromRegistry = _this._treeshare
@@ -64,12 +72,12 @@ export default (_this: Parcel): Object => ({
                 return parcel;
             };
 
-            parcel = _this._handleChange.THUNK_REDUCER
+            parcel = _this._onDispatch.THUNK_REDUCER
                 ? reducerThunk
                 : reducerThunk();
         }
 
-        _this._handleChange(parcel, [].concat(action));
+        _this._onDispatch(parcel, [].concat(action));
     },
 
     batch: (batcher: Function) => {

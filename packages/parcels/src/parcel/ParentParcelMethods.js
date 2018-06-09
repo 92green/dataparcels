@@ -32,7 +32,7 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
     get: (key: Key|Index, notSetValue: * = undefined): Parcel => {
         let childParcelData: ParcelData = parcelGet(key, notSetValue)(_this._parcelData);
 
-        let childHandleChange: Function = (parcelData: ParcelData, actions: Action[]) => {
+        let childOnDispatch: Function = (parcelData: ParcelData, actions: Action[]) => {
             pipeWith(
                 actions,
                 map(pipe(
@@ -46,7 +46,7 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
 
         return _this._create({
             parcelData: childParcelData,
-            handleChange: _this._skipReducer(childHandleChange),
+            onDispatch: _this._skipReducer(childOnDispatch),
             id: _this._id.push(childParcelData.key, _this.isIndexed()),
             parent: _this
         });

@@ -25,6 +25,7 @@ import Treeshare from '../treeshare/Treeshare';
 import map from 'unmutable/lib/map';
 
 const DEFAULT_CONFIG_INTERNAL = {
+    onDispatch: undefined,
     child: undefined,
     meta: {},
     id: new ParcelId(),
@@ -39,7 +40,7 @@ export default class Parcel {
     // private data
     //
 
-    _handleChange: Function;
+    _onDispatch: Function;
     _parcelData: ParcelData;
     _id: ParcelId;
     _modifiers: Modifiers;
@@ -157,12 +158,13 @@ export default class Parcel {
 
     constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
-            handleChange = () => {},
-            value = undefined,
+            handleChange,
+            value,
             debugRender = false
         } = parcelConfig;
 
         let {
+            onDispatch,
             child,
             meta,
             id,
@@ -171,7 +173,10 @@ export default class Parcel {
             treeshare
         } = _parcelConfigInternal || DEFAULT_CONFIG_INTERNAL;
 
-        this._handleChange = handleChange;
+        // handleChange = handleChange; add handle change logic here
+
+        let noop = () => {};
+        this._onDispatch = handleChange || onDispatch || noop;
         this._parcelData = {
             value,
             child,
@@ -240,20 +245,20 @@ export default class Parcel {
                 value,
                 meta
             },
-            handleChange = this._skipReducer((parcel: Parcel, action: Action|Action[]) => {
+            onDispatch = this._skipReducer((parcel: Parcel, action: Action|Action[]) => {
                 this.dispatch(action);
             }),
             id = this._id,
             modifiers = this._modifiers,
-            parent = undefined
+            parent
         } = createParcelConfig;
 
         let parcel: Parcel = new Parcel(
             {
-                handleChange,
                 value
             },
             {
+                onDispatch,
                 child,
                 meta,
                 id,

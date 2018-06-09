@@ -2,12 +2,9 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-const handleChange = ii => {};
-
 test('Parcel.modify() should return the result of modifys updaters', (tt: Object) => {
     var data = {
         value: 123,
-        handleChange
     };
 
     let parcel = new Parcel(data);
@@ -34,8 +31,7 @@ test('Parcel.modify() should return the result of modifys updaters', (tt: Object
 test('Parcel.modifyData() should return a new parcel with updated parcelData', (tt: Object) => {
     var data = {
         value: 123,
-        key: "#a",
-        handleChange
+        key: "#a"
     };
     var updated = new Parcel(data)
         .modifyData((parcelData) => ({
@@ -53,8 +49,7 @@ test('Parcel.modifyData() should return a new parcel with updated parcelData', (
 test('Parcel.modifyValue() should return a new parcel with updated parcelData', (tt: Object) => {
     tt.plan(2);
     var data = {
-        value: [123],
-        handleChange
+        value: [123]
     };
     var parcel = new Parcel(data).get(0);
     var updated = parcel
@@ -149,8 +144,7 @@ test('Parcel.initialMeta() should merge', (tt: Object) => {
 
 test('Parcel should addModifier', (tt: Object) => {
     var data = {
-        value: [1,2,3],
-        handleChange
+        value: [1,2,3]
     };
 
     let parcel = new Parcel(data)
@@ -164,8 +158,7 @@ test('Parcel should addModifier', (tt: Object) => {
 
 test('Parcel should addDescendantModifier', (tt: Object) => {
     var data = {
-        value: [1,2,3],
-        handleChange
+        value: [1,2,3]
     };
 
     let parcel = new Parcel(data)
@@ -182,8 +175,7 @@ test('Parcel should addModifier with simple match', (tt: Object) => {
         value: {
             abc: 123,
             def: 456
-        },
-        handleChange
+        }
     };
 
     let parcel = new Parcel(data)
@@ -203,8 +195,7 @@ test('Parcel should addModifier with deep match', (tt: Object) => {
                 ghi: 123
             },
             def: 456
-        },
-        handleChange
+        }
     };
 
     let parcel = new Parcel(data)
@@ -224,8 +215,7 @@ test('Parcel should addModifier with globstar', (tt: Object) => {
                 ghi: 123
             },
             def: 456
-        },
-        handleChange
+        }
     };
 
     let parcel = new Parcel(data)
@@ -247,8 +237,7 @@ test('Parcel should addModifier with typed match', (tt: Object) => {
             },
             def: 456,
             mno: [4,5,6]
-        },
-        handleChange
+        }
     };
 
     let parcel = new Parcel(data)

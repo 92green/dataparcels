@@ -2,15 +2,12 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-const handleChange = ii => {};
-
 test('Parcel.key() should return the Parcels key', (tt: Object) => {
     var data = {
         value: {
             a: [1,2,3],
             ['something.:@']: 123
-        },
-        handleChange
+        }
     };
     tt.is("^", new Parcel(data).key());
     tt.is("a", new Parcel(data).get("a").key());
@@ -25,8 +22,7 @@ test('Parcel.id() should return the Parcels id', (tt: Object) => {
         value: {
             a: [1,2,3],
             ['something.:@']: 123
-        },
-        handleChange
+        }
     };
     tt.is("^", new Parcel(data).id());
     tt.is("^.a", new Parcel(data).get("a").id());
@@ -42,8 +38,7 @@ test('Parcel.path() should return the Parcels path', (tt: Object) => {
         value: {
             a: [1,2,3],
             ['something.:@']: 123
-        },
-        handleChange
+        }
     };
     tt.deepEqual([], new Parcel(data).path());
     tt.deepEqual(["a"], new Parcel(data).get("a").path());
@@ -59,8 +54,7 @@ test('Parcel._typedPathString() should return the Parcels typed path', (tt: Obje
         value: {
             a: [1,2,3],
             ['something.:@']: 123
-        },
-        handleChange
+        }
     };
     tt.deepEqual("^:ceiPT", new Parcel(data)._typedPathString());
     tt.deepEqual("^:ceiPT", new Parcel(data).modifyValue(ii => ii)._typedPathString());
