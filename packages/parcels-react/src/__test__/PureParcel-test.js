@@ -9,7 +9,6 @@ configure({adapter: new Adapter()});
 import {shallow} from 'enzyme';
 import PureParcel from '../PureParcel';
 import Parcel from 'parcels';
-import {ActionCreators} from 'parcels';
 
 test('PureParcel should pass a *value equivalent* parcel to children', tt => {
     tt.plan(1);
@@ -168,7 +167,7 @@ test('PureParcel should ignore debounce when sending a ping', tt => {
 
     let wrapper = shallow(<PureParcel parcel={parcel} debounce={100}>
         {(pp) => {
-            pp.dispatch(ActionCreators.ping());
+            pp.ping();
             tt.true(hasChanged, `onChange works synchronously when debounce is set and ping is sent (handleChange should already be called by this point)`)
         }}
     </PureParcel>);

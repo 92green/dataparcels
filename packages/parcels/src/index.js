@@ -2,8 +2,8 @@
 import Parcel from './parcel/Parcel';
 export default Parcel;
 
-export {default as Action} from './action/Action';
-export {default as ActionCreators} from './action/ActionCreators';
+export {default as Action} from './change/Action';
+export {default as ActionCreators} from './change/ActionCreators';
 
 export type {ParcelData} from './types/Types';
 export type {PartialParcelData} from './types/Types';

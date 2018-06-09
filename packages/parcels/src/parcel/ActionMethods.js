@@ -1,7 +1,7 @@
 // @flow
 import type Parcel from './Parcel';
-import type Action from '../action/Action';
-import Reducer from '../action/Reducer';
+import type Action from '../change/Action';
+import Reducer from '../change/Reducer';
 
 import concat from 'unmutable/lib/concat';
 import isNotEmpty from 'unmutable/lib/isNotEmpty';

@@ -7,7 +7,7 @@ import type {
 
 import type Parcel from './Parcel';
 import MethodCreator from './MethodCreator';
-import Action from '../action/Action';
+import Action from '../change/Action';
 
 import parcelForEach from '../parcelData/forEach';
 import parcelGet from '../parcelData/get';

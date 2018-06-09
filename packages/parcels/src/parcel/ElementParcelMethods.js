@@ -6,7 +6,7 @@ import type {
 
 import type Parcel from './Parcel';
 import MethodCreator from './MethodCreator';
-import ActionCreators from '../action/ActionCreators';
+import ActionCreators from '../change/ActionCreators';
 
 export default MethodCreator("Element", (_this: Parcel): Object => ({
     // change methods

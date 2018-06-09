@@ -1,7 +1,7 @@
 // @flow
 import type Parcel from './Parcel';
 import MethodCreator from './MethodCreator';
-import ActionCreators from '../action/ActionCreators';
+import ActionCreators from '../change/ActionCreators';
 
 export default MethodCreator("Child", (_this: Parcel): Object => ({
 

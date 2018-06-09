@@ -4,7 +4,7 @@ import type {
     ModifierObject
 } from '../types/Types';
 
-import Action from '../action/Action';
+import Action from '../change/Action';
 import strip from '../parcelData/strip';
 
 import filterNot from 'unmutable/lib/filterNot';

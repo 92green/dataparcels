@@ -2,7 +2,7 @@
 import type {ParcelData} from '../types/Types';
 import type Parcel from './Parcel';
 import strip from '../parcelData/strip';
-import ActionCreators from '../action/ActionCreators';
+import ActionCreators from '../change/ActionCreators';
 import {containsWildcard, split} from '../modifiers/Matcher';
 
 import flatMap from 'unmutable/lib/flatMap';

@@ -6,7 +6,7 @@ import type {
     CreateParcelConfigType
 } from '../types/Types';
 
-import type Action from '../action/Action';
+import type Action from '../change/Action';
 
 import Modifiers from '../modifiers/Modifiers';
 
