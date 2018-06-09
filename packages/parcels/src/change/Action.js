@@ -5,28 +5,34 @@ import type {
 } from '../types/Types';
 
 type ActionData = {
-    type: string,
-    payload?: Object,
+    type?: string,
+    payload?: *,
     keyPath?: Array<Key|Index>
 };
 
 export default class Action {
-    type: string;
-    payload: ?Object;
-    keyPath: Array<Key|Index>;
+    type: ?string;
+    payload: * = {};
+    keyPath: Array<Key|Index> = [];
 
     constructor(actionData: ActionData) {
-        this.type = actionData.type;
-        this.payload = actionData.payload || {};
-        this.keyPath = actionData.keyPath || [];
+        this.type = actionData.type || this.type;
+        this.payload = actionData.payload || this.payload;
+        this.keyPath = actionData.keyPath || this.keyPath;
     }
 
-    shouldBeSynchronous(): boolean {
+    _unget = (key: Key|Index): Action => {
+        return new Action({
+            keyPath: [key, ...this.keyPath]
+        });
+    };
+
+    shouldBeSynchronous = (): boolean => {
         return this.type === "ping";
-    }
+    };
 
-    toJS(): Object {
+    toJS = (): ActionData => {
         let {type, payload, keyPath} = this;
         return {type, payload, keyPath};
-    }
+    };
 }
