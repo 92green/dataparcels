@@ -176,7 +176,12 @@ export default class Parcel {
         // handleChange = handleChange; add handle change logic here
 
         let noop = () => {};
-        this._onDispatch = handleChange || onDispatch || noop;
+        this._onDispatch = handleChange
+            ? (parcels, actions) => {
+                handleChange(parcels, actions);
+            }
+            : (onDispatch || noop);
+
         this._parcelData = {
             value,
             child,

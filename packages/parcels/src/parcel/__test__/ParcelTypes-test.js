@@ -3,11 +3,8 @@ import {Map, List} from 'immutable';
 import test from 'ava';
 import Parcel from '../Parcel';
 
-const handleChange = ii => {};
-
 test('ParcelTypes should correctly identify primitive values', tt => {
     var data = {
-        handleChange,
         value: 123
     };
     tt.false(new Parcel(data).isParent());
@@ -20,7 +17,6 @@ test('ParcelTypes should correctly identify primitive values', tt => {
 
 test('ParcelTypes should correctly identify primitive date', tt => {
     var data = {
-        handleChange,
         value: new Date()
     };
     tt.false(new Parcel(data).isParent());
@@ -33,7 +29,6 @@ test('ParcelTypes should correctly identify primitive date', tt => {
 
 test('ParcelTypes should correctly identify object values', tt => {
     var data = {
-        handleChange,
         value: {
             a: "A"
         }
@@ -51,7 +46,6 @@ test('ParcelTypes should correctly identify class instance values', tt => {
         foo = "123"
     }
     var data = {
-        handleChange,
         value: new Thing()
     };
     tt.false(new Parcel(data).isParent());
@@ -65,7 +59,6 @@ test('ParcelTypes should correctly identify class instance values', tt => {
 
 test('ParcelTypes should correctly identify Immutable.js Map values', tt => {
     var data = {
-        handleChange,
         value: Map({
             a: "A"
         })
@@ -81,7 +74,6 @@ test('ParcelTypes should correctly identify Immutable.js Map values', tt => {
 
 test('ParcelTypes should correctly identify array values', tt => {
     var data = {
-        handleChange,
         value: [1,2,3]
     };
     tt.true(new Parcel(data).isParent());
@@ -94,7 +86,6 @@ test('ParcelTypes should correctly identify array values', tt => {
 
 test('ParcelTypes should correctly identify Immutable.js List values', tt => {
     var data = {
-        handleChange,
         value: List([1,2,3])
     };
     tt.true(new Parcel(data).isParent());
@@ -107,7 +98,6 @@ test('ParcelTypes should correctly identify Immutable.js List values', tt => {
 
 test('ParcelTypes should correctly identify child values', tt => {
     var data = {
-        handleChange,
         value: {
             a: "A"
         }
@@ -122,7 +112,6 @@ test('ParcelTypes should correctly identify child values', tt => {
 
 test('ParcelTypes should correctly identify element values', tt => {
     var data = {
-        handleChange,
         value: [1,2,3]
     };
     tt.false(new Parcel(data).get(0).isParent());
@@ -135,7 +124,6 @@ test('ParcelTypes should correctly identify element values', tt => {
 
 test('ParcelTypes should correctly identify top level values after modifiers', tt => {
     var data = {
-        handleChange,
         value: [1,2,3]
     };
     tt.true(new Parcel(data).modifyValue(ii => ii).isTopLevel());
@@ -145,7 +133,6 @@ test('ParcelTypes should correctly identify top level values after modifiers', t
 
 test('Correct methods are created for primitive values', tt => {
     var data = {
-        handleChange,
         value: 123
     };
     tt.notThrows(() => new Parcel(data).value());
@@ -157,7 +144,6 @@ test('Correct methods are created for primitive values', tt => {
 
 test('Correct methods are created for object values', tt => {
     var data = {
-        handleChange,
         value: {a: 123}
     };
     tt.notThrows(() => new Parcel(data).value());
@@ -169,7 +155,6 @@ test('Correct methods are created for object values', tt => {
 
 test('Correct methods are created for array values', tt => {
     var data = {
-        handleChange,
         value: [1,2,3]
     };
     tt.notThrows(() => new Parcel(data).value());
@@ -181,7 +166,6 @@ test('Correct methods are created for array values', tt => {
 
 test('Correct methods are created for object child values', tt => {
     var data = {
-        handleChange,
         value: {a: 123}
     };
     tt.notThrows(() => new Parcel(data).get("a").value());
@@ -193,7 +177,6 @@ test('Correct methods are created for object child values', tt => {
 
 test('Correct methods are created for array element values', tt => {
     var data = {
-        handleChange,
         value: [1,2,3]
     };
     tt.notThrows(() => new Parcel(data).get(0).value());
