@@ -3,7 +3,6 @@ import escapeStringRegexp from 'escape-string-regexp';
 
 import doIf from 'unmutable/lib/doIf';
 import join from 'unmutable/lib/join';
-import log from 'unmutable/lib/log';
 import keyArray from 'unmutable/lib/keyArray';
 import map from 'unmutable/lib/map';
 import sort from 'unmutable/lib/sort';
