@@ -21,14 +21,9 @@ export default (_this: Parcel): Object => ({
     },
 
     _handleChange: (_onHandleChange: Function, changeRequest: ChangeRequest) => {
-        let parcelDataFromRegistry = _this._treeshare
-            .registry
-            .get(_this._id.id())
-            .raw();
-
         let parcel: Parcel = _this._create({
             parcelData: changeRequest
-                .setBase(parcelDataFromRegistry)
+                .setBaseParcel(_this)
                 .data()
         });
 
@@ -63,7 +58,7 @@ export default (_this: Parcel): Object => ({
             );
 
             _this._parcelData = changeRequest
-                .setBase(_this._parcelData)
+                .setBaseParcel(_this)
                 .data();
 
             return;

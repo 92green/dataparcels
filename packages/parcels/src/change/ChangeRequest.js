@@ -1,9 +1,8 @@
 // @flow
-import type {
-    Key,
-    ParcelData
-} from '../types/Types';
+import type Parcel from '../parcel/Parcel';
+import type {Key} from '../types/Types';
 import type Action from './Action';
+
 import Reducer from '../change/Reducer';
 
 type ActionUpdater = (actions: Action[]) => Action[];
@@ -11,7 +10,7 @@ type ActionUpdater = (actions: Action[]) => Action[];
 export default class ChangeRequest {
 
     _actions: Action[] = [];
-    _base: ?ParcelData;
+    _baseParcel: ?Parcel;
     _meta: * = {};
     _originId: ?string = null;
     _originPath: ?string[] = null;
@@ -20,10 +19,10 @@ export default class ChangeRequest {
         this._actions = this._actions.concat(action);
     }
 
-    _create = ({actions, base, meta, originId, originPath}: Object): ChangeRequest => {
+    _create = ({actions, baseParcel, meta, originId, originPath}: Object): ChangeRequest => {
         let changeRequest = new ChangeRequest();
         changeRequest._actions = actions || this._actions;
-        changeRequest._base = base || this._base;
+        changeRequest._baseParcel = baseParcel || this._baseParcel;
         changeRequest._meta = meta || this._meta;
         changeRequest._originId = originId || this._originId;
         changeRequest._originPath = originPath || this._originPath;
@@ -36,17 +35,25 @@ export default class ChangeRequest {
         });
     };
 
-    setBase = (base: ParcelData): ChangeRequest => {
+    setBaseParcel = (baseParcel: Parcel): ChangeRequest => {
         return this._create({
-            base
+            baseParcel
         });
     };
 
     data = (): * => {
-        if(!this._base) {
-            throw new Error(`ChangeRequest data() cannot be called before calling setBase()`);
+        if(!this._baseParcel) {
+            throw new Error(`ChangeRequest data() cannot be called before calling setBaseParcel()`);
         }
-        return Reducer(this._base, this._actions);
+
+        let parcelDataFromRegistry = this
+            ._baseParcel
+            ._treeshare
+            .registry
+            .get(this._baseParcel._id.id())
+            .raw();
+
+        return Reducer(parcelDataFromRegistry, this._actions);
     };
 
     actions = (): Action[] => {

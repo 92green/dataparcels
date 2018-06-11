@@ -2,6 +2,7 @@
 import test from 'ava';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
+import Parcel from '../../parcel/Parcel';
 
 test('ChangeRequest should build an action', tt => {
     let expectedDefaultData = {
@@ -94,7 +95,7 @@ test('ChangeRequest _unget() should prepend key', tt => {
     );
 });
 
-test('ChangeRequest setBase() and data() should use Reducer', tt => {
+test('ChangeRequest setBaseParcel() and data() should use Reducer', tt => {
     var action = new Action({
         type: "set",
         keyPath: ["b"],
@@ -103,15 +104,15 @@ test('ChangeRequest setBase() and data() should use Reducer', tt => {
         }
     });
 
-    var data = {
+    var parcel = new Parcel({
         value: {
             a: 1,
             b: 2
         }
-    };
+    });
 
     let {value} = new ChangeRequest(action)
-        .setBase(data)
+        .setBaseParcel(parcel)
         .data();
 
     var expectedValue = {
@@ -122,7 +123,41 @@ test('ChangeRequest setBase() and data() should use Reducer', tt => {
     tt.deepEqual(expectedValue, value);
 });
 
+test('ChangeRequest data() should get latest parcel data from treeshare when called to prevent basing onto stale data', tt => {
+    tt.plan(1);
 
-test('ChangeRequest should throw error if data() is called before setBase()', tt => {
-    tt.is(tt.throws(() => new ChangeRequest().data(), Error).message, `ChangeRequest data() cannot be called before calling setBase()`);
+    var action = new Action({
+        type: "set",
+        keyPath: ["b"],
+        payload: {
+            value: 3
+        }
+    });
+
+    var ref = {};
+
+    var parcel = new Parcel({
+        value: {
+            a: 1,
+            b: 2
+        },
+        handleChange: (parcel) => {
+            let {value} = ref.changeRequest.data();
+
+            var expectedValue = {
+                a: 4,
+                b: 3
+            };
+
+            tt.deepEqual(expectedValue, value);
+        }
+    });
+
+    ref.changeRequest = new ChangeRequest(action).setBaseParcel(parcel);
+    parcel.get('a').onChange(4);
+});
+
+
+test('ChangeRequest should throw error if data() is called before setBaseParcel()', tt => {
+    tt.is(tt.throws(() => new ChangeRequest().data(), Error).message, `ChangeRequest data() cannot be called before calling setBaseParcel()`);
 });
