@@ -1,6 +1,6 @@
 // @flow
 import test from 'ava';
-import Matcher from '../Matcher';
+import Matcher, {split, containsWildcard, containsGlobstar} from '../Matcher';
 
 import filter from 'unmutable/lib/filter';
 import identity from 'unmutable/lib/identity';
@@ -346,3 +346,34 @@ pipeWith(
         });
     })
 );
+
+test(`split() should split`, (tt: Object) => {
+    tt.deepEqual(['abc'], split(`abc`));
+    tt.deepEqual(['abc', 'def'], split(`abc.def`));
+    tt.deepEqual(['abc', 'de%.f'], split(`abc.de%.f`));
+});
+
+test(`containsWildcard() should identify when a match string contains a wildcard`, (tt: Object) => {
+    tt.false(containsWildcard(`abc`));
+    tt.true(containsWildcard(`abc*`));
+    tt.true(containsWildcard(`abc.*`));
+    tt.false(containsWildcard(`abc%*`));
+    tt.true(containsWildcard(`abc%*.*`));
+    tt.false(containsWildcard(`**`));
+    tt.false(containsWildcard(`abc.**`));
+    tt.true(containsWildcard(`abc.*.**`));
+    tt.true(containsWildcard(`abc%**`));
+});
+
+test(`containsGlobstar() should identify when a match string contains a globstar`, (tt: Object) => {
+    tt.false(containsGlobstar(`abc`));
+    tt.false(containsGlobstar(`abc*`));
+    tt.false(containsGlobstar(`abc.*`));
+    tt.false(containsGlobstar(`abc%*`));
+    tt.false(containsGlobstar(`abc%*.*`));
+    tt.true(containsGlobstar(`**`));
+    tt.true(containsGlobstar(`abc.**`));
+    tt.true(containsGlobstar(`abc.*.**`));
+    tt.false(containsGlobstar(`abc%**`));
+});
+
