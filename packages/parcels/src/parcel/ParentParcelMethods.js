@@ -7,19 +7,14 @@ import type {
 
 import type Parcel from './Parcel';
 import MethodCreator from './MethodCreator';
-import Action from '../change/Action';
+import type ChangeRequest from '../change/ChangeRequest';
 
 import parcelForEach from '../parcelData/forEach';
 import parcelGet from '../parcelData/get';
 import parcelHas from '../parcelData/has';
 
-import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
-import unshift from 'unmutable/lib/unshift';
-import update from 'unmutable/lib/update';
-import pipe from 'unmutable/lib/util/pipe';
-import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default MethodCreator("Parent", (_this: Parcel): Object => ({
 
@@ -32,21 +27,13 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
     get: (key: Key|Index, notSetValue: * = undefined): Parcel => {
         let childParcelData: ParcelData = parcelGet(key, notSetValue)(_this._parcelData);
 
-        let childOnDispatch: Function = (parcelData: ParcelData, actions: Action[]) => {
-            pipeWith(
-                actions,
-                map(pipe(
-                    action => action.toJS(),
-                    update('keyPath', unshift(key)),
-                    action => new Action(action)
-                )),
-                _this.dispatch
-            );
+        let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
+            _this.dispatch(changeRequest._unget(key));
         };
 
         return _this._create({
             parcelData: childParcelData,
-            onDispatch: _this._skipReducer(childOnDispatch),
+            onDispatch: childOnDispatch,
             id: _this._id.push(childParcelData.key, _this.isIndexed()),
             parent: _this
         });

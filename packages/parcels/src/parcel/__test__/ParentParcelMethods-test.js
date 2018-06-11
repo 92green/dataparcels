@@ -35,8 +35,8 @@ test('ParentParcel.get(key) should return a new child Parcel', tt => {
             a: 1,
             b: 4
         },
-        handleChange: (parcel, action) => {
-            tt.deepEqual(expectedAction, action[0].toJS(), 'child parcel onChange passes correct action');
+        handleChange: (parcel, changeRequest) => {
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'child parcel onChange passes correct action');
             tt.deepEqual(expectedValue, parcel.value(), 'child parcel onChange updates original parcels value correctly');
         }
     };
@@ -122,9 +122,9 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
             },
             c: 4
         },
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(parcel.value(), expectedValue, 'child parcel onChange updates original parcels value correctly');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'child parcel onChange passes correct action');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'child parcel onChange passes correct action');
         }
     };
 
@@ -175,9 +175,9 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', tt => 
             },
             b: 4
         },
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(parcel.value(), expectedValue, 'descendant parcel onChange updates original parcels value correctly');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'descendant parcel onChange passes correct action');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'descendant parcel onChange passes correct action');
         }
     };
 

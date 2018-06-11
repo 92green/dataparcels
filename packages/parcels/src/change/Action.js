@@ -22,8 +22,11 @@ export default class Action {
     }
 
     _unget = (key: Key|Index): Action => {
+        let {type, payload, keyPath} = this;
         return new Action({
-            keyPath: [key, ...this.keyPath]
+            type,
+            payload,
+            keyPath: [key, ...keyPath]
         });
     };
 

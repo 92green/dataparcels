@@ -6,7 +6,7 @@ import type {
     CreateParcelConfigType
 } from '../types/Types';
 
-import type Action from '../change/Action';
+import type ChangeRequest from '../change/ChangeRequest';
 
 import Modifiers from '../modifiers/Modifiers';
 
@@ -40,12 +40,13 @@ export default class Parcel {
     // private data
     //
 
-    _onDispatch: Function;
+    _onHandleChange: ?Function;
+    _onDispatch: ?Function;
     _parcelData: ParcelData;
     _id: ParcelId;
     _modifiers: Modifiers;
     _treeshare: Treeshare;
-    _actionBuffer: Action[][] = [];
+    _dispatchBuffer: Array<?ChangeRequest> = [];
     _parcelTypes: ParcelTypes;
     _applyModifiers: Function;
 
@@ -56,8 +57,6 @@ export default class Parcel {
     // - action methods
     _buffer: Function;
     _flush: Function;
-    _skipReducer: Function;
-    _thunkReducer: Function;
     // - id methods
     _typedPathString: Function;
 
@@ -100,6 +99,7 @@ export default class Parcel {
     //
 
     // - action methods
+    handleChange: Function;
     dispatch: Function;
     batch: Function;
     // - value parcel methods
@@ -173,14 +173,8 @@ export default class Parcel {
             treeshare
         } = _parcelConfigInternal || DEFAULT_CONFIG_INTERNAL;
 
-        // handleChange = handleChange; add handle change logic here
-
-        let noop = () => {};
-        this._onDispatch = handleChange
-            ? (parcels, actions) => {
-                handleChange(parcels, actions);
-            }
-            : (onDispatch || noop);
+        this._onHandleChange = handleChange;
+        this._onDispatch = onDispatch;
 
         this._parcelData = {
             value,
@@ -250,9 +244,9 @@ export default class Parcel {
                 value,
                 meta
             },
-            onDispatch = this._skipReducer((parcel: Parcel, action: Action|Action[]) => {
-                this.dispatch(action);
-            }),
+            onDispatch = (changeRequest: ChangeRequest) => {
+                this.dispatch(changeRequest);
+            },
             id = this._id,
             modifiers = this._modifiers,
             parent

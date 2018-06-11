@@ -37,17 +37,17 @@ test('IndexedParcel.delete() should delete', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct using index');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
         }
     }).delete(0);
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedActionWithKey, action[0].toJS(), 'updated action is correct using key');
+            tt.deepEqual(expectedActionWithKey, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
         }
     }).delete("#a");
 
@@ -117,17 +117,17 @@ test('IndexedParcel.insertBefore() should insertBefore', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct using index');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
         }
     }).insertBefore(1, 4);
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedActionWithKey, action[0].toJS(), 'updated action is correct using key');
+            tt.deepEqual(expectedActionWithKey, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
         }
     }).insertBefore("#b", 4);
 });
@@ -173,17 +173,17 @@ test('IndexedParcel.insertAfter() should insertAfter', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct using index');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
         }
     }).insertAfter(1, 4);
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedActionWithKey, action[0].toJS(), 'updated action is correct using key');
+            tt.deepEqual(expectedActionWithKey, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
         }
     }).insertAfter("#b", 4);
 });
@@ -221,9 +221,9 @@ test('IndexedParcel.push() should push', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).push(4);
 });
@@ -257,9 +257,9 @@ test('IndexedParcel.pop() should pop', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).pop();
 });
@@ -293,9 +293,9 @@ test('IndexedParcel.shift() should shift', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).shift();
 });
@@ -332,9 +332,9 @@ test('IndexedParcel.swap() should swap', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with indexes');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct with indexes');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with indexes');
         }
     }).swap(0,2);
 });
@@ -369,9 +369,9 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).swapNext(0);
 
@@ -383,9 +383,9 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct with keys');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with keys');
         }
     }).swapNext("#a");
 });
@@ -421,9 +421,9 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).swapPrev(1);
 
@@ -435,9 +435,9 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct with keys');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with keys');
         }
     }).swapPrev("#b");
 });
@@ -475,9 +475,9 @@ test('IndexedParcel.unshift() should unshift', tt => {
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).unshift(4);
 });

@@ -1,6 +1,7 @@
 // @flow
 import test from 'ava';
 import Parcel from '../Parcel';
+import type ChangeRequest from '../../change/ChangeRequest';
 
 test('Parcel.modify() should return the result of modifys updaters', (tt: Object) => {
     var data = {
@@ -78,25 +79,9 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
     };
 
     new Parcel(data)
-        .modifyChange(({parcel, newParcelData}: Object) => {
-            parcel.setSelf(newParcelData().value + 1);
+        .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+            parcel.setSelf(changeRequest.data().value + 1);
         })
-        .onChange(456);
-});
-
-test('Parcel.modifyChange() should allow you to call continueChange to continue without modification', (tt: Object) => {
-    tt.plan(1);
-
-    var data = {
-        value: 123,
-        handleChange: (parcel: Parcel) => {
-            let {value} = parcel.data();
-            tt.is(456, value, "original handleChange should receive updated value");
-        }
-    };
-
-    new Parcel(data)
-        .modifyChange(({continueChange}) => continueChange())
         .onChange(456);
 });
 
