@@ -20,12 +20,7 @@ export default (_this: Parcel): Object => ({
         _this.dispatch(_this._dispatchBuffer.pop());
     },
 
-    handleChange: (changeRequest: ChangeRequest) => {
-        let {_onHandleChange} = _this;
-        if(!_onHandleChange) {
-            return;
-        }
-
+    _handleChange: (_onHandleChange: Function, changeRequest: ChangeRequest) => {
         let parcelDataFromRegistry = _this._treeshare
             .registry
             .get(_this._id.id())
@@ -75,7 +70,7 @@ export default (_this: Parcel): Object => ({
         }
 
         if(_onHandleChange) {
-            _this.handleChange(changeRequest);
+            _this._handleChange(_onHandleChange, changeRequest);
             return;
         }
         _onDispatch && _onDispatch(changeRequest);

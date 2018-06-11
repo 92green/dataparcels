@@ -13,14 +13,14 @@ export default class ChangeRequest {
     _actions: Action[] = [];
     _base: ?ParcelData;
     _meta: * = {};
-    _originId: ?string;
-    _originPath: ?string[];
+    _originId: ?string = null;
+    _originPath: ?string[] = null;
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
     }
 
-    _create = ({actions, base, meta, originId, originPath}: *): ChangeRequest => {
+    _create = ({actions, base, meta, originId, originPath}: Object): ChangeRequest => {
         let changeRequest = new ChangeRequest();
         changeRequest._actions = actions || this._actions;
         changeRequest._base = base || this._base;
@@ -74,5 +74,14 @@ export default class ChangeRequest {
                 ...partialMeta
             }
         });
+    };
+
+    toJS = (): Object => {
+        return {
+            actions: this._actions,
+            meta: this._meta,
+            originId: this._originId,
+            originPath: this._originPath
+        };
     };
 }

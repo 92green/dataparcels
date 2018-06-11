@@ -7,7 +7,7 @@ import type {
 import get from './get';
 import has from './has';
 
-export default (keyPath: Array<Key>, notSetValue: * = undefined) => (parcelData: ParcelData): ParcelData => {
+export default (keyPath: Array<Key>) => (parcelData: ParcelData): ParcelData => {
     for(let key of keyPath) {
         if(!has(key)(parcelData)) {
             return {
@@ -16,7 +16,7 @@ export default (keyPath: Array<Key>, notSetValue: * = undefined) => (parcelData:
                 meta: {}
             };
         }
-        parcelData = get(key, notSetValue)(parcelData);
+        parcelData = get(key)(parcelData);
     }
     return parcelData;
 };

@@ -99,7 +99,7 @@ export default class Parcel {
     //
 
     // - action methods
-    handleChange: Function;
+    _handleChange: Function;
     dispatch: Function;
     batch: Function;
     // - value parcel methods
@@ -239,17 +239,14 @@ export default class Parcel {
 
     _create: Function = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
+            id = this._id,
             parcelData: {
                 child,
                 value,
                 meta
             },
-            onDispatch = (changeRequest: ChangeRequest) => {
-                this.dispatch(changeRequest);
-            },
-            id = this._id,
-            modifiers = this._modifiers,
-            parent
+            parent,
+            onDispatch = this.dispatch
         } = createParcelConfig;
 
         let parcel: Parcel = new Parcel(
@@ -257,11 +254,11 @@ export default class Parcel {
                 value
             },
             {
-                onDispatch,
                 child,
                 meta,
                 id,
-                modifiers,
+                modifiers: this._modifiers,
+                onDispatch,
                 parent,
                 treeshare: this._treeshare
             }

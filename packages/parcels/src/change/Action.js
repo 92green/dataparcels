@@ -6,16 +6,16 @@ import type {
 
 type ActionData = {
     type?: string,
-    payload?: *,
+    payload?: Object,
     keyPath?: Array<Key|Index>
 };
 
 export default class Action {
-    type: ?string;
-    payload: * = {};
+    type: string = "";
+    payload: Object = {};
     keyPath: Array<Key|Index> = [];
 
-    constructor(actionData: ActionData) {
+    constructor(actionData: ActionData = {}) {
         this.type = actionData.type || this.type;
         this.payload = actionData.payload || this.payload;
         this.keyPath = actionData.keyPath || this.keyPath;

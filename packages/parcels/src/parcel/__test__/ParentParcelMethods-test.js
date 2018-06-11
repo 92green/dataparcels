@@ -163,6 +163,19 @@ test('ParentParcel.get(keyDoesntExist) should return a parcel with value of unde
     tt.true(typeof new Parcel(data).get("z").value() === "undefined");
 });
 
+test('ParentParcel.get(keyDoesntExist, "notset") should return a parcel with value of "notset"', tt => {
+    var data = {
+        value: {
+            a: {
+                b: 2
+            },
+            c: 4
+        }
+    };
+
+    tt.is(new Parcel(data).get("z", "notset").value(), "notset");
+});
+
 test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', tt => {
     tt.plan(4);
 
