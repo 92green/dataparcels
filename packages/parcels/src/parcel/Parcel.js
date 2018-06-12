@@ -6,7 +6,7 @@ import type {
     CreateParcelConfigType
 } from '../types/Types';
 
-import type Action from '../action/Action';
+import type ChangeRequest from '../change/ChangeRequest';
 
 import Modifiers from '../modifiers/Modifiers';
 
@@ -25,6 +25,7 @@ import Treeshare from '../treeshare/Treeshare';
 import map from 'unmutable/lib/map';
 
 const DEFAULT_CONFIG_INTERNAL = {
+    onDispatch: undefined,
     child: undefined,
     meta: {},
     id: new ParcelId(),
@@ -39,12 +40,13 @@ export default class Parcel {
     // private data
     //
 
-    _handleChange: Function;
+    _onHandleChange: ?Function;
+    _onDispatch: ?Function;
     _parcelData: ParcelData;
     _id: ParcelId;
     _modifiers: Modifiers;
     _treeshare: Treeshare;
-    _actionBuffer: Action[][] = [];
+    _dispatchBuffer: Array<?ChangeRequest> = [];
     _parcelTypes: ParcelTypes;
     _applyModifiers: Function;
 
@@ -55,8 +57,6 @@ export default class Parcel {
     // - action methods
     _buffer: Function;
     _flush: Function;
-    _skipReducer: Function;
-    _thunkReducer: Function;
     // - id methods
     _typedPathString: Function;
 
@@ -99,6 +99,7 @@ export default class Parcel {
     //
 
     // - action methods
+    _handleChange: Function;
     dispatch: Function;
     batch: Function;
     // - value parcel methods
@@ -157,12 +158,13 @@ export default class Parcel {
 
     constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
         let {
-            handleChange = () => {},
-            value = undefined,
+            handleChange,
+            value,
             debugRender = false
         } = parcelConfig;
 
         let {
+            onDispatch,
             child,
             meta,
             id,
@@ -171,7 +173,9 @@ export default class Parcel {
             treeshare
         } = _parcelConfigInternal || DEFAULT_CONFIG_INTERNAL;
 
-        this._handleChange = handleChange;
+        this._onHandleChange = handleChange;
+        this._onDispatch = onDispatch;
+
         this._parcelData = {
             value,
             child,
@@ -235,29 +239,26 @@ export default class Parcel {
 
     _create: Function = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
+            id = this._id,
             parcelData: {
                 child,
                 value,
                 meta
             },
-            handleChange = this._skipReducer((parcel: Parcel, action: Action|Action[]) => {
-                this.dispatch(action);
-            }),
-            id = this._id,
-            modifiers = this._modifiers,
-            parent = undefined
+            parent,
+            onDispatch = this.dispatch
         } = createParcelConfig;
 
         let parcel: Parcel = new Parcel(
             {
-                handleChange,
                 value
             },
             {
                 child,
                 meta,
                 id,
-                modifiers,
+                modifiers: this._modifiers,
+                onDispatch,
                 parent,
                 treeshare: this._treeshare
             }

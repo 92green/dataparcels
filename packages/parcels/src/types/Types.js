@@ -26,6 +26,7 @@ export type ParcelConfig = {
 };
 
 export type ParcelConfigInternal = {
+    onDispatch?: Function,
     child: *,
     meta: Object,
     id: ParcelId,
@@ -35,9 +36,8 @@ export type ParcelConfigInternal = {
 };
 
 export type CreateParcelConfigType = {
-    handleChange?: Function,
+    onDispatch?: Function,
     id: ParcelId,
-    modifiers: Modifiers,
     parcelData: ParcelData,
     parent?: Parcel
 };

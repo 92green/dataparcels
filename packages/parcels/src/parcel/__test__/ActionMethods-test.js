@@ -2,8 +2,6 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-const handleChange = ii => {};
-
 test('Parcel._buffer() should buffer any actions and _flush() should dispatch them', (tt: Object) => {
     tt.plan(4);
 

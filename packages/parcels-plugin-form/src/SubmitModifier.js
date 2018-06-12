@@ -1,5 +1,5 @@
 // @flow
-import type Parcel from 'parcels';
+import type Parcel, {ChangeRequest} from 'parcels';
 
 export default ({onSubmit, onError}: Object) => (parcel: Parcel): Parcel => {
     let ref = {};
@@ -10,12 +10,12 @@ export default ({onSubmit, onError}: Object) => (parcel: Parcel): Parcel => {
             submitting: false, // TODO - actionMeta can replace this
             submit: () => ref.submit()
         })
-        .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
-            let parcelData = newParcelData();
+        .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+            let parcelData = changeRequest.data();
             let {submitting, errors} = parcelData.meta;
 
             if(!submitting) { // TODO - actionMeta can replace this
-                continueChange();
+                parcel.dispatch(changeRequest);
                 return;
             }
 
@@ -25,7 +25,7 @@ export default ({onSubmit, onError}: Object) => (parcel: Parcel): Parcel => {
                 onSubmit && onSubmit(parcelData.value, parcelData);
             }
 
-            continueChange();
+            parcel.dispatch(changeRequest);
             parcel.setMeta({ // TODO - actionMeta can replace this
                 submitting: false
             });

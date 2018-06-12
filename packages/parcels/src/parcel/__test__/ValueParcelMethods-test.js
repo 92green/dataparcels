@@ -2,12 +2,9 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-const handleChange = ii => {};
-
 test('Parcel.data() should return the Parcels data', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
 
     var expectedData = {
@@ -20,8 +17,7 @@ test('Parcel.data() should return the Parcels data', (tt: Object) => {
 
 test('Parcel.data() should strip the returned Parcel data', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
 
     var expectedData = {
@@ -35,8 +31,7 @@ test('Parcel.data() should strip the returned Parcel data', (tt: Object) => {
 test('Parcel.raw() should return the Parcels data without stripping', (tt: Object) => {
     var data = {
         value: 123,
-        child: undefined,
-        handleChange
+        child: undefined
     };
 
     var expectedData = {
@@ -51,8 +46,7 @@ test('Parcel.raw() should return the Parcels data without stripping', (tt: Objec
 
 test('Parcel.value() should return the Parcels value', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
     tt.is(new Parcel(data).value(), 123);
 });
@@ -60,8 +54,7 @@ test('Parcel.value() should return the Parcels value', (tt: Object) => {
 test('Parcel.value() should return the same instance of the Parcels value', (tt: Object) => {
     var myObject = {a:1,b:2};
     var data = {
-        value: myObject,
-        handleChange
+        value: myObject
     };
     tt.is(new Parcel(data).value(), myObject);
 });
@@ -113,9 +106,9 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).setSelf(456);
 });
@@ -144,9 +137,9 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).updateSelf((ii) => {
         tt.deepEqual(expectedArg, ii, 'update passes correct argument to updater');
@@ -176,9 +169,9 @@ test('Parcel.onChange() should work like set that only accepts a single argument
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).onChange(456);
 });
@@ -205,9 +198,9 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).onChangeDOM({
         target: {
@@ -294,12 +287,12 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             changes++;
 
             if(changes === 1) {
                 tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-                tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+                tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
                 parcel.setMeta({
                     def: 456
                 });
@@ -370,12 +363,12 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             changes++;
 
             if(changes === 1) {
                 tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-                tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+                tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
                 parcel.updateMeta(meta => {
                     tt.deepEqual({abc: 123}, meta, 'updateMeta should receive initial meta of {abc:123}')
                     return {
@@ -455,7 +448,7 @@ test('Parcel.ping() should call the Parcels handleChange function with no change
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'data is correct');
         }
     }).ping(456);

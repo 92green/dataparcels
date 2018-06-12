@@ -4,7 +4,7 @@ import type {
     ModifierObject
 } from '../types/Types';
 
-import Action from '../action/Action';
+import type ChangeRequest from '../change/ChangeRequest';
 import strip from '../parcelData/strip';
 
 import filterNot from 'unmutable/lib/filterNot';
@@ -64,23 +64,18 @@ export default (_this: Parcel): Object => ({
             parcelData => ({
                 parcelData,
                 id: _this._id.pushModifier('mc'),
-                handleChange: _this._thunkReducer((parcelThunk: Function, actions: Action[]) => {
-                    _this.batch((parcel: Parcel) => {
-                        batcher({
-                            parcel,
-                            newParcelData: () => parcelThunk().raw(),
-                            continueChange: () => parcel.dispatch(actions),
-                            actions
-                        });
-                    });
-                })
+                onDispatch: (changeRequest: ChangeRequest) => {
+                    _this.batch(
+                        (parcel: Parcel) => batcher(parcel, changeRequest.setBaseParcel(parcel)),
+                        changeRequest
+                    );
+                }
             }),
             _this._create
         );
     },
 
     initialMeta: (initialMeta: Object = {}): Parcel => {
-
         let {meta} = _this._parcelData;
 
         let partialMetaToSet = pipeWith(
@@ -92,10 +87,10 @@ export default (_this: Parcel): Object => ({
             ? ii => ii
             : pipe(
                 setIn(['parcelData', 'meta'], merge(partialMetaToSet)(meta)),
-                set('handleChange', (newParcel: Parcel, actions: Action[]) => {
+                set('onDispatch', (changeRequest: ChangeRequest) => {
                     _this.batch((parcel: Parcel) => {
                         parcel.setMeta(partialMetaToSet);
-                        parcel.dispatch(actions);
+                        parcel.dispatch(changeRequest);
                     });
                 })
             );

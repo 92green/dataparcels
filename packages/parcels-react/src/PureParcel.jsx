@@ -2,6 +2,7 @@
 import React from 'react';
 import type {Node} from 'react';
 import Parcel from 'parcels';
+import type {ChangeRequest} from 'parcels';
 
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
@@ -66,27 +67,28 @@ export default class PureParcel extends React.Component<Props, State> {
         }
 
         return this.state.parcel
-            .modifyChange(({parcel, continueChange, newParcelData, actions}: Object) => {
+            .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
-                let parcelData = newParcelData();
                 this.setState({
                     parcel: parcel._create({
-                        parcelData
+                        parcelData: changeRequest.data()
                     })
                 });
 
-                let shouldBeSynchronous: boolean = actions.some(action => action.shouldBeSynchronous());
+                let shouldBeSynchronous: boolean = changeRequest
+                    .actions()
+                    .some(action => action.shouldBeSynchronous());
 
                 this.changeCount++;
                 let originalChangeCount = this.changeCount;
                 if(shouldBeSynchronous) {
-                    continueChange();
+                    parcel.dispatch(changeRequest);
                     return;
                 }
 
                 setTimeout(() => {
                     if(originalChangeCount === this.changeCount) {
-                        continueChange();
+                        parcel.dispatch(changeRequest);
                     }
                 }, debounce);
             });
