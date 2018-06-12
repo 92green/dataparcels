@@ -469,27 +469,3 @@ test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareD
     tt.deepEqual({x:1}, p.get('def').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at def');
 
 });
-
-test('Parcel.findAllMatching() returns all parcels matching the match string at or below the current parcels depth', (tt: Object) => {
-
-    let p = new Parcel({
-        value: {
-            abc: {
-                def: 123,
-                ghi: 456
-            },
-            jkl: {
-                mno: 789
-            }
-        }
-    });
-
-    tt.deepEqual(["abc"], p.findAllMatching("abc").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def"], p.findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.findAllMatching("abc.woo").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.findAllMatching("asdf%.kasd.asdasd.asd").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def", "abc.ghi"], p.findAllMatching("abc.*").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def"], p.get('abc').findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.get('mno').findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def","abc.ghi","jkl.mno"], p.findAllMatching("*.*").map(ii => ii.path().join(".")));
-});
