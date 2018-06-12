@@ -4,7 +4,7 @@ import type {Node} from 'react';
 import Parcel from 'parcels';
 import type {ChangeRequest} from 'parcels';
 
-import PureParcelEquals from './PureParcelEquals';
+import PureParcelEquals from './util/PureParcelEquals';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
 type RenderFunction = (parcel: Parcel) => Node;

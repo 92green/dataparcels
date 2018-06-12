@@ -8,7 +8,7 @@ configure({adapter: new Adapter()});
 
 import {shallow} from 'enzyme';
 import PureParcel from '../PureParcel';
-import PureParcelEquals from '../PureParcelEquals';
+import PureParcelEquals from '../util/PureParcelEquals';
 import Parcel from 'parcels';
 
 test('PureParcel should pass a *value equivalent* parcel to children', tt => {
