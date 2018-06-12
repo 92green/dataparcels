@@ -144,6 +144,7 @@ export default class Parcel {
     modifyData: Function;
     modifyValue: Function;
     modifyChange: Function;
+    modifyChangeValue: Function;
     initialMeta: Function;
     addPreModifier: Function;
     addModifier: Function;
