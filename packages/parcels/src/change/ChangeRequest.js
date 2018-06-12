@@ -67,7 +67,9 @@ export default class ChangeRequest {
     };
 
     merge = (other: ChangeRequest): ChangeRequest => {
-        return this.updateActions(ii => ii.concat(other.actions()));
+        return this
+            .updateActions(ii => ii.concat(other.actions()))
+            .setMeta(other.meta());
     };
 
     meta = (): * => {
