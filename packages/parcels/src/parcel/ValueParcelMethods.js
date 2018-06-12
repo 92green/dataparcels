@@ -45,16 +45,6 @@ export default (_this: Parcel): Object => ({
         return {...meta};
     },
 
-    equals: (otherParcel: Parcel): boolean => {
-        let aa: Object = _this.raw();
-        let bb: Object = otherParcel.raw();
-
-        return aa.value === bb.value
-            && aa.key === bb.key
-            && aa.child === bb.child
-            && shallowEquals(aa.meta)(bb.meta);
-    },
-
     hasDispatched: (): boolean => {
         return _this._treeshare.dispatch.hasPathDispatched(_this.path());
     },

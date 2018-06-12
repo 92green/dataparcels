@@ -4,6 +4,7 @@ import type {Node} from 'react';
 import Parcel from 'parcels';
 import type {ChangeRequest} from 'parcels';
 
+import PureParcelEquals from './PureParcelEquals';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
 type RenderFunction = (parcel: Parcel) => Node;
@@ -32,8 +33,8 @@ export default class PureParcel extends React.Component<Props, State> {
 
     shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
         let parcelDataChanged: boolean = nextProps.debounce
-            ? !this.state.parcel.equals(nextState.parcel)
-            : !this.props.parcel.equals(nextProps.parcel);
+            ? !PureParcelEquals(this.state.parcel, nextState.parcel)
+            : !PureParcelEquals(this.props.parcel, nextProps.parcel);
 
         let forceUpdateChanged: boolean = !shallowEquals(this.props.forceUpdate || [])(nextProps.forceUpdate || []);
         return parcelDataChanged || forceUpdateChanged;
@@ -41,7 +42,7 @@ export default class PureParcel extends React.Component<Props, State> {
 
     componentWillReceiveProps(nextProps: Object) {
         let {parcel} = nextProps;
-        if(!this.props.parcel.equals(parcel)) {
+        if(!PureParcelEquals(this.props.parcel, parcel)) {
             this.setState({
                 parcel
             });

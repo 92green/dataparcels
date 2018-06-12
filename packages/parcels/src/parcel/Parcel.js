@@ -82,7 +82,6 @@ export default class Parcel {
     spread: Function;
     spreadDOM: Function;
     meta: Function;
-    equals: Function;
     hasDispatched: Function;
     findAllMatching: Function;
     getInternalLocationShareData: Function;
