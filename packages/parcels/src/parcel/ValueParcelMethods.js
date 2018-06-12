@@ -2,6 +2,7 @@
 import type {ParcelData} from '../types/Types';
 import type Parcel from './Parcel';
 import strip from '../parcelData/strip';
+import ChangeRequest from '../change/ChangeRequest';
 import ActionCreators from '../change/ActionCreators';
 import {containsWildcard, split} from '../modifiers/Matcher';
 
@@ -125,6 +126,10 @@ export default (_this: Parcel): Object => ({
     updateMeta: (updater: Function) => {
         let {meta} = _this._parcelData;
         _this.setMeta(updater(meta));
+    },
+
+    setChangeRequestMeta: (partialMeta: Object) => {
+        _this.dispatch(new ChangeRequest().setMeta(partialMeta));
     },
 
     ping: () => {

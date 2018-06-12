@@ -388,6 +388,22 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
     });
 });
 
+test('Parcel.setChangeRequestMeta() should set change request meta', (tt: Object) => {
+    var data = {
+        value: 123,
+        handleChange: (parcel, changeRequest) => {
+            tt.deepEqual({a: 3, b: 2}, changeRequest.meta());
+        }
+    };
+
+    var parcel = new Parcel(data).batch(parcel => {
+        parcel.setChangeRequestMeta({a: 1});
+        parcel.onChange(456);
+        parcel.setChangeRequestMeta({b: 2});
+        parcel.setChangeRequestMeta({a: 3});
+    });
+});
+
 test('Parcel.equals() should compare two parcels data', (tt: Object) => {
     var child = {};
     var parcelCreator = (merge = {}) => {
