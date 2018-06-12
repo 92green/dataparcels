@@ -27,10 +27,6 @@ export default (_this: Parcel): Object => ({
                 .data()
         });
 
-        if(_this._treeshare.hasPreModifier() && _this.id() === "^") {
-            parcel = _this._treeshare.getPreModifier().applyTo(parcel);
-        }
-
         _onHandleChange(parcel, changeRequest);
     },
 

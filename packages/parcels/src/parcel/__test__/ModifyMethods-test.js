@@ -288,20 +288,3 @@ test('Parcel should addModifier with typed match', (tt: Object) => {
 
     tt.deepEqual([4,5,6,999], parcel.get('mno').value(), "mno parcel value proves that modifier has been applied");
 });
-
-test('Parcel should addPreModifier', (tt: Object) => {
-    tt.plan(2);
-
-    var data = {
-        value: 123,
-        handleChange: (parcel) => {
-            tt.is(457, parcel.value(), "handleChange parcel value proves that modifier has been applied");
-        }
-    };
-
-    let parcel = new Parcel(data)
-        .addPreModifier((parcel) => parcel.modifyValue(ii => ii + 1));
-
-    tt.is(124, parcel.value(), "constructed parcel value proves that modifier has been applied");
-    parcel.onChange(456);
-});

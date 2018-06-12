@@ -1,6 +1,4 @@
 // @flow
-import type {ModifierFunction} from '../types/Types';
-import Modifiers from '../modifiers/Modifiers';
 import {stringifyPath} from '../parcelId/ParcelId';
 
 class ParcelRegistry {
@@ -54,7 +52,6 @@ class LocationShareRegistry {
 
 export default class Treeshare {
     _debugRender: boolean = false;
-    _preModifier: Modifiers = new Modifiers();
     registry: ParcelRegistry = new ParcelRegistry();
     dispatch: DispatchRegistry = new DispatchRegistry();
     locationShare: LocationShareRegistry = new LocationShareRegistry();
@@ -66,16 +63,4 @@ export default class Treeshare {
     getDebugRender: Function = (): boolean => {
         return this._debugRender;
     }
-
-    hasPreModifier: Function = (): boolean => {
-        return !this._preModifier.isEmpty();
-    };
-
-    getPreModifier: Function = (): Modifiers => {
-        return this._preModifier;
-    };
-
-    setPreModifier: Function = (modifier: ModifierFunction) => {
-        this._preModifier = this._preModifier.set([modifier]);
-    };
 }

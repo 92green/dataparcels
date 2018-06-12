@@ -120,11 +120,6 @@ export default (_this: Parcel): Object => ({
         );
     },
 
-    addPreModifier: (modifier: ModifierFunction): Parcel => {
-        _this._treeshare.setPreModifier(modifier);
-        return modifier(_this);
-    },
-
     addModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
         return pipeWith(
             modifier,
