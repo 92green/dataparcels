@@ -75,6 +75,20 @@ export default (_this: Parcel): Object => ({
         );
     },
 
+    modifyChangeValue: (updater: Function): Parcel => {
+        return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+
+            let valueActionFilter = actions => actions.filter(action => !action.isValueAction());
+            parcel.dispatch(changeRequest.updateActions(valueActionFilter));
+
+            pipeWith(
+                changeRequest.data().value,
+                updater,
+                parcel.onChange
+            );
+        });
+    },
+
     initialMeta: (initialMeta: Object = {}): Parcel => {
         let {meta} = _this._parcelData;
 

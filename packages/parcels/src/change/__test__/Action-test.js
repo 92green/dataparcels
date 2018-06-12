@@ -52,3 +52,15 @@ test('Action should unshift key to front of keyPath when ungetting', tt => {
 
     tt.deepEqual(expectedAction, new Action(action)._unget('b').toJS());
 });
+
+test('Action should be value action if it isnt ping or setMeta', tt => {
+    tt.false(new Action({type: "ping"}).isValueAction());
+    tt.true(new Action({type: "set"}).isValueAction());
+    tt.false(new Action({type: "setMeta"}).isValueAction());
+});
+
+test('Action should be meta action if it is setMeta', tt => {
+    tt.false(new Action({type: "ping"}).isMetaAction());
+    tt.false(new Action({type: "set"}).isMetaAction());
+    tt.true(new Action({type: "setMeta"}).isMetaAction());
+});

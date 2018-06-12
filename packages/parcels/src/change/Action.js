@@ -34,6 +34,14 @@ export default class Action {
         return this.type === "ping";
     };
 
+    isValueAction = (): boolean => {
+        return this.type !== "ping" && this.type !== "setMeta";
+    };
+
+    isMetaAction = (): boolean => {
+        return this.type === "setMeta";
+    };
+
     toJS = (): ActionData => {
         let {type, payload, keyPath} = this;
         return {type, payload, keyPath};
