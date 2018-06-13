@@ -3,22 +3,11 @@ import {stringifyPath} from '../parcelId/ParcelId';
 
 class ParcelRegistry {
     _registry: Object = {};
-    _registryOrder: string[] = [];
-
     get = (id: string): Object => {
         return this._registry[id];
     };
 
-    list = (): Object[] => {
-        return this
-            ._registryOrder
-            .map(id => this._registry[id]);
-    };
-
     set = (id: string, reference: Object) => {
-        if(!this._registry[id]) {
-            this._registryOrder.push(id);
-        }
         this._registry[id] = reference;
     };
 }
