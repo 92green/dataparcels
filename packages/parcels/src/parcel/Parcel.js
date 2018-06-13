@@ -1,4 +1,5 @@
 // @flow
+import Types from '../types/Types';
 import type {
     ParcelData,
     ParcelConfig,
@@ -155,12 +156,17 @@ export default class Parcel {
     // - value parcel methods
     setInternalLocationShareData: Function;
 
-    constructor(parcelConfig: ParcelConfig = {}, _parcelConfigInternal: ?ParcelConfigInternal) {
+    constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
+        Types(`Parcel() expects param "config" to be`, `object`)(config);
+
         let {
             handleChange,
             value,
             debugRender = false
-        } = parcelConfig;
+        } = config;
+
+        Types(`Parcel() expects param "config.handleChange" to be`, `functionOptional`)(handleChange);
+        Types(`Parcel() expects param "config.debugRender" to be`, `boolean`)(debugRender);
 
         let {
             onDispatch,
@@ -170,7 +176,7 @@ export default class Parcel {
             modifiers,
             parent,
             treeshare
-        } = _parcelConfigInternal || DEFAULT_CONFIG_INTERNAL;
+        } = _configInternal || DEFAULT_CONFIG_INTERNAL;
 
         this._onHandleChange = handleChange;
         this._onDispatch = onDispatch;
