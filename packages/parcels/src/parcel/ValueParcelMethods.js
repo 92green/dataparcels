@@ -1,5 +1,6 @@
 // @flow
 import type {ParcelData} from '../types/Types';
+import Types from '../types/Types';
 import type Parcel from './Parcel';
 import strip from '../parcelData/strip';
 import ChangeRequest from '../change/ChangeRequest';
@@ -56,27 +57,37 @@ export default (_this: Parcel): Object => ({
     },
 
     updateSelf: (updater: Function) => {
+        Types(`updateSelf() expects param "updater" to be`, `function`)(updater);
         _this.setSelf(updater(_this.value()));
     },
 
-    onChange: (newValue: *) => {
-        _this.setSelf(newValue);
+    onChange: (value: *) => {
+        _this.setSelf(value);
     },
 
     onChangeDOM: (event: Object) => {
-        _this.onChange(event.target.value);
+        Types(`onChangeDOM() expects param "event" to be`, `event`)(event);
+        _this.onChange(event.currentTarget.value);
     },
 
     setMeta: (partialMeta: Object) => {
+        Types(`setMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
         _this.dispatch(ActionCreators.setMeta(partialMeta));
     },
 
     updateMeta: (updater: Function) => {
+        Types(`updateMeta() expects param "updater" to be`, `function`)(updater);
         let {meta} = _this._parcelData;
-        _this.setMeta(updater(meta));
+        pipeWith(
+            meta,
+            updater,
+            Types(`updateMeta() expects the result of updater() to be`, `object`),
+            _this.setMeta
+        );
     },
 
     setChangeRequestMeta: (partialMeta: Object) => {
+        Types(`setChangeRequestMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
         _this.dispatch(new ChangeRequest().setMeta(partialMeta));
     },
 
@@ -87,6 +98,7 @@ export default (_this: Parcel): Object => ({
     // mutation methods
 
     setInternalLocationShareData: (partialData: Object) => {
+        Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
         _this._treeshare.locationShare.set(_this.path(), partialData);
     }
 });

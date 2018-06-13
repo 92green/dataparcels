@@ -176,7 +176,7 @@ test('Parcel.onChange() should work like set that only accepts a single argument
     }).onChange(456);
 });
 
-test('Parcel.onChangeDOM() should work like onChange but take the value from event.target.value', (tt: Object) => {
+test('Parcel.onChangeDOM() should work like onChange but take the value from event.currentTarget.value', (tt: Object) => {
     tt.plan(2);
 
     var data = {
@@ -203,7 +203,7 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
             tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).onChangeDOM({
-        target: {
+        currentTarget: {
             value: 456
         }
     });

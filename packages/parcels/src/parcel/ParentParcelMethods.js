@@ -1,9 +1,6 @@
 // @flow
-import type {
-    Index,
-    Key,
-    ParcelData
-} from '../types/Types';
+import type {Index, Key, ParcelData} from '../types/Types';
+import Types from '../types/Types';
 
 import type Parcel from './Parcel';
 import MethodCreator from './MethodCreator';
@@ -21,10 +18,12 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
     // get methods
 
     has: (key: Key|Index): boolean => {
+        Types(`has() expects param "key" to be`, `keyIndex`)(key);
         return parcelHas(key)(_this._parcelData);
     },
 
     get: (key: Key|Index, notSetValue: * = undefined): Parcel => {
+        Types(`get() expects param "key" to be`, `keyIndex`)(key);
         let childParcelData: ParcelData = parcelGet(key, notSetValue)(_this._parcelData);
 
         let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
@@ -40,6 +39,7 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
     },
 
     getIn: (keyPath: Array<Key|Index>, notSetValue: * = undefined): Parcel => {
+        Types(`getIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
         var parcel = _this;
         for(let i = 0; i < keyPath.length; i++) {
             parcel = parcel.get(keyPath[i], i < keyPath.length - 1 ? {} : notSetValue);
@@ -48,6 +48,7 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
     },
 
     toObject: (mapper: Function = ii => ii): Object => {
+        Types(`toObject() expects param "mapper" to be`, `function`)(mapper);
         let obj = {};
 
         parcelForEach((parcelData: ParcelData, index: string|number) => {
@@ -60,6 +61,7 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
     },
 
     toArray: (mapper: Function = ii => ii): Array<*> => {
+        Types(`toArray() expects param "mapper" to be`, `function`)(mapper);
         return toArray()(_this.toObject(mapper));
     },
 
@@ -68,18 +70,24 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
     // change methods
 
     set: (key: Key|Index, value: *) => {
+        Types(`set() expects param "key" to be`, `keyIndex`)(key);
         _this.get(key).setSelf(value);
     },
 
     update: (key: Key|Index, updater: Function) => {
+        Types(`update() expects param "key" to be`, `keyIndex`)(key);
+        Types(`update() expects param "updater" to be`, `function`)(updater);
         _this.get(key).updateSelf(updater);
     },
 
     setIn: (keyPath: Array<Key|Index>, value: *) => {
+        Types(`setIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
         _this.getIn(keyPath).setSelf(value);
     },
 
     updateIn: (keyPath: Array<Key|Index>, updater: Function) => {
+        Types(`updateIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
+        Types(`update() expects param "updater" to be`, `function`)(updater);
         _this.getIn(keyPath).updateSelf(updater);
     }
 }));

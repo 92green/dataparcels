@@ -1,9 +1,13 @@
 // @flow
+import has from 'unmutable/lib/has';
 
-import type Parcel from '../parcel/Parcel';
 import type ParcelId from '../parcelId/ParcelId';
 import type Modifiers from '../modifiers/Modifiers';
 import type Treeshare from '../treeshare/Treeshare';
+
+import Parcel from '../parcel/Parcel';
+import Action from '../change/Action';
+import ChangeRequest from '../change/ChangeRequest';
 
 export type ParcelData = {
     value: *,
@@ -52,3 +56,59 @@ export type ModifierObject = {
 export type Key = string;
 
 export type Index = number;
+
+const runtimeTypes = {
+    ['dispatchable']: {
+        name: "an Action, an array of Actions, or a ChangeRequest",
+        check: ii => ii instanceof Action
+            || (Array.isArray(ii) && ii.every(jj => jj instanceof Action))
+            || ii instanceof ChangeRequest
+    },
+    ['event']: {
+        name: "an event",
+        check: ii => ii.currentTarget
+    },
+    ['function']: {
+        name: "a function",
+        check: ii => typeof ii === "function"
+    },
+    ['functionArray']: {
+        name: "",
+        check: ii => ii.every(jj => typeof jj === "function")
+    },
+    ['keyIndex']: {
+        name: "a key or an index (string or number)",
+        check: ii => typeof ii === "string" || typeof ii === "number"
+    },
+    ['keyIndexPath']: {
+        name: "an array of keys or indexes (strings or numbers)",
+        check: ii => Array.isArray(ii) && ii.every(jj => typeof jj === "string" || typeof jj === "number")
+    },
+    ['modifier']: {
+        name: "a modifier function, or an object like {modifier: Function, match: ?string}",
+        check: ii => typeof ii === "function" || ii.modifier
+    },
+    ['object']: {
+        name: "an object",
+        check: ii => typeof ii === "object"
+    },
+    ['parcel']: {
+        name: "a Parcel",
+        check: ii => ii instanceof Parcel
+    },
+    ['parcelData']: {
+        name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
+        check: ii => typeof ii === "object" && has('value')(ii)
+    }
+};
+
+export default (message: string, type: string) => (value: *): * => {
+    let runtimeType = runtimeTypes[type];
+    if(!runtimeType) {
+        return value;
+    }
+    if(!runtimeType.check(value)) {
+        throw new Error(`${message} ${runtimeType.name}, but got ${value}`);
+    }
+    return value;
+};
