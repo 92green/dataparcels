@@ -1,6 +1,4 @@
 // @flow
-import has from 'unmutable/lib/has';
-
 import type ParcelId from '../parcelId/ParcelId';
 import type Modifiers from '../modifiers/Modifiers';
 import type Treeshare from '../treeshare/Treeshare';
@@ -58,6 +56,10 @@ export type Key = string;
 export type Index = number;
 
 const runtimeTypes = {
+    ['boolean']: {
+        name: "a boolean",
+        check: ii => typeof ii === "boolean"
+    },
     ['dispatchable']: {
         name: "an Action, an array of Actions, or a ChangeRequest",
         check: ii => ii instanceof Action
@@ -66,7 +68,7 @@ const runtimeTypes = {
     },
     ['event']: {
         name: "an event",
-        check: ii => ii.currentTarget
+        check: ii => ii && ii.currentTarget
     },
     ['function']: {
         name: "a function",
@@ -74,19 +76,33 @@ const runtimeTypes = {
     },
     ['functionArray']: {
         name: "",
-        check: ii => ii.every(jj => typeof jj === "function")
+        check: ii => ii
+            && Array.isArray(ii)
+            && ii.every(jj => typeof jj === "function")
+    },
+    ['functionOptional']: {
+        name: "a function",
+        check: ii => typeof ii === "undefined"
+            || typeof ii === "function"
     },
     ['keyIndex']: {
         name: "a key or an index (string or number)",
-        check: ii => typeof ii === "string" || typeof ii === "number"
+        check: ii => typeof ii === "string"
+            || typeof ii === "number"
     },
     ['keyIndexPath']: {
         name: "an array of keys or indexes (strings or numbers)",
-        check: ii => Array.isArray(ii) && ii.every(jj => typeof jj === "string" || typeof jj === "number")
+        check: ii => ii
+            && Array.isArray(ii)
+            && ii.every(jj => typeof jj === "string" || typeof jj === "number")
     },
     ['modifier']: {
         name: "a modifier function, or an object like {modifier: Function, match: ?string}",
-        check: ii => typeof ii === "function" || ii.modifier
+        check: ii => ii
+            && (
+                typeof ii === "function"
+                || (ii.modifier && typeof ii.modifier === "function")
+            )
     },
     ['object']: {
         name: "an object",
@@ -98,7 +114,7 @@ const runtimeTypes = {
     },
     ['parcelData']: {
         name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
-        check: ii => typeof ii === "object" && has('value')(ii)
+        check: ii => typeof ii === "object" && ii.hasOwnProperty('value') && !(ii instanceof Parcel)
     }
 };
 
