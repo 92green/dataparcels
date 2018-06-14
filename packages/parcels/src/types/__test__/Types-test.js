@@ -47,8 +47,8 @@ let testTypes = (type: string, shouldAllow: string[]) => (tt: *) => {
     );
 };
 
-test('Types will fail silently if type is not found', tt => {
-    tt.notThrows(() => Types('???', 'notfound')({abc: 123}));
+test('Types will error if type is not found', tt => {
+    tt.is("Unknown type check", tt.throws(() => Types('???', 'notfound')({abc: 123}), Error).message);
 });
 
 test('Types() can identify a boolean', testTypes(`boolean`, [
@@ -94,6 +94,10 @@ test('Types() can identify a modifier', testTypes(`modifier`, [
     'modifierObject'
 ]));
 
+test('Types() can identify a number', testTypes(`number`, [
+    'number'
+]));
+
 test('Types() can identify a object', testTypes(`object`, [
     'action',
     'actionArray',
@@ -115,4 +119,8 @@ test('Types() can identify a parcel', testTypes(`parcel`, [
 
 test('Types() can identify a parcelData', testTypes(`parcelData`, [
     'parcelData'
+]));
+
+test('Types() can identify a string', testTypes(`string`, [
+    'string'
 ]));

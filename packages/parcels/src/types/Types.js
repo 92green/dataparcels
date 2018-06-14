@@ -104,6 +104,10 @@ const runtimeTypes = {
                 || (ii.modifier && typeof ii.modifier === "function")
             )
     },
+    ['number']: {
+        name: "a number",
+        check: ii => typeof ii === "number"
+    },
     ['object']: {
         name: "an object",
         check: ii => typeof ii === "object"
@@ -115,13 +119,17 @@ const runtimeTypes = {
     ['parcelData']: {
         name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
         check: ii => typeof ii === "object" && ii.hasOwnProperty('value') && !(ii instanceof Parcel)
+    },
+    ['string']: {
+        name: "a string",
+        check: ii => typeof ii === "string"
     }
 };
 
 export default (message: string, type: string) => (value: *): * => {
     let runtimeType = runtimeTypes[type];
     if(!runtimeType) {
-        return value;
+        throw new Error(`Unknown type check`);
     }
     if(!runtimeType.check(value)) {
         throw new Error(`${message} ${runtimeType.name}, but got ${value}`);

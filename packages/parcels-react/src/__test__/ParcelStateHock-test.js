@@ -26,6 +26,24 @@ test('ParcelStateHock config should accept an initial value', tt => {
     );
 });
 
+test('ParcelStateHock must be passed a prop, and throw an error if it isnt', tt => {
+    // $FlowFixMe - intentiaal misuse of types
+    tt.is(`ParcelStateHock() expects param "config.prop" to be a string, but got undefined`, tt.throws(() => ParcelStateHock({}), Error).message);
+});
+
+
+test('ParcelStateHock config should default initial value to undefined', tt => {
+    CheckHockChildProps(
+        ParcelStateHock({
+            prop: "proppy"
+        }),
+        {},
+        (props) => {
+            tt.true(typeof props.proppy.value() === "undefined", `value is passed down via prop`);
+        }
+    );
+});
+
 test('ParcelStateHock changes should be put back into ParcelStateHock state', tt => {
     let Child = () => <div />;
     let Hocked = ParcelStateHock({
