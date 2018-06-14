@@ -27,6 +27,16 @@ test('ParcelStateHock config should accept an initial value', tt => {
 });
 
 test('ParcelStateHock changes should be put back into ParcelStateHock state', tt => {
+    let Child = () => <div />;
+    let Hocked = ParcelStateHock({
+        initialValue: () => 123,
+        prop: "proppy"
+    })(Child);
+
+    let wrapper = shallow(<Hocked />);
+    let {proppy} = wrapper.props();
+    proppy.onChange(456);
+    tt.is(456, wrapper.update().props().proppy.value());
 });
 
 
