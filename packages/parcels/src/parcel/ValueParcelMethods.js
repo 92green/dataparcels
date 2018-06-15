@@ -1,13 +1,11 @@
 // @flow
 import type {ParcelData} from '../types/Types';
+import Types from '../types/Types';
 import type Parcel from './Parcel';
 import strip from '../parcelData/strip';
-import ActionCreators from '../action/ActionCreators';
-import {containsWildcard, split} from '../modifiers/Matcher';
+import ChangeRequest from '../change/ChangeRequest';
+import ActionCreators from '../change/ActionCreators';
 
-import flatMap from 'unmutable/lib/flatMap';
-import shallowEquals from 'unmutable/lib/shallowEquals';
-import take from 'unmutable/lib/take';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel): Object => ({
@@ -44,60 +42,12 @@ export default (_this: Parcel): Object => ({
         return {...meta};
     },
 
-    equals: (otherParcel: Parcel): boolean => {
-        let aa: Object = _this.raw();
-        let bb: Object = otherParcel.raw();
-
-        return aa.value === bb.value
-            && aa.key === bb.key
-            && aa.child === bb.child
-            && shallowEquals(aa.meta)(bb.meta);
-    },
-
     hasDispatched: (): boolean => {
         return _this._treeshare.dispatch.hasPathDispatched(_this.path());
     },
 
     getInternalLocationShareData: (): Object => {
         return _this._treeshare.locationShare.get(_this.path());
-    },
-
-    findAllMatching: (match: string): Parcel[] => {
-        let matchParts = split(match);
-        let path = _this.path();
-
-        let baseMatches = pipeWith(
-            matchParts,
-            take(path.length),
-            shallowEquals(path)
-        );
-
-        if(!baseMatches) {
-            return [];
-        }
-
-        let get = (parcel: Parcel, matchParts: string[]): Parcel[] => {
-            let [matchPart, ...remainingMatchParts] = matchParts;
-
-            if(!matchPart) {
-                return [parcel];
-            }
-            if(!parcel.isParent()) {
-                return [];
-            }
-            if(containsWildcard(matchPart)) {
-                return pipeWith(
-                    parcel.toArray(pp => get(pp, remainingMatchParts)),
-                    flatMap(ii => ii)
-                );
-            }
-            if(!parcel.has(matchPart)) {
-                return [];
-            }
-            return get(parcel.get(matchPart), remainingMatchParts);
-        };
-
-        return get(_this, matchParts.slice(path.length));
     },
 
     // change methods
@@ -107,24 +57,38 @@ export default (_this: Parcel): Object => ({
     },
 
     updateSelf: (updater: Function) => {
+        Types(`updateSelf() expects param "updater" to be`, `function`)(updater);
         _this.setSelf(updater(_this.value()));
     },
 
-    onChange: (newValue: *) => {
-        _this.setSelf(newValue);
+    onChange: (value: *) => {
+        _this.setSelf(value);
     },
 
     onChangeDOM: (event: Object) => {
-        _this.onChange(event.target.value);
+        Types(`onChangeDOM() expects param "event" to be`, `event`)(event);
+        _this.onChange(event.currentTarget.value);
     },
 
     setMeta: (partialMeta: Object) => {
+        Types(`setMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
         _this.dispatch(ActionCreators.setMeta(partialMeta));
     },
 
     updateMeta: (updater: Function) => {
+        Types(`updateMeta() expects param "updater" to be`, `function`)(updater);
         let {meta} = _this._parcelData;
-        _this.setMeta(updater(meta));
+        pipeWith(
+            meta,
+            updater,
+            Types(`updateMeta() expects the result of updater() to be`, `object`),
+            _this.setMeta
+        );
+    },
+
+    setChangeRequestMeta: (partialMeta: Object) => {
+        Types(`setChangeRequestMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
+        _this.dispatch(new ChangeRequest().setMeta(partialMeta));
     },
 
     ping: () => {
@@ -134,6 +98,7 @@ export default (_this: Parcel): Object => ({
     // mutation methods
 
     setInternalLocationShareData: (partialData: Object) => {
+        Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
         _this._treeshare.locationShare.set(_this.path(), partialData);
     }
 });

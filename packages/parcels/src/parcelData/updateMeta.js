@@ -1,10 +1,10 @@
 // @flow
-import type {PartialParcelData} from '../types/Types';
+import type {ParcelData} from '../types/Types';
 
 import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default () => (parcelData: PartialParcelData): PartialParcelData => {
+export default () => (parcelData: ParcelData): ParcelData => {
     return pipeWith(
         parcelData,
         update('meta', meta => meta || {})

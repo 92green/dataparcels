@@ -1,15 +1,14 @@
 // @flow
-import type {
-    ModifierFunction,
-    ModifierObject
-} from '../types/Types';
+import Types from '../types/Types';
+import type {ModifierFunction, ModifierObject} from '../types/Types';
 
-import Action from '../action/Action';
+import type ChangeRequest from '../change/ChangeRequest';
 import strip from '../parcelData/strip';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
+import map from 'unmutable/lib/map';
 import merge from 'unmutable/lib/merge';
 import set from 'unmutable/lib/set';
 import setIn from 'unmutable/lib/setIn';
@@ -27,17 +26,26 @@ export default (_this: Parcel): Object => ({
 
     // modify methods
     modify: (...updaters: Function[]): Parcel => {
+        Types(`modify() expects all params to be`, `functionArray`)(updaters);
         return pipeWith(
             _this,
-            ...updaters
+            ...pipeWith(
+                updaters,
+                map(updater => pipe(
+                    updater,
+                    Types(`modify() expects the result of all functions to be`, `parcel`)
+                ))
+            )
         );
     },
 
     modifyData: (updater: Function): Parcel => {
+        Types(`modifyData() expects param "updater" to be`, `function`)(updater);
         return pipeWith(
             _this._parcelData,
             strip(),
             updater,
+            Types(`modifyData() expects the result of updater() to be`, `parcelData`),
             parcelData => ({
                 parcelData,
                 id: _this._id.pushModifier('md')
@@ -47,6 +55,7 @@ export default (_this: Parcel): Object => ({
     },
 
     modifyValue: (updater: Function): Parcel => {
+        Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
         return pipeWith(
             _this._parcelData,
             set('value', updater(_this._parcelData.value, _this)),
@@ -59,28 +68,40 @@ export default (_this: Parcel): Object => ({
     },
 
     modifyChange: (batcher: Function): Parcel => {
+        Types(`modifyChange() expects param "batcher" to be`, `function`)(batcher);
         return pipeWith(
             _this._parcelData,
             parcelData => ({
                 parcelData,
                 id: _this._id.pushModifier('mc'),
-                handleChange: _this._thunkReducer((parcelThunk: Function, actions: Action[]) => {
-                    _this.batch((parcel: Parcel) => {
-                        batcher({
-                            parcel,
-                            newParcelData: () => parcelThunk().raw(),
-                            continueChange: () => parcel.dispatch(actions),
-                            actions
-                        });
-                    });
-                })
+                onDispatch: (changeRequest: ChangeRequest) => {
+                    _this.batch(
+                        (parcel: Parcel) => batcher(parcel, changeRequest.setBaseParcel(parcel)),
+                        changeRequest
+                    );
+                }
             }),
             _this._create
         );
     },
 
-    initialMeta: (initialMeta: Object = {}): Parcel => {
+    modifyChangeValue: (updater: Function): Parcel => {
+        Types(`modifyChangeValue() expects param "updater" to be`, `function`)(updater);
+        return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
+            let valueActionFilter = actions => actions.filter(action => !action.isValueAction());
+            parcel.dispatch(changeRequest.updateActions(valueActionFilter));
+
+            pipeWith(
+                changeRequest.data().value,
+                updater,
+                parcel.onChange
+            );
+        });
+    },
+
+    initialMeta: (initialMeta: Object = {}): Parcel => {
+        Types(`initialMeta() expects param "initialMeta" to be`, `object`)(initialMeta);
         let {meta} = _this._parcelData;
 
         let partialMetaToSet = pipeWith(
@@ -92,10 +113,10 @@ export default (_this: Parcel): Object => ({
             ? ii => ii
             : pipe(
                 setIn(['parcelData', 'meta'], merge(partialMetaToSet)(meta)),
-                set('handleChange', (newParcel: Parcel, actions: Action[]) => {
+                set('onDispatch', (changeRequest: ChangeRequest) => {
                     _this.batch((parcel: Parcel) => {
                         parcel.setMeta(partialMetaToSet);
-                        parcel.dispatch(actions);
+                        parcel.dispatch(changeRequest);
                     });
                 })
             );
@@ -111,12 +132,8 @@ export default (_this: Parcel): Object => ({
         );
     },
 
-    addPreModifier: (modifier: ModifierFunction): Parcel => {
-        _this._treeshare.setPreModifier(modifier);
-        return modifier(_this);
-    },
-
     addModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
+        Types(`addModifier() expects param "modifier" to be`, `modifier`)(modifier);
         return pipeWith(
             modifier,
             _this.addDescendantModifier,
@@ -125,6 +142,7 @@ export default (_this: Parcel): Object => ({
     },
 
     addDescendantModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
+        Types(`addDescendantModifier() expects param "modifier" to be`, `modifier`)(modifier);
         // explicitly mutate, see https://github.com/blueflag/parcels/issues/43
         _this._modifiers =_this._modifiers.add(modifier);
         return _this;

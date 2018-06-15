@@ -1,12 +1,10 @@
 // @flow
-import type {
-    Key,
-    Index
-} from '../types/Types';
+import Types from '../types/Types';
+import type {Key, Index} from '../types/Types';
 
 import type Parcel from './Parcel';
 import MethodCreator from './MethodCreator';
-import ActionCreators from '../action/ActionCreators';
+import ActionCreators from '../change/ActionCreators';
 
 export default MethodCreator("Element", (_this: Parcel): Object => ({
     // change methods
@@ -28,6 +26,7 @@ export default MethodCreator("Element", (_this: Parcel): Object => ({
     },
 
     swapWithSelf: (key: Key|Index) => {
+        Types(`swapWithSelf() expects param "key" to be`, `keyIndex`)(key);
         _this.dispatch(ActionCreators.swapWithSelf(key));
     }
 }));

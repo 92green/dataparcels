@@ -3,15 +3,12 @@ import test from 'ava';
 import Parcel from '../Parcel';
 import map from 'unmutable/lib/map';
 
-let handleChange = ii => {};
-
 test('ParentParcel.size() should return size of parcel', tt => {
     var data = {
         value: {
             a: 1,
             b: 4
-        },
-        handleChange
+        }
     };
 
     tt.is(new Parcel(data).size(), 2);
@@ -22,8 +19,7 @@ test('ParentParcel.has(key) should return a boolean indicating if key exists', t
         value: {
             a: 1,
             b: 4
-        },
-        handleChange
+        }
     };
 
     tt.true(new Parcel(data).has('a'));
@@ -39,8 +35,8 @@ test('ParentParcel.get(key) should return a new child Parcel', tt => {
             a: 1,
             b: 4
         },
-        handleChange: (parcel, action) => {
-            tt.deepEqual(expectedAction, action[0].toJS(), 'child parcel onChange passes correct action');
+        handleChange: (parcel, changeRequest) => {
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'child parcel onChange passes correct action');
             tt.deepEqual(expectedValue, parcel.value(), 'child parcel onChange updates original parcels value correctly');
         }
     };
@@ -72,8 +68,7 @@ test('ParentParcel.get(key).value() should return the same instance of the neste
         value: {
             a: myObject,
             b: 2
-        },
-        handleChange
+        }
     };
 
     tt.is(new Parcel(data).get("a").value(), myObject);
@@ -87,8 +82,7 @@ test('ParentParcel.get(key).key() on object should return the key', tt => {
                 b:2
             },
             b: 2
-        },
-        handleChange
+        }
     };
 
     tt.is(new Parcel(data).get("a").key(), "a");
@@ -96,8 +90,7 @@ test('ParentParcel.get(key).key() on object should return the key', tt => {
 
 test('ParentParcel.get(index).value() on array should return the first element', tt => {
     var data = {
-        value: [1,2,3],
-        handleChange
+        value: [1,2,3]
     };
 
     tt.is(new Parcel(data).get(0).value(), 1);
@@ -105,8 +98,7 @@ test('ParentParcel.get(index).value() on array should return the first element',
 
 test('ParentParcel.get(key).value() on array should return the first element', tt => {
     var data = {
-        value: [1,2,3],
-        handleChange
+        value: [1,2,3]
     };
 
     tt.is(new Parcel(data).get("#a").value(), 1);
@@ -114,8 +106,7 @@ test('ParentParcel.get(key).value() on array should return the first element', t
 
 test('ParentParcel.get(key).key() on array should return the key, not the index', tt => {
     var data = {
-        value: [1,2,3],
-        handleChange
+        value: [1,2,3]
     };
 
     tt.is(new Parcel(data).get(0).key(), "#a");
@@ -131,9 +122,9 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
             },
             c: 4
         },
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(parcel.value(), expectedValue, 'child parcel onChange updates original parcels value correctly');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'child parcel onChange passes correct action');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'child parcel onChange passes correct action');
         }
     };
 
@@ -166,11 +157,23 @@ test('ParentParcel.get(keyDoesntExist) should return a parcel with value of unde
                 b: 2
             },
             c: 4
-        },
-        handleChange
+        }
     };
 
     tt.true(typeof new Parcel(data).get("z").value() === "undefined");
+});
+
+test('ParentParcel.get(keyDoesntExist, "notset") should return a parcel with value of "notset"', tt => {
+    var data = {
+        value: {
+            a: {
+                b: 2
+            },
+            c: 4
+        }
+    };
+
+    tt.is(new Parcel(data).get("z", "notset").value(), "notset");
 });
 
 test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', tt => {
@@ -185,9 +188,9 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', tt => 
             },
             b: 4
         },
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(parcel.value(), expectedValue, 'descendant parcel onChange updates original parcels value correctly');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'descendant parcel onChange passes correct action');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'descendant parcel onChange passes correct action');
         }
     };
 
@@ -224,8 +227,7 @@ test('ParentParcel.getIn(keyPath) should cope with non existent keypaths', tt =>
                 }
             },
             b: 4
-        },
-        handleChange
+        }
     };
 
     var descendantParcel = new Parcel(data).getIn(["x", "y", "z"]);
@@ -240,8 +242,7 @@ test('ParentParcel.toObject() should make an object', (tt: Object) => {
         value: {a:1,b:2,c:3},
         meta: {
             a: {a:4,b:5,c:6}
-        },
-        handleChange
+        }
     };
 
     var expectedObject = {a:1,b:2,c:3};
@@ -257,8 +258,7 @@ test('ParentParcel.toObject() should make an object with a mapper', (tt: Object)
         value: {a:1,b:2,c:3},
         meta: {
             a: {a:4,b:5,c:6}
-        },
-        handleChange
+        }
     };
 
     var expectedObject = {a:2,b:3,c:4};
@@ -286,8 +286,7 @@ test('ParentParcel.toArray() should make an array', (tt: Object) => {
         value: [1,2,3],
         meta: {
             a: [4,5,6]
-        },
-        handleChange
+        }
     };
 
     var expectedArray = [1,2,3];
@@ -304,8 +303,7 @@ test('ParentParcel.toArray() should make an array with a mapper', (tt: Object) =
         value: [1,2,3],
         meta: {
             a: [4,5,6]
-        },
-        handleChange
+        }
     };
 
     var expectedArray = [2,3,4];

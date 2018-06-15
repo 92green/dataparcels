@@ -9,7 +9,9 @@ test('decodeHashKey should work', (tt: Object) => {
             {key:"#a"},
             {key:"#b"},
             {key:"#c"}
-        ]
+        ],
+        key: "abc",
+        meta: {}
     };
 
     tt.is(1, decodeHashKey("#b")(parcelData));

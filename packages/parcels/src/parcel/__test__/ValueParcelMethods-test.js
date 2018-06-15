@@ -2,12 +2,9 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-const handleChange = ii => {};
-
 test('Parcel.data() should return the Parcels data', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
 
     var expectedData = {
@@ -20,8 +17,7 @@ test('Parcel.data() should return the Parcels data', (tt: Object) => {
 
 test('Parcel.data() should strip the returned Parcel data', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
 
     var expectedData = {
@@ -35,8 +31,7 @@ test('Parcel.data() should strip the returned Parcel data', (tt: Object) => {
 test('Parcel.raw() should return the Parcels data without stripping', (tt: Object) => {
     var data = {
         value: 123,
-        child: undefined,
-        handleChange
+        child: undefined
     };
 
     var expectedData = {
@@ -51,8 +46,7 @@ test('Parcel.raw() should return the Parcels data without stripping', (tt: Objec
 
 test('Parcel.value() should return the Parcels value', (tt: Object) => {
     var data = {
-        value: 123,
-        handleChange
+        value: 123
     };
     tt.is(new Parcel(data).value(), 123);
 });
@@ -60,8 +54,7 @@ test('Parcel.value() should return the Parcels value', (tt: Object) => {
 test('Parcel.value() should return the same instance of the Parcels value', (tt: Object) => {
     var myObject = {a:1,b:2};
     var data = {
-        value: myObject,
-        handleChange
+        value: myObject
     };
     tt.is(new Parcel(data).value(), myObject);
 });
@@ -113,9 +106,9 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).setSelf(456);
 });
@@ -144,9 +137,9 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).updateSelf((ii) => {
         tt.deepEqual(expectedArg, ii, 'update passes correct argument to updater');
@@ -176,14 +169,14 @@ test('Parcel.onChange() should work like set that only accepts a single argument
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).onChange(456);
 });
 
-test('Parcel.onChangeDOM() should work like onChange but take the value from event.target.value', (tt: Object) => {
+test('Parcel.onChangeDOM() should work like onChange but take the value from event.currentTarget.value', (tt: Object) => {
     tt.plan(2);
 
     var data = {
@@ -205,12 +198,12 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).onChangeDOM({
-        target: {
+        currentTarget: {
             value: 456
         }
     });
@@ -294,12 +287,12 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             changes++;
 
             if(changes === 1) {
                 tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-                tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+                tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
                 parcel.setMeta({
                     def: 456
                 });
@@ -370,12 +363,12 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             changes++;
 
             if(changes === 1) {
                 tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-                tt.deepEqual(expectedAction, action[0].toJS(), 'updated action is correct');
+                tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
                 parcel.updateMeta(meta => {
                     tt.deepEqual({abc: 123}, meta, 'updateMeta should receive initial meta of {abc:123}')
                     return {
@@ -395,28 +388,20 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
     });
 });
 
-test('Parcel.equals() should compare two parcels data', (tt: Object) => {
-    var child = {};
-    var parcelCreator = (merge = {}) => {
-        let p = new Parcel();
-        p._parcelData = {
-            value: 123,
-            meta: {
-                abc: 123,
-                def: 456
-            },
-            key: "a",
-            child,
-            ...merge
-        };
-        return p;
+test('Parcel.setChangeRequestMeta() should set change request meta', (tt: Object) => {
+    var data = {
+        value: 123,
+        handleChange: (parcel, changeRequest) => {
+            tt.deepEqual({a: 3, b: 2}, changeRequest.meta());
+        }
     };
 
-    tt.true(parcelCreator().equals(parcelCreator()), 'parcel equals self');
-    tt.false(parcelCreator().equals(parcelCreator({value: 456})), 'parcel doesnt equals different value');
-    tt.false(parcelCreator().equals(parcelCreator({meta: {abc: 123}})), 'parcel doesnt equals different meta contents');
-    tt.false(parcelCreator().equals(parcelCreator({child: {}})), 'parcel doesnt equals different child');
-    tt.false(parcelCreator().equals(parcelCreator({key: "b"})), 'parcel doesnt equals different key');
+    var parcel = new Parcel(data).batch(parcel => {
+        parcel.setChangeRequestMeta({a: 1});
+        parcel.onChange(456);
+        parcel.setChangeRequestMeta({b: 2});
+        parcel.setChangeRequestMeta({a: 3});
+    });
 });
 
 test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', (tt: Object) => {
@@ -455,7 +440,7 @@ test('Parcel.ping() should call the Parcels handleChange function with no change
 
     new Parcel({
         ...data,
-        handleChange: (parcel, action) => {
+        handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'data is correct');
         }
     }).ping(456);
@@ -483,28 +468,4 @@ test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareD
     p.get('def').setInternalLocationShareData({x:1});
     tt.deepEqual({x:1}, p.get('def').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at def');
 
-});
-
-test('Parcel.findAllMatching() returns all parcels matching the match string at or below the current parcels depth', (tt: Object) => {
-
-    let p = new Parcel({
-        value: {
-            abc: {
-                def: 123,
-                ghi: 456
-            },
-            jkl: {
-                mno: 789
-            }
-        }
-    });
-
-    tt.deepEqual(["abc"], p.findAllMatching("abc").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def"], p.findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.findAllMatching("abc.woo").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.findAllMatching("asdf%.kasd.asdasd.asd").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def", "abc.ghi"], p.findAllMatching("abc.*").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def"], p.get('abc').findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.get('mno').findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def","abc.ghi","jkl.mno"], p.findAllMatching("*.*").map(ii => ii.path().join(".")));
 });

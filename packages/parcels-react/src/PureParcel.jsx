@@ -2,7 +2,9 @@
 import React from 'react';
 import type {Node} from 'react';
 import Parcel from 'parcels';
+import type {ChangeRequest} from 'parcels';
 
+import PureParcelEquals from './util/PureParcelEquals';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
 type RenderFunction = (parcel: Parcel) => Node;
@@ -31,8 +33,8 @@ export default class PureParcel extends React.Component<Props, State> {
 
     shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
         let parcelDataChanged: boolean = nextProps.debounce
-            ? !this.state.parcel.equals(nextState.parcel)
-            : !this.props.parcel.equals(nextProps.parcel);
+            ? !PureParcelEquals(this.state.parcel, nextState.parcel)
+            : !PureParcelEquals(this.props.parcel, nextProps.parcel);
 
         let forceUpdateChanged: boolean = !shallowEquals(this.props.forceUpdate || [])(nextProps.forceUpdate || []);
         return parcelDataChanged || forceUpdateChanged;
@@ -40,7 +42,7 @@ export default class PureParcel extends React.Component<Props, State> {
 
     componentWillReceiveProps(nextProps: Object) {
         let {parcel} = nextProps;
-        if(!this.props.parcel.equals(parcel)) {
+        if(!PureParcelEquals(this.props.parcel, parcel)) {
             this.setState({
                 parcel
             });
@@ -66,27 +68,28 @@ export default class PureParcel extends React.Component<Props, State> {
         }
 
         return this.state.parcel
-            .modifyChange(({parcel, continueChange, newParcelData, actions}: Object) => {
+            .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
-                let parcelData = newParcelData();
                 this.setState({
                     parcel: parcel._create({
-                        parcelData
+                        parcelData: changeRequest.data()
                     })
                 });
 
-                let shouldBeSynchronous: boolean = actions.some(action => action.shouldBeSynchronous());
+                let shouldBeSynchronous: boolean = changeRequest
+                    .actions()
+                    .some(action => action.shouldBeSynchronous());
 
                 this.changeCount++;
                 let originalChangeCount = this.changeCount;
                 if(shouldBeSynchronous) {
-                    continueChange();
+                    parcel.dispatch(changeRequest);
                     return;
                 }
 
                 setTimeout(() => {
                     if(originalChangeCount === this.changeCount) {
-                        continueChange();
+                        parcel.dispatch(changeRequest);
                     }
                 }, debounce);
             });

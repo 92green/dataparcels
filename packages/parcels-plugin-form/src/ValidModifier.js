@@ -1,5 +1,7 @@
 // @flow
-import type Parcel from 'parcels';
+import type Parcel, {ChangeRequest} from 'parcels';
+import FindParcelsMatching from 'parcels/lib/util/FindParcelsMatching';
+
 import flatMap from 'unmutable/lib/flatMap';
 import get from 'unmutable/lib/get';
 import getIn from 'unmutable/lib/getIn';
@@ -55,7 +57,7 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
 
     let addModifier = (validatorArray: Function[], match: string) => (parcel: Parcel): Parcel => {
         return parcel.addModifier({
-            modifier: ii => ii.modifyChange(({parcel, continueChange, newParcelData}: Object) => {
+            modifier: ii => ii.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
                 let error = pipeWith(
                     validatorArray,
@@ -63,14 +65,14 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
                         if(error) {
                             return error;
                         }
-                        return validator(newParcelData().value);
+                        return validator(changeRequest.data().value);
                     }, null)
                 );
 
+                parcel.dispatch(changeRequest);
                 parcel.setMeta({
                     error
                 });
-                continueChange();
             }),
             match
         });
@@ -81,12 +83,10 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
             .initialMeta({
                 errors: []
             })
-            .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
-                continueChange();
-                let parcelData = newParcelData();
-                let errors = getErrors(parcelData);
+            .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+                parcel.dispatch(changeRequest);
                 parcel.setMeta({
-                    errors
+                    errors: getErrors(changeRequest.data())
                 });
             });
 
@@ -96,7 +96,7 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
                     pipeWith(
                         validators,
                         keyArray(),
-                        flatMap(preparedParcel.findAllMatching),
+                        flatMap(match => FindParcelsMatching(preparedParcel, match)),
                         map((parcel: Parcel) => {
                             if(!parcel.hasDispatched()) {
                                 parcel.ping();

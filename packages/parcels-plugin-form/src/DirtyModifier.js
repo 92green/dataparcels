@@ -1,5 +1,5 @@
 // @flow
-import type Parcel from 'parcels';
+import type Parcel, {ChangeRequest} from 'parcels';
 
 export default (match: string = "") => (parcel: Parcel): Parcel => {
     return parcel.addModifier({
@@ -7,12 +7,13 @@ export default (match: string = "") => (parcel: Parcel): Parcel => {
             .initialMeta({
                 originalValue: ii.value()
             })
-            .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
-                let {value, meta} = newParcelData();
+            .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+                parcel.dispatch(changeRequest);
+
+                let {value, meta} = changeRequest.data();
                 parcel.setMeta({
                     dirty: value !== meta.originalValue
                 });
-                continueChange();
             }),
         match: match || "**/*:!Parent"
     });

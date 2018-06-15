@@ -1,5 +1,5 @@
 // @flow
-import type Parcel from 'parcels';
+import type Parcel, {ChangeRequest} from 'parcels';
 
 export default ({onSubmit, onError}: Object) => (parcel: Parcel): Parcel => {
     let ref = {};
@@ -7,35 +7,32 @@ export default ({onSubmit, onError}: Object) => (parcel: Parcel): Parcel => {
     let newParcel = parcel
         .initialMeta({
             attemptedSubmit: false,
-            submitting: false, // TODO - actionMeta can replace this
             submit: () => ref.submit()
         })
-        .modifyChange(({parcel, continueChange, newParcelData}: Object) => {
-            let parcelData = newParcelData();
-            let {submitting, errors} = parcelData.meta;
+        .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+            let parcelData = changeRequest.data();
+            let {fromSubmit} = changeRequest.meta();
+            let {errors} = parcelData.meta;
 
-            if(!submitting) { // TODO - actionMeta can replace this
-                continueChange();
-                return;
+            if(fromSubmit) {
+                if(errors && errors.length > 0) {
+                    onError && onError(errors, parcelData);
+                } else {
+                    onSubmit && onSubmit(parcelData.value, parcelData);
+                }
             }
 
-            if(errors && errors.length > 0) {
-                onError && onError(errors, parcelData);
-            } else {
-                onSubmit && onSubmit(parcelData.value, parcelData);
-            }
-
-            continueChange();
-            parcel.setMeta({ // TODO - actionMeta can replace this
-                submitting: false
-            });
+            parcel.dispatch(changeRequest);
         });
 
     ref.submit = () => {
         newParcel.batch((parcel: Parcel) => {
             parcel.setMeta({
-                attemptedSubmit: true,
-                submitting: true
+                attemptedSubmit: true
+            });
+
+            parcel.setChangeRequestMeta({
+                fromSubmit: true
             });
 
             let {validate} = parcel.getInternalLocationShareData();

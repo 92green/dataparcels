@@ -26,11 +26,7 @@ export default class ExampleMeta extends React.Component {
                 food: {
                     type: "Apples",
                     quantity: "1"
-                },
-                pets: [
-                    {name: "Gustav"},
-                    {name: ""}
-                ]
+                }
             },
             handleChange: (lunch) => this.setState({lunch}),
             debugRender: true
@@ -58,8 +54,7 @@ export default class ExampleMeta extends React.Component {
                     "name": [isRequired],
                     "email": [isRequired, isEmail],
                     "food.type": [isRequired],
-                    "food.quantity": [isRequired, isQuantity],
-                    "pets.*.name": [isRequired]
+                    "food.quantity": [isRequired, isQuantity]
                 })
             })
         );

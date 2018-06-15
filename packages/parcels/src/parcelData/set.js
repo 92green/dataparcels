@@ -1,7 +1,9 @@
 // @flow
 import type {
     Key,
-    ParcelData
+    Index,
+    ParcelData,
+    PartialParcelData
 } from '../types/Types';
 
 import decodeHashKey from './decodeHashKey';
@@ -17,7 +19,7 @@ import updateIn from 'unmutable/lib/updateIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key, input: ParcelData) => (parcelData: ParcelData): ParcelData => {
+export default (key: Key|Index, input: PartialParcelData) => (parcelData: ParcelData): ParcelData => {
     key = decodeHashKey(key)(parcelData);
     return pipeWith(
         parcelData,

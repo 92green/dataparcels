@@ -19,7 +19,13 @@ export const split = (match: string): string[] => pipeWith(
 export const containsWildcard = (match: string): boolean => pipeWith(
     match,
     escapeSplitChars,
-    ii => ii.indexOf("*") !== -1
+    ii => ii.replace(/\*\*/g, "").indexOf("*") !== -1
+);
+
+export const containsGlobstar = (match: string): boolean => pipeWith(
+    match,
+    escapeSplitChars,
+    ii => ii.indexOf("**") !== -1
 );
 
 const TYPE_SELECTORS = {
@@ -35,7 +41,8 @@ const TYPE_SELECTORS = {
     ["!TopLevel"]: "t"
 };
 
-const SPLIT_CHARS = ["\\.", ":", "\\|", "%\\*"];
+const SPLIT_CHARS = [".", ":", "|", "*"];
+const REGEX_SPLIT_CHARS = SPLIT_CHARS.map(escapeStringRegexp);
 
 const addImpliedCarat = doIf(
     ii => ii[0] !== "^" && `${ii[0]}${ii[1]}` !== "**",
@@ -44,7 +51,7 @@ const addImpliedCarat = doIf(
 
 const escapeSplitChars = pipe(
     ...pipeWith(
-        SPLIT_CHARS,
+        REGEX_SPLIT_CHARS,
         map((chr: string, index: number): Function => {
             return str => str.replace(new RegExp(`%${chr}`, "g"), `%${index}`);
         })

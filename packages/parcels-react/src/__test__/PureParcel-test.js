@@ -8,8 +8,8 @@ configure({adapter: new Adapter()});
 
 import {shallow} from 'enzyme';
 import PureParcel from '../PureParcel';
+import PureParcelEquals from '../util/PureParcelEquals';
 import Parcel from 'parcels';
-import {ActionCreators} from 'parcels';
 
 test('PureParcel should pass a *value equivalent* parcel to children', tt => {
     tt.plan(1);
@@ -17,7 +17,7 @@ test('PureParcel should pass a *value equivalent* parcel to children', tt => {
 
     let wrapper = shallow(<PureParcel parcel={parcel}>
         {(pp) => {
-            tt.true(pp.equals(parcel));
+            tt.true(PureParcelEquals(pp, parcel));
         }}
     </PureParcel>);
 });
@@ -50,9 +50,9 @@ test('PureParcel should pass a NEW *value equivalent* parcel to children when pr
     let wrapper = shallow(<PureParcel parcel={parcel}>
         {(pp) => {
             if(renders === 0) {
-                tt.true(pp.equals(parcel));
+                tt.true(PureParcelEquals(pp, parcel));
             } else if(renders === 1) {
-                tt.true(pp.equals(parcel2));
+                tt.true(PureParcelEquals(pp, parcel2));
             }
             renders++;
         }}
@@ -168,9 +168,26 @@ test('PureParcel should ignore debounce when sending a ping', tt => {
 
     let wrapper = shallow(<PureParcel parcel={parcel} debounce={100}>
         {(pp) => {
-            pp.dispatch(ActionCreators.ping());
+            pp.ping();
             tt.true(hasChanged, `onChange works synchronously when debounce is set and ping is sent (handleChange should already be called by this point)`)
         }}
     </PureParcel>);
+});
+
+test('PureParcel should render colours when debugRender is true', tt => {
+    let hasChanged = false;
+    let parcel = new Parcel({
+        value: 123,
+        debugRender: true
+    });
+
+    tt.true(
+        shallow(<PureParcel parcel={parcel} debounce={100}>{(pp) => "???"}</PureParcel>)
+        .render()
+        .get(0)
+        .attribs
+        .style
+        .indexOf('background-color') !== -1
+    );
 });
 

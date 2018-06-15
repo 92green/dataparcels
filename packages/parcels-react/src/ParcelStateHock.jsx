@@ -2,6 +2,7 @@
 import React from 'react';
 import type {ComponentType, Node} from 'react';
 import Parcel from 'parcels';
+import Types from 'parcels/lib/types/Types';
 
 type Props = {};
 type State = {
@@ -12,16 +13,23 @@ type ParcelStateHockConfig = {
     debugRender?: boolean,
     initialValue?: (props: Object) => *,
     modify?: (parcel: Parcel) => Parcel,
-    prop?: string
+    prop: string
 };
 
 export default (config: ParcelStateHockConfig): Function => {
+    Types(`ParcelStateHock() expects param "config" to be`, `object`)(config);
+
     let {
         initialValue = () => undefined,
-        prop = "parcel",
+        prop,
         modify = ii => ii,
         debugRender = false
     } = config;
+
+    Types(`ParcelStateHock() expects param "config.initialValue" to be`, `function`)(initialValue);
+    Types(`ParcelStateHock() expects param "config.prop" to be`, `string`)(prop);
+    Types(`ParcelStateHock() expects param "config.modify" to be`, `function`)(modify);
+    Types(`ParcelStateHock() expects param "config.debugRender" to be`, `boolean`)(debugRender);
 
     return (Component: ComponentType<ChildProps>) => class ParcelStateHock extends React.Component<Props, State> {
         constructor(props: Props) {

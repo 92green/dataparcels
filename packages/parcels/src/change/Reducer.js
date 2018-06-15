@@ -1,4 +1,10 @@
 // @flow
+import type {
+    Index,
+    Key,
+    ParcelData
+} from '../types/Types';
+
 import butLast from 'unmutable/lib/butLast';
 import isEmpty from 'unmutable/lib/isEmpty';
 import last from 'unmutable/lib/last';
@@ -25,7 +31,7 @@ import Action from './Action';
 
 export default function MultiReducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
     let actionArray: Action[] = Array.isArray(action) ? action : [action];
-    let reduced: PartialParcelData = actionArray.reduce(Reducer, parcelData);
+    let reduced: ParcelData = actionArray.reduce(Reducer, parcelData);
     return {
         value: undefined,
         meta: {},
@@ -47,11 +53,11 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
         type
     } = action;
 
-    let keyPathLast: Key[] = last()(keyPath);
-    let keyPathButLast: Key[] = butLast()(keyPath);
+    let keyPathLast: Key|Index = last()(keyPath);
+    let keyPathButLast: Array<Key|Index> = butLast()(keyPath);
     let keyPathIsEmpty: boolean = isEmpty()(keyPath);
 
-    let updateIn = (keyPath: Key[], updater: Function) => pipeWith(
+    let updateIn = (keyPath: Array<Key|Index>, updater: Function) => pipeWith(
         parcelData,
         parcelUpdateIn(
             keyPath,
