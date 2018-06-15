@@ -6,7 +6,7 @@
     "flow": "blueflag-test flow",
     "lint": "blueflag-test lint --monorepo",
     "test": "blueflag-test test --monorepo",
-    "coverage": "blueflag-test coverage --min-coverage=80 --monorepo",
+    "coverage": "blueflag-test coverage --min-coverage=75 --monorepo",
     "test-all": "yarn lint && yarn coverage",
     "deploy-docs": "yarn lerna --scope parcels-docs run deploy",
     "view-coverage": "yarn run coverage; open ./coverage/lcov-report/index.html",
