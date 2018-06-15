@@ -176,7 +176,7 @@ test('Parcel.onChange() should work like set that only accepts a single argument
     }).onChange(456);
 });
 
-test('Parcel.onChangeDOM() should work like onChange but take the value from event.target.value', (tt: Object) => {
+test('Parcel.onChangeDOM() should work like onChange but take the value from event.currentTarget.value', (tt: Object) => {
     tt.plan(2);
 
     var data = {
@@ -203,7 +203,7 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
             tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     }).onChangeDOM({
-        target: {
+        currentTarget: {
             value: 456
         }
     });
@@ -404,30 +404,6 @@ test('Parcel.setChangeRequestMeta() should set change request meta', (tt: Object
     });
 });
 
-test('Parcel.equals() should compare two parcels data', (tt: Object) => {
-    var child = {};
-    var parcelCreator = (merge = {}) => {
-        let p = new Parcel();
-        p._parcelData = {
-            value: 123,
-            meta: {
-                abc: 123,
-                def: 456
-            },
-            key: "a",
-            child,
-            ...merge
-        };
-        return p;
-    };
-
-    tt.true(parcelCreator().equals(parcelCreator()), 'parcel equals self');
-    tt.false(parcelCreator().equals(parcelCreator({value: 456})), 'parcel doesnt equals different value');
-    tt.false(parcelCreator().equals(parcelCreator({meta: {abc: 123}})), 'parcel doesnt equals different meta contents');
-    tt.false(parcelCreator().equals(parcelCreator({child: {}})), 'parcel doesnt equals different child');
-    tt.false(parcelCreator().equals(parcelCreator({key: "b"})), 'parcel doesnt equals different key');
-});
-
 test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', (tt: Object) => {
     tt.plan(6);
 
@@ -492,28 +468,4 @@ test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareD
     p.get('def').setInternalLocationShareData({x:1});
     tt.deepEqual({x:1}, p.get('def').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at def');
 
-});
-
-test('Parcel.findAllMatching() returns all parcels matching the match string at or below the current parcels depth', (tt: Object) => {
-
-    let p = new Parcel({
-        value: {
-            abc: {
-                def: 123,
-                ghi: 456
-            },
-            jkl: {
-                mno: 789
-            }
-        }
-    });
-
-    tt.deepEqual(["abc"], p.findAllMatching("abc").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def"], p.findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.findAllMatching("abc.woo").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.findAllMatching("asdf%.kasd.asdasd.asd").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def", "abc.ghi"], p.findAllMatching("abc.*").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def"], p.get('abc').findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual([], p.get('mno').findAllMatching("abc.def").map(ii => ii.path().join(".")));
-    tt.deepEqual(["abc.def","abc.ghi","jkl.mno"], p.findAllMatching("*.*").map(ii => ii.path().join(".")));
 });

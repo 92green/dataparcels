@@ -1,4 +1,6 @@
 // @flow
+import Types from '../types/Types';
+
 import type Parcel from './Parcel';
 import type Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
@@ -27,14 +29,12 @@ export default (_this: Parcel): Object => ({
                 .data()
         });
 
-        if(_this._treeshare.hasPreModifier() && _this.id() === "^") {
-            parcel = _this._treeshare.getPreModifier().applyTo(parcel);
-        }
-
         _onHandleChange(parcel, changeRequest);
     },
 
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
+        Types(`dispatch() expects param "dispatchable" to be`, `dispatchable`)(dispatchable);
+
         let {
             _onDispatch,
             _onHandleChange
@@ -72,6 +72,7 @@ export default (_this: Parcel): Object => ({
     },
 
     batch: (batcher: Function, changeRequest: ?ChangeRequest) => {
+        Types(`batch() expects param "batcher" to be`, `function`)(batcher);
         _this._buffer(changeRequest);
         batcher(_this);
 

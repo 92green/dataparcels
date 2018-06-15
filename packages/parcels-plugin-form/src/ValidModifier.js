@@ -1,5 +1,7 @@
 // @flow
 import type Parcel, {ChangeRequest} from 'parcels';
+import FindParcelsMatching from 'parcels/lib/util/FindParcelsMatching';
+
 import flatMap from 'unmutable/lib/flatMap';
 import get from 'unmutable/lib/get';
 import getIn from 'unmutable/lib/getIn';
@@ -94,7 +96,7 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
                     pipeWith(
                         validators,
                         keyArray(),
-                        flatMap(preparedParcel.findAllMatching),
+                        flatMap(match => FindParcelsMatching(preparedParcel, match)),
                         map((parcel: Parcel) => {
                             if(!parcel.hasDispatched()) {
                                 parcel.ping();
