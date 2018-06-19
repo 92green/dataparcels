@@ -1,6 +1,6 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
-import type {Key} from '../types/Types';
+import type {Key, Index} from '../types/Types';
 import type Action from './Action';
 
 import Reducer from '../change/Reducer';
@@ -29,7 +29,7 @@ export default class ChangeRequest {
         return changeRequest;
     };
 
-    _unget = (key: Key): ChangeRequest => {
+    _unget = (key: Key|Index): ChangeRequest => {
         return this._create({
             actions: this._actions.map(ii => ii._unget(key))
         });

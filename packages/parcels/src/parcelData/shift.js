@@ -1,4 +1,9 @@
 // @flow
+import type {
+    Key,
+    Index
+} from '../types/Types';
+
 import shift from 'unmutable/lib/shift';
 import update from 'unmutable/lib/update';
 import pipe from 'unmutable/lib/util/pipe';

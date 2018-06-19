@@ -1,4 +1,6 @@
 // @flow
+import type {PartialParcelData} from '../types/Types';
+
 import del from 'unmutable/lib/delete';
 import get from 'unmutable/lib/get';
 import isEmpty from 'unmutable/lib/isEmpty';

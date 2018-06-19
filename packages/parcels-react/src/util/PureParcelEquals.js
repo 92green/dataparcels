@@ -1,4 +1,5 @@
 // @flow
+import type Parcel from 'parcels';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
 export default (parcelA: Parcel, parcelB: Parcel): boolean => {

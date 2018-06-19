@@ -6,7 +6,7 @@ import type {
     PartialParcelData
 } from '../types/Types';
 
-import decodeHashKey from './decodeHashKey';
+import hashKeyToIndex from './hashKeyToIndex';
 import updateChildKeys from './updateChildKeys';
 
 import insert from 'unmutable/lib/insert';
@@ -14,11 +14,13 @@ import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (key: Key|Index, newParcelData: PartialParcelData) => (parcelData: ParcelData): ParcelData => {
-    key = decodeHashKey(key)(parcelData);
+
+    let index: Index = hashKeyToIndex(key)(parcelData);
+
     return pipeWith(
         parcelData,
-        update('value', insert(key, newParcelData.value)),
-        update('child', insert(key, {})),
+        update('value', insert(index, newParcelData.value)),
+        update('child', insert(index, {})),
         updateChildKeys()
     );
 };

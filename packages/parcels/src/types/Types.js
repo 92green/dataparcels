@@ -52,7 +52,7 @@ export type ModifierObject = {
 };
 
 export type Key = string;
-
+export type HashKey = string;
 export type Index = number;
 
 const runtimeTypes = {
@@ -132,7 +132,7 @@ export default (message: string, type: string) => (value: *): * => {
         throw new Error(`Unknown type check`);
     }
     if(!runtimeType.check(value)) {
-        throw new Error(`${message} ${runtimeType.name}, but got ${value}`);
+        throw new Error(`${message} ${runtimeType.name}, but got ${(value + "")}`);
     }
     return value;
 };
