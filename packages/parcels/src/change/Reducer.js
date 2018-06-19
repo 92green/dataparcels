@@ -151,14 +151,14 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
             if(keyPathIsEmpty) {
                 throw new Error(`Swap actions must have a keyPath with at least one key`);
             }
-            let {swapIndex} = action.payload;
-            if(typeof swapIndex === "undefined") {
-                throw new Error(`Swap actions must have a swapIndex in their payload`);
+            let {swapKey} = action.payload;
+            if(typeof swapKey === "undefined") {
+                throw new Error(`Swap actions must have a swapKey in their payload`);
             }
 
             return updateIn(
                 keyPathButLast,
-                parcelSwap(keyPathLast, swapIndex)
+                parcelSwap(keyPathLast, swapKey)
             );
         }
 

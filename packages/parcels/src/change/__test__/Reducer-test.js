@@ -784,14 +784,14 @@ test('Reducer swap action should throw error if keyPath is empty', tt => {
     var action = new Action({
         type: "swap",
         payload: {
-            swapIndex: 1
+            swapKey: 1
         }
     });
 
     tt.is(tt.throws(() => Reducer(data, action), Error).message, `Swap actions must have a keyPath with at least one key`);
 });
 
-test('Reducer swap action should throw error if payload.swapIndex doesnt exist', tt => {
+test('Reducer swap action should throw error if payload.swapKey doesnt exist', tt => {
     var data = {
         value: [
             0,
@@ -804,7 +804,7 @@ test('Reducer swap action should throw error if payload.swapIndex doesnt exist',
         keyPath: [0]
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `Swap actions must have a swapIndex in their payload`);
+    tt.is(tt.throws(() => Reducer(data, action), Error).message, `Swap actions must have a swapKey in their payload`);
 });
 
 
@@ -820,7 +820,7 @@ test('Reducer should swap by array indexes', tt => {
         type: "swap",
         keyPath: [0],
         payload: {
-            swapIndex: 2
+            swapKey: 2
         }
     });
     var expectedValue = [
@@ -843,7 +843,7 @@ test('Reducer should swap by array keys', tt => {
         type: "swap",
         keyPath: ["#a"],
         payload: {
-            swapIndex: "#b"
+            swapKey: "#b"
         }
     });
     var expectedValue = [
@@ -988,7 +988,7 @@ test('Reducer should swap deeply', tt => {
         type: "swap",
         keyPath: [0, "pets", 0],
         payload: {
-            swapIndex: 1
+            swapKey: 1
         }
     });
     var expectedValue = [
