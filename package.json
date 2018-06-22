@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "prepublishOnly": "yarn build-all",
+    "preversion": "yarn build-all",
     "build": "lerna run build --parallel --",
     "build-all": "lerna run build-all --parallel --",
     "build-docs": "cp README.md packages/parcels/README.md && cp README.md packages/parcels-react/README.md && lerna run build-docs --parallel --",
