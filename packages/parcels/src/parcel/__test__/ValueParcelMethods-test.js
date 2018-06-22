@@ -392,7 +392,7 @@ test('Parcel.setChangeRequestMeta() should set change request meta', (tt: Object
     var data = {
         value: 123,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual({a: 3, b: 2}, changeRequest.meta());
+            tt.deepEqual({a: 3, b: 2}, changeRequest.changeRequestMeta());
         }
     };
 

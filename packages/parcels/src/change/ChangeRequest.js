@@ -69,14 +69,14 @@ export default class ChangeRequest {
     merge = (other: ChangeRequest): ChangeRequest => {
         return this
             .updateActions(ii => ii.concat(other.actions()))
-            .setMeta(other.meta());
+            .setChangeRequestMeta(other.changeRequestMeta());
     };
 
-    meta = (): * => {
+    changeRequestMeta = (): * => {
         return this._meta;
     };
 
-    setMeta = (partialMeta: *): ChangeRequest => {
+    setChangeRequestMeta = (partialMeta: *): ChangeRequest => {
         return this._create({
             meta: {
                 ...this._meta,

@@ -60,7 +60,7 @@ test('ChangeRequest merge() should merge other change requests actions', tt => {
 });
 
 
-test('ChangeRequest setMeta() and meta() should work', tt => {
+test('ChangeRequest setChangeRequestMeta() and changeRequestMeta() should work', tt => {
     let expectedMeta = {
         a: 3,
         b: 2
@@ -68,10 +68,10 @@ test('ChangeRequest setMeta() and meta() should work', tt => {
     tt.deepEqual(
         expectedMeta,
         new ChangeRequest()
-            .setMeta({a: 1})
-            .setMeta({b: 2})
-            .setMeta({a: 3})
-            .meta()
+            .setChangeRequestMeta({a: 1})
+            .setChangeRequestMeta({b: 2})
+            .setChangeRequestMeta({a: 3})
+            .changeRequestMeta()
     );
 });
 
