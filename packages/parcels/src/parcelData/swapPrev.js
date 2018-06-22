@@ -5,7 +5,7 @@ import type {
     ParcelData
 } from '../types/Types';
 
-import hashKeyToIndex from './hashKeyToIndex';
+import keyOrIndexToIndex from './keyOrIndexToIndex';
 import wrapNumber from '../util/wrapNumber';
 
 import size from 'unmutable/lib/size';
@@ -15,7 +15,7 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (key: Key|Index) => (parcelData: ParcelData): ParcelData => {
 
-    let indexA: Index = hashKeyToIndex(key)(parcelData);
+    let indexA: Index = keyOrIndexToIndex(key)(parcelData);
     let indexB: Index = wrapNumber(indexA - 1, size()(parcelData.value));
 
     return pipeWith(

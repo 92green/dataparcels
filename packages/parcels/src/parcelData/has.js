@@ -5,24 +5,10 @@ import type {
     ParcelData
 } from '../types/Types';
 
-import decodeHashKey from './decodeHashKey';
-import updateChild from './updateChild';
-import updateChildKeys from './updateChildKeys';
-
+import keyOrIndexToProperty from './keyOrIndexToProperty';
 import has from 'unmutable/lib/has';
-import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (key: Key|Index) => (parcelData: ParcelData): boolean => {
-
-    if(!parcelData.child) {
-        parcelData = pipeWith(
-            parcelData,
-            updateChild(),
-            updateChildKeys()
-        );
-    }
-
-    key = decodeHashKey(key)(parcelData);
-
-    return has(key)(parcelData.value);
+    let property = keyOrIndexToProperty(key)(parcelData);
+    return has(property)(parcelData.value);
 };
