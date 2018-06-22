@@ -2,12 +2,13 @@
   "private": true,
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "cp README.md packages/parcels/README.md && cp README.md packages/parcels-react/README.md && lerna run build --parallel --",
+    "build": "lerna run build --parallel --",
+    "build-docs": "cp README.md packages/parcels/README.md && cp README.md packages/parcels-react/README.md && lerna run build-docs --parallel --",
     "flow": "blueflag-test flow",
     "lint": "blueflag-test lint --monorepo",
     "test": "blueflag-test test --monorepo",
     "coverage": "blueflag-test coverage --min-coverage=75 --monorepo",
-    "test-all": "yarn lint && yarn coverage",
+    "test-all": "yarn lint && yarn flow && yarn coverage",
     "deploy-docs": "yarn lerna --scope parcels-docs run deploy",
     "view-coverage": "yarn run coverage; open ./coverage/lcov-report/index.html",
     "watch": "lerna run watch --parallel --"

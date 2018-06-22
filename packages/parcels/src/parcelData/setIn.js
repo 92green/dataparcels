@@ -1,6 +1,7 @@
 // @flow
 import type {
     Key,
+    Index,
     ParcelData
 } from '../types/Types';
 
@@ -8,7 +9,7 @@ import getIn from './getIn';
 import set from './set';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (keyPath: Array<Key>, newParcelData: ParcelData) => (parcelData: ParcelData): ParcelData => {
+export default (keyPath: Array<Key|Index>, newParcelData: ParcelData) => (parcelData: ParcelData): ParcelData => {
     for(var i = keyPath.length - 1; i >= 0; i--) {
         const partialKeyPath = keyPath.slice(0, i);
         newParcelData = pipeWith(

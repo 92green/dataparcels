@@ -326,7 +326,7 @@ test('IndexedParcel.swap() should swap', tt => {
         type: "swap",
         keyPath: [0],
         payload: {
-            swapIndex: 2
+            swapKey: 2
         }
     };
 

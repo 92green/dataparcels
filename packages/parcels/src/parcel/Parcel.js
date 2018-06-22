@@ -248,7 +248,7 @@ export default class Parcel {
             parcelData: {
                 child,
                 value,
-                meta
+                meta = {}
             },
             parent,
             onDispatch = this.dispatch

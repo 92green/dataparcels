@@ -21,6 +21,26 @@ test('get should work with objects', (tt: Object) => {
     tt.deepEqual(expectedParcelData, get('a')(parcelData));
 });
 
+test('get should work with objects with hashkey - just to make sure that hashkeys are only converted to properties when used on an indexed parcel', (tt: Object) => {
+    let parcelData = {
+        value: {
+            ["#a"]: {
+                b: 1
+            }
+        }
+    };
+    let expectedParcelData = {
+        meta: {},
+        value: {
+            b: 1
+        },
+        key: "#a"
+    };
+
+    tt.deepEqual(expectedParcelData, get('#a')(parcelData));
+});
+
+
 test('get should not clone value', (tt: Object) => {
     let parcelData = {
         value: {

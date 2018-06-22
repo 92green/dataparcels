@@ -22,9 +22,9 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
         return parcelHas(key)(_this._parcelData);
     },
 
-    get: (key: Key|Index, notSetValue: * = undefined): Parcel => {
+    get: (key: Key|Index, notFoundValue: ?*): Parcel => {
         Types(`get() expects param "key" to be`, `keyIndex`)(key);
-        let childParcelData: ParcelData = parcelGet(key, notSetValue)(_this._parcelData);
+        let childParcelData: ParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
 
         let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
             _this.dispatch(changeRequest._unget(key));
@@ -38,11 +38,11 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
         });
     },
 
-    getIn: (keyPath: Array<Key|Index>, notSetValue: * = undefined): Parcel => {
+    getIn: (keyPath: Array<Key|Index>, notFoundValue: ?*): Parcel => {
         Types(`getIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
         var parcel = _this;
         for(let i = 0; i < keyPath.length; i++) {
-            parcel = parcel.get(keyPath[i], i < keyPath.length - 1 ? {} : notSetValue);
+            parcel = parcel.get(keyPath[i], i < keyPath.length - 1 ? {} : notFoundValue);
         }
         return parcel;
     },

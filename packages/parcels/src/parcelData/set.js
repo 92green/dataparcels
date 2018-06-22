@@ -3,10 +3,10 @@ import type {
     Key,
     Index,
     ParcelData,
-    PartialParcelData
+    Property
 } from '../types/Types';
 
-import decodeHashKey from './decodeHashKey';
+import keyOrIndexToProperty from './keyOrIndexToProperty';
 import updateChild from './updateChild';
 import updateChildKeys from './updateChildKeys';
 
@@ -19,14 +19,14 @@ import updateIn from 'unmutable/lib/updateIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index, input: PartialParcelData) => (parcelData: ParcelData): ParcelData => {
-    key = decodeHashKey(key)(parcelData);
+export default (key: Key|Index, input: ParcelData) => (parcelData: ParcelData): ParcelData => {
+    let property: Property = keyOrIndexToProperty(key)(parcelData);
     return pipeWith(
         parcelData,
-        has('value')(input) ? update('value', set(key, input.value)) : identity(),
+        has('value')(input) ? update('value', set(property, input.value)) : identity(),
         updateChild(),
         updateIn(
-            ['child', key],
+            ['child', property],
             pipe(
                 input.child ? set('child', input.child) : identity(),
                 has('meta')(input) ? update('meta', {}, merge(input.meta)) : identity()

@@ -7,6 +7,7 @@ test('PureParcelEquals should test equality to see if a re-render should occur',
     var child = {};
     var parcelCreator = (merge = {}) => {
         let p = new Parcel();
+        // $FlowFixMe
         p._parcelData = {
             value: 123,
             meta: {

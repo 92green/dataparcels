@@ -8,13 +8,6 @@ import Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
 
 export type ParcelData = {
-    value: *,
-    child: *,
-    key: string,
-    meta: Object
-};
-
-export type PartialParcelData = {
     value?: *,
     child?: *,
     key?: string,
@@ -44,16 +37,18 @@ export type CreateParcelConfigType = {
     parent?: Parcel
 };
 
+export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
+
 export type ModifierFunction = Function;
 
-export type ModifierObject = {
+export type ModifierObject = {|
     match?: string,
     modifier: ModifierFunction
-};
+|};
 
 export type Key = string;
-
 export type Index = number;
+export type Property = number|string;
 
 const runtimeTypes = {
     ['boolean']: {
@@ -98,11 +93,7 @@ const runtimeTypes = {
     },
     ['modifier']: {
         name: "a modifier function, or an object like {modifier: Function, match: ?string}",
-        check: ii => ii
-            && (
-                typeof ii === "function"
-                || (ii.modifier && typeof ii.modifier === "function")
-            )
+        check: ii => typeof ii === "function" || (typeof ii === "object" && ii.modifier && typeof ii.modifier === "function")
     },
     ['number']: {
         name: "a number",
@@ -132,7 +123,8 @@ export default (message: string, type: string) => (value: *): * => {
         throw new Error(`Unknown type check`);
     }
     if(!runtimeType.check(value)) {
-        throw new Error(`${message} ${runtimeType.name}, but got ${value}`);
+        // $FlowFixMe - I want to make value into a string regardless of flows opinions https://github.com/facebook/flow/issues/1460
+        throw new Error(`${message} ${runtimeType.name}, but got ${(value + "")}`);
     }
     return value;
 };

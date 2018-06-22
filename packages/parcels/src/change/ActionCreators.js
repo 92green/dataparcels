@@ -106,7 +106,7 @@ const swap: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
         type: "swap",
         keyPath: [keyA],
         payload: {
-            swapIndex: keyB
+            swapKey: keyB
         }
     });
 };
@@ -141,7 +141,7 @@ const swapWithSelf: Function = (keyB: Key|Index): Action => {
     return new Action({
         type: "swap",
         payload: {
-            swapIndex: keyB
+            swapKey: keyB
         }
     });
 };

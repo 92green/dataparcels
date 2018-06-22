@@ -2,34 +2,29 @@
 import type {
     Key,
     Index,
-    ParcelData
+    ParcelData,
+    Property
 } from '../types/Types';
 
-import decodeHashKey from './decodeHashKey';
-import updateChild from './updateChild';
+import keyOrIndexToProperty from './keyOrIndexToProperty';
+import keyOrIndexToKey from './keyOrIndexToKey';
 import updateMeta from './updateMeta';
-import updateChildKeys from './updateChildKeys';
+import prepareChildKeys from './prepareChildKeys';
 
 import getIn from 'unmutable/lib/getIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index, notSetValue: * = undefined) => (parcelData: ParcelData): ParcelData => {
+export default (key: Key|Index, notFoundValue: ?*) => (parcelData: ParcelData): ParcelData => {
 
-    if(!parcelData.child) {
-        parcelData = pipeWith(
-            parcelData,
-            updateChild(),
-            updateChildKeys()
-        );
-    }
-
-    key = decodeHashKey(key)(parcelData);
+    parcelData = prepareChildKeys()(parcelData);
+    let property: Property = keyOrIndexToProperty(key)(parcelData);
+    let stringKey: Key = keyOrIndexToKey(key)(parcelData);
 
     return updateMeta()({
-        value: getIn(['value', key], notSetValue)(parcelData),
+        value: getIn(['value', property], notFoundValue)(parcelData),
         ...pipeWith(
             parcelData,
-            getIn(['child', key], {key})
+            getIn(['child', property], {key: stringKey})
         )
     });
 };
