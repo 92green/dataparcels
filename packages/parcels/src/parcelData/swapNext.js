@@ -6,7 +6,7 @@ import type {
 } from '../types/Types';
 
 import keyOrIndexToIndex from './keyOrIndexToIndex';
-import wrapNumber from '../util/wrapNumber';
+import wrapNumber from './wrapNumber';
 
 import size from 'unmutable/lib/size';
 import swap from 'unmutable/lib/swap';
