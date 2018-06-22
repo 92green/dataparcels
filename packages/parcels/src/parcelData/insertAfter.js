@@ -2,8 +2,7 @@
 import type {
     Index,
     Key,
-    ParcelData,
-    PartialParcelData
+    ParcelData
 } from '../types/Types';
 
 import keyOrIndexToIndex from './keyOrIndexToIndex';
@@ -13,7 +12,7 @@ import insert from 'unmutable/lib/insert';
 import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index, newParcelData: PartialParcelData) => (parcelData: ParcelData): ParcelData => {
+export default (key: Key|Index, newParcelData: ParcelData) => (parcelData: ParcelData): ParcelData => {
 
     let index: Index = keyOrIndexToIndex(key)(parcelData) + 1;
 

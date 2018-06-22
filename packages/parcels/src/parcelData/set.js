@@ -3,7 +3,6 @@ import type {
     Key,
     Index,
     ParcelData,
-    PartialParcelData,
     Property
 } from '../types/Types';
 
@@ -20,7 +19,7 @@ import updateIn from 'unmutable/lib/updateIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index, input: PartialParcelData) => (parcelData: ParcelData): ParcelData => {
+export default (key: Key|Index, input: ParcelData) => (parcelData: ParcelData): ParcelData => {
     let property: Property = keyOrIndexToProperty(key)(parcelData);
     return pipeWith(
         parcelData,

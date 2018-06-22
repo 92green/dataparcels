@@ -6,9 +6,13 @@ import Action from '../Action';
 
 test('Reducer should throw error if action is not provided', tt => {
     var data = {
-        value: 123
+        value: 123,
+        meta: {},
+        key: "^",
+        child: undefined
     };
 
+    // $FlowFixMe - intential misuse of types
     tt.is(tt.throws(() => Reducer(data), Error).message, `Reducer must receive an Action`);
 });
 
@@ -22,7 +26,10 @@ test('Reducer delete action should throw error if keyPath is empty', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "delete"
@@ -37,7 +44,10 @@ test('Reducer should delete key', tt => {
         value: {
             a: 1,
             b: 2
-        }
+        },
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "delete",
@@ -58,7 +68,10 @@ test('Reducer should delete deep key', tt => {
                 d: 4
             },
             c: 3
-        }
+        },
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "delete",
@@ -80,7 +93,10 @@ test('Reducer should delete array index', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "delete",
@@ -100,7 +116,10 @@ test('Reducer should delete array key', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "delete",
@@ -124,7 +143,10 @@ test('Reducer insertAfter action should throw error if keyPath is empty', tt => 
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "insertAfter",
@@ -142,7 +164,10 @@ test('Reducer should insertAfter by array index', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "insertAfter",
@@ -167,7 +192,10 @@ test('Reducer should insertAfter by array key', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "insertAfter",
@@ -196,7 +224,10 @@ test('Reducer should insertAfter by array index deeply', tt => {
                     2
                 ]
             }
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "insertAfter",
@@ -230,7 +261,10 @@ test('Reducer insertBefore action should throw error if keyPath is empty', tt =>
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "insertBefore",
@@ -248,7 +282,10 @@ test('Reducer should insertBefore by array index', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "insertBefore",
@@ -273,7 +310,10 @@ test('Reducer should insertBefore by array key', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "insertBefore",
@@ -302,7 +342,10 @@ test('Reducer should insertBefore by array index deeply', tt => {
                     2
                 ]
             }
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "insertBefore",
@@ -336,7 +379,10 @@ test('Reducer should ping', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "ping"
@@ -361,7 +407,10 @@ test('Reducer should pop', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "pop"
@@ -382,7 +431,10 @@ test('Reducer should pop deeply', tt => {
                 1,
                 2
             ]
-        }
+        },
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "pop",
@@ -404,7 +456,10 @@ test('Reducer pop action should throw error if array keys in keyPath are invalid
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "pop",
@@ -426,7 +481,10 @@ test('Reducer should push', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "push",
@@ -454,7 +512,10 @@ test('Reducer should push deeply', tt => {
                     2
                 ]
             }
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "push",
@@ -486,7 +547,10 @@ test('Reducer should set with empty keyPath', tt => {
         value: {
             a: 1,
             b: 2
-        }
+        },
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "set",
@@ -504,7 +568,10 @@ test('Reducer should set by key', tt => {
         value: {
             a: 1,
             b: 2
-        }
+        },
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "set",
@@ -528,7 +595,10 @@ test('Reducer should set by deep key', tt => {
             b: {
                 c: 1
             }
-        }
+        },
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "set",
@@ -554,7 +624,10 @@ test('Reducer should set by array index', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "set",
@@ -577,7 +650,10 @@ test('Reducer should set by array key', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "set",
@@ -604,7 +680,9 @@ test('Reducer should setMeta with empty keyPath', tt => {
             a: 1,
             b: 2
         },
-        meta: {}
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "setMeta",
@@ -630,7 +708,9 @@ test('Reducer should setMeta merge', tt => {
         },
         meta: {
             def: 456
-        }
+        },
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "setMeta",
@@ -655,7 +735,9 @@ test('Reducer should setMeta with keyPath', tt => {
             a: 1,
             b: 2
         },
-        meta: {}
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "setMeta",
@@ -695,7 +777,8 @@ test('Reducer should merge setMeta with keyPath', tt => {
                 }
             }
         },
-        meta: {}
+        meta: {},
+        key: "^"
     };
     var action = new Action({
         type: "setMeta",
@@ -733,7 +816,10 @@ test('Reducer should shift', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "shift"
@@ -754,7 +840,10 @@ test('Reducer should shift deeply', tt => {
                 1,
                 2
             ]
-        }
+        },
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "shift",
@@ -779,7 +868,10 @@ test('Reducer swap action should throw error if keyPath is empty', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "swap",
@@ -797,7 +889,10 @@ test('Reducer swap action should throw error if payload.swapKey doesnt exist', t
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "swap",
@@ -814,7 +909,10 @@ test('Reducer should swap by array indexes', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "swap",
@@ -837,7 +935,10 @@ test('Reducer should swap by array keys', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "swap",
@@ -864,7 +965,10 @@ test('Reducer swapNext action should throw error if keyPath is empty', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "swapNext"
@@ -883,7 +987,10 @@ test('Reducer swapPrev action should throw error if keyPath is empty', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "swapPrev"
@@ -902,7 +1009,10 @@ test('Reducer should unshift', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "unshift",
@@ -930,7 +1040,10 @@ test('Reducer should unshift deeply', tt => {
                     2
                 ]
             }
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "unshift",
@@ -980,7 +1093,10 @@ test('Reducer should swap deeply', tt => {
                     }
                 ]
             }
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
 
 
@@ -1031,7 +1147,10 @@ test('Reducer should push multiple', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = [
         new Action({
@@ -1068,7 +1187,10 @@ test('Reducer should throw error if action is not valid', tt => {
             0,
             1,
             2
-        ]
+        ],
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "fake"
@@ -1086,7 +1208,10 @@ test('Reducer should set meta if not provided', tt => {
         value: {
             a: 1,
             b: 2
-        }
+        },
+        meta: {},
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "set",
@@ -1109,7 +1234,9 @@ test('Reducer should pass through meta if provided', tt => {
             a: 1,
             b: 2
         },
-        meta
+        meta,
+        key: "^",
+        child: undefined
     };
     var action = new Action({
         type: "set",
