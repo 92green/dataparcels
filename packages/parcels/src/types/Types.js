@@ -52,8 +52,8 @@ export type ModifierObject = {
 };
 
 export type Key = string;
-export type HashKey = string;
 export type Index = number;
+export type Property = number|string;
 
 const runtimeTypes = {
     ['boolean']: {
@@ -98,11 +98,7 @@ const runtimeTypes = {
     },
     ['modifier']: {
         name: "a modifier function, or an object like {modifier: Function, match: ?string}",
-        check: ii => ii
-            && (
-                typeof ii === "function"
-                || (ii.modifier && typeof ii.modifier === "function")
-            )
+        check: ii => typeof ii === "function" || (typeof ii === "object" && ii.modifier && typeof ii.modifier === "function")
     },
     ['number']: {
         name: "a number",

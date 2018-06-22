@@ -15,6 +15,7 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 let types = {
     ['action']: new Action(),
     ['actionArray']: [new Action(),new Action()],
+    ['botchedActionArray']: [new Action(),new Action(),123],
     ['booleanTrue']: true,
     ['booleanFalse']: false,
     ['changeRequest']: new ChangeRequest(),
@@ -101,6 +102,7 @@ test('Types() can identify a number', testTypes(`number`, [
 test('Types() can identify a object', testTypes(`object`, [
     'action',
     'actionArray',
+    'botchedActionArray',
     'changeRequest',
     'event',
     'functionArray',
