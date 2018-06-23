@@ -37,7 +37,7 @@ class Param extends Record({
     }
 }
 
-class Return extends Record({
+class Returns extends Record({
     name: null, // ?string;
     type: null // ?Type;
 }) {
@@ -107,9 +107,9 @@ class DocNode extends Record({
     parent: null, // ?*;
     path: null, // ?Path;
     properties: [], // ?Property[] = [];
-    returns: [], // ?Return[] = [];
+    returns: [], // ?Returns[] = [];
     scope: null, // ?string;
-    tags: null, // ?Tag[];
+    tags: [], // ?Tag[];
     type: null // ?Type;
 }) {
     constructor(props) {
@@ -123,7 +123,7 @@ class DocNode extends Record({
             update('params', map(_ => new Param(_))),
             update('path', _ => new Path(_)),
             update('properties', map(_ => new Property(_))),
-            update('returns', map(_ => new Return(_)))
+            update('returns', map(_ => new Returns(_))),
             update('tags', map(_ => new Tag(_)))
         );
     }
@@ -134,7 +134,7 @@ module.exports = {
     Err,
     Example,
     Param,
-    Return,
+    Returns,
     Property,
     Path,
     Internal,
