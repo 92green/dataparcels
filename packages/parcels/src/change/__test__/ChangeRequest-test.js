@@ -161,3 +161,55 @@ test('ChangeRequest data() should get latest parcel data from treeshare when cal
 test('ChangeRequest should throw error if data() is called before setBaseParcel()', tt => {
     tt.is(tt.throws(() => new ChangeRequest().data(), Error).message, `ChangeRequest data() cannot be called before calling setBaseParcel()`);
 });
+
+test('ChangeRequest value() should be a shortcut for data().value', tt => {
+    var action = new Action({
+        type: "set",
+        keyPath: ["b"],
+        payload: {
+            value: 3
+        }
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: 1,
+            b: 2
+        }
+    });
+
+    let value = new ChangeRequest(action)
+        .setBaseParcel(parcel)
+        .value();
+
+    var expectedValue = {
+        a: 1,
+        b: 3
+    };
+
+    tt.deepEqual(expectedValue, value);
+});
+
+test('ChangeRequest meta() should be a shortcut for data().meta', tt => {
+    var action = new Action({
+        type: "setMeta",
+        payload: {
+            meta: {
+                abc: 123
+            }
+        }
+    });
+
+    var parcel = new Parcel();
+
+    let meta = new ChangeRequest(action)
+        .setBaseParcel(parcel)
+        .meta();
+
+    var expectedMeta = {
+        abc: 123
+    };
+
+    tt.deepEqual(expectedMeta, meta);
+});
+

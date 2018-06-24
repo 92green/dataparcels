@@ -56,6 +56,14 @@ export default class ChangeRequest {
         return Reducer(parcelDataFromRegistry, this._actions);
     };
 
+    value = (): * => {
+        return this.data().value;
+    };
+
+    meta = (): * => {
+        return this.data().meta;
+    };
+
     actions = (): Action[] => {
         return this._actions;
     };
