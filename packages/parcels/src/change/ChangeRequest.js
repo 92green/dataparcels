@@ -56,6 +56,14 @@ export default class ChangeRequest {
         return Reducer(parcelDataFromRegistry, this._actions);
     };
 
+    value = (): * => {
+        return this.data().value;
+    };
+
+    meta = (): * => {
+        return this.data().meta;
+    };
+
     actions = (): Action[] => {
         return this._actions;
     };
@@ -69,20 +77,28 @@ export default class ChangeRequest {
     merge = (other: ChangeRequest): ChangeRequest => {
         return this
             .updateActions(ii => ii.concat(other.actions()))
-            .setMeta(other.meta());
+            .setChangeRequestMeta(other.changeRequestMeta());
     };
 
-    meta = (): * => {
+    changeRequestMeta = (): * => {
         return this._meta;
     };
 
-    setMeta = (partialMeta: *): ChangeRequest => {
+    setChangeRequestMeta = (partialMeta: *): ChangeRequest => {
         return this._create({
             meta: {
                 ...this._meta,
                 ...partialMeta
             }
         });
+    };
+
+    originId = (): ?string => {
+        return this._originId;
+    };
+
+    originPath = (): ?string[] => {
+        return this._originPath;
     };
 
     toJS = (): Object => {
