@@ -213,3 +213,45 @@ test('ChangeRequest meta() should be a shortcut for data().meta', tt => {
     tt.deepEqual(expectedMeta, meta);
 });
 
+test('ChangeRequest should keep originId and originPath', (tt: Object) => {
+    tt.plan(2);
+
+    var data = {
+        value: {
+            abc: 123
+        },
+        handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
+            tt.deepEqual(['abc'], changeRequest.originPath());
+            tt.deepEqual('^.abc', changeRequest.originId());
+        }
+    };
+
+    new Parcel(data)
+        .get('abc')
+        .onChange(456);
+        //.modifyChangeValue(value => value + 1)
+});
+
+
+test('ChangeRequest should keep originId and originPath even when going through a batch() where another change is fired before the original one', (tt: Object) => {
+    tt.plan(2);
+
+    var data = {
+        value: {
+            abc: 123,
+            def: 456
+        },
+        handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
+            tt.deepEqual(['abc'], changeRequest.originPath());
+            tt.deepEqual('^.~mc.abc', changeRequest.originId());
+        }
+    };
+
+    new Parcel(data)
+        .modifyChange((parcel, changeRequest) => {
+            parcel.set('def', 789);
+            parcel.dispatch(changeRequest);
+        })
+        .get('abc')
+        .onChange(456);
+});

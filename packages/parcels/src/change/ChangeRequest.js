@@ -93,6 +93,14 @@ export default class ChangeRequest {
         });
     };
 
+    originId = (): ?string => {
+        return this._originId;
+    };
+
+    originPath = (): ?string[] => {
+        return this._originPath;
+    };
+
     toJS = (): Object => {
         return {
             actions: this._actions,
