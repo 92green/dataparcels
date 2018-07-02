@@ -3,120 +3,26 @@ const crypto = require(`crypto`);
 const digest = str => crypto.createHash(`md5`).update(str).digest(`hex`);
 const remark = require(`remark`);
 const Prism = require(`prismjs`);
+const {DocletNode} = require(`./Records`);
 
-//
-// use records!!
-//
+const stringifyMarkdownAST = (node = ``) => typeof node === 'string'
+    ? node
+    : remark().stringify(node);
 
-class Tag {
-    description: ?string;
-    kind: ?string;
-    lineNumber: ?number;
-    name: ?string;
-    title: ?string;
-}
-
-class Error {
-    commentLineNumber: ?number;
-    message: ?string;
-}
-
-class Example {
-    highlighted: ?string;
-    raw: ?string;
-}
-
-class Param {
-    default: ?string;
-    name: ?string;
-    title: ?string;
-    type: ?Type;
-}
-
-class Return {
-    name: ?string;
-    type: ?Type;
-}
-
-class Property {
-    name: ?string;
-    type: ?Type;
-}
-
-class Path {
-    kind: ?string;
-    name: ?string;
-    scope: ?string;
-}
-
-class Internal {
-    contentDigest: ?*;
-    owner: ?*;
-    type: ?*;
-}
-
-class Field {
-    name: ?string;
-    kind: ?string;
-    slug: ?string;
-    sortBy: ?string;
-}
-
-class Type {
-    name: ?string;
-    type: ?string;
-}
-
-class DocNode {
-    augments: ?string;
-    children: ?*;
-    context: ?*;
-    description: ?*;
-    errors: ?Error[] = [];
-    examples: ?Example[] = [];
-    fields: ?Field[] = [];
-    id: ?string;
-    internal: ?internal;
-    kind: ?string;
-    loc: ?*;
-    memberof: ?string;
-    name: ?string;
-    namespace: ?string;
-    namespace: ?string;
-    params: ?Param[] = [];
-    parent: ?*;
-    path: ?Path;
-    properties: ?Property[] = [];
-    returns: ?Return[] = [];
-    scope: ?string;
-    tags: ?Tag[];
-    type: ?Type;
-}
-
-const stringifyMarkdownAST = (node = ``) => {
-    if (typeof node === 'string') {
-        return node
-    } else {
-        return remark().stringify(node)
-    }
-}
-
-const commentId = (parentId, commentNumber) =>
-    `documentationJS ${parentId} comment #${commentNumber}`
-const descriptionId = (parentId, name) =>
-    `${parentId}--DocumentationJSComponentDescription--${name}`
+const commentId = (parentId, commentNumber) => `documentationJS ${parentId} comment #${commentNumber}`;
+const descriptionId = (parentId, name) => `${parentId}--DocumentationJSComponentDescription--${name}`;
 
 function createDescriptionNode(
     node,
-    docNodeId,
+    docletNodeId,
     markdownStr,
     name,
     boundActionCreators
 ) {
-    const { createNode } = boundActionCreators
+    const {createNode} = boundActionCreators;
 
     const descriptionNode = {
-        id: descriptionId(docNodeId, name),
+        id: descriptionId(docletNodeId, name),
         parent: node.id,
         children: [],
         internal: {
@@ -125,61 +31,32 @@ function createDescriptionNode(
             content: markdownStr,
             contentDigest: digest(markdownStr),
         },
-    }
+    };
 
     node.children = node.children.concat([descriptionNode.id])
     createNode(descriptionNode)
-
     return descriptionNode.id
 }
 
-function createDoclet(docsJson, i, node, boundActionCreators) {
-    //console.log('====createDoclet===:', i);
-    //console.log(docsJson);
-    //console.log('\n');
+function createDocletNode(doclet, i, node, boundActionCreators) {
 
     const {
         createNode,
         createParentChildLink
     } = boundActionCreators;
 
-    const picked = {
-        kind: undefined,
-        memberof: undefined,
-        name: undefined,
-        scope: undefined,
-        members: undefined,
-        augments: undefined,
-        namespace: undefined,
-        properties: undefined,
-        type: undefined,
-        ...docsJson
-    };
-
-    // const docNode = new DocNode(docsJson);
-    // console.log("docNode", docNode);
-
-    // Defaults
-    picked.params = [{ name: ``, type: { type: ``, name: `` } }]
-    picked.properties = picked.properties || [];
-    picked.returns = [{ type: { type: ``, name: `` } }]
-    picked.examples = [{ raw: ``, highlighted: `` }]
-
-    // Prepare various sub-pieces.
-    if (docsJson.description) {
-        picked.description___NODE = createDescriptionNode(
+    if(doclet.description) {
+        doclet.description___NODE = createDescriptionNode(
             node,
             commentId(node.id, i),
-            stringifyMarkdownAST(docsJson.description),
+            stringifyMarkdownAST(doclet.description),
             `comment.description`,
             boundActionCreators
-        )
+        );
     }
 
-    // console.log(picked);
-
-    const transformParam = param => {
-        if (param.description) {
+    const transformParam = (param) => {
+        if(param.description) {
             param.description___NODE = createDescriptionNode(
                 node,
                 commentId(node.id, i),
@@ -187,80 +64,77 @@ function createDoclet(docsJson, i, node, boundActionCreators) {
                 param.name,
                 boundActionCreators
             )
-            delete param.description
+            delete param.description;
         }
-        delete param.lineNumber
+        delete param.lineNumber;
 
         // When documenting destructured parameters, the name
         // is parent.child where we just want the child.
-        if (param.name.split(`.`).length > 1) {
+        if(param.name.split(`.`).length > 1) {
             param.name = param.name
                 .split(`.`)
                 .slice(-1)
-                .join(`.`)
+                .join(`.`);
         }
 
-        if (param.properties) {
-            param.properties = param.properties.map(transformParam)
+        if(param.properties) {
+            param.properties = param.properties.map(transformParam);
         }
-
         return param
+    };
+
+    if(doclet.params) {
+        doclet.params = doclet.params.map(transformParam);
     }
 
-
-
-    if (docsJson.params) {
-        picked.params = docsJson.params.map(transformParam)
+    if(doclet.returns) {
+        doclet.returns = doclet.returns
+            .map(ret => {
+                if(ret.description) {
+                    ret.description___NODE = createDescriptionNode(
+                        node,
+                        commentId(node.id, i),
+                        stringifyMarkdownAST(ret.description),
+                        ret.title,
+                        boundActionCreators
+                    )
+                }
+                return ret;
+            });
     }
 
-    if (docsJson.returns) {
-        picked.returns = docsJson.returns.map(ret => {
-            if (ret.description) {
-                ret.description___NODE = createDescriptionNode(
-                    node,
-                    commentId(node.id, i),
-                    stringifyMarkdownAST(ret.description),
-                    ret.title,
-                    boundActionCreators
-                )
-            }
-
-            return ret
-        })
+    if(doclet.properties) {
+        doclet.properties = doclet.properties
+            .map(prop => {
+                const tag = doclet.tags.find(tag => tag.name === prop.name);
+                if(tag && tag.description) {
+                    prop.description___NODE = createDescriptionNode(
+                        node,
+                        commentId(node.id, i),
+                        stringifyMarkdownAST(tag.description),
+                        tag.name,
+                        boundActionCreators
+                    )
+                }
+                return prop;
+            });
     }
 
-    if (picked.properties) {
-        picked.properties = picked.properties.map(prop => {
-            const tag = docsJson.tags.find(tag => tag.name === prop.name);
-            if (tag && tag.description) {
-                prop.description___NODE = createDescriptionNode(
-                    node,
-                    commentId(node.id, i),
-                    stringifyMarkdownAST(tag.description),
-                    tag.name,
-                    boundActionCreators
-                )
-            }
-            return prop;
-        })
-    }
-
-    if (docsJson.examples) {
-        picked.examples = docsJson.examples.map(example => {
-            return {
+    if(doclet.examples) {
+        doclet.examples = doclet.examples
+            .map(example => ({
                 raw: example.description,
                 highlighted: Prism.highlight(
                     example.description,
                     Prism.languages.javascript
                 ),
-            }
-        })
+            }));
     }
 
-    const strContent = JSON.stringify(picked, null, 4)
+    const strContent = JSON.stringify(doclet, null, 4);
 
-    const docNode = {
-        ...picked,
+    let docletNode = {
+        ...doclet,
         commentNumber: i,
         id: commentId(node.id, i),
         parent: node.id,
@@ -268,20 +142,26 @@ function createDoclet(docsJson, i, node, boundActionCreators) {
         internal: {
             contentDigest: digest(strContent),
             type: `DocumentationJs`,
-        },
+        }
+    };
+
+    docletNode = new DocletNode(docletNode).toJS();
+
+    // console.log('====docletNode===:', i);
+    // console.log(docletNode);
+    // console.log('\n');
+
+    createParentChildLink({
+        parent: node,
+        child: docletNode
+    });
+
+    createNode(docletNode);
+
+    if(doclet.members.instance) {
+        doclet.members.instance = doclet.members.instance
+            .map((doclet, jj) => createDocletNode(doclet, `${i}.${jj}`, node, boundActionCreators));
     }
-
-    createParentChildLink({ parent: node, child: docNode })
-    createNode(docNode)
-
-    if(picked.members.instance) {
-        picked.members.instance = picked.members.instance.map((doclet, jj) => createDoclet(doclet, `${i}.${jj}`, node, boundActionCreators));
-        // console.log(picked.members.instance);
-    }
-
-    console.log("docNode", docNode);
-
-    return docNode;
 }
 
 /**
@@ -293,14 +173,11 @@ exports.onCreateNode = async ({
     loadNodeContent,
     boundActionCreators,
 }) => {
-    if (
-        node.internal.mediaType !== `application/javascript` ||
-        node.internal.type !== `File`
-    ) {
-        return null
+    if(node.internal.mediaType !== `application/javascript` || node.internal.type !== `File`) {
+        return null;
     }
 
-    let documentationJson
+    let documentationJson;
     try {
         documentationJson = await documentation.build(node.absolutePath, {shallow: true})
     } catch (e) {
@@ -308,10 +185,13 @@ exports.onCreateNode = async ({
         // and an error here kills Gatsby.
     }
 
-    if (documentationJson && documentationJson.length > 0) {
-        documentationJson.forEach((docs, ii) => createDoclet(docs, ii, node, boundActionCreators));
+    if(documentationJson && documentationJson.length > 0) {
+        // get around the problem of gatsby's dynamically generated graphql schemas by making one node
+        // that contains the complete possible data shape
+        // createDocletNode(DocletNode.createEmpty(), 0, node, boundActionCreators);
+
+        documentationJson.forEach((doclet, ii) => createDocletNode(doclet, ii, node, boundActionCreators));
         return true;
-    } else {
-        return null;
     }
+    return null;
 }
