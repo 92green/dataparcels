@@ -1,62 +1,27 @@
 @import '~bruce/bruce';
 @include BruceReset;
 @include BruceBoxSizing;
-@import '~obtuse/lib/all';
-@include ObtuseConfig;
+@import '~dcme-style/lib/all';
+@include DcmeConfig;
 
-@include BruceGrid {
-    &_item {
-        @include BruceBreakpoint('small') {
-            &-padding {
-                border-left: 1rem solid transparent;
-                border-right: 1rem solid transparent;
-            }
+@include DcmeBase;
+@include DcmeBox;
+@include DcmeBulletList;
+@include DcmeButton;
+@include DcmeGrid;
+@include DcmeImage;
+@include DcmeLink;
+@include DcmeLabel;
+@include DcmeInput;
+@include DcmeNavigationList;
+@include DcmeOrderedList;
+@include DcmeTable;
+@include DcmeTerminal;
+@include DcmeText;
+@include DcmeTypography;
+@include DcmeWrapper;
 
-            &-paddingMilli {
-                border-left: .5rem solid transparent;
-                border-right: .5rem solid transparent;
-            }
-        }
-    }
-}
-
-@include ObtuseBase;
-@include ObtuseLabel;
-@include ObtuseLink;
-@include ObtuseBox;
-@include ObtuseButton;
-@include ObtuseInput {
-    background-color: color('background');
-};
-@include ObtuseTable;
-@include ObtuseTerminal;
-@include ObtuseText {
-    &-definition {
-        background-color: grey(94);
-        padding: 1rem;
-    }
-    &-code {
-        background-color: color('alternativeBackground');
-        padding: 0 .25rem;
-        border-radius: 3px;
-    }
-};
-@include ObtuseTypography;
-@include ObtuseWrapper;
-
-body {
-    padding: 2rem;
-}
-
-.Code {
-    background-color: grey(90);
-    padding: 1rem;
-    margin: 2rem 0;
-    white-space: pre;
-    background-color: #333;
-    color: #e6e6e6;
-}
-
+/*
 .gatsby-highlight pre > code {
     background-color: grey(90);
     padding: 1rem;
@@ -81,21 +46,7 @@ comment     #6D6D6D
 red         #C55B4E
  */
 
-/* Red */
-.token.keyword {color: #C55B4E;}
 
-/* Yellow */
-.token.tag {color: #E1AE69;}
-
-/* Green */
-.token.string {color: #86C797;}
-
-/* Blue */
-.token.number {color: #6CA6CE;}
-.token.boolean {color: #6CA6CE;}
-
-
-.token.comment {color: #6D6D6D;}
 
 .Example {
 
@@ -138,8 +89,4 @@ red         #C55B4E
             width: 10rem;
         }
     }
-}
-
-.Navigation {
-    margin-bottom: 3rem;
 }

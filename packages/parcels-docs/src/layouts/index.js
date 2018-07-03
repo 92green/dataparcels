@@ -3,9 +3,9 @@ import React from "react";
 import type {Node} from "react";
 import PropTypes from "prop-types";
 import Helmet from "react-helmet";
-import {Wrapper} from 'obtuse';
+import {Wrapper} from 'dcme-style';
 import Navigation from '../components/Navigation';
-import {Column, Grid} from 'obtuse';
+import {Column, Grid, Head} from 'dcme-style';
 
 import "./index.scss";
 
@@ -24,12 +24,13 @@ function TemplateWrapper(props: Object): Node {
                 //{name: "keywords", content: "sample, something"}
             ]}
         />
+        <Head />
         <Grid modifier="auto">
             <Column modifier="shrink padding">
                 <Navigation allSitePage={allSitePage}/>
             </Column>
             <Column modifier="padding">
-                {wrapper 
+                {wrapper
                     ? <Wrapper>{children()}</Wrapper>
                     : children()
                 }

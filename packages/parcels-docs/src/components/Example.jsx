@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {ComponentType, Element, Node} from 'react';
-import {Box, Column, Grid, Tab, TabSet, Terminal, Text} from 'obtuse';
+import {Box, Column, Grid, Tab, TabSet, Terminal, Text} from 'dcme-style';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import Link from 'gatsby-link';

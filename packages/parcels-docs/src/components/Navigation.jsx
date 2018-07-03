@@ -3,21 +3,21 @@ import React from "react";
 import type {Node} from 'react';
 import Link from 'gatsby-link';
 
-import {ListItem} from 'obtuse';
-import {Text} from 'obtuse';
+import {
+    NavigationList,
+    NavigationListItem,
+    Text
+} from 'dcme-style';
 
-export default function Navigation(): Node {
+const NavItem = (props: Object): Node => <NavigationListItem>
+    <Link to={props.to} className="Link">{props.children}</Link>
+</NavigationListItem>;
 
-    function NavItem(props: Object): Node {
-        return <ListItem>
-            <Link to={props.to} className="Link">{props.children}</Link>
-        </ListItem>;
-    }
+const NavHeading = (props: Object) => <NavigationListItem><Text modifier="weightMilli">{props.children}</Text></NavigationListItem>;
 
-    const NavHeading = (props) => <ListItem style={{marginTop: '1rem'}}><Text modifier="muted">{props.children}</Text></ListItem>;
+export default (): Node => {
 
-    return <ul className="Navigation">
-        <NavHeading>Parcels</NavHeading>
+    return <NavigationList>
         <NavItem to="/">Home</NavItem>
         <NavItem to="/examples">Examples</NavItem>
 
@@ -28,6 +28,6 @@ export default function Navigation(): Node {
 
         <NavHeading>Misc</NavHeading>
         <NavItem to="/types">All Types</NavItem>
-    </ul>;
+    </NavigationList>;
 }
 

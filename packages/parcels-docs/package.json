@@ -24,14 +24,13 @@
     "gatsby-transformer-remark": "^1.7.34",
     "gh-pages": "^1.1.0",
     "immutable": "^3.8.2",
-    "jsdonk": "^0.7.0",
-    "obtuse": "^0.7.3",
     "prettier": "^1.11.1",
     "prismjs": "^1.11.0",
     "react-helmet": "^5.2.0",
     "stampy": "^0.26.1"
   },
   "dependencies": {
+    "dcme-style": "^0.4.0",
     "gatsby": "^1.9.223",
     "gatsby-remark-prismjs": "^1.2.21",
     "mdx-loader": "^1.1.0",

@@ -17,7 +17,7 @@ import {
     // TableHeadCell,
     // TableRow,
     Text
-} from 'obtuse';
+} from 'dcme-style';
 
 let removeOptions = map(fn => ({options, ...props}) => fn(props));
 

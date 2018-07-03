@@ -2,8 +2,8 @@
 import React from "react";
 import Link from 'gatsby-link';
 import type {Node} from 'react';
-import {Text} from 'obtuse';
-import {Typography} from 'obtuse';
+import {Text} from 'dcme-style';
+import {Typography} from 'dcme-style';
 import getIn from 'unmutable/lib/getIn';
 import Doclet from '../components/Doclet';
 
