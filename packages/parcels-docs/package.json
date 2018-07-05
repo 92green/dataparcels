@@ -12,27 +12,25 @@
     "watch": "gatsby develop",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
+  "dependencies": {
     "bruce": "^4.0.0",
+    "dcme-style": "^0.4.0",
+    "gatsby": "^1.9.223",
     "gatsby": "^1.9.223",
     "gatsby-link": "^1.6.38",
     "gatsby-plugin-react-helmet": "^2.0.6",
     "gatsby-plugin-sass": "^1.0.20",
+    "gatsby-remark-prismjs": "^1.2.21",
     "gatsby-source-filesystem": "^1.5.26",
     "gatsby-transformer-documentationjs": "^1.4.10",
     "gatsby-transformer-remark": "^1.7.34",
     "gh-pages": "^1.1.0",
     "immutable": "^3.8.2",
-    "prismjs": "^1.11.0",
-    "react-helmet": "^5.2.0",
-    "stampy": "^0.26.1"
-  },
-  "dependencies": {
-    "dcme-style": "^0.4.0",
-    "gatsby": "^1.9.223",
-    "gatsby-remark-prismjs": "^1.2.21",
     "mdx-loader": "^1.1.0",
     "mdxc": "^1.1.1",
+    "prismjs": "^1.11.0",
+    "react-helmet": "^5.2.0",
+    "stampy": "^0.26.1",
     "unmutable": "^0.29.2"
   }
 }
