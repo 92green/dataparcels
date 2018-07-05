@@ -47,7 +47,7 @@ function Keys(param: Object, ii: number): Node {
         <Text>{name}{type.type === 'OptionalType' ? '?' : ''}: </Text>
         <TypeLink type={type}/>
         {def && <Text> = {def}</Text>}
-        {description && <Text modifier="muted">{` // ${description.internal.content.replace(/\n$/, "")}`}</Text>}
+        {description && <Text modifier="weightMilli">{` // ${description.internal.content.replace(/\n$/, "")}`}</Text>}
     </Text>;
 }
 
@@ -59,7 +59,7 @@ function Spread(param: Object): Node {
         {type && type.type === 'RestType' && '...'}
         <Text>{name}</Text>
         {def && <Text> = {def}</Text>}
-        {description && <Text modifier="muted">{` // ${description.internal.content.replace(/\n$/, "")}`}</Text>}
+        {description && <Text modifier="weightMilli">{` // ${description.internal.content.replace(/\n$/, "")}`}</Text>}
     </Text>;
 }
 
@@ -76,7 +76,7 @@ function NodeName({node}: Object): Node {
     const returnString = returns.map(pp => <Text>
         <Text>: </Text>
         <TypeLink type={pp.type}/>
-        {pp.description && <Text modifier="muted">{` // ${pp.description.internal.content.replace(/\n$/, "")}`}</Text>}
+        {pp.description && <Text modifier="weightMilli">{` // ${pp.description.internal.content.replace(/\n$/, "")}`}</Text>}
     </Text>)[0];
 
     if(name[0] === '$') {
@@ -213,12 +213,12 @@ export default function Doclet(props: Object): Node {
 
     return <div key={node.id} style={{marginTop: primary ? '' : '6rem'}}>
         {<Text element="h2" modifier={`${primary ? 'sizeGiga' : 'sizeMega'} marginGiga`}>{name}</Text>}
-        <Text modifier="block muted marginGiga">
+        <Text modifier="block weightMilli marginGiga">
             <Text>{scope} {kind} </Text>
             {augments && augments.length > 0 && <Text>{extend(node)}</Text>}
         </Text>
         <Typography dangerouslySetInnerHTML={{__html: getIn(['childMarkdownRemark', 'html'])(description)}}/>
-        <Text element="pre" modifier="marginGiga definition">
+        <Text element="pre" modifier="marginGiga codeblock">
             <NodePrefix node={node} />
             <NodeName node={node} />
         </Text>

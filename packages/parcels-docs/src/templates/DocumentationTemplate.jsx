@@ -6,7 +6,11 @@ import {Text} from 'dcme-style';
 import {Typography} from 'dcme-style';
 import getIn from 'unmutable/lib/getIn';
 import Doclet from '../components/Doclet';
+<<<<<<< HEAD
 
+=======
+import {DocletNode} from '../../plugins/gatsby-transformer-blueflagdocs/Records';
+>>>>>>> What is going on
 
 export default function DocumentationTemplate(props: Object): Node {
     const {data} = props;
@@ -15,7 +19,11 @@ export default function DocumentationTemplate(props: Object): Node {
 
     return <div>
         {edges.map(({node}: Object, index: number): Node => {
+<<<<<<< HEAD
             return <Doclet node={node} primary={index === 0} />;
+=======
+            return <Doclet node={new DocletNode(node)} primary={index === 0} />;
+>>>>>>> What is going on
         })}
     </div>;
 }
@@ -28,7 +36,7 @@ query DocumentationQuery($name: String!) {
         id
         name
         namespace
-        # memberof
+        memberof
         # augments {
         #   title
         #   name

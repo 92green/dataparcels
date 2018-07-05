@@ -22,6 +22,14 @@ const Example = Record({
     raw: null // ?string;
 });
 
+const Members = Record({
+    global: [], // ??????[],
+    inner: [], // ??????[],
+    instance: [], // ??????[],
+    events: [], // ??????[],
+    static: [] // ??????[],
+});
+
 class Param extends Record({
     default: null, // ?string;
     name: null, // ?string;
@@ -75,33 +83,27 @@ const Internal = Record({
     type: null // ?*;
 });
 
-const Fields = Record({
-    name: null, // ?string;
-    kind: null, // ?string;
-    slug: null, // ?string;
-    sortBy: null // ?string;
-});
-
 const Type = Record({
     name: null, // ?string;
     type: null // ?string;
 });
 
-class DocNode extends Record({
+class DocletNode extends Record({
     augments: null, // ?string;
     children: null, // ?*;
+    commentNumber: null, // ?number;
     context: null, // ?*;
     description: null, // ?*;
+    description___NODE: null, // ?*;
     errors: [], // ?Err[] = [];
     examples: [], // ?Example[] = [];
-    fields: [], // ?Field[] = [];
     id: null, // ?string;
     internal: null, // ?Internal;
     kind: null, // ?string;
     loc: null, // ?*;
     memberof: null, // ?string;
+    members: null, // ?Members;
     name: null, // ?string;
-    namespace: null, // ?string;
     namespace: null, // ?string;
     params: [], // ?Param[] = [];
     parent: null, // ?*;
@@ -109,7 +111,10 @@ class DocNode extends Record({
     properties: [], // ?Property[] = [];
     returns: [], // ?Returns[] = [];
     scope: null, // ?string;
+    sees: [], // ?????[];
     tags: [], // ?Tag[];
+    throws: [], // ?????[];
+    todos: [], // ?????[];
     type: null // ?Type;
 }) {
     constructor(props) {
@@ -118,7 +123,6 @@ class DocNode extends Record({
             this,
             update('errors', map(_ => new Err(_))),
             update('examples', map(_ => new Example(_))),
-            update('fields', _ => new Fields(_)),
             update('internal', _ => new Internal(_)),
             update('params', map(_ => new Param(_))),
             update('path', _ => new Path(_)),
@@ -126,6 +130,10 @@ class DocNode extends Record({
             update('returns', map(_ => new Returns(_))),
             update('tags', map(_ => new Tag(_)))
         );
+    }
+
+    static createEmpty() {
+        return new DocletNode({});
     }
 };
 
@@ -138,7 +146,7 @@ module.exports = {
     Property,
     Path,
     Internal,
-    Fields,
     Type,
-    DocNode
+    Members,
+    DocletNode
 };
