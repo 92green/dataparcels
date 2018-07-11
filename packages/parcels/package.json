@@ -1,6 +1,6 @@
 {
   "name": "parcels",
-  "version": "0.12.0",
+  "version": "0.13.2",
   "description": "Flexible forms and user input that work really well with React",
   "main": "lib/index.js",
   "license": "UNLICENSED",
