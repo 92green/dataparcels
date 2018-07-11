@@ -12,7 +12,7 @@ type ChildProps = {};
 type ParcelStateHockConfig = {
     debugRender?: boolean,
     initialValue?: (props: Object) => *,
-    modify?: (parcel: Parcel) => Parcel,
+    modify?: (props: Object) => (parcel: Parcel) => Parcel,
     prop: string
 };
 
@@ -22,7 +22,7 @@ export default (config: ParcelStateHockConfig): Function => {
     let {
         initialValue = () => undefined,
         prop,
-        modify = ii => ii,
+        modify = props => ii => ii, /* eslint-disable-line no-unused-vars */
         debugRender = false
     } = config;
 
@@ -50,7 +50,10 @@ export default (config: ParcelStateHockConfig): Function => {
         render(): Node {
             let {parcel} = this.state;
             if(modify) {
-                parcel = parcel.modify(modify);
+                let modifyWithProps = modify(this.props);
+                Types(`ParcelStateHock() expects param "config.modify" to return`, `function`)(modifyWithProps);
+                parcel = modifyWithProps(parcel);
+                Types(`ParcelStateHock() expects param "config.modify(props)" to return`, `parcel`)(parcel);
             }
 
             let props = {

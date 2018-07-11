@@ -59,13 +59,14 @@ test('ParcelStateHock changes should be put back into ParcelStateHock state', tt
 
 
 test('ParcelStateHock config should accept a modify function', tt => {
-    tt.plan(2);
+    tt.plan(3);
     CheckHockChildProps(
         ParcelStateHock({
             initialValue: () => 456,
             prop: "proppy",
-            modify: (parcel) => {
+            modify: (props) => (parcel) => {
                 tt.is(456, parcel.value(), `modify should receive parcel`);
+                tt.deepEqual({}, props, `modify should receive props`);
                 return parcel.modifyValue(ii => ii + 1);
             }
         }),
