@@ -71,7 +71,7 @@ const runtimeTypes = {
         check: ii => typeof ii === "function"
     },
     ['functionArray']: {
-        name: "",
+        name: "functions",
         check: ii => ii
             && Array.isArray(ii)
             && ii.every(jj => typeof jj === "function")
