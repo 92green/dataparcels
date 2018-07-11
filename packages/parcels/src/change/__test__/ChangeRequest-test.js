@@ -60,7 +60,7 @@ test('ChangeRequest merge() should merge other change requests actions', tt => {
 });
 
 
-test('ChangeRequest setMeta() and meta() should work', tt => {
+test('ChangeRequest setChangeRequestMeta() and changeRequestMeta() should work', tt => {
     let expectedMeta = {
         a: 3,
         b: 2
@@ -68,10 +68,10 @@ test('ChangeRequest setMeta() and meta() should work', tt => {
     tt.deepEqual(
         expectedMeta,
         new ChangeRequest()
-            .setMeta({a: 1})
-            .setMeta({b: 2})
-            .setMeta({a: 3})
-            .meta()
+            .setChangeRequestMeta({a: 1})
+            .setChangeRequestMeta({b: 2})
+            .setChangeRequestMeta({a: 3})
+            .changeRequestMeta()
     );
 });
 
@@ -160,4 +160,98 @@ test('ChangeRequest data() should get latest parcel data from treeshare when cal
 
 test('ChangeRequest should throw error if data() is called before setBaseParcel()', tt => {
     tt.is(tt.throws(() => new ChangeRequest().data(), Error).message, `ChangeRequest data() cannot be called before calling setBaseParcel()`);
+});
+
+test('ChangeRequest value() should be a shortcut for data().value', tt => {
+    var action = new Action({
+        type: "set",
+        keyPath: ["b"],
+        payload: {
+            value: 3
+        }
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: 1,
+            b: 2
+        }
+    });
+
+    let value = new ChangeRequest(action)
+        .setBaseParcel(parcel)
+        .value();
+
+    var expectedValue = {
+        a: 1,
+        b: 3
+    };
+
+    tt.deepEqual(expectedValue, value);
+});
+
+test('ChangeRequest meta() should be a shortcut for data().meta', tt => {
+    var action = new Action({
+        type: "setMeta",
+        payload: {
+            meta: {
+                abc: 123
+            }
+        }
+    });
+
+    var parcel = new Parcel();
+
+    let meta = new ChangeRequest(action)
+        .setBaseParcel(parcel)
+        .meta();
+
+    var expectedMeta = {
+        abc: 123
+    };
+
+    tt.deepEqual(expectedMeta, meta);
+});
+
+test('ChangeRequest should keep originId and originPath', (tt: Object) => {
+    tt.plan(2);
+
+    var data = {
+        value: {
+            abc: 123
+        },
+        handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
+            tt.deepEqual(['abc'], changeRequest.originPath());
+            tt.deepEqual('^.abc', changeRequest.originId());
+        }
+    };
+
+    new Parcel(data)
+        .get('abc')
+        .onChange(456);
+        //.modifyChangeValue(value => value + 1)
+});
+
+
+test('ChangeRequest should keep originId and originPath even when going through a batch() where another change is fired before the original one', (tt: Object) => {
+    tt.plan(2);
+
+    var data = {
+        value: {
+            abc: 123,
+            def: 456
+        },
+        handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
+            tt.deepEqual(['abc'], changeRequest.originPath());
+            tt.deepEqual('^.~mc.abc', changeRequest.originId());
+        }
+    };
+
+    new Parcel(data)
+        .modifyChange((parcel, changeRequest) => {
+            parcel.set('def', 789);
+            parcel.dispatch(changeRequest);
+        })
+        .get('abc')
+        .onChange(456);
 });

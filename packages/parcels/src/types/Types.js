@@ -6,6 +6,7 @@ import type Treeshare from '../treeshare/Treeshare';
 import Parcel from '../parcel/Parcel';
 import Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
+import isPlainObject from 'unmutable/lib/util/isPlainObject';
 
 export type ParcelData = {
     value?: *,
@@ -70,7 +71,7 @@ const runtimeTypes = {
         check: ii => typeof ii === "function"
     },
     ['functionArray']: {
-        name: "",
+        name: "functions",
         check: ii => ii
             && Array.isArray(ii)
             && ii.every(jj => typeof jj === "function")
@@ -109,7 +110,7 @@ const runtimeTypes = {
     },
     ['parcelData']: {
         name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
-        check: ii => typeof ii === "object" && ii.hasOwnProperty('value') && !(ii instanceof Parcel)
+        check: ii => isPlainObject(ii) && ii.hasOwnProperty('value')
     },
     ['string']: {
         name: "a string",

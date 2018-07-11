@@ -88,7 +88,7 @@ export default (_this: Parcel): Object => ({
 
     setChangeRequestMeta: (partialMeta: Object) => {
         Types(`setChangeRequestMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
-        _this.dispatch(new ChangeRequest().setMeta(partialMeta));
+        _this.dispatch(new ChangeRequest().setChangeRequestMeta(partialMeta));
     },
 
     ping: () => {
