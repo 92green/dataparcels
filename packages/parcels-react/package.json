@@ -1,19 +1,19 @@
 {
   "name": "parcels-react",
-  "version": "0.13.2",
+  "version": "0.13.4",
   "description": "Parcels + a couple of helpful React components for optimal rendering",
   "main": "lib/index.js",
   "license": "UNLICENSED",
   "author": "Damien Clarke",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blueflag/parcels.git"
+    "url": "git+https://github.com/blueflag/dataparcels.git"
   },
   "files": [
     "lib"
   ],
   "bugs": {
-    "url": "https://github.com/blueflag/parcels/issues"
+    "url": "https://github.com/blueflag/dataparcels/issues"
   },
   "private": false,
   "scripts": {
@@ -22,7 +22,7 @@
     "watch": "yarn run build -w"
   },
   "dependencies": {
-    "parcels": "^0.13.2",
+    "parcels": "^0.13.4",
     "unmutable": "^0.26.0"
   },
   "devDependencies": {

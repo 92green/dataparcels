@@ -1,19 +1,19 @@
 {
   "name": "parcels",
-  "version": "0.13.2",
+  "version": "0.13.4",
   "description": "Flexible forms and user input that work really well with React",
   "main": "lib/index.js",
   "license": "UNLICENSED",
   "author": "Damien Clarke",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blueflag/parcels.git"
+    "url": "git+https://github.com/blueflag/dataparcels.git"
   },
   "files": [
     "lib"
   ],
   "bugs": {
-    "url": "https://github.com/blueflag/parcels/issues"
+    "url": "https://github.com/blueflag/dataparcels/issues"
   },
   "private": false,
   "scripts": {
