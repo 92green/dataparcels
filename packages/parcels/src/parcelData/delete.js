@@ -1,13 +1,16 @@
 // @flow
-import type {Key, Index, ParcelDataEvaluator} from '../types/Types';
+import type {Key, Index, Property, ParcelData} from '../types/Types';
 
+import keyOrIndexToProperty from './keyOrIndexToProperty';
 import del from 'unmutable/lib/delete';
 import update from 'unmutable/lib/update';
-import pipe from 'unmutable/lib/util/pipe';
+import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index): ParcelDataEvaluator => {
-    let fn = del(key);
-    return pipe(
+export default (key: Key|Index) => (parcelData: ParcelData): ParcelData => {
+    let property: Property = keyOrIndexToProperty(key)(parcelData);
+    let fn = del(property);
+    return pipeWith(
+        parcelData,
         update('value', fn),
         update('child', fn)
     );

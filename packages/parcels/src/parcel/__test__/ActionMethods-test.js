@@ -109,6 +109,37 @@ test('Parcel.batch() should batch actions', (tt: Object) => {
     tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
 });
 
+test('Parcel.batch() should batch correctly with non-idempotent actions', (tt: Object) => {
+    tt.plan(2);
+
+    var functionCalls = [];
+    var expectedFunctionCalls = [
+        'batch',
+        'push(456)',
+        'push(789)',
+        'handleChange'
+    ];
+
+    var data = {
+        value: [],
+        handleChange: (parcel) => {
+            let {value} = parcel.data();
+            tt.deepEqual(value, [456,789]);
+            functionCalls.push("handleChange");
+        }
+    };
+
+    new Parcel(data).batch((parcel) => {
+        functionCalls.push("batch");
+        parcel.push(456);
+        functionCalls.push("push(456)");
+        parcel.push(789);
+        functionCalls.push("push(789)");
+    });
+
+    tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
+});
+
 test('Parcel.batch() should not fire handleChange if no actions called within batch', (tt: Object) => {
     var handleChangeCalled = false;
 
