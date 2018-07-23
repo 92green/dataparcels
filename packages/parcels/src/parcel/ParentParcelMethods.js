@@ -27,7 +27,7 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
         let childParcelData: ParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
 
         let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
-            _this.dispatch(changeRequest._unget(key));
+            _this.dispatch(changeRequest._unget(childParcelData.key));
         };
 
         return _this._create({

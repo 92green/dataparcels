@@ -27,14 +27,6 @@ test('ElementParcel.insertBeforeSelf() should insert', tt => {
 
     var expectedAction = {
         type: "insertBefore",
-        keyPath: [1],
-        payload: {
-            value: 4
-        }
-    };
-
-    var expectedActionWithKey = {
-        type: "insertBefore",
         keyPath: ["#b"],
         payload: {
             value: 4
@@ -55,7 +47,7 @@ test('ElementParcel.insertBeforeSelf() should insert', tt => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedActionWithKey, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
         }
     })
         .get("#b")
@@ -87,14 +79,6 @@ test('ElementParcel.insertAfterSelf() should insert', tt => {
 
     var expectedAction = {
         type: "insertAfter",
-        keyPath: [1],
-        payload: {
-            value: 4
-        }
-    };
-
-    var expectedActionWithKey = {
-        type: "insertAfter",
         keyPath: ["#b"],
         payload: {
             value: 4
@@ -115,7 +99,7 @@ test('ElementParcel.insertAfterSelf() should insert', tt => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedActionWithKey, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
         }
     })
         .get("#b")
@@ -146,7 +130,7 @@ test('ElementParcel.swapWithSelf() should swap', tt => {
 
     var expectedAction = {
         type: "swap",
-        keyPath: [0],
+        keyPath: ["#a"],
         payload: {
             swapKey: 2
         }
@@ -155,8 +139,8 @@ test('ElementParcel.swapWithSelf() should swap', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with indexes');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with indexes');
+            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
+            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     })
         .get(0)
@@ -187,7 +171,7 @@ test('ElementParcel.swapNextWithSelf() should swapNext', tt => {
 
     var expectedAction = {
         type: "swapNext",
-        keyPath: [0],
+        keyPath: ["#a"],
         payload: {}
     };
 
@@ -218,7 +202,7 @@ test('ElementParcel.swapNextWithSelf() should swapNext', tt => {
 
 
 test('ElementParcel.swapPrevWithSelf() should swapPrev', tt => {
-    tt.plan(4);
+    tt.plan(2);
 
     var data = {
         value: [1,2,3],
@@ -240,20 +224,6 @@ test('ElementParcel.swapPrevWithSelf() should swapPrev', tt => {
     };
 
     var expectedAction = {
-        type: "swapPrev",
-        keyPath: [1],
-        payload: {}
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
-        }
-    }).swapPrev(1);
-
-    expectedAction = {
         type: "swapPrev",
         keyPath: ["#b"],
         payload: {}
