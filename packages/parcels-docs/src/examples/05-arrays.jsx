@@ -25,7 +25,6 @@ export default class ExampleArrays extends React.Component {
                 {name: "d"}
             ],
             handleChange: (items, cr) => {
-                console.log("cr", cr);
                 this.setState({items});
             }
         });
@@ -44,8 +43,6 @@ export default class ExampleArrays extends React.Component {
             parcel.dispatch(changeRequest);
         });
 
-        console.log(items.value());
-
         return example(this, desc, <div>
             {items.toArray((item) => <PureParcel parcel={item} key={item.key()}>
                 {(item) => <div>
@@ -57,8 +54,12 @@ export default class ExampleArrays extends React.Component {
                     <button className="Button Button-inline" onClick={() => item.insertAfterSelf({name: "new"})}>+</button>
                 </div>}
             </PureParcel>)}
-            <button className="Button Button-inline" onClick={() => items.delete("#b")}>delete #b</button>
-            <button className="Button Button-inline" onClick={() => items.delete(1)}>delete #b</button>
+            <button className="Button Button-inline" onClick={() => items.delete("#c")}>delete #c</button>
+            <button className="Button Button-inline" onClick={() => items.delete(2)}>delete 2</button>
+            <button className="Button Button-inline" onClick={() => items.swapPrev('#b')}>swapPrev #b</button>
+            <button className="Button Button-inline" onClick={() => items.swapPrev(2)}>swapPrev 2</button>
+            <button className="Button Button-inline" onClick={() => items.swapNext('#b')}>swapNext #b</button>
+            <button className="Button Button-inline" onClick={() => items.swapNext(2)}>swapNext 2</button>
         </div>);
     }
 }
