@@ -67,6 +67,7 @@ export default class Parcel {
 
     // get methods
     // - type methods
+
     isChild: Function;
     isElement: Function;
     isIndexed: Function;
@@ -156,13 +157,14 @@ export default class Parcel {
     // - value parcel methods
     setInternalLocationShareData: Function;
 
-    constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
+    constructor(config: ParcelConfig = {}) {
         Types(`Parcel() expects param "config" to be`, `object`)(config);
 
         let {
             handleChange,
             value,
-            debugRender = false
+            debugRender = false,
+            _internal
         } = config;
 
         Types(`Parcel() expects param "config.handleChange" to be`, `functionOptional`)(handleChange);
@@ -176,7 +178,7 @@ export default class Parcel {
             modifiers,
             parent,
             treeshare
-        } = _configInternal || DEFAULT_CONFIG_INTERNAL;
+        } = _internal || DEFAULT_CONFIG_INTERNAL;
 
         this._onHandleChange = handleChange;
         this._onDispatch = onDispatch;
@@ -256,17 +258,17 @@ export default class Parcel {
 
         let parcel: Parcel = new Parcel(
             {
-                value
+                value,
+                _internal: {
+                    child,
+                    meta,
+                    id,
+                    modifiers: this._modifiers,
+                    onDispatch,
+                    parent,
+                    treeshare: this._treeshare
+                }
             },
-            {
-                child,
-                meta,
-                id,
-                modifiers: this._modifiers,
-                onDispatch,
-                parent,
-                treeshare: this._treeshare
-            }
         );
 
         return parent
