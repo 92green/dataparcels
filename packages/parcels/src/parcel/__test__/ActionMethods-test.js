@@ -2,84 +2,8 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-test('Parcel._buffer() should buffer any actions and _flush() should dispatch them', (tt: Object) => {
-    tt.plan(4);
-
-    var functionCalls = [];
-    var expectedFunctionCalls = [
-        '_buffer',
-        'onChange(456)',
-        'onChange(789)',
-        'handleChange'
-    ];
-
-    var data = {
-        value: 123,
-        handleChange: (parcel) => {
-            let {value} = parcel.data();
-            tt.is(value, 789);
-            functionCalls.push("handleChange");
-        }
-    };
-
-    let parcel = new Parcel(data);
-    parcel._buffer();
-    functionCalls.push("_buffer");
-    parcel.onChange(456);
-    tt.is(456, parcel.value(), 'parcel contains correct value after first onchange');
-    functionCalls.push("onChange(456)");
-    parcel.onChange(789);
-    tt.is(789, parcel.value(), 'parcel contains correct value after second onchange');
-    functionCalls.push("onChange(789)");
-    parcel._flush();
-
-    tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
-});
-
-test('Parcel._buffer() calls should be nestable', (tt: Object) => {
-    tt.plan(4);
-
-    var functionCalls = [];
-    var expectedFunctionCalls = [
-        '_buffer',
-        'onChange(456)',
-        '_buffer 2',
-        'onChange(789)',
-        'handleChange'
-    ];
-
-    var data = {
-        value: 123,
-        handleChange: (parcel) => {
-            let {value} = parcel.data();
-            tt.is(value, 789);
-            functionCalls.push("handleChange");
-        }
-    };
-
-    let parcel = new Parcel(data);
-    parcel._buffer();
-    functionCalls.push("_buffer");
-    parcel.onChange(456);
-    tt.is(456, parcel.value(), 'parcel contains correct value after first onchange');
-    functionCalls.push("onChange(456)");
-
-    parcel._buffer();
-    functionCalls.push("_buffer 2");
-
-    parcel.onChange(789);
-    tt.is(789, parcel.value(), 'parcel contains correct value after second onchange');
-    functionCalls.push("onChange(789)");
-
-    parcel._flush();
-    parcel._flush();
-
-    tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
-});
-
-
 test('Parcel.batch() should batch actions', (tt: Object) => {
-    tt.plan(2);
+    tt.plan(4);
 
     var functionCalls = [];
     var expectedFunctionCalls = [
@@ -89,11 +13,12 @@ test('Parcel.batch() should batch actions', (tt: Object) => {
         'handleChange'
     ];
 
+
     var data = {
         value: 123,
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            tt.is(value, 789);
+            tt.is(value, 789, 'parcel contains correct result');
             functionCalls.push("handleChange");
         }
     };
@@ -101,8 +26,10 @@ test('Parcel.batch() should batch actions', (tt: Object) => {
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.onChange(456);
+        tt.is(456, parcel.value(), 'parcel contains correct mutated value after first onchange');
         functionCalls.push("onChange(456)");
         parcel.onChange(789);
+        tt.is(789, parcel.value(), 'parcel contains correct mutated value after second onchange');
         functionCalls.push("onChange(789)");
     });
 
@@ -110,7 +37,7 @@ test('Parcel.batch() should batch actions', (tt: Object) => {
 });
 
 test('Parcel.batch() should batch correctly with non-idempotent actions', (tt: Object) => {
-    tt.plan(2);
+    tt.plan(4);
 
     var functionCalls = [];
     var expectedFunctionCalls = [
@@ -124,7 +51,7 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', (tt: O
         value: [],
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            tt.deepEqual(value, [456,789]);
+            tt.deepEqual(value, [456,789], 'parcel contains correct result');
             functionCalls.push("handleChange");
         }
     };
@@ -132,8 +59,10 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', (tt: O
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.push(456);
+        tt.deepEqual([456], parcel.value(), 'parcel contains correct mutated value after first onchange');
         functionCalls.push("push(456)");
         parcel.push(789);
+        tt.deepEqual([456, 789], parcel.value(), 'parcel contains correct mutated value after second onchange');
         functionCalls.push("push(789)");
     });
 
@@ -152,4 +81,47 @@ test('Parcel.batch() should not fire handleChange if no actions called within ba
 
     new Parcel(data).batch((parcel) => {});
     tt.false(handleChangeCalled);
+});
+
+test('Parcel.batch() should be nestable', (tt: Object) => {
+    tt.plan(5);
+
+    var functionCalls = [];
+    var expectedFunctionCalls = [
+        'batch',
+        'onChange(123)',
+        'batch again',
+        'onChange(456)',
+        'out again',
+        'onChange(789)',
+        'handleChange'
+    ];
+
+    var data = {
+        value: 123,
+        handleChange: (parcel) => {
+            let {value} = parcel.data();
+            tt.is(value, 789, 'parcel contains correct result');
+            functionCalls.push("handleChange");
+        }
+    };
+
+    new Parcel(data).batch((parcel) => {
+        functionCalls.push("batch");
+        parcel.onChange(123);
+        tt.is(123, parcel.value(), 'parcel contains correct mutated value after first onchange');
+        functionCalls.push("onChange(123)");
+        parcel.batch((parcel) => {
+            functionCalls.push("batch again");
+            parcel.onChange(456);
+            tt.is(456, parcel.value(), 'parcel contains correct mutated value after second onchange');
+            functionCalls.push("onChange(456)");
+        });
+        functionCalls.push("out again");
+        parcel.onChange(789);
+        tt.is(789, parcel.value(), 'parcel contains correct mutated value after third onchange');
+        functionCalls.push("onChange(789)");
+    });
+
+    tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
 });
