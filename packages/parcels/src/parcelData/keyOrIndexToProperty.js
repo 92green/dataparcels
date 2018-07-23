@@ -13,7 +13,7 @@ import get from 'unmutable/lib/get';
 import isIndexed from 'unmutable/lib/util/isIndexed';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index) => (parcelData: ParcelData): Property => {
+export default (key: Key|Index) => (parcelData: ParcelData): ?Property => {
     if(!isIndexed(parcelData.value) || typeof key === "number") {
         return key;
     }

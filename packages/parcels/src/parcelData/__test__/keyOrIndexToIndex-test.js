@@ -24,6 +24,16 @@ test('keyOrIndexToIndex() accepts key and returns index for array', tt => {
     tt.is(0, keyOrIndexToIndex("#a")(data));
 });
 
+test('keyOrIndexToIndex() accepts non existent key and returns undefined', tt => {
+    let data = {
+        value: [
+            1,
+            2
+        ]
+    };
+
+    tt.is(undefined, keyOrIndexToIndex("#z")(data));
+});
 
 test('keyOrIndexToIndex() throws error for object', tt => {
     let data = {
