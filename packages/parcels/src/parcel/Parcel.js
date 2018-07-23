@@ -47,17 +47,14 @@ export default class Parcel {
     _id: ParcelId;
     _modifiers: Modifiers;
     _treeshare: Treeshare;
-    _dispatchBuffer: Array<?ChangeRequest> = [];
     _parcelTypes: ParcelTypes;
     _applyModifiers: Function;
+    _dispatchBuffer: ?Function;
 
     //
     // private methods
     //
 
-    // - action methods
-    _buffer: Function;
-    _flush: Function;
     // - id methods
     _typedPathString: Function;
 
