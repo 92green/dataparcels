@@ -44,3 +44,15 @@ test('delete should work by key', (tt: Object) => {
 
     tt.deepEqual(expectedParcelData, del("#b")(parcelData));
 });
+
+test('delete should work by non-existent key', (tt: Object) => {
+    let parcelData = {
+        value: [1,3],
+        child: [
+            {key:"#a"},
+            {key:"#c"}
+        ]
+    };
+
+    tt.deepEqual(parcelData, del("#b")(parcelData));
+});

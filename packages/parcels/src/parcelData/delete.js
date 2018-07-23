@@ -7,7 +7,11 @@ import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (key: Key|Index) => (parcelData: ParcelData): ParcelData => {
-    let property: Property = keyOrIndexToProperty(key)(parcelData);
+    let property: ?Property = keyOrIndexToProperty(key)(parcelData);
+    if(typeof property === "undefined") {
+        return parcelData;
+    }
+
     let fn = del(property);
     return pipeWith(
         parcelData,
