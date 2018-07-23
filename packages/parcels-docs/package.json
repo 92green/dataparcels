@@ -28,7 +28,7 @@
     "mdxc": "^1.1.1",
     "prismjs": "^1.11.0",
     "react-helmet": "^5.2.0",
-    "stampy": "^0.26.1",
+    "stampy": "^0.41.0",
     "unmutable": "^0.29.2"
   }
 }
