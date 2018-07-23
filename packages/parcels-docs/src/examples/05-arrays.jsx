@@ -24,7 +24,10 @@ export default class ExampleArrays extends React.Component {
                 {name: "c"},
                 {name: "d"}
             ],
-            handleChange: (items) => this.setState({items})
+            handleChange: (items, cr) => {
+                console.log("cr", cr);
+                this.setState({items});
+            }
         });
 
         this.state = {
@@ -37,9 +40,9 @@ export default class ExampleArrays extends React.Component {
         let isEmail = (value) => /.+@.+\..+/.test(value) ? null : "This field must contain an email address";
         let isQuantity = (value) => /^\d+$/.test(value) ? null : "This field must contain a whole number";
 
-        let items = this.state.items/*.modifyChange((parcel, changeRequest) => {
+        let items = this.state.items.modifyChange((parcel, changeRequest) => {
             parcel.dispatch(changeRequest);
-        });*/
+        });
 
         console.log(items.value());
 
@@ -54,6 +57,8 @@ export default class ExampleArrays extends React.Component {
                     <button className="Button Button-inline" onClick={() => item.insertAfterSelf({name: "new"})}>+</button>
                 </div>}
             </PureParcel>)}
+            <button className="Button Button-inline" onClick={() => items.delete("#b")}>delete #b</button>
+            <button className="Button Button-inline" onClick={() => items.delete(1)}>delete #b</button>
         </div>);
     }
 }

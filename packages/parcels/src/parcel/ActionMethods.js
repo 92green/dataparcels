@@ -19,7 +19,16 @@ export default (_this: Parcel): Object => ({
     },
 
     _flush: () => {
-        _this.dispatch(_this._dispatchBuffer.pop());
+        let shouldFlush: boolean = pipeWith(
+            _this._dispatchBuffer,
+            last(),
+            cc => cc && cc.actions().length > 0
+        );
+
+        let changeRequest = _this._dispatchBuffer.pop();
+        if(shouldFlush) {
+            _this.dispatch(changeRequest, true);
+        }
     },
 
     _handleChange: (_onHandleChange: Function, changeRequest: ChangeRequest) => {
@@ -41,6 +50,7 @@ export default (_this: Parcel): Object => ({
         } = _this;
 
         _this._treeshare.dispatch.markPathAsDispatched(_this.path());
+        // ^ what if this is done during a batch()? should it count?
 
         let changeRequest: ChangeRequest = dispatchable instanceof ChangeRequest
             ? dispatchable
@@ -75,17 +85,6 @@ export default (_this: Parcel): Object => ({
         Types(`batch() expects param "batcher" to be`, `function`)(batcher);
         _this._buffer(changeRequest);
         batcher(_this);
-
-        let shouldFlush: boolean = pipeWith(
-            _this._dispatchBuffer,
-            last(),
-            cc => cc && cc.actions().length > 0
-        );
-
-        if(shouldFlush) {
-            _this._flush();
-        } else {
-            _this._dispatchBuffer.pop();
-        }
+        _this._flush();
     }
 });
