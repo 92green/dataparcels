@@ -1,18 +1,22 @@
 // @flow
-import React from "react";
 import type {Node} from "react";
+
+import React from "react";
 import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import {Wrapper} from 'dcme-style';
-import Navigation from '../components/Navigation';
-import {Column, Grid, Head} from 'dcme-style';
+import {Grid, GridItem, Head} from 'dcme-style';
 
 import "./index.scss";
 
-function TemplateWrapper(props: Object): Node {
+type Props = {
+    children: *,
+    data: *
+};
+
+export default (props: Props): Node => {
     const {
-        children,
-        wrapper = true
+        children
     } = props;
 
     const {allSitePage} = props.data;
@@ -25,21 +29,11 @@ function TemplateWrapper(props: Object): Node {
             ]}
         />
         <Head />
-        <Grid modifier="auto">
-            <Column modifier="shrink padding">
-                <Navigation allSitePage={allSitePage}/>
-            </Column>
-            <Column modifier="padding">
-                {wrapper
-                    ? <Wrapper>{children()}</Wrapper>
-                    : children()
-                }
-            </Column>
-        </Grid>
+        <Wrapper>{children()}</Wrapper>
     </div>;
-}
+};
 
-
+// $FlowFixMe
 export const query = graphql`
     query NavigationQuery {
       allSitePage {
@@ -52,9 +46,3 @@ export const query = graphql`
       }
     }
 `;
-
-TemplateWrapper.propTypes = {
-    children: PropTypes.func
-};
-
-export default TemplateWrapper;

@@ -35,19 +35,6 @@ const DEFAULT_CONFIG_INTERNAL = {
     treeshare: undefined
 };
 
-/**
- * The Parcel class is a something.
- *
- * @example
- * new Parcel({
- *     value: 123,
- *     handleChange: () => {}
- * });
- *
- * @param {ParcelConfig} [config] Config
- *
- */
-
 export default class Parcel {
 
     //

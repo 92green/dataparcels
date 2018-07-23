@@ -5,7 +5,6 @@ import {Box, Column, Grid, Tab, TabSet, Terminal, Text} from 'dcme-style';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import Link from 'gatsby-link';
-import Markdown from './Markdown';
 import Parcel from 'parcels';
 import QueryStringHock from 'stampy/lib/hock/QueryStringHock';
 
@@ -57,7 +56,7 @@ const Example = (props: ExampleProps): Node => {
             {previous && <Link className="Button" to={previous}>{"<"} Prev</Link>}
         </div>
         <div className="Example_content">
-            {description && <Markdown data={description} />}
+            {description}
             <Box modifier="marginRowKilo">
                 <Grid>
                     <Column modifier="6 padding">

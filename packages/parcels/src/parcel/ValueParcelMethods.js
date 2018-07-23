@@ -12,25 +12,9 @@ export default (_this: Parcel): Object => ({
 
     // get methods
 
-    /**
-     *  Raw raw raw
-     *
-     *  @memberof Parcel
-     *  @param {Object} name - A name for the type of entity
-     *  @return {ParcelData} Something
-     */
-
     raw: (): ParcelData => {
         return _this._parcelData;
     },
-
-    /**
-     *  Data data data
-     *
-     *  @memberof Parcel
-     *  @param {Object} name - A name for the type of entity
-     *  @return {ParcelData} Something
-     */
 
     data: (): ParcelData => {
         return pipeWith(
@@ -52,13 +36,6 @@ export default (_this: Parcel): Object => ({
         value: _this.value(),
         onChange: _this.onChangeDOM
     }),
-
-    /**
-     *  Meta meta meta
-     *
-     *  @memberof Parcel
-     *  @return {*} Anything
-     */
 
     meta: (): * => {
         let {meta} = _this._parcelData;

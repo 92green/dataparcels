@@ -1,11 +1,13 @@
-//@flow
-import React from "react";
+// @flow
+import React from 'react';
+import {Box, CenteredLanding, Text} from 'dcme-style';
+import Link from 'gatsby-link';
 
-const NotFoundPage = () => (
-    <div>
-        <h1>NOT FOUND</h1>
-        <p>You just hit a route that doesn't exist... the sadness.</p>
-    </div>
-);
-
-export default NotFoundPage;
+export default () => <Box modifier="invertedCopy">
+    <CenteredLanding
+        top={() => <Text element="h1" modifier="sizeTera center">404</Text>}
+        bottom={() => <Text element="p" modifier="monospace center margin">
+            There's nothing here. Try heading back to the <Link to="/" className="Link">homepage</Link>.
+        </Text>}
+    />
+</Box>;
