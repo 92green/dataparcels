@@ -11,7 +11,7 @@ import isPlainObject from 'unmutable/lib/util/isPlainObject';
 export type ParcelData = {
     value?: *,
     child?: *,
-    key?: string,
+    key?: Key,
     meta?: Object
 };
 

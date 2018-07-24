@@ -17,7 +17,7 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 export default (key: Key|Index, notFoundValue: ?*) => (parcelData: ParcelData): ParcelData => {
 
     parcelData = prepareChildKeys()(parcelData);
-    let property: Property = keyOrIndexToProperty(key)(parcelData);
+    let property: ?Property = keyOrIndexToProperty(key)(parcelData);
     let stringKey: Key = keyOrIndexToKey(key)(parcelData);
 
     return updateMeta()({

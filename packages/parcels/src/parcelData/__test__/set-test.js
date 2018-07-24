@@ -121,3 +121,16 @@ test('set should work with hashKey', (tt: Object) => {
 
     tt.deepEqual(expectedParcelData, set('#b', {value: 4})(parcelData));
 });
+
+test('set should do nothing with non-existent hashKey', (tt: Object) => {
+    let parcelData = {
+        value: [1,2,3],
+        child: [
+            {key:"#a"},
+            {key:"#b"},
+            {key:"#c"}
+        ]
+    };
+
+    tt.deepEqual(parcelData, set('#z', {value: 4})(parcelData));
+});
