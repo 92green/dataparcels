@@ -8,5 +8,14 @@ If the key / index doesn't exist, a Parcel with a value of `notSetValue` will be
  `undefined` will be returned.
  
 ```js
+let parcel = new Parcel({
+    value: {
+        abc: 123,
+        def: 456
+    }
+});
 
+parcel.get('abc').value(); // returns 123
+
+parcel.get('xyz').value(); // returns undefined
 ```
