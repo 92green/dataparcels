@@ -20,7 +20,7 @@ type State = {
     parcel: Parcel
 };
 
-export default class PureParcel extends React.Component<Props, State> {
+export default class PureParcel extends React.Component<Props, State> { /* eslint-disable-line react/no-deprecated */
 
     changeCount: number = 0;
 

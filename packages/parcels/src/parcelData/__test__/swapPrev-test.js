@@ -20,9 +20,10 @@ test('swapPrev should work', (tt: Object) => {
             {key:"#b"}
         ]
     };
-
-
-    tt.deepEqual(expectedParcelData, swapPrev(2)(parcelData));
+    tt.deepEqual(expectedParcelData, swapPrev(2)(parcelData), 'should work with in range number');
+    tt.deepEqual(expectedParcelData, swapPrev(-1)(parcelData), 'should work with negative');
+    tt.deepEqual(expectedParcelData, swapPrev(5)(parcelData), 'should work with positive wrapped number');
+    tt.deepEqual(expectedParcelData, swapPrev(-4)(parcelData), 'should work with negative wrapped number');
 });
 
 test('swapPrev should work with hashKeys', (tt: Object) => {
@@ -70,7 +71,7 @@ test('swapPrev should work with zero', (tt: Object) => {
     tt.deepEqual(expectedParcelData, swapPrev(0)(parcelData));
 });
 
-test('swapPrev should work with negative numbers', (tt: Object) => {
+test('swapPrev should do nothing if given non existent key', (tt: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -80,15 +81,5 @@ test('swapPrev should work with negative numbers', (tt: Object) => {
         ]
     };
 
-    let expectedParcelData = {
-        value: [1,3,2],
-        child: [
-            {key:"#a"},
-            {key:"#c"},
-            {key:"#b"}
-        ]
-    };
-
-
-    tt.deepEqual(expectedParcelData, swapPrev(-1)(parcelData));
+    tt.deepEqual(parcelData, swapPrev("#z")(parcelData));
 });

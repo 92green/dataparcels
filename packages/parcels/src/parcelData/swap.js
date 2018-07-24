@@ -13,8 +13,12 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (keyA: Key|Index, keyB: Key|Index) => (parcelData: ParcelData): ParcelData => {
 
-    let indexA: Index = keyOrIndexToIndex(keyA)(parcelData);
-    let indexB: Index = keyOrIndexToIndex(keyB)(parcelData);
+    let indexA: ?Index = keyOrIndexToIndex(keyA)(parcelData);
+    let indexB: ?Index = keyOrIndexToIndex(keyB)(parcelData);
+
+    if(typeof indexA === "undefined" || typeof indexB === "undefined") {
+        return parcelData;
+    }
 
     return pipeWith(
         parcelData,

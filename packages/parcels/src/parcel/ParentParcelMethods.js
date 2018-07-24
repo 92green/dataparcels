@@ -24,10 +24,11 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
 
     get: (key: Key|Index, notFoundValue: ?*): Parcel => {
         Types(`get() expects param "key" to be`, `keyIndex`)(key);
-        let childParcelData: ParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
+        let childParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
 
         let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
-            _this.dispatch(changeRequest._unget(key));
+            // $FlowFixMe - key *will* exist, but our types are too flexible and can't tell that
+            _this.dispatch(changeRequest._unget(childParcelData.key));
         };
 
         return _this._create({
