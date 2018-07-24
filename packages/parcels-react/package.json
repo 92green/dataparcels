@@ -1,6 +1,6 @@
 {
   "name": "parcels-react",
-  "version": "0.13.4",
+  "version": "0.13.5",
   "description": "Parcels + a couple of helpful React components for optimal rendering",
   "main": "lib/index.js",
   "license": "UNLICENSED",
@@ -22,7 +22,7 @@
     "watch": "yarn run build -w"
   },
   "dependencies": {
-    "parcels": "^0.13.4",
+    "parcels": "^0.13.5",
     "unmutable": "^0.26.0"
   },
   "devDependencies": {

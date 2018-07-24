@@ -20,7 +20,12 @@ import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (key: Key|Index, input: ParcelData) => (parcelData: ParcelData): ParcelData => {
-    let property: Property = keyOrIndexToProperty(key)(parcelData);
+    let property: ?Property = keyOrIndexToProperty(key)(parcelData);
+
+    if(typeof property === "undefined") {
+        return parcelData;
+    }
+
     return pipeWith(
         parcelData,
         has('value')(input) ? update('value', set(property, input.value)) : identity(),

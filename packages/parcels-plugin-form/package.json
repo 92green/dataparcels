@@ -1,6 +1,6 @@
 {
   "name": "parcels-plugin-form",
-  "version": "0.13.4",
+  "version": "0.13.5",
   "description": "Parcels modifiers to add classic web form behaviours like submit, hooks for validators etc.",
   "main": "lib/index.js",
   "license": "UNLICENSED",
@@ -22,7 +22,7 @@
     "watch": "yarn run build -w"
   },
   "devDependencies": {
-    "parcels": "^0.13.4",
+    "parcels": "^0.13.5",
     "unmutable": "0.27.0"
   },
   "peerDependencies": {

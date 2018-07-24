@@ -46,3 +46,17 @@ test('swap should work with hashKeys', (tt: Object) => {
 
     tt.deepEqual(expectedParcelData, swap("#b","#c")(parcelData));
 });
+
+test('swap should do nothing with non existent hashKeys', (tt: Object) => {
+    let parcelData = {
+        value: [1,2,3],
+        child: [
+            {key:"#a"},
+            {key:"#b"},
+            {key:"#c"}
+        ]
+    };
+
+    tt.deepEqual(parcelData, swap("#z","#c")(parcelData));
+    tt.deepEqual(parcelData, swap("#a","#z")(parcelData));
+});
