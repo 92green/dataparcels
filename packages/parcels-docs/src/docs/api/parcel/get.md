@@ -1,4 +1,4 @@
-# get
+## get
 
 ```
 get(key: string|number): Parcel
@@ -20,7 +20,7 @@ parcel.get('xyz').value(); // returns undefined
 parcel.get('xyz', 789).value(); // returns 789
 ```
 
-## Indexed Parcels
+### Indexed Parcels
 
 When called on an `IndexedParcel`, `get()` can accept an `index` or a `key`. If `index` is negative...
 

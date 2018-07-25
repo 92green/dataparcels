@@ -3004,12 +3004,13 @@ dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
 
-dcme-style@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.13.0.tgz#a4b965c66be20fcec9d6eb561555665f0239d613"
+dcme-style@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.14.0.tgz#83d0087bfd455a4640a9c4ca0bb4a0121001595c"
   dependencies:
     react-goose "0.2.2"
     react-select "^1.0.0-rc.4"
+    stampy "^0.39.0"
     unmutable "^0.29.2"
 
 death@^1.0.0:
@@ -6784,9 +6785,9 @@ mdurl@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
 
-mdx-loader@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/mdx-loader/-/mdx-loader-1.1.1.tgz#a528818ae14037edffe189247bb2248abf732add"
+mdx-loader@1.0.0-beta.3:
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/mdx-loader/-/mdx-loader-1.0.0-beta.3.tgz#189f972fd84d1ba9ae4a4e9c35a805357a0ce741"
   dependencies:
     front-matter "^2.1.2"
     loader-utils "^1.1.0"
@@ -10255,6 +10256,17 @@ stackframe@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-1.0.4.tgz#357b24a992f9427cba6b545d96a14ed2cbca187b"
 
+stampy@^0.39.0:
+  version "0.39.0"
+  resolved "https://registry.yarnpkg.com/stampy/-/stampy-0.39.0.tgz#b37c2ca0c6d8af0ff97a05adf9b163871375bf96"
+  dependencies:
+    blueflag-test "^0.18.1"
+    classnames "^2.2.5"
+    element-resize-detector "^1.1.12"
+    is-plain-object "^2.0.3"
+    unmutable "^0.23.0"
+    url-search-params "^0.9.0"
+
 stampy@^0.40.0:
   version "0.40.0"
   resolved "https://registry.yarnpkg.com/stampy/-/stampy-0.40.0.tgz#621f055f25bee7219ee23eac2718e786afca676f"
@@ -11042,6 +11054,13 @@ unmutable@0.27.0:
 unmutable@0.29.2, unmutable@^0.29.2:
   version "0.29.2"
   resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.29.2.tgz#8463a104c7088e13c5b958131c14fa2bd01ae65f"
+  dependencies:
+    fast-deep-equal "^1.0.0"
+    is-plain-object "^2.0.4"
+
+unmutable@^0.23.0:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.23.0.tgz#ad6f01e19a1a1f72b5f45ab6da856d38fb3e9121"
   dependencies:
     fast-deep-equal "^1.0.0"
     is-plain-object "^2.0.4"
