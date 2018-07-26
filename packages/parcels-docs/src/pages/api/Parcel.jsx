@@ -4,9 +4,11 @@ import React from 'react';
 import {Box, Grid, GridItem, NavigationList, NavigationListItem, Text, Typography} from 'dcme-style';
 import Link from 'gatsby-link';
 import Markdown_Parcel from '../../docs/api/parcel/Parcel.md';
+import Markdown_value from '../../docs/api/parcel/value.md';
 import Markdown_get from '../../docs/api/parcel/get.md';
 
 const md = {
+    value: Markdown_value,
     get: Markdown_get
 }
 
@@ -107,17 +109,17 @@ const renderApi = () => api
         }
         return <Link className="Link" to={`#${line}`}>{line}</Link>;
     })
-    .map(line => <NavigationListItem>{line}</NavigationListItem>);
+    .map((line, key) => <NavigationListItem key={key}>{line}</NavigationListItem>);
 
 const renderDoclets = () => api
     .split('\n')
     .filter(_ => _)
-    .map(name => {
+    .map((name, key) => {
         let Component = md[name];
         if(!Component) {
             return null;
         }
-        return <Box modifier="marginBottomMega">
+        return <Box key={key} modifier="marginBottomGiga">
             <a name={name} />
             <Text element="h3" modifier="sizeKilo marginKilo">{name}()</Text>
             <Typography>
@@ -130,9 +132,11 @@ const renderDoclets = () => api
 export default () => <Box>
     <Grid>
         <GridItem modifier="9 padding">
-            <Typography>
-                <Markdown_Parcel />
-            </Typography>
+            <Box modifier="marginBottomGiga">
+                <Typography>
+                    <Markdown_Parcel />
+                </Typography>
+            </Box>
             {renderDoclets()}
         </GridItem>
         <GridItem modifier="3 padding">

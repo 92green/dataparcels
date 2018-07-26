@@ -1,3 +1,11 @@
 # Parcel
 
-Parcels description goes here.
+```flow
+new Parcel({
+    value: any,
+    handleChange: Function
+});
+```
+
+* `value`
+* `handleChange`

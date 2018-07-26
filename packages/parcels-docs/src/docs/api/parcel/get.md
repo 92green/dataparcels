@@ -2,7 +2,7 @@ import IndexedKeys from '../../notes/IndexedKeys.md';
 
 ```flow
 get(key: string|number): Parcel
-get(key: string|number, notSetValue: *): Parcel
+get(key: string|number, notSetValue: any): Parcel
 ```
 
 Returns a Parcel containing the value associated with the provided key / index.
