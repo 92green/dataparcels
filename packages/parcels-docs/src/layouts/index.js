@@ -19,5 +19,5 @@ export default ({children}: Props): Node => <div>
         ]}
     />
     <Head />
-    <Wrapper>{children()}</Wrapper>
+    <Wrapper modifier="marginBottom">{children()}</Wrapper>
 </div>;

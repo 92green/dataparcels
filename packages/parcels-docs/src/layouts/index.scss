@@ -8,11 +8,13 @@
 @include DcmeBox;
 @include DcmeBulletList;
 @include DcmeButton;
+@include DcmeCenteredLanding;
 @include DcmeGrid;
 @include DcmeImage;
 @include DcmeLink;
 @include DcmeLabel;
 @include DcmeInput;
+@include DcmeMessage;
 @include DcmeNavigationList;
 @include DcmeOrderedList;
 @include DcmeTable;
@@ -20,73 +22,3 @@
 @include DcmeText;
 @include DcmeTypography;
 @include DcmeWrapper;
-
-/*
-.gatsby-highlight pre > code {
-    background-color: grey(90);
-    padding: 1rem;
-    margin: 2rem 0;
-    white-space: pre;
-    background-color: #333;
-    color: #e6e6e6;
-
-    &:after {
-        content: '';
-    }
-}
-
-/*
-Code Highlighting
-blue        #6CA6CE
-green       #86C797
-yellow      #E1AE69
-orange      #E1865A
-white       #e6e6e6
-comment     #6D6D6D
-red         #C55B4E
- */
-
-
-
-.Example {
-
-    @include BruceBreakpoint('small') {
-        display: table;
-        margin-top: 3rem;
-    }
-
-    &_prev {
-        box-sizing: border-box;
-        text-align: left;
-
-        @include BruceBreakpoint('small') {
-            display: table-cell;
-            padding: 10rem .5rem .5rem;
-            text-align: center;
-            vertical-align: top;
-            width: 10rem;
-        }
-    }
-
-    &_content {
-        box-sizing: border-box;
-
-        @include BruceBreakpoint('small') {
-            display: table-cell;
-            padding: .5rem;
-        }
-    }
-
-    &_next {
-        box-sizing: border-box;
-        text-align: right;
-
-        @include BruceBreakpoint('small') {
-            display: table-cell;
-            padding: 10rem .5rem .5rem;
-            text-align: center;
-            vertical-align: top;
-            width: 10rem;
-        }
-    }
-}

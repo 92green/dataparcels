@@ -1,4 +1,4 @@
-import {Text} from 'dcme-style';
+import Link from 'gatsby-link';
 
 # Dataparcels
 
@@ -6,6 +6,4 @@ They do things! They do!
 
 ## API
 
-* [Parcel](/api/Parcel)
-* [Action](/api/Action)
-* [ChangeRequest](/api/ChangeRequest)
+* <Link to="/api/Parcel">Parcel</Link>

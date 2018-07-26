@@ -48,6 +48,7 @@ export default class Parcel {
     _parcelTypes: ParcelTypes;
     _applyModifiers: Function;
     _dispatchBuffer: ?Function;
+    _handleChange: Function;
 
     //
     // private methods
@@ -93,7 +94,6 @@ export default class Parcel {
     //
 
     // - action methods
-    _handleChange: Function;
     dispatch: Function;
     batch: Function;
     // - value parcel methods

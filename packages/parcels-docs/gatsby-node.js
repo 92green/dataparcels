@@ -63,3 +63,17 @@ general:
 exports.onPostBuild = () => {
     fs.writeFileSync(`${__dirname}/public/circle.yml`, circleYml);
 }
+
+exports.modifyWebpackConfig = ({ config, stage }) => {
+
+    config
+        .loader("mdx", {
+            test: /\.mdx?$/,
+            loaders: [
+                'babel-loader',
+                'mdx-loader'
+            ]
+        })
+
+    return config;
+};
