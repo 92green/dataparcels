@@ -1,145 +1,24 @@
 @import '~bruce/bruce';
 @include BruceReset;
 @include BruceBoxSizing;
-@import '~obtuse/lib/all';
-@include ObtuseConfig;
+@import '~dcme-style/lib/all';
+@include DcmeConfig;
 
-@include BruceGrid {
-    &_item {
-        @include BruceBreakpoint('small') {
-            &-padding {
-                border-left: 1rem solid transparent;
-                border-right: 1rem solid transparent;
-            }
-
-            &-paddingMilli {
-                border-left: .5rem solid transparent;
-                border-right: .5rem solid transparent;
-            }
-        }
-    }
-}
-
-@include ObtuseBase;
-@include ObtuseLabel;
-@include ObtuseLink;
-@include ObtuseBox;
-@include ObtuseButton;
-@include ObtuseInput {
-    background-color: color('background');
-};
-@include ObtuseTable;
-@include ObtuseTerminal;
-@include ObtuseText {
-    &-definition {
-        background-color: grey(94);
-        padding: 1rem;
-    }
-    &-code {
-        background-color: color('alternativeBackground');
-        padding: 0 .25rem;
-        border-radius: 3px;
-    }
-};
-@include ObtuseTypography;
-@include ObtuseWrapper;
-
-body {
-    padding: 2rem;
-}
-
-.Code {
-    background-color: grey(90);
-    padding: 1rem;
-    margin: 2rem 0;
-    white-space: pre;
-    background-color: #333;
-    color: #e6e6e6;
-}
-
-.gatsby-highlight pre > code {
-    background-color: grey(90);
-    padding: 1rem;
-    margin: 2rem 0;
-    white-space: pre;
-    background-color: #333;
-    color: #e6e6e6;
-
-    &:after {
-        content: '';
-    }
-}
-
-/*
-Code Highlighting
-blue        #6CA6CE
-green       #86C797
-yellow      #E1AE69
-orange      #E1865A
-white       #e6e6e6
-comment     #6D6D6D
-red         #C55B4E
- */
-
-/* Red */
-.token.keyword {color: #C55B4E;}
-
-/* Yellow */
-.token.tag {color: #E1AE69;}
-
-/* Green */
-.token.string {color: #86C797;}
-
-/* Blue */
-.token.number {color: #6CA6CE;}
-.token.boolean {color: #6CA6CE;}
-
-
-.token.comment {color: #6D6D6D;}
-
-.Example {
-
-    @include BruceBreakpoint('small') {
-        display: table;
-        margin-top: 3rem;
-    }
-
-    &_prev {
-        box-sizing: border-box;
-        text-align: left;
-
-        @include BruceBreakpoint('small') {
-            display: table-cell;
-            padding: 10rem .5rem .5rem;
-            text-align: center;
-            vertical-align: top;
-            width: 10rem;
-        }
-    }
-
-    &_content {
-        box-sizing: border-box;
-
-        @include BruceBreakpoint('small') {
-            display: table-cell;
-            padding: .5rem;
-        }
-    }
-
-    &_next {
-        box-sizing: border-box;
-        text-align: right;
-
-        @include BruceBreakpoint('small') {
-            display: table-cell;
-            padding: 10rem .5rem .5rem;
-            text-align: center;
-            vertical-align: top;
-            width: 10rem;
-        }
-    }
-}
-
-.Navigation {
-    margin-bottom: 3rem;
-}
+@include DcmeBase;
+@include DcmeBox;
+@include DcmeBulletList;
+@include DcmeButton;
+@include DcmeCenteredLanding;
+@include DcmeGrid;
+@include DcmeImage;
+@include DcmeLink;
+@include DcmeLabel;
+@include DcmeInput;
+@include DcmeMessage;
+@include DcmeNavigationList;
+@include DcmeOrderedList;
+@include DcmeTable;
+@include DcmeTerminal;
+@include DcmeText;
+@include DcmeTypography;
+@include DcmeWrapper;

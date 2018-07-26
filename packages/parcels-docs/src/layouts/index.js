@@ -1,59 +1,23 @@
 // @flow
-import React from "react";
 import type {Node} from "react";
-import PropTypes from "prop-types";
+
+import React from "react";
 import Helmet from "react-helmet";
-import {Wrapper} from 'obtuse';
-import Navigation from '../components/Navigation';
-import {Column, Grid} from 'obtuse';
+import {Head, Wrapper} from 'dcme-style';
 
 import "./index.scss";
 
-function TemplateWrapper(props: Object): Node {
-    const {
-        children,
-        wrapper = true
-    } = props;
-
-    const {allSitePage} = props.data;
-    return <div>
-        <Helmet
-            title="Parcels"
-            meta={[
-                //{name: "description", content: "Sample"},
-                //{name: "keywords", content: "sample, something"}
-            ]}
-        />
-        <Grid modifier="auto">
-            <Column modifier="shrink padding">
-                <Navigation allSitePage={allSitePage}/>
-            </Column>
-            <Column modifier="padding">
-                {wrapper 
-                    ? <Wrapper>{children()}</Wrapper>
-                    : children()
-                }
-            </Column>
-        </Grid>
-    </div>;
-}
-
-
-export const query = graphql`
-    query NavigationQuery {
-      allSitePage {
-        edges {
-          node {
-            id
-            path
-          }
-        }
-      }
-    }
-`;
-
-TemplateWrapper.propTypes = {
-    children: PropTypes.func
+type Props = {
+    children: *
 };
 
-export default TemplateWrapper;
+export default ({children}: Props): Node => <div>
+    <Helmet
+        title="Dataparcels"
+        meta={[
+            {name: "description", content: "A super declarative user input library that works really well with React."}
+        ]}
+    />
+    <Head />
+    <Wrapper modifier="marginBottom">{children()}</Wrapper>
+</div>;
