@@ -3004,9 +3004,9 @@ dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
 
-dcme-style@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.14.0.tgz#83d0087bfd455a4640a9c4ca0bb4a0121001595c"
+dcme-style@^0.15.4:
+  version "0.15.4"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.15.4.tgz#452199f7d44471268cf8c92170c2d6da4b11c3b5"
   dependencies:
     react-goose "0.2.2"
     react-select "^1.0.0-rc.4"
