@@ -1,4 +1,6 @@
-import {Link} from 'gatsby-link';
+import Link from 'gatsby-link';
+
+# Dataparcels
 
 They do things! They do!
 

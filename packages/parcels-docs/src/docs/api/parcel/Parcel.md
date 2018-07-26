@@ -1,8 +1,3 @@
-import ParcelGet from './get.md';
-
-# Parcel API
+# Parcel
 
 Parcels description goes here.
-
-<ParcelGet />
-
