@@ -1,4 +1,4 @@
-import IndexedKeys from '../../notes/IndexedKeys.md';
+import IndexedKeys from 'docs/notes/IndexedKeys.md';
 
 ```flow
 value(): any

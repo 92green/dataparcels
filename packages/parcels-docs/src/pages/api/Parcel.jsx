@@ -2,13 +2,15 @@
 import type {Node} from 'react';
 import React from 'react';
 import {Box, Grid, GridItem, NavigationList, NavigationListItem, Text, Typography} from 'dcme-style';
-import Link from 'gatsby-link';
-import Markdown_Parcel from '../../docs/api/parcel/Parcel.md';
-import Markdown_value from '../../docs/api/parcel/value.md';
-import Markdown_get from '../../docs/api/parcel/get.md';
+import Link from 'component/Link';
+import Markdown_Parcel from 'docs/api/parcel/Parcel.md';
+import Markdown_value from 'docs/api/parcel/value.md';
+import Markdown_meta from 'docs/api/parcel/meta.md';
+import Markdown_get from 'docs/api/parcel/get.md';
 
 const md = {
     value: Markdown_value,
+    meta: Markdown_meta,
     get: Markdown_get
 }
 
@@ -107,7 +109,7 @@ const renderApi = () => api
         if(!line) {
             return <br />;
         }
-        return <Link className="Link" to={`#${line}`}>{line}</Link>;
+        return <Link to={`#${line}`}>{line}</Link>;
     })
     .map((line, key) => <NavigationListItem key={key}>{line}</NavigationListItem>);
 

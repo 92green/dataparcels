@@ -3004,9 +3004,9 @@ dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
 
-dcme-style@^0.15.6:
-  version "0.15.6"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.15.6.tgz#3df78755b01136ddfcf576947725c4c9578dbaaa"
+dcme-style@^0.15.7:
+  version "0.15.7"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.15.7.tgz#0feb2b31d4d364eb710fd515b1325cccb74910dd"
   dependencies:
     react-goose "0.2.2"
     react-select "^1.0.0-rc.4"
@@ -4437,6 +4437,10 @@ gatsby-plugin-react-helmet@^2.0.6:
   resolved "https://registry.yarnpkg.com/gatsby-plugin-react-helmet/-/gatsby-plugin-react-helmet-2.0.11.tgz#a2db81755f5b41d54e0e535ca1d9a008d3ccff0a"
   dependencies:
     babel-runtime "^6.26.0"
+
+gatsby-plugin-resolve-src@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-resolve-src/-/gatsby-plugin-resolve-src-1.1.4.tgz#28d60a35de488248d864937c48775613c80bba0c"
 
 gatsby-plugin-sass@^1.0.20:
   version "1.0.26"
