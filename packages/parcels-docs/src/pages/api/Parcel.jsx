@@ -117,9 +117,12 @@ const renderDoclets = () => api
     .split('\n')
     .filter(_ => _)
     .map((name, key) => {
+        if(name.slice(0,2) === "# ") {
+            return <Text element="h2" modifier="sizeMega marginMega weightMicro">{name.slice(2)}</Text>;
+        }
         let Component = md[name];
         if(!Component) {
-            return null;
+            Component = () => <span>...</span>;
         }
         return <Box key={key} modifier="marginBottomGiga">
             <a name={name} />
