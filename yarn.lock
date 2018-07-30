@@ -3004,13 +3004,13 @@ dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
 
-dcme-style@^0.15.7:
-  version "0.15.7"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.15.7.tgz#0feb2b31d4d364eb710fd515b1325cccb74910dd"
+dcme-style@^0.15.10:
+  version "0.15.10"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.15.10.tgz#f17cd2740e6650f453f6a34f528c11f74af18ab3"
   dependencies:
     react-goose "0.2.2"
     react-select "^1.0.0-rc.4"
-    stampy "^0.39.0"
+    stampy "^0.41.0"
     unmutable "^0.29.2"
 
 death@^1.0.0:
@@ -10260,17 +10260,6 @@ stackframe@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-1.0.4.tgz#357b24a992f9427cba6b545d96a14ed2cbca187b"
 
-stampy@^0.39.0:
-  version "0.39.0"
-  resolved "https://registry.yarnpkg.com/stampy/-/stampy-0.39.0.tgz#b37c2ca0c6d8af0ff97a05adf9b163871375bf96"
-  dependencies:
-    blueflag-test "^0.18.1"
-    classnames "^2.2.5"
-    element-resize-detector "^1.1.12"
-    is-plain-object "^2.0.3"
-    unmutable "^0.23.0"
-    url-search-params "^0.9.0"
-
 stampy@^0.40.0:
   version "0.40.0"
   resolved "https://registry.yarnpkg.com/stampy/-/stampy-0.40.0.tgz#621f055f25bee7219ee23eac2718e786afca676f"
@@ -11058,13 +11047,6 @@ unmutable@0.27.0:
 unmutable@0.29.2, unmutable@^0.29.2:
   version "0.29.2"
   resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.29.2.tgz#8463a104c7088e13c5b958131c14fa2bd01ae65f"
-  dependencies:
-    fast-deep-equal "^1.0.0"
-    is-plain-object "^2.0.4"
-
-unmutable@^0.23.0:
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.23.0.tgz#ad6f01e19a1a1f72b5f45ab6da856d38fb3e9121"
   dependencies:
     fast-deep-equal "^1.0.0"
     is-plain-object "^2.0.4"
