@@ -6,12 +6,14 @@ import Link from 'component/Link';
 import Markdown_Parcel from 'docs/api/parcel/Parcel.md';
 import Markdown_value from 'docs/api/parcel/value.md';
 import Markdown_meta from 'docs/api/parcel/meta.md';
+import Markdown_data from 'docs/api/parcel/data.md';
 import Markdown_get from 'docs/api/parcel/get.md';
 
 const md = {
     value: Markdown_value,
     meta: Markdown_meta,
-    get: Markdown_get
+    get: Markdown_get,
+    data: Markdown_data
 }
 
 const api = `
@@ -19,7 +21,6 @@ const api = `
 value
 meta
 data
-raw
 
 # Parent get methods
 get
