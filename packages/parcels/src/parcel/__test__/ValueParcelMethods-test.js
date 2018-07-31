@@ -4,32 +4,6 @@ import Parcel from '../Parcel';
 
 test('Parcel.data() should return the Parcels data', (tt: Object) => {
     var data = {
-        value: 123
-    };
-
-    var expectedData = {
-        key: '^',
-        value: 123
-    };
-
-    tt.deepEqual(expectedData, new Parcel(data).data());
-});
-
-test('Parcel.data() should strip the returned Parcel data', (tt: Object) => {
-    var data = {
-        value: 123
-    };
-
-    var expectedData = {
-        key: '^',
-        value: 123
-    };
-
-    tt.deepEqual(new Parcel(data).data(), expectedData);
-});
-
-test('Parcel.raw() should return the Parcels data without stripping', (tt: Object) => {
-    var data = {
         value: 123,
         child: undefined
     };
@@ -41,7 +15,7 @@ test('Parcel.raw() should return the Parcels data without stripping', (tt: Objec
         meta: {}
     };
 
-    tt.deepEqual(expectedData, new Parcel(data).raw());
+    tt.deepEqual(expectedData, new Parcel(data).data());
 });
 
 test('Parcel.value() should return the Parcels value', (tt: Object) => {
@@ -92,6 +66,8 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
     };
 
     var expectedData = {
+        child: undefined,
+        meta: {},
         value: 456,
         key: '^'
     };
@@ -123,6 +99,8 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
     var expectedArg = 123;
 
     var expectedData = {
+        child: undefined,
+        meta: {},
         value: 456,
         key: '^'
     };
@@ -155,6 +133,8 @@ test('Parcel.onChange() should work like set that only accepts a single argument
     };
 
     var expectedData = {
+        child: undefined,
+        meta: {},
         value: 456,
         key: '^'
     };
@@ -184,6 +164,8 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
     };
 
     var expectedData = {
+        child: undefined,
+        meta: {},
         value: 456,
         key: '^'
     };
@@ -256,21 +238,13 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
         value: 123
     };
 
-    var expectedData = {
-        value: 123,
-        key: '^',
-        meta: {
-            abc: 123
-        }
+    var expectedMeta = {
+        abc: 123
     };
 
-    var expectedData2 = {
-        value: 123,
-        key: '^',
-        meta: {
-            abc: 123,
-            def: 456
-        }
+    var expectedMeta2 = {
+        abc: 123,
+        def: 456
     };
 
     var expectedAction = {
@@ -291,14 +265,14 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
             changes++;
 
             if(changes === 1) {
-                tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
+                tt.deepEqual(expectedMeta, parcel.meta(), 'updated meta is correct');
                 tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
                 parcel.setMeta({
                     def: 456
                 });
 
             } else if(changes === 2) {
-                tt.deepEqual(expectedData2, parcel.data(), 'updated data is correct');
+                tt.deepEqual(expectedMeta2, parcel.meta(), 'updated meta is correct');
             }
         }
     }).setMeta({
@@ -332,21 +306,13 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
         value: 123
     };
 
-    var expectedData = {
-        value: 123,
-        key: '^',
-        meta: {
-            abc: 123
-        }
+    var expectedMeta = {
+        abc: 123
     };
 
-    var expectedData2 = {
-        value: 123,
-        key: '^',
-        meta: {
-            abc: 123,
-            def: 456
-        }
+    var expectedMeta2 = {
+        abc: 123,
+        def: 456
     };
 
     var expectedAction = {
@@ -367,7 +333,7 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
             changes++;
 
             if(changes === 1) {
-                tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
+                tt.deepEqual(expectedMeta, parcel.meta(), 'updated meta is correct');
                 tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
                 parcel.updateMeta(meta => {
                     tt.deepEqual({abc: 123}, meta, 'updateMeta should receive initial meta of {abc:123}')
@@ -377,7 +343,7 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
                 });
 
             } else if(changes === 2) {
-                tt.deepEqual(expectedData2, parcel.data(), 'updated data is correct');
+                tt.deepEqual(expectedMeta2, parcel.meta(), 'updated meta is correct');
             }
         }
     }).updateMeta(meta => {
@@ -434,6 +400,8 @@ test('Parcel.ping() should call the Parcels handleChange function with no change
     };
 
     var expectedData = {
+        child: undefined,
+        meta: {},
         value: 123,
         key: '^'
     };

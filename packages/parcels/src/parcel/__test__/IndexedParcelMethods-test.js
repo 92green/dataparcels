@@ -15,6 +15,7 @@ test('IndexedParcel.delete() should delete', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [2,3],
         key: '^',
         child: [
@@ -89,6 +90,7 @@ test('IndexedParcel.insertBefore() should insertBefore', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [1,4,2,3],
         key: '^',
         child: [
@@ -145,6 +147,7 @@ test('IndexedParcel.insertAfter() should insertAfter', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [1,2,4,3],
         key: '^',
         child: [
@@ -201,6 +204,7 @@ test('IndexedParcel.push() should push', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [1,2,3,4],
         key: '^',
         child: [
@@ -241,6 +245,7 @@ test('IndexedParcel.pop() should pop', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [1,2],
         key: '^',
         child: [
@@ -277,6 +282,7 @@ test('IndexedParcel.shift() should shift', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [2,3],
         key: '^',
         child: [
@@ -313,6 +319,7 @@ test('IndexedParcel.swap() should swap', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [3,2,1],
         key: '^',
         child: [
@@ -352,6 +359,7 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [2,1,3],
         key: '^',
         child: [
@@ -404,6 +412,7 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [2,1,3],
         key: '^',
         child: [
@@ -455,6 +464,7 @@ test('IndexedParcel.unshift() should unshift', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [4,1,2,3],
         key: '^',
         child: [
