@@ -5,6 +5,7 @@ import React from "react";
 import Helmet from "react-helmet";
 import {Head, Wrapper} from 'dcme-style';
 import Parcel from 'parcels-react';
+import IsRenderingStaticHtml from 'utils/IsRenderingStaticHtml';
 
 import "./index.scss";
 
@@ -12,7 +13,9 @@ type Props = {
     children: *
 };
 
-window.Parcel = Parcel;
+if(!IsRenderingStaticHtml()) {
+    window.Parcel = Parcel;
+}
 
 export default ({children}: Props): Node => <div>
     <Helmet
