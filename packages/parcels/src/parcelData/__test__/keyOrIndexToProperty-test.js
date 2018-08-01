@@ -2,7 +2,7 @@
 import test from 'ava';
 import keyOrIndexToProperty from '../keyOrIndexToProperty';
 
-test('keyOrIndexToProperty() accepts key and returns property for object', tt => {
+test('keyOrIndexToProperty() accepts key and returns property for object', t => {
     let data = {
         value: {
             a: 1,
@@ -10,10 +10,10 @@ test('keyOrIndexToProperty() accepts key and returns property for object', tt =>
         }
     };
 
-    tt.is("a", keyOrIndexToProperty("a")(data));
+    t.is("a", keyOrIndexToProperty("a")(data));
 });
 
-test('keyOrIndexToProperty() accepts index and returns property for array', tt => {
+test('keyOrIndexToProperty() accepts index and returns property for array', t => {
     let data = {
         value: [
             1,
@@ -21,10 +21,10 @@ test('keyOrIndexToProperty() accepts index and returns property for array', tt =
         ]
     };
 
-    tt.is(0, keyOrIndexToProperty(0)(data));
+    t.is(0, keyOrIndexToProperty(0)(data));
 });
 
-test('keyOrIndexToProperty() accepts key and returns property for array', tt => {
+test('keyOrIndexToProperty() accepts key and returns property for array', t => {
     let data = {
         value: [
             1,
@@ -32,6 +32,6 @@ test('keyOrIndexToProperty() accepts key and returns property for array', tt => 
         ]
     };
 
-    tt.is(0, keyOrIndexToProperty("#a")(data));
+    t.is(0, keyOrIndexToProperty("#a")(data));
 });
 

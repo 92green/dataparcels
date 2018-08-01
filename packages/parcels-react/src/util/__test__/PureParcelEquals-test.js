@@ -3,7 +3,7 @@ import test from 'ava';
 import PureParcelEquals from '../PureParcelEquals';
 import Parcel from 'parcels';
 
-test('PureParcelEquals should test equality to see if a re-render should occur', tt => {
+test('PureParcelEquals should test equality to see if a re-render should occur', t => {
     var child = {};
     var parcelCreator = (merge = {}) => {
         let p = new Parcel();
@@ -21,9 +21,9 @@ test('PureParcelEquals should test equality to see if a re-render should occur',
         return p;
     };
 
-    tt.true(PureParcelEquals(parcelCreator(), parcelCreator()), 'parcel equals self');
-    tt.false(PureParcelEquals(parcelCreator(), parcelCreator({value: 456})), 'parcel doesnt equals different value');
-    tt.false(PureParcelEquals(parcelCreator(), parcelCreator({meta: {abc: 123}})), 'parcel doesnt equals different meta contents');
-    tt.false(PureParcelEquals(parcelCreator(), parcelCreator({child: {}})), 'parcel doesnt equals different child');
-    tt.false(PureParcelEquals(parcelCreator(), parcelCreator({key: "b"})), 'parcel doesnt equals different key');
+    t.true(PureParcelEquals(parcelCreator(), parcelCreator()), 'parcel equals self');
+    t.false(PureParcelEquals(parcelCreator(), parcelCreator({value: 456})), 'parcel doesnt equals different value');
+    t.false(PureParcelEquals(parcelCreator(), parcelCreator({meta: {abc: 123}})), 'parcel doesnt equals different meta contents');
+    t.false(PureParcelEquals(parcelCreator(), parcelCreator({child: {}})), 'parcel doesnt equals different child');
+    t.false(PureParcelEquals(parcelCreator(), parcelCreator({key: "b"})), 'parcel doesnt equals different key');
 });

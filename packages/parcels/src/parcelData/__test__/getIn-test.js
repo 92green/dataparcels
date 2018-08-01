@@ -2,7 +2,7 @@
 import test from 'ava';
 import getIn from '../getIn';
 
-test('getIn should work with objects', (tt: Object) => {
+test('getIn should work with objects', (t: Object) => {
     let parcelData = {
         value: {
             a: {
@@ -16,7 +16,7 @@ test('getIn should work with objects', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, getIn(['a', 'b'])(parcelData));
+    t.deepEqual(expectedParcelData, getIn(['a', 'b'])(parcelData));
 
     let expectedParcelData2 = {
         value: undefined,
@@ -25,10 +25,10 @@ test('getIn should work with objects', (tt: Object) => {
         child: undefined
     };
 
-    tt.deepEqual(expectedParcelData2, getIn(['z', 'b'])(parcelData));
+    t.deepEqual(expectedParcelData2, getIn(['z', 'b'])(parcelData));
 });
 
-test('getIn should not clone value', (tt: Object) => {
+test('getIn should not clone value', (t: Object) => {
     let parcelData = {
         value: {
             a: {
@@ -36,5 +36,5 @@ test('getIn should not clone value', (tt: Object) => {
             }
         }
     };
-    tt.is(parcelData.value.a.b, getIn(['a','b'])(parcelData).value);
+    t.is(parcelData.value.a.b, getIn(['a','b'])(parcelData).value);
 });

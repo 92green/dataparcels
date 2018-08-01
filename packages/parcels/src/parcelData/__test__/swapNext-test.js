@@ -2,7 +2,7 @@
 import test from 'ava';
 import swapNext from '../swapNext';
 
-test('swapNext should work with indexes', (tt: Object) => {
+test('swapNext should work with indexes', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -21,13 +21,13 @@ test('swapNext should work with indexes', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(expectedParcelData, swapNext(1)(parcelData), 'should work with in range number');
-    tt.deepEqual(expectedParcelData, swapNext(-2)(parcelData), 'should work with negative');
-    tt.deepEqual(expectedParcelData, swapNext(4)(parcelData), 'should work with positive wrapped number');
-    tt.deepEqual(expectedParcelData, swapNext(-5)(parcelData), 'should work with negative wrapped number');
+    t.deepEqual(expectedParcelData, swapNext(1)(parcelData), 'should work with in range number');
+    t.deepEqual(expectedParcelData, swapNext(-2)(parcelData), 'should work with negative');
+    t.deepEqual(expectedParcelData, swapNext(4)(parcelData), 'should work with positive wrapped number');
+    t.deepEqual(expectedParcelData, swapNext(-5)(parcelData), 'should work with negative wrapped number');
 });
 
-test('swapNext should work with hashKeys', (tt: Object) => {
+test('swapNext should work with hashKeys', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -46,10 +46,10 @@ test('swapNext should work with hashKeys', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(expectedParcelData, swapNext("#b")(parcelData));
+    t.deepEqual(expectedParcelData, swapNext("#b")(parcelData));
 });
 
-test('swapNext should work with length - 1', (tt: Object) => {
+test('swapNext should work with length - 1', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -69,10 +69,10 @@ test('swapNext should work with length - 1', (tt: Object) => {
     };
 
 
-    tt.deepEqual(expectedParcelData, swapNext(2)(parcelData));
+    t.deepEqual(expectedParcelData, swapNext(2)(parcelData));
 });
 
-test('swapNext should do nothing if given non existent key', (tt: Object) => {
+test('swapNext should do nothing if given non existent key', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -82,5 +82,5 @@ test('swapNext should do nothing if given non existent key', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(parcelData, swapNext("#z")(parcelData));
+    t.deepEqual(parcelData, swapNext("#z")(parcelData));
 });

@@ -2,8 +2,8 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-test('ElementParcel.insertBeforeSelf() should insert', tt => {
-    tt.plan(4);
+test('ElementParcel.insertBeforeSelf() should insert', t => {
+    t.plan(4);
 
     var data = {
         value: [1,2,3],
@@ -37,8 +37,8 @@ test('ElementParcel.insertBeforeSelf() should insert', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
+            t.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
+            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
         }
     })
         .get(1)
@@ -47,16 +47,16 @@ test('ElementParcel.insertBeforeSelf() should insert', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
+            t.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
+            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
         }
     })
         .get("#b")
         .insertBeforeSelf(4);
 });
 
-test('ElementParcel.insertAfterSelf() should insert', tt => {
-    tt.plan(4);
+test('ElementParcel.insertAfterSelf() should insert', t => {
+    t.plan(4);
 
     var data = {
         value: [1,2,3],
@@ -90,8 +90,8 @@ test('ElementParcel.insertAfterSelf() should insert', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
+            t.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
+            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
         }
     })
         .get(1)
@@ -100,16 +100,16 @@ test('ElementParcel.insertAfterSelf() should insert', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
+            t.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
+            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
         }
     })
         .get("#b")
         .insertAfterSelf(4);
 });
 
-test('ElementParcel.swapWithSelf() should swap', tt => {
-    tt.plan(2);
+test('ElementParcel.swapWithSelf() should swap', t => {
+    t.plan(2);
 
     var data = {
         value: [1,2,3],
@@ -142,16 +142,16 @@ test('ElementParcel.swapWithSelf() should swap', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            t.deepEqual(expectedData, parcel.data(), 'updated data is correct');
+            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     })
         .get(0)
         .swapWithSelf(2);
 });
 
-test('ElementParcel.swapNextWithSelf() should swapNext', tt => {
-    tt.plan(4);
+test('ElementParcel.swapNextWithSelf() should swapNext', t => {
+    t.plan(4);
 
     var data = {
         value: [1,2,3],
@@ -182,8 +182,8 @@ test('ElementParcel.swapNextWithSelf() should swapNext', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            t.deepEqual(expectedData, parcel.data(), 'updated data is correct');
+            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
         }
     })
         .get(0)
@@ -198,15 +198,15 @@ test('ElementParcel.swapNextWithSelf() should swapNext', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with keys');
+            t.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
+            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with keys');
         }
     }).swapNext("#a");
 });
 
 
-test('ElementParcel.swapPrevWithSelf() should swapPrev', tt => {
-    tt.plan(2);
+test('ElementParcel.swapPrevWithSelf() should swapPrev', t => {
+    t.plan(2);
 
     var data = {
         value: [1,2,3],
@@ -237,8 +237,8 @@ test('ElementParcel.swapPrevWithSelf() should swapPrev', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with keys');
+            t.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
+            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with keys');
         }
     })
         .get("#b")

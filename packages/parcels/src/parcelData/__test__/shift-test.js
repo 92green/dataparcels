@@ -2,7 +2,7 @@
 import test from 'ava';
 import shift from '../shift';
 
-test('shift should work', (tt: Object) => {
+test('shift should work', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -20,5 +20,5 @@ test('shift should work', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(expectedParcelData, shift()(parcelData));
+    t.deepEqual(expectedParcelData, shift()(parcelData));
 });

@@ -2,7 +2,7 @@
 import test from 'ava';
 import swap from '../swap';
 
-test('swap should work', (tt: Object) => {
+test('swap should work', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -22,10 +22,10 @@ test('swap should work', (tt: Object) => {
     };
 
 
-    tt.deepEqual(expectedParcelData, swap(1,2)(parcelData));
+    t.deepEqual(expectedParcelData, swap(1,2)(parcelData));
 });
 
-test('swap should work with hashKeys', (tt: Object) => {
+test('swap should work with hashKeys', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -44,10 +44,10 @@ test('swap should work with hashKeys', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(expectedParcelData, swap("#b","#c")(parcelData));
+    t.deepEqual(expectedParcelData, swap("#b","#c")(parcelData));
 });
 
-test('swap should do nothing with non existent hashKeys', (tt: Object) => {
+test('swap should do nothing with non existent hashKeys', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -57,6 +57,6 @@ test('swap should do nothing with non existent hashKeys', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(parcelData, swap("#z","#c")(parcelData));
-    tt.deepEqual(parcelData, swap("#a","#z")(parcelData));
+    t.deepEqual(parcelData, swap("#z","#c")(parcelData));
+    t.deepEqual(parcelData, swap("#a","#z")(parcelData));
 });

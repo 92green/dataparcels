@@ -34,22 +34,22 @@ let types = {
     ['undefined']: undefined
 };
 
-let testTypes = (type: string, shouldAllow: string[]) => (tt: *) => {
+let testTypes = (type: string, shouldAllow: string[]) => (t: *) => {
     let message = `Expected thing to be`;
     pipeWith(
         types,
         map((data, dataType) => {
             if(shouldAllow.indexOf(dataType) !== -1) {
-                tt.notThrows(() => Types(message, type)(data), `${type} should not throw when given ${dataType}`);
+                t.notThrows(() => Types(message, type)(data), `${type} should not throw when given ${dataType}`);
             } else {
-                tt.true(tt.throws(() => Types(message, type)(data), Error).message.indexOf("but got") !== -1, `${type} should throw error when given ${dataType}`);
+                t.true(t.throws(() => Types(message, type)(data), Error).message.indexOf("but got") !== -1, `${type} should throw error when given ${dataType}`);
             }
         })
     );
 };
 
-test('Types will error if type is not found', tt => {
-    tt.is("Unknown type check", tt.throws(() => Types('???', 'notfound')({abc: 123}), Error).message);
+test('Types will error if type is not found', t => {
+    t.is("Unknown type check", t.throws(() => Types('???', 'notfound')({abc: 123}), Error).message);
 });
 
 test('Types() can identify a boolean', testTypes(`boolean`, [

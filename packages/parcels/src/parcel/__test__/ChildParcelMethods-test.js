@@ -2,8 +2,8 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-test('ChildParcel.deleteSelf() should delete self', (tt: Object) => {
-    tt.plan(1);
+test('ChildParcel.deleteSelf() should delete self', (t: Object) => {
+    t.plan(1);
 
     var expectedValue = {
         b: 2
@@ -16,15 +16,15 @@ test('ChildParcel.deleteSelf() should delete self', (tt: Object) => {
         },
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            tt.deepEqual(expectedValue, value);
+            t.deepEqual(expectedValue, value);
         }
     };
 
     new Parcel(data).get('a').deleteSelf();
 });
 
-test('ChildParcel.deleteSelf() should delete self when indexed', (tt: Object) => {
-    tt.plan(1);
+test('ChildParcel.deleteSelf() should delete self when indexed', (t: Object) => {
+    t.plan(1);
 
     var expectedValue = [1,3];
 
@@ -32,7 +32,7 @@ test('ChildParcel.deleteSelf() should delete self when indexed', (tt: Object) =>
         value: [1,2,3],
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            tt.deepEqual(expectedValue, value);
+            t.deepEqual(expectedValue, value);
         }
     };
 

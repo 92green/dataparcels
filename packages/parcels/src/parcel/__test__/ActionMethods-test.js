@@ -2,8 +2,8 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-test('Parcel.batch() should batch actions', (tt: Object) => {
-    tt.plan(4);
+test('Parcel.batch() should batch actions', (t: Object) => {
+    t.plan(4);
 
     var functionCalls = [];
     var expectedFunctionCalls = [
@@ -18,7 +18,7 @@ test('Parcel.batch() should batch actions', (tt: Object) => {
         value: 123,
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            tt.is(value, 789, 'parcel contains correct result');
+            t.is(value, 789, 'parcel contains correct result');
             functionCalls.push("handleChange");
         }
     };
@@ -26,18 +26,18 @@ test('Parcel.batch() should batch actions', (tt: Object) => {
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.onChange(456);
-        tt.is(456, parcel.value(), 'parcel contains correct mutated value after first onchange');
+        t.is(456, parcel.value(), 'parcel contains correct mutated value after first onchange');
         functionCalls.push("onChange(456)");
         parcel.onChange(789);
-        tt.is(789, parcel.value(), 'parcel contains correct mutated value after second onchange');
+        t.is(789, parcel.value(), 'parcel contains correct mutated value after second onchange');
         functionCalls.push("onChange(789)");
     });
 
-    tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
+    t.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
 });
 
-test('Parcel.batch() should batch correctly with non-idempotent actions', (tt: Object) => {
-    tt.plan(4);
+test('Parcel.batch() should batch correctly with non-idempotent actions', (t: Object) => {
+    t.plan(4);
 
     var functionCalls = [];
     var expectedFunctionCalls = [
@@ -51,7 +51,7 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', (tt: O
         value: [],
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            tt.deepEqual(value, [456,789], 'parcel contains correct result');
+            t.deepEqual(value, [456,789], 'parcel contains correct result');
             functionCalls.push("handleChange");
         }
     };
@@ -59,17 +59,17 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', (tt: O
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.push(456);
-        tt.deepEqual([456], parcel.value(), 'parcel contains correct mutated value after first onchange');
+        t.deepEqual([456], parcel.value(), 'parcel contains correct mutated value after first onchange');
         functionCalls.push("push(456)");
         parcel.push(789);
-        tt.deepEqual([456, 789], parcel.value(), 'parcel contains correct mutated value after second onchange');
+        t.deepEqual([456, 789], parcel.value(), 'parcel contains correct mutated value after second onchange');
         functionCalls.push("push(789)");
     });
 
-    tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
+    t.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
 });
 
-test('Parcel.batch() should not fire handleChange if no actions called within batch', (tt: Object) => {
+test('Parcel.batch() should not fire handleChange if no actions called within batch', (t: Object) => {
     var handleChangeCalled = false;
 
     var data = {
@@ -80,11 +80,11 @@ test('Parcel.batch() should not fire handleChange if no actions called within ba
     };
 
     new Parcel(data).batch((parcel) => {});
-    tt.false(handleChangeCalled);
+    t.false(handleChangeCalled);
 });
 
-test('Parcel.batch() should be nestable', (tt: Object) => {
-    tt.plan(5);
+test('Parcel.batch() should be nestable', (t: Object) => {
+    t.plan(5);
 
     var functionCalls = [];
     var expectedFunctionCalls = [
@@ -101,7 +101,7 @@ test('Parcel.batch() should be nestable', (tt: Object) => {
         value: 123,
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            tt.is(value, 789, 'parcel contains correct result');
+            t.is(value, 789, 'parcel contains correct result');
             functionCalls.push("handleChange");
         }
     };
@@ -109,19 +109,19 @@ test('Parcel.batch() should be nestable', (tt: Object) => {
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.onChange(123);
-        tt.is(123, parcel.value(), 'parcel contains correct mutated value after first onchange');
+        t.is(123, parcel.value(), 'parcel contains correct mutated value after first onchange');
         functionCalls.push("onChange(123)");
         parcel.batch((parcel) => {
             functionCalls.push("batch again");
             parcel.onChange(456);
-            tt.is(456, parcel.value(), 'parcel contains correct mutated value after second onchange');
+            t.is(456, parcel.value(), 'parcel contains correct mutated value after second onchange');
             functionCalls.push("onChange(456)");
         });
         functionCalls.push("out again");
         parcel.onChange(789);
-        tt.is(789, parcel.value(), 'parcel contains correct mutated value after third onchange');
+        t.is(789, parcel.value(), 'parcel contains correct mutated value after third onchange');
         functionCalls.push("onChange(789)");
     });
 
-    tt.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
+    t.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
 });

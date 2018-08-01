@@ -2,7 +2,7 @@
 import test from 'ava';
 import prepareChildKeys from '../prepareChildKeys';
 
-test('prepareChildKeys() adds child keys if they dont exist', tt => {
+test('prepareChildKeys() adds child keys if they dont exist', t => {
     let data = {
         value: {
             a: 1,
@@ -26,10 +26,10 @@ test('prepareChildKeys() adds child keys if they dont exist', tt => {
         meta: {}
     };
 
-    tt.deepEqual(expectedData, prepareChildKeys()(data));
+    t.deepEqual(expectedData, prepareChildKeys()(data));
 });
 
-test('prepareChildKeys() doesnt change anything if child keys all exist', tt => {
+test('prepareChildKeys() doesnt change anything if child keys all exist', t => {
     let data = {
         value: {
             a: 1,
@@ -46,5 +46,5 @@ test('prepareChildKeys() doesnt change anything if child keys all exist', tt => 
         meta: {}
     };
 
-    tt.deepEqual(data, prepareChildKeys()(data));
+    t.deepEqual(data, prepareChildKeys()(data));
 });

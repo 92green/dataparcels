@@ -2,7 +2,7 @@
 import test from 'ava';
 import pop from '../pop';
 
-test('pop should work', (tt: Object) => {
+test('pop should work', (t: Object) => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -20,5 +20,5 @@ test('pop should work', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(expectedParcelData, pop()(parcelData));
+    t.deepEqual(expectedParcelData, pop()(parcelData));
 });

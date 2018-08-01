@@ -2,7 +2,7 @@
 import test from 'ava';
 import setIn from '../setIn';
 
-test('setIn should work', (tt: Object) => {
+test('setIn should work', (t: Object) => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -23,10 +23,10 @@ test('setIn should work', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, setIn(['d'], {value: 4})(parcelData));
+    t.deepEqual(expectedParcelData, setIn(['d'], {value: 4})(parcelData));
 });
 
-test('setIn should work with existing child', (tt: Object) => {
+test('setIn should work with existing child', (t: Object) => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -46,10 +46,10 @@ test('setIn should work with existing child', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, setIn(['a'], {value: 4})(parcelData));
+    t.deepEqual(expectedParcelData, setIn(['a'], {value: 4})(parcelData));
 });
 
-test('setIn should work deeply', (tt: Object) => {
+test('setIn should work deeply', (t: Object) => {
     let parcelData = {
         value: {
             a: {},
@@ -87,10 +87,10 @@ test('setIn should work deeply', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, setIn(['a', 'd'], {value: 4})(parcelData));
+    t.deepEqual(expectedParcelData, setIn(['a', 'd'], {value: 4})(parcelData));
 });
 
-test('setIn should work deeply with existing child', (tt: Object) => {
+test('setIn should work deeply with existing child', (t: Object) => {
     let parcelData = {
         value: {
             a: {
@@ -137,5 +137,5 @@ test('setIn should work deeply with existing child', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, setIn(['a', 'd'], {value: 4})(parcelData));
+    t.deepEqual(expectedParcelData, setIn(['a', 'd'], {value: 4})(parcelData));
 });

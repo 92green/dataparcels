@@ -335,45 +335,45 @@ let matchTests = [
 pipeWith(
     matchTests,
     map(({name, match, matchParsed, shouldMatch}) => {
-        test(`${name}`, (tt: Object) => {
+        test(`${name}`, (t: Object) => {
             let matched: string[] = pipeWith(
                 typedPathStrings,
                 map((typedPathString, name) => Matcher(typedPathString, match)),
                 filter(identity()),
                 keyArray()
             );
-            tt.deepEqual(shouldMatch, matched, `"${match}" should match correctly`);
+            t.deepEqual(shouldMatch, matched, `"${match}" should match correctly`);
         });
     })
 );
 
-test(`split() should split`, (tt: Object) => {
-    tt.deepEqual(['abc'], split(`abc`));
-    tt.deepEqual(['abc', 'def'], split(`abc.def`));
-    tt.deepEqual(['abc', 'de%.f'], split(`abc.de%.f`));
+test(`split() should split`, (t: Object) => {
+    t.deepEqual(['abc'], split(`abc`));
+    t.deepEqual(['abc', 'def'], split(`abc.def`));
+    t.deepEqual(['abc', 'de%.f'], split(`abc.de%.f`));
 });
 
-test(`containsWildcard() should identify when a match string contains a wildcard`, (tt: Object) => {
-    tt.false(containsWildcard(`abc`));
-    tt.true(containsWildcard(`abc*`));
-    tt.true(containsWildcard(`abc.*`));
-    tt.false(containsWildcard(`abc%*`));
-    tt.true(containsWildcard(`abc%*.*`));
-    tt.false(containsWildcard(`**`));
-    tt.false(containsWildcard(`abc.**`));
-    tt.true(containsWildcard(`abc.*.**`));
-    tt.true(containsWildcard(`abc%**`));
+test(`containsWildcard() should identify when a match string contains a wildcard`, (t: Object) => {
+    t.false(containsWildcard(`abc`));
+    t.true(containsWildcard(`abc*`));
+    t.true(containsWildcard(`abc.*`));
+    t.false(containsWildcard(`abc%*`));
+    t.true(containsWildcard(`abc%*.*`));
+    t.false(containsWildcard(`**`));
+    t.false(containsWildcard(`abc.**`));
+    t.true(containsWildcard(`abc.*.**`));
+    t.true(containsWildcard(`abc%**`));
 });
 
-test(`containsGlobstar() should identify when a match string contains a globstar`, (tt: Object) => {
-    tt.false(containsGlobstar(`abc`));
-    tt.false(containsGlobstar(`abc*`));
-    tt.false(containsGlobstar(`abc.*`));
-    tt.false(containsGlobstar(`abc%*`));
-    tt.false(containsGlobstar(`abc%*.*`));
-    tt.true(containsGlobstar(`**`));
-    tt.true(containsGlobstar(`abc.**`));
-    tt.true(containsGlobstar(`abc.*.**`));
-    tt.false(containsGlobstar(`abc%**`));
+test(`containsGlobstar() should identify when a match string contains a globstar`, (t: Object) => {
+    t.false(containsGlobstar(`abc`));
+    t.false(containsGlobstar(`abc*`));
+    t.false(containsGlobstar(`abc.*`));
+    t.false(containsGlobstar(`abc%*`));
+    t.false(containsGlobstar(`abc%*.*`));
+    t.true(containsGlobstar(`**`));
+    t.true(containsGlobstar(`abc.**`));
+    t.true(containsGlobstar(`abc.*.**`));
+    t.false(containsGlobstar(`abc%**`));
 });
 

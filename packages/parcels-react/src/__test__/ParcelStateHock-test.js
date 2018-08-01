@@ -9,42 +9,42 @@ configure({adapter: new Adapter()});
 import ParcelStateHock from '../ParcelStateHock';
 import {CheckHockChildProps} from 'stampy/lib/util/TestHelpers';
 
-test('ParcelStateHock config should accept an initial value', tt => {
-    tt.plan(2);
+test('ParcelStateHock config should accept an initial value', t => {
+    t.plan(2);
     CheckHockChildProps(
         ParcelStateHock({
             initialValue: (props) => {
-                tt.is(123, props.abc, `initialValue should receive props`);
+                t.is(123, props.abc, `initialValue should receive props`);
                 return 456;
             },
             prop: "proppy"
         }),
         {abc: 123},
         (props) => {
-            tt.is(456, props.proppy.value(), `value is passed down via prop`);
+            t.is(456, props.proppy.value(), `value is passed down via prop`);
         }
     );
 });
 
-test('ParcelStateHock must be passed a prop, and throw an error if it isnt', tt => {
+test('ParcelStateHock must be passed a prop, and throw an error if it isnt', t => {
     // $FlowFixMe - intentiaal misuse of types
-    tt.is(`ParcelStateHock() expects param "config.prop" to be a string, but got undefined`, tt.throws(() => ParcelStateHock({}), Error).message);
+    t.is(`ParcelStateHock() expects param "config.prop" to be a string, but got undefined`, t.throws(() => ParcelStateHock({}), Error).message);
 });
 
 
-test('ParcelStateHock config should default initial value to undefined', tt => {
+test('ParcelStateHock config should default initial value to undefined', t => {
     CheckHockChildProps(
         ParcelStateHock({
             prop: "proppy"
         }),
         {},
         (props) => {
-            tt.true(typeof props.proppy.value() === "undefined", `value is passed down via prop`);
+            t.true(typeof props.proppy.value() === "undefined", `value is passed down via prop`);
         }
     );
 });
 
-test('ParcelStateHock changes should be put back into ParcelStateHock state', tt => {
+test('ParcelStateHock changes should be put back into ParcelStateHock state', t => {
     let Child = () => <div />;
     let Hocked = ParcelStateHock({
         initialValue: () => 123,
@@ -54,31 +54,31 @@ test('ParcelStateHock changes should be put back into ParcelStateHock state', tt
     let wrapper = shallow(<Hocked />);
     let {proppy} = wrapper.props();
     proppy.onChange(456);
-    tt.is(456, wrapper.update().props().proppy.value());
+    t.is(456, wrapper.update().props().proppy.value());
 });
 
 
-test('ParcelStateHock config should accept a modify function', tt => {
-    tt.plan(3);
+test('ParcelStateHock config should accept a modify function', t => {
+    t.plan(3);
     CheckHockChildProps(
         ParcelStateHock({
             initialValue: () => 456,
             prop: "proppy",
             modify: (props) => (parcel) => {
-                tt.is(456, parcel.value(), `modify should receive parcel`);
-                tt.deepEqual({}, props, `modify should receive props`);
+                t.is(456, parcel.value(), `modify should receive parcel`);
+                t.deepEqual({}, props, `modify should receive props`);
                 return parcel.modifyValue(ii => ii + 1);
             }
         }),
         {},
         (props) => {
-            tt.is(457, props.proppy.value(), `modified value is passed down via prop`);
+            t.is(457, props.proppy.value(), `modified value is passed down via prop`);
         }
     );
 });
 
-test('ParcelStateHock config should accept a debugRender boolean', tt => {
-    tt.plan(1);
+test('ParcelStateHock config should accept a debugRender boolean', t => {
+    t.plan(1);
     CheckHockChildProps(
         ParcelStateHock({
             initialValue: () => 456,
@@ -87,7 +87,7 @@ test('ParcelStateHock config should accept a debugRender boolean', tt => {
         }),
         {},
         (props) => {
-            tt.true(props.proppy._treeshare.getDebugRender(), `debugRender is set on parcel`);
+            t.true(props.proppy._treeshare.getDebugRender(), `debugRender is set on parcel`);
         }
     );
 });

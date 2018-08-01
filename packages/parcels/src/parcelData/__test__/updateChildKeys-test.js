@@ -2,7 +2,7 @@
 import test from 'ava';
 import updateChildKeys from '../updateChildKeys';
 
-test('updateChildKeys() adds child keys for objects if they dont exist', tt => {
+test('updateChildKeys() adds child keys for objects if they dont exist', t => {
     let data = {
         value: {
             a: 1,
@@ -29,10 +29,10 @@ test('updateChildKeys() adds child keys for objects if they dont exist', tt => {
         }
     };
 
-    tt.deepEqual(expectedData, updateChildKeys()(data));
+    t.deepEqual(expectedData, updateChildKeys()(data));
 });
 
-test('updateChildKeys() doesnt change anything for objects if child keys all exist', tt => {
+test('updateChildKeys() doesnt change anything for objects if child keys all exist', t => {
     let data = {
         value: {
             a: 1,
@@ -48,10 +48,10 @@ test('updateChildKeys() doesnt change anything for objects if child keys all exi
         }
     };
 
-    tt.deepEqual(data, updateChildKeys()(data));
+    t.deepEqual(data, updateChildKeys()(data));
 });
 
-test('updateChildKeys() adds child keys for arrays if they dont exist', tt => {
+test('updateChildKeys() adds child keys for arrays if they dont exist', t => {
     let data = {
         value: [1,2,3],
         child: [{}, {}, {}]
@@ -66,10 +66,10 @@ test('updateChildKeys() adds child keys for arrays if they dont exist', tt => {
         ]
     };
 
-    tt.deepEqual(expectedData, updateChildKeys()(data));
+    t.deepEqual(expectedData, updateChildKeys()(data));
 });
 
-test('updateChildKeys() doesnt change anything for arrays if child keys all exist', tt => {
+test('updateChildKeys() doesnt change anything for arrays if child keys all exist', t => {
     let data = {
         value: [1,2,3],
         child: [
@@ -79,10 +79,10 @@ test('updateChildKeys() doesnt change anything for arrays if child keys all exis
         ]
     };
 
-    tt.deepEqual(data, updateChildKeys()(data));
+    t.deepEqual(data, updateChildKeys()(data));
 });
 
-test('updateChildKeys() adds missing keys for arrays', tt => {
+test('updateChildKeys() adds missing keys for arrays', t => {
     let data = {
         value: [1,2,3,4],
         child: [
@@ -103,10 +103,10 @@ test('updateChildKeys() adds missing keys for arrays', tt => {
         ]
     };
 
-    tt.deepEqual(expectedData, updateChildKeys()(data));
+    t.deepEqual(expectedData, updateChildKeys()(data));
 });
 
-test('updateChildKeys() removes unnecessary keys', tt => {
+test('updateChildKeys() removes unnecessary keys', t => {
     let data = {
         value: [1,2],
         child: [
@@ -124,10 +124,10 @@ test('updateChildKeys() removes unnecessary keys', tt => {
         ]
     };
 
-    tt.deepEqual(expectedData, updateChildKeys()(data));
+    t.deepEqual(expectedData, updateChildKeys()(data));
 });
 
-test('updateChildKeys() retains deep keys on objects', tt => {
+test('updateChildKeys() retains deep keys on objects', t => {
     let data = {
         value: {a:[1], b:[2]},
         child: {
@@ -144,10 +144,10 @@ test('updateChildKeys() retains deep keys on objects', tt => {
         }
     };
 
-    tt.deepEqual(expectedData, updateChildKeys()(data));
+    t.deepEqual(expectedData, updateChildKeys()(data));
 });
 
-test('updateChildKeys() retains deep keys on arrays', tt => {
+test('updateChildKeys() retains deep keys on arrays', t => {
     let data = {
         value: [[1],[2]],
         child: [
@@ -164,5 +164,5 @@ test('updateChildKeys() retains deep keys on arrays', tt => {
         ]
     };
 
-    tt.deepEqual(expectedData, updateChildKeys()(data));
+    t.deepEqual(expectedData, updateChildKeys()(data));
 });

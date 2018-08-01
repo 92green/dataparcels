@@ -2,7 +2,7 @@
 import test from 'ava';
 import forEach from '../forEach';
 
-test('forEach should work on objects', (tt: Object) => {
+test('forEach should work on objects', (t: Object) => {
     let parcelData = {
         value: {a:1,b:2,c:3}
     };
@@ -37,10 +37,10 @@ test('forEach should work on objects', (tt: Object) => {
     let arr = [];
     forEach((parcelData, key) => arr.push({parcelData, key}))(parcelData);
 
-    tt.deepEqual(expectedArr, arr);
+    t.deepEqual(expectedArr, arr);
 });
 
-test('forEach should work on arrays', (tt: Object) => {
+test('forEach should work on arrays', (t: Object) => {
     let parcelData = {
         value: [1,2,3]
     };
@@ -75,5 +75,5 @@ test('forEach should work on arrays', (tt: Object) => {
     let arr = [];
     forEach((parcelData, key) => arr.push({parcelData, key}))(parcelData);
 
-    tt.deepEqual(expectedArr, arr);
+    t.deepEqual(expectedArr, arr);
 });

@@ -7,7 +7,7 @@ const addThree = (parcelData) => ({
     value: parcelData.value + 3
 });
 
-test('updateIn should work', (tt: Object) => {
+test('updateIn should work', (t: Object) => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -28,10 +28,10 @@ test('updateIn should work', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, updateIn(['d'], () => ({value: 4}))(parcelData));
+    t.deepEqual(expectedParcelData, updateIn(['d'], () => ({value: 4}))(parcelData));
 });
 
-test('updateIn should work with existing child', (tt: Object) => {
+test('updateIn should work with existing child', (t: Object) => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -51,10 +51,10 @@ test('updateIn should work with existing child', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, updateIn(['a'], addThree)(parcelData));
+    t.deepEqual(expectedParcelData, updateIn(['a'], addThree)(parcelData));
 });
 
-test('updateIn should work deeply', (tt: Object) => {
+test('updateIn should work deeply', (t: Object) => {
     let parcelData = {
         value: {
             a: {},
@@ -92,10 +92,10 @@ test('updateIn should work deeply', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, updateIn(['a', 'd'], () => ({value: 4}))(parcelData));
+    t.deepEqual(expectedParcelData, updateIn(['a', 'd'], () => ({value: 4}))(parcelData));
 });
 
-test('updateIn should work deeply with existing child', (tt: Object) => {
+test('updateIn should work deeply with existing child', (t: Object) => {
     let parcelData = {
         value: {
             a: {
@@ -143,5 +143,5 @@ test('updateIn should work deeply with existing child', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, updateIn(['a', 'd'], addThree)(parcelData));
+    t.deepEqual(expectedParcelData, updateIn(['a', 'd'], addThree)(parcelData));
 });
