@@ -1,5 +1,4 @@
 // @flow
-import test from 'ava';
 import Action from '../../change/Action';
 import ChangeRequest from '../../change/ChangeRequest';
 import Parcel from '../../parcel/Parcel';
@@ -40,16 +39,20 @@ let testTypes = (type: string, shouldAllow: string[]) => (t: *) => {
         types,
         map((data, dataType) => {
             if(shouldAllow.indexOf(dataType) !== -1) {
-                t.notThrows(() => Types(message, type)(data), `${type} should not throw when given ${dataType}`);
+                expect(() => Types(message, type)(data)).not.toThrowError(`${type} should not throw when given ${dataType}`);
             } else {
-                t.true(t.throws(() => Types(message, type)(data), Error).message.indexOf("but got") !== -1, `${type} should throw error when given ${dataType}`);
+                expect(
+                    expect(() => Types(message, type)(data)).toThrowError(Error).message.indexOf("but got") !== -1
+                ).toBe(true);
             }
         })
     );
 };
 
-test('Types will error if type is not found', t => {
-    t.is("Unknown type check", t.throws(() => Types('???', 'notfound')({abc: 123}), Error).message);
+test('Types will error if type is not found', () => {
+    expect("Unknown type check").toBe(
+        expect(() => Types('???', 'notfound')({abc: 123})).toThrowError(Error).message
+    );
 });
 
 test('Types() can identify a boolean', testTypes(`boolean`, [
