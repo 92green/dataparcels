@@ -2,7 +2,7 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-test('ChildParcel.deleteSelf() should delete self', (t: Object) => {
+test('ChildParcel.deleteSelf() should delete self', t => {
     t.plan(1);
 
     var expectedValue = {
@@ -23,7 +23,7 @@ test('ChildParcel.deleteSelf() should delete self', (t: Object) => {
     new Parcel(data).get('a').deleteSelf();
 });
 
-test('ChildParcel.deleteSelf() should delete self when indexed', (t: Object) => {
+test('ChildParcel.deleteSelf() should delete self when indexed', t => {
     t.plan(1);
 
     var expectedValue = [1,3];

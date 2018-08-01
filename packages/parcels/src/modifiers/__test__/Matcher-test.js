@@ -335,7 +335,7 @@ let matchTests = [
 pipeWith(
     matchTests,
     map(({name, match, matchParsed, shouldMatch}) => {
-        test(`${name}`, (t: Object) => {
+        test(`${name}`, t => {
             let matched: string[] = pipeWith(
                 typedPathStrings,
                 map((typedPathString, name) => Matcher(typedPathString, match)),
@@ -347,13 +347,13 @@ pipeWith(
     })
 );
 
-test(`split() should split`, (t: Object) => {
+test(`split() should split`, t => {
     t.deepEqual(['abc'], split(`abc`));
     t.deepEqual(['abc', 'def'], split(`abc.def`));
     t.deepEqual(['abc', 'de%.f'], split(`abc.de%.f`));
 });
 
-test(`containsWildcard() should identify when a match string contains a wildcard`, (t: Object) => {
+test(`containsWildcard() should identify when a match string contains a wildcard`, t => {
     t.false(containsWildcard(`abc`));
     t.true(containsWildcard(`abc*`));
     t.true(containsWildcard(`abc.*`));
@@ -365,7 +365,7 @@ test(`containsWildcard() should identify when a match string contains a wildcard
     t.true(containsWildcard(`abc%**`));
 });
 
-test(`containsGlobstar() should identify when a match string contains a globstar`, (t: Object) => {
+test(`containsGlobstar() should identify when a match string contains a globstar`, t => {
     t.false(containsGlobstar(`abc`));
     t.false(containsGlobstar(`abc*`));
     t.false(containsGlobstar(`abc.*`));

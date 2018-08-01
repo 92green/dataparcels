@@ -2,7 +2,7 @@
 import test from 'ava';
 import pop from '../pop';
 
-test('pop should work', (t: Object) => {
+test('pop should work', t => {
     let parcelData = {
         value: [1,2,3],
         child: [

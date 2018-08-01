@@ -3,7 +3,7 @@ import test from 'ava';
 import Parcel from 'parcels';
 import FindParcelsMatching from '../FindParcelsMatching';
 
-test(`FindParcelsMatching() should return all parcels matching the match string at or below the start parcel's depth`, (t: Object) => {
+test(`FindParcelsMatching() should return all parcels matching the match string at or below the start parcel's depth`, t => {
 
     let p = new Parcel({
         value: {

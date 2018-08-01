@@ -2,7 +2,7 @@
 import test from 'ava';
 import swapPrev from '../swapPrev';
 
-test('swapPrev should work', (t: Object) => {
+test('swapPrev should work', t => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -26,7 +26,7 @@ test('swapPrev should work', (t: Object) => {
     t.deepEqual(expectedParcelData, swapPrev(-4)(parcelData), 'should work with negative wrapped number');
 });
 
-test('swapPrev should work with hashKeys', (t: Object) => {
+test('swapPrev should work with hashKeys', t => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -48,7 +48,7 @@ test('swapPrev should work with hashKeys', (t: Object) => {
     t.deepEqual(expectedParcelData, swapPrev("#c")(parcelData));
 });
 
-test('swapPrev should work with zero', (t: Object) => {
+test('swapPrev should work with zero', t => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -71,7 +71,7 @@ test('swapPrev should work with zero', (t: Object) => {
     t.deepEqual(expectedParcelData, swapPrev(0)(parcelData));
 });
 
-test('swapPrev should do nothing if given non existent key', (t: Object) => {
+test('swapPrev should do nothing if given non existent key', t => {
     let parcelData = {
         value: [1,2,3],
         child: [

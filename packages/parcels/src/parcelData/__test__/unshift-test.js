@@ -2,7 +2,7 @@
 import test from 'ava';
 import unshift from '../unshift';
 
-test('unshift should work', (t: Object) => {
+test('unshift should work', t => {
     let parcelData = {
         value: [1,2,3],
         child: [

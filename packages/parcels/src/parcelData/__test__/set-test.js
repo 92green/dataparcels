@@ -2,7 +2,7 @@
 import test from 'ava';
 import set from '../set';
 
-test('set should work', (t: Object) => {
+test('set should work', t => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -26,7 +26,7 @@ test('set should work', (t: Object) => {
     t.deepEqual(expectedParcelData, set('d', {value: 4})(parcelData));
 });
 
-test('set should work with existing child', (t: Object) => {
+test('set should work with existing child', t => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -49,7 +49,7 @@ test('set should work with existing child', (t: Object) => {
     t.deepEqual(expectedParcelData, set('a', {value: 4})(parcelData));
 });
 
-test('set should work when setting a child', (t: Object) => {
+test('set should work when setting a child', t => {
     let parcelData = {
         value: {
             a: 1,
@@ -99,7 +99,7 @@ test('set should work when setting a child', (t: Object) => {
     t.deepEqual(expectedParcelData, set('a', {value: {d:4}, child: {d:{key: 'd'}} })(parcelData));
 });
 
-test('set should work with hashKey', (t: Object) => {
+test('set should work with hashKey', t => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -122,7 +122,7 @@ test('set should work with hashKey', (t: Object) => {
     t.deepEqual(expectedParcelData, set('#b', {value: 4})(parcelData));
 });
 
-test('set should do nothing with non-existent hashKey', (t: Object) => {
+test('set should do nothing with non-existent hashKey', t => {
     let parcelData = {
         value: [1,2,3],
         child: [

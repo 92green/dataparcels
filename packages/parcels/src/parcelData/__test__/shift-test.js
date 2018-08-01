@@ -2,7 +2,7 @@
 import test from 'ava';
 import shift from '../shift';
 
-test('shift should work', (t: Object) => {
+test('shift should work', t => {
     let parcelData = {
         value: [1,2,3],
         child: [

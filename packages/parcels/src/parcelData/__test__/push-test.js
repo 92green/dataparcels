@@ -2,7 +2,7 @@
 import test from 'ava';
 import push from '../push';
 
-test('push should work', (t: Object) => {
+test('push should work', t => {
     let parcelData = {
         value: [1,2,3],
         child: [

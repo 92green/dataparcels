@@ -2,7 +2,7 @@
 import test from 'ava';
 import get from '../get';
 
-test('get should work with objects', (t: Object) => {
+test('get should work with objects', t => {
     let parcelData = {
         value: {
             a: {
@@ -21,7 +21,7 @@ test('get should work with objects', (t: Object) => {
     t.deepEqual(expectedParcelData, get('a')(parcelData));
 });
 
-test('get should work with objects with hashkey - just to make sure that hashkeys are only converted to properties when used on an indexed parcel', (t: Object) => {
+test('get should work with objects with hashkey - just to make sure that hashkeys are only converted to properties when used on an indexed parcel', t => {
     let parcelData = {
         value: {
             ["#a"]: {
@@ -41,7 +41,7 @@ test('get should work with objects with hashkey - just to make sure that hashkey
 });
 
 
-test('get should not clone value', (t: Object) => {
+test('get should not clone value', t => {
     let parcelData = {
         value: {
             a: {
@@ -52,7 +52,7 @@ test('get should not clone value', (t: Object) => {
     t.is(parcelData.value.a, get('a')(parcelData).value);
 });
 
-test('get should work with arrays that dont have keys yet', (t: Object) => {
+test('get should work with arrays that dont have keys yet', t => {
     let parcelData = {
         value: ['abc']
     };
@@ -66,7 +66,7 @@ test('get should work with arrays that dont have keys yet', (t: Object) => {
     t.deepEqual(get(0)(parcelData), expectedParcelData);
 });
 
-test('get should work with arrays that dont have keys yet with hashkey', (t: Object) => {
+test('get should work with arrays that dont have keys yet with hashkey', t => {
     let parcelData = {
         value: ['abc', 'def']
     };
@@ -80,7 +80,7 @@ test('get should work with arrays that dont have keys yet with hashkey', (t: Obj
     t.deepEqual(get("#b")(parcelData), expectedParcelData);
 });
 
-test('get should work with objects that already have children, and not recreate children, even if incorrect', (t: Object) => {
+test('get should work with objects that already have children, and not recreate children, even if incorrect', t => {
     let parcelData = {
         value: {
             a: {
@@ -104,7 +104,7 @@ test('get should work with objects that already have children, and not recreate 
     t.deepEqual(expectedParcelData, get('a')(parcelData));
 });
 
-test('get should work with non existent keys', (t: Object) => {
+test('get should work with non existent keys', t => {
     let parcelData = {
         value: {
             a: {

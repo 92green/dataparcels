@@ -237,7 +237,7 @@ test('ParentParcel.getIn(keyPath) should cope with non existent keypaths', t => 
     t.deepEqual(descendantParcel2.value(), "!!!");
 });
 
-test('ParentParcel.toObject() should make an object', (t: Object) => {
+test('ParentParcel.toObject() should make an object', t => {
     var data = {
         value: {a:1,b:2,c:3},
         meta: {
@@ -253,7 +253,7 @@ test('ParentParcel.toObject() should make an object', (t: Object) => {
 
 });
 
-test('ParentParcel.toObject() should make an object with a mapper', (t: Object) => {
+test('ParentParcel.toObject() should make an object with a mapper', t => {
     var data = {
         value: {a:1,b:2,c:3},
         meta: {
@@ -281,7 +281,7 @@ test('ParentParcel.toObject() should make an object with a mapper', (t: Object) 
 
 });
 
-test('ParentParcel.toArray() should make an array', (t: Object) => {
+test('ParentParcel.toArray() should make an array', t => {
     var data = {
         value: [1,2,3],
         meta: {
@@ -298,7 +298,7 @@ test('ParentParcel.toArray() should make an array', (t: Object) => {
 });
 
 
-test('ParentParcel.toArray() should make an array with a mapper', (t: Object) => {
+test('ParentParcel.toArray() should make an array with a mapper', t => {
     var data = {
         value: [1,2,3],
         meta: {
@@ -326,7 +326,7 @@ test('ParentParcel.toArray() should make an array with a mapper', (t: Object) =>
 
 });
 
-test('ParentParcel.setSelf() should call the Parcels handleChange function with the new parcelData', (t: Object) => {
+test('ParentParcel.setSelf() should call the Parcels handleChange function with the new parcelData', t => {
     t.plan(1);
 
     var data = {
@@ -342,7 +342,7 @@ test('ParentParcel.setSelf() should call the Parcels handleChange function with 
     new Parcel(data).setSelf("???");
 });
 
-test('ParentParcel.updateSelf() should call the Parcels handleChange function with the new parcelData', (t: Object) => {
+test('ParentParcel.updateSelf() should call the Parcels handleChange function with the new parcelData', t => {
     t.plan(2);
 
     var data = {
@@ -365,7 +365,7 @@ test('ParentParcel.updateSelf() should call the Parcels handleChange function wi
     });
 });
 
-test('ParentParcel.set(key) should call the Parcels handleChange function with the new parcelData', (t: Object) => {
+test('ParentParcel.set(key) should call the Parcels handleChange function with the new parcelData', t => {
     t.plan(1);
 
     var data = {
@@ -381,7 +381,7 @@ test('ParentParcel.set(key) should call the Parcels handleChange function with t
     new Parcel(data).set("a", "???");
 });
 
-test('ParentParcel.update(key) should call the Parcels handleChange function with the new parcelData', (t: Object) => {
+test('ParentParcel.update(key) should call the Parcels handleChange function with the new parcelData', t => {
     t.plan(2);
 
     var data = {
@@ -400,7 +400,7 @@ test('ParentParcel.update(key) should call the Parcels handleChange function wit
     });
 });
 
-test('ParentParcel.setIn(keyPath) should call the Parcels handleChange function with the new parcelData', (t: Object) => {
+test('ParentParcel.setIn(keyPath) should call the Parcels handleChange function with the new parcelData', t => {
     t.plan(1);
 
     var data = {
@@ -418,7 +418,7 @@ test('ParentParcel.setIn(keyPath) should call the Parcels handleChange function 
     new Parcel(data).setIn(["a", "b"], "???");
 });
 
-test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange function with the new parcelData', (t: Object) => {
+test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange function with the new parcelData', t => {
     t.plan(2);
 
     var data = {

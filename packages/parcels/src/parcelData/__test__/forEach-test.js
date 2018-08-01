@@ -2,7 +2,7 @@
 import test from 'ava';
 import forEach from '../forEach';
 
-test('forEach should work on objects', (t: Object) => {
+test('forEach should work on objects', t => {
     let parcelData = {
         value: {a:1,b:2,c:3}
     };
@@ -40,7 +40,7 @@ test('forEach should work on objects', (t: Object) => {
     t.deepEqual(expectedArr, arr);
 });
 
-test('forEach should work on arrays', (t: Object) => {
+test('forEach should work on arrays', t => {
     let parcelData = {
         value: [1,2,3]
     };

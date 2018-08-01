@@ -2,7 +2,7 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-test('Parcel.data() should return the Parcels data', (t: Object) => {
+test('Parcel.data() should return the Parcels data', t => {
     var data = {
         value: 123,
         child: undefined
@@ -18,14 +18,14 @@ test('Parcel.data() should return the Parcels data', (t: Object) => {
     t.deepEqual(expectedData, new Parcel(data).data());
 });
 
-test('Parcel.value() should return the Parcels value', (t: Object) => {
+test('Parcel.value() should return the Parcels value', t => {
     var data = {
         value: 123
     };
     t.is(new Parcel(data).value(), 123);
 });
 
-test('Parcel.value() should return the same instance of the Parcels value', (t: Object) => {
+test('Parcel.value() should return the same instance of the Parcels value', t => {
     var myObject = {a:1,b:2};
     var data = {
         value: myObject
@@ -34,13 +34,13 @@ test('Parcel.value() should return the same instance of the Parcels value', (t: 
 });
 
 
-test('Parcels should be able to accept no config', (t: Object) => {
+test('Parcels should be able to accept no config', t => {
     let parcel = new Parcel();
     t.deepEqual(undefined, parcel.value());
     parcel.onChange(123);
 });
 
-test('Parcels should be able to accept just value in config', (t: Object) => {
+test('Parcels should be able to accept just value in config', t => {
     let parcel = new Parcel({
         value: 123
     });
@@ -48,7 +48,7 @@ test('Parcels should be able to accept just value in config', (t: Object) => {
     parcel.onChange(456);
 });
 
-test('Parcels should be able to accept just handleChange in config', (t: Object) => {
+test('Parcels should be able to accept just handleChange in config', t => {
     let parcel = new Parcel({
         handleChange: (parcel) => {
             t.is(456, parcel.value());
@@ -58,7 +58,7 @@ test('Parcels should be able to accept just handleChange in config', (t: Object)
     parcel.onChange(456);
 });
 
-test('Parcel.setSelf() should call the Parcels handleChange function with the new parcelData', (t: Object) => {
+test('Parcel.setSelf() should call the Parcels handleChange function with the new parcelData', t => {
     t.plan(2);
 
     var data = {
@@ -89,7 +89,7 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
     }).setSelf(456);
 });
 
-test('Parcel.updateSelf() should call the Parcels handleChange function with the new parcelData', (t: Object) => {
+test('Parcel.updateSelf() should call the Parcels handleChange function with the new parcelData', t => {
     t.plan(3);
 
     var data = {
@@ -125,7 +125,7 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
     });
 });
 
-test('Parcel.onChange() should work like set that only accepts a single argument', (t: Object) => {
+test('Parcel.onChange() should work like set that only accepts a single argument', t => {
     t.plan(2);
 
     var data = {
@@ -156,7 +156,7 @@ test('Parcel.onChange() should work like set that only accepts a single argument
     }).onChange(456);
 });
 
-test('Parcel.onChangeDOM() should work like onChange but take the value from event.currentTarget.value', (t: Object) => {
+test('Parcel.onChangeDOM() should work like onChange but take the value from event.currentTarget.value', t => {
     t.plan(2);
 
     var data = {
@@ -191,7 +191,7 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
     });
 });
 
-test('Parcel.spread() returns an object with value and onChange', (t: Object) => {
+test('Parcel.spread() returns an object with value and onChange', t => {
     var data = {
         value: 123,
         handleChange: (parcel) => {
@@ -211,7 +211,7 @@ test('Parcel.spread() returns an object with value and onChange', (t: Object) =>
     t.is(onChange, parcel.onChange, 'onChange is returned');
 });
 
-test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)', (t: Object) => {
+test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)', t => {
     var data = {
         value: 123,
         handleChange: (parcel) => {
@@ -231,7 +231,7 @@ test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)
     t.is(onChange, parcel.onChangeDOM, 'onChangeDOM is returned');
 });
 
-test('Parcel.setMeta() should call the Parcels handleChange function with the new meta merged in', (t: Object) => {
+test('Parcel.setMeta() should call the Parcels handleChange function with the new meta merged in', t => {
     t.plan(3);
 
     var data = {
@@ -280,7 +280,7 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
     });
 });
 
-test('Parcel.meta() should return meta', (t: Object) => {
+test('Parcel.meta() should return meta', t => {
     var meta = {
         abc: 123,
         def: 456
@@ -299,7 +299,7 @@ test('Parcel.meta() should return meta', (t: Object) => {
     var parcel = new Parcel(data).setMeta(meta);
 });
 
-test('Parcel.updateMeta() should call the Parcels handleChange function with the new meta merged in', (t: Object) => {
+test('Parcel.updateMeta() should call the Parcels handleChange function with the new meta merged in', t => {
     t.plan(5);
 
     var data = {
@@ -354,7 +354,7 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
     });
 });
 
-test('Parcel.setChangeRequestMeta() should set change request meta', (t: Object) => {
+test('Parcel.setChangeRequestMeta() should set change request meta', t => {
     var data = {
         value: 123,
         handleChange: (parcel, changeRequest) => {
@@ -370,7 +370,7 @@ test('Parcel.setChangeRequestMeta() should set change request meta', (t: Object)
     });
 });
 
-test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', (t: Object) => {
+test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', t => {
     t.plan(6);
 
     let p = new Parcel({
@@ -392,7 +392,7 @@ test('Parcel.hasDispatched() should say if a parcel has dispatched from the curr
     p.get('abc').onChange(789);
 });
 
-test('Parcel.ping() should call the Parcels handleChange function with no change', (t: Object) => {
+test('Parcel.ping() should call the Parcels handleChange function with no change', t => {
     t.plan(1);
 
     var data = {
@@ -414,7 +414,7 @@ test('Parcel.ping() should call the Parcels handleChange function with no change
     }).ping(456);
 });
 
-test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', (t: Object) => {
+test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', t => {
 
     let p = new Parcel({
         value: {

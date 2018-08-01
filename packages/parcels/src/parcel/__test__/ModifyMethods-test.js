@@ -3,7 +3,7 @@ import test from 'ava';
 import Parcel from '../Parcel';
 import type ChangeRequest from '../../change/ChangeRequest';
 
-test('Parcel.modify() should return the result of modifys updaters', (t: Object) => {
+test('Parcel.modify() should return the result of modifys updaters', t => {
     var data = {
         value: 123,
     };
@@ -29,7 +29,7 @@ test('Parcel.modify() should return the result of modifys updaters', (t: Object)
 });
 
 
-test('Parcel.modifyData() should return a new parcel with updated parcelData', (t: Object) => {
+test('Parcel.modifyData() should return a new parcel with updated parcelData', t => {
     var data = {
         value: 123,
         key: "#a"
@@ -49,7 +49,7 @@ test('Parcel.modifyData() should return a new parcel with updated parcelData', (
     t.deepEqual(expectedData, updated);
 });
 
-test('Parcel.modifyValue() should return a new parcel with updated parcelData', (t: Object) => {
+test('Parcel.modifyValue() should return a new parcel with updated parcelData', t => {
     t.plan(2);
     var data = {
         value: [123]
@@ -71,7 +71,7 @@ test('Parcel.modifyValue() should return a new parcel with updated parcelData', 
     t.deepEqual(expectedData, updated);
 });
 
-test('Parcel.modifyChange() should allow you to change the payload of a changed parcel', (t: Object) => {
+test('Parcel.modifyChange() should allow you to change the payload of a changed parcel', t => {
     t.plan(1);
 
     var data = {
@@ -89,7 +89,7 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
         .onChange(456);
 });
 
-test('Parcel.modifyChange() should allow you to stop a change by not calling dispatch', (t: Object) => {
+test('Parcel.modifyChange() should allow you to stop a change by not calling dispatch', t => {
     var data = {
         value: 123,
         handleChange: (parcel: Parcel) => {
@@ -105,7 +105,7 @@ test('Parcel.modifyChange() should allow you to stop a change by not calling dis
         .onChange(456);
 });
 
-test('Parcel.modifyChangeValue() should allow you to change the payload of a changed parcel with an updater', (t: Object) => {
+test('Parcel.modifyChangeValue() should allow you to change the payload of a changed parcel with an updater', t => {
     t.plan(1);
 
     var data = {
@@ -121,7 +121,7 @@ test('Parcel.modifyChangeValue() should allow you to change the payload of a cha
         .onChange(456);
 });
 
-test('Parcel.modifyChangeValue() should allow changes to meta through', (t: Object) => {
+test('Parcel.modifyChangeValue() should allow changes to meta through', t => {
     t.plan(2);
 
     var data = {
@@ -144,7 +144,7 @@ test('Parcel.modifyChangeValue() should allow changes to meta through', (t: Obje
 });
 
 
-test('Parcel.initialMeta() should work', (t: Object) => {
+test('Parcel.initialMeta() should work', t => {
     t.plan(3);
 
     let meta = {a:1, b:2};
@@ -165,7 +165,7 @@ test('Parcel.initialMeta() should work', (t: Object) => {
     });
 });
 
-test('Parcel.initialMeta() should merge', (t: Object) => {
+test('Parcel.initialMeta() should merge', t => {
     t.plan(2);
 
     let meta = {a:1, b:2};
@@ -186,7 +186,7 @@ test('Parcel.initialMeta() should merge', (t: Object) => {
     });
 });
 
-test('Parcel should addModifier', (t: Object) => {
+test('Parcel should addModifier', t => {
     var data = {
         value: [1,2,3]
     };
@@ -200,7 +200,7 @@ test('Parcel should addModifier', (t: Object) => {
     t.deepEqual(11, element.value(), "element parcel value proves that modifier has been applied to current parcel");
 });
 
-test('Parcel should addDescendantModifier', (t: Object) => {
+test('Parcel should addDescendantModifier', t => {
     var data = {
         value: [1,2,3]
     };
@@ -214,7 +214,7 @@ test('Parcel should addDescendantModifier', (t: Object) => {
     t.deepEqual( 11,element.value(), "element parcel value proves that modifier has been applied to current parcel");
 });
 
-test('Parcel should addModifier with simple match', (t: Object) => {
+test('Parcel should addModifier with simple match', t => {
     var data = {
         value: {
             abc: 123,
@@ -232,7 +232,7 @@ test('Parcel should addModifier with simple match', (t: Object) => {
     t.is(456, parcel.get('def').value(), "def parcel value proves that modifier has NOT been applied");
 });
 
-test('Parcel should addModifier with deep match', (t: Object) => {
+test('Parcel should addModifier with deep match', t => {
     var data = {
         value: {
             abc: {
@@ -252,7 +252,7 @@ test('Parcel should addModifier with deep match', (t: Object) => {
     t.is(456, parcel.get('def').value(), "def parcel value proves that modifier has NOT been applied");
 });
 
-test('Parcel should addModifier with globstar', (t: Object) => {
+test('Parcel should addModifier with globstar', t => {
     var data = {
         value: {
             abc: {
@@ -272,7 +272,7 @@ test('Parcel should addModifier with globstar', (t: Object) => {
     t.is(457, parcel.get('def').value(), "def parcel value proves that modifier has been applied");
 });
 
-test('Parcel should addModifier with typed match', (t: Object) => {
+test('Parcel should addModifier with typed match', t => {
     var data = {
         value: {
             abc: {

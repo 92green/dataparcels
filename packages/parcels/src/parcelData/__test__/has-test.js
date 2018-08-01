@@ -2,7 +2,7 @@
 import test from 'ava';
 import has from '../has';
 
-test('has should work', (t: Object) => {
+test('has should work', t => {
     let parcelData = {
         value: {
             a: {
@@ -15,7 +15,7 @@ test('has should work', (t: Object) => {
     t.false(has('b')(parcelData));
 });
 
-test('has should work with hashkeys', (t: Object) => {
+test('has should work with hashkeys', t => {
     let parcelData = {
         value: [1,2,3]
     };

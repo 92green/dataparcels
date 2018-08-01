@@ -213,7 +213,7 @@ test('ChangeRequest meta() should be a shortcut for data().meta', t => {
     t.deepEqual(expectedMeta, meta);
 });
 
-test('ChangeRequest should keep originId and originPath', (t: Object) => {
+test('ChangeRequest should keep originId and originPath', t => {
     t.plan(2);
 
     var data = {
@@ -233,7 +233,7 @@ test('ChangeRequest should keep originId and originPath', (t: Object) => {
 });
 
 
-test('ChangeRequest should keep originId and originPath even when going through a batch() where another change is fired before the original one', (t: Object) => {
+test('ChangeRequest should keep originId and originPath even when going through a batch() where another change is fired before the original one', t => {
     t.plan(2);
 
     var data = {

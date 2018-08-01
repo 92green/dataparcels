@@ -2,7 +2,7 @@
 import test from 'ava';
 import insertBefore from '../insertBefore';
 
-test('insertBefore should work', (t: Object) => {
+test('insertBefore should work', t => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -28,7 +28,7 @@ test('insertBefore should work', (t: Object) => {
     t.deepEqual(expectedParcelData, insertBefore(-5, {value: 4})(parcelData), 'should work with negative wrapped number');
 });
 
-test('insertBefore should work with hashKey', (t: Object) => {
+test('insertBefore should work with hashKey', t => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -52,7 +52,7 @@ test('insertBefore should work with hashKey', (t: Object) => {
     t.deepEqual(expectedParcelData, insertBefore("#b", {value: 4})(parcelData));
 });
 
-test('insertBefore should do nothing with non-existent hashKey', (t: Object) => {
+test('insertBefore should do nothing with non-existent hashKey', t => {
     let parcelData = {
         value: [1,2,3],
         child: [

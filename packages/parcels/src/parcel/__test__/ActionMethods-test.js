@@ -2,7 +2,7 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-test('Parcel.batch() should batch actions', (t: Object) => {
+test('Parcel.batch() should batch actions', t => {
     t.plan(4);
 
     var functionCalls = [];
@@ -36,7 +36,7 @@ test('Parcel.batch() should batch actions', (t: Object) => {
     t.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
 });
 
-test('Parcel.batch() should batch correctly with non-idempotent actions', (t: Object) => {
+test('Parcel.batch() should batch correctly with non-idempotent actions', t => {
     t.plan(4);
 
     var functionCalls = [];
@@ -69,7 +69,7 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', (t: Ob
     t.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
 });
 
-test('Parcel.batch() should not fire handleChange if no actions called within batch', (t: Object) => {
+test('Parcel.batch() should not fire handleChange if no actions called within batch', t => {
     var handleChangeCalled = false;
 
     var data = {
@@ -83,7 +83,7 @@ test('Parcel.batch() should not fire handleChange if no actions called within ba
     t.false(handleChangeCalled);
 });
 
-test('Parcel.batch() should be nestable', (t: Object) => {
+test('Parcel.batch() should be nestable', t => {
     t.plan(5);
 
     var functionCalls = [];

@@ -2,7 +2,7 @@
 import test from 'ava';
 import Parcel from '../Parcel';
 
-test('Parcel.key() should return the Parcels key', (t: Object) => {
+test('Parcel.key() should return the Parcels key', t => {
     var data = {
         value: {
             a: [1,2,3],
@@ -17,7 +17,7 @@ test('Parcel.key() should return the Parcels key', (t: Object) => {
     // t.is("#a", new Parcel(data).getIn(["a",?????]).key()); TODO
 });
 
-test('Parcel.id() should return the Parcels id', (t: Object) => {
+test('Parcel.id() should return the Parcels id', t => {
     var data = {
         value: {
             a: [1,2,3],
@@ -33,7 +33,7 @@ test('Parcel.id() should return the Parcels id', (t: Object) => {
     // t.is("#a", new Parcel(data).getIn(["a",?????]).id()); TODO
 });
 
-test('Parcel.path() should return the Parcels path', (t: Object) => {
+test('Parcel.path() should return the Parcels path', t => {
     var data = {
         value: {
             a: [1,2,3],
@@ -49,7 +49,7 @@ test('Parcel.path() should return the Parcels path', (t: Object) => {
     // t.is("#a", new Parcel(data).getIn(["a",?????]).path()); TODO
 });
 
-test('Parcel._typedPathString() should return the Parcels typed path', (t: Object) => {
+test('Parcel._typedPathString() should return the Parcels typed path', t => {
     var data = {
         value: {
             a: [1,2,3],

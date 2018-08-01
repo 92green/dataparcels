@@ -2,7 +2,7 @@
 import test from 'ava';
 import getIn from '../getIn';
 
-test('getIn should work with objects', (t: Object) => {
+test('getIn should work with objects', t => {
     let parcelData = {
         value: {
             a: {
@@ -28,7 +28,7 @@ test('getIn should work with objects', (t: Object) => {
     t.deepEqual(expectedParcelData2, getIn(['z', 'b'])(parcelData));
 });
 
-test('getIn should not clone value', (t: Object) => {
+test('getIn should not clone value', t => {
     let parcelData = {
         value: {
             a: {

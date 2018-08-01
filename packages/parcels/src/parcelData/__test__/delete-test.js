@@ -2,7 +2,7 @@
 import test from 'ava';
 import del from '../delete';
 
-test('delete should work by index', (t: Object) => {
+test('delete should work by index', t => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -24,7 +24,7 @@ test('delete should work by index', (t: Object) => {
 });
 
 
-test('delete should work by key', (t: Object) => {
+test('delete should work by key', t => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -45,7 +45,7 @@ test('delete should work by key', (t: Object) => {
     t.deepEqual(expectedParcelData, del("#b")(parcelData));
 });
 
-test('delete should work by non-existent key', (t: Object) => {
+test('delete should work by non-existent key', t => {
     let parcelData = {
         value: [1,3],
         child: [

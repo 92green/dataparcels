@@ -2,7 +2,7 @@
 import test from 'ava';
 import Modifiers from '../Modifiers';
 
-test('Modifiers should accept and return modifier objects', (t: Object) => {
+test('Modifiers should accept and return modifier objects', t => {
     let modifiers = [
         {
             modifier: () => {},
@@ -17,7 +17,7 @@ test('Modifiers should accept and return modifier objects', (t: Object) => {
     t.deepEqual(modifiers, new Modifiers(modifiers).toJS());
 });
 
-test('Modifiers should turn modifier functions into modifier objects', (t: Object) => {
+test('Modifiers should turn modifier functions into modifier objects', t => {
     let modifier = () => {};
     let expectedModifier = [{
         modifier
@@ -26,7 +26,7 @@ test('Modifiers should turn modifier functions into modifier objects', (t: Objec
     t.deepEqual(expectedModifier, new Modifiers([modifier]).toJS());
 });
 
-test('Modifiers should cope with being passed into other modifier constructors', (t: Object) => {
+test('Modifiers should cope with being passed into other modifier constructors', t => {
     let modifiers = [
         {
             modifier: () => {},
@@ -42,7 +42,7 @@ test('Modifiers should cope with being passed into other modifier constructors',
     t.deepEqual(modifiers, new Modifiers(js).toJS());
 });
 
-test('Modifiers should add()', (t: Object) => {
+test('Modifiers should add()', t => {
     let modifier = () => {};
     let modifier2 = () => {};
     let modifier2Object = {
@@ -62,13 +62,13 @@ test('Modifiers should add()', (t: Object) => {
     t.deepEqual(expectedModifier, new Modifiers([modifier]).add(modifier2Object).toJS());
 });
 
-test('Modifiers should isEmpty()', (t: Object) => {
+test('Modifiers should isEmpty()', t => {
     t.false(new Modifiers([() => {}]).isEmpty());
     t.true(new Modifiers().isEmpty());
 });
 
 
-test('Modifiers should set()', (t: Object) => {
+test('Modifiers should set()', t => {
     let modifier = () => {};
     let modifier2 = () => {};
     let modifier2Object = {
