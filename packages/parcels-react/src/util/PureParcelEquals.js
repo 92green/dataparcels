@@ -3,8 +3,8 @@ import type Parcel from 'parcels';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
 export default (parcelA: Parcel, parcelB: Parcel): boolean => {
-    let aa: Object = parcelA.raw();
-    let bb: Object = parcelB.raw();
+    let aa: Object = parcelA.data();
+    let bb: Object = parcelB.data();
 
     return aa.value === bb.value
         && aa.key === bb.key

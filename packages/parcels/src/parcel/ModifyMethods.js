@@ -3,7 +3,6 @@ import Types from '../types/Types';
 import type {ModifierFunction, ModifierObject} from '../types/Types';
 
 import type ChangeRequest from '../change/ChangeRequest';
-import strip from '../parcelData/strip';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
@@ -43,7 +42,6 @@ export default (_this: Parcel): Object => ({
         Types(`modifyData() expects param "updater" to be`, `function`)(updater);
         return pipeWith(
             _this._parcelData,
-            strip(),
             updater,
             Types(`modifyData() expects the result of updater() to be`, `parcelData`),
             parcelData => ({

@@ -73,7 +73,6 @@ export default class Parcel {
     id: Function;
     path: Function;
     // - value parcel methods
-    raw: Function;
     data: Function;
     value: Function;
     spread: Function;

@@ -15,6 +15,7 @@ test('ElementParcel.insertBeforeSelf() should insert', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [1,4,2,3],
         key: '^',
         child: [
@@ -67,6 +68,7 @@ test('ElementParcel.insertAfterSelf() should insert', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [1,2,4,3],
         key: '^',
         child: [
@@ -119,6 +121,7 @@ test('ElementParcel.swapWithSelf() should swap', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [3,2,1],
         key: '^',
         child: [
@@ -160,6 +163,7 @@ test('ElementParcel.swapNextWithSelf() should swapNext', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [2,1,3],
         key: '^',
         child: [
@@ -214,6 +218,7 @@ test('ElementParcel.swapPrevWithSelf() should swapPrev', tt => {
     };
 
     var expectedData = {
+        meta: {},
         value: [2,1,3],
         key: '^',
         child: [

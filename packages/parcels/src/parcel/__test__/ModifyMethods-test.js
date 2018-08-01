@@ -41,6 +41,8 @@ test('Parcel.modifyData() should return a new parcel with updated parcelData', (
         .data();
 
     var expectedData = {
+        meta: {},
+        child: undefined,
         value: "???",
         key: "^"
     };
@@ -61,6 +63,8 @@ test('Parcel.modifyValue() should return a new parcel with updated parcelData', 
         .data();
 
     var expectedData = {
+        meta: {},
+        child: undefined,
         value: 124,
         key: "#a"
     };

@@ -2,12 +2,18 @@
 import type {Node} from 'react';
 import React from 'react';
 import {Box, Grid, GridItem, NavigationList, NavigationListItem, Text, Typography} from 'dcme-style';
-import Link from 'gatsby-link';
-import Markdown_Parcel from '../../docs/api/parcel/Parcel.md';
-import Markdown_get from '../../docs/api/parcel/get.md';
+import Link from 'component/Link';
+import Markdown_Parcel from 'docs/api/parcel/Parcel.md';
+import Markdown_value from 'docs/api/parcel/value.md';
+import Markdown_meta from 'docs/api/parcel/meta.md';
+import Markdown_data from 'docs/api/parcel/data.md';
+import Markdown_get from 'docs/api/parcel/get.md';
 
 const md = {
-    get: Markdown_get
+    value: Markdown_value,
+    meta: Markdown_meta,
+    get: Markdown_get,
+    data: Markdown_data
 }
 
 const api = `
@@ -15,7 +21,6 @@ const api = `
 value
 meta
 data
-raw
 
 # Parent get methods
 get
@@ -105,19 +110,22 @@ const renderApi = () => api
         if(!line) {
             return <br />;
         }
-        return <Link className="Link" to={`#${line}`}>{line}</Link>;
+        return <Link to={`#${line}`}>{line}</Link>;
     })
-    .map(line => <NavigationListItem>{line}</NavigationListItem>);
+    .map((line, key) => <NavigationListItem key={key}>{line}</NavigationListItem>);
 
 const renderDoclets = () => api
     .split('\n')
     .filter(_ => _)
-    .map(name => {
+    .map((name, key) => {
+        if(name.slice(0,2) === "# ") {
+            return <Text element="h2" modifier="sizeMega marginMega weightMicro">{name.slice(2)}</Text>;
+        }
         let Component = md[name];
         if(!Component) {
-            return null;
+            Component = () => <span>...</span>;
         }
-        return <Box modifier="marginBottomMega">
+        return <Box key={key} modifier="marginBottomGiga">
             <a name={name} />
             <Text element="h3" modifier="sizeKilo marginKilo">{name}()</Text>
             <Typography>
@@ -130,9 +138,11 @@ const renderDoclets = () => api
 export default () => <Box>
     <Grid>
         <GridItem modifier="9 padding">
-            <Typography>
-                <Markdown_Parcel />
-            </Typography>
+            <Box modifier="marginBottomGiga">
+                <Typography>
+                    <Markdown_Parcel />
+                </Typography>
+            </Box>
             {renderDoclets()}
         </GridItem>
         <GridItem modifier="3 padding">

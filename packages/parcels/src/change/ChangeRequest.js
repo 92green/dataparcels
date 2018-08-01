@@ -51,7 +51,7 @@ export default class ChangeRequest {
             ._treeshare
             .registry
             .get(this._baseParcel._id.id())
-            .raw();
+            .data();
 
         return Reducer(parcelDataFromRegistry, this._actions);
     };

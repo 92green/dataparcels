@@ -2,7 +2,6 @@
 import type {ParcelData} from '../types/Types';
 import Types from '../types/Types';
 import type Parcel from './Parcel';
-import strip from '../parcelData/strip';
 import ChangeRequest from '../change/ChangeRequest';
 import ActionCreators from '../change/ActionCreators';
 
@@ -12,15 +11,8 @@ export default (_this: Parcel): Object => ({
 
     // get methods
 
-    raw: (): ParcelData => {
-        return _this._parcelData;
-    },
-
     data: (): ParcelData => {
-        return pipeWith(
-            _this._parcelData,
-            strip()
-        );
+        return _this._parcelData;
     },
 
     value: (): * => {
