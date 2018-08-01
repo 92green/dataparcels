@@ -6,10 +6,11 @@
     "build-all": "lerna run build-all --parallel --",
     "build-docs": "cp README.md packages/parcels/README.md && cp README.md packages/parcels-react/README.md && lerna run build-docs --parallel --",
     "flow": "blueflag-test flow",
+    "flow-coverage": "blueflag-test flow-coverage -M",
     "lint": "blueflag-test lint --monorepo",
     "test": "blueflag-test test --monorepo",
     "coverage": "blueflag-test coverage --min-coverage=75 --monorepo",
-    "test-all": "yarn lint && yarn flow && yarn coverage",
+    "test-all": "yarn lint && yarn flow && yarn coverage && yarn flow-coverage",
     "deploy-docs": "yarn lerna --scope parcels-docs run deploy",
     "view-coverage": "yarn run coverage; open ./coverage/lcov-report/index.html",
     "watch": "lerna run watch --parallel --"
