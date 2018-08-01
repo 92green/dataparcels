@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import updateChildKeys from '../updateChildKeys';
 
-test('updateChildKeys() adds child keys for objects if they dont exist', t => {
+test('updateChildKeys() adds child keys for objects if they dont exist', () => {
     let data = {
         value: {
             a: 1,
@@ -29,10 +28,10 @@ test('updateChildKeys() adds child keys for objects if they dont exist', t => {
         }
     };
 
-    t.deepEqual(expectedData, updateChildKeys()(data));
+    expect(expectedData).toEqual(updateChildKeys()(data));
 });
 
-test('updateChildKeys() doesnt change anything for objects if child keys all exist', t => {
+test('updateChildKeys() doesnt change anything for objects if child keys all exist', () => {
     let data = {
         value: {
             a: 1,
@@ -48,10 +47,10 @@ test('updateChildKeys() doesnt change anything for objects if child keys all exi
         }
     };
 
-    t.deepEqual(data, updateChildKeys()(data));
+    expect(data).toEqual(updateChildKeys()(data));
 });
 
-test('updateChildKeys() adds child keys for arrays if they dont exist', t => {
+test('updateChildKeys() adds child keys for arrays if they dont exist', () => {
     let data = {
         value: [1,2,3],
         child: [{}, {}, {}]
@@ -66,10 +65,10 @@ test('updateChildKeys() adds child keys for arrays if they dont exist', t => {
         ]
     };
 
-    t.deepEqual(expectedData, updateChildKeys()(data));
+    expect(expectedData).toEqual(updateChildKeys()(data));
 });
 
-test('updateChildKeys() doesnt change anything for arrays if child keys all exist', t => {
+test('updateChildKeys() doesnt change anything for arrays if child keys all exist', () => {
     let data = {
         value: [1,2,3],
         child: [
@@ -79,10 +78,10 @@ test('updateChildKeys() doesnt change anything for arrays if child keys all exis
         ]
     };
 
-    t.deepEqual(data, updateChildKeys()(data));
+    expect(data).toEqual(updateChildKeys()(data));
 });
 
-test('updateChildKeys() adds missing keys for arrays', t => {
+test('updateChildKeys() adds missing keys for arrays', () => {
     let data = {
         value: [1,2,3,4],
         child: [
@@ -103,10 +102,10 @@ test('updateChildKeys() adds missing keys for arrays', t => {
         ]
     };
 
-    t.deepEqual(expectedData, updateChildKeys()(data));
+    expect(expectedData).toEqual(updateChildKeys()(data));
 });
 
-test('updateChildKeys() removes unnecessary keys', t => {
+test('updateChildKeys() removes unnecessary keys', () => {
     let data = {
         value: [1,2],
         child: [
@@ -124,10 +123,10 @@ test('updateChildKeys() removes unnecessary keys', t => {
         ]
     };
 
-    t.deepEqual(expectedData, updateChildKeys()(data));
+    expect(expectedData).toEqual(updateChildKeys()(data));
 });
 
-test('updateChildKeys() retains deep keys on objects', t => {
+test('updateChildKeys() retains deep keys on objects', () => {
     let data = {
         value: {a:[1], b:[2]},
         child: {
@@ -144,10 +143,10 @@ test('updateChildKeys() retains deep keys on objects', t => {
         }
     };
 
-    t.deepEqual(expectedData, updateChildKeys()(data));
+    expect(expectedData).toEqual(updateChildKeys()(data));
 });
 
-test('updateChildKeys() retains deep keys on arrays', t => {
+test('updateChildKeys() retains deep keys on arrays', () => {
     let data = {
         value: [[1],[2]],
         child: [
@@ -164,5 +163,5 @@ test('updateChildKeys() retains deep keys on arrays', t => {
         ]
     };
 
-    t.deepEqual(expectedData, updateChildKeys()(data));
+    expect(expectedData).toEqual(updateChildKeys()(data));
 });

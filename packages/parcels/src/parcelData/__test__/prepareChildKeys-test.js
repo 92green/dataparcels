@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import prepareChildKeys from '../prepareChildKeys';
 
-test('prepareChildKeys() adds child keys if they dont exist', t => {
+test('prepareChildKeys() adds child keys if they dont exist', () => {
     let data = {
         value: {
             a: 1,
@@ -26,10 +25,10 @@ test('prepareChildKeys() adds child keys if they dont exist', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedData, prepareChildKeys()(data));
+    expect(expectedData).toEqual(prepareChildKeys()(data));
 });
 
-test('prepareChildKeys() doesnt change anything if child keys all exist', t => {
+test('prepareChildKeys() doesnt change anything if child keys all exist', () => {
     let data = {
         value: {
             a: 1,
@@ -46,5 +45,5 @@ test('prepareChildKeys() doesnt change anything if child keys all exist', t => {
         meta: {}
     };
 
-    t.deepEqual(data, prepareChildKeys()(data));
+    expect(data).toEqual(prepareChildKeys()(data));
 });

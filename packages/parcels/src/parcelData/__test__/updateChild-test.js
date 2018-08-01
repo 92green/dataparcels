@@ -1,17 +1,16 @@
 // @flow
-import test from 'ava';
 import updateChild from '../updateChild';
 
-test('updateChild() doesnt add child nodes for non-collections', t => {
+test('updateChild() doesnt add child nodes for non-collections', () => {
     let data = {
         value: 123,
         meta: {}
     };
 
-    t.deepEqual(data, updateChild()(data));
+    expect(data).toEqual(updateChild()(data));
 });
 
-test('updateChild() removes child nodes from non-collections', t => {
+test('updateChild() removes child nodes from non-collections', () => {
     let data = {
         value: 123,
         child: {}
@@ -22,10 +21,10 @@ test('updateChild() removes child nodes from non-collections', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedData, updateChild()(data));
+    expect(expectedData).toEqual(updateChild()(data));
 });
 
-test('updateChild() adds child nodes for objects if they dont exist', t => {
+test('updateChild() adds child nodes for objects if they dont exist', () => {
     let data = {
         value: {
             a: 1,
@@ -45,10 +44,10 @@ test('updateChild() adds child nodes for objects if they dont exist', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedData, updateChild()(data));
+    expect(expectedData).toEqual(updateChild()(data));
 });
 
-test('updateChild() keeps child nodes for objects if they exist', t => {
+test('updateChild() keeps child nodes for objects if they exist', () => {
     let data = {
         value: {
             a: 1,
@@ -65,10 +64,10 @@ test('updateChild() keeps child nodes for objects if they exist', t => {
         meta: {}
     };
 
-    t.deepEqual(data, updateChild()(data));
+    expect(data).toEqual(updateChild()(data));
 });
 
-test('updateChild() updates child nodes for objects if they are wrong', t => {
+test('updateChild() updates child nodes for objects if they are wrong', () => {
     let data = {
         value: {
             b: 2,
@@ -99,10 +98,10 @@ test('updateChild() updates child nodes for objects if they are wrong', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedData, updateChild()(data));
+    expect(expectedData).toEqual(updateChild()(data));
 });
 
-test('updateChild() adds child nodes for arrays if they dont exist', t => {
+test('updateChild() adds child nodes for arrays if they dont exist', () => {
     let data = {
         value: [1,2,3]
     };
@@ -113,20 +112,20 @@ test('updateChild() adds child nodes for arrays if they dont exist', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedData, updateChild()(data));
+    expect(expectedData).toEqual(updateChild()(data));
 });
 
-test('updateChild() keeps child nodes for arrays if they exist', t => {
+test('updateChild() keeps child nodes for arrays if they exist', () => {
     let data = {
         value: [1,2,3],
         child: [{key: "#a"}, {}, {}],
         meta: {}
     };
 
-    t.deepEqual(data, updateChild()(data));
+    expect(data).toEqual(updateChild()(data));
 });
 
-test('updateChild() passes through meta if it exists', t => {
+test('updateChild() passes through meta if it exists', () => {
     let data = {
         value: [1,2,3],
         child: [{key: "#a"}, {}, {}],
@@ -135,5 +134,5 @@ test('updateChild() passes through meta if it exists', t => {
         }
     };
 
-    t.deepEqual(data, updateChild()(data));
+    expect(data).toEqual(updateChild()(data));
 });

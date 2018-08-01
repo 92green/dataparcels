@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import keyOrIndexToKey from '../keyOrIndexToKey';
 
-test('keyOrIndexToKey() accepts key and returns key for object', t => {
+test('keyOrIndexToKey() accepts key and returns key for object', () => {
     let data = {
         value: {
             a: 1,
@@ -10,10 +9,10 @@ test('keyOrIndexToKey() accepts key and returns key for object', t => {
         }
     };
 
-    t.is("a", keyOrIndexToKey("a")(data));
+    expect("a").toBe(keyOrIndexToKey("a")(data));
 });
 
-test('keyOrIndexToKey() accepts index and returns key for array', t => {
+test('keyOrIndexToKey() accepts index and returns key for array', () => {
     let data = {
         value: [
             1,
@@ -21,10 +20,10 @@ test('keyOrIndexToKey() accepts index and returns key for array', t => {
         ]
     };
 
-    t.is("#a", keyOrIndexToKey(0)(data));
+    expect("#a").toBe(keyOrIndexToKey(0)(data));
 });
 
-test('keyOrIndexToKey() accepts key and returns key for array', t => {
+test('keyOrIndexToKey() accepts key and returns key for array', () => {
     let data = {
         value: [
             1,
@@ -32,6 +31,6 @@ test('keyOrIndexToKey() accepts key and returns key for array', t => {
         ]
     };
 
-    t.is("#a", keyOrIndexToKey("#a")(data));
+    expect("#a").toBe(keyOrIndexToKey("#a")(data));
 });
 

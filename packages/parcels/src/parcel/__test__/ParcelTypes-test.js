@@ -1,188 +1,215 @@
 // @flow
 import {Map, List} from 'immutable';
-import test from 'ava';
 import Parcel from '../Parcel';
 
-test('ParcelTypes should correctly identify primitive values', t => {
+test('ParcelTypes should correctly identify primitive values', () => {
     var data = {
         value: 123
     };
-    t.false(new Parcel(data).isParent());
-    t.false(new Parcel(data).isIndexed());
-    t.false(new Parcel(data).isChild());
-    t.false(new Parcel(data).isElement());
-    t.true(new Parcel(data).isTopLevel());
-    t.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceipT");
+    expect(new Parcel(data).isParent()).toBe(false);
+    expect(new Parcel(data).isIndexed()).toBe(false);
+    expect(new Parcel(data).isChild()).toBe(false);
+    expect(new Parcel(data).isElement()).toBe(false);
+    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
 });
 
-test('ParcelTypes should correctly identify primitive date', t => {
+test('ParcelTypes should correctly identify primitive date', () => {
     var data = {
         value: new Date()
     };
-    t.false(new Parcel(data).isParent());
-    t.false(new Parcel(data).isIndexed());
-    t.false(new Parcel(data).isChild());
-    t.false(new Parcel(data).isElement());
-    t.true(new Parcel(data).isTopLevel());
-    t.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceipT");
+    expect(new Parcel(data).isParent()).toBe(false);
+    expect(new Parcel(data).isIndexed()).toBe(false);
+    expect(new Parcel(data).isChild()).toBe(false);
+    expect(new Parcel(data).isElement()).toBe(false);
+    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
 });
 
-test('ParcelTypes should correctly identify object values', t => {
+test('ParcelTypes should correctly identify object values', () => {
     var data = {
         value: {
             a: "A"
         }
     };
-    t.true(new Parcel(data).isParent());
-    t.false(new Parcel(data).isIndexed());
-    t.false(new Parcel(data).isChild());
-    t.false(new Parcel(data).isElement());
-    t.true(new Parcel(data).isTopLevel());
-    t.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiPT");
+    expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isIndexed()).toBe(false);
+    expect(new Parcel(data).isChild()).toBe(false);
+    expect(new Parcel(data).isElement()).toBe(false);
+    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
 });
 
-test('ParcelTypes should correctly identify class instance values', t => {
+test('ParcelTypes should correctly identify class instance values', () => {
     class Thing {
         foo = "123"
     }
     var data = {
         value: new Thing()
     };
-    t.false(new Parcel(data).isParent());
-    t.false(new Parcel(data).isIndexed());
-    t.false(new Parcel(data).isChild());
-    t.false(new Parcel(data).isElement());
-    t.true(new Parcel(data).isTopLevel());
-    t.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceipT");
+    expect(new Parcel(data).isParent()).toBe(false);
+    expect(new Parcel(data).isIndexed()).toBe(false);
+    expect(new Parcel(data).isChild()).toBe(false);
+    expect(new Parcel(data).isElement()).toBe(false);
+    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
     // TODO - may have to allow unmutable to recognise class instances as ValueObjects for this to change
 });
 
-test('ParcelTypes should correctly identify Immutable.js Map values', t => {
+test('ParcelTypes should correctly identify Immutable.js Map values', () => {
     var data = {
         value: Map({
             a: "A"
         })
     };
-    t.true(new Parcel(data).isParent());
-    t.false(new Parcel(data).isIndexed());
-    t.false(new Parcel(data).isChild());
-    t.false(new Parcel(data).isElement());
-    t.true(new Parcel(data).isTopLevel());
-    t.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceiPT");
+    expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isIndexed()).toBe(false);
+    expect(new Parcel(data).isChild()).toBe(false);
+    expect(new Parcel(data).isElement()).toBe(false);
+    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
 });
 
 
-test('ParcelTypes should correctly identify array values', t => {
+test('ParcelTypes should correctly identify array values', () => {
     var data = {
         value: [1,2,3]
     };
-    t.true(new Parcel(data).isParent());
-    t.true(new Parcel(data).isIndexed());
-    t.false(new Parcel(data).isChild());
-    t.false(new Parcel(data).isElement());
-    t.true(new Parcel(data).isTopLevel());
-    t.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIPT");
+    expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isIndexed()).toBe(true);
+    expect(new Parcel(data).isChild()).toBe(false);
+    expect(new Parcel(data).isElement()).toBe(false);
+    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceIPT");
 });
 
-test('ParcelTypes should correctly identify Immutable.js List values', t => {
+test('ParcelTypes should correctly identify Immutable.js List values', () => {
     var data = {
         value: List([1,2,3])
     };
-    t.true(new Parcel(data).isParent());
-    t.true(new Parcel(data).isIndexed());
-    t.false(new Parcel(data).isChild());
-    t.false(new Parcel(data).isElement());
-    t.true(new Parcel(data).isTopLevel());
-    t.is(new Parcel(data)._parcelTypes.toTypeCode(), "ceIPT");
+    expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isIndexed()).toBe(true);
+    expect(new Parcel(data).isChild()).toBe(false);
+    expect(new Parcel(data).isElement()).toBe(false);
+    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceIPT");
 });
 
-test('ParcelTypes should correctly identify child values', t => {
+test('ParcelTypes should correctly identify child values', () => {
     var data = {
         value: {
             a: "A"
         }
     };
-    t.false(new Parcel(data).get("a").isParent());
-    t.false(new Parcel(data).get("a").isIndexed());
-    t.true(new Parcel(data).get("a").isChild());
-    t.false(new Parcel(data).get("a").isElement());
-    t.false(new Parcel(data).get("a").isTopLevel());
-    t.is(new Parcel(data).get("a")._parcelTypes.toTypeCode(), "Ceipt");
+    expect(new Parcel(data).get("a").isParent()).toBe(false);
+    expect(new Parcel(data).get("a").isIndexed()).toBe(false);
+    expect(new Parcel(data).get("a").isChild()).toBe(true);
+    expect(new Parcel(data).get("a").isElement()).toBe(false);
+    expect(new Parcel(data).get("a").isTopLevel()).toBe(false);
+    expect(new Parcel(data).get("a")._parcelTypes.toTypeCode()).toBe("Ceipt");
 });
 
-test('ParcelTypes should correctly identify element values', t => {
+test('ParcelTypes should correctly identify element values', () => {
     var data = {
         value: [1,2,3]
     };
-    t.false(new Parcel(data).get(0).isParent());
-    t.false(new Parcel(data).get(0).isIndexed());
-    t.true(new Parcel(data).get(0).isChild());
-    t.true(new Parcel(data).get(0).isElement());
-    t.false(new Parcel(data).get(0).isTopLevel());
-    t.is(new Parcel(data).get(0)._parcelTypes.toTypeCode(), "CEipt");
+    expect(new Parcel(data).get(0).isParent()).toBe(false);
+    expect(new Parcel(data).get(0).isIndexed()).toBe(false);
+    expect(new Parcel(data).get(0).isChild()).toBe(true);
+    expect(new Parcel(data).get(0).isElement()).toBe(true);
+    expect(new Parcel(data).get(0).isTopLevel()).toBe(false);
+    expect(new Parcel(data).get(0)._parcelTypes.toTypeCode()).toBe("CEipt");
 });
 
-test('ParcelTypes should correctly identify top level values after modifiers', t => {
+test('ParcelTypes should correctly identify top level values after modifiers', () => {
     var data = {
         value: [1,2,3]
     };
-    t.true(new Parcel(data).modifyValue(ii => ii).isTopLevel());
+    expect(new Parcel(data).modifyValue(ii => ii).isTopLevel()).toBe(true);
 });
 
 // method creators
 
-test('Correct methods are created for primitive values', t => {
+test('Correct methods are created for primitive values', () => {
     var data = {
         value: 123
     };
-    t.notThrows(() => new Parcel(data).value());
-    t.true(t.throws(() => new Parcel(data).has('a'), Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1);
-    t.true(t.throws(() => new Parcel(data).pop(), Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1);
-    t.true(t.throws(() => new Parcel(data).deleteSelf(), Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1);
-    t.true(t.throws(() => new Parcel(data).swapNextWithSelf(), Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1);
+    expect(() => new Parcel(data).value()).not.toThrow();
+    expect(
+        expect(() => new Parcel(data).has('a')).toThrowError(Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1
+    ).toBe(true);
+    expect(
+        expect(() => new Parcel(data).pop()).toThrowError(Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1
+    ).toBe(true);
+    expect(
+        expect(() => new Parcel(data).deleteSelf()).toThrowError(Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1
+    ).toBe(true);
+    expect(
+        expect(() => new Parcel(data).swapNextWithSelf()).toThrowError(Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1
+    ).toBe(true);
 });
 
-test('Correct methods are created for object values', t => {
+test('Correct methods are created for object values', () => {
     var data = {
         value: {a: 123}
     };
-    t.notThrows(() => new Parcel(data).value());
-    t.notThrows(() => new Parcel(data).has('a'));
-    t.true(t.throws(() => new Parcel(data).pop(), Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1);
-    t.true(t.throws(() => new Parcel(data).deleteSelf(), Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1);
-    t.true(t.throws(() => new Parcel(data).swapNextWithSelf(), Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1);
+    expect(() => new Parcel(data).value()).not.toThrow();
+    expect(() => new Parcel(data).has('a')).not.toThrow();
+    expect(
+        expect(() => new Parcel(data).pop()).toThrowError(Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1
+    ).toBe(true);
+    expect(
+        expect(() => new Parcel(data).deleteSelf()).toThrowError(Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1
+    ).toBe(true);
+    expect(
+        expect(() => new Parcel(data).swapNextWithSelf()).toThrowError(Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1
+    ).toBe(true);
 });
 
-test('Correct methods are created for array values', t => {
+test('Correct methods are created for array values', () => {
     var data = {
         value: [1,2,3]
     };
-    t.notThrows(() => new Parcel(data).value());
-    t.notThrows(() => new Parcel(data).has('a'));
-    t.notThrows(() => new Parcel(data).pop());
-    t.true(t.throws(() => new Parcel(data).deleteSelf(), Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1);
-    t.true(t.throws(() => new Parcel(data).swapNextWithSelf(), Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1);
+    expect(() => new Parcel(data).value()).not.toThrow();
+    expect(() => new Parcel(data).has('a')).not.toThrow();
+    expect(() => new Parcel(data).pop()).not.toThrow();
+    expect(
+        expect(() => new Parcel(data).deleteSelf()).toThrowError(Error).message.indexOf(`Cannot call .deleteSelf() on Parcel`) !== -1
+    ).toBe(true);
+    expect(
+        expect(() => new Parcel(data).swapNextWithSelf()).toThrowError(Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1
+    ).toBe(true);
 });
 
-test('Correct methods are created for object child values', t => {
+test('Correct methods are created for object child values', () => {
     var data = {
         value: {a: 123}
     };
-    t.notThrows(() => new Parcel(data).get("a").value());
-    t.true(t.throws(() => new Parcel(data).get("a").has('a'), Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1);
-    t.true(t.throws(() => new Parcel(data).get("a").pop(), Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1);
-    t.notThrows(() => new Parcel(data).get("a").deleteSelf());
-    t.true(t.throws(() => new Parcel(data).get("a").swapNextWithSelf(), Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1);
+    expect(() => new Parcel(data).get("a").value()).not.toThrow();
+    expect(
+        expect(() => new Parcel(data).get("a").has('a')).toThrowError(Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1
+    ).toBe(true);
+    expect(
+        expect(() => new Parcel(data).get("a").pop()).toThrowError(Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1
+    ).toBe(true);
+    expect(() => new Parcel(data).get("a").deleteSelf()).not.toThrow();
+    expect(
+        expect(() => new Parcel(data).get("a").swapNextWithSelf()).toThrowError(Error).message.indexOf(`Cannot call .swapNextWithSelf() on Parcel`) !== -1
+    ).toBe(true);
 });
 
-test('Correct methods are created for array element values', t => {
+test('Correct methods are created for array element values', () => {
     var data = {
         value: [1,2,3]
     };
-    t.notThrows(() => new Parcel(data).get(0).value());
-    t.true(t.throws(() => new Parcel(data).get(0).has('a'), Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1);
-    t.true(t.throws(() => new Parcel(data).get(0).pop(), Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1);
-    t.notThrows(() => new Parcel(data).get(0).deleteSelf());
-    t.notThrows(() => new Parcel(data).get(0).swapNextWithSelf());
+    expect(() => new Parcel(data).get(0).value()).not.toThrow();
+    expect(
+        expect(() => new Parcel(data).get(0).has('a')).toThrowError(Error).message.indexOf(`Cannot call .has() on Parcel`) !== -1
+    ).toBe(true);
+    expect(
+        expect(() => new Parcel(data).get(0).pop()).toThrowError(Error).message.indexOf(`Cannot call .pop() on Parcel`) !== -1
+    ).toBe(true);
+    expect(() => new Parcel(data).get(0).deleteSelf()).not.toThrow();
+    expect(() => new Parcel(data).get(0).swapNextWithSelf()).not.toThrow();
 });
 

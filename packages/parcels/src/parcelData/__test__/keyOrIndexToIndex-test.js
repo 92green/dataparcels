@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import keyOrIndexToIndex from '../keyOrIndexToIndex';
 
-test('keyOrIndexToIndex() accepts index and returns index for array', t => {
+test('keyOrIndexToIndex() accepts index and returns index for array', () => {
     let data = {
         value: [
             1,
@@ -10,10 +9,10 @@ test('keyOrIndexToIndex() accepts index and returns index for array', t => {
         ]
     };
 
-    t.is(0, keyOrIndexToIndex(0)(data));
+    expect(0).toBe(keyOrIndexToIndex(0)(data));
 });
 
-test('keyOrIndexToIndex() accepts key and returns index for array', t => {
+test('keyOrIndexToIndex() accepts key and returns index for array', () => {
     let data = {
         value: [
             1,
@@ -21,10 +20,10 @@ test('keyOrIndexToIndex() accepts key and returns index for array', t => {
         ]
     };
 
-    t.is(0, keyOrIndexToIndex("#a")(data));
+    expect(0).toBe(keyOrIndexToIndex("#a")(data));
 });
 
-test('keyOrIndexToIndex() accepts non existent key and returns undefined', t => {
+test('keyOrIndexToIndex() accepts non existent key and returns undefined', () => {
     let data = {
         value: [
             1,
@@ -32,10 +31,10 @@ test('keyOrIndexToIndex() accepts non existent key and returns undefined', t => 
         ]
     };
 
-    t.is(undefined, keyOrIndexToIndex("#z")(data));
+    expect(undefined).toBe(keyOrIndexToIndex("#z")(data));
 });
 
-test('keyOrIndexToIndex() throws error for object', t => {
+test('keyOrIndexToIndex() throws error for object', () => {
     let data = {
         value: {
             a: 1,
@@ -43,5 +42,5 @@ test('keyOrIndexToIndex() throws error for object', t => {
         }
     };
 
-    t.is(`Cannot find index on non-indexed parcelData`, t.throws(() => keyOrIndexToIndex("a")(data), Error).message);
+    expect(`Cannot find index on non-indexed parcelData`).toBe(expect(() => keyOrIndexToIndex("a")(data)).toThrowError(Error).message);
 });
