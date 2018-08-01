@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import push from '../push';
 
-test('push should work', t => {
+test('push should work', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -23,5 +22,5 @@ test('push should work', t => {
     };
 
 
-    t.deepEqual(expectedParcelData, push({value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(push({value: 4})(parcelData));
 });

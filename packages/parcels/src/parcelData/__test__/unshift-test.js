@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import unshift from '../unshift';
 
-test('unshift should work', t => {
+test('unshift should work', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -23,5 +22,5 @@ test('unshift should work', t => {
     };
 
 
-    t.deepEqual(expectedParcelData, unshift({value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(unshift({value: 4})(parcelData));
 });

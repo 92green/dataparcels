@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import insertAfter from '../insertAfter';
 
-test('insertAfter should work', t => {
+test('insertAfter should work', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -22,13 +21,13 @@ test('insertAfter should work', t => {
         ]
     };
 
-    t.deepEqual(expectedParcelData, insertAfter(1, {value: 4})(parcelData), 'should work with in range number');
-    t.deepEqual(expectedParcelData, insertAfter(-2, {value: 4})(parcelData), 'should work with in negative number');
-    t.deepEqual(expectedParcelData, insertAfter(4, {value: 4})(parcelData), 'should work with positive wrapped number');
-    t.deepEqual(expectedParcelData, insertAfter(-5, {value: 4})(parcelData), 'should work with negative wrapped number');
+    expect(expectedParcelData).toEqual(insertAfter(1, {value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(insertAfter(-2, {value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(insertAfter(4, {value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(insertAfter(-5, {value: 4})(parcelData));
 });
 
-test('insertAfter should work with hashKey', t => {
+test('insertAfter should work with hashKey', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -49,11 +48,11 @@ test('insertAfter should work with hashKey', t => {
     };
 
 
-    t.deepEqual(expectedParcelData, insertAfter("#b", {value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(insertAfter("#b", {value: 4})(parcelData));
 });
 
 
-test('insertAfter should do nothing with non-existent hashKey', t => {
+test('insertAfter should do nothing with non-existent hashKey', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -63,5 +62,5 @@ test('insertAfter should do nothing with non-existent hashKey', t => {
         ]
     };
 
-    t.deepEqual(parcelData, insertAfter("#z", {value: 4})(parcelData));
+    expect(parcelData).toEqual(insertAfter("#z", {value: 4})(parcelData));
 });

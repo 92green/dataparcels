@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import del from '../delete';
 
-test('delete should work by index', t => {
+test('delete should work by index', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -20,11 +19,11 @@ test('delete should work by index', t => {
         ]
     };
 
-    t.deepEqual(expectedParcelData, del(1)(parcelData));
+    expect(expectedParcelData).toEqual(del(1)(parcelData));
 });
 
 
-test('delete should work by key', t => {
+test('delete should work by key', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -42,10 +41,10 @@ test('delete should work by key', t => {
         ]
     };
 
-    t.deepEqual(expectedParcelData, del("#b")(parcelData));
+    expect(expectedParcelData).toEqual(del("#b")(parcelData));
 });
 
-test('delete should work by non-existent key', t => {
+test('delete should work by non-existent key', () => {
     let parcelData = {
         value: [1,3],
         child: [
@@ -54,5 +53,5 @@ test('delete should work by non-existent key', t => {
         ]
     };
 
-    t.deepEqual(parcelData, del("#b")(parcelData));
+    expect(parcelData).toEqual(del("#b")(parcelData));
 });

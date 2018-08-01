@@ -1,9 +1,8 @@
 // @flow
-import test from 'ava';
 import Parcel from '../Parcel';
 
-test('ChildParcel.deleteSelf() should delete self', t => {
-    t.plan(1);
+test('ChildParcel.deleteSelf() should delete self', () => {
+    expect.assertions(1);
 
     var expectedValue = {
         b: 2
@@ -16,15 +15,15 @@ test('ChildParcel.deleteSelf() should delete self', t => {
         },
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            t.deepEqual(expectedValue, value);
+            expect(expectedValue).toEqual(value);
         }
     };
 
     new Parcel(data).get('a').deleteSelf();
 });
 
-test('ChildParcel.deleteSelf() should delete self when indexed', t => {
-    t.plan(1);
+test('ChildParcel.deleteSelf() should delete self when indexed', () => {
+    expect.assertions(1);
 
     var expectedValue = [1,3];
 
@@ -32,7 +31,7 @@ test('ChildParcel.deleteSelf() should delete self when indexed', t => {
         value: [1,2,3],
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            t.deepEqual(expectedValue, value);
+            expect(expectedValue).toEqual(value);
         }
     };
 

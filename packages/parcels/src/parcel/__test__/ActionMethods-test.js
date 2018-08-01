@@ -1,9 +1,8 @@
 // @flow
-import test from 'ava';
 import Parcel from '../Parcel';
 
-test('Parcel.batch() should batch actions', t => {
-    t.plan(4);
+test('Parcel.batch() should batch actions', () => {
+    expect.assertions(4);
 
     var functionCalls = [];
     var expectedFunctionCalls = [
@@ -18,7 +17,7 @@ test('Parcel.batch() should batch actions', t => {
         value: 123,
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            t.is(value, 789, 'parcel contains correct result');
+            expect(value).toBe(789);
             functionCalls.push("handleChange");
         }
     };
@@ -26,18 +25,18 @@ test('Parcel.batch() should batch actions', t => {
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.onChange(456);
-        t.is(456, parcel.value(), 'parcel contains correct mutated value after first onchange');
+        expect(456).toBe(parcel.value());
         functionCalls.push("onChange(456)");
         parcel.onChange(789);
-        t.is(789, parcel.value(), 'parcel contains correct mutated value after second onchange');
+        expect(789).toBe(parcel.value());
         functionCalls.push("onChange(789)");
     });
 
-    t.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
+    expect(expectedFunctionCalls).toEqual(functionCalls);
 });
 
-test('Parcel.batch() should batch correctly with non-idempotent actions', t => {
-    t.plan(4);
+test('Parcel.batch() should batch correctly with non-idempotent actions', () => {
+    expect.assertions(4);
 
     var functionCalls = [];
     var expectedFunctionCalls = [
@@ -51,7 +50,7 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', t => {
         value: [],
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            t.deepEqual(value, [456,789], 'parcel contains correct result');
+            expect(value).toEqual([456,789]);
             functionCalls.push("handleChange");
         }
     };
@@ -59,17 +58,17 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', t => {
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.push(456);
-        t.deepEqual([456], parcel.value(), 'parcel contains correct mutated value after first onchange');
+        expect([456]).toEqual(parcel.value());
         functionCalls.push("push(456)");
         parcel.push(789);
-        t.deepEqual([456, 789], parcel.value(), 'parcel contains correct mutated value after second onchange');
+        expect([456, 789]).toEqual(parcel.value());
         functionCalls.push("push(789)");
     });
 
-    t.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
+    expect(expectedFunctionCalls).toEqual(functionCalls);
 });
 
-test('Parcel.batch() should not fire handleChange if no actions called within batch', t => {
+test('Parcel.batch() should not fire handleChange if no actions called within batch', () => {
     var handleChangeCalled = false;
 
     var data = {
@@ -80,11 +79,11 @@ test('Parcel.batch() should not fire handleChange if no actions called within ba
     };
 
     new Parcel(data).batch((parcel) => {});
-    t.false(handleChangeCalled);
+    expect(handleChangeCalled).toBe(false);
 });
 
-test('Parcel.batch() should be nestable', t => {
-    t.plan(5);
+test('Parcel.batch() should be nestable', () => {
+    expect.assertions(5);
 
     var functionCalls = [];
     var expectedFunctionCalls = [
@@ -101,7 +100,7 @@ test('Parcel.batch() should be nestable', t => {
         value: 123,
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            t.is(value, 789, 'parcel contains correct result');
+            expect(value).toBe(789);
             functionCalls.push("handleChange");
         }
     };
@@ -109,19 +108,19 @@ test('Parcel.batch() should be nestable', t => {
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.onChange(123);
-        t.is(123, parcel.value(), 'parcel contains correct mutated value after first onchange');
+        expect(123).toBe(parcel.value());
         functionCalls.push("onChange(123)");
         parcel.batch((parcel) => {
             functionCalls.push("batch again");
             parcel.onChange(456);
-            t.is(456, parcel.value(), 'parcel contains correct mutated value after second onchange');
+            expect(456).toBe(parcel.value());
             functionCalls.push("onChange(456)");
         });
         functionCalls.push("out again");
         parcel.onChange(789);
-        t.is(789, parcel.value(), 'parcel contains correct mutated value after third onchange');
+        expect(789).toBe(parcel.value());
         functionCalls.push("onChange(789)");
     });
 
-    t.deepEqual(expectedFunctionCalls, functionCalls, 'functions are called in correct order due to buffering');
+    expect(expectedFunctionCalls).toEqual(functionCalls);
 });

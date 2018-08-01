@@ -1,5 +1,4 @@
 // @flow
-import test from 'ava';
 import updateIn from '../updateIn';
 
 const addThree = (parcelData) => ({
@@ -7,7 +6,7 @@ const addThree = (parcelData) => ({
     value: parcelData.value + 3
 });
 
-test('updateIn should work', t => {
+test('updateIn should work', () => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -28,10 +27,10 @@ test('updateIn should work', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedParcelData, updateIn(['d'], () => ({value: 4}))(parcelData));
+    expect(expectedParcelData).toEqual(updateIn(['d'], () => ({value: 4}))(parcelData));
 });
 
-test('updateIn should work with existing child', t => {
+test('updateIn should work with existing child', () => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -51,10 +50,10 @@ test('updateIn should work with existing child', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedParcelData, updateIn(['a'], addThree)(parcelData));
+    expect(expectedParcelData).toEqual(updateIn(['a'], addThree)(parcelData));
 });
 
-test('updateIn should work deeply', t => {
+test('updateIn should work deeply', () => {
     let parcelData = {
         value: {
             a: {},
@@ -92,10 +91,10 @@ test('updateIn should work deeply', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedParcelData, updateIn(['a', 'd'], () => ({value: 4}))(parcelData));
+    expect(expectedParcelData).toEqual(updateIn(['a', 'd'], () => ({value: 4}))(parcelData));
 });
 
-test('updateIn should work deeply with existing child', t => {
+test('updateIn should work deeply with existing child', () => {
     let parcelData = {
         value: {
             a: {
@@ -143,5 +142,5 @@ test('updateIn should work deeply with existing child', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedParcelData, updateIn(['a', 'd'], addThree)(parcelData));
+    expect(expectedParcelData).toEqual(updateIn(['a', 'd'], addThree)(parcelData));
 });

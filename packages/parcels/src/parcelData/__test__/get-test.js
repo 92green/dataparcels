@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import get from '../get';
 
-test('get should work with objects', t => {
+test('get should work with objects', () => {
     let parcelData = {
         value: {
             a: {
@@ -18,10 +17,10 @@ test('get should work with objects', t => {
         key: "a"
     };
 
-    t.deepEqual(expectedParcelData, get('a')(parcelData));
+    expect(expectedParcelData).toEqual(get('a')(parcelData));
 });
 
-test('get should work with objects with hashkey - just to make sure that hashkeys are only converted to properties when used on an indexed parcel', t => {
+test('get should work with objects with hashkey - just to make sure that hashkeys are only converted to properties when used on an indexed parcel', () => {
     let parcelData = {
         value: {
             ["#a"]: {
@@ -37,11 +36,11 @@ test('get should work with objects with hashkey - just to make sure that hashkey
         key: "#a"
     };
 
-    t.deepEqual(expectedParcelData, get('#a')(parcelData));
+    expect(expectedParcelData).toEqual(get('#a')(parcelData));
 });
 
 
-test('get should not clone value', t => {
+test('get should not clone value', () => {
     let parcelData = {
         value: {
             a: {
@@ -49,10 +48,10 @@ test('get should not clone value', t => {
             }
         }
     };
-    t.is(parcelData.value.a, get('a')(parcelData).value);
+    expect(parcelData.value.a).toBe(get('a')(parcelData).value);
 });
 
-test('get should work with arrays that dont have keys yet', t => {
+test('get should work with arrays that dont have keys yet', () => {
     let parcelData = {
         value: ['abc']
     };
@@ -63,10 +62,10 @@ test('get should work with arrays that dont have keys yet', t => {
         key: "#a"
     };
 
-    t.deepEqual(get(0)(parcelData), expectedParcelData);
+    expect(get(0)(parcelData)).toEqual(expectedParcelData);
 });
 
-test('get should work with arrays that dont have keys yet with hashkey', t => {
+test('get should work with arrays that dont have keys yet with hashkey', () => {
     let parcelData = {
         value: ['abc', 'def']
     };
@@ -77,10 +76,10 @@ test('get should work with arrays that dont have keys yet with hashkey', t => {
         key: "#b"
     };
 
-    t.deepEqual(get("#b")(parcelData), expectedParcelData);
+    expect(get("#b")(parcelData)).toEqual(expectedParcelData);
 });
 
-test('get should work with objects that already have children, and not recreate children, even if incorrect', t => {
+test('get should work with objects that already have children, and not recreate children, even if incorrect', () => {
     let parcelData = {
         value: {
             a: {
@@ -101,10 +100,10 @@ test('get should work with objects that already have children, and not recreate 
         key: 'AsdasdsdDS'
     };
 
-    t.deepEqual(expectedParcelData, get('a')(parcelData));
+    expect(expectedParcelData).toEqual(get('a')(parcelData));
 });
 
-test('get should work with non existent keys', t => {
+test('get should work with non existent keys', () => {
     let parcelData = {
         value: {
             a: {
@@ -118,7 +117,7 @@ test('get should work with non existent keys', t => {
         key: "z"
     };
 
-    t.deepEqual(expectedParcelData, get('z')(parcelData));
+    expect(expectedParcelData).toEqual(get('z')(parcelData));
 
     let expectedParcelData2 = {
         meta: {},
@@ -126,5 +125,5 @@ test('get should work with non existent keys', t => {
         key: "z"
     };
 
-    t.deepEqual(expectedParcelData2, get('z', "!!!")(parcelData));
+    expect(expectedParcelData2).toEqual(get('z', "!!!")(parcelData));
 });

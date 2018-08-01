@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import forEach from '../forEach';
 
-test('forEach should work on objects', t => {
+test('forEach should work on objects', () => {
     let parcelData = {
         value: {a:1,b:2,c:3}
     };
@@ -37,10 +36,10 @@ test('forEach should work on objects', t => {
     let arr = [];
     forEach((parcelData, key) => arr.push({parcelData, key}))(parcelData);
 
-    t.deepEqual(expectedArr, arr);
+    expect(expectedArr).toEqual(arr);
 });
 
-test('forEach should work on arrays', t => {
+test('forEach should work on arrays', () => {
     let parcelData = {
         value: [1,2,3]
     };
@@ -75,5 +74,5 @@ test('forEach should work on arrays', t => {
     let arr = [];
     forEach((parcelData, key) => arr.push({parcelData, key}))(parcelData);
 
-    t.deepEqual(expectedArr, arr);
+    expect(expectedArr).toEqual(arr);
 });

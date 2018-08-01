@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import swapPrev from '../swapPrev';
 
-test('swapPrev should work', t => {
+test('swapPrev should work', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -20,13 +19,13 @@ test('swapPrev should work', t => {
             {key:"#b"}
         ]
     };
-    t.deepEqual(expectedParcelData, swapPrev(2)(parcelData), 'should work with in range number');
-    t.deepEqual(expectedParcelData, swapPrev(-1)(parcelData), 'should work with negative');
-    t.deepEqual(expectedParcelData, swapPrev(5)(parcelData), 'should work with positive wrapped number');
-    t.deepEqual(expectedParcelData, swapPrev(-4)(parcelData), 'should work with negative wrapped number');
+    expect(expectedParcelData).toEqual(swapPrev(2)(parcelData));
+    expect(expectedParcelData).toEqual(swapPrev(-1)(parcelData));
+    expect(expectedParcelData).toEqual(swapPrev(5)(parcelData));
+    expect(expectedParcelData).toEqual(swapPrev(-4)(parcelData));
 });
 
-test('swapPrev should work with hashKeys', t => {
+test('swapPrev should work with hashKeys', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -45,10 +44,10 @@ test('swapPrev should work with hashKeys', t => {
         ]
     };
 
-    t.deepEqual(expectedParcelData, swapPrev("#c")(parcelData));
+    expect(expectedParcelData).toEqual(swapPrev("#c")(parcelData));
 });
 
-test('swapPrev should work with zero', t => {
+test('swapPrev should work with zero', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -68,10 +67,10 @@ test('swapPrev should work with zero', t => {
     };
 
 
-    t.deepEqual(expectedParcelData, swapPrev(0)(parcelData));
+    expect(expectedParcelData).toEqual(swapPrev(0)(parcelData));
 });
 
-test('swapPrev should do nothing if given non existent key', t => {
+test('swapPrev should do nothing if given non existent key', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -81,5 +80,5 @@ test('swapPrev should do nothing if given non existent key', t => {
         ]
     };
 
-    t.deepEqual(parcelData, swapPrev("#z")(parcelData));
+    expect(parcelData).toEqual(swapPrev("#z")(parcelData));
 });

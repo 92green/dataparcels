@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import Modifiers from '../Modifiers';
 
-test('Modifiers should accept and return modifier objects', t => {
+test('Modifiers should accept and return modifier objects', () => {
     let modifiers = [
         {
             modifier: () => {},
@@ -14,19 +13,19 @@ test('Modifiers should accept and return modifier objects', t => {
         }
     ];
 
-    t.deepEqual(modifiers, new Modifiers(modifiers).toJS());
+    expect(modifiers).toEqual(new Modifiers(modifiers).toJS());
 });
 
-test('Modifiers should turn modifier functions into modifier objects', t => {
+test('Modifiers should turn modifier functions into modifier objects', () => {
     let modifier = () => {};
     let expectedModifier = [{
         modifier
     }];
 
-    t.deepEqual(expectedModifier, new Modifiers([modifier]).toJS());
+    expect(expectedModifier).toEqual(new Modifiers([modifier]).toJS());
 });
 
-test('Modifiers should cope with being passed into other modifier constructors', t => {
+test('Modifiers should cope with being passed into other modifier constructors', () => {
     let modifiers = [
         {
             modifier: () => {},
@@ -39,10 +38,10 @@ test('Modifiers should cope with being passed into other modifier constructors',
     ];
 
     var js = new Modifiers(modifiers).toJS();
-    t.deepEqual(modifiers, new Modifiers(js).toJS());
+    expect(modifiers).toEqual(new Modifiers(js).toJS());
 });
 
-test('Modifiers should add()', t => {
+test('Modifiers should add()', () => {
     let modifier = () => {};
     let modifier2 = () => {};
     let modifier2Object = {
@@ -58,17 +57,17 @@ test('Modifiers should add()', t => {
         }
     ];
 
-    t.deepEqual(expectedModifier, new Modifiers([modifier]).add(modifier2).toJS());
-    t.deepEqual(expectedModifier, new Modifiers([modifier]).add(modifier2Object).toJS());
+    expect(expectedModifier).toEqual(new Modifiers([modifier]).add(modifier2).toJS());
+    expect(expectedModifier).toEqual(new Modifiers([modifier]).add(modifier2Object).toJS());
 });
 
-test('Modifiers should isEmpty()', t => {
-    t.false(new Modifiers([() => {}]).isEmpty());
-    t.true(new Modifiers().isEmpty());
+test('Modifiers should isEmpty()', () => {
+    expect(new Modifiers([() => {}]).isEmpty()).toBe(false);
+    expect(new Modifiers().isEmpty()).toBe(true);
 });
 
 
-test('Modifiers should set()', t => {
+test('Modifiers should set()', () => {
     let modifier = () => {};
     let modifier2 = () => {};
     let modifier2Object = {
@@ -81,6 +80,6 @@ test('Modifiers should set()', t => {
         }
     ];
 
-    t.deepEqual(expectedModifier, new Modifiers([modifier]).set([modifier2]).toJS());
-    t.deepEqual(expectedModifier, new Modifiers([modifier]).set([modifier2Object]).toJS());
+    expect(expectedModifier).toEqual(new Modifiers([modifier]).set([modifier2]).toJS());
+    expect(expectedModifier).toEqual(new Modifiers([modifier]).set([modifier2Object]).toJS());
 });

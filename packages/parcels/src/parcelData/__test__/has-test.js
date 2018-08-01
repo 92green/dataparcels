@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import has from '../has';
 
-test('has should work', t => {
+test('has should work', () => {
     let parcelData = {
         value: {
             a: {
@@ -11,15 +10,15 @@ test('has should work', t => {
         }
     };
 
-    t.true(has('a')(parcelData));
-    t.false(has('b')(parcelData));
+    expect(has('a')(parcelData)).toBe(true);
+    expect(has('b')(parcelData)).toBe(false);
 });
 
-test('has should work with hashkeys', t => {
+test('has should work with hashkeys', () => {
     let parcelData = {
         value: [1,2,3]
     };
 
-    t.true(has('#a')(parcelData));
-    t.false(has('#d')(parcelData));
+    expect(has('#a')(parcelData)).toBe(true);
+    expect(has('#d')(parcelData)).toBe(false);
 });

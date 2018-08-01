@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import swapNext from '../swapNext';
 
-test('swapNext should work with indexes', t => {
+test('swapNext should work with indexes', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -21,13 +20,13 @@ test('swapNext should work with indexes', t => {
         ]
     };
 
-    t.deepEqual(expectedParcelData, swapNext(1)(parcelData), 'should work with in range number');
-    t.deepEqual(expectedParcelData, swapNext(-2)(parcelData), 'should work with negative');
-    t.deepEqual(expectedParcelData, swapNext(4)(parcelData), 'should work with positive wrapped number');
-    t.deepEqual(expectedParcelData, swapNext(-5)(parcelData), 'should work with negative wrapped number');
+    expect(expectedParcelData).toEqual(swapNext(1)(parcelData));
+    expect(expectedParcelData).toEqual(swapNext(-2)(parcelData));
+    expect(expectedParcelData).toEqual(swapNext(4)(parcelData));
+    expect(expectedParcelData).toEqual(swapNext(-5)(parcelData));
 });
 
-test('swapNext should work with hashKeys', t => {
+test('swapNext should work with hashKeys', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -46,10 +45,10 @@ test('swapNext should work with hashKeys', t => {
         ]
     };
 
-    t.deepEqual(expectedParcelData, swapNext("#b")(parcelData));
+    expect(expectedParcelData).toEqual(swapNext("#b")(parcelData));
 });
 
-test('swapNext should work with length - 1', t => {
+test('swapNext should work with length - 1', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -69,10 +68,10 @@ test('swapNext should work with length - 1', t => {
     };
 
 
-    t.deepEqual(expectedParcelData, swapNext(2)(parcelData));
+    expect(expectedParcelData).toEqual(swapNext(2)(parcelData));
 });
 
-test('swapNext should do nothing if given non existent key', t => {
+test('swapNext should do nothing if given non existent key', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -82,5 +81,5 @@ test('swapNext should do nothing if given non existent key', t => {
         ]
     };
 
-    t.deepEqual(parcelData, swapNext("#z")(parcelData));
+    expect(parcelData).toEqual(swapNext("#z")(parcelData));
 });

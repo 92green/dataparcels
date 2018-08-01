@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import Parcel from '../Parcel';
 
-test('Parcel.data() should return the Parcels data', t => {
+test('Parcel.data() should return the Parcels data', () => {
     var data = {
         value: 123,
         child: undefined
@@ -15,51 +14,51 @@ test('Parcel.data() should return the Parcels data', t => {
         meta: {}
     };
 
-    t.deepEqual(expectedData, new Parcel(data).data());
+    expect(expectedData).toEqual(new Parcel(data).data());
 });
 
-test('Parcel.value() should return the Parcels value', t => {
+test('Parcel.value() should return the Parcels value', () => {
     var data = {
         value: 123
     };
-    t.is(new Parcel(data).value(), 123);
+    expect(new Parcel(data).value()).toBe(123);
 });
 
-test('Parcel.value() should return the same instance of the Parcels value', t => {
+test('Parcel.value() should return the same instance of the Parcels value', () => {
     var myObject = {a:1,b:2};
     var data = {
         value: myObject
     };
-    t.is(new Parcel(data).value(), myObject);
+    expect(new Parcel(data).value()).toBe(myObject);
 });
 
 
-test('Parcels should be able to accept no config', t => {
+test('Parcels should be able to accept no config', () => {
     let parcel = new Parcel();
-    t.deepEqual(undefined, parcel.value());
+    expect(undefined).toEqual(parcel.value());
     parcel.onChange(123);
 });
 
-test('Parcels should be able to accept just value in config', t => {
+test('Parcels should be able to accept just value in config', () => {
     let parcel = new Parcel({
         value: 123
     });
-    t.deepEqual(123, parcel.value());
+    expect(123).toEqual(parcel.value());
     parcel.onChange(456);
 });
 
-test('Parcels should be able to accept just handleChange in config', t => {
+test('Parcels should be able to accept just handleChange in config', () => {
     let parcel = new Parcel({
         handleChange: (parcel) => {
-            t.is(456, parcel.value());
+            expect(456).toBe(parcel.value());
         }
     });
-    t.deepEqual(undefined, parcel.value());
+    expect(undefined).toEqual(parcel.value());
     parcel.onChange(456);
 });
 
-test('Parcel.setSelf() should call the Parcels handleChange function with the new parcelData', t => {
-    t.plan(2);
+test('Parcel.setSelf() should call the Parcels handleChange function with the new parcelData', () => {
+    expect.assertions(2);
 
     var data = {
         value: 123
@@ -83,14 +82,14 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            t.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).setSelf(456);
 });
 
-test('Parcel.updateSelf() should call the Parcels handleChange function with the new parcelData', t => {
-    t.plan(3);
+test('Parcel.updateSelf() should call the Parcels handleChange function with the new parcelData', () => {
+    expect.assertions(3);
 
     var data = {
         value: 123
@@ -116,17 +115,17 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            t.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).updateSelf((ii) => {
-        t.deepEqual(expectedArg, ii, 'update passes correct argument to updater');
+        expect(expectedArg).toEqual(ii);
         return 456;
     });
 });
 
-test('Parcel.onChange() should work like set that only accepts a single argument', t => {
-    t.plan(2);
+test('Parcel.onChange() should work like set that only accepts a single argument', () => {
+    expect.assertions(2);
 
     var data = {
         value: 123
@@ -150,14 +149,14 @@ test('Parcel.onChange() should work like set that only accepts a single argument
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            t.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).onChange(456);
 });
 
-test('Parcel.onChangeDOM() should work like onChange but take the value from event.currentTarget.value', t => {
-    t.plan(2);
+test('Parcel.onChangeDOM() should work like onChange but take the value from event.currentTarget.value', () => {
+    expect.assertions(2);
 
     var data = {
         value: 123
@@ -181,8 +180,8 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            t.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).onChangeDOM({
         currentTarget: {
@@ -191,12 +190,12 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
     });
 });
 
-test('Parcel.spread() returns an object with value and onChange', t => {
+test('Parcel.spread() returns an object with value and onChange', () => {
     var data = {
         value: 123,
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            t.is(value, 456);
+            expect(value).toBe(456);
         }
     };
 
@@ -207,16 +206,16 @@ test('Parcel.spread() returns an object with value and onChange', t => {
         onChange
     } = parcel.spread();
 
-    t.is(value, parcel.value(), 'value is returned');
-    t.is(onChange, parcel.onChange, 'onChange is returned');
+    expect(value).toBe(parcel.value());
+    expect(onChange).toBe(parcel.onChange);
 });
 
-test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)', t => {
+test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)', () => {
     var data = {
         value: 123,
         handleChange: (parcel) => {
             let {value} = parcel.data();
-            t.is(value, 456);
+            expect(value).toBe(456);
         }
     };
 
@@ -227,12 +226,12 @@ test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)
         onChange
     } = parcel.spreadDOM();
 
-    t.is(value, parcel.value(), 'value is returned');
-    t.is(onChange, parcel.onChangeDOM, 'onChangeDOM is returned');
+    expect(value).toBe(parcel.value());
+    expect(onChange).toBe(parcel.onChangeDOM);
 });
 
-test('Parcel.setMeta() should call the Parcels handleChange function with the new meta merged in', t => {
-    t.plan(3);
+test('Parcel.setMeta() should call the Parcels handleChange function with the new meta merged in', () => {
+    expect.assertions(3);
 
     var data = {
         value: 123
@@ -265,14 +264,14 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
             changes++;
 
             if(changes === 1) {
-                t.deepEqual(expectedMeta, parcel.meta(), 'updated meta is correct');
-                t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+                expect(expectedMeta).toEqual(parcel.meta());
+                expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
                 parcel.setMeta({
                     def: 456
                 });
 
             } else if(changes === 2) {
-                t.deepEqual(expectedMeta2, parcel.meta(), 'updated meta is correct');
+                expect(expectedMeta2).toEqual(parcel.meta());
             }
         }
     }).setMeta({
@@ -280,7 +279,7 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
     });
 });
 
-test('Parcel.meta() should return meta', t => {
+test('Parcel.meta() should return meta', () => {
     var meta = {
         abc: 123,
         def: 456
@@ -290,8 +289,8 @@ test('Parcel.meta() should return meta', t => {
         value: 123,
         handleChange: (parcel) => {
             // the see if it is returned correctly
-            t.deepEqual(meta, parcel.meta(), 'meta is returned');
-            t.true(meta !== parcel.meta(), 'meta object should be cloned to prevent mutating');
+            expect(meta).toEqual(parcel.meta());
+            expect(meta !== parcel.meta()).toBe(true);
         }
     };
 
@@ -299,8 +298,8 @@ test('Parcel.meta() should return meta', t => {
     var parcel = new Parcel(data).setMeta(meta);
 });
 
-test('Parcel.updateMeta() should call the Parcels handleChange function with the new meta merged in', t => {
-    t.plan(5);
+test('Parcel.updateMeta() should call the Parcels handleChange function with the new meta merged in', () => {
+    expect.assertions(5);
 
     var data = {
         value: 123
@@ -333,32 +332,32 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
             changes++;
 
             if(changes === 1) {
-                t.deepEqual(expectedMeta, parcel.meta(), 'updated meta is correct');
-                t.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+                expect(expectedMeta).toEqual(parcel.meta());
+                expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
                 parcel.updateMeta(meta => {
-                    t.deepEqual({abc: 123}, meta, 'updateMeta should receive initial meta of {abc:123}')
+                    expect({abc: 123}).toEqual(meta)
                     return {
                         def: 456
                     };
                 });
 
             } else if(changes === 2) {
-                t.deepEqual(expectedMeta2, parcel.meta(), 'updated meta is correct');
+                expect(expectedMeta2).toEqual(parcel.meta());
             }
         }
     }).updateMeta(meta => {
-        t.deepEqual({}, meta, 'updateMeta should receive initial meta of {}')
+        expect({}).toEqual(meta)
         return {
             abc: 123
         };
     });
 });
 
-test('Parcel.setChangeRequestMeta() should set change request meta', t => {
+test('Parcel.setChangeRequestMeta() should set change request meta', () => {
     var data = {
         value: 123,
         handleChange: (parcel, changeRequest) => {
-            t.deepEqual({a: 3, b: 2}, changeRequest.changeRequestMeta());
+            expect({a: 3, b: 2}).toEqual(changeRequest.changeRequestMeta());
         }
     };
 
@@ -370,8 +369,8 @@ test('Parcel.setChangeRequestMeta() should set change request meta', t => {
     });
 });
 
-test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', t => {
-    t.plan(6);
+test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', () => {
+    expect.assertions(6);
 
     let p = new Parcel({
         value: {
@@ -379,21 +378,21 @@ test('Parcel.hasDispatched() should say if a parcel has dispatched from the curr
             def: 456
         },
         handleChange: (p2) => {
-            t.true(p2.hasDispatched(), `top parcel should have dispatched`);
-            t.true(p2.get('abc').hasDispatched(), `abc parcel should have dispatched`);
-            t.false(p2.get('def').hasDispatched(), `def parcel should not have dispatched`);
+            expect(p2.hasDispatched()).toBe(true);
+            expect(p2.get('abc').hasDispatched()).toBe(true);
+            expect(p2.get('def').hasDispatched()).toBe(false);
         }
     });
 
-    t.false(p.hasDispatched(), `top parcel should not have dispatched initially`);
-    t.false(p.get('abc').hasDispatched(), `abc parcel should not have dispatched initially`);
-    t.false(p.get('def').hasDispatched(), `def parcel should not have dispatched initially`);
+    expect(p.hasDispatched()).toBe(false);
+    expect(p.get('abc').hasDispatched()).toBe(false);
+    expect(p.get('def').hasDispatched()).toBe(false);
 
     p.get('abc').onChange(789);
 });
 
-test('Parcel.ping() should call the Parcels handleChange function with no change', t => {
-    t.plan(1);
+test('Parcel.ping() should call the Parcels handleChange function with no change', () => {
+    expect.assertions(1);
 
     var data = {
         value: 123
@@ -409,12 +408,12 @@ test('Parcel.ping() should call the Parcels handleChange function with no change
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            t.deepEqual(expectedData, parcel.data(), 'data is correct');
+            expect(expectedData).toEqual(parcel.data());
         }
     }).ping(456);
 });
 
-test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', t => {
+test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', () => {
 
     let p = new Parcel({
         value: {
@@ -423,17 +422,17 @@ test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareD
         }
     });
 
-    t.deepEqual({}, p.getInternalLocationShareData(), 'getInternalLocationShareData() should default to empty object');
+    expect({}).toEqual(p.getInternalLocationShareData());
 
     p.get('abc').setInternalLocationShareData({x:1});
-    t.deepEqual({x:1}, p.get('abc').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at abc');
+    expect({x:1}).toEqual(p.get('abc').getInternalLocationShareData());
 
     p.get('abc').setInternalLocationShareData({y:2});
-    t.deepEqual({x:1, y:2}, p.get('abc').getInternalLocationShareData(), 'setInternalLocationShareData() should merge data at abc');
+    expect({x:1, y:2}).toEqual(p.get('abc').getInternalLocationShareData());
 
-    t.deepEqual({}, p.get('def').getInternalLocationShareData(), 'getInternalLocationShareData() at another location should be empty');
+    expect({}).toEqual(p.get('def').getInternalLocationShareData());
 
     p.get('def').setInternalLocationShareData({x:1});
-    t.deepEqual({x:1}, p.get('def').getInternalLocationShareData(), 'setInternalLocationShareData() should set data at def');
+    expect({x:1}).toEqual(p.get('def').getInternalLocationShareData());
 
 });

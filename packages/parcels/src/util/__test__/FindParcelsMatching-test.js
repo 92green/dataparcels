@@ -1,9 +1,8 @@
 // @flow
-import test from 'ava';
 import Parcel from 'parcels';
 import FindParcelsMatching from '../FindParcelsMatching';
 
-test(`FindParcelsMatching() should return all parcels matching the match string at or below the start parcel's depth`, t => {
+test(`FindParcelsMatching() should return all parcels matching the match string at or below the start parcel's depth`, () => {
 
     let p = new Parcel({
         value: {
@@ -17,13 +16,19 @@ test(`FindParcelsMatching() should return all parcels matching the match string 
         }
     });
 
-    t.deepEqual(["abc"], FindParcelsMatching(p, "abc").map(ii => ii.path().join(".")));
-    t.deepEqual(["abc.def"], FindParcelsMatching(p, "abc.def").map(ii => ii.path().join(".")));
-    t.deepEqual([], FindParcelsMatching(p, "abc.def.toofar").map(ii => ii.path().join(".")));
-    t.deepEqual([], FindParcelsMatching(p, "abc.woo").map(ii => ii.path().join(".")));
-    t.deepEqual([], FindParcelsMatching(p, "asdf%.kasd.asdasd.asd").map(ii => ii.path().join(".")));
-    t.deepEqual(["abc.def", "abc.ghi"], FindParcelsMatching(p, "abc.*").map(ii => ii.path().join(".")));
-    t.deepEqual(["abc.def"], FindParcelsMatching(p.get('abc'), "abc.def").map(ii => ii.path().join(".")));
-    t.deepEqual([], FindParcelsMatching(p.get('mno'), "abc.def").map(ii => ii.path().join(".")));
-    t.deepEqual(["abc.def","abc.ghi","jkl.mno"], FindParcelsMatching(p, "*.*").map(ii => ii.path().join(".")));
+    expect(["abc"]).toEqual(FindParcelsMatching(p, "abc").map(ii => ii.path().join(".")));
+    expect(["abc.def"]).toEqual(FindParcelsMatching(p, "abc.def").map(ii => ii.path().join(".")));
+    expect([]).toEqual(FindParcelsMatching(p, "abc.def.toofar").map(ii => ii.path().join(".")));
+    expect([]).toEqual(FindParcelsMatching(p, "abc.woo").map(ii => ii.path().join(".")));
+    expect([]).toEqual(
+        FindParcelsMatching(p, "asdf%.kasd.asdasd.asd").map(ii => ii.path().join("."))
+    );
+    expect(["abc.def", "abc.ghi"]).toEqual(FindParcelsMatching(p, "abc.*").map(ii => ii.path().join(".")));
+    expect(["abc.def"]).toEqual(
+        FindParcelsMatching(p.get('abc'), "abc.def").map(ii => ii.path().join("."))
+    );
+    expect([]).toEqual(
+        FindParcelsMatching(p.get('mno'), "abc.def").map(ii => ii.path().join("."))
+    );
+    expect(["abc.def","abc.ghi","jkl.mno"]).toEqual(FindParcelsMatching(p, "*.*").map(ii => ii.path().join(".")));
 });
