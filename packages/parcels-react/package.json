@@ -24,15 +24,5 @@
   "dependencies": {
     "parcels": "^0.13.5",
     "unmutable": "^0.26.0"
-  },
-  "devDependencies": {
-    "enzyme-adapter-react-16": "^1.1.1",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "stampy": "^0.40.0"
-  },
-  "peerDependencies": {
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
   }
 }

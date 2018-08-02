@@ -7,5 +7,6 @@ module.exports = {
         "!**/node_modules/**",
         "!packages/parcels-docs/**"
     ],
-    testMatch: ["**/__test__/**/*.js?(x)"]
+    testMatch: ["**/__test__/**/*.js?(x)"],
+    testURL: 'http://localhost'
 };
