@@ -88,20 +88,21 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
         .onChange(456);
 });
 
-test('Parcel.modifyChange() should allow you to stop a change by not calling dispatch', done => {
+test('Parcel.modifyChange() should allow you to stop a change by not calling dispatch', () => {
+    var handleChange = jest.fn();
+
     var data = {
         value: 123,
-        handleChange: (parcel: Parcel) => {
-            done.fail('modifyChange() with no changes in it should NOT call handle change, but it has');
-        }
+        handleChange
     };
 
     new Parcel(data)
         .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
-            // nothing here, run a passing assertion to make this test valid
-            expect(true).toBe(true);
+            // nothing here
         })
         .onChange(456);
+
+    expect(handleChange).toHaveBeenCalledTimes(0);
 });
 
 test('Parcel.modifyChangeValue() should allow you to change the payload of a changed parcel with an updater', () => {
