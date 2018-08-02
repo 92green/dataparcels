@@ -27,9 +27,7 @@ test('ParcelStateHock config should accept an initial value', () => {
 
 test('ParcelStateHock must be passed a prop, and throw an error if it isnt', () => {
     // $FlowFixMe - intentiaal misuse of types
-    expect(
-        `ParcelStateHock() expects param "config.prop" to be a string, but got undefined`
-    ).toBe(expect(() => ParcelStateHock({})).toThrowError(Error).message);
+    expect(() => ParcelStateHock({})).toThrow(`ParcelStateHock() expects param "config.prop" to be a string, but got undefined`);
 });
 
 

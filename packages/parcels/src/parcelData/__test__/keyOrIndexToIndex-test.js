@@ -42,5 +42,5 @@ test('keyOrIndexToIndex() throws error for object', () => {
         }
     };
 
-    expect(`Cannot find index on non-indexed parcelData`).toBe(expect(() => keyOrIndexToIndex("a")(data)).toThrowError(Error).message);
+    expect(() => keyOrIndexToIndex("a")(data)).toThrow(/^Cannot find index on non-indexed parcelData$/);
 });

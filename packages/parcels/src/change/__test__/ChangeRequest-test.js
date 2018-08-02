@@ -148,7 +148,7 @@ test('ChangeRequest data() should get latest parcel data from treeshare when cal
 
 
 test('ChangeRequest should throw error if data() is called before setBaseParcel()', () => {
-    expect(expect(() => new ChangeRequest().data()).toThrowError(Error).message).toBe(`ChangeRequest data() cannot be called before calling setBaseParcel()`);
+    expect(() => new ChangeRequest().data()).toThrowError(`ChangeRequest data() cannot be called before calling setBaseParcel()`);
 });
 
 test('ChangeRequest value() should be a shortcut for data().value', () => {

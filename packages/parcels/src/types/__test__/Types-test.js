@@ -41,18 +41,14 @@ let testTypes = (type: string, shouldAllow: string[]) => (t: *) => {
             if(shouldAllow.indexOf(dataType) !== -1) {
                 expect(() => Types(message, type)(data)).not.toThrowError(`${type} should not throw when given ${dataType}`);
             } else {
-                expect(
-                    expect(() => Types(message, type)(data)).toThrowError(Error).message.indexOf("but got") !== -1
-                ).toBe(true);
+                expect(() => Types(message, type)(data)).toThrowError(`but got`);
             }
         })
     );
 };
 
 test('Types will error if type is not found', () => {
-    expect("Unknown type check").toBe(
-        expect(() => Types('???', 'notfound')({abc: 123})).toThrowError(Error).message
-    );
+    expect(() => Types('???', 'notfound')({abc: 123})).toThrowError("Unknown type check");
 });
 
 test('Types() can identify a boolean', testTypes(`boolean`, [

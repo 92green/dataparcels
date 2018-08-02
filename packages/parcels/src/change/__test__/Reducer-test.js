@@ -12,7 +12,7 @@ test('Reducer should throw error if action is not provided', () => {
     };
 
     // $FlowFixMe - intential misuse of types
-    expect(expect(() => Reducer(data)).toThrowError(Error).message).toBe(`Reducer must receive an Action`);
+    expect(() => Reducer(data)).toThrowError(`Reducer must receive an Action`);
 });
 
 //
@@ -34,7 +34,7 @@ test('Reducer delete action should throw error if keyPath is empty', () => {
         type: "delete"
     });
 
-    expect(expect(() => Reducer(data, action)).toThrowError(Error).message).toBe(`Delete actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`Delete actions must have a keyPath with at least one key`);
 });
 
 
@@ -154,7 +154,7 @@ test('Reducer insertAfter action should throw error if keyPath is empty', () => 
         }
     });
 
-    expect(expect(() => Reducer(data, action)).toThrowError(Error).message).toBe(`InsertAfter actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`InsertAfter actions must have a keyPath with at least one key`);
 });
 
 test('Reducer should insertAfter by array index', () => {
@@ -272,7 +272,7 @@ test('Reducer insertBefore action should throw error if keyPath is empty', () =>
         }
     });
 
-    expect(expect(() => Reducer(data, action)).toThrowError(Error).message).toBe(`InsertBefore actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`InsertBefore actions must have a keyPath with at least one key`);
 });
 
 test('Reducer should insertBefore by array index', () => {
@@ -465,9 +465,7 @@ test('Reducer pop action should throw error if array keys in keyPath are invalid
         keyPath: ["#z"]
     });
 
-    expect(t.throws(() => {
-        Reducer(data, action);
-    }, Error)).toBeTruthy();
+    expect(() => Reducer(data, action)).toThrowError();
 });
 
 //
@@ -879,7 +877,7 @@ test('Reducer swap action should throw error if keyPath is empty', () => {
         }
     });
 
-    expect(expect(() => Reducer(data, action)).toThrowError(Error).message).toBe(`Swap actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`Swap actions must have a keyPath with at least one key`);
 });
 
 test('Reducer swap action should throw error if payload.swapKey doesnt exist', () => {
@@ -898,7 +896,7 @@ test('Reducer swap action should throw error if payload.swapKey doesnt exist', (
         keyPath: [0]
     });
 
-    expect(expect(() => Reducer(data, action)).toThrowError(Error).message).toBe(`Swap actions must have a swapKey in their payload`);
+    expect(() => Reducer(data, action)).toThrowError(`Swap actions must have a swapKey in their payload`);
 });
 
 
@@ -973,7 +971,7 @@ test('Reducer swapNext action should throw error if keyPath is empty', () => {
         type: "swapNext"
     });
 
-    expect(expect(() => Reducer(data, action)).toThrowError(Error).message).toBe(`SwapNext actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`SwapNext actions must have a keyPath with at least one key`);
 });
 
 //
@@ -995,7 +993,7 @@ test('Reducer swapPrev action should throw error if keyPath is empty', () => {
         type: "swapPrev"
     });
 
-    expect(expect(() => Reducer(data, action)).toThrowError(Error).message).toBe(`SwapPrev actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`SwapPrev actions must have a keyPath with at least one key`);
 });
 
 //
@@ -1195,7 +1193,7 @@ test('Reducer should throw error if action is not valid', () => {
         type: "fake"
     });
 
-    expect(expect(() => Reducer(data, action)).toThrowError(Error).message).toBe(`"fake" is not a valid action`);
+    expect(() => Reducer(data, action)).toThrowError(`"fake" is not a valid action`);
 });
 
 //
