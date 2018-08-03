@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import keyOrIndexToProperty from '../keyOrIndexToProperty';
 
-test('keyOrIndexToProperty() accepts key and returns property for object', tt => {
+test('keyOrIndexToProperty() accepts key and returns property for object', () => {
     let data = {
         value: {
             a: 1,
@@ -10,10 +9,10 @@ test('keyOrIndexToProperty() accepts key and returns property for object', tt =>
         }
     };
 
-    tt.is("a", keyOrIndexToProperty("a")(data));
+    expect("a").toBe(keyOrIndexToProperty("a")(data));
 });
 
-test('keyOrIndexToProperty() accepts index and returns property for array', tt => {
+test('keyOrIndexToProperty() accepts index and returns property for array', () => {
     let data = {
         value: [
             1,
@@ -21,10 +20,10 @@ test('keyOrIndexToProperty() accepts index and returns property for array', tt =
         ]
     };
 
-    tt.is(0, keyOrIndexToProperty(0)(data));
+    expect(0).toBe(keyOrIndexToProperty(0)(data));
 });
 
-test('keyOrIndexToProperty() accepts key and returns property for array', tt => {
+test('keyOrIndexToProperty() accepts key and returns property for array', () => {
     let data = {
         value: [
             1,
@@ -32,6 +31,6 @@ test('keyOrIndexToProperty() accepts key and returns property for array', tt => 
         ]
     };
 
-    tt.is(0, keyOrIndexToProperty("#a")(data));
+    expect(0).toBe(keyOrIndexToProperty("#a")(data));
 });
 

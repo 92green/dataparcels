@@ -1,5 +1,4 @@
 // @flow
-import test from 'ava';
 import Action from '../../change/Action';
 import ChangeRequest from '../../change/ChangeRequest';
 import Parcel from '../../parcel/Parcel';
@@ -34,72 +33,72 @@ let types = {
     ['undefined']: undefined
 };
 
-let testTypes = (type: string, shouldAllow: string[]) => (tt: *) => {
+let testTypes = (type: string, shouldAllow: string[]) => {
     let message = `Expected thing to be`;
     pipeWith(
         types,
         map((data, dataType) => {
             if(shouldAllow.indexOf(dataType) !== -1) {
-                tt.notThrows(() => Types(message, type)(data), `${type} should not throw when given ${dataType}`);
+                expect(() => Types(message, type)(data)).not.toThrowError(`${type} should not throw when given ${dataType}`);
             } else {
-                tt.true(tt.throws(() => Types(message, type)(data), Error).message.indexOf("but got") !== -1, `${type} should throw error when given ${dataType}`);
+                expect(() => Types(message, type)(data)).toThrowError(`but got`);
             }
         })
     );
 };
 
-test('Types will error if type is not found', tt => {
-    tt.is("Unknown type check", tt.throws(() => Types('???', 'notfound')({abc: 123}), Error).message);
+test('Types will error if type is not found', () => {
+    expect(() => Types('???', 'notfound')({abc: 123})).toThrowError("Unknown type check");
 });
 
-test('Types() can identify a boolean', testTypes(`boolean`, [
+test('Types() can identify a boolean', () => testTypes(`boolean`, [
     'booleanTrue',
     'booleanFalse'
 ]));
 
-test('Types() can identify a dispatchable', testTypes(`dispatchable`, [
+test('Types() can identify a dispatchable', () => testTypes(`dispatchable`, [
     'action',
     'actionArray',
     'changeRequest'
 ]));
 
-test('Types() can identify an event', testTypes(`event`, [
+test('Types() can identify an event', () => testTypes(`event`, [
     'event'
 ]));
 
-test('Types() can identify a function', testTypes(`function`, [
+test('Types() can identify a function', () => testTypes(`function`, [
     'function'
 ]));
 
-test('Types() can identify a function array', testTypes(`functionArray`, [
+test('Types() can identify a function array', () => testTypes(`functionArray`, [
     'functionArray'
 ]));
 
-test('Types() can identify an optional function', testTypes(`functionOptional`, [
+test('Types() can identify an optional function', () => testTypes(`functionOptional`, [
     'function',
     'undefined'
 ]));
 
-test('Types() can identify a keyIndex', testTypes(`keyIndex`, [
+test('Types() can identify a keyIndex', () => testTypes(`keyIndex`, [
     'number',
     'string'
 ]));
 
-test('Types() can identify a keyIndexPath', testTypes(`keyIndexPath`, [
+test('Types() can identify a keyIndexPath', () => testTypes(`keyIndexPath`, [
     'numberArray',
     'stringArray'
 ]));
 
-test('Types() can identify a modifier', testTypes(`modifier`, [
+test('Types() can identify a modifier', () => testTypes(`modifier`, [
     'function',
     'modifierObject'
 ]));
 
-test('Types() can identify a number', testTypes(`number`, [
+test('Types() can identify a number', () => testTypes(`number`, [
     'number'
 ]));
 
-test('Types() can identify a object', testTypes(`object`, [
+test('Types() can identify a object', () => testTypes(`object`, [
     'action',
     'actionArray',
     'botchedActionArray',
@@ -115,14 +114,14 @@ test('Types() can identify a object', testTypes(`object`, [
     'stringArray'
 ]));
 
-test('Types() can identify a parcel', testTypes(`parcel`, [
+test('Types() can identify a parcel', () => testTypes(`parcel`, [
     'parcel'
 ]));
 
-test('Types() can identify a parcelData', testTypes(`parcelData`, [
+test('Types() can identify a parcelData', () => testTypes(`parcelData`, [
     'parcelData'
 ]));
 
-test('Types() can identify a string', testTypes(`string`, [
+test('Types() can identify a string', () => testTypes(`string`, [
     'string'
 ]));

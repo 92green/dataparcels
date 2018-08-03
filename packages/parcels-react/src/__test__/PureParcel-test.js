@@ -1,5 +1,4 @@
 // @flow
-import test from 'ava';
 import React from 'react';
 
 import {configure} from 'enzyme';
@@ -11,38 +10,38 @@ import PureParcel from '../PureParcel';
 import PureParcelEquals from '../util/PureParcelEquals';
 import Parcel from 'parcels';
 
-test('PureParcel should pass a *value equivalent* parcel to children', tt => {
-    tt.plan(1);
+test('PureParcel should pass a *value equivalent* parcel to children', () => {
+    expect.assertions(1);
     let parcel = new Parcel();
 
     let wrapper = shallow(<PureParcel parcel={parcel}>
         {(pp) => {
-            tt.true(PureParcelEquals(pp, parcel));
+            expect(PureParcelEquals(pp, parcel)).toBe(true);
         }}
     </PureParcel>);
 });
 
-test('PureParcel should send correct changes back up when debounce = 0', tt => {
-    tt.plan(2);
+test('PureParcel should send correct changes back up when debounce = 0', () => {
+    expect.assertions(2);
     let hasChanged = false;
     let parcel = new Parcel({
         value: 456,
         handleChange: (newParcel) => {
             hasChanged = true;
-            tt.is(123, newParcel.value(), `handleChange receives correct value`);
+            expect(123).toBe(newParcel.value());
         }
     });
 
     let wrapper = shallow(<PureParcel parcel={parcel}>
         {(pp) => {
             pp.onChange(123);
-            tt.true(hasChanged, `onChange works synchronously when debounce = 0 (handleChange should already be called by this point)`)
+            expect(hasChanged).toBe(true)
         }}
     </PureParcel>);
 });
 
-test('PureParcel should pass a NEW *value equivalent* parcel to children when props change', tt => {
-    tt.plan(2);
+test('PureParcel should pass a NEW *value equivalent* parcel to children when props change', () => {
+    expect.assertions(2);
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
     let renders = 0;
@@ -50,9 +49,9 @@ test('PureParcel should pass a NEW *value equivalent* parcel to children when pr
     let wrapper = shallow(<PureParcel parcel={parcel}>
         {(pp) => {
             if(renders === 0) {
-                tt.true(PureParcelEquals(pp, parcel));
+                expect(PureParcelEquals(pp, parcel)).toBe(true);
             } else if(renders === 1) {
-                tt.true(PureParcelEquals(pp, parcel2));
+                expect(PureParcelEquals(pp, parcel2)).toBe(true);
             }
             renders++;
         }}
@@ -63,7 +62,7 @@ test('PureParcel should pass a NEW *value equivalent* parcel to children when pr
     });
 });
 
-test('PureParcel should not rerender if parcel has not changed value', tt => {
+test('PureParcel should not rerender if parcel has not changed value', () => {
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
     let renders = 0;
@@ -79,10 +78,10 @@ test('PureParcel should not rerender if parcel has not changed value', tt => {
         somethingElse: true
     });
 
-    tt.is(renders, 1);
+    expect(renders).toBe(1);
 });
 
-test('PureParcel should rerender if parcel has not changed value but forceUpdate has', tt => {
+test('PureParcel should rerender if parcel has not changed value but forceUpdate has', () => {
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
     let renders = 0;
@@ -98,17 +97,17 @@ test('PureParcel should rerender if parcel has not changed value but forceUpdate
         forceUpdate: ["def"]
     });
 
-    tt.is(renders, 2);
+    expect(renders).toBe(2);
 });
 
-test('PureParcel should debounce', async tt => {
-    tt.plan(5);
+test('PureParcel should debounce', async () => {
+    expect.assertions(5);
     return new Promise((resolve) => {
         let handleChangeCalls = 0;
         let parcel = new Parcel({
             handleChange: (newParcel) => {
                 handleChangeCalls++;
-                tt.is(newParcel.value(), 789, 'parcel should send correct changes back up when debouncing');
+                expect(newParcel.value()).toBe(789);
             }
         });
 
@@ -119,13 +118,13 @@ test('PureParcel should debounce', async tt => {
                 if(renders === 0) {
                     pp.onChange(123);
                 } else if(renders === 1) {
-                    tt.is(123, pp.value(), 'parcel should receive correct value on 1st re-render');
+                    expect(123).toBe(pp.value());
                     pp.onChange(456);
                 } else if(renders === 2) {
-                    tt.is(456, pp.value(), 'parcel should receive correct value on 2nd re-render');
+                    expect(456).toBe(pp.value());
                     pp.onChange(789);
                 } else if(renders === 3) {
-                    tt.is(789, pp.value(), 'parcel should receive correct value on 3rd re-render');
+                    expect(789).toBe(pp.value());
                 }
                 renders++;
             }}
@@ -147,7 +146,7 @@ test('PureParcel should debounce', async tt => {
         }, 60);
 
         setTimeout(() => {
-            tt.is(handleChangeCalls, 1, 'handleChange should have been called just once');
+            expect(handleChangeCalls).toBe(1);
             wrapper.instance().forceUpdate();
             wrapper.update().render();
             resolve();
@@ -155,39 +154,39 @@ test('PureParcel should debounce', async tt => {
     });
 });
 
-test('PureParcel should ignore debounce when sending a ping', tt => {
-    tt.plan(2);
+test('PureParcel should ignore debounce when sending a ping', () => {
+    expect.assertions(2);
     let hasChanged = false;
     let parcel = new Parcel({
         value: 123,
         handleChange: (newParcel) => {
             hasChanged = true;
-            tt.is(123, newParcel.value(), `handleChange receives correct value`);
+            expect(123).toBe(newParcel.value());
         }
     });
 
     let wrapper = shallow(<PureParcel parcel={parcel} debounce={100}>
         {(pp) => {
             pp.ping();
-            tt.true(hasChanged, `onChange works synchronously when debounce is set and ping is sent (handleChange should already be called by this point)`)
+            expect(hasChanged).toBe(true)
         }}
     </PureParcel>);
 });
 
-test('PureParcel should render colours when debugRender is true', tt => {
+test('PureParcel should render colours when debugRender is true', () => {
     let hasChanged = false;
     let parcel = new Parcel({
         value: 123,
         debugRender: true
     });
 
-    tt.true(
+    expect(
         shallow(<PureParcel parcel={parcel} debounce={100}>{(pp) => "???"}</PureParcel>)
         .render()
         .get(0)
         .attribs
         .style
         .indexOf('background-color') !== -1
-    );
+    ).toBe(true);
 });
 

@@ -1,10 +1,9 @@
 // @flow
-import test from 'ava';
-import {List, Map} from 'immutable';
+import { List, Map } from 'immutable';
 import Reducer from '../Reducer';
 import Action from '../Action';
 
-test('Reducer should throw error if action is not provided', tt => {
+test('Reducer should throw error if action is not provided', () => {
     var data = {
         value: 123,
         meta: {},
@@ -13,14 +12,14 @@ test('Reducer should throw error if action is not provided', tt => {
     };
 
     // $FlowFixMe - intential misuse of types
-    tt.is(tt.throws(() => Reducer(data), Error).message, `Reducer must receive an Action`);
+    expect(() => Reducer(data)).toThrowError(`Reducer must receive an Action`);
 });
 
 //
 // delete
 //
 
-test('Reducer delete action should throw error if keyPath is empty', tt => {
+test('Reducer delete action should throw error if keyPath is empty', () => {
     var data = {
         value: [
             0,
@@ -35,11 +34,11 @@ test('Reducer delete action should throw error if keyPath is empty', tt => {
         type: "delete"
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `Delete actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`Delete actions must have a keyPath with at least one key`);
 });
 
 
-test('Reducer should delete key', tt => {
+test('Reducer should delete key', () => {
     var data = {
         value: {
             a: 1,
@@ -57,10 +56,10 @@ test('Reducer should delete key', tt => {
     var expectedValue = {
         b: 2
     };
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should delete deep key', tt => {
+test('Reducer should delete deep key', () => {
     var data = {
         value: {
             a: {
@@ -84,10 +83,10 @@ test('Reducer should delete deep key', tt => {
         },
         c: 3
     };
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should delete array index', tt => {
+test('Reducer should delete array index', () => {
     var data = {
         value: [
             0,
@@ -107,10 +106,10 @@ test('Reducer should delete array index', tt => {
         1,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should delete array key', tt => {
+test('Reducer should delete array key', () => {
     var data = {
         value: [
             0,
@@ -130,14 +129,14 @@ test('Reducer should delete array key', tt => {
         1,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // insertAfter
 //
 
-test('Reducer insertAfter action should throw error if keyPath is empty', tt => {
+test('Reducer insertAfter action should throw error if keyPath is empty', () => {
     var data = {
         value: [
             0,
@@ -155,10 +154,10 @@ test('Reducer insertAfter action should throw error if keyPath is empty', tt => 
         }
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `InsertAfter actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`InsertAfter actions must have a keyPath with at least one key`);
 });
 
-test('Reducer should insertAfter by array index', tt => {
+test('Reducer should insertAfter by array index', () => {
     var data = {
         value: [
             0,
@@ -183,10 +182,10 @@ test('Reducer should insertAfter by array index', tt => {
         3,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should insertAfter by array key', tt => {
+test('Reducer should insertAfter by array key', () => {
     var data = {
         value: [
             0,
@@ -210,10 +209,10 @@ test('Reducer should insertAfter by array key', tt => {
         2,
         3
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should insertAfter by array index deeply', tt => {
+test('Reducer should insertAfter by array index deeply', () => {
     var data = {
         value: [
             null,
@@ -248,14 +247,14 @@ test('Reducer should insertAfter by array index deeply', tt => {
             ]
         }
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // insertBefore
 //
 
-test('Reducer insertBefore action should throw error if keyPath is empty', tt => {
+test('Reducer insertBefore action should throw error if keyPath is empty', () => {
     var data = {
         value: [
             0,
@@ -273,10 +272,10 @@ test('Reducer insertBefore action should throw error if keyPath is empty', tt =>
         }
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `InsertBefore actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`InsertBefore actions must have a keyPath with at least one key`);
 });
 
-test('Reducer should insertBefore by array index', tt => {
+test('Reducer should insertBefore by array index', () => {
     var data = {
         value: [
             0,
@@ -301,10 +300,10 @@ test('Reducer should insertBefore by array index', tt => {
         1,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should insertBefore by array key', tt => {
+test('Reducer should insertBefore by array key', () => {
     var data = {
         value: [
             0,
@@ -328,10 +327,10 @@ test('Reducer should insertBefore by array key', tt => {
         3,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should insertBefore by array index deeply', tt => {
+test('Reducer should insertBefore by array index deeply', () => {
     var data = {
         value: [
             null,
@@ -366,14 +365,14 @@ test('Reducer should insertBefore by array index deeply', tt => {
             ]
         }
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // ping
 //
 
-test('Reducer should ping', tt => {
+test('Reducer should ping', () => {
     var data = {
         value: [
             0,
@@ -393,7 +392,7 @@ test('Reducer should ping', tt => {
         1,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 
@@ -401,7 +400,7 @@ test('Reducer should ping', tt => {
 // pop
 //
 
-test('Reducer should pop', tt => {
+test('Reducer should pop', () => {
     var data = {
         value: [
             0,
@@ -420,10 +419,10 @@ test('Reducer should pop', tt => {
         0,
         1
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should pop deeply', tt => {
+test('Reducer should pop deeply', () => {
     var data = {
         value: {
             woo: [
@@ -447,10 +446,10 @@ test('Reducer should pop deeply', tt => {
             1
         ]
     };
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer pop action should throw error if array keys in keyPath are invalid', tt => {
+test('Reducer pop action should throw error if array keys in keyPath are invalid', () => {
     var data = {
         value: [
             0,
@@ -466,16 +465,14 @@ test('Reducer pop action should throw error if array keys in keyPath are invalid
         keyPath: ["#z"]
     });
 
-    tt.truthy(tt.throws(() => {
-        Reducer(data, action);
-    }, Error));
+    expect(() => Reducer(data, action)).toThrowError();
 });
 
 //
 // push
 //
 
-test('Reducer should push', tt => {
+test('Reducer should push', () => {
     var data = {
         value: [
             0,
@@ -498,10 +495,10 @@ test('Reducer should push', tt => {
         2,
         3
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should push deeply', tt => {
+test('Reducer should push deeply', () => {
     var data = {
         value: [
             null,
@@ -535,14 +532,14 @@ test('Reducer should push deeply', tt => {
             ]
         }
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // set
 //
 
-test('Reducer should set with empty keyPath', tt => {
+test('Reducer should set with empty keyPath', () => {
     var data = {
         value: {
             a: 1,
@@ -560,10 +557,10 @@ test('Reducer should set with empty keyPath', tt => {
     });
     var expectedValue = 3;
 
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should set by key', tt => {
+test('Reducer should set by key', () => {
     var data = {
         value: {
             a: 1,
@@ -585,10 +582,10 @@ test('Reducer should set by key', tt => {
         b: 3
     };
 
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should set by deep key', tt => {
+test('Reducer should set by deep key', () => {
     var data = {
         value: {
             a: 1,
@@ -614,11 +611,11 @@ test('Reducer should set by deep key', tt => {
         }
     };
 
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 
-test('Reducer should set by array index', tt => {
+test('Reducer should set by array index', () => {
     var data = {
         value: [
             0,
@@ -641,10 +638,10 @@ test('Reducer should set by array index', tt => {
         111,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should set by array key', tt => {
+test('Reducer should set by array key', () => {
     var data = {
         value: [
             0,
@@ -667,14 +664,14 @@ test('Reducer should set by array key', tt => {
         1,
         333
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // setMeta
 //
 
-test('Reducer should setMeta with empty keyPath', tt => {
+test('Reducer should setMeta with empty keyPath', () => {
     var data = {
         value: {
             a: 1,
@@ -697,10 +694,10 @@ test('Reducer should setMeta with empty keyPath', tt => {
         abc: 123
     };
 
-    tt.deepEqual(expectedMeta, Reducer(data, action).meta);
+    expect(expectedMeta).toEqual(Reducer(data, action).meta);
 });
 
-test('Reducer should setMeta merge', tt => {
+test('Reducer should setMeta merge', () => {
     var data = {
         value: {
             a: 1,
@@ -726,10 +723,10 @@ test('Reducer should setMeta merge', tt => {
         def: 456
     };
 
-    tt.deepEqual(expectedMeta, Reducer(data, action).meta);
+    expect(expectedMeta).toEqual(Reducer(data, action).meta);
 });
 
-test('Reducer should setMeta with keyPath', tt => {
+test('Reducer should setMeta with keyPath', () => {
     var data = {
         value: {
             a: 1,
@@ -760,10 +757,10 @@ test('Reducer should setMeta with keyPath', tt => {
         }
     };
 
-    tt.deepEqual(expectedChild, Reducer(data, action).child);
+    expect(expectedChild).toEqual(Reducer(data, action).child);
 });
 
-test('Reducer should merge setMeta with keyPath', tt => {
+test('Reducer should merge setMeta with keyPath', () => {
     var data = {
         value: {
             a: 1,
@@ -802,7 +799,7 @@ test('Reducer should merge setMeta with keyPath', tt => {
         }
     };
 
-    tt.deepEqual(expectedChild, Reducer(data, action).child);
+    expect(expectedChild).toEqual(Reducer(data, action).child);
 });
 
 
@@ -810,7 +807,7 @@ test('Reducer should merge setMeta with keyPath', tt => {
 // shift
 //
 
-test('Reducer should shift', tt => {
+test('Reducer should shift', () => {
     var data = {
         value: [
             0,
@@ -829,10 +826,10 @@ test('Reducer should shift', tt => {
         1,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should shift deeply', tt => {
+test('Reducer should shift deeply', () => {
     var data = {
         value: {
             woo: [
@@ -855,14 +852,14 @@ test('Reducer should shift deeply', tt => {
             2
         ]
     };
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // swap
 //
 
-test('Reducer swap action should throw error if keyPath is empty', tt => {
+test('Reducer swap action should throw error if keyPath is empty', () => {
     var data = {
         value: [
             0,
@@ -880,10 +877,10 @@ test('Reducer swap action should throw error if keyPath is empty', tt => {
         }
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `Swap actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`Swap actions must have a keyPath with at least one key`);
 });
 
-test('Reducer swap action should throw error if payload.swapKey doesnt exist', tt => {
+test('Reducer swap action should throw error if payload.swapKey doesnt exist', () => {
     var data = {
         value: [
             0,
@@ -899,11 +896,11 @@ test('Reducer swap action should throw error if payload.swapKey doesnt exist', t
         keyPath: [0]
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `Swap actions must have a swapKey in their payload`);
+    expect(() => Reducer(data, action)).toThrowError(`Swap actions must have a swapKey in their payload`);
 });
 
 
-test('Reducer should swap by array indexes', tt => {
+test('Reducer should swap by array indexes', () => {
     var data = {
         value: [
             0,
@@ -926,10 +923,10 @@ test('Reducer should swap by array indexes', tt => {
         1,
         0
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should swap by array keys', tt => {
+test('Reducer should swap by array keys', () => {
     var data = {
         value: [
             0,
@@ -952,14 +949,14 @@ test('Reducer should swap by array keys', tt => {
         0,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // swapNext
 //
 
-test('Reducer swapNext action should throw error if keyPath is empty', tt => {
+test('Reducer swapNext action should throw error if keyPath is empty', () => {
     var data = {
         value: [
             0,
@@ -974,14 +971,14 @@ test('Reducer swapNext action should throw error if keyPath is empty', tt => {
         type: "swapNext"
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `SwapNext actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`SwapNext actions must have a keyPath with at least one key`);
 });
 
 //
 // swapPrev
 //
 
-test('Reducer swapPrev action should throw error if keyPath is empty', tt => {
+test('Reducer swapPrev action should throw error if keyPath is empty', () => {
     var data = {
         value: [
             0,
@@ -996,14 +993,14 @@ test('Reducer swapPrev action should throw error if keyPath is empty', tt => {
         type: "swapPrev"
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `SwapPrev actions must have a keyPath with at least one key`);
+    expect(() => Reducer(data, action)).toThrowError(`SwapPrev actions must have a keyPath with at least one key`);
 });
 
 //
 // unshift
 //
 
-test('Reducer should unshift', tt => {
+test('Reducer should unshift', () => {
     var data = {
         value: [
             0,
@@ -1026,10 +1023,10 @@ test('Reducer should unshift', tt => {
         1,
         2
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should unshift deeply', tt => {
+test('Reducer should unshift deeply', () => {
     var data = {
         value: [
             null,
@@ -1063,10 +1060,10 @@ test('Reducer should unshift deeply', tt => {
             ]
         }
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
-test('Reducer should swap deeply', tt => {
+test('Reducer should swap deeply', () => {
     var data = {
         value: [
             {
@@ -1134,14 +1131,14 @@ test('Reducer should swap deeply', tt => {
         }
     ];
 
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // action array test with push
 //
 
-test('Reducer should push multiple', tt => {
+test('Reducer should push multiple', () => {
     var data = {
         value: [
             0,
@@ -1174,14 +1171,14 @@ test('Reducer should push multiple', tt => {
         3,
         4
     ];
-    tt.deepEqual(expectedValue, Reducer(data, action).value);
+    expect(expectedValue).toEqual(Reducer(data, action).value);
 });
 
 //
 // incorrect action
 //
 
-test('Reducer should throw error if action is not valid', tt => {
+test('Reducer should throw error if action is not valid', () => {
     var data = {
         value: [
             0,
@@ -1196,14 +1193,14 @@ test('Reducer should throw error if action is not valid', tt => {
         type: "fake"
     });
 
-    tt.is(tt.throws(() => Reducer(data, action), Error).message, `"fake" is not a valid action`);
+    expect(() => Reducer(data, action)).toThrowError(`"fake" is not a valid action`);
 });
 
 //
 // meta
 //
 
-test('Reducer should set meta if not provided', tt => {
+test('Reducer should set meta if not provided', () => {
     var data = {
         value: {
             a: 1,
@@ -1221,10 +1218,10 @@ test('Reducer should set meta if not provided', tt => {
         }
     });
 
-    tt.deepEqual({}, Reducer(data, action).meta);
+    expect({}).toEqual(Reducer(data, action).meta);
 });
 
-test('Reducer should pass through meta if provided', tt => {
+test('Reducer should pass through meta if provided', () => {
     var meta = {
         abc: 123
     };
@@ -1246,5 +1243,5 @@ test('Reducer should pass through meta if provided', tt => {
         }
     });
 
-    tt.deepEqual(meta, Reducer(data, action).meta);
+    expect(meta).toEqual(Reducer(data, action).meta);
 });

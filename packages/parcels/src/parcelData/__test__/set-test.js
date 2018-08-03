@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import set from '../set';
 
-test('set should work', (tt: Object) => {
+test('set should work', () => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -23,10 +22,10 @@ test('set should work', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, set('d', {value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(set('d', {value: 4})(parcelData));
 });
 
-test('set should work with existing child', (tt: Object) => {
+test('set should work with existing child', () => {
     let parcelData = {
         value: {a:1,b:2,c:3},
         child: {
@@ -46,10 +45,10 @@ test('set should work with existing child', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, set('a', {value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(set('a', {value: 4})(parcelData));
 });
 
-test('set should work when setting a child', (tt: Object) => {
+test('set should work when setting a child', () => {
     let parcelData = {
         value: {
             a: 1,
@@ -96,10 +95,10 @@ test('set should work when setting a child', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, set('a', {value: {d:4}, child: {d:{key: 'd'}} })(parcelData));
+    expect(expectedParcelData).toEqual(set('a', {value: {d:4}, child: {d:{key: 'd'}} })(parcelData));
 });
 
-test('set should work with hashKey', (tt: Object) => {
+test('set should work with hashKey', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -119,10 +118,10 @@ test('set should work with hashKey', (tt: Object) => {
         meta: {}
     };
 
-    tt.deepEqual(expectedParcelData, set('#b', {value: 4})(parcelData));
+    expect(expectedParcelData).toEqual(set('#b', {value: 4})(parcelData));
 });
 
-test('set should do nothing with non-existent hashKey', (tt: Object) => {
+test('set should do nothing with non-existent hashKey', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -132,5 +131,5 @@ test('set should do nothing with non-existent hashKey', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(parcelData, set('#z', {value: 4})(parcelData));
+    expect(parcelData).toEqual(set('#z', {value: 4})(parcelData));
 });

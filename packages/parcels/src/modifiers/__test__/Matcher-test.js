@@ -1,6 +1,5 @@
 // @flow
-import test from 'ava';
-import Matcher, {split, containsWildcard, containsGlobstar} from '../Matcher';
+import Matcher, { split, containsWildcard, containsGlobstar } from '../Matcher';
 
 import filter from 'unmutable/lib/filter';
 import identity from 'unmutable/lib/identity';
@@ -335,45 +334,45 @@ let matchTests = [
 pipeWith(
     matchTests,
     map(({name, match, matchParsed, shouldMatch}) => {
-        test(`${name}`, (tt: Object) => {
+        test(`${name}`, () => {
             let matched: string[] = pipeWith(
                 typedPathStrings,
                 map((typedPathString, name) => Matcher(typedPathString, match)),
                 filter(identity()),
                 keyArray()
             );
-            tt.deepEqual(shouldMatch, matched, `"${match}" should match correctly`);
+            expect(shouldMatch).toEqual(matched);
         });
     })
 );
 
-test(`split() should split`, (tt: Object) => {
-    tt.deepEqual(['abc'], split(`abc`));
-    tt.deepEqual(['abc', 'def'], split(`abc.def`));
-    tt.deepEqual(['abc', 'de%.f'], split(`abc.de%.f`));
+test(`split() should split`, () => {
+    expect(['abc']).toEqual(split(`abc`));
+    expect(['abc', 'def']).toEqual(split(`abc.def`));
+    expect(['abc', 'de%.f']).toEqual(split(`abc.de%.f`));
 });
 
-test(`containsWildcard() should identify when a match string contains a wildcard`, (tt: Object) => {
-    tt.false(containsWildcard(`abc`));
-    tt.true(containsWildcard(`abc*`));
-    tt.true(containsWildcard(`abc.*`));
-    tt.false(containsWildcard(`abc%*`));
-    tt.true(containsWildcard(`abc%*.*`));
-    tt.false(containsWildcard(`**`));
-    tt.false(containsWildcard(`abc.**`));
-    tt.true(containsWildcard(`abc.*.**`));
-    tt.true(containsWildcard(`abc%**`));
+test(`containsWildcard() should identify when a match string contains a wildcard`, () => {
+    expect(containsWildcard(`abc`)).toBe(false);
+    expect(containsWildcard(`abc*`)).toBe(true);
+    expect(containsWildcard(`abc.*`)).toBe(true);
+    expect(containsWildcard(`abc%*`)).toBe(false);
+    expect(containsWildcard(`abc%*.*`)).toBe(true);
+    expect(containsWildcard(`**`)).toBe(false);
+    expect(containsWildcard(`abc.**`)).toBe(false);
+    expect(containsWildcard(`abc.*.**`)).toBe(true);
+    expect(containsWildcard(`abc%**`)).toBe(true);
 });
 
-test(`containsGlobstar() should identify when a match string contains a globstar`, (tt: Object) => {
-    tt.false(containsGlobstar(`abc`));
-    tt.false(containsGlobstar(`abc*`));
-    tt.false(containsGlobstar(`abc.*`));
-    tt.false(containsGlobstar(`abc%*`));
-    tt.false(containsGlobstar(`abc%*.*`));
-    tt.true(containsGlobstar(`**`));
-    tt.true(containsGlobstar(`abc.**`));
-    tt.true(containsGlobstar(`abc.*.**`));
-    tt.false(containsGlobstar(`abc%**`));
+test(`containsGlobstar() should identify when a match string contains a globstar`, () => {
+    expect(containsGlobstar(`abc`)).toBe(false);
+    expect(containsGlobstar(`abc*`)).toBe(false);
+    expect(containsGlobstar(`abc.*`)).toBe(false);
+    expect(containsGlobstar(`abc%*`)).toBe(false);
+    expect(containsGlobstar(`abc%*.*`)).toBe(false);
+    expect(containsGlobstar(`**`)).toBe(true);
+    expect(containsGlobstar(`abc.**`)).toBe(true);
+    expect(containsGlobstar(`abc.*.**`)).toBe(true);
+    expect(containsGlobstar(`abc%**`)).toBe(false);
 });
 

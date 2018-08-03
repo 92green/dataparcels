@@ -1,9 +1,8 @@
 // @flow
-import test from 'ava';
 import Parcel from '../Parcel';
 
-test('IndexedParcel.delete() should delete', tt => {
-    tt.plan(4);
+test('IndexedParcel.delete() should delete', () => {
+    expect.assertions(4);
 
     var data = {
         value: [1,2,3],
@@ -39,22 +38,22 @@ test('IndexedParcel.delete() should delete', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).delete(0);
 
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedActionWithKey, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
         }
     }).delete("#a");
 
 });
 
-test('IndexedParcel.get(hashkey) should return a new child Parcel', tt => {
+test('IndexedParcel.get(hashkey) should return a new child Parcel', () => {
     var data = {
         value: [6,7,8],
         handleChange: () => {}
@@ -73,12 +72,12 @@ test('IndexedParcel.get(hashkey) should return a new child Parcel', tt => {
 
     var childParcel = new Parcel(data).get("#a");
 
-    tt.true(childParcel instanceof Parcel, 'get(hashkey) returns a child Parcel');
-    tt.is(childParcel.value(), expectedValue, 'child parcel has correct value');
+    expect(childParcel instanceof Parcel).toBe(true);
+    expect(childParcel.value()).toBe(expectedValue);
 });
 
-test('IndexedParcel.insertBefore() should insertBefore', tt => {
-    tt.plan(4);
+test('IndexedParcel.insertBefore() should insertBefore', () => {
+    expect.assertions(4);
 
     var data = {
         value: [1,2,3],
@@ -120,22 +119,22 @@ test('IndexedParcel.insertBefore() should insertBefore', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).insertBefore(1, 4);
 
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedActionWithKey, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
         }
     }).insertBefore("#b", 4);
 });
 
-test('IndexedParcel.insertAfter() should insertAfter', tt => {
-    tt.plan(4);
+test('IndexedParcel.insertAfter() should insertAfter', () => {
+    expect.assertions(4);
 
     var data = {
         value: [1,2,3],
@@ -177,22 +176,22 @@ test('IndexedParcel.insertAfter() should insertAfter', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using index');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct using index');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).insertAfter(1, 4);
 
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct using key');
-            tt.deepEqual(expectedActionWithKey, changeRequest.actions()[0].toJS(), 'updated action is correct using key');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
         }
     }).insertAfter("#b", 4);
 });
 
-test('IndexedParcel.push() should push', tt => {
-    tt.plan(2);
+test('IndexedParcel.push() should push', () => {
+    expect.assertions(2);
 
     var data = {
         value: [1,2,3],
@@ -226,14 +225,14 @@ test('IndexedParcel.push() should push', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).push(4);
 });
 
-test('IndexedParcel.pop() should pop', tt => {
-    tt.plan(2);
+test('IndexedParcel.pop() should pop', () => {
+    expect.assertions(2);
 
     var data = {
         value: [1,2,3],
@@ -263,14 +262,14 @@ test('IndexedParcel.pop() should pop', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).pop();
 });
 
-test('IndexedParcel.shift() should shift', tt => {
-    tt.plan(2);
+test('IndexedParcel.shift() should shift', () => {
+    expect.assertions(2);
 
     var data = {
         value: [1,2,3],
@@ -300,14 +299,14 @@ test('IndexedParcel.shift() should shift', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).shift();
 });
 
-test('IndexedParcel.swap() should swap', tt => {
-    tt.plan(2);
+test('IndexedParcel.swap() should swap', () => {
+    expect.assertions(2);
 
     var data = {
         value: [1,2,3],
@@ -340,14 +339,14 @@ test('IndexedParcel.swap() should swap', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with indexes');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with indexes');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swap(0,2);
 });
 
-test('IndexedParcel.swapNext() should swapNext', tt => {
-    tt.plan(4);
+test('IndexedParcel.swapNext() should swapNext', () => {
+    expect.assertions(4);
 
     var data = {
         value: [1,2,3],
@@ -378,8 +377,8 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapNext(0);
 
@@ -392,15 +391,15 @@ test('IndexedParcel.swapNext() should swapNext', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with keys');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapNext("#a");
 });
 
 
-test('IndexedParcel.swapPrev() should swapPrev', tt => {
-    tt.plan(4);
+test('IndexedParcel.swapPrev() should swapPrev', () => {
+    expect.assertions(4);
 
     var data = {
         value: [1,2,3],
@@ -431,8 +430,8 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapPrev(1);
 
@@ -445,14 +444,14 @@ test('IndexedParcel.swapPrev() should swapPrev', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct with keys');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct with keys');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapPrev("#b");
 });
 
-test('IndexedParcel.unshift() should unshift', tt => {
-    tt.plan(2);
+test('IndexedParcel.unshift() should unshift', () => {
+    expect.assertions(2);
 
     var data = {
         value: [1,2,3],
@@ -486,8 +485,8 @@ test('IndexedParcel.unshift() should unshift', tt => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            tt.deepEqual(expectedData, parcel.data(), 'updated data is correct');
-            tt.deepEqual(expectedAction, changeRequest.actions()[0].toJS(), 'updated action is correct');
+            expect(expectedData).toEqual(parcel.data());
+            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).unshift(4);
 });

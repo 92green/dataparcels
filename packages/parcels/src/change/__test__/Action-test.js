@@ -1,43 +1,42 @@
 // @flow
-import test from 'ava';
 import Action from '../Action';
 
-test('Action should build an action', tt => {
+test('Action should build an action', () => {
     let expectedDefaultData = {
         type: "",
         payload: {},
         keyPath: []
     };
-    tt.deepEqual(expectedDefaultData, new Action().toJS());
+    expect(expectedDefaultData).toEqual(new Action().toJS());
 });
 
-test('Action should build an action with a type', tt => {
-    tt.is("???", new Action({type: "???"}).type);
+test('Action should build an action with a type', () => {
+    expect("???").toBe(new Action({type: "???"}).type);
 });
 
-test('Action should build an action with a payload', tt => {
-    tt.deepEqual({a: 1}, new Action({type: "???", payload: {a: 1}}).payload);
+test('Action should build an action with a payload', () => {
+    expect({a: 1}).toEqual(new Action({type: "???", payload: {a: 1}}).payload);
 });
 
-test('Action should build an action with a default payload', tt => {
-    tt.deepEqual({}, new Action({type: "???"}).payload);
+test('Action should build an action with a default payload', () => {
+    expect({}).toEqual(new Action({type: "???"}).payload);
 });
 
-test('Action should build an action with a keyPath', tt => {
-    tt.deepEqual(['a', 'b'], new Action({type: "???", keyPath: ['a', 'b']}).keyPath);
+test('Action should build an action with a keyPath', () => {
+    expect(['a', 'b']).toEqual(new Action({type: "???", keyPath: ['a', 'b']}).keyPath);
 });
 
-test('Action should build an action with a default keyPath', tt => {
-    tt.deepEqual([], new Action({type: "???"}).keyPath);
+test('Action should build an action with a default keyPath', () => {
+    expect([]).toEqual(new Action({type: "???"}).keyPath);
 });
 
-test('Action should be synchronous if it has a type of ping, else not', tt => {
-    tt.true(new Action({type: "ping"}).shouldBeSynchronous());
-    tt.false(new Action({type: "set"}).shouldBeSynchronous());
-    tt.false(new Action({type: "???"}).shouldBeSynchronous());
+test('Action should be synchronous if it has a type of ping, else not', () => {
+    expect(new Action({type: "ping"}).shouldBeSynchronous()).toBe(true);
+    expect(new Action({type: "set"}).shouldBeSynchronous()).toBe(false);
+    expect(new Action({type: "???"}).shouldBeSynchronous()).toBe(false);
 });
 
-test('Action should unshift key to front of keyPath when ungetting', tt => {
+test('Action should unshift key to front of keyPath when ungetting', () => {
     let action = {
         type: "woo",
         payload: {abc: 123},
@@ -50,17 +49,17 @@ test('Action should unshift key to front of keyPath when ungetting', tt => {
         keyPath: ['b', 'a']
     };
 
-    tt.deepEqual(expectedAction, new Action(action)._unget('b').toJS());
+    expect(expectedAction).toEqual(new Action(action)._unget('b').toJS());
 });
 
-test('Action should be value action if it isnt ping or setMeta', tt => {
-    tt.false(new Action({type: "ping"}).isValueAction());
-    tt.true(new Action({type: "set"}).isValueAction());
-    tt.false(new Action({type: "setMeta"}).isValueAction());
+test('Action should be value action if it isnt ping or setMeta', () => {
+    expect(new Action({type: "ping"}).isValueAction()).toBe(false);
+    expect(new Action({type: "set"}).isValueAction()).toBe(true);
+    expect(new Action({type: "setMeta"}).isValueAction()).toBe(false);
 });
 
-test('Action should be meta action if it is setMeta', tt => {
-    tt.false(new Action({type: "ping"}).isMetaAction());
-    tt.false(new Action({type: "set"}).isMetaAction());
-    tt.true(new Action({type: "setMeta"}).isMetaAction());
+test('Action should be meta action if it is setMeta', () => {
+    expect(new Action({type: "ping"}).isMetaAction()).toBe(false);
+    expect(new Action({type: "set"}).isMetaAction()).toBe(false);
+    expect(new Action({type: "setMeta"}).isMetaAction()).toBe(true);
 });

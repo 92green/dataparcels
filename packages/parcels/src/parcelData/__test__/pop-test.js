@@ -1,8 +1,7 @@
 // @flow
-import test from 'ava';
 import pop from '../pop';
 
-test('pop should work', (tt: Object) => {
+test('pop should work', () => {
     let parcelData = {
         value: [1,2,3],
         child: [
@@ -20,5 +19,5 @@ test('pop should work', (tt: Object) => {
         ]
     };
 
-    tt.deepEqual(expectedParcelData, pop()(parcelData));
+    expect(expectedParcelData).toEqual(pop()(parcelData));
 });

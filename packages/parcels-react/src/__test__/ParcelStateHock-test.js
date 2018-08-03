@@ -1,50 +1,45 @@
 // @flow
-import test from 'ava';
 import React from 'react';
-
-import {shallow, configure} from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-configure({adapter: new Adapter()});
 
 import ParcelStateHock from '../ParcelStateHock';
 import {CheckHockChildProps} from 'stampy/lib/util/TestHelpers';
 
-test('ParcelStateHock config should accept an initial value', tt => {
-    tt.plan(2);
+test('ParcelStateHock config should accept an initial value', () => {
+    expect.assertions(2);
     CheckHockChildProps(
         ParcelStateHock({
             initialValue: (props) => {
-                tt.is(123, props.abc, `initialValue should receive props`);
+                expect(123).toBe(props.abc);
                 return 456;
             },
             prop: "proppy"
         }),
         {abc: 123},
         (props) => {
-            tt.is(456, props.proppy.value(), `value is passed down via prop`);
+            expect(456).toBe(props.proppy.value());
         }
     );
 });
 
-test('ParcelStateHock must be passed a prop, and throw an error if it isnt', tt => {
+test('ParcelStateHock must be passed a prop, and throw an error if it isnt', () => {
     // $FlowFixMe - intentiaal misuse of types
-    tt.is(`ParcelStateHock() expects param "config.prop" to be a string, but got undefined`, tt.throws(() => ParcelStateHock({}), Error).message);
+    expect(() => ParcelStateHock({})).toThrow(`ParcelStateHock() expects param "config.prop" to be a string, but got undefined`);
 });
 
 
-test('ParcelStateHock config should default initial value to undefined', tt => {
+test('ParcelStateHock config should default initial value to undefined', () => {
     CheckHockChildProps(
         ParcelStateHock({
             prop: "proppy"
         }),
         {},
         (props) => {
-            tt.true(typeof props.proppy.value() === "undefined", `value is passed down via prop`);
+            expect(typeof props.proppy.value() === "undefined").toBe(true);
         }
     );
 });
 
-test('ParcelStateHock changes should be put back into ParcelStateHock state', tt => {
+test('ParcelStateHock changes should be put back into ParcelStateHock state', () => {
     let Child = () => <div />;
     let Hocked = ParcelStateHock({
         initialValue: () => 123,
@@ -54,31 +49,31 @@ test('ParcelStateHock changes should be put back into ParcelStateHock state', tt
     let wrapper = shallow(<Hocked />);
     let {proppy} = wrapper.props();
     proppy.onChange(456);
-    tt.is(456, wrapper.update().props().proppy.value());
+    expect(456).toBe(wrapper.update().props().proppy.value());
 });
 
 
-test('ParcelStateHock config should accept a modify function', tt => {
-    tt.plan(3);
+test('ParcelStateHock config should accept a modify function', () => {
+    expect.assertions(3);
     CheckHockChildProps(
         ParcelStateHock({
             initialValue: () => 456,
             prop: "proppy",
             modify: (props) => (parcel) => {
-                tt.is(456, parcel.value(), `modify should receive parcel`);
-                tt.deepEqual({}, props, `modify should receive props`);
+                expect(456).toBe(parcel.value());
+                expect({}).toEqual(props);
                 return parcel.modifyValue(ii => ii + 1);
             }
         }),
         {},
         (props) => {
-            tt.is(457, props.proppy.value(), `modified value is passed down via prop`);
+            expect(457).toBe(props.proppy.value());
         }
     );
 });
 
-test('ParcelStateHock config should accept a debugRender boolean', tt => {
-    tt.plan(1);
+test('ParcelStateHock config should accept a debugRender boolean', () => {
+    expect.assertions(1);
     CheckHockChildProps(
         ParcelStateHock({
             initialValue: () => 456,
@@ -87,7 +82,7 @@ test('ParcelStateHock config should accept a debugRender boolean', tt => {
         }),
         {},
         (props) => {
-            tt.true(props.proppy._treeshare.getDebugRender(), `debugRender is set on parcel`);
+            expect(props.proppy._treeshare.getDebugRender()).toBe(true);
         }
     );
 });
