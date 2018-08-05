@@ -5,7 +5,7 @@ module.exports = {
         "packages/**/*.{js,jsx}",
         "!**/lib/**",
         "!**/node_modules/**",
-        "!packages/parcels-docs/**"
+        "!packages/dataparcels-docs/**"
     ],
     testMatch: ["**/__test__/**/*.js?(x)"],
     testURL: 'http://localhost'
