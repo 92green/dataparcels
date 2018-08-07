@@ -11,6 +11,7 @@
 
 # Folders
 coverage
+flow-coverage
 dist
 lib
 **/node_modules

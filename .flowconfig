@@ -10,4 +10,4 @@ module.system.node.resolve_dirname=src
 <PROJECT_ROOT>/scripts/.*
 <PROJECT_ROOT>/example/.*
 <PROJECT_ROOT>/.*/gatsby-node.js
-<PROJECT_ROOT>/packages/parcels-docs/.*
+<PROJECT_ROOT>/packages/dataparcels-docs/.*

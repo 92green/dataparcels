@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/parcels
+    working_directory: ~/dataparcels
     docker:
       - image: circleci/node:8
 

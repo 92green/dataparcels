@@ -8704,6 +8704,13 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
+parcels@^0.13.5:
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/parcels/-/parcels-0.13.5.tgz#6cbabcdafdd43f7f3a505c78f24c900fcc21981f"
+  dependencies:
+    escape-string-regexp "^1.0.5"
+    unmutable "0.29.2"
+
 parse-asn1@^5.0.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/parse-asn1/-/parse-asn1-5.1.1.tgz#f6bf293818332bd0dab54efb16087724745e6ca8"
