@@ -1,6 +1,6 @@
 import Link from 'gatsby-link';
 import HelloWorld from 'examples/HelloWorld';
-import HelloWorldRaw from 'raw-loader!examples/HelloWorld';
+import {Grid, GridItem} from 'dcme-style';
 
 # Getting Started
 
@@ -8,23 +8,22 @@ import HelloWorldRaw from 'raw-loader!examples/HelloWorld';
 
 If you'd like to use `dataparcels` with React:
 
-```js
-yarn add react-dataparcels
-- or -
-npm install react-dataparcels --save
+```bash
+yarn add react-dataparcels # ...or npm install react-dataparcels --save
 ```
 
 If you'd like to use `dataparcels` *without* React:
 
-```js
-yarn add dataparcels
-- or -
-npm install dataparcels --save
+
+```bash
+yarn add dataparcels # ...or npm install dataparcels --save
 ```
+
+Beware that most of the examples on these docs assume that React is being used. If you'd like to use `dataparcels` without React it's completely possible to do so; [drop us a line](https://www.github.com/blueflag/dataparcels/issues) if you do as we'd love ot know about your use case.
 
 ## Hello World
 
-Here's an example that imports `dataparcels`, and creates a React UI to allow editing of the following data structure:
+Say we want to allow the user to edit the two fields in the following data structure:
 
 ```js
 {
@@ -33,9 +32,32 @@ Here's an example that imports `dataparcels`, and creates a React UI to allow ed
 }
 ```
 
+This example demonstrates a pretty typical React setup to do that.
+
+* `react-dataparcels` is imported.
+* It stores the data in a `ParcelStateHock` higher order component, which passes a parcel down as props.
+* The `.get()` method is used on the parcel to create smaller parcels containing just `firstname` and `lastname`.
+* It uses the `PureParcel` React component to avoid needless re-rendering.
+* Finally `.spreadDOM()` is used to provide the `value` and `onChange` props to the `input` elements.
+
 ```js
 import React from 'react';
-import Parcel, {ParcelStateHock, PureParcel} from 'react-dataparcels';
+import {ParcelStateHock, PureParcel} from 'react-dataparcels';
+
+const PersonEditor = (props) => {
+    let {personParcel} = props;
+    return <div>
+        <label>firstname</label>
+        <PureParcel parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+        </PureParcel>
+        
+        <label>lastname</label>
+        <PureParcel parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </PureParcel>
+    </div>;
+};
 
 const PersonParcelHoc = ParcelStateHock({
     initialValue: (/* props */) => ({
@@ -45,26 +67,14 @@ const PersonParcelHoc = ParcelStateHock({
     prop: "personParcel"
 });
 
-const PersonEditor = (props) => {
-    let {personParcel} = props;
-    return <div>
-        <PureParcel parcel={personParcel.get('firstname')} debounce={100}>
-            {(firstname) => <div>
-                <label>firstname</label>
-                <input type="text" {...firstname.spreadDOM()} />
-            </div>}
-        </PureParcel>
-        <PureParcel parcel={personParcel.get('lastname')} debounce={100}>
-            {(lastname) => <div>
-                <label>lastname</label>
-                <input type="text" {...lastname.spreadDOM()} />
-            </div>}
-        </PureParcel>
-    </div>;
-};
-
 export default PersonParcelHoc(PersonEditor);
+
 
 ```
 
 <HelloWorld />
+
+## More examples
+
+Soon!
+

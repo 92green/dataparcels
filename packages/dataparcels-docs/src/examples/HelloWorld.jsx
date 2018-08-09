@@ -1,20 +1,18 @@
 import React from 'react';
-import Parcel, {ParcelStateHock, PureParcel} from 'react-dataparcels';
+import {ParcelStateHock, PureParcel} from 'react-dataparcels';
+import ExampleHoc from 'component/ExampleHoc';
 
 const PersonEditor = (props) => {
     let {personParcel} = props;
     return <div>
-        <PureParcel parcel={personParcel.get('firstname')} debounce={100}>
-            {(firstname) => <div>
-                <label>firstname</label>
-                <input type="text" {...firstname.spreadDOM()} />
-            </div>}
+        <label>firstname</label>
+        <PureParcel parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
         </PureParcel>
-        <PureParcel parcel={personParcel.get('lastname')} debounce={100}>
-            {(lastname) => <div>
-                <label>lastname</label>
-                <input type="text" {...lastname.spreadDOM()} />
-            </div>}
+
+        <label>lastname</label>
+        <PureParcel parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
         </PureParcel>
     </div>;
 };
@@ -27,4 +25,4 @@ const PersonParcelHoc = ParcelStateHock({
     prop: "personParcel"
 });
 
-export default PersonParcelHoc(PersonEditor);
+export default PersonParcelHoc(ExampleHoc(PersonEditor));

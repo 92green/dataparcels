@@ -3222,11 +3222,11 @@ dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
 
-dcme-style@^0.15.10:
-  version "0.15.10"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.15.10.tgz#f17cd2740e6650f453f6a34f528c11f74af18ab3"
+dcme-style@^0.15.13:
+  version "0.15.13"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.15.13.tgz#87927d320b2610b0eeab4343ec23f7e5c9874cb8"
   dependencies:
-    react-goose "0.2.2"
+    react-goose "^0.4.2"
     react-select "^1.0.0-rc.4"
     stampy "^0.41.0"
     unmutable "^0.29.2"
@@ -9880,11 +9880,10 @@ react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
 
-react-goose@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-goose/-/react-goose-0.2.2.tgz#4d294f16414449330dbd71869e93dda340c0c72d"
+react-goose@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/react-goose/-/react-goose-0.4.2.tgz#5d7034b7474e9059af350350fa7d753d3c1b25c1"
   dependencies:
-    blueflag-test "^0.18.1"
     stampy "^0.41.0"
 
 react-helmet@^5.2.0:
