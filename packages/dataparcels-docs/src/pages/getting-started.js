@@ -1,10 +1,11 @@
 // @flow
+import type {Node} from 'react';
 import React from 'react';
-import {Box, CenteredLanding, Text} from 'dcme-style';
+import {Wrapper, Text, Typography} from 'dcme-style';
+import GettingStartedMarkdown from 'pages/getting-started.md';
 
-export default () => <Box>
-    <CenteredLanding
-        top={() => <Text element="h1" modifier="sizeTera center">Getting Started</Text>}
-        bottom={() => <Text element="p" modifier="monospace center margin">This doesn't exist yet. These docs are still very much under construction.</Text>}
-    />
-</Box>;
+export default () => <Wrapper modifier="medium">
+    <Typography>
+        <GettingStartedMarkdown />
+    </Typography>
+</Wrapper>;

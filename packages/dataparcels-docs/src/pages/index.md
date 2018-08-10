@@ -13,7 +13,7 @@ Dataparcels lets you easily build UIs for editing data structures.
 
 ## Getting Started
 
-<Link to="/getting-started">Get started with dataparcels</Link>, installation instructions and a "hello world" example.
+<Link to="/getting-started">Get started with dataparcels</Link>, installation instructions and a hello world example.
 
 ## Features
 
