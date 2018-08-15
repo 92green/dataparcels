@@ -9,15 +9,15 @@ type State = {
     parcel: Parcel
 };
 type ChildProps = {};
-type ParcelStateHockConfig = {
+type ParcelStateHocConfig = {
     debugRender?: boolean,
     initialValue?: (props: Object) => *,
     modify?: (props: Object) => (parcel: Parcel) => Parcel,
     prop: string
 };
 
-export default (config: ParcelStateHockConfig): Function => {
-    Types(`ParcelStateHock() expects param "config" to be`, `object`)(config);
+export default (config: ParcelStateHocConfig): Function => {
+    Types(`ParcelStateHoc() expects param "config" to be`, `object`)(config);
 
     let {
         initialValue = () => undefined,
@@ -26,12 +26,12 @@ export default (config: ParcelStateHockConfig): Function => {
         debugRender = false
     } = config;
 
-    Types(`ParcelStateHock() expects param "config.initialValue" to be`, `function`)(initialValue);
-    Types(`ParcelStateHock() expects param "config.prop" to be`, `string`)(prop);
-    Types(`ParcelStateHock() expects param "config.modify" to be`, `function`)(modify);
-    Types(`ParcelStateHock() expects param "config.debugRender" to be`, `boolean`)(debugRender);
+    Types(`ParcelStateHoc() expects param "config.initialValue" to be`, `function`)(initialValue);
+    Types(`ParcelStateHoc() expects param "config.prop" to be`, `string`)(prop);
+    Types(`ParcelStateHoc() expects param "config.modify" to be`, `function`)(modify);
+    Types(`ParcelStateHoc() expects param "config.debugRender" to be`, `boolean`)(debugRender);
 
-    return (Component: ComponentType<ChildProps>) => class ParcelStateHock extends React.Component<Props, State> {
+    return (Component: ComponentType<ChildProps>) => class ParcelStateHoc extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
 
@@ -51,9 +51,9 @@ export default (config: ParcelStateHockConfig): Function => {
             let {parcel} = this.state;
             if(modify) {
                 let modifyWithProps = modify(this.props);
-                Types(`ParcelStateHock() expects param "config.modify" to return`, `function`)(modifyWithProps);
+                Types(`ParcelStateHoc() expects param "config.modify" to return`, `function`)(modifyWithProps);
                 parcel = modifyWithProps(parcel);
-                Types(`ParcelStateHock() expects param "config.modify(props)" to return`, `parcel`)(parcel);
+                Types(`ParcelStateHoc() expects param "config.modify(props)" to return`, `parcel`)(parcel);
             }
 
             let props = {

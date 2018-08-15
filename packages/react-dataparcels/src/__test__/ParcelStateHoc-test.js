@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
 
-import ParcelStateHock from '../ParcelStateHock';
+import ParcelStateHoc from '../ParcelStateHoc';
 import {CheckHockChildProps} from 'stampy/lib/util/TestHelpers';
 
-test('ParcelStateHock config should accept an initial value', () => {
+test('ParcelStateHoc config should accept an initial value', () => {
     expect.assertions(2);
     CheckHockChildProps(
-        ParcelStateHock({
+        ParcelStateHoc({
             initialValue: (props) => {
                 expect(123).toBe(props.abc);
                 return 456;
@@ -21,15 +21,15 @@ test('ParcelStateHock config should accept an initial value', () => {
     );
 });
 
-test('ParcelStateHock must be passed a prop, and throw an error if it isnt', () => {
+test('ParcelStateHoc must be passed a prop, and throw an error if it isnt', () => {
     // $FlowFixMe - intentiaal misuse of types
-    expect(() => ParcelStateHock({})).toThrow(`ParcelStateHock() expects param "config.prop" to be a string, but got undefined`);
+    expect(() => ParcelStateHoc({})).toThrow(`ParcelStateHoc() expects param "config.prop" to be a string, but got undefined`);
 });
 
 
-test('ParcelStateHock config should default initial value to undefined', () => {
+test('ParcelStateHoc config should default initial value to undefined', () => {
     CheckHockChildProps(
-        ParcelStateHock({
+        ParcelStateHoc({
             prop: "proppy"
         }),
         {},
@@ -39,9 +39,9 @@ test('ParcelStateHock config should default initial value to undefined', () => {
     );
 });
 
-test('ParcelStateHock changes should be put back into ParcelStateHock state', () => {
+test('ParcelStateHoc changes should be put back into ParcelStateHoc state', () => {
     let Child = () => <div />;
-    let Hocked = ParcelStateHock({
+    let Hocked = ParcelStateHoc({
         initialValue: () => 123,
         prop: "proppy"
     })(Child);
@@ -53,10 +53,10 @@ test('ParcelStateHock changes should be put back into ParcelStateHock state', ()
 });
 
 
-test('ParcelStateHock config should accept a modify function', () => {
+test('ParcelStateHoc config should accept a modify function', () => {
     expect.assertions(3);
     CheckHockChildProps(
-        ParcelStateHock({
+        ParcelStateHoc({
             initialValue: () => 456,
             prop: "proppy",
             modify: (props) => (parcel) => {
@@ -72,10 +72,10 @@ test('ParcelStateHock config should accept a modify function', () => {
     );
 });
 
-test('ParcelStateHock config should accept a debugRender boolean', () => {
+test('ParcelStateHoc config should accept a debugRender boolean', () => {
     expect.assertions(1);
     CheckHockChildProps(
-        ParcelStateHock({
+        ParcelStateHoc({
             initialValue: () => 456,
             prop: "proppy",
             debugRender: true

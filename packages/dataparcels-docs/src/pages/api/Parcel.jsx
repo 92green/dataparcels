@@ -17,87 +17,85 @@ const md = {
 }
 
 const api = `
-# Getters
+# Properties
 value
 meta
 data
-
-# Parent get methods
-get
-getIn
-toObject
-toArray
-has
-size
-
-# Spread methods
-spread
-spreadDOM
-
-# Change methods
-onChange
-onChangeDOM
-setSelf
-updateSelf
-setMeta
-updateMeta
-setChangeRequestMeta
-dispatch
-batch
-ping
-
-# Parent change methods
-set
-setIn
-update
-updateIn
-
-# Indexed change methods
-delete
-insertAfter
-insertBefore
-push
-pop
-shift
-swap
-swapNext
-swapPrev
-unshift
-
-# Child change methods
-deleteSelf
-
-# Element change methods
-insertAfterSelf
-insertBeforeSelf
-swapWithSelf
-swapNextWithSelf
-swapPrevWithSelf
-
-# Modify methods
-modify
-modifyData
-modifyValue
-modifyChange
-modifyChangeValue
-initialMeta
-addModifier
-addDescendantModifier
-
-# Type methods
-isChild
-isElement
-isIndexed
-isParent
-isTopLevel
-
-# Id methods
 key
 id
 path
 
+# Parent get methods
+get()
+getIn()
+toObject()
+toArray()
+has()
+size()
+
+# Spread methods
+spread()
+spreadDOM()
+
+# Change methods
+onChange()
+onChangeDOM()
+setSelf()
+updateSelf()
+setMeta()
+updateMeta()
+setChangeRequestMeta()
+dispatch()
+batch()
+ping()
+
+# Parent change methods
+set()
+setIn()
+update()
+updateIn()
+
+# Indexed change methods
+delete()
+insertAfter()
+insertBefore()
+push()
+pop()
+shift()
+swap()
+swapNext()
+swapPrev()
+unshift()
+
+# Child change methods
+deleteSelf()
+
+# Element change methods
+insertAfterSelf()
+insertBeforeSelf()
+swapWithSelf()
+swapNextWithSelf()
+swapPrevWithSelf()
+
+# Modify methods
+modify()
+modifyData()
+modifyValue()
+modifyChange()
+modifyChangeValue()
+initialMeta()
+addModifier()
+addDescendantModifier()
+
+# Type methods
+isChild()
+isElement()
+isIndexed()
+isParent()
+isTopLevel()
+
 # Status methods
-hasDispatched
+hasDispatched()
 
 `;
 
@@ -110,7 +108,7 @@ const renderApi = () => api
         if(!line) {
             return <br />;
         }
-        return <Link to={`#${line}`}>{line}</Link>;
+        return <Link to={`#${line.replace("()","")}`}>{line.replace("()","")}</Link>;
     })
     .map((line, key) => <NavigationListItem key={key}>{line}</NavigationListItem>);
 
@@ -126,8 +124,8 @@ const renderDoclets = () => api
             Component = () => <span>...</span>;
         }
         return <Box key={key} modifier="marginBottomGiga">
-            <a name={name} />
-            <Text element="h3" modifier="sizeKilo marginKilo">{name}()</Text>
+            <a name={name.replace("()","")} />
+            <Text element="h3" modifier="sizeKilo marginKilo">{name}</Text>
             <Typography>
                 <Component />
             </Typography>

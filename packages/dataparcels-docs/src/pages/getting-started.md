@@ -35,14 +35,14 @@ Say we want to allow the user to edit the two fields in the following data struc
 This example demonstrates a pretty typical React setup to do that.
 
 * `react-dataparcels` is imported.
-* It stores the data in a `ParcelStateHock` higher order component, which passes a parcel down as props.
+* It stores the data in a `ParcelStateHoc` higher order component, which passes a parcel down as props.
 * The `.get()` method is used on the parcel to create smaller parcels containing just `firstname` and `lastname`.
 * It uses the `PureParcel` React component to avoid needless re-rendering.
 * Finally `.spreadDOM()` is used to provide the `value` and `onChange` props to the `input` elements.
 
 ```js
 import React from 'react';
-import {ParcelStateHock, PureParcel} from 'react-dataparcels';
+import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
 
 const PersonEditor = (props) => {
     let {personParcel} = props;
@@ -59,7 +59,7 @@ const PersonEditor = (props) => {
     </div>;
 };
 
-const PersonParcelHoc = ParcelStateHock({
+const PersonParcelHoc = ParcelStateHoc({
     initialValue: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps"

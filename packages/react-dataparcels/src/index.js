@@ -16,5 +16,5 @@ export type {Key} from 'dataparcels';
 export type {Index} from 'dataparcels';
 export type {Property} from 'dataparcels';
 
-export {default as ParcelStateHock} from './ParcelStateHock';
+export {default as ParcelStateHoc} from './ParcelStateHoc';
 export {default as PureParcel} from './PureParcel';
