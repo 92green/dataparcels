@@ -24,15 +24,15 @@ export default (_this: Parcel): Object => ({
     },
 
     // modify methods
-    modify: (...updaters: Function[]): Parcel => {
-        Types(`modify() expects all params to be`, `functionArray`)(updaters);
+    pipe: (...updaters: Function[]): Parcel => {
+        Types(`pipe() expects all params to be`, `functionArray`)(updaters);
         return pipeWith(
             _this,
             ...pipeWith(
                 updaters,
                 map(updater => pipe(
                     updater,
-                    Types(`modify() expects the result of all functions to be`, `parcel`)
+                    Types(`pipe() expects the result of all functions to be`, `parcel`)
                 ))
             )
         );

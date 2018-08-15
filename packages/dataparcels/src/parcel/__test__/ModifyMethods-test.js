@@ -2,7 +2,7 @@
 import Parcel from '../Parcel';
 import type ChangeRequest from '../../change/ChangeRequest';
 
-test('Parcel.modify() should return the result of modifys updaters', () => {
+test('Parcel.pipe() should return the result of pipe\'s updaters', () => {
     var data = {
         value: 123,
     };
@@ -10,7 +10,7 @@ test('Parcel.modify() should return the result of modifys updaters', () => {
     let parcel = new Parcel(data);
     let modifiedParcel = null;
 
-    let modified = parcel.modify(
+    let modified = parcel.pipe(
         ii => {
             expect(ii).toBe(parcel);
             modifiedParcel = ii.modifyValue(ii => ii + 100);

@@ -37,6 +37,9 @@ size()
 spread()
 spreadDOM()
 
+# Composition methods
+pipe()
+
 # Change methods
 onChange()
 onChangeDOM()
@@ -78,7 +81,6 @@ swapNextWithSelf()
 swapPrevWithSelf()
 
 # Modify methods
-modify()
 modifyData()
 modifyValue()
 modifyChange()

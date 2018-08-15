@@ -42,7 +42,7 @@ export default class ExampleMeta extends React.Component {
         let isEmail = (value) => /.+@.+\..+/.test(value) ? null : "This field must contain an email address";
         let isQuantity = (value) => /^\d+$/.test(value) ? null : "This field must contain a whole number";
 
-        let lunch = this.state.lunch.modify(
+        let lunch = this.state.lunch.pipe(
             ParcelsPluginForm({
                 onSubmit: (value) => {
                     console.log("submitted:", value);
