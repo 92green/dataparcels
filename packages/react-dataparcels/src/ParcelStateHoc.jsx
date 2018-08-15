@@ -12,7 +12,7 @@ type ChildProps = {};
 type ParcelStateHocConfig = {
     debugRender?: boolean,
     initialValue?: (props: Object) => *,
-    modify?: (props: Object) => (parcel: Parcel) => Parcel,
+    pipe?: (props: Object) => (parcel: Parcel) => Parcel,
     prop: string
 };
 
@@ -22,13 +22,13 @@ export default (config: ParcelStateHocConfig): Function => {
     let {
         initialValue = () => undefined,
         prop,
-        modify = props => ii => ii, /* eslint-disable-line no-unused-vars */
+        pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         debugRender = false
     } = config;
 
     Types(`ParcelStateHoc() expects param "config.initialValue" to be`, `function`)(initialValue);
     Types(`ParcelStateHoc() expects param "config.prop" to be`, `string`)(prop);
-    Types(`ParcelStateHoc() expects param "config.modify" to be`, `function`)(modify);
+    Types(`ParcelStateHoc() expects param "config.pipe" to be`, `function`)(pipe);
     Types(`ParcelStateHoc() expects param "config.debugRender" to be`, `boolean`)(debugRender);
 
     return (Component: ComponentType<ChildProps>) => class ParcelStateHoc extends React.Component<Props, State> {
@@ -49,11 +49,11 @@ export default (config: ParcelStateHocConfig): Function => {
 
         render(): Node {
             let {parcel} = this.state;
-            if(modify) {
-                let modifyWithProps = modify(this.props);
-                Types(`ParcelStateHoc() expects param "config.modify" to return`, `function`)(modifyWithProps);
-                parcel = modifyWithProps(parcel);
-                Types(`ParcelStateHoc() expects param "config.modify(props)" to return`, `parcel`)(parcel);
+            if(pipe) {
+                let pipeWithProps = pipe(this.props);
+                Types(`ParcelStateHoc() expects param "config.pipe" to return`, `function`)(pipeWithProps);
+                parcel = pipeWithProps(parcel);
+                Types(`ParcelStateHoc() expects param "config.pipe(props)" to return`, `parcel`)(parcel);
             }
 
             let props = {

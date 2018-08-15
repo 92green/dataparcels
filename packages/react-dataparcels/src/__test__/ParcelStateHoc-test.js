@@ -59,7 +59,7 @@ test('ParcelStateHoc config should accept a modify function', () => {
         ParcelStateHoc({
             initialValue: () => 456,
             prop: "proppy",
-            modify: (props) => (parcel) => {
+            pipe: (props) => (parcel) => {
                 expect(456).toBe(parcel.value);
                 expect({}).toEqual(props);
                 return parcel.modifyValue(ii => ii + 1);
