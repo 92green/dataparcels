@@ -11,7 +11,7 @@ export default ({onSubmit, onError}: Object) => (parcel: Parcel): Parcel => {
         })
         .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
             let parcelData = changeRequest.data;
-            let {fromSubmit} = changeRequest.changeRequestMeta();
+            let {fromSubmit} = changeRequest.changeRequestMeta;
             let {errors} = parcelData.meta;
 
             if(fromSubmit) {

@@ -96,12 +96,18 @@ export default class ChangeRequest {
     merge = (other: ChangeRequest): ChangeRequest => {
         return this
             .updateActions(ii => ii.concat(other.actions()))
-            .setChangeRequestMeta(other.changeRequestMeta());
+            .setChangeRequestMeta(other.changeRequestMeta);
     };
 
-    changeRequestMeta = (): * => {
+    // $FlowFixMe - this doesn't have side effects
+    get changeRequestMeta(): * {
         return this._meta;
-    };
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set changeRequestMeta(value: *) {
+        ReadOnlyError();
+    }
 
     setChangeRequestMeta = (partialMeta: *): ChangeRequest => {
         return this._create({
@@ -112,13 +118,25 @@ export default class ChangeRequest {
         });
     };
 
-    originId = (): ?string => {
+    // $FlowFixMe - this doesn't have side effects
+    get originId(): ?string {
         return this._originId;
-    };
+    }
 
-    originPath = (): ?string[] => {
+    // $FlowFixMe - this doesn't have side effects
+    set originId(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get originPath(): ?string[] {
         return this._originPath;
-    };
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set originPath(value: *) {
+        ReadOnlyError();
+    }
 
     toJS = (): Object => {
         return {

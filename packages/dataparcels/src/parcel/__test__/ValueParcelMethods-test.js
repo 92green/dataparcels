@@ -357,7 +357,7 @@ test('Parcel.setChangeRequestMeta() should set change request meta', () => {
     var data = {
         value: 123,
         handleChange: (parcel, changeRequest) => {
-            expect({a: 3, b: 2}).toEqual(changeRequest.changeRequestMeta());
+            expect({a: 3, b: 2}).toEqual(changeRequest.changeRequestMeta);
         }
     };
 

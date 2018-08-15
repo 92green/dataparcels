@@ -55,7 +55,7 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
 });
 
 
-test('ChangeRequest setChangeRequestMeta() and changeRequestMeta() should work', () => {
+test('ChangeRequest setChangeRequestMeta() and changeRequestMeta should work', () => {
     let expectedMeta = {
         a: 3,
         b: 2
@@ -64,7 +64,7 @@ test('ChangeRequest setChangeRequestMeta() and changeRequestMeta() should work',
         .setChangeRequestMeta({a: 1})
         .setChangeRequestMeta({b: 2})
         .setChangeRequestMeta({a: 3})
-        .changeRequestMeta());
+        .changeRequestMeta);
 });
 
 test('ChangeRequest _unget() should prepend key', () => {
@@ -209,8 +209,8 @@ test('ChangeRequest should keep originId and originPath', () => {
             abc: 123
         },
         handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
-            expect(['abc']).toEqual(changeRequest.originPath());
-            expect('^.abc').toEqual(changeRequest.originId());
+            expect(['abc']).toEqual(changeRequest.originPath);
+            expect('^.abc').toEqual(changeRequest.originId);
         }
     };
 
@@ -230,8 +230,8 @@ test('ChangeRequest should keep originId and originPath even when going through 
             def: 456
         },
         handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
-            expect(['abc']).toEqual(changeRequest.originPath());
-            expect('^.~mc.abc').toEqual(changeRequest.originId());
+            expect(['abc']).toEqual(changeRequest.originPath);
+            expect('^.~mc.abc').toEqual(changeRequest.originId);
         }
     };
 
