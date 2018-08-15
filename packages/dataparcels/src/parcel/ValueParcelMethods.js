@@ -21,11 +21,11 @@ export default (_this: Parcel): Object => ({
     }),
 
     hasDispatched: (): boolean => {
-        return _this._treeshare.dispatch.hasPathDispatched(_this.path());
+        return _this._treeshare.dispatch.hasPathDispatched(_this.path);
     },
 
     getInternalLocationShareData: (): Object => {
-        return _this._treeshare.locationShare.get(_this.path());
+        return _this._treeshare.locationShare.get(_this.path);
     },
 
     // change methods
@@ -77,6 +77,6 @@ export default (_this: Parcel): Object => ({
 
     setInternalLocationShareData: (partialData: Object) => {
         Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
-        _this._treeshare.locationShare.set(_this.path(), partialData);
+        _this._treeshare.locationShare.set(_this.path, partialData);
     }
 });

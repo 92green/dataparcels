@@ -104,7 +104,7 @@ export default class ExampleMeta extends React.Component {
             </PureParcel>
 
             {/*lunch.get('pets').toArray((pet) => {
-                return <PureParcel parcel={pet} key={pet.key()}>
+                return <PureParcel parcel={pet} key={pet.key}>
                     {(pet) => {
                         let name = pet.get('name');
                         return <div>

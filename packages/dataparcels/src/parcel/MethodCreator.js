@@ -16,7 +16,7 @@ export default (parcelType: string|boolean, methodCreator: Function) => (parcel:
         methods,
         map((value, key) => () => {
             // $FlowFixMe - It's ok to throw a boolean (which'll never get here anyway) into a template string
-            throw new Error(`Cannot call .${key}() on Parcel with path [${parcel.path().join(', ')}]. Expected a ${parcelType}Parcel, but got a Parcel with a value of "${parcel.value}"`);
+            throw new Error(`Cannot call .${key}() on Parcel with path [${parcel.path.join(', ')}]. Expected a ${parcelType}Parcel, but got a Parcel with a value of "${parcel.value}"`);
         })
     );
 };

@@ -1,10 +1,12 @@
 // @flow
 import Types from '../types/Types';
+import {ReadOnlyError} from '../errors/Errors';
 import type {
     ParcelData,
     ParcelConfig,
     ParcelConfigInternal,
-    CreateParcelConfigType
+    CreateParcelConfigType,
+    Key
 } from '../types/Types';
 
 import Modifiers from '../modifiers/Modifiers';
@@ -51,13 +53,6 @@ export default class Parcel {
     _handleChange: Function;
 
     //
-    // private methods
-    //
-
-    // - id methods
-    _typedPathString: Function;
-
-    //
     // public get methods
     //
 
@@ -68,10 +63,6 @@ export default class Parcel {
     isIndexed: Function;
     isParent: Function;
     isTopLevel: Function;
-    // - id methods
-    key: Function;
-    id: Function;
-    path: Function;
     // - value parcel methods
     spread: Function;
     spreadDOM: Function;
@@ -202,12 +193,6 @@ export default class Parcel {
         this.isParent = this._parcelTypes.isParent;
         this.isTopLevel = this._parcelTypes.isTopLevel;
 
-        // id methods
-        this._typedPathString = this._id.typedPathString;
-        this.key = this._id.key;
-        this.id = this._id.id;
-        this.path = this._id.path;
-
         // method creators
         // $FlowFixMe - I want to use computed properties, go away flow
         let addMethods = map((fn, name) => this[name] = fn);
@@ -270,8 +255,13 @@ export default class Parcel {
     //
 
     // $FlowFixMe - this doesn't have side effects
-    get data(): * {
+    get data(): ParcelData {
         return this._parcelData;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set data(value: *) {
+        ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -280,8 +270,48 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
+    set value(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
     get meta(): * {
         let {meta} = this._parcelData;
         return {...meta};
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set meta(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get key(): Key {
+        return this._id.key();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set key(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get id(): string {
+        return this._id.id();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set id(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get path(): Array<Key> {
+        return this._id.path();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set path(value: *) {
+        ReadOnlyError();
     }
 }

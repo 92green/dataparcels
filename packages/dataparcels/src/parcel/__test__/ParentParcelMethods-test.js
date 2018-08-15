@@ -73,7 +73,7 @@ test('ParentParcel.get(key).value should return the same instance of the nested 
     expect(new Parcel(data).get("a").value).toBe(myObject);
 });
 
-test('ParentParcel.get(key).key() on object should return the key', () => {
+test('ParentParcel.get(key).key on object should return the key', () => {
     var data = {
         value: {
             a: {
@@ -84,7 +84,7 @@ test('ParentParcel.get(key).key() on object should return the key', () => {
         }
     };
 
-    expect(new Parcel(data).get("a").key()).toBe("a");
+    expect(new Parcel(data).get("a").key).toBe("a");
 });
 
 test('ParentParcel.get(index).value on array should return the first element', () => {
@@ -103,12 +103,12 @@ test('ParentParcel.get(key).value on array should return the first element', () 
     expect(new Parcel(data).get("#a").value).toBe(1);
 });
 
-test('ParentParcel.get(key).key() on array should return the key, not the index', () => {
+test('ParentParcel.get(key).key on array should return the key, not the index', () => {
     var data = {
         value: [1,2,3]
     };
 
-    expect(new Parcel(data).get(0).key()).toBe("#a");
+    expect(new Parcel(data).get(0).key).toBe("#a");
 });
 
 test('ParentParcel.get(key).get(key) should return a new child Parcel and chain onChanges', () => {

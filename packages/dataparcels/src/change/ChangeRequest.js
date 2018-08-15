@@ -3,6 +3,7 @@ import type Parcel from '../parcel/Parcel';
 import type {Key, Index} from '../types/Types';
 import type Action from './Action';
 
+import {ReadOnlyError} from '../errors/Errors';
 import Reducer from '../change/Reducer';
 
 type ActionUpdater = (actions: Action[]) => Action[];
@@ -58,13 +59,28 @@ export default class ChangeRequest {
     }
 
     // $FlowFixMe - this doesn't have side effects
+    set data(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
     get value(): * {
         return this.data.value;
     }
 
     // $FlowFixMe - this doesn't have side effects
+    set value(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
     get meta (): * {
         return this.data.meta;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set meta(value: *) {
+        ReadOnlyError();
     }
 
     actions = (): Action[] => {

@@ -44,7 +44,7 @@ export default class ExampleArrays extends React.Component {
         });
 
         return example(this, desc, <div>
-            {items.toArray((item) => <PureParcel parcel={item} key={item.key()}>
+            {items.toArray((item) => <PureParcel parcel={item} key={item.key}>
                 {(item) => <div>
                     <label className="Label">Item name</label>
                     <input className="Input" type="tel" {...item.get('name').spreadDOM()} />

@@ -25,15 +25,15 @@ export default (_this: Parcel): Object => ({
             _onHandleChange
         } = _this;
 
-        _this._treeshare.dispatch.markPathAsDispatched(_this.path());
+        _this._treeshare.dispatch.markPathAsDispatched(_this.path);
 
         let changeRequest: ChangeRequest = dispatchable instanceof ChangeRequest
             ? dispatchable
             : new ChangeRequest(dispatchable);
 
         if(!changeRequest._originId) {
-            changeRequest._originId = _this.id();
-            changeRequest._originPath = _this.path();
+            changeRequest._originId = _this.id;
+            changeRequest._originPath = _this.path;
         }
 
         if(_this._dispatchBuffer) {
