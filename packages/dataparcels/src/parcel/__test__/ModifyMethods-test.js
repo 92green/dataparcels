@@ -24,7 +24,7 @@ test('Parcel.modify() should return the result of modifys updaters', () => {
     );
 
     expect(modifiedParcel).toBe(modified);
-    expect(323).toBe(modifiedParcel && modifiedParcel.value());
+    expect(323).toBe(modifiedParcel && modifiedParcel.value);
 });
 
 
@@ -37,7 +37,7 @@ test('Parcel.modifyData() should return a new parcel with updated parcelData', (
         .modifyData((parcelData) => ({
             value: "???"
         }))
-        .data();
+        .data;
 
     var expectedData = {
         meta: {},
@@ -59,7 +59,7 @@ test('Parcel.modifyValue() should return a new parcel with updated parcelData', 
             expect(parcelData).toBe(parcel);
             return value + 1;
         })
-        .data();
+        .data;
 
     var expectedData = {
         meta: {},
@@ -76,14 +76,14 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
     var data = {
         value: 123,
         handleChange: (parcel: Parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect(457).toBe(value);
         }
     };
 
     new Parcel(data)
         .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
-            parcel.setSelf(changeRequest.data().value + 1);
+            parcel.setSelf(changeRequest.data.value + 1);
         })
         .onChange(456);
 });
@@ -111,7 +111,7 @@ test('Parcel.modifyChangeValue() should allow you to change the payload of a cha
     var data = {
         value: 123,
         handleChange: (parcel: Parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect(457).toBe(value);
         }
     };
@@ -127,7 +127,7 @@ test('Parcel.modifyChangeValue() should allow changes to meta through', () => {
     var data = {
         value: 123,
         handleChange: (parcel: Parcel) => {
-            let {value, meta} = parcel.data();
+            let {value, meta} = parcel.data;
             expect(457).toBe(value);
             expect({abc: 123}).toEqual(meta);
         }
@@ -152,14 +152,14 @@ test('Parcel.initialMeta() should work', () => {
     var data = {
         value: 123,
         handleChange: (parcel: Parcel) => {
-            let {meta} = parcel.data();
+            let {meta} = parcel.data;
             expect({a:1, b:3}).toEqual(meta);
-            expect({a:1, b:3}).toEqual(parcel.initialMeta().meta());
+            expect({a:1, b:3}).toEqual(parcel.initialMeta().meta);
         }
     };
 
     let parcel = new Parcel(data).initialMeta(meta);
-    expect(meta).toEqual(parcel.meta());
+    expect(meta).toEqual(parcel.meta);
     parcel.setMeta({
         b: 3
     });
@@ -174,13 +174,13 @@ test('Parcel.initialMeta() should merge', () => {
     var data = {
         value: 123,
         handleChange: (parcel: Parcel) => {
-            let {meta} = parcel.data();
+            let {meta} = parcel.data;
             expect({a:1, b:3, c:3}).toEqual(meta);
         }
     };
 
     let parcel = new Parcel(data).initialMeta(meta).initialMeta(meta2);
-    expect({a:1, b:2, c:3}).toEqual(parcel.meta());
+    expect({a:1, b:2, c:3}).toEqual(parcel.meta);
     parcel.setMeta({
         b: 3
     });
@@ -194,10 +194,10 @@ test('Parcel should addModifier', () => {
     let parcel = new Parcel(data)
         .addModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
 
-    expect([1,2,3,4]).toEqual(parcel.value());
+    expect([1,2,3,4]).toEqual(parcel.value);
 
     let element = parcel.get(0);
-    expect(11).toEqual(element.value());
+    expect(11).toEqual(element.value);
 });
 
 test('Parcel should addDescendantModifier', () => {
@@ -208,10 +208,10 @@ test('Parcel should addDescendantModifier', () => {
     let parcel = new Parcel(data)
         .addDescendantModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
 
-    expect([1,2,3]).toEqual(parcel.value());
+    expect([1,2,3]).toEqual(parcel.value);
 
     let element = parcel.get(0);
-    expect(11).toEqual(element.value());
+    expect(11).toEqual(element.value);
 });
 
 test('Parcel should addModifier with simple match', () => {
@@ -228,8 +228,8 @@ test('Parcel should addModifier with simple match', () => {
             match: "abc"
         });
 
-    expect(124).toBe(parcel.get('abc').value());
-    expect(456).toBe(parcel.get('def').value());
+    expect(124).toBe(parcel.get('abc').value);
+    expect(456).toBe(parcel.get('def').value);
 });
 
 test('Parcel should addModifier with deep match', () => {
@@ -248,8 +248,8 @@ test('Parcel should addModifier with deep match', () => {
             match: "abc.ghi"
         });
 
-    expect(124).toBe(parcel.getIn(['abc', 'ghi']).value());
-    expect(456).toBe(parcel.get('def').value());
+    expect(124).toBe(parcel.getIn(['abc', 'ghi']).value);
+    expect(456).toBe(parcel.get('def').value);
 });
 
 test('Parcel should addModifier with globstar', () => {
@@ -268,8 +268,8 @@ test('Parcel should addModifier with globstar', () => {
             match: "**.*"
         });
 
-    expect(124).toBe(parcel.getIn(['abc', 'ghi']).value());
-    expect(457).toBe(parcel.get('def').value());
+    expect(124).toBe(parcel.getIn(['abc', 'ghi']).value);
+    expect(457).toBe(parcel.get('def').value);
 });
 
 test('Parcel should addModifier with typed match', () => {
@@ -290,5 +290,5 @@ test('Parcel should addModifier with typed match', () => {
             match: "**.*:Indexed"
         });
 
-    expect([4,5,6,999]).toEqual(parcel.get('mno').value());
+    expect([4,5,6,999]).toEqual(parcel.get('mno').value);
 });

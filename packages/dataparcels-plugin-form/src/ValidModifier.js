@@ -65,7 +65,7 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
                         if(error) {
                             return error;
                         }
-                        return validator(changeRequest.data().value);
+                        return validator(changeRequest.data.value);
                     }, null)
                 );
 
@@ -86,7 +86,7 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
             .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
                 parcel.dispatch(changeRequest);
                 parcel.setMeta({
-                    errors: getErrors(changeRequest.data())
+                    errors: getErrors(changeRequest.data)
                 });
             });
 

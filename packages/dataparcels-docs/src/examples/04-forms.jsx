@@ -59,11 +59,11 @@ export default class ExampleMeta extends React.Component {
             })
         );
 
-        console.log(lunch.meta());
+        console.log(lunch.meta);
 
         let renderError = (parcel) => {
-            let {error} = parcel.meta();
-            if(/*lunch.meta().attemptedSubmit && */error) {
+            let {error} = parcel.meta;
+            if(/*lunch.meta.attemptedSubmit && */error) {
                 return <p className="Text Text-failure Text-margin">{error}</p>;
             }
         };
@@ -116,7 +116,7 @@ export default class ExampleMeta extends React.Component {
                 </PureParcel>;
             })*/}
 
-            <button className="Button Button-primary" onClick={lunch.meta().submit}>Submit</button>
+            <button className="Button Button-primary" onClick={lunch.meta.submit}>Submit</button>
         </div>);
     }
 }

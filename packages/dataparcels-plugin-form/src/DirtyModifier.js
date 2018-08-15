@@ -5,12 +5,12 @@ export default (match: string = "") => (parcel: Parcel): Parcel => {
     return parcel.addModifier({
         modifier: ii => ii
             .initialMeta({
-                originalValue: ii.value()
+                originalValue: ii.value
             })
             .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
                 parcel.dispatch(changeRequest);
 
-                let {value, meta} = changeRequest.data();
+                let {value, meta} = changeRequest;
                 parcel.setMeta({
                     dirty: value !== meta.originalValue
                 });

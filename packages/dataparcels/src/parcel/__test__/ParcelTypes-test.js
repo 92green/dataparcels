@@ -134,7 +134,7 @@ test('Correct methods are created for primitive values', () => {
     var data = {
         value: 123
     };
-    expect(() => new Parcel(data).value()).not.toThrow();
+    expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).toThrowError(`Cannot call .has() on Parcel`);
     expect(() => new Parcel(data).pop()).toThrowError(`Cannot call .pop() on Parcel`);
     expect(() => new Parcel(data).deleteSelf()).toThrowError(`Cannot call .deleteSelf() on Parcel`);
@@ -145,7 +145,7 @@ test('Correct methods are created for object values', () => {
     var data = {
         value: {a: 123}
     };
-    expect(() => new Parcel(data).value()).not.toThrow();
+    expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).toThrowError(`Cannot call .pop() on Parcel`);
     expect(() => new Parcel(data).deleteSelf()).toThrowError(`Cannot call .deleteSelf() on Parcel`);
@@ -156,7 +156,7 @@ test('Correct methods are created for array values', () => {
     var data = {
         value: [1,2,3]
     };
-    expect(() => new Parcel(data).value()).not.toThrow();
+    expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).not.toThrow();
     expect(() => new Parcel(data).deleteSelf()).toThrowError(`Cannot call .deleteSelf() on Parcel`);
@@ -167,7 +167,7 @@ test('Correct methods are created for object child values', () => {
     var data = {
         value: {a: 123}
     };
-    expect(() => new Parcel(data).get("a").value()).not.toThrow();
+    expect(() => new Parcel(data).get("a").value).not.toThrow();
     expect(() => new Parcel(data).get("a").has('a')).toThrowError(`Cannot call .has() on Parcel`);
     expect(() => new Parcel(data).get("a").pop()).toThrowError(`Cannot call .pop() on Parcel`);
     expect(() => new Parcel(data).get("a").deleteSelf()).not.toThrow();
@@ -178,7 +178,7 @@ test('Correct methods are created for array element values', () => {
     var data = {
         value: [1,2,3]
     };
-    expect(() => new Parcel(data).get(0).value()).not.toThrow();
+    expect(() => new Parcel(data).get(0).value).not.toThrow();
     expect(() => new Parcel(data).get(0).has('a')).toThrowError(`Cannot call .has() on Parcel`);
     expect(() => new Parcel(data).get(0).pop()).toThrowError(`Cannot call .pop() on Parcel`);
     expect(() => new Parcel(data).get(0).deleteSelf()).not.toThrow();

@@ -14,7 +14,7 @@ test('ChildParcel.deleteSelf() should delete self', () => {
             b: 2
         },
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect(expectedValue).toEqual(value);
         }
     };
@@ -30,7 +30,7 @@ test('ChildParcel.deleteSelf() should delete self when indexed', () => {
     var data = {
         value: [1,2,3],
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect(expectedValue).toEqual(value);
         }
     };

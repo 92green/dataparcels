@@ -84,7 +84,7 @@ test('ChangeRequest _unget() should prepend key', () => {
         .map(aa => aa.keyPath));
 });
 
-test('ChangeRequest setBaseParcel() and data() should use Reducer', () => {
+test('ChangeRequest setBaseParcel() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
         keyPath: ["b"],
@@ -102,7 +102,7 @@ test('ChangeRequest setBaseParcel() and data() should use Reducer', () => {
 
     let {value} = new ChangeRequest(action)
         .setBaseParcel(parcel)
-        .data();
+        .data;
 
     var expectedValue = {
         a: 1,
@@ -112,7 +112,7 @@ test('ChangeRequest setBaseParcel() and data() should use Reducer', () => {
     expect(expectedValue).toEqual(value);
 });
 
-test('ChangeRequest data() should get latest parcel data from treeshare when called to prevent basing onto stale data', () => {
+test('ChangeRequest data should get latest parcel data from treeshare when called to prevent basing onto stale data', () => {
     expect.assertions(1);
 
     var action = new Action({
@@ -131,7 +131,7 @@ test('ChangeRequest data() should get latest parcel data from treeshare when cal
             b: 2
         },
         handleChange: (parcel) => {
-            let {value} = ref.changeRequest.data();
+            let {value} = ref.changeRequest.data;
 
             var expectedValue = {
                 a: 4,
@@ -147,8 +147,8 @@ test('ChangeRequest data() should get latest parcel data from treeshare when cal
 });
 
 
-test('ChangeRequest should throw error if data() is called before setBaseParcel()', () => {
-    expect(() => new ChangeRequest().data()).toThrowError(`ChangeRequest data() cannot be called before calling setBaseParcel()`);
+test('ChangeRequest should throw error if data is accessed before setBaseParcel()', () => {
+    expect(() => new ChangeRequest().data).toThrowError(`ChangeRequest.data cannot be accessed before calling setBaseParcel()`);
 });
 
 test('ChangeRequest value() should be a shortcut for data().value', () => {
@@ -169,7 +169,7 @@ test('ChangeRequest value() should be a shortcut for data().value', () => {
 
     let value = new ChangeRequest(action)
         .setBaseParcel(parcel)
-        .value();
+        .value;
 
     var expectedValue = {
         a: 1,
@@ -179,7 +179,7 @@ test('ChangeRequest value() should be a shortcut for data().value', () => {
     expect(expectedValue).toEqual(value);
 });
 
-test('ChangeRequest meta() should be a shortcut for data().meta', () => {
+test('ChangeRequest .meta should be a shortcut for data().meta', () => {
     var action = new Action({
         type: "setMeta",
         payload: {
@@ -191,9 +191,8 @@ test('ChangeRequest meta() should be a shortcut for data().meta', () => {
 
     var parcel = new Parcel();
 
-    let meta = new ChangeRequest(action)
-        .setBaseParcel(parcel)
-        .meta();
+    let {meta} = new ChangeRequest(action)
+        .setBaseParcel(parcel);
 
     var expectedMeta = {
         abc: 123

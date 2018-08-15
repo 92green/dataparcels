@@ -10,7 +10,7 @@ export default ({onSubmit, onError}: Object) => (parcel: Parcel): Parcel => {
             submit: () => ref.submit()
         })
         .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
-            let parcelData = changeRequest.data();
+            let parcelData = changeRequest.data;
             let {fromSubmit} = changeRequest.changeRequestMeta();
             let {errors} = parcelData.meta;
 

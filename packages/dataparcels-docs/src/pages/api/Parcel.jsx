@@ -17,7 +17,7 @@ const md = {
 }
 
 const api = `
-# Get methods
+# Getters
 value
 meta
 data

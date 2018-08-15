@@ -72,7 +72,7 @@ export default class PureParcel extends React.Component<Props, State> { /* eslin
 
                 this.setState({
                     parcel: parcel._create({
-                        parcelData: changeRequest.data()
+                        parcelData: changeRequest.data
                     })
                 });
 

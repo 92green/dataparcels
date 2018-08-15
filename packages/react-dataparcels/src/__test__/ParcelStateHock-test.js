@@ -16,7 +16,7 @@ test('ParcelStateHock config should accept an initial value', () => {
         }),
         {abc: 123},
         (props) => {
-            expect(456).toBe(props.proppy.value());
+            expect(456).toBe(props.proppy.value);
         }
     );
 });
@@ -34,7 +34,7 @@ test('ParcelStateHock config should default initial value to undefined', () => {
         }),
         {},
         (props) => {
-            expect(typeof props.proppy.value() === "undefined").toBe(true);
+            expect(typeof props.proppy.value === "undefined").toBe(true);
         }
     );
 });
@@ -49,7 +49,7 @@ test('ParcelStateHock changes should be put back into ParcelStateHock state', ()
     let wrapper = shallow(<Hocked />);
     let {proppy} = wrapper.props();
     proppy.onChange(456);
-    expect(456).toBe(wrapper.update().props().proppy.value());
+    expect(456).toBe(wrapper.update().props().proppy.value);
 });
 
 
@@ -60,14 +60,14 @@ test('ParcelStateHock config should accept a modify function', () => {
             initialValue: () => 456,
             prop: "proppy",
             modify: (props) => (parcel) => {
-                expect(456).toBe(parcel.value());
+                expect(456).toBe(parcel.value);
                 expect({}).toEqual(props);
                 return parcel.modifyValue(ii => ii + 1);
             }
         }),
         {},
         (props) => {
-            expect(457).toBe(props.proppy.value());
+            expect(457).toBe(props.proppy.value);
         }
     );
 });

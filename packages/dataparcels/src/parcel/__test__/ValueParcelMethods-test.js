@@ -1,7 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 
-test('Parcel.data() should return the Parcels data', () => {
+test('Parcel.data should return the Parcels data', () => {
     var data = {
         value: 123,
         child: undefined
@@ -14,28 +14,28 @@ test('Parcel.data() should return the Parcels data', () => {
         meta: {}
     };
 
-    expect(expectedData).toEqual(new Parcel(data).data());
+    expect(expectedData).toEqual(new Parcel(data).data);
 });
 
-test('Parcel.value() should return the Parcels value', () => {
+test('Parcel.value should return the Parcels value', () => {
     var data = {
         value: 123
     };
-    expect(new Parcel(data).value()).toBe(123);
+    expect(new Parcel(data).value).toBe(123);
 });
 
-test('Parcel.value() should return the same instance of the Parcels value', () => {
+test('Parcel.value should return the same instance of the Parcels value', () => {
     var myObject = {a:1,b:2};
     var data = {
         value: myObject
     };
-    expect(new Parcel(data).value()).toBe(myObject);
+    expect(new Parcel(data).value).toBe(myObject);
 });
 
 
 test('Parcels should be able to accept no config', () => {
     let parcel = new Parcel();
-    expect(undefined).toEqual(parcel.value());
+    expect(undefined).toEqual(parcel.value);
     parcel.onChange(123);
 });
 
@@ -43,17 +43,17 @@ test('Parcels should be able to accept just value in config', () => {
     let parcel = new Parcel({
         value: 123
     });
-    expect(123).toEqual(parcel.value());
+    expect(123).toEqual(parcel.value);
     parcel.onChange(456);
 });
 
 test('Parcels should be able to accept just handleChange in config', () => {
     let parcel = new Parcel({
         handleChange: (parcel) => {
-            expect(456).toBe(parcel.value());
+            expect(456).toBe(parcel.value);
         }
     });
-    expect(undefined).toEqual(parcel.value());
+    expect(undefined).toEqual(parcel.value);
     parcel.onChange(456);
 });
 
@@ -82,7 +82,7 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).setSelf(456);
@@ -115,7 +115,7 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).updateSelf((ii) => {
@@ -149,7 +149,7 @@ test('Parcel.onChange() should work like set that only accepts a single argument
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).onChange(456);
@@ -180,7 +180,7 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).onChangeDOM({
@@ -194,7 +194,7 @@ test('Parcel.spread() returns an object with value and onChange', () => {
     var data = {
         value: 123,
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect(value).toBe(456);
         }
     };
@@ -206,7 +206,7 @@ test('Parcel.spread() returns an object with value and onChange', () => {
         onChange
     } = parcel.spread();
 
-    expect(value).toBe(parcel.value());
+    expect(value).toBe(parcel.value);
     expect(onChange).toBe(parcel.onChange);
 });
 
@@ -214,7 +214,7 @@ test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)
     var data = {
         value: 123,
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect(value).toBe(456);
         }
     };
@@ -226,7 +226,7 @@ test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)
         onChange
     } = parcel.spreadDOM();
 
-    expect(value).toBe(parcel.value());
+    expect(value).toBe(parcel.value);
     expect(onChange).toBe(parcel.onChangeDOM);
 });
 
@@ -264,14 +264,14 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
             changes++;
 
             if(changes === 1) {
-                expect(expectedMeta).toEqual(parcel.meta());
+                expect(expectedMeta).toEqual(parcel.meta);
                 expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
                 parcel.setMeta({
                     def: 456
                 });
 
             } else if(changes === 2) {
-                expect(expectedMeta2).toEqual(parcel.meta());
+                expect(expectedMeta2).toEqual(parcel.meta);
             }
         }
     }).setMeta({
@@ -279,7 +279,7 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
     });
 });
 
-test('Parcel.meta() should return meta', () => {
+test('Parcel.meta should return meta', () => {
     var meta = {
         abc: 123,
         def: 456
@@ -289,8 +289,8 @@ test('Parcel.meta() should return meta', () => {
         value: 123,
         handleChange: (parcel) => {
             // the see if it is returned correctly
-            expect(meta).toEqual(parcel.meta());
-            expect(meta !== parcel.meta()).toBe(true);
+            expect(meta).toEqual(parcel.meta);
+            expect(meta !== parcel.meta).toBe(true);
         }
     };
 
@@ -332,7 +332,7 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
             changes++;
 
             if(changes === 1) {
-                expect(expectedMeta).toEqual(parcel.meta());
+                expect(expectedMeta).toEqual(parcel.meta);
                 expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
                 parcel.updateMeta(meta => {
                     expect({abc: 123}).toEqual(meta)
@@ -342,7 +342,7 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
                 });
 
             } else if(changes === 2) {
-                expect(expectedMeta2).toEqual(parcel.meta());
+                expect(expectedMeta2).toEqual(parcel.meta);
             }
         }
     }).updateMeta(meta => {
@@ -408,7 +408,7 @@ test('Parcel.ping() should call the Parcels handleChange function with no change
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
         }
     }).ping(456);
 });

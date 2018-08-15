@@ -91,7 +91,7 @@ export default (_this: Parcel): Object => ({
             parcel.dispatch(changeRequest.updateActions(valueActionFilter));
 
             pipeWith(
-                changeRequest.data().value,
+                changeRequest.data.value,
                 updater,
                 parcel.onChange
             );

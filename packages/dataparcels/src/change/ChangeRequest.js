@@ -41,9 +41,10 @@ export default class ChangeRequest {
         });
     };
 
-    data = (): * => {
+    // $FlowFixMe - this doesn't have side effects
+    get data(): * {
         if(!this._baseParcel) {
-            throw new Error(`ChangeRequest data() cannot be called before calling setBaseParcel()`);
+            throw new Error(`ChangeRequest.data cannot be accessed before calling setBaseParcel()`);
         }
 
         let parcelDataFromRegistry = this
@@ -51,18 +52,20 @@ export default class ChangeRequest {
             ._treeshare
             .registry
             .get(this._baseParcel._id.id())
-            .data();
+            .data;
 
         return Reducer(parcelDataFromRegistry, this._actions);
-    };
+    }
 
-    value = (): * => {
-        return this.data().value;
-    };
+    // $FlowFixMe - this doesn't have side effects
+    get value(): * {
+        return this.data.value;
+    }
 
-    meta = (): * => {
-        return this.data().meta;
-    };
+    // $FlowFixMe - this doesn't have side effects
+    get meta (): * {
+        return this.data.meta;
+    }
 
     actions = (): Action[] => {
         return this._actions;

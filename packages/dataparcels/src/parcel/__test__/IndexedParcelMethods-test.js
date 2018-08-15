@@ -38,7 +38,7 @@ test('IndexedParcel.delete() should delete', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).delete(0);
@@ -46,7 +46,7 @@ test('IndexedParcel.delete() should delete', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
         }
     }).delete("#a");
@@ -73,7 +73,7 @@ test('IndexedParcel.get(hashkey) should return a new child Parcel', () => {
     var childParcel = new Parcel(data).get("#a");
 
     expect(childParcel instanceof Parcel).toBe(true);
-    expect(childParcel.value()).toBe(expectedValue);
+    expect(childParcel.value).toBe(expectedValue);
 });
 
 test('IndexedParcel.insertBefore() should insertBefore', () => {
@@ -119,7 +119,7 @@ test('IndexedParcel.insertBefore() should insertBefore', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).insertBefore(1, 4);
@@ -127,7 +127,7 @@ test('IndexedParcel.insertBefore() should insertBefore', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
         }
     }).insertBefore("#b", 4);
@@ -176,7 +176,7 @@ test('IndexedParcel.insertAfter() should insertAfter', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).insertAfter(1, 4);
@@ -184,7 +184,7 @@ test('IndexedParcel.insertAfter() should insertAfter', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
         }
     }).insertAfter("#b", 4);
@@ -225,7 +225,7 @@ test('IndexedParcel.push() should push', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).push(4);
@@ -262,7 +262,7 @@ test('IndexedParcel.pop() should pop', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).pop();
@@ -299,7 +299,7 @@ test('IndexedParcel.shift() should shift', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).shift();
@@ -339,7 +339,7 @@ test('IndexedParcel.swap() should swap', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swap(0,2);
@@ -377,7 +377,7 @@ test('IndexedParcel.swapNext() should swapNext', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapNext(0);
@@ -391,7 +391,7 @@ test('IndexedParcel.swapNext() should swapNext', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapNext("#a");
@@ -430,7 +430,7 @@ test('IndexedParcel.swapPrev() should swapPrev', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapPrev(1);
@@ -444,7 +444,7 @@ test('IndexedParcel.swapPrev() should swapPrev', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapPrev("#b");
@@ -485,7 +485,7 @@ test('IndexedParcel.unshift() should unshift', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).unshift(4);

@@ -28,7 +28,7 @@ test('PureParcel should send correct changes back up when debounce = 0', () => {
         value: 456,
         handleChange: (newParcel) => {
             hasChanged = true;
-            expect(123).toBe(newParcel.value());
+            expect(123).toBe(newParcel.value);
         }
     });
 
@@ -107,7 +107,7 @@ test('PureParcel should debounce', async () => {
         let parcel = new Parcel({
             handleChange: (newParcel) => {
                 handleChangeCalls++;
-                expect(newParcel.value()).toBe(789);
+                expect(newParcel.value).toBe(789);
             }
         });
 
@@ -118,13 +118,13 @@ test('PureParcel should debounce', async () => {
                 if(renders === 0) {
                     pp.onChange(123);
                 } else if(renders === 1) {
-                    expect(123).toBe(pp.value());
+                    expect(123).toBe(pp.value);
                     pp.onChange(456);
                 } else if(renders === 2) {
-                    expect(456).toBe(pp.value());
+                    expect(456).toBe(pp.value);
                     pp.onChange(789);
                 } else if(renders === 3) {
-                    expect(789).toBe(pp.value());
+                    expect(789).toBe(pp.value);
                 }
                 renders++;
             }}
@@ -161,7 +161,7 @@ test('PureParcel should ignore debounce when sending a ping', () => {
         value: 123,
         handleChange: (newParcel) => {
             hasChanged = true;
-            expect(123).toBe(newParcel.value());
+            expect(123).toBe(newParcel.value);
         }
     });
 

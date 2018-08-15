@@ -73,11 +73,8 @@ export default class Parcel {
     id: Function;
     path: Function;
     // - value parcel methods
-    data: Function;
-    value: Function;
     spread: Function;
     spreadDOM: Function;
-    meta: Function;
     hasDispatched: Function;
     getInternalLocationShareData: Function;
     // - parent parcel methods
@@ -212,7 +209,7 @@ export default class Parcel {
         this.path = this._id.path;
 
         // method creators
-        // $FlowFixMe - I want to use compued properties, go away flow
+        // $FlowFixMe - I want to use computed properties, go away flow
         let addMethods = map((fn, name) => this[name] = fn);
         addMethods({
             // $FlowFixMe
@@ -267,4 +264,24 @@ export default class Parcel {
             ? parcel._applyModifiers()
             : parcel;
     };
+
+    //
+    // getters
+    //
+
+    // $FlowFixMe - this doesn't have side effects
+    get data(): * {
+        return this._parcelData;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get value(): * {
+        return this._parcelData.value;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get meta(): * {
+        let {meta} = this._parcelData;
+        return {...meta};
+    }
 }

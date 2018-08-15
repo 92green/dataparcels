@@ -16,7 +16,7 @@ test('Parcel.batch() should batch actions', () => {
     var data = {
         value: 123,
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel;
             expect(value).toBe(789);
             functionCalls.push("handleChange");
         }
@@ -25,10 +25,10 @@ test('Parcel.batch() should batch actions', () => {
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.onChange(456);
-        expect(456).toBe(parcel.value());
+        expect(parcel.value).toBe(456);
         functionCalls.push("onChange(456)");
         parcel.onChange(789);
-        expect(789).toBe(parcel.value());
+        expect(parcel.value).toBe(789);
         functionCalls.push("onChange(789)");
     });
 
@@ -49,7 +49,7 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', () => 
     var data = {
         value: [],
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel;
             expect(value).toEqual([456,789]);
             functionCalls.push("handleChange");
         }
@@ -58,10 +58,10 @@ test('Parcel.batch() should batch correctly with non-idempotent actions', () => 
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.push(456);
-        expect([456]).toEqual(parcel.value());
+        expect(parcel.value).toEqual([456]);
         functionCalls.push("push(456)");
         parcel.push(789);
-        expect([456, 789]).toEqual(parcel.value());
+        expect(parcel.value).toEqual([456, 789]);
         functionCalls.push("push(789)");
     });
 
@@ -99,7 +99,7 @@ test('Parcel.batch() should be nestable', () => {
     var data = {
         value: 123,
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel;
             expect(value).toBe(789);
             functionCalls.push("handleChange");
         }
@@ -108,17 +108,17 @@ test('Parcel.batch() should be nestable', () => {
     new Parcel(data).batch((parcel) => {
         functionCalls.push("batch");
         parcel.onChange(123);
-        expect(123).toBe(parcel.value());
+        expect(parcel.value).toBe(123);
         functionCalls.push("onChange(123)");
         parcel.batch((parcel) => {
             functionCalls.push("batch again");
             parcel.onChange(456);
-            expect(456).toBe(parcel.value());
+            expect(parcel.value).toBe(456);
             functionCalls.push("onChange(456)");
         });
         functionCalls.push("out again");
         parcel.onChange(789);
-        expect(789).toBe(parcel.value());
+        expect(parcel.value).toBe(789);
         functionCalls.push("onChange(789)");
     });
 

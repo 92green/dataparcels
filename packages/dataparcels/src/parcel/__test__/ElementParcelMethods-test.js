@@ -36,7 +36,7 @@ test('ElementParcel.insertBeforeSelf() should insert', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     })
@@ -46,7 +46,7 @@ test('ElementParcel.insertBeforeSelf() should insert', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     })
@@ -89,7 +89,7 @@ test('ElementParcel.insertAfterSelf() should insert', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     })
@@ -99,7 +99,7 @@ test('ElementParcel.insertAfterSelf() should insert', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     })
@@ -141,7 +141,7 @@ test('ElementParcel.swapWithSelf() should swap', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     })
@@ -181,7 +181,7 @@ test('ElementParcel.swapNextWithSelf() should swapNext', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     })
@@ -197,7 +197,7 @@ test('ElementParcel.swapNextWithSelf() should swapNext', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).swapNext("#a");
@@ -236,7 +236,7 @@ test('ElementParcel.swapPrevWithSelf() should swapPrev', () => {
     new Parcel({
         ...data,
         handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data());
+            expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     })

@@ -16,9 +16,9 @@ let value = {
     def: 456
 };
 let parcel = new Parcel({value});
-parcel.get('abc').value(); // returns 123
-parcel.get('xyz').value(); // returns undefined
-parcel.get('xyz', 789).value(); // returns 789
+parcel.get('abc').value; // returns 123
+parcel.get('xyz').value; // returns undefined
+parcel.get('xyz', 789).value; // returns 789
 ```
 
 #### get() with indexed values
@@ -32,7 +32,7 @@ When called on a Parcel with an indexed value, such as an array, `get()` can acc
 ```js
 let value = ['abc', 'def', 'ghi'];
 let parcel = new Parcel({value});
-parcel.get(0).value(); // returns 'abc'
-parcel.get(-1).value(); // returns 'ghi'
-parcel.get('#a').value(); // returns 'abc'
+parcel.get(0).value; // returns 'abc'
+parcel.get(-1).value; // returns 'ghi'
+parcel.get('#a').value; // returns 'abc'
 ```

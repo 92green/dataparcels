@@ -33,6 +33,6 @@ export default (Component: ComponentType<*>) => class Example extends Layout<Pro
     };
 
     data = (): Node => {
-        return <Terminal>{JSON.stringify(this.props.personParcel.value(), null, 4)}</Terminal>;
+        return <Terminal>{JSON.stringify(this.props.personParcel.value, null, 4)}</Terminal>;
     };
 };
