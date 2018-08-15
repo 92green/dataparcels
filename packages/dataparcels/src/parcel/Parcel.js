@@ -38,7 +38,7 @@ const DEFAULT_CONFIG_INTERNAL = {
 export default class Parcel {
 
     //
-    // private data
+    // private
     //
 
     _onHandleChange: ?Function;
@@ -53,22 +53,10 @@ export default class Parcel {
     _handleChange: Function;
 
     //
-    // public get methods
+    // public
     //
 
-    // get methods
-    // - type methods
-    isChild: Function;
-    isElement: Function;
-    isIndexed: Function;
-    isParent: Function;
-    isTopLevel: Function;
-    // - value parcel methods
-    spread: Function;
-    spreadDOM: Function;
-    hasDispatched: Function;
-    getInternalLocationShareData: Function;
-    // - parent parcel methods
+    // Parent get methods
     has: Function;
     get: Function;
     getIn: Function;
@@ -76,28 +64,32 @@ export default class Parcel {
     toArray: Function;
     size: Function;
 
-    //
-    // public change methods
-    //
+    // Spread methods
+    spread: Function;
+    spreadDOM: Function;
 
-    // - action methods
-    dispatch: Function;
-    batch: Function;
-    // - value parcel methods
-    setSelf: Function;
-    updateSelf: Function;
+    // Composition methods
+    pipe: Function;
+
+    // Change methods
     onChange: Function;
     onChangeDOM: Function;
+    setSelf: Function;
+    updateSelf: Function;
     setMeta: Function;
     updateMeta: Function;
     setChangeRequestMeta: Function;
+    dispatch: Function;
+    batch: Function;
     ping: Function;
-    // - parent parcel methods
+
+    // Parent change methods
     set: Function;
     setIn: Function;
     update: Function;
     updateIn: Function;
-    // - indexed parcel methods
+
+    // Indexed change methods
     delete: Function;
     insertAfter: Function;
     insertBefore: Function;
@@ -108,21 +100,18 @@ export default class Parcel {
     swapNext: Function;
     swapPrev: Function;
     unshift: Function;
-    // - child parcel methods
+
+    // Child change methods
     deleteSelf: Function;
-    // - element parcel methods
+
+    // Element change methods
     insertAfterSelf: Function;
     insertBeforeSelf: Function;
     swapWithSelf: Function;
     swapNextWithSelf: Function;
     swapPrevWithSelf: Function;
 
-    //
-    // public modify methods
-    //
-
-    // - modify methods
-    modify: Function;
+    // Modify methods
     modifyData: Function;
     modifyValue: Function;
     modifyChange: Function;
@@ -131,11 +120,18 @@ export default class Parcel {
     addModifier: Function;
     addDescendantModifier: Function;
 
-    //
-    // public mutation methods
-    //
+    // Type methods
+    isChild: Function;
+    isElement: Function;
+    isIndexed: Function;
+    isParent: Function;
+    isTopLevel: Function;
 
-    // - value parcel methods
+    // -Status methods
+    hasDispatched: Function;
+
+    // Location share data methods
+    getInternalLocationShareData: Function;
     setInternalLocationShareData: Function;
 
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
