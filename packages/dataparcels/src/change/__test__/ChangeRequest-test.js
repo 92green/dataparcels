@@ -84,7 +84,7 @@ test('ChangeRequest _unget() should prepend key', () => {
         .map(aa => aa.keyPath));
 });
 
-test('ChangeRequest setBaseParcel() and data should use Reducer', () => {
+test('ChangeRequest _setBaseParcel() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
         keyPath: ["b"],
@@ -101,7 +101,7 @@ test('ChangeRequest setBaseParcel() and data should use Reducer', () => {
     });
 
     let {value} = new ChangeRequest(action)
-        .setBaseParcel(parcel)
+        ._setBaseParcel(parcel)
         .data;
 
     var expectedValue = {
@@ -142,13 +142,13 @@ test('ChangeRequest data should get latest parcel data from treeshare when calle
         }
     });
 
-    ref.changeRequest = new ChangeRequest(action).setBaseParcel(parcel);
+    ref.changeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
     parcel.get('a').onChange(4);
 });
 
 
-test('ChangeRequest should throw error if data is accessed before setBaseParcel()', () => {
-    expect(() => new ChangeRequest().data).toThrowError(`ChangeRequest.data cannot be accessed before calling setBaseParcel()`);
+test('ChangeRequest should throw error if data is accessed before _setBaseParcel()', () => {
+    expect(() => new ChangeRequest().data).toThrowError(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
 });
 
 test('ChangeRequest value() should be a shortcut for data().value', () => {
@@ -168,7 +168,7 @@ test('ChangeRequest value() should be a shortcut for data().value', () => {
     });
 
     let value = new ChangeRequest(action)
-        .setBaseParcel(parcel)
+        ._setBaseParcel(parcel)
         .value;
 
     var expectedValue = {
@@ -192,7 +192,7 @@ test('ChangeRequest .meta should be a shortcut for data().meta', () => {
     var parcel = new Parcel();
 
     let {meta} = new ChangeRequest(action)
-        .setBaseParcel(parcel);
+        ._setBaseParcel(parcel);
 
     var expectedMeta = {
         abc: 123

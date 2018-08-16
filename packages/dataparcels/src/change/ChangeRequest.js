@@ -36,7 +36,7 @@ export default class ChangeRequest {
         });
     };
 
-    setBaseParcel = (baseParcel: Parcel): ChangeRequest => {
+    _setBaseParcel = (baseParcel: Parcel): ChangeRequest => {
         return this._create({
             baseParcel
         });
@@ -45,7 +45,7 @@ export default class ChangeRequest {
     // $FlowFixMe - this doesn't have side effects
     get data(): * {
         if(!this._baseParcel) {
-            throw new Error(`ChangeRequest.data cannot be accessed before calling setBaseParcel()`);
+            throw new Error(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
         }
 
         let parcelDataFromRegistry = this

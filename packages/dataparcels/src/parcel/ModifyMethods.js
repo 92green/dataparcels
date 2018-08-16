@@ -60,7 +60,7 @@ export default (_this: Parcel): Object => ({
                 id: _this._id.pushModifier('mc'),
                 onDispatch: (changeRequest: ChangeRequest) => {
                     _this.batch(
-                        (parcel: Parcel) => batcher(parcel, changeRequest.setBaseParcel(parcel)),
+                        (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),
                         changeRequest
                     );
                 }
