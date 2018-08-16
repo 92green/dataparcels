@@ -81,7 +81,6 @@ swapNextWithSelf()
 swapPrevWithSelf()
 
 # Modify methods
-modifyData()
 modifyValue()
 modifyChange()
 modifyChangeValue()

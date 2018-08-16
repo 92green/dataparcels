@@ -112,7 +112,6 @@ export default class Parcel {
     swapPrevWithSelf: Function;
 
     // Modify methods
-    modifyData: Function;
     modifyValue: Function;
     modifyChange: Function;
     modifyChangeValue: Function;

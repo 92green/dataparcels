@@ -27,27 +27,6 @@ test('Parcel.pipe() should return the result of pipe\'s updaters', () => {
     expect(323).toBe(modifiedParcel && modifiedParcel.value);
 });
 
-
-test('Parcel.modifyData() should return a new parcel with updated parcelData', () => {
-    var data = {
-        value: 123,
-        key: "#a"
-    };
-    var updated = new Parcel(data)
-        .modifyData((parcelData) => ({
-            value: "???"
-        }))
-        .data;
-
-    var expectedData = {
-        meta: {},
-        child: undefined,
-        value: "???",
-        key: "^"
-    };
-    expect(expectedData).toEqual(updated);
-});
-
 test('Parcel.modifyValue() should return a new parcel with updated parcelData', () => {
     expect.assertions(2);
     var data = {

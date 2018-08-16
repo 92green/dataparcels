@@ -38,20 +38,6 @@ export default (_this: Parcel): Object => ({
         );
     },
 
-    modifyData: (updater: Function): Parcel => {
-        Types(`modifyData() expects param "updater" to be`, `function`)(updater);
-        return pipeWith(
-            _this._parcelData,
-            updater,
-            Types(`modifyData() expects the result of updater() to be`, `parcelData`),
-            parcelData => ({
-                parcelData,
-                id: _this._id.pushModifier('md')
-            }),
-            _this._create
-        );
-    },
-
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
         return pipeWith(
