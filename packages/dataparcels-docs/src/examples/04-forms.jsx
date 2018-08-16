@@ -42,7 +42,7 @@ export default class ExampleMeta extends React.Component {
         let isEmail = (value) => /.+@.+\..+/.test(value) ? null : "This field must contain an email address";
         let isQuantity = (value) => /^\d+$/.test(value) ? null : "This field must contain a whole number";
 
-        let lunch = this.state.lunch.modify(
+        let lunch = this.state.lunch.pipe(
             ParcelsPluginForm({
                 onSubmit: (value) => {
                     console.log("submitted:", value);
@@ -59,11 +59,11 @@ export default class ExampleMeta extends React.Component {
             })
         );
 
-        console.log(lunch.meta());
+        console.log(lunch.meta);
 
         let renderError = (parcel) => {
-            let {error} = parcel.meta();
-            if(/*lunch.meta().attemptedSubmit && */error) {
+            let {error} = parcel.meta;
+            if(/*lunch.meta.attemptedSubmit && */error) {
                 return <p className="Text Text-failure Text-margin">{error}</p>;
             }
         };
@@ -104,7 +104,7 @@ export default class ExampleMeta extends React.Component {
             </PureParcel>
 
             {/*lunch.get('pets').toArray((pet) => {
-                return <PureParcel parcel={pet} key={pet.key()}>
+                return <PureParcel parcel={pet} key={pet.key}>
                     {(pet) => {
                         let name = pet.get('name');
                         return <div>
@@ -116,7 +116,7 @@ export default class ExampleMeta extends React.Component {
                 </PureParcel>;
             })*/}
 
-            <button className="Button Button-primary" onClick={lunch.meta().submit}>Submit</button>
+            <button className="Button Button-primary" onClick={lunch.meta.submit}>Submit</button>
         </div>);
     }
 }

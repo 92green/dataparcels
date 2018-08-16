@@ -1,7 +1,7 @@
 import Link from 'component/Link';
 
 ```flow
-data(): Object
+data: Object
 ```
 
 Returns an object containing the Parcel's data, which includes:
@@ -13,9 +13,9 @@ Returns an object containing the Parcel's data, which includes:
 ```js
 let value = 123;
 let parcel = new Parcel({value});
-parcel.data();
+parcel.data;
 
-// returns {
+// return {
 //     child: undefined,
 //     key: '^',
 //     meta: {},

@@ -37,7 +37,7 @@ export default class Modifiers {
     };
 
     applyTo: Function = (parcel: Parcel): Parcel => {
-        let typedPathString = parcel._typedPathString();
+        let typedPathString = parcel._id.typedPathString();
         return pipeWith(
             this._modifiers,
             filter(({match}: Object): boolean => {

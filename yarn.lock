@@ -9880,6 +9880,10 @@ react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
 
+react-flip-move@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-flip-move/-/react-flip-move-3.0.2.tgz#2f6f16ca6cb0a8490fba15a98b3440a76127e825"
+
 react-goose@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/react-goose/-/react-goose-0.4.2.tgz#5d7034b7474e9059af350350fa7d753d3c1b25c1"

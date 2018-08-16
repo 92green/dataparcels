@@ -1,10 +1,12 @@
 // @flow
 import Types from '../types/Types';
+import {ReadOnlyError} from '../errors/Errors';
 import type {
     ParcelData,
     ParcelConfig,
     ParcelConfigInternal,
-    CreateParcelConfigType
+    CreateParcelConfigType,
+    Key
 } from '../types/Types';
 
 import Modifiers from '../modifiers/Modifiers';
@@ -36,7 +38,7 @@ const DEFAULT_CONFIG_INTERNAL = {
 export default class Parcel {
 
     //
-    // private data
+    // private
     //
 
     _onHandleChange: ?Function;
@@ -51,36 +53,10 @@ export default class Parcel {
     _handleChange: Function;
 
     //
-    // private methods
+    // public
     //
 
-    // - id methods
-    _typedPathString: Function;
-
-    //
-    // public get methods
-    //
-
-    // get methods
-    // - type methods
-    isChild: Function;
-    isElement: Function;
-    isIndexed: Function;
-    isParent: Function;
-    isTopLevel: Function;
-    // - id methods
-    key: Function;
-    id: Function;
-    path: Function;
-    // - value parcel methods
-    data: Function;
-    value: Function;
-    spread: Function;
-    spreadDOM: Function;
-    meta: Function;
-    hasDispatched: Function;
-    getInternalLocationShareData: Function;
-    // - parent parcel methods
+    // Parent get methods
     has: Function;
     get: Function;
     getIn: Function;
@@ -88,28 +64,32 @@ export default class Parcel {
     toArray: Function;
     size: Function;
 
-    //
-    // public change methods
-    //
+    // Spread methods
+    spread: Function;
+    spreadDOM: Function;
 
-    // - action methods
-    dispatch: Function;
-    batch: Function;
-    // - value parcel methods
-    setSelf: Function;
-    updateSelf: Function;
+    // Composition methods
+    pipe: Function;
+
+    // Change methods
     onChange: Function;
     onChangeDOM: Function;
+    setSelf: Function;
+    updateSelf: Function;
     setMeta: Function;
     updateMeta: Function;
     setChangeRequestMeta: Function;
+    dispatch: Function;
+    batch: Function;
     ping: Function;
-    // - parent parcel methods
+
+    // Parent change methods
     set: Function;
     setIn: Function;
     update: Function;
     updateIn: Function;
-    // - indexed parcel methods
+
+    // Indexed change methods
     delete: Function;
     insertAfter: Function;
     insertBefore: Function;
@@ -120,22 +100,18 @@ export default class Parcel {
     swapNext: Function;
     swapPrev: Function;
     unshift: Function;
-    // - child parcel methods
+
+    // Child change methods
     deleteSelf: Function;
-    // - element parcel methods
+
+    // Element change methods
     insertAfterSelf: Function;
     insertBeforeSelf: Function;
     swapWithSelf: Function;
     swapNextWithSelf: Function;
     swapPrevWithSelf: Function;
 
-    //
-    // public modify methods
-    //
-
-    // - modify methods
-    modify: Function;
-    modifyData: Function;
+    // Modify methods
     modifyValue: Function;
     modifyChange: Function;
     modifyChangeValue: Function;
@@ -143,11 +119,18 @@ export default class Parcel {
     addModifier: Function;
     addDescendantModifier: Function;
 
-    //
-    // public mutation methods
-    //
+    // Type methods
+    isChild: Function;
+    isElement: Function;
+    isIndexed: Function;
+    isParent: Function;
+    isTopLevel: Function;
 
-    // - value parcel methods
+    // -Status methods
+    hasDispatched: Function;
+
+    // Location share data methods
+    getInternalLocationShareData: Function;
     setInternalLocationShareData: Function;
 
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
@@ -205,14 +188,8 @@ export default class Parcel {
         this.isParent = this._parcelTypes.isParent;
         this.isTopLevel = this._parcelTypes.isTopLevel;
 
-        // id methods
-        this._typedPathString = this._id.typedPathString;
-        this.key = this._id.key;
-        this.id = this._id.id;
-        this.path = this._id.path;
-
         // method creators
-        // $FlowFixMe - I want to use compued properties, go away flow
+        // $FlowFixMe - I want to use computed properties, go away flow
         let addMethods = map((fn, name) => this[name] = fn);
         addMethods({
             // $FlowFixMe
@@ -267,4 +244,69 @@ export default class Parcel {
             ? parcel._applyModifiers()
             : parcel;
     };
+
+    //
+    // getters
+    //
+
+    // $FlowFixMe - this doesn't have side effects
+    get data(): ParcelData {
+        return this._parcelData;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set data(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get value(): * {
+        return this._parcelData.value;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set value(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get meta(): * {
+        let {meta} = this._parcelData;
+        return {...meta};
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set meta(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get key(): Key {
+        return this._id.key();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set key(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get id(): string {
+        return this._id.id();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set id(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get path(): Array<Key> {
+        return this._id.path();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set path(value: *) {
+        ReadOnlyError();
+    }
 }

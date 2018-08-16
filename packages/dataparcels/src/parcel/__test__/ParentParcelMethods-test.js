@@ -36,7 +36,7 @@ test('ParentParcel.get(key) should return a new child Parcel', () => {
         },
         handleChange: (parcel, changeRequest) => {
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
-            expect(expectedValue).toEqual(parcel.value());
+            expect(expectedValue).toEqual(parcel.value);
         }
     };
 
@@ -56,11 +56,11 @@ test('ParentParcel.get(key) should return a new child Parcel', () => {
     var childParcel = new Parcel(data).get("a");
 
     expect(childParcel instanceof Parcel).toBe(true);
-    expect(childParcel.value()).toBe(1);
+    expect(childParcel.value).toBe(1);
     childParcel.onChange(2);
 });
 
-test('ParentParcel.get(key).value() should return the same instance of the nested piece of data', () => {
+test('ParentParcel.get(key).value should return the same instance of the nested piece of data', () => {
     var myObject = {a:1,b:2};
 
     var data = {
@@ -70,10 +70,10 @@ test('ParentParcel.get(key).value() should return the same instance of the neste
         }
     };
 
-    expect(new Parcel(data).get("a").value()).toBe(myObject);
+    expect(new Parcel(data).get("a").value).toBe(myObject);
 });
 
-test('ParentParcel.get(key).key() on object should return the key', () => {
+test('ParentParcel.get(key).key on object should return the key', () => {
     var data = {
         value: {
             a: {
@@ -84,31 +84,31 @@ test('ParentParcel.get(key).key() on object should return the key', () => {
         }
     };
 
-    expect(new Parcel(data).get("a").key()).toBe("a");
+    expect(new Parcel(data).get("a").key).toBe("a");
 });
 
-test('ParentParcel.get(index).value() on array should return the first element', () => {
+test('ParentParcel.get(index).value on array should return the first element', () => {
     var data = {
         value: [1,2,3]
     };
 
-    expect(new Parcel(data).get(0).value()).toBe(1);
+    expect(new Parcel(data).get(0).value).toBe(1);
 });
 
-test('ParentParcel.get(key).value() on array should return the first element', () => {
+test('ParentParcel.get(key).value on array should return the first element', () => {
     var data = {
         value: [1,2,3]
     };
 
-    expect(new Parcel(data).get("#a").value()).toBe(1);
+    expect(new Parcel(data).get("#a").value).toBe(1);
 });
 
-test('ParentParcel.get(key).key() on array should return the key, not the index', () => {
+test('ParentParcel.get(key).key on array should return the key, not the index', () => {
     var data = {
         value: [1,2,3]
     };
 
-    expect(new Parcel(data).get(0).key()).toBe("#a");
+    expect(new Parcel(data).get(0).key).toBe("#a");
 });
 
 test('ParentParcel.get(key).get(key) should return a new child Parcel and chain onChanges', () => {
@@ -122,7 +122,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
             c: 4
         },
         handleChange: (parcel, changeRequest) => {
-            expect(parcel.value()).toEqual(expectedValue);
+            expect(parcel.value).toEqual(expectedValue);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     };
@@ -145,7 +145,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
     var childParcel = new Parcel(data).get("a").get("b");
 
     expect(childParcel instanceof Parcel).toBe(true);
-    expect(childParcel.value()).toBe(2);
+    expect(childParcel.value).toBe(2);
     childParcel.onChange(6);
 });
 
@@ -159,7 +159,7 @@ test('ParentParcel.get(keyDoesntExist) should return a parcel with value of unde
         }
     };
 
-    expect(typeof new Parcel(data).get("z").value() === "undefined").toBe(true);
+    expect(typeof new Parcel(data).get("z").value === "undefined").toBe(true);
 });
 
 test('ParentParcel.get(keyDoesntExist, "notset") should return a parcel with value of "notset"', () => {
@@ -172,7 +172,7 @@ test('ParentParcel.get(keyDoesntExist, "notset") should return a parcel with val
         }
     };
 
-    expect(new Parcel(data).get("z", "notset").value()).toBe("notset");
+    expect(new Parcel(data).get("z", "notset").value).toBe("notset");
 });
 
 test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => {
@@ -188,7 +188,7 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => 
             b: 4
         },
         handleChange: (parcel, changeRequest) => {
-            expect(parcel.value()).toEqual(expectedValue);
+            expect(parcel.value).toEqual(expectedValue);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     };
@@ -213,7 +213,7 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => 
     var descendantParcel = new Parcel(data).getIn(["a", "c", "d"]);
 
     expect(descendantParcel instanceof Parcel).toBe(true);
-    expect(descendantParcel.value()).toBe(123);
+    expect(descendantParcel.value).toBe(123);
     descendantParcel.onChange(456);
 });
 
@@ -230,10 +230,10 @@ test('ParentParcel.getIn(keyPath) should cope with non existent keypaths', () =>
     };
 
     var descendantParcel = new Parcel(data).getIn(["x", "y", "z"]);
-    expect(descendantParcel.value()).toEqual(undefined);
+    expect(descendantParcel.value).toEqual(undefined);
 
     var descendantParcel2 = new Parcel(data).getIn(["x", "y", "z"], "!!!");
-    expect(descendantParcel2.value()).toEqual("!!!");
+    expect(descendantParcel2.value).toEqual("!!!");
 });
 
 test('ParentParcel.toObject() should make an object', () => {
@@ -246,7 +246,7 @@ test('ParentParcel.toObject() should make an object', () => {
 
     var expectedObject = {a:1,b:2,c:3};
     var parcel = new Parcel(data);
-    var obj = map(ii => ii.value())(parcel.toObject());
+    var obj = map(ii => ii.value)(parcel.toObject());
 
     expect(expectedObject).toEqual(obj);
 
@@ -271,8 +271,8 @@ test('ParentParcel.toObject() should make an object with a mapper', () => {
     var passedArgs = [];
 
     var obj = parcel.toObject((pp, key, iter) => {
-        passedArgs.push({value: pp.value(), key, iter});
-        return pp.value() + 1;
+        passedArgs.push({value: pp.value, key, iter});
+        return pp.value + 1;
     });
 
     expect(expectedObject).toEqual(obj);
@@ -290,7 +290,7 @@ test('ParentParcel.toArray() should make an array', () => {
 
     var expectedArray = [1,2,3];
     var parcel = new Parcel(data);
-    var array = map(ii => ii.value())(parcel.toArray());
+    var array = map(ii => ii.value)(parcel.toArray());
 
     expect(expectedArray).toEqual(array);
 
@@ -316,8 +316,8 @@ test('ParentParcel.toArray() should make an array with a mapper', () => {
     var passedArgs = [];
 
     var array = parcel.toArray((pp, key, iter) => {
-        passedArgs.push({value: pp.value(), key, iter});
-        return pp.value() + 1;
+        passedArgs.push({value: pp.value, key, iter});
+        return pp.value + 1;
     });
 
     expect(expectedArray).toEqual(array);
@@ -333,7 +333,7 @@ test('ParentParcel.setSelf() should call the Parcels handleChange function with 
             a: "!!!"
         },
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect("???").toEqual(value);
         }
     };
@@ -349,7 +349,7 @@ test('ParentParcel.updateSelf() should call the Parcels handleChange function wi
             a: "!!!"
         },
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect("???").toEqual(value);
         }
     };
@@ -372,7 +372,7 @@ test('ParentParcel.set(key) should call the Parcels handleChange function with t
             a: "!!!"
         },
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect({a: "???"}).toEqual(value);
         }
     };
@@ -388,7 +388,7 @@ test('ParentParcel.update(key) should call the Parcels handleChange function wit
             a: "!!!"
         },
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect({a: "???"}).toEqual(value);
         }
     };
@@ -409,7 +409,7 @@ test('ParentParcel.setIn(keyPath) should call the Parcels handleChange function 
             }
         },
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect({a: {b: "???"}}).toEqual(value);
         }
     };
@@ -427,7 +427,7 @@ test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange functi
             }
         },
         handleChange: (parcel) => {
-            let {value} = parcel.data();
+            let {value} = parcel.data;
             expect({a: {b: "???"}}).toEqual(value);
         }
     };

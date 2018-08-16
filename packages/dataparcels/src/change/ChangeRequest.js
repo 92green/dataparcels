@@ -3,6 +3,7 @@ import type Parcel from '../parcel/Parcel';
 import type {Key, Index} from '../types/Types';
 import type Action from './Action';
 
+import {ReadOnlyError} from '../errors/Errors';
 import Reducer from '../change/Reducer';
 
 type ActionUpdater = (actions: Action[]) => Action[];
@@ -35,15 +36,16 @@ export default class ChangeRequest {
         });
     };
 
-    setBaseParcel = (baseParcel: Parcel): ChangeRequest => {
+    _setBaseParcel = (baseParcel: Parcel): ChangeRequest => {
         return this._create({
             baseParcel
         });
     };
 
-    data = (): * => {
+    // $FlowFixMe - this doesn't have side effects
+    get data(): * {
         if(!this._baseParcel) {
-            throw new Error(`ChangeRequest data() cannot be called before calling setBaseParcel()`);
+            throw new Error(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
         }
 
         let parcelDataFromRegistry = this
@@ -51,18 +53,35 @@ export default class ChangeRequest {
             ._treeshare
             .registry
             .get(this._baseParcel._id.id())
-            .data();
+            .data;
 
         return Reducer(parcelDataFromRegistry, this._actions);
-    };
+    }
 
-    value = (): * => {
-        return this.data().value;
-    };
+    // $FlowFixMe - this doesn't have side effects
+    set data(value: *) {
+        ReadOnlyError();
+    }
 
-    meta = (): * => {
-        return this.data().meta;
-    };
+    // $FlowFixMe - this doesn't have side effects
+    get value(): * {
+        return this.data.value;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set value(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get meta (): * {
+        return this.data.meta;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set meta(value: *) {
+        ReadOnlyError();
+    }
 
     actions = (): Action[] => {
         return this._actions;
@@ -77,12 +96,18 @@ export default class ChangeRequest {
     merge = (other: ChangeRequest): ChangeRequest => {
         return this
             .updateActions(ii => ii.concat(other.actions()))
-            .setChangeRequestMeta(other.changeRequestMeta());
+            .setChangeRequestMeta(other.changeRequestMeta);
     };
 
-    changeRequestMeta = (): * => {
+    // $FlowFixMe - this doesn't have side effects
+    get changeRequestMeta(): * {
         return this._meta;
-    };
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set changeRequestMeta(value: *) {
+        ReadOnlyError();
+    }
 
     setChangeRequestMeta = (partialMeta: *): ChangeRequest => {
         return this._create({
@@ -93,13 +118,25 @@ export default class ChangeRequest {
         });
     };
 
-    originId = (): ?string => {
+    // $FlowFixMe - this doesn't have side effects
+    get originId(): ?string {
         return this._originId;
-    };
+    }
 
-    originPath = (): ?string[] => {
+    // $FlowFixMe - this doesn't have side effects
+    set originId(value: *) {
+        ReadOnlyError();
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get originPath(): ?string[] {
         return this._originPath;
-    };
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set originPath(value: *) {
+        ReadOnlyError();
+    }
 
     toJS = (): Object => {
         return {

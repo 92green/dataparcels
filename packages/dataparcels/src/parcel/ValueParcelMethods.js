@@ -1,5 +1,4 @@
 // @flow
-import type {ParcelData} from '../types/Types';
 import Types from '../types/Types';
 import type Parcel from './Parcel';
 import ChangeRequest from '../change/ChangeRequest';
@@ -11,35 +10,22 @@ export default (_this: Parcel): Object => ({
 
     // get methods
 
-    data: (): ParcelData => {
-        return _this._parcelData;
-    },
-
-    value: (): * => {
-        return _this._parcelData.value;
-    },
-
     spread: (): Object => ({
-        value: _this.value(),
+        value: _this.value,
         onChange: _this.onChange
     }),
 
     spreadDOM: (): Object => ({
-        value: _this.value(),
+        value: _this.value,
         onChange: _this.onChangeDOM
     }),
 
-    meta: (): * => {
-        let {meta} = _this._parcelData;
-        return {...meta};
-    },
-
     hasDispatched: (): boolean => {
-        return _this._treeshare.dispatch.hasPathDispatched(_this.path());
+        return _this._treeshare.dispatch.hasPathDispatched(_this.path);
     },
 
     getInternalLocationShareData: (): Object => {
-        return _this._treeshare.locationShare.get(_this.path());
+        return _this._treeshare.locationShare.get(_this.path);
     },
 
     // change methods
@@ -50,7 +36,7 @@ export default (_this: Parcel): Object => ({
 
     updateSelf: (updater: Function) => {
         Types(`updateSelf() expects param "updater" to be`, `function`)(updater);
-        _this.setSelf(updater(_this.value()));
+        _this.setSelf(updater(_this.value));
     },
 
     onChange: (value: *) => {
@@ -91,6 +77,6 @@ export default (_this: Parcel): Object => ({
 
     setInternalLocationShareData: (partialData: Object) => {
         Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
-        _this._treeshare.locationShare.set(_this.path(), partialData);
+        _this._treeshare.locationShare.set(_this.path, partialData);
     }
 });

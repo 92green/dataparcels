@@ -1,7 +1,7 @@
 import IndexedKeys from 'docs/notes/IndexedKeys.md';
 
 ```flow
-value(): any
+value: any
 ```
 
 Returns the Parcel's value.
@@ -9,5 +9,5 @@ Returns the Parcel's value.
 ```js
 let value = 123;
 let parcel = new Parcel({value});
-parcel.value(); // returns 123
+parcel.value; // returns 123
 ```

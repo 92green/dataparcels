@@ -9,7 +9,7 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (startParcel: Parcel, match: string): Parcel[] => {
     let matchParts = split(match);
-    let path = startParcel.path();
+    let {path} = startParcel;
 
     let baseMatches = pipeWith(
         matchParts,

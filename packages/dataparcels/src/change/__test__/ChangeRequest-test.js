@@ -55,7 +55,7 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
 });
 
 
-test('ChangeRequest setChangeRequestMeta() and changeRequestMeta() should work', () => {
+test('ChangeRequest setChangeRequestMeta() and changeRequestMeta should work', () => {
     let expectedMeta = {
         a: 3,
         b: 2
@@ -64,7 +64,7 @@ test('ChangeRequest setChangeRequestMeta() and changeRequestMeta() should work',
         .setChangeRequestMeta({a: 1})
         .setChangeRequestMeta({b: 2})
         .setChangeRequestMeta({a: 3})
-        .changeRequestMeta());
+        .changeRequestMeta);
 });
 
 test('ChangeRequest _unget() should prepend key', () => {
@@ -84,7 +84,7 @@ test('ChangeRequest _unget() should prepend key', () => {
         .map(aa => aa.keyPath));
 });
 
-test('ChangeRequest setBaseParcel() and data() should use Reducer', () => {
+test('ChangeRequest _setBaseParcel() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
         keyPath: ["b"],
@@ -101,8 +101,8 @@ test('ChangeRequest setBaseParcel() and data() should use Reducer', () => {
     });
 
     let {value} = new ChangeRequest(action)
-        .setBaseParcel(parcel)
-        .data();
+        ._setBaseParcel(parcel)
+        .data;
 
     var expectedValue = {
         a: 1,
@@ -112,7 +112,7 @@ test('ChangeRequest setBaseParcel() and data() should use Reducer', () => {
     expect(expectedValue).toEqual(value);
 });
 
-test('ChangeRequest data() should get latest parcel data from treeshare when called to prevent basing onto stale data', () => {
+test('ChangeRequest data should get latest parcel data from treeshare when called to prevent basing onto stale data', () => {
     expect.assertions(1);
 
     var action = new Action({
@@ -131,7 +131,7 @@ test('ChangeRequest data() should get latest parcel data from treeshare when cal
             b: 2
         },
         handleChange: (parcel) => {
-            let {value} = ref.changeRequest.data();
+            let {value} = ref.changeRequest.data;
 
             var expectedValue = {
                 a: 4,
@@ -142,13 +142,13 @@ test('ChangeRequest data() should get latest parcel data from treeshare when cal
         }
     });
 
-    ref.changeRequest = new ChangeRequest(action).setBaseParcel(parcel);
+    ref.changeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
     parcel.get('a').onChange(4);
 });
 
 
-test('ChangeRequest should throw error if data() is called before setBaseParcel()', () => {
-    expect(() => new ChangeRequest().data()).toThrowError(`ChangeRequest data() cannot be called before calling setBaseParcel()`);
+test('ChangeRequest should throw error if data is accessed before _setBaseParcel()', () => {
+    expect(() => new ChangeRequest().data).toThrowError(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
 });
 
 test('ChangeRequest value() should be a shortcut for data().value', () => {
@@ -168,8 +168,8 @@ test('ChangeRequest value() should be a shortcut for data().value', () => {
     });
 
     let value = new ChangeRequest(action)
-        .setBaseParcel(parcel)
-        .value();
+        ._setBaseParcel(parcel)
+        .value;
 
     var expectedValue = {
         a: 1,
@@ -179,7 +179,7 @@ test('ChangeRequest value() should be a shortcut for data().value', () => {
     expect(expectedValue).toEqual(value);
 });
 
-test('ChangeRequest meta() should be a shortcut for data().meta', () => {
+test('ChangeRequest .meta should be a shortcut for data().meta', () => {
     var action = new Action({
         type: "setMeta",
         payload: {
@@ -191,9 +191,8 @@ test('ChangeRequest meta() should be a shortcut for data().meta', () => {
 
     var parcel = new Parcel();
 
-    let meta = new ChangeRequest(action)
-        .setBaseParcel(parcel)
-        .meta();
+    let {meta} = new ChangeRequest(action)
+        ._setBaseParcel(parcel);
 
     var expectedMeta = {
         abc: 123
@@ -210,8 +209,8 @@ test('ChangeRequest should keep originId and originPath', () => {
             abc: 123
         },
         handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
-            expect(['abc']).toEqual(changeRequest.originPath());
-            expect('^.abc').toEqual(changeRequest.originId());
+            expect(['abc']).toEqual(changeRequest.originPath);
+            expect('^.abc').toEqual(changeRequest.originId);
         }
     };
 
@@ -231,8 +230,8 @@ test('ChangeRequest should keep originId and originPath even when going through 
             def: 456
         },
         handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
-            expect(['abc']).toEqual(changeRequest.originPath());
-            expect('^.~mc.abc').toEqual(changeRequest.originId());
+            expect(['abc']).toEqual(changeRequest.originPath);
+            expect('^.~mc.abc').toEqual(changeRequest.originId);
         }
     };
 

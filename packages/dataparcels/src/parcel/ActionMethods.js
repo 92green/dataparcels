@@ -10,8 +10,8 @@ export default (_this: Parcel): Object => ({
     _handleChange: (_onHandleChange: Function, changeRequest: ChangeRequest) => {
         let parcel: Parcel = _this._create({
             parcelData: changeRequest
-                .setBaseParcel(_this)
-                .data()
+                ._setBaseParcel(_this)
+                .data
         });
 
         _onHandleChange(parcel, changeRequest);
@@ -25,15 +25,15 @@ export default (_this: Parcel): Object => ({
             _onHandleChange
         } = _this;
 
-        _this._treeshare.dispatch.markPathAsDispatched(_this.path());
+        _this._treeshare.dispatch.markPathAsDispatched(_this.path);
 
         let changeRequest: ChangeRequest = dispatchable instanceof ChangeRequest
             ? dispatchable
             : new ChangeRequest(dispatchable);
 
         if(!changeRequest._originId) {
-            changeRequest._originId = _this.id();
-            changeRequest._originPath = _this.path();
+            changeRequest._originId = _this.id;
+            changeRequest._originPath = _this.path;
         }
 
         if(_this._dispatchBuffer) {
@@ -61,8 +61,8 @@ export default (_this: Parcel): Object => ({
         _this._dispatchBuffer = (changeRequest: ChangeRequest) => {
             buffer = buffer.merge(changeRequest);
             _this._parcelData = changeRequest
-                .setBaseParcel(_this)
-                .data();
+                ._setBaseParcel(_this)
+                .data;
         };
 
         batcher(_this);

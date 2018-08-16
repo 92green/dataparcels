@@ -66,7 +66,7 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
         return toArray()(_this.toObject(mapper));
     },
 
-    size: () => size()(_this.value()),
+    size: () => size()(_this.value),
 
     // change methods
 

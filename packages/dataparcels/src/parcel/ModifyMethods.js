@@ -24,31 +24,17 @@ export default (_this: Parcel): Object => ({
     },
 
     // modify methods
-    modify: (...updaters: Function[]): Parcel => {
-        Types(`modify() expects all params to be`, `functionArray`)(updaters);
+    pipe: (...updaters: Function[]): Parcel => {
+        Types(`pipe() expects all params to be`, `functionArray`)(updaters);
         return pipeWith(
             _this,
             ...pipeWith(
                 updaters,
                 map(updater => pipe(
                     updater,
-                    Types(`modify() expects the result of all functions to be`, `parcel`)
+                    Types(`pipe() expects the result of all functions to be`, `parcel`)
                 ))
             )
-        );
-    },
-
-    modifyData: (updater: Function): Parcel => {
-        Types(`modifyData() expects param "updater" to be`, `function`)(updater);
-        return pipeWith(
-            _this._parcelData,
-            updater,
-            Types(`modifyData() expects the result of updater() to be`, `parcelData`),
-            parcelData => ({
-                parcelData,
-                id: _this._id.pushModifier('md')
-            }),
-            _this._create
         );
     },
 
@@ -74,7 +60,7 @@ export default (_this: Parcel): Object => ({
                 id: _this._id.pushModifier('mc'),
                 onDispatch: (changeRequest: ChangeRequest) => {
                     _this.batch(
-                        (parcel: Parcel) => batcher(parcel, changeRequest.setBaseParcel(parcel)),
+                        (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),
                         changeRequest
                     );
                 }
@@ -91,7 +77,7 @@ export default (_this: Parcel): Object => ({
             parcel.dispatch(changeRequest.updateActions(valueActionFilter));
 
             pipeWith(
-                changeRequest.data().value,
+                changeRequest.data.value,
                 updater,
                 parcel.onChange
             );
