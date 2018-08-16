@@ -4,7 +4,7 @@ import ParcelMeta from 'docs/notes/ParcelMeta.md';
 meta: Object
 ```
 
-Returns an object containing the Parcel's meta data. 
+Returns an object containing the parcel's meta data. 
 
 <ParcelMeta />
  
