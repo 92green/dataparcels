@@ -43,6 +43,7 @@ export type ParcelMetaUpdater = (meta: ParcelMeta) => ParcelMeta;
 
 export type ParcelBatcher = (item: Parcel) => void;
 export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
+export type ParcelValueUpdater = (value: *) => *;
 
 export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
 

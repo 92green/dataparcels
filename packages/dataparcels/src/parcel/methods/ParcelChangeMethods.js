@@ -1,7 +1,9 @@
 // @flow
 import Types from '../../types/Types';
 import type Parcel from '../Parcel';
-import type {ParcelMeta, ParcelMetaUpdater} from '../../types/Types';
+import type {ParcelMeta} from '../../types/Types';
+import type {ParcelMetaUpdater} from '../../types/Types';
+import type {ParcelValueUpdater} from '../../types/Types';
 import ChangeRequest from '../../change/ChangeRequest';
 import ActionCreators from '../../change/ActionCreators';
 
@@ -13,7 +15,7 @@ export default (_this: Parcel, dispatch: Function) => ({
         dispatch(ActionCreators.setSelf(value));
     },
 
-    updateSelf: (updater: Function) => {
+    updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf() expects param "updater" to be`, `function`)(updater);
         _this.setSelf(updater(_this.value));
     },

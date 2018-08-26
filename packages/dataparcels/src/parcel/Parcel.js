@@ -14,19 +14,21 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelMapper} from '../types/Types';
 import type {ParcelMetaUpdater} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
+import type {ParcelValueUpdater} from '../types/Types';
 
 import Modifiers from '../modifiers/Modifiers';
 import ParcelGetMethods from './methods/ParcelGetMethods';
 import ParcelChangeMethods from './methods/ParcelChangeMethods';
 import ActionMethods from './methods/ActionMethods';
 import ParentGetMethods from './methods/ParentGetMethods';
+import ParentChangeMethods from './methods/ParentChangeMethods';
 
 import ChildChangeMethods from './ChildChangeMethods';
 import ElementChangeMethods from './ElementChangeMethods';
 import IndexedChangeMethods from './IndexedChangeMethods';
 import ModifyMethods from './ModifyMethods';
+import MethodCreator from './MethodCreator';
 import ParcelTypes from './ParcelTypes';
-import ParentChangeMethods from './ParentChangeMethods';
 
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
@@ -60,12 +62,6 @@ export default class Parcel {
     _applyModifiers: Function;
     _dispatchBuffer: ?Function;
     _dispatchBuffer: ?Function;
-
-    // Parent change methods
-    set: Function;
-    setIn: Function;
-    update: Function;
-    updateIn: Function;
 
     // Indexed change methods
     delete: Function;
@@ -175,12 +171,12 @@ export default class Parcel {
             // $FlowFixMe
             ...ParcelChangeMethods(this, this.dispatch),
             // $FlowFixMe
-            ...ParentGetMethods(this)
+            ...MethodCreator("Parent", ParentGetMethods)(this),
+            // $FlowFixMe
+            ...MethodCreator("Parent", ParentChangeMethods)(this, this.dispatch)
         };
 
         addMethods({
-            // $FlowFixMe
-            ...ParentChangeMethods(this, this.dispatch),
             // $FlowFixMe
             ...IndexedChangeMethods(this, this.dispatch),
             // $FlowFixMe
@@ -333,4 +329,10 @@ export default class Parcel {
     toObject = (mapper: ParcelMapper = _ => _): { [key: string]: * } => this._methods.toObject(mapper);
     toArray = (mapper: ParcelMapper = _ => _): Array<*> => this._methods.toArray(mapper);
     size = (): number => this._methods.size();
+
+    // Parent change methods
+    set = (key: Key|Index, value: *) => this._methods.set(key, value);
+    update = (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater);
+    setIn = (keyPath: Array<Key|Index>, value: *) => this._methods.setIn(keyPath, value);
+    updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
 }
