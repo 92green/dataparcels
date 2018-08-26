@@ -24,8 +24,8 @@ import ParentGetMethods from './methods/ParentGetMethods';
 import ParentChangeMethods from './methods/ParentChangeMethods';
 import IndexedChangeMethods from './methods/IndexedChangeMethods';
 import ChildChangeMethods from './methods/ChildChangeMethods';
+import ElementChangeMethods from './methods/ElementChangeMethods';
 
-import ElementChangeMethods from './ElementChangeMethods';
 import ModifyMethods from './ModifyMethods';
 import MethodCreator from './MethodCreator';
 import ParcelTypes from './ParcelTypes';
@@ -62,13 +62,6 @@ export default class Parcel {
     _applyModifiers: Function;
     _dispatchBuffer: ?Function;
     _dispatchBuffer: ?Function;
-
-    // Element change methods
-    insertAfterSelf: Function;
-    insertBeforeSelf: Function;
-    swapWithSelf: Function;
-    swapNextWithSelf: Function;
-    swapPrevWithSelf: Function;
 
     // Modify methods
     modifyValue: Function;
@@ -162,13 +155,10 @@ export default class Parcel {
             // $FlowFixMe
             ...MethodCreator("Indexed", IndexedChangeMethods)(this, this.dispatch),
             // $FlowFixMe
-            ...MethodCreator("Child", ChildChangeMethods)(this, this.dispatch)
-        };
-
-        addMethods({
+            ...MethodCreator("Child", ChildChangeMethods)(this, this.dispatch),
             // $FlowFixMe
-            ...ElementChangeMethods(this, this.dispatch)
-        });
+            ...MethodCreator("Element", ElementChangeMethods)(this, this.dispatch)
+        };
     }
 
     //
@@ -335,4 +325,11 @@ export default class Parcel {
 
     // Child methods
     deleteSelf = () => this._methods.deleteSelf();
+
+    // Element methods
+    insertAfterSelf = (value: *) => this._methods.insertAfterSelf(value);
+    insertBeforeSelf = (value: *) => this._methods.insertBeforeSelf(value);
+    swapNextWithSelf = () => this._methods.swapNextWithSelf();
+    swapPrevWithSelf = () => this._methods.swapPrevWithSelf();
+    swapWithSelf = (key: Key|Index) => this._methods.swapWithSelf(key);
 }
