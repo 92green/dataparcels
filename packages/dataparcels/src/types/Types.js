@@ -12,7 +12,7 @@ export type ParcelData = {
     value?: *,
     child?: *,
     key?: Key,
-    meta?: Object
+    meta?: ParcelMeta
 };
 
 export type ParcelConfig = {
@@ -24,7 +24,7 @@ export type ParcelConfig = {
 export type ParcelConfigInternal = {
     onDispatch?: Function,
     child: *,
-    meta: Object,
+    meta: ParcelMeta,
     id: ParcelId,
     modifiers?: Modifiers,
     parent?: Parcel,
@@ -37,6 +37,11 @@ export type CreateParcelConfigType = {
     parcelData: ParcelData,
     parent?: Parcel
 };
+
+export type ParcelMeta = {[key: string]: *};
+export type ParcelMetaUpdater = (meta: ParcelMeta) => ParcelMeta;
+
+export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
 
 export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
 

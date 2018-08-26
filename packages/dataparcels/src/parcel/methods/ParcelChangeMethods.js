@@ -1,12 +1,13 @@
 // @flow
-import Types from '../types/Types';
-import type Parcel from './Parcel';
-import ChangeRequest from '../change/ChangeRequest';
-import ActionCreators from '../change/ActionCreators';
+import Types from '../../types/Types';
+import type Parcel from '../Parcel';
+import type {ParcelMeta, ParcelMetaUpdater} from '../../types/Types';
+import ChangeRequest from '../../change/ChangeRequest';
+import ActionCreators from '../../change/ActionCreators';
 
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (_this: Parcel, dispatch: Function): Object => ({
+export default (_this: Parcel, dispatch: Function) => ({
 
     setSelf: (value: *) => {
         dispatch(ActionCreators.setSelf(value));
@@ -26,12 +27,12 @@ export default (_this: Parcel, dispatch: Function): Object => ({
         _this.onChange(event.currentTarget.value);
     },
 
-    setMeta: (partialMeta: Object) => {
+    setMeta: (partialMeta: ParcelMeta) => {
         Types(`setMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
         dispatch(ActionCreators.setMeta(partialMeta));
     },
 
-    updateMeta: (updater: Function) => {
+    updateMeta: (updater: ParcelMetaUpdater) => {
         Types(`updateMeta() expects param "updater" to be`, `function`)(updater);
         let {meta} = _this._parcelData;
         pipeWith(
@@ -42,7 +43,7 @@ export default (_this: Parcel, dispatch: Function): Object => ({
         );
     },
 
-    setChangeRequestMeta: (partialMeta: Object) => {
+    setChangeRequestMeta: (partialMeta: ParcelMeta) => {
         Types(`setChangeRequestMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
         dispatch(new ChangeRequest().setChangeRequestMeta(partialMeta));
     },

@@ -31,14 +31,6 @@ key
 id
 path
 
-# Parent get methods
-get()
-getIn()
-toObject()
-toArray()
-has()
-size()
-
 # Spread methods
 spread()
 spreadDOM()
@@ -57,6 +49,14 @@ setChangeRequestMeta()
 dispatch()
 batch()
 ping()
+
+# Parent get methods
+get()
+getIn()
+toObject()
+toArray()
+has()
+size()
 
 # Parent change methods
 set()

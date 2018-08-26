@@ -5,23 +5,26 @@ import type {
     ParcelData,
     ParcelConfig,
     ParcelConfigInternal,
+    ParcelMapper,
+    ParcelMeta,
+    ParcelMetaUpdater,
     CreateParcelConfigType,
     Key,
     Index
 } from '../types/Types';
 
 import Modifiers from '../modifiers/Modifiers';
+import ParcelGetMethods from './methods/ParcelGetMethods';
+import ParcelChangeMethods from './methods/ParcelChangeMethods';
+import ParentGetMethods from './methods/ParentGetMethods';
 
 import ActionMethods from './ActionMethods';
 import ChildChangeMethods from './ChildChangeMethods';
 import ElementChangeMethods from './ElementChangeMethods';
 import IndexedChangeMethods from './IndexedChangeMethods';
 import ModifyMethods from './ModifyMethods';
-import ParcelChangeMethods from './ParcelChangeMethods';
-import ParcelGetMethods from './ParcelGetMethods';
 import ParcelTypes from './ParcelTypes';
 import ParentChangeMethods from './ParentChangeMethods';
-import ParentGetMethods from './ParentGetMethods';
 
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
@@ -44,6 +47,7 @@ export default class Parcel {
     // private
     //
 
+    _methods: { [key: string]: Function };
     _onHandleChange: ?Function;
     _onDispatch: ?Function;
     _parcelData: ParcelData;
@@ -55,25 +59,6 @@ export default class Parcel {
     _dispatchBuffer: ?Function;
     _dispatchBuffer: ?Function;
     _handleChange: Function;
-
-    //
-    // public
-    //
-
-    // Parent get methods
-    has: (key: Key|Index) => boolean;
-    get: (key: Key|Index, notFoundValue: ?*) => Parcel;
-    getIn: (keyPath: Array<Key|Index>, notFoundValue: ?*) => Parcel;
-    toObject: (mapper?: Function) => { [key: string]: Parcel };
-    toArray: (mapper?: Function) => Array<Parcel>;
-    size: () => number;
-
-    // Spread methods
-    spread: Function;
-    spreadDOM: Function;
-
-    // Composition methods
-    pipe: Function;
 
     // Change methods
     onChange: Function;
@@ -130,13 +115,6 @@ export default class Parcel {
     isParent: Function;
     isTopLevel: Function;
 
-    // Status methods
-    hasDispatched: Function;
-
-    // Location share data methods
-    getInternalLocationShareData: Function;
-    setInternalLocationShareData: Function;
-
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
         Types(`Parcel() expects param "config" to be`, `object`)(config);
 
@@ -192,23 +170,26 @@ export default class Parcel {
         this.isParent = this._parcelTypes.isParent;
         this.isTopLevel = this._parcelTypes.isTopLevel;
 
-        // method creators
         // $FlowFixMe - I want to use computed properties, go away flow
         let addMethods = map((fn, name) => this[name] = fn);
         addMethods({
-            // $FlowFixMe
-            ...ParcelGetMethods(this),
-            // $FlowFixMe
-            ...ParentGetMethods(this),
             // $FlowFixMe
             ...ActionMethods(this),
             // $FlowFixMe
             ...ModifyMethods(this)
         });
 
-        addMethods({
+        // methods
+        this._methods = {
+            // $FlowFixMe
+            ...ParcelGetMethods(this),
             // $FlowFixMe
             ...ParcelChangeMethods(this, this.dispatch),
+            // $FlowFixMe
+            ...ParentGetMethods(this)
+        };
+
+        addMethods({
             // $FlowFixMe
             ...ParentChangeMethods(this, this.dispatch),
             // $FlowFixMe
@@ -255,6 +236,19 @@ export default class Parcel {
             ? parcel._applyModifiers()
             : parcel;
     };
+
+    //
+    // advanced users only - TODO move to advanced methods!
+    //
+
+    getInternalLocationShareData = (): Object => {
+        return this._treeshare.locationShare.get(this.path);
+    }
+
+    setInternalLocationShareData = (partialData: Object) => {
+        Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
+        this._treeshare.locationShare.set(this.path, partialData);
+    }
 
     //
     // getters
@@ -320,4 +314,32 @@ export default class Parcel {
     set path(value: *) {
         ReadOnlyError();
     }
+
+    // Spread methods
+    spread = (): * => this._methods.spread();
+    spreadDOM = (): * => this._methods.spreadDOM();
+
+    // Composition methods
+    pipe = (...updaters: Function[]): Parcel => this._methods.pipe(...updaters);
+
+    // Status methods
+    hasDispatched = (): boolean => this._methods.hasDispatched();
+
+    // Change Methods
+    setSelf = (value: *) => this._methods.setSelf(value);
+    updateSelf = (updater: Function) => this._methods.updateSelf(updater);
+    onChange = (value: *) => this._methods.onChange(value);
+    onChangeDOM = (event: *) => this._methods.onChangeDOM(event);
+    setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
+    updateMeta = (updater: ParcelMetaUpdater) => this._methods.updateMeta(updater);
+    setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
+    ping = () => this._methods.ping();
+
+    // Parent get Methods
+    has = (key: Key|Index): boolean => this._methods.has(key);
+    get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
+    getIn = (keyPath: Array<Key|Index>, notFoundValue: ?* = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);
+    toObject = (mapper: ParcelMapper = _ => _): { [key: string]: * } => this._methods.toObject(mapper);
+    toArray = (mapper: ParcelMapper = _ => _): Array<*> => this._methods.toArray(mapper);
+    size = (): number => this._methods.size();
 }

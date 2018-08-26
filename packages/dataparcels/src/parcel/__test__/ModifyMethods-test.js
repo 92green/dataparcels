@@ -2,31 +2,6 @@
 import Parcel from '../Parcel';
 import type ChangeRequest from '../../change/ChangeRequest';
 
-test('Parcel.pipe() should return the result of pipe\'s updaters', () => {
-    var data = {
-        value: 123,
-    };
-
-    let parcel = new Parcel(data);
-    let modifiedParcel = null;
-
-    let modified = parcel.pipe(
-        ii => {
-            expect(ii).toBe(parcel);
-            modifiedParcel = ii.modifyValue(ii => ii + 100);
-            return modifiedParcel;
-        },
-        ii => {
-            expect(ii).toBe(modifiedParcel);
-            modifiedParcel = ii.modifyValue(ii => ii + 100);
-            return modifiedParcel;
-        }
-    );
-
-    expect(modifiedParcel).toBe(modified);
-    expect(323).toBe(modifiedParcel && modifiedParcel.value);
-});
-
 test('Parcel.modifyValue() should return a new parcel with updated parcelData', () => {
     expect.assertions(2);
     var data = {

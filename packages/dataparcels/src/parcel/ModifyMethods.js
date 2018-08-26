@@ -7,7 +7,6 @@ import type ChangeRequest from '../change/ChangeRequest';
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
-import map from 'unmutable/lib/map';
 import merge from 'unmutable/lib/merge';
 import set from 'unmutable/lib/set';
 import setIn from 'unmutable/lib/setIn';
@@ -24,20 +23,6 @@ export default (_this: Parcel): Object => ({
     },
 
     // modify methods
-    pipe: (...updaters: Function[]): Parcel => {
-        Types(`pipe() expects all params to be`, `functionArray`)(updaters);
-        return pipeWith(
-            _this,
-            ...pipeWith(
-                updaters,
-                map(updater => pipe(
-                    updater,
-                    Types(`pipe() expects the result of all functions to be`, `parcel`)
-                ))
-            )
-        );
-    },
-
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
         return pipeWith(
