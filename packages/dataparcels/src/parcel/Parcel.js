@@ -59,7 +59,6 @@ export default class Parcel {
     _modifiers: Modifiers;
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
-    _applyModifiers: Function;
     _dispatchBuffer: ?Function;
     _dispatchBuffer: ?Function;
 
@@ -165,7 +164,7 @@ export default class Parcel {
     // private
     //
 
-    _create: Function = (createParcelConfig: CreateParcelConfigType): Parcel => {
+    _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
             id = this._id,
             parcelData: {
@@ -195,6 +194,10 @@ export default class Parcel {
         return parent
             ? parcel._applyModifiers()
             : parcel;
+    };
+
+    _applyModifiers = (): Parcel => {
+        return this._modifiers.applyTo(this);
     };
 
     //

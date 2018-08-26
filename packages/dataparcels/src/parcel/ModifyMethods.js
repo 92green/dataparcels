@@ -17,11 +17,6 @@ import type Parcel from './Parcel';
 
 export default (_this: Parcel): Object => ({
 
-    // private methods
-    _applyModifiers: (): Parcel => {
-        return _this._modifiers.applyTo(_this);
-    },
-
     // modify methods
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
