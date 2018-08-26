@@ -6,19 +6,22 @@ import type {
     ParcelConfig,
     ParcelConfigInternal,
     CreateParcelConfigType,
-    Key
+    Key,
+    Index
 } from '../types/Types';
 
 import Modifiers from '../modifiers/Modifiers';
 
 import ActionMethods from './ActionMethods';
-import ChildParcelMethods from './ChildParcelMethods';
-import ElementParcelMethods from './ElementParcelMethods';
-import IndexedParcelMethods from './IndexedParcelMethods';
+import ChildChangeMethods from './ChildChangeMethods';
+import ElementChangeMethods from './ElementChangeMethods';
+import IndexedChangeMethods from './IndexedChangeMethods';
 import ModifyMethods from './ModifyMethods';
+import ParcelChangeMethods from './ParcelChangeMethods';
+import ParcelGetMethods from './ParcelGetMethods';
 import ParcelTypes from './ParcelTypes';
-import ParentParcelMethods from './ParentParcelMethods';
-import ValueParcelMethods from './ValueParcelMethods';
+import ParentChangeMethods from './ParentChangeMethods';
+import ParentGetMethods from './ParentGetMethods';
 
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
@@ -50,6 +53,7 @@ export default class Parcel {
     _parcelTypes: ParcelTypes;
     _applyModifiers: Function;
     _dispatchBuffer: ?Function;
+    _dispatchBuffer: ?Function;
     _handleChange: Function;
 
     //
@@ -57,12 +61,12 @@ export default class Parcel {
     //
 
     // Parent get methods
-    has: Function;
-    get: Function;
-    getIn: Function;
-    toObject: Function;
-    toArray: Function;
-    size: Function;
+    has: (key: Key|Index) => boolean;
+    get: (key: Key|Index, notFoundValue: ?*) => Parcel;
+    getIn: (keyPath: Array<Key|Index>, notFoundValue: ?*) => Parcel;
+    toObject: (mapper?: Function) => { [key: string]: Parcel };
+    toArray: (mapper?: Function) => Array<Parcel>;
+    size: () => number;
 
     // Spread methods
     spread: Function;
@@ -126,7 +130,7 @@ export default class Parcel {
     isParent: Function;
     isTopLevel: Function;
 
-    // -Status methods
+    // Status methods
     hasDispatched: Function;
 
     // Location share data methods
@@ -193,19 +197,26 @@ export default class Parcel {
         let addMethods = map((fn, name) => this[name] = fn);
         addMethods({
             // $FlowFixMe
+            ...ParcelGetMethods(this),
+            // $FlowFixMe
+            ...ParentGetMethods(this),
+            // $FlowFixMe
             ...ActionMethods(this),
             // $FlowFixMe
-            ...ChildParcelMethods(this),
+            ...ModifyMethods(this)
+        });
+
+        addMethods({
             // $FlowFixMe
-            ...ElementParcelMethods(this),
+            ...ParcelChangeMethods(this, this.dispatch),
             // $FlowFixMe
-            ...IndexedParcelMethods(this),
+            ...ParentChangeMethods(this, this.dispatch),
             // $FlowFixMe
-            ...ModifyMethods(this),
+            ...IndexedChangeMethods(this, this.dispatch),
             // $FlowFixMe
-            ...ParentParcelMethods(this),
+            ...ChildChangeMethods(this, this.dispatch),
             // $FlowFixMe
-            ...ValueParcelMethods(this)
+            ...ElementChangeMethods(this, this.dispatch)
         });
     }
 

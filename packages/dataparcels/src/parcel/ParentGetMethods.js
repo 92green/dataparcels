@@ -15,8 +15,6 @@ import toArray from 'unmutable/lib/toArray';
 
 export default MethodCreator("Parent", (_this: Parcel): Object => ({
 
-    // get methods
-
     has: (key: Key|Index): boolean => {
         Types(`has() expects param "key" to be`, `keyIndex`)(key);
         return parcelHas(key)(_this._parcelData);
@@ -48,7 +46,7 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
         return parcel;
     },
 
-    toObject: (mapper: Function = ii => ii): Object => {
+    toObject: (mapper: Function = ii => ii): { [key: string]: Parcel } => {
         Types(`toObject() expects param "mapper" to be`, `function`)(mapper);
         let obj = {};
 
@@ -61,34 +59,10 @@ export default MethodCreator("Parent", (_this: Parcel): Object => ({
         return obj;
     },
 
-    toArray: (mapper: Function = ii => ii): Array<*> => {
+    toArray: (mapper: Function = ii => ii): Array<Parcel> => {
         Types(`toArray() expects param "mapper" to be`, `function`)(mapper);
         return toArray()(_this.toObject(mapper));
     },
 
-    size: () => size()(_this.value),
-
-    // change methods
-
-    set: (key: Key|Index, value: *) => {
-        Types(`set() expects param "key" to be`, `keyIndex`)(key);
-        _this.get(key).setSelf(value);
-    },
-
-    update: (key: Key|Index, updater: Function) => {
-        Types(`update() expects param "key" to be`, `keyIndex`)(key);
-        Types(`update() expects param "updater" to be`, `function`)(updater);
-        _this.get(key).updateSelf(updater);
-    },
-
-    setIn: (keyPath: Array<Key|Index>, value: *) => {
-        Types(`setIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
-        _this.getIn(keyPath).setSelf(value);
-    },
-
-    updateIn: (keyPath: Array<Key|Index>, updater: Function) => {
-        Types(`updateIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
-        Types(`update() expects param "updater" to be`, `function`)(updater);
-        _this.getIn(keyPath).updateSelf(updater);
-    }
+    size: (): number => size()(_this.value)
 }));

@@ -6,32 +6,10 @@ import ActionCreators from '../change/ActionCreators';
 
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (_this: Parcel): Object => ({
-
-    // get methods
-
-    spread: (): Object => ({
-        value: _this.value,
-        onChange: _this.onChange
-    }),
-
-    spreadDOM: (): Object => ({
-        value: _this.value,
-        onChange: _this.onChangeDOM
-    }),
-
-    hasDispatched: (): boolean => {
-        return _this._treeshare.dispatch.hasPathDispatched(_this.path);
-    },
-
-    getInternalLocationShareData: (): Object => {
-        return _this._treeshare.locationShare.get(_this.path);
-    },
-
-    // change methods
+export default (_this: Parcel, dispatch: Function): Object => ({
 
     setSelf: (value: *) => {
-        _this.dispatch(ActionCreators.setSelf(value));
+        dispatch(ActionCreators.setSelf(value));
     },
 
     updateSelf: (updater: Function) => {
@@ -50,7 +28,7 @@ export default (_this: Parcel): Object => ({
 
     setMeta: (partialMeta: Object) => {
         Types(`setMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
-        _this.dispatch(ActionCreators.setMeta(partialMeta));
+        dispatch(ActionCreators.setMeta(partialMeta));
     },
 
     updateMeta: (updater: Function) => {
@@ -66,17 +44,10 @@ export default (_this: Parcel): Object => ({
 
     setChangeRequestMeta: (partialMeta: Object) => {
         Types(`setChangeRequestMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
-        _this.dispatch(new ChangeRequest().setChangeRequestMeta(partialMeta));
+        dispatch(new ChangeRequest().setChangeRequestMeta(partialMeta));
     },
 
     ping: () => {
-        _this.dispatch(ActionCreators.ping());
-    },
-
-    // mutation methods
-
-    setInternalLocationShareData: (partialData: Object) => {
-        Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
-        _this._treeshare.locationShare.set(_this.path, partialData);
+        dispatch(ActionCreators.ping());
     }
 });

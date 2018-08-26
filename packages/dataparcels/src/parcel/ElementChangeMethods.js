@@ -6,27 +6,27 @@ import type Parcel from './Parcel';
 import MethodCreator from './MethodCreator';
 import ActionCreators from '../change/ActionCreators';
 
-export default MethodCreator("Element", (_this: Parcel): Object => ({
+export default MethodCreator("Element", (_this: Parcel, dispatch: Function): Object => ({
     // change methods
 
     insertAfterSelf: (value: *) => {
-        _this.dispatch(ActionCreators.insertAfterSelf(value));
+        dispatch(ActionCreators.insertAfterSelf(value));
     },
 
     insertBeforeSelf: (value: *) => {
-        _this.dispatch(ActionCreators.insertBeforeSelf(value));
+        dispatch(ActionCreators.insertBeforeSelf(value));
     },
 
     swapNextWithSelf: () => {
-        _this.dispatch(ActionCreators.swapNextWithSelf());
+        dispatch(ActionCreators.swapNextWithSelf());
     },
 
     swapPrevWithSelf: () => {
-        _this.dispatch(ActionCreators.swapPrevWithSelf());
+        dispatch(ActionCreators.swapPrevWithSelf());
     },
 
     swapWithSelf: (key: Key|Index) => {
         Types(`swapWithSelf() expects param "key" to be`, `keyIndex`)(key);
-        _this.dispatch(ActionCreators.swapWithSelf(key));
+        dispatch(ActionCreators.swapWithSelf(key));
     }
 }));
