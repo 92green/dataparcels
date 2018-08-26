@@ -1,24 +1,26 @@
 // @flow
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
-import type {
-    ParcelData,
-    ParcelConfig,
-    ParcelConfigInternal,
-    ParcelMapper,
-    ParcelMeta,
-    ParcelMetaUpdater,
-    CreateParcelConfigType,
-    Key,
-    Index
-} from '../types/Types';
+
+import type Action from '../change/Action';
+import type ChangeRequest from '../change/ChangeRequest';
+import type {CreateParcelConfigType} from '../types/Types';
+import type {Index} from '../types/Types';
+import type {Key} from '../types/Types';
+import type {ParcelBatcher} from '../types/Types';
+import type {ParcelConfigInternal} from '../types/Types';
+import type {ParcelConfig} from '../types/Types';
+import type {ParcelData} from '../types/Types';
+import type {ParcelMapper} from '../types/Types';
+import type {ParcelMetaUpdater} from '../types/Types';
+import type {ParcelMeta} from '../types/Types';
 
 import Modifiers from '../modifiers/Modifiers';
 import ParcelGetMethods from './methods/ParcelGetMethods';
 import ParcelChangeMethods from './methods/ParcelChangeMethods';
+import ActionMethods from './methods/ActionMethods';
 import ParentGetMethods from './methods/ParentGetMethods';
 
-import ActionMethods from './ActionMethods';
 import ChildChangeMethods from './ChildChangeMethods';
 import ElementChangeMethods from './ElementChangeMethods';
 import IndexedChangeMethods from './IndexedChangeMethods';
@@ -58,11 +60,6 @@ export default class Parcel {
     _applyModifiers: Function;
     _dispatchBuffer: ?Function;
     _dispatchBuffer: ?Function;
-    _handleChange: Function;
-
-    // Change methods
-    dispatch: Function;
-    batch: Function;
 
     // Parent change methods
     set: Function;
@@ -317,7 +314,7 @@ export default class Parcel {
     // Status methods
     hasDispatched = (): boolean => this._methods.hasDispatched();
 
-    // Change Methods
+    // Change methods
     setSelf = (value: *) => this._methods.setSelf(value);
     updateSelf = (updater: Function) => this._methods.updateSelf(updater);
     onChange = (value: *) => this._methods.onChange(value);
@@ -325,9 +322,11 @@ export default class Parcel {
     setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
     updateMeta = (updater: ParcelMetaUpdater) => this._methods.updateMeta(updater);
     setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
+    dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
+    batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
     ping = () => this._methods.ping();
 
-    // Parent get Methods
+    // Parent get methods
     has = (key: Key|Index): boolean => this._methods.has(key);
     get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
     getIn = (keyPath: Array<Key|Index>, notFoundValue: ?* = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);

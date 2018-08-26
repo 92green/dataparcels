@@ -1,21 +1,13 @@
 // @flow
-import Types from '../types/Types';
-import type {ParcelData} from '../types/Types';
+import Types from '../../types/Types';
+import type {ParcelData} from '../../types/Types';
+import type {ParcelBatcher} from '../../types/Types';
 
-import type Parcel from './Parcel';
-import type Action from '../change/Action';
-import ChangeRequest from '../change/ChangeRequest';
+import type Parcel from '../Parcel';
+import type Action from '../../change/Action';
+import ChangeRequest from '../../change/ChangeRequest';
 
 export default (_this: Parcel): Object => ({
-    _handleChange: (_onHandleChange: Function, changeRequest: ChangeRequest) => {
-        let parcel: Parcel = _this._create({
-            parcelData: changeRequest
-                ._setBaseParcel(_this)
-                .data
-        });
-
-        _onHandleChange(parcel, changeRequest);
-    },
 
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
         Types(`dispatch() expects param "dispatchable" to be`, `dispatchable`)(dispatchable);
@@ -42,13 +34,19 @@ export default (_this: Parcel): Object => ({
         }
 
         if(_onHandleChange) {
-            _this._handleChange(_onHandleChange, changeRequest);
+            let parcelWithChangedData = _this._create({
+                parcelData: changeRequest
+                    ._setBaseParcel(_this)
+                    .data
+            });
+
+            _onHandleChange(parcelWithChangedData, changeRequest);
             return;
         }
         _onDispatch && _onDispatch(changeRequest);
     },
 
-    batch: (batcher: Function, changeRequest: ?ChangeRequest) => {
+    batch: (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => {
         Types(`batch() expects param "batcher" to be`, `function`)(batcher);
 
         let parcelData: ParcelData = _this._parcelData;
