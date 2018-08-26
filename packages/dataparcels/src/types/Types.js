@@ -118,7 +118,7 @@ const runtimeTypes = {
     }
 };
 
-export default (message: string, type: string) => (value: *): * => {
+export default (message: string, type: string) => (value: any): * => {
     let runtimeType = runtimeTypes[type];
     if(!runtimeType) {
         throw new Error(`Unknown type check`);
