@@ -31,11 +31,8 @@ import ModifyMethods from './methods/ModifyMethods';
 
 import MethodCreator from './MethodCreator';
 import ParcelTypes from './ParcelTypes';
-
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
-
-import map from 'unmutable/lib/map';
 
 const DEFAULT_CONFIG_INTERNAL = {
     onDispatch: undefined,
@@ -61,7 +58,6 @@ export default class Parcel {
     _modifiers: Modifiers;
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
-    _dispatchBuffer: ?Function;
     _dispatchBuffer: ?Function;
 
     // Type methods
@@ -126,29 +122,26 @@ export default class Parcel {
         this.isParent = this._parcelTypes.isParent;
         this.isTopLevel = this._parcelTypes.isTopLevel;
 
-        // $FlowFixMe - I want to use computed properties, go away flow
-        let addMethods = map((fn, name) => this[name] = fn);
-        addMethods({
-            // $FlowFixMe
-            ...ActionMethods(this)
-        });
+        let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
 
         // methods
         this._methods = {
             // $FlowFixMe
             ...ParcelGetMethods(this),
             // $FlowFixMe
-            ...ParcelChangeMethods(this, this.dispatch),
+            ...ParcelChangeMethods(this, dispatch),
+            // $FlowFixMe
+            ...ActionMethods(this),
             // $FlowFixMe
             ...MethodCreator("Parent", ParentGetMethods)(this),
             // $FlowFixMe
-            ...MethodCreator("Parent", ParentChangeMethods)(this, this.dispatch),
+            ...MethodCreator("Parent", ParentChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...MethodCreator("Indexed", IndexedChangeMethods)(this, this.dispatch),
+            ...MethodCreator("Indexed", IndexedChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...MethodCreator("Child", ChildChangeMethods)(this, this.dispatch),
+            ...MethodCreator("Child", ChildChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...MethodCreator("Element", ElementChangeMethods)(this, this.dispatch),
+            ...MethodCreator("Element", ElementChangeMethods)(this, dispatch),
             // $FlowFixMe
             ...ModifyMethods(this)
         };
