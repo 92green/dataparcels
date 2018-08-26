@@ -50,7 +50,7 @@ export default class Parcel {
     // private
     //
 
-    _methods: { [key: string]: Function };
+    _methods: { [key: string]: * };
     _onHandleChange: ?Function;
     _onDispatch: ?Function;
     _parcelData: ParcelData;
@@ -59,13 +59,6 @@ export default class Parcel {
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
     _dispatchBuffer: ?Function;
-
-    // Type methods
-    isChild: Function;
-    isElement: Function;
-    isIndexed: Function;
-    isParent: Function;
-    isTopLevel: Function;
 
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
         Types(`Parcel() expects param "config" to be`, `object`)(config);
@@ -114,13 +107,6 @@ export default class Parcel {
         // treeshare
         this._treeshare = treeshare || new Treeshare({debugRender});
         this._treeshare.registry.set(id.id(), this);
-
-        // parcel type methods
-        this.isChild = this._parcelTypes.isChild;
-        this.isElement = this._parcelTypes.isElement;
-        this.isIndexed = this._parcelTypes.isIndexed;
-        this.isParent = this._parcelTypes.isParent;
-        this.isTopLevel = this._parcelTypes.isTopLevel;
 
         let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
 
@@ -330,4 +316,11 @@ export default class Parcel {
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     addModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addModifier(modifier);
     addDescendantModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addDescendantModifier(modifier);
+
+    // Type methods
+    isChild = (): boolean => this._parcelTypes.isChild();
+    isElement = (): boolean => this._parcelTypes.isElement();
+    isIndexed = (): boolean => this._parcelTypes.isIndexed();
+    isParent = (): boolean => this._parcelTypes.isParent();
+    isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
 }
