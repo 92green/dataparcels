@@ -22,10 +22,10 @@ import ParcelChangeMethods from './methods/ParcelChangeMethods';
 import ActionMethods from './methods/ActionMethods';
 import ParentGetMethods from './methods/ParentGetMethods';
 import ParentChangeMethods from './methods/ParentChangeMethods';
+import IndexedChangeMethods from './methods/IndexedChangeMethods';
+import ChildChangeMethods from './methods/ChildChangeMethods';
 
-import ChildChangeMethods from './ChildChangeMethods';
 import ElementChangeMethods from './ElementChangeMethods';
-import IndexedChangeMethods from './IndexedChangeMethods';
 import ModifyMethods from './ModifyMethods';
 import MethodCreator from './MethodCreator';
 import ParcelTypes from './ParcelTypes';
@@ -62,21 +62,6 @@ export default class Parcel {
     _applyModifiers: Function;
     _dispatchBuffer: ?Function;
     _dispatchBuffer: ?Function;
-
-    // Indexed change methods
-    delete: Function;
-    insertAfter: Function;
-    insertBefore: Function;
-    push: Function;
-    pop: Function;
-    shift: Function;
-    swap: Function;
-    swapNext: Function;
-    swapPrev: Function;
-    unshift: Function;
-
-    // Child change methods
-    deleteSelf: Function;
 
     // Element change methods
     insertAfterSelf: Function;
@@ -173,14 +158,14 @@ export default class Parcel {
             // $FlowFixMe
             ...MethodCreator("Parent", ParentGetMethods)(this),
             // $FlowFixMe
-            ...MethodCreator("Parent", ParentChangeMethods)(this, this.dispatch)
+            ...MethodCreator("Parent", ParentChangeMethods)(this, this.dispatch),
+            // $FlowFixMe
+            ...MethodCreator("Indexed", IndexedChangeMethods)(this, this.dispatch),
+            // $FlowFixMe
+            ...MethodCreator("Child", ChildChangeMethods)(this, this.dispatch)
         };
 
         addMethods({
-            // $FlowFixMe
-            ...IndexedChangeMethods(this, this.dispatch),
-            // $FlowFixMe
-            ...ChildChangeMethods(this, this.dispatch),
             // $FlowFixMe
             ...ElementChangeMethods(this, this.dispatch)
         });
@@ -335,4 +320,19 @@ export default class Parcel {
     update = (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater);
     setIn = (keyPath: Array<Key|Index>, value: *) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
+
+    // Indexed methods
+    delete = (key: Key|Index) => this._methods.delete(key);
+    insertAfter = (key: Key|Index, value: *) => this._methods.insertAfter(key, value);
+    insertBefore = (key: Key|Index, value: *) => this._methods.insertBefore(key, value);
+    push = (value: *) => this._methods.push(value);
+    pop = () => this._methods.pop();
+    shift = () => this._methods.shift();
+    swap = (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB);
+    swapNext = (key: Key|Index) => this._methods.swapNext(key);
+    swapPrev = (key: Key|Index) => this._methods.swapPrev(key);
+    unshift = (value: *) => this._methods.unshift(value);
+
+    // Child methods
+    deleteSelf = () => this._methods.deleteSelf();
 }
