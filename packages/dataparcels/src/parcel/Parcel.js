@@ -61,16 +61,8 @@ export default class Parcel {
     _handleChange: Function;
 
     // Change methods
-    onChange: Function;
-    onChangeDOM: Function;
-    setSelf: Function;
-    updateSelf: Function;
-    setMeta: Function;
-    updateMeta: Function;
-    setChangeRequestMeta: Function;
     dispatch: Function;
     batch: Function;
-    ping: Function;
 
     // Parent change methods
     set: Function;
