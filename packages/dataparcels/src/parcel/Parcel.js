@@ -7,6 +7,8 @@ import type ChangeRequest from '../change/ChangeRequest';
 import type {CreateParcelConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
+import type {ModifierFunction} from '../types/Types';
+import type {ModifierObject} from '../types/Types';
 import type {ParcelBatcher} from '../types/Types';
 import type {ParcelConfigInternal} from '../types/Types';
 import type {ParcelConfig} from '../types/Types';
@@ -25,8 +27,8 @@ import ParentChangeMethods from './methods/ParentChangeMethods';
 import IndexedChangeMethods from './methods/IndexedChangeMethods';
 import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
+import ModifyMethods from './methods/ModifyMethods';
 
-import ModifyMethods from './ModifyMethods';
 import MethodCreator from './MethodCreator';
 import ParcelTypes from './ParcelTypes';
 
@@ -61,14 +63,6 @@ export default class Parcel {
     _parcelTypes: ParcelTypes;
     _dispatchBuffer: ?Function;
     _dispatchBuffer: ?Function;
-
-    // Modify methods
-    modifyValue: Function;
-    modifyChange: Function;
-    modifyChangeValue: Function;
-    initialMeta: Function;
-    addModifier: Function;
-    addDescendantModifier: Function;
 
     // Type methods
     isChild: Function;
@@ -136,9 +130,7 @@ export default class Parcel {
         let addMethods = map((fn, name) => this[name] = fn);
         addMethods({
             // $FlowFixMe
-            ...ActionMethods(this),
-            // $FlowFixMe
-            ...ModifyMethods(this)
+            ...ActionMethods(this)
         });
 
         // methods
@@ -156,7 +148,9 @@ export default class Parcel {
             // $FlowFixMe
             ...MethodCreator("Child", ChildChangeMethods)(this, this.dispatch),
             // $FlowFixMe
-            ...MethodCreator("Element", ElementChangeMethods)(this, this.dispatch)
+            ...MethodCreator("Element", ElementChangeMethods)(this, this.dispatch),
+            // $FlowFixMe
+            ...ModifyMethods(this)
         };
     }
 
@@ -335,4 +329,12 @@ export default class Parcel {
     swapNextWithSelf = () => this._methods.swapNextWithSelf();
     swapPrevWithSelf = () => this._methods.swapPrevWithSelf();
     swapWithSelf = (key: Key|Index) => this._methods.swapWithSelf(key);
+
+    // Modify methods
+    modifyValue = (updater: Function): Parcel => this._methods.modifyValue(updater);
+    modifyChange = (batcher: Function): Parcel => this._methods.modifyChange(batcher);
+    modifyChangeValue = (updater: Function): Parcel => this._methods.modifyChangeValue(updater);
+    initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
+    addModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addModifier(modifier);
+    addDescendantModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addDescendantModifier(modifier);
 }

@@ -1,8 +1,10 @@
 // @flow
-import Types from '../types/Types';
-import type {ModifierFunction, ModifierObject} from '../types/Types';
+import Types from '../../types/Types';
+import type {ModifierFunction} from '../../types/Types';
+import type {ModifierObject} from '../../types/Types';
+import type {ParcelMeta} from '../../types/Types';
 
-import type ChangeRequest from '../change/ChangeRequest';
+import type ChangeRequest from '../../change/ChangeRequest';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
@@ -13,11 +15,10 @@ import setIn from 'unmutable/lib/setIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-import type Parcel from './Parcel';
+import type Parcel from '../Parcel';
 
 export default (_this: Parcel): Object => ({
 
-    // modify methods
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
         return pipeWith(
@@ -64,7 +65,7 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    initialMeta: (initialMeta: Object = {}): Parcel => {
+    initialMeta: (initialMeta: ParcelMeta = {}): Parcel => {
         Types(`initialMeta() expects param "initialMeta" to be`, `object`)(initialMeta);
         let {meta} = _this._parcelData;
 
