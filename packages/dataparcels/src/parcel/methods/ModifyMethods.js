@@ -1,42 +1,23 @@
 // @flow
-import Types from '../types/Types';
-import type {ModifierFunction, ModifierObject} from '../types/Types';
+import Types from '../../types/Types';
+import type {ModifierFunction} from '../../types/Types';
+import type {ModifierObject} from '../../types/Types';
+import type {ParcelMeta} from '../../types/Types';
 
-import type ChangeRequest from '../change/ChangeRequest';
+import type ChangeRequest from '../../change/ChangeRequest';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
-import map from 'unmutable/lib/map';
 import merge from 'unmutable/lib/merge';
 import set from 'unmutable/lib/set';
 import setIn from 'unmutable/lib/setIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-import type Parcel from './Parcel';
+import type Parcel from '../Parcel';
 
 export default (_this: Parcel): Object => ({
-
-    // private methods
-    _applyModifiers: (): Parcel => {
-        return _this._modifiers.applyTo(_this);
-    },
-
-    // modify methods
-    pipe: (...updaters: Function[]): Parcel => {
-        Types(`pipe() expects all params to be`, `functionArray`)(updaters);
-        return pipeWith(
-            _this,
-            ...pipeWith(
-                updaters,
-                map(updater => pipe(
-                    updater,
-                    Types(`pipe() expects the result of all functions to be`, `parcel`)
-                ))
-            )
-        );
-    },
 
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
@@ -84,7 +65,7 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    initialMeta: (initialMeta: Object = {}): Parcel => {
+    initialMeta: (initialMeta: ParcelMeta = {}): Parcel => {
         Types(`initialMeta() expects param "initialMeta" to be`, `object`)(initialMeta);
         let {meta} = _this._parcelData;
 

@@ -12,7 +12,7 @@ export type ParcelData = {
     value?: *,
     child?: *,
     key?: Key,
-    meta?: Object
+    meta?: ParcelMeta
 };
 
 export type ParcelConfig = {
@@ -24,7 +24,7 @@ export type ParcelConfig = {
 export type ParcelConfigInternal = {
     onDispatch?: Function,
     child: *,
-    meta: Object,
+    meta: ParcelMeta,
     id: ParcelId,
     modifiers?: Modifiers,
     parent?: Parcel,
@@ -37,6 +37,13 @@ export type CreateParcelConfigType = {
     parcelData: ParcelData,
     parent?: Parcel
 };
+
+export type ParcelMeta = {[key: string]: *};
+export type ParcelMetaUpdater = (meta: ParcelMeta) => ParcelMeta;
+
+export type ParcelBatcher = (item: Parcel) => void;
+export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
+export type ParcelValueUpdater = (value: *) => *;
 
 export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
 
@@ -118,7 +125,7 @@ const runtimeTypes = {
     }
 };
 
-export default (message: string, type: string) => (value: *): * => {
+export default (message: string, type: string) => (value: any): * => {
     let runtimeType = runtimeTypes[type];
     if(!runtimeType) {
         throw new Error(`Unknown type check`);

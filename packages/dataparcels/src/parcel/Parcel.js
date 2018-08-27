@@ -1,29 +1,38 @@
 // @flow
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
-import type {
-    ParcelData,
-    ParcelConfig,
-    ParcelConfigInternal,
-    CreateParcelConfigType,
-    Key
-} from '../types/Types';
+
+import type Action from '../change/Action';
+import type ChangeRequest from '../change/ChangeRequest';
+import type {CreateParcelConfigType} from '../types/Types';
+import type {Index} from '../types/Types';
+import type {Key} from '../types/Types';
+import type {ModifierFunction} from '../types/Types';
+import type {ModifierObject} from '../types/Types';
+import type {ParcelBatcher} from '../types/Types';
+import type {ParcelConfigInternal} from '../types/Types';
+import type {ParcelConfig} from '../types/Types';
+import type {ParcelData} from '../types/Types';
+import type {ParcelMapper} from '../types/Types';
+import type {ParcelMetaUpdater} from '../types/Types';
+import type {ParcelMeta} from '../types/Types';
+import type {ParcelValueUpdater} from '../types/Types';
 
 import Modifiers from '../modifiers/Modifiers';
+import ParcelGetMethods from './methods/ParcelGetMethods';
+import ParcelChangeMethods from './methods/ParcelChangeMethods';
+import ActionMethods from './methods/ActionMethods';
+import ParentGetMethods from './methods/ParentGetMethods';
+import ParentChangeMethods from './methods/ParentChangeMethods';
+import IndexedChangeMethods from './methods/IndexedChangeMethods';
+import ChildChangeMethods from './methods/ChildChangeMethods';
+import ElementChangeMethods from './methods/ElementChangeMethods';
+import ModifyMethods from './methods/ModifyMethods';
 
-import ActionMethods from './ActionMethods';
-import ChildParcelMethods from './ChildParcelMethods';
-import ElementParcelMethods from './ElementParcelMethods';
-import IndexedParcelMethods from './IndexedParcelMethods';
-import ModifyMethods from './ModifyMethods';
+import MethodCreator from './MethodCreator';
 import ParcelTypes from './ParcelTypes';
-import ParentParcelMethods from './ParentParcelMethods';
-import ValueParcelMethods from './ValueParcelMethods';
-
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
-
-import map from 'unmutable/lib/map';
 
 const DEFAULT_CONFIG_INTERNAL = {
     onDispatch: undefined,
@@ -41,6 +50,7 @@ export default class Parcel {
     // private
     //
 
+    _methods: { [key: string]: * };
     _onHandleChange: ?Function;
     _onDispatch: ?Function;
     _parcelData: ParcelData;
@@ -48,90 +58,7 @@ export default class Parcel {
     _modifiers: Modifiers;
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
-    _applyModifiers: Function;
     _dispatchBuffer: ?Function;
-    _handleChange: Function;
-
-    //
-    // public
-    //
-
-    // Parent get methods
-    has: Function;
-    get: Function;
-    getIn: Function;
-    toObject: Function;
-    toArray: Function;
-    size: Function;
-
-    // Spread methods
-    spread: Function;
-    spreadDOM: Function;
-
-    // Composition methods
-    pipe: Function;
-
-    // Change methods
-    onChange: Function;
-    onChangeDOM: Function;
-    setSelf: Function;
-    updateSelf: Function;
-    setMeta: Function;
-    updateMeta: Function;
-    setChangeRequestMeta: Function;
-    dispatch: Function;
-    batch: Function;
-    ping: Function;
-
-    // Parent change methods
-    set: Function;
-    setIn: Function;
-    update: Function;
-    updateIn: Function;
-
-    // Indexed change methods
-    delete: Function;
-    insertAfter: Function;
-    insertBefore: Function;
-    push: Function;
-    pop: Function;
-    shift: Function;
-    swap: Function;
-    swapNext: Function;
-    swapPrev: Function;
-    unshift: Function;
-
-    // Child change methods
-    deleteSelf: Function;
-
-    // Element change methods
-    insertAfterSelf: Function;
-    insertBeforeSelf: Function;
-    swapWithSelf: Function;
-    swapNextWithSelf: Function;
-    swapPrevWithSelf: Function;
-
-    // Modify methods
-    modifyValue: Function;
-    modifyChange: Function;
-    modifyChangeValue: Function;
-    initialMeta: Function;
-    addModifier: Function;
-    addDescendantModifier: Function;
-
-    // Type methods
-    isChild: Function;
-    isElement: Function;
-    isIndexed: Function;
-    isParent: Function;
-    isTopLevel: Function;
-
-    // -Status methods
-    hasDispatched: Function;
-
-    // Location share data methods
-    getInternalLocationShareData: Function;
-    setInternalLocationShareData: Function;
 
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
         Types(`Parcel() expects param "config" to be`, `object`)(config);
@@ -181,39 +108,36 @@ export default class Parcel {
         this._treeshare = treeshare || new Treeshare({debugRender});
         this._treeshare.registry.set(id.id(), this);
 
-        // parcel type methods
-        this.isChild = this._parcelTypes.isChild;
-        this.isElement = this._parcelTypes.isElement;
-        this.isIndexed = this._parcelTypes.isIndexed;
-        this.isParent = this._parcelTypes.isParent;
-        this.isTopLevel = this._parcelTypes.isTopLevel;
+        let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
 
-        // method creators
-        // $FlowFixMe - I want to use computed properties, go away flow
-        let addMethods = map((fn, name) => this[name] = fn);
-        addMethods({
+        // methods
+        this._methods = {
+            // $FlowFixMe
+            ...ParcelGetMethods(this),
+            // $FlowFixMe
+            ...ParcelChangeMethods(this, dispatch),
             // $FlowFixMe
             ...ActionMethods(this),
             // $FlowFixMe
-            ...ChildParcelMethods(this),
+            ...MethodCreator("Parent", ParentGetMethods)(this),
             // $FlowFixMe
-            ...ElementParcelMethods(this),
+            ...MethodCreator("Parent", ParentChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...IndexedParcelMethods(this),
+            ...MethodCreator("Indexed", IndexedChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...ModifyMethods(this),
+            ...MethodCreator("Child", ChildChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...ParentParcelMethods(this),
+            ...MethodCreator("Element", ElementChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...ValueParcelMethods(this)
-        });
+            ...ModifyMethods(this)
+        };
     }
 
     //
     // private
     //
 
-    _create: Function = (createParcelConfig: CreateParcelConfigType): Parcel => {
+    _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
             id = this._id,
             parcelData: {
@@ -244,6 +168,23 @@ export default class Parcel {
             ? parcel._applyModifiers()
             : parcel;
     };
+
+    _applyModifiers = (): Parcel => {
+        return this._modifiers.applyTo(this);
+    };
+
+    //
+    // advanced users only - TODO move to advanced methods!
+    //
+
+    getInternalLocationShareData = (): Object => {
+        return this._treeshare.locationShare.get(this.path);
+    }
+
+    setInternalLocationShareData = (partialData: Object) => {
+        Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
+        this._treeshare.locationShare.set(this.path, partialData);
+    }
 
     //
     // getters
@@ -309,4 +250,77 @@ export default class Parcel {
     set path(value: *) {
         ReadOnlyError();
     }
+
+    // Spread methods
+    spread = (): * => this._methods.spread();
+    spreadDOM = (): * => this._methods.spreadDOM();
+
+    // Composition methods
+    pipe = (...updaters: Function[]): Parcel => this._methods.pipe(...updaters);
+
+    // Status methods
+    hasDispatched = (): boolean => this._methods.hasDispatched();
+
+    // Change methods
+    setSelf = (value: *) => this._methods.setSelf(value);
+    updateSelf = (updater: Function) => this._methods.updateSelf(updater);
+    onChange = (value: *) => this._methods.onChange(value);
+    onChangeDOM = (event: *) => this._methods.onChangeDOM(event);
+    setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
+    updateMeta = (updater: ParcelMetaUpdater) => this._methods.updateMeta(updater);
+    setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
+    dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
+    batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
+    ping = () => this._methods.ping();
+
+    // Parent get methods
+    has = (key: Key|Index): boolean => this._methods.has(key);
+    get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
+    getIn = (keyPath: Array<Key|Index>, notFoundValue: ?* = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);
+    toObject = (mapper: ParcelMapper = _ => _): { [key: string]: * } => this._methods.toObject(mapper);
+    toArray = (mapper: ParcelMapper = _ => _): Array<*> => this._methods.toArray(mapper);
+    size = (): number => this._methods.size();
+
+    // Parent change methods
+    set = (key: Key|Index, value: *) => this._methods.set(key, value);
+    update = (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater);
+    setIn = (keyPath: Array<Key|Index>, value: *) => this._methods.setIn(keyPath, value);
+    updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
+
+    // Indexed methods
+    delete = (key: Key|Index) => this._methods.delete(key);
+    insertAfter = (key: Key|Index, value: *) => this._methods.insertAfter(key, value);
+    insertBefore = (key: Key|Index, value: *) => this._methods.insertBefore(key, value);
+    push = (value: *) => this._methods.push(value);
+    pop = () => this._methods.pop();
+    shift = () => this._methods.shift();
+    swap = (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB);
+    swapNext = (key: Key|Index) => this._methods.swapNext(key);
+    swapPrev = (key: Key|Index) => this._methods.swapPrev(key);
+    unshift = (value: *) => this._methods.unshift(value);
+
+    // Child methods
+    deleteSelf = () => this._methods.deleteSelf();
+
+    // Element methods
+    insertAfterSelf = (value: *) => this._methods.insertAfterSelf(value);
+    insertBeforeSelf = (value: *) => this._methods.insertBeforeSelf(value);
+    swapNextWithSelf = () => this._methods.swapNextWithSelf();
+    swapPrevWithSelf = () => this._methods.swapPrevWithSelf();
+    swapWithSelf = (key: Key|Index) => this._methods.swapWithSelf(key);
+
+    // Modify methods
+    modifyValue = (updater: Function): Parcel => this._methods.modifyValue(updater);
+    modifyChange = (batcher: Function): Parcel => this._methods.modifyChange(batcher);
+    modifyChangeValue = (updater: Function): Parcel => this._methods.modifyChangeValue(updater);
+    initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
+    addModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addModifier(modifier);
+    addDescendantModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addDescendantModifier(modifier);
+
+    // Type methods
+    isChild = (): boolean => this._parcelTypes.isChild();
+    isElement = (): boolean => this._parcelTypes.isElement();
+    isIndexed = (): boolean => this._parcelTypes.isIndexed();
+    isParent = (): boolean => this._parcelTypes.isParent();
+    isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
 }
