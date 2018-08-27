@@ -58,6 +58,21 @@ export type Key = string;
 export type Index = number;
 export type Property = number|string;
 
+export type ParcelIdData = {
+    id: string[],
+    path: string[],
+    typedPath: string[]
+};
+
+export type ParcelNodeConfig = {
+    parcelData: ParcelData,
+    id: ParcelId
+};
+
+export type ParcelNodeConfigInternal = {
+    changeRequest: ChangeRequest
+};
+
 const runtimeTypes = {
     ['boolean']: {
         name: "a boolean",

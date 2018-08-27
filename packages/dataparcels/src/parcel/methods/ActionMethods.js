@@ -1,10 +1,10 @@
 // @flow
-import Types from '../../types/Types';
+import type Action from '../../change/Action';
+import type Parcel from '../Parcel';
 import type {ParcelData} from '../../types/Types';
 import type {ParcelBatcher} from '../../types/Types';
+import Types from '../../types/Types';
 
-import type Parcel from '../Parcel';
-import type Action from '../../change/Action';
 import ChangeRequest from '../../change/ChangeRequest';
 
 export default (_this: Parcel): Object => ({

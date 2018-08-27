@@ -1,9 +1,11 @@
 // @flow
-import type {Index, Key, ParcelData, ParcelMapper} from '../../types/Types';
-import Types from '../../types/Types';
-
-import type Parcel from '../Parcel';
 import type ChangeRequest from '../../change/ChangeRequest';
+import type {Index} from '../../types/Types';
+import type {Key} from '../../types/Types';
+import type Parcel from '../Parcel';
+import type {ParcelData} from '../../types/Types';
+import type {ParcelMapper} from '../../types/Types';
+import Types from '../../types/Types';
 
 import parcelForEach from '../../parcelData/forEach';
 import parcelGet from '../../parcelData/get';
@@ -45,7 +47,7 @@ export default (_this: Parcel) => ({
         return parcel;
     },
 
-    toObject: (mapper: ParcelMapper): { [key: string]: * } => {
+    toObject: (mapper: ParcelMapper): { [key: string]: Parcel } => {
         Types(`toObject() expects param "mapper" to be`, `function`)(mapper);
         let obj = {};
 
@@ -58,7 +60,7 @@ export default (_this: Parcel) => ({
         return obj;
     },
 
-    toArray: (mapper: ParcelMapper): Array<*> => {
+    toArray: (mapper: ParcelMapper): Array<Parcel> => {
         Types(`toArray() expects param "mapper" to be`, `function`)(mapper);
         return toArray()(_this.toObject(mapper));
     },

@@ -1,7 +1,4 @@
 // @flow
-import Types from '../types/Types';
-import {ReadOnlyError} from '../errors/Errors';
-
 import type Action from '../change/Action';
 import type ChangeRequest from '../change/ChangeRequest';
 import type {CreateParcelConfigType} from '../types/Types';
@@ -18,6 +15,9 @@ import type {ParcelMetaUpdater} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
+import Types from '../types/Types';
+import {ReadOnlyError} from '../errors/Errors';
+
 import Modifiers from '../modifiers/Modifiers';
 import ParcelGetMethods from './methods/ParcelGetMethods';
 import ParcelChangeMethods from './methods/ParcelChangeMethods';
@@ -28,13 +28,14 @@ import IndexedChangeMethods from './methods/IndexedChangeMethods';
 import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
+import AdvancedMethods from './methods/AdvancedMethods';
 
 import MethodCreator from './MethodCreator';
 import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
 
-const DEFAULT_CONFIG_INTERNAL = {
+const DEFAULT_CONFIG_INTERNAL = () => ({
     onDispatch: undefined,
     child: undefined,
     meta: {},
@@ -42,24 +43,9 @@ const DEFAULT_CONFIG_INTERNAL = {
     modifiers: undefined,
     parent: undefined,
     treeshare: undefined
-};
+});
 
 export default class Parcel {
-
-    //
-    // private
-    //
-
-    _methods: { [key: string]: * };
-    _onHandleChange: ?Function;
-    _onDispatch: ?Function;
-    _parcelData: ParcelData;
-    _id: ParcelId;
-    _modifiers: Modifiers;
-    _treeshare: Treeshare;
-    _parcelTypes: ParcelTypes;
-    _dispatchBuffer: ?Function;
-
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
         Types(`Parcel() expects param "config" to be`, `object`)(config);
 
@@ -80,7 +66,7 @@ export default class Parcel {
             modifiers,
             parent,
             treeshare
-        } = _configInternal || DEFAULT_CONFIG_INTERNAL;
+        } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
         this._onHandleChange = handleChange;
         this._onDispatch = onDispatch;
@@ -129,13 +115,25 @@ export default class Parcel {
             // $FlowFixMe
             ...MethodCreator("Element", ElementChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...ModifyMethods(this)
+            ...ModifyMethods(this),
+            // $FlowFixMe
+            ...AdvancedMethods(this)
         };
     }
 
     //
     // private
     //
+
+    _methods: { [key: string]: * };
+    _onHandleChange: ?Function;
+    _onDispatch: ?Function;
+    _parcelData: ParcelData;
+    _id: ParcelId;
+    _modifiers: Modifiers;
+    _treeshare: Treeshare;
+    _parcelTypes: ParcelTypes;
+    _dispatchBuffer: ?Function;
 
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
@@ -172,19 +170,6 @@ export default class Parcel {
     _applyModifiers = (): Parcel => {
         return this._modifiers.applyTo(this);
     };
-
-    //
-    // advanced users only - TODO move to advanced methods!
-    //
-
-    getInternalLocationShareData = (): Object => {
-        return this._treeshare.locationShare.get(this.path);
-    }
-
-    setInternalLocationShareData = (partialData: Object) => {
-        Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
-        this._treeshare.locationShare.set(this.path, partialData);
-    }
 
     //
     // getters
@@ -250,6 +235,10 @@ export default class Parcel {
     set path(value: *) {
         ReadOnlyError();
     }
+
+    //
+    // public methods
+    //
 
     // Spread methods
     spread = (): * => this._methods.spread();
@@ -323,4 +312,9 @@ export default class Parcel {
     isIndexed = (): boolean => this._parcelTypes.isIndexed();
     isParent = (): boolean => this._parcelTypes.isParent();
     isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
+
+    // Advanced methods
+    toParcelNode = (): * => this._methods.toParcelNode();
+    getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
+    setInternalLocationShareData = (partialData: Object): * => this._methods.setInternalLocationShareData(partialData);
 }

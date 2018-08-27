@@ -1,6 +1,6 @@
 // @flow
-import Types from '../../types/Types';
 import type Parcel from '../../parcel/Parcel';
+import Types from '../../types/Types';
 
 import map from 'unmutable/lib/map';
 import pipe from 'unmutable/lib/util/pipe';
