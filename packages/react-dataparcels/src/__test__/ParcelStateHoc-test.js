@@ -86,3 +86,60 @@ test('ParcelStateHoc config should accept a debugRender boolean', () => {
         }
     );
 });
+
+
+
+
+ParcelStateHoc({
+    initialValue: (props) => ({
+        abc: 123,
+        def: 456
+    }),
+    prop: "proppy"
+})
+
+ParcelStateHoc({
+    initialValue: props => props.value,
+    updateValue: true,
+    prop: "proppy"
+})
+
+ParcelStateHoc({
+    initialValue: ({value}) => ({
+        value,
+        cool: false
+    }),
+    updateValue: {
+        "value": ({value}) => ({value})
+    },
+    prop: "proppy"
+})
+
+ParcelStateHoc({
+    initialValue: ({value}) => ({
+        value,
+        cool: false
+    }),
+    updateValue: [
+        {
+            props: ["value"],
+            updater: ({value}) => ({value})
+        }
+    ],
+    prop: "proppy"
+})
+
+/////////////
+
+ParcelStateHoc({
+    initialValue: (props) => props.location.query.foo,
+    updateValue: true,
+    handleChange: (props) => (payload) => props.history.setQuery({foo: payload}),
+    prop: "foo"
+})
+
+ParcelStateHoc({
+    initialValue: (props) => window.localStorage.getItem("???"),
+    handleChange: (props) => (payload) => window.localStorage.setItem("???", payload),
+    prop: "foo"
+})
