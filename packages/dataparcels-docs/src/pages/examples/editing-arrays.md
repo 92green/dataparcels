@@ -2,8 +2,6 @@ import Link from 'gatsby-link';
 import EditingArrays from 'examples/EditingArrays';
 import EditingArraysFlipMove from 'examples/EditingArraysFlipMove';
 
-# Editing Arrays
-
 Dataparcels has a powerful set of methods for manipulating indexed data types, such as arrays. This example demonstrates an editor that allows the user to edit, append to and sort the elements in an array of strings.
 
 <EditingArrays />
@@ -12,6 +10,15 @@ Dataparcels has a powerful set of methods for manipulating indexed data types, s
 import React from 'react';
 import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
+
+const FruitListParcelHoc = ParcelStateHoc({
+    initialValue: (/* props */) => [
+        "Apple",
+        "Banana",
+        "Crumpets"
+    ],
+    prop: "fruitListParcel"
+});
 
 const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
@@ -30,15 +37,6 @@ const FruitListEditor = (props) => {
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
 };
-
-const FruitListParcelHoc = ParcelStateHoc({
-    initialValue: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ],
-    prop: "fruitListParcel"
-});
 
 export default FruitListParcelHoc(FruitListEditor);
 ```

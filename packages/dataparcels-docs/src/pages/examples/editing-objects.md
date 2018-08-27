@@ -17,6 +17,14 @@ This example demonstrates a pretty typical React setup to do that.
 import React from 'react';
 import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
 
+const PersonParcelHoc = ParcelStateHoc({
+    initialValue: (/* props */) => ({
+        firstname: "Robert",
+        lastname: "Clamps"
+    }),
+    prop: "personParcel"
+});
+
 const PersonEditor = (props) => {
     let {personParcel} = props;
     return <div>
@@ -31,14 +39,6 @@ const PersonEditor = (props) => {
         </PureParcel>
     </div>;
 };
-
-const PersonParcelHoc = ParcelStateHoc({
-    initialValue: (/* props */) => ({
-        firstname: "Robert",
-        lastname: "Clamps"
-    }),
-    prop: "personParcel"
-});
 
 export default PersonParcelHoc(PersonEditor);
 

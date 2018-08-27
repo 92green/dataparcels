@@ -3,6 +3,8 @@ import type {Node} from 'react';
 import React from 'react';
 import {Box, Grid, GridItem, NavigationList, NavigationListItem, Text, Typography} from 'dcme-style';
 import Link from 'component/Link';
+import SiteNavigation from 'component/SiteNavigation';
+import PageLayout from 'component/PageLayout';
 
 const renderApi = (api) => api
     .split('\n')
@@ -50,22 +52,18 @@ type Props = {
 
 export default ({name, api, md}: Props) => {
     let Description = md._desc;
-    return <Box>
-        <Grid>
-            <GridItem modifier="9 padding">
-                <Box modifier="marginBottomGiga">
-                    <Typography>
-                        <Description />
-                    </Typography>
-                </Box>
-                {renderDoclets({api, md})}
-            </GridItem>
-            <GridItem modifier="3 padding">
-                <NavigationList>
-                    <NavigationListItem>{name}</NavigationListItem>
-                    {renderApi(api)}
-                </NavigationList>
-            </GridItem>
-        </Grid>
-    </Box>;
+    return <PageLayout
+        content={() => <Box>
+            <Box modifier="marginBottomGiga">
+                <Typography>
+                    <Description />
+                </Typography>
+            </Box>
+            {renderDoclets({api, md})}
+        </Box>}
+        nav={() => <NavigationList>
+            <NavigationListItem>{name}</NavigationListItem>
+            {renderApi(api)}
+        </NavigationList>}
+    />;
 };

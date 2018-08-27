@@ -1,11 +1,9 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
-import {Wrapper, Text, Typography} from 'dcme-style';
 import Markdown from 'pages/examples/editing-arrays.md';
+import Example from 'component/Example';
 
-export default () => <Wrapper modifier="medium">
-    <Typography>
-        <Markdown />
-    </Typography>
-</Wrapper>;
+export default () => <Example
+    name="Editing Arrays"
+    md={Markdown}
+/>;
