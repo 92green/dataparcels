@@ -4,6 +4,7 @@ import type Modifiers from '../modifiers/Modifiers';
 import type Treeshare from '../treeshare/Treeshare';
 
 import Parcel from '../parcel/Parcel';
+import ParcelNode from '../parcelNode/ParcelNode';
 import Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
 import isPlainObject from 'unmutable/lib/util/isPlainObject';
@@ -70,8 +71,18 @@ export type ParcelNodeConfig = {
 };
 
 export type ParcelNodeConfigInternal = {
-    changeRequest: ChangeRequest
+    changeRequest: ChangeRequest,
+    parent?: ParcelNode
 };
+
+export type CreateParcelNodeConfigType = {
+    onDispatch?: Function,
+    id: ParcelId,
+    parcelData: ParcelData,
+    parent?: ParcelNode
+};
+
+export type ParcelNodeMapper = (item: ParcelNode, index: string|number, _this: ParcelNode) => *;
 
 const runtimeTypes = {
     ['boolean']: {

@@ -30,7 +30,7 @@ import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
 import AdvancedMethods from './methods/AdvancedMethods';
 
-import MethodCreator from './MethodCreator';
+import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
@@ -101,19 +101,19 @@ export default class Parcel {
             // $FlowFixMe
             ...ParcelGetMethods(this),
             // $FlowFixMe
-            ...ParcelChangeMethods(this, dispatch),
-            // $FlowFixMe
             ...ActionMethods(this),
             // $FlowFixMe
-            ...MethodCreator("Parent", ParentGetMethods)(this),
+            ...FilterMethods("Parent", ParentGetMethods)(this),
             // $FlowFixMe
-            ...MethodCreator("Parent", ParentChangeMethods)(this, dispatch),
+            ...ParcelChangeMethods(this, dispatch),
             // $FlowFixMe
-            ...MethodCreator("Indexed", IndexedChangeMethods)(this, dispatch),
+            ...FilterMethods("Parent", ParentChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...MethodCreator("Child", ChildChangeMethods)(this, dispatch),
+            ...FilterMethods("Indexed", IndexedChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...MethodCreator("Element", ElementChangeMethods)(this, dispatch),
+            ...FilterMethods("Child", ChildChangeMethods)(this, dispatch),
+            // $FlowFixMe
+            ...FilterMethods("Element", ElementChangeMethods)(this, dispatch),
             // $FlowFixMe
             ...ModifyMethods(this),
             // $FlowFixMe
