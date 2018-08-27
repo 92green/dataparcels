@@ -47,7 +47,7 @@ export default (_this: Parcel) => ({
         return parcel;
     },
 
-    toObject: (mapper: ParcelMapper): { [key: string]: Parcel } => {
+    toObject: (mapper: ParcelMapper): { [key: string]: * } => {
         Types(`toObject() expects param "mapper" to be`, `function`)(mapper);
         let obj = {};
 
@@ -60,7 +60,7 @@ export default (_this: Parcel) => ({
         return obj;
     },
 
-    toArray: (mapper: ParcelMapper): Array<Parcel> => {
+    toArray: (mapper: ParcelMapper): Array<*> => {
         Types(`toArray() expects param "mapper" to be`, `function`)(mapper);
         return toArray()(_this.toObject(mapper));
     },

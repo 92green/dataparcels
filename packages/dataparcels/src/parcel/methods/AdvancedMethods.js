@@ -7,10 +7,21 @@ import ParcelNode from '../../parcelNode/ParcelNode';
 export default (_this: Parcel): Object => ({
 
     toParcelNode: (): ParcelNode => {
-        return new ParcelNode({
-            parcelData: _this._parcelData,
-            id: _this._id
-        });
+        let {
+            value,
+            meta,
+            key,
+            child
+        } = _this._parcelData;
+
+        return new ParcelNode(
+            value,
+            {
+                meta,
+                key,
+                child
+            }
+        );
     },
 
     getInternalLocationShareData: (): Object => {

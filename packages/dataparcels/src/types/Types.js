@@ -71,13 +71,14 @@ export type ParcelNodeConfig = {
 };
 
 export type ParcelNodeConfigInternal = {
-    changeRequest: ChangeRequest,
+    changeRequest?: ChangeRequest,
+    child?: *,
+    key?: Key,
+    meta?: ParcelMeta,
     parent?: ParcelNode
 };
 
 export type CreateParcelNodeConfigType = {
-    onDispatch?: Function,
-    id: ParcelId,
     parcelData: ParcelData,
     parent?: ParcelNode
 };

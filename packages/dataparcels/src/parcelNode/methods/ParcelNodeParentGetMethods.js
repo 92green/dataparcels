@@ -27,7 +27,6 @@ export default (_this: ParcelNode) => ({
 
         return _this._create({
             parcelData: childParcelData,
-            id: _this._id.push(childParcelData.key, _this.isIndexed()),
             parent: _this
         });
     },
@@ -41,7 +40,7 @@ export default (_this: ParcelNode) => ({
         return parcel;
     },
 
-    toObject: (mapper: ParcelNodeMapper): { [key: string]: ParcelNode } => {
+    toObject: (mapper: ParcelNodeMapper): { [key: string]: * } => {
         Types(`toObject() expects param "mapper" to be`, `function`)(mapper);
         let obj = {};
 
@@ -54,7 +53,7 @@ export default (_this: ParcelNode) => ({
         return obj;
     },
 
-    toArray: (mapper: ParcelNodeMapper): Array<ParcelNode> => {
+    toArray: (mapper: ParcelNodeMapper): Array<*> => {
         Types(`toArray() expects param "mapper" to be`, `function`)(mapper);
         return toArray()(_this.toObject(mapper));
     },

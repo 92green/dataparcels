@@ -3,11 +3,9 @@ import type {CreateParcelNodeConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {ParcelData} from '../types/Types';
-import type {ParcelNodeConfig} from '../types/Types';
 import type {ParcelNodeConfigInternal} from '../types/Types';
 import type {ParcelNodeMapper} from '../types/Types';
 
-import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
 
 import ParcelNodeParentGetMethods from './methods/ParcelNodeParentGetMethods';
@@ -15,37 +13,40 @@ import ParcelNodeParentGetMethods from './methods/ParcelNodeParentGetMethods';
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from '../parcel/ParcelTypes';
 import ChangeRequest from '../change/ChangeRequest';
-import ParcelId from '../parcelId/ParcelId';
 
 const DEFAULT_CONFIG_INTERNAL = () => ({
     changeRequest: new ChangeRequest(),
+    key: undefined,
+    meta: {},
     parent: undefined
 });
 
 export default class ParcelNode {
 
-    constructor(config: ParcelNodeConfig, _configInternal: ?ParcelNodeConfigInternal) {
-        Types(`ParcelNode() expects param "config" to be`, `object`)(config);
-
-        let {
-            parcelData,
-            id
-        } = config;
-
+    constructor(value: *, _configInternal: ?ParcelNodeConfigInternal) {
         let {
             changeRequest,
+            meta,
+            key,
             parent
-        } = _configInternal || DEFAULT_CONFIG_INTERNAL();
+        } = {
+            ...DEFAULT_CONFIG_INTERNAL(),
+            ..._configInternal
+        };
 
-        this._parcelData = parcelData;
-        this._id = id;
+
+        this._parcelData = {
+            value,
+            meta,
+            key
+        };
+
         this._changeRequest = changeRequest;
 
         // types
         this._parcelTypes = new ParcelTypes(
-            parcelData.value,
-            parent && parent._parcelTypes,
-            id
+            value,
+            parent && parent._parcelTypes
         );
 
         // methods
@@ -71,24 +72,27 @@ export default class ParcelNode {
 
     _methods: { [key: string]: * };
     _parcelData: ParcelData;
-    _id: ParcelId;
     _changeRequest: ChangeRequest;
     _parcelTypes: ParcelTypes;
 
     _create = (createParcelConfig: CreateParcelNodeConfigType): ParcelNode => {
         let {
-            id = this._id,
-            parcelData,
+            parcelData: {
+                value,
+                meta,
+                key,
+                child
+            },
             parent
         } = createParcelConfig;
 
         return new ParcelNode(
-            {
-                parcelData,
-                id
-            },
+            value,
             {
                 changeRequest: this._changeRequest,
+                meta,
+                key,
+                child,
                 parent
             }
         );
@@ -131,7 +135,7 @@ export default class ParcelNode {
 
     // $FlowFixMe - this doesn't have side effects
     get key(): Key {
-        return this._id.key();
+        return this._parcelData.key;
     }
 
     // $FlowFixMe - this doesn't have side effects
