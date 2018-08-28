@@ -52,8 +52,25 @@ test('ParcelStateHoc changes should be put back into ParcelStateHoc state', () =
     expect(456).toBe(wrapper.update().props().proppy.value);
 });
 
+test('ParcelStateHoc config should accept an onChange function, and call it with the value when changed', () => {
+    expect.assertions(1);
+    let Child = () => <div />;
+    let Hocked = ParcelStateHoc({
+        initialValue: () => 123,
+        onChange: (props) => (value) => props.onChange(value),
+        prop: "proppy"
+    })(Child);
 
-test('ParcelStateHoc config should accept a modify function', () => {
+    let onChange = (value) => {
+        expect(value).toBe(456);
+    };
+
+    let wrapper = shallow(<Hocked onChange={onChange} />);
+    let {proppy} = wrapper.props();
+    proppy.onChange(456);
+});
+
+test('ParcelStateHoc config should accept a pipe function', () => {
     expect.assertions(3);
     CheckHockChildProps(
         ParcelStateHoc({
@@ -87,48 +104,3 @@ test('ParcelStateHoc config should accept a debugRender boolean', () => {
     );
 });
 
-
-
-
-// ParcelStateHoc({
-//     initialValue: (props) => ({
-//         abc: 123,
-//         def: 456
-//     }),
-//     prop: "proppy"
-// })
-
-// ParcelStateHoc({
-//     initialValue: props => props.value,
-//     updateValue: true,
-//     prop: "proppy"
-// })
-
-// ParcelStateHoc({
-//     initialValue: ({value}) => ({
-//         value,
-//         cool: false
-//     }),
-//     updateValue: [
-//         {
-//             props: ["value"],
-//             updater: ({value}) => ({value})
-//         }
-//     ],
-//     prop: "proppy"
-// })
-
-// /////////////
-
-// ParcelStateHoc({
-//     initialValue: (props) => props.location.query.foo,
-//     updateValue: true,
-//     handleChange: (props) => (payload) => props.history.setQuery({foo: payload}),
-//     prop: "foo"
-// })
-
-// ParcelStateHoc({
-//     initialValue: (props) => window.localStorage.getItem("???"),
-//     handleChange: (props) => (payload) => window.localStorage.setItem("???", payload),
-//     prop: "foo"
-// })

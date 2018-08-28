@@ -28,7 +28,7 @@ export default (config: ParcelStateHocConfig): Function => {
 
     let {
         initialValue = (props) => undefined, /* eslint-disable-line no-unused-vars */
-        onChange = (props) => (parcel, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
+        onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         prop,
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         debugRender = false
@@ -59,7 +59,7 @@ export default (config: ParcelStateHocConfig): Function => {
             this.setState({parcel});
             let onChangeWithProps = onChange(this.props);
             Types(`ParcelStateHoc() expects param "config.onChange" to return`, `function`)(onChangeWithProps);
-            onChangeWithProps(parcel, changeRequest);
+            onChangeWithProps(parcel.value, changeRequest);
         };
 
         render(): Node {

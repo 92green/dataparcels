@@ -12,7 +12,7 @@ import {ParcelStateHoc} from 'react-dataparcels';
 
 const WordParcelHoc = ParcelStateHoc({
     initialValue: (props) => props.defaultValue,
-    onChange: (props) => (parcel) => props.onChange(parcel.value),
+    onChange: (props) => (value) => props.onChange(value),
     prop: "wordParcel"
 });
 

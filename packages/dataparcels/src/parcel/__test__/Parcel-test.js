@@ -1,6 +1,5 @@
 // @flow
 import Parcel from '../Parcel';
-import ParcelNode from '../../parcelNode/ParcelNode';
 
 test('Parcels should be able to accept no config', () => {
     let parcel = new Parcel();
