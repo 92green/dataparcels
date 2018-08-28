@@ -1,5 +1,5 @@
 import React from 'react';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelStateHoc} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
 const PersonParcelHoc = ParcelStateHoc({
@@ -22,19 +22,13 @@ const PersonEditor = (props) => {
 
     return <div>
         <label>firstname</label>
-        <PureParcel parcel={firstname}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
-        </PureParcel>
+        <input type="text" value={firstname.value} onChange={firstname.onChange} />
 
         <label>lastname</label>
-        <PureParcel parcel={lastname}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
-        </PureParcel>
+        <input type="text" value={lastname.value} onChange={lastname.onChange} />
 
         <label>postcode</label>
-        <PureParcel parcel={postcode}>
-            {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
-        </PureParcel>
+        <input type="text" value={postcode.value} onChange={postcode.onChange} />
     </div>;
 };
 

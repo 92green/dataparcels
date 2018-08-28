@@ -1,11 +1,14 @@
 import EditingObjects from 'examples/EditingObjects';
 
-Say we want to allow the user to edit the two fields in the following data structure:
+Say we want to allow the user to edit the fields in the following data structure:
 
 ```js
 {
     firstname: "Robert",
-    lastname: "Clamps"
+    lastname: "Clamps",
+    address: {
+        postcode: "1234"
+    }
 }
 ```
 
@@ -20,22 +23,35 @@ import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
 const PersonParcelHoc = ParcelStateHoc({
     initialValue: (/* props */) => ({
         firstname: "Robert",
-        lastname: "Clamps"
+        lastname: "Clamps",
+        address: {
+            postcode: "1234"
+        }
     }),
     prop: "personParcel"
 });
 
 const PersonEditor = (props) => {
     let {personParcel} = props;
+
+    let firstname = personParcel.get('firstname');
+    let lastname = personParcel.get('lastname');
+    let postcode = personParcel.getIn(['address', 'postcode']);
+
     return <div>
         <label>firstname</label>
-        <PureParcel parcel={personParcel.get('firstname')}>
+        <PureParcel parcel={firstname}>
             {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
         </PureParcel>
-        
+
         <label>lastname</label>
-        <PureParcel parcel={personParcel.get('lastname')}>
+        <PureParcel parcel={lastname}>
             {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </PureParcel>
+
+        <label>postcode</label>
+        <PureParcel parcel={postcode}>
+            {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
         </PureParcel>
     </div>;
 };
