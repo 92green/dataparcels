@@ -29,4 +29,7 @@ Beware that most of the examples on these docs assume that React is being used. 
 
 * <Link to="/examples/editing-arrays">Editing Arrays</Link>
 * <Link to="/examples/managing-your-own-parcel-state">Managing Your Own Parcel State</Link>
+* <Link to="/examples/parcelstatehoc-example">ParcelStateHoc - Example</Link>
+* <Link to="/examples/parcelstatehoc-initial-value-from-props">ParcelStateHoc - Getting initialValue from props</Link>
+* <Link to="/examples/parcelstatehoc-onchange">ParcelStateHoc - Using onChange</Link>
 

@@ -14,16 +14,11 @@ type State = {
 type ChildProps = {};
 
 type ValueCreator = (props: Object) => *;
-type PartialValueCreator = {
-    props: string[],
-    updater: (props: Object) => {[key: string]: *}
-};
 
 type ParcelStateHocConfig = {
     debugRender?: boolean,
     initialValue?: ValueCreator,
-    updateValue?: boolean|ValueCreator|PartialValueCreator[],
-    handleChange: (props: Object) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
+    onChange: (props: Object) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     pipe?: (props: Object) => (parcel: Parcel) => Parcel,
     prop: string
 };
@@ -33,16 +28,14 @@ export default (config: ParcelStateHocConfig): Function => {
 
     let {
         initialValue = (props) => undefined, /* eslint-disable-line no-unused-vars */
-        updateValue = false,
-        handleChange = (props) => (parcel, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
+        onChange = (props) => (parcel, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         prop,
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         debugRender = false
     } = config;
 
     Types(`ParcelStateHoc() expects param "config.initialValue" to be`, `function`)(initialValue);
-    //Types(`ParcelStateHoc() expects param "config.updateValue" to be`, [`boolean`, `function`, `partialValueCreatorArray`])(updateValue);
-    Types(`ParcelStateHoc() expects param "config.handleChange" to be`, `function`)(handleChange);
+    Types(`ParcelStateHoc() expects param "config.onChange" to be`, `function`)(onChange);
     Types(`ParcelStateHoc() expects param "config.prop" to be`, `string`)(prop);
     Types(`ParcelStateHoc() expects param "config.pipe" to be`, `function`)(pipe);
     Types(`ParcelStateHoc() expects param "config.debugRender" to be`, `boolean`)(debugRender);
@@ -64,14 +57,10 @@ export default (config: ParcelStateHocConfig): Function => {
 
         handleChange = (parcel, changeRequest) => {
             this.setState({parcel});
-            let handleChangeWithProps = handleChange(this.props);
-            Types(`ParcelStateHoc() expects param "config.handleChange" to return`, `function`)(handleChangeWithProps);
-            handleChangeWithProps(parcel, changeRequest);
+            let onChangeWithProps = onChange(this.props);
+            Types(`ParcelStateHoc() expects param "config.onChange" to return`, `function`)(onChangeWithProps);
+            onChangeWithProps(parcel, changeRequest);
         };
-
-        componentWillReceiveProps(nextProps: Props) {
-            // ???
-        }
 
         render(): Node {
             let {parcel} = this.state;

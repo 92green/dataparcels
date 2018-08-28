@@ -33,8 +33,10 @@ Dataparcels lets you easily build UIs for editing data structures.
 
 ## Examples
 
-
 * <Link to="/examples/editing-objects">Editing Objects</Link>
 * <Link to="/examples/editing-arrays">Editing Arrays</Link>
 * <Link to="/examples/managing-your-own-parcel-state">Managing Your Own Parcel State</Link>
+* <Link to="/examples/parcelstatehoc-example">ParcelStateHoc - Example</Link>
+* <Link to="/examples/parcelstatehoc-initial-value-from-props">ParcelStateHoc - Getting initialValue from props</Link>
+* <Link to="/examples/parcelstatehoc-onchange">ParcelStateHoc - Using onChange</Link>
 

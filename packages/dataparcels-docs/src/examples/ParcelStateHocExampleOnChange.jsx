@@ -3,8 +3,8 @@ import {ParcelStateHoc} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
 const WordParcelHoc = ParcelStateHoc({
-    initialValue: (props) => props.initialWord,
-    handleChange: (props) => (parcel) => props.onChange(parcel.value),
+    initialValue: (props) => props.defaultValue,
+    onChange: (props) => (parcel) => props.onChange(parcel.value),
     prop: "wordParcel"
 });
 
@@ -17,5 +17,5 @@ const WordExample = WordParcelHoc(ExampleHoc(WordEditor));
 
 export default (/* props */) => {
     let onChange = (value) => console.log(value);
-    return <WordExample initialWord="word" onChange={onChange} />;
+    return <WordExample defaultValue="word" onChange={onChange} />;
 };
