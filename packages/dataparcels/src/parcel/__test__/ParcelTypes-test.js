@@ -23,7 +23,7 @@ test('ParcelTypes should correctly identify date', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
 });
 
 test('ParcelTypes should correctly identify object values', () => {
@@ -52,8 +52,7 @@ test('ParcelTypes should correctly identify class instance values', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
-    // TODO - may have to allow unmutable to recognise class instances as ValueObjects for this to change
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
 });
 
 test('ParcelTypes should correctly identify Immutable.js Map values', () => {
