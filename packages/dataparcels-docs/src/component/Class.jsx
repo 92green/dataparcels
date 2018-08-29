@@ -15,7 +15,7 @@ const renderApi = (api) => api
         if(!line) {
             return <br />;
         }
-        return <Link to={`#${line.replace("()","")}`}>{line.replace("()","")}</Link>;
+        return <a className="Link" href={`#${line.replace("()","")}`}>{line.replace("()","")}</a>;
     })
     .map((line, key) => <NavigationListItem key={key}>{line}</NavigationListItem>);
 
