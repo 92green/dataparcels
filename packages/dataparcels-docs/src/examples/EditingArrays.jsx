@@ -1,14 +1,14 @@
 import React from 'react';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
-const FruitListParcelHoc = ParcelStateHoc({
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
     initialValue: (/* props */) => [
         "Apple",
         "Banana",
         "Crumpets"
-    ],
-    prop: "fruitListParcel"
+    ]
 });
 
 const FruitListEditor = (props) => {

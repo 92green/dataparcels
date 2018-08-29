@@ -1,10 +1,10 @@
 import React from 'react';
-import {ParcelStateHoc} from 'react-dataparcels';
+import {ParcelHoc} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
-const WordParcelHoc = ParcelStateHoc({
-    initialValue: (props) => props.initialWord,
-    prop: "wordParcel"
+const WordParcelHoc = ParcelHoc({
+    name: "wordParcel",
+    initialValue: (props) => props.initialWord
 });
 
 const WordEditor = (props) => {

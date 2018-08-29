@@ -8,16 +8,16 @@ Dataparcels has a powerful set of methods for manipulating indexed data types, s
 
 ```js
 import React from 'react';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
-const FruitListParcelHoc = ParcelStateHoc({
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
     initialValue: (/* props */) => [
         "Apple",
         "Banana",
         "Crumpets"
-    ],
-    prop: "fruitListParcel"
+    ]
 });
 
 const FruitListEditor = (props) => {
@@ -59,7 +59,7 @@ Dataparcels automatic keying plays nicely with [react-flip-move](https://github.
 ```js
 import React from 'react';
 import FlipMove from 'react-flip-move';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListEditor = (props) => {
@@ -80,13 +80,13 @@ const FruitListEditor = (props) => {
     </FlipMove>;
 };
 
-const FruitListParcelHoc = ParcelStateHoc({
+const FruitListParcelHoc = ParcelHoc({
     initialValue: (/* props */) => [
         "Apple",
         "Banana",
         "Crumpets"
     ],
-    prop: "fruitListParcel"
+    name: "fruitListParcel"
 });
 
 export default FruitListParcelHoc(ExampleHoc(FruitListEditor));

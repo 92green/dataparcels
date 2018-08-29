@@ -1,16 +1,16 @@
 import React from 'react';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
-const PersonParcelHoc = ParcelStateHoc({
+const PersonParcelHoc = ParcelHoc({
+    name: "personParcel",
     initialValue: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {
             postcode: "1234"
         }
-    }),
-    prop: "personParcel"
+    })
 });
 
 const PersonEditor = (props) => {

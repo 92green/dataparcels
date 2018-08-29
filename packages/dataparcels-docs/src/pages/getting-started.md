@@ -42,17 +42,17 @@ We could do something like this.
 
 ```js
 import React from 'react';
-import {ParcelStateHoc} from 'react-dataparcels';
+import {ParcelHoc} from 'react-dataparcels';
 
-const PersonParcelHoc = ParcelStateHoc({
+const PersonParcelHoc = ParcelHoc({
+    name: "personParcel",
     initialValue: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {
             postcode: "1234"
         }
-    }),
-    prop: "personParcel"
+    })
 });
 
 const PersonEditor = (props) => {
@@ -82,13 +82,13 @@ export default PersonParcelHoc(PersonEditor);
 ### What's going on
 
 * `react-dataparcels` is imported.
-* It stores the data in a `ParcelStateHoc` higher order component, which passes a parcel down as props. The parcel contains the data.
+* It stores the data in a `ParcelHoc` higher order component, which passes a parcel down as props. The parcel contains the data.
 * The `.get()` method is used on the parcel to create smaller parcels containing just `firstname`, `lastname` etc.
 * The `value` and the `onChange` functions aree given to each of the `input` elements.
 
 Notice how changes to each of the fields are merged into the original data structure for you. But we can do better.
 
-## New And Improved™
+## Hello Better World
 
 This is the same example with a few improvements added: better rendering performance, and a reduction of repetitive code.
 
@@ -96,17 +96,17 @@ This is the same example with a few improvements added: better rendering perform
 
 ```js
 import React from 'react';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 
-const PersonParcelHoc = ParcelStateHoc({
+const PersonParcelHoc = ParcelHoc({
+    name: "personParcel",
     initialValue: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {
             postcode: "1234"
         }
-    }),
-    prop: "personParcel"
+    })
 });
 
 const PersonEditor = (props) => {
@@ -133,7 +133,7 @@ export default PersonParcelHoc(PersonEditor);
 
 ```
 
-### What's changed
+### What's better
 
 * It's now using the `PureParcel` React component to make sure that inputs are only re-rendered if their values have changed. This isn't *required*, but it is **very** recommended. Without this, all inputs will re-render any time any data changes.
 * `.spreadDOM()` is used to provide the `value` and `onChange` props to the `input` elements more easily.
@@ -141,13 +141,13 @@ export default PersonParcelHoc(PersonEditor);
 
 ## Docs
 
-For more info see the documentation for <Link to="/api/Parcel">Parcel</Link>, <Link to="/api/ParcelStateHoc">ParcelStateHoc</Link> and <Link to="/api/PureParcel">PureParcel</Link>.
+For more info see the documentation for <Link to="/api/Parcel">Parcel</Link>, <Link to="/api/ParcelHoc">ParcelHoc</Link> and <Link to="/api/PureParcel">PureParcel</Link>.
 
 ## More examples
 
 * <Link to="/examples/editing-arrays">Editing Arrays</Link>
 * <Link to="/examples/managing-your-own-parcel-state">Managing Your Own Parcel State</Link>
-* <Link to="/examples/parcelstatehoc-example">ParcelStateHoc - Example</Link>
-* <Link to="/examples/parcelstatehoc-initial-value-from-props">ParcelStateHoc - Getting initialValue from props</Link>
-* <Link to="/examples/parcelstatehoc-onchange">ParcelStateHoc - Using onChange</Link>
+* <Link to="/examples/parcelhoc-example">ParcelHoc - Example</Link>
+* <Link to="/examples/parcelhoc-initialvalue">ParcelHoc - Getting initialValue from props</Link>
+* <Link to="/examples/parcelhoc-onchange">ParcelHoc - Using onChange</Link>
 

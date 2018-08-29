@@ -1,7 +1,7 @@
 import Link from 'gatsby-link';
 import ManagingOwnParcelState from 'examples/ManagingOwnParcelState';
 
-If you don't want to use the <Link to="/api/ParcelStateHoc">ParcelStateHoc higher order component</Link> and would prefer to manage your Parcel's state yourself, this example deomstrates how.
+If you don't want to use the <Link to="/api/ParcelHoc">ParcelHoc higher order component</Link> and would prefer to manage your Parcel's state yourself, this example deomstrates how.
 
 <ManagingOwnParcelState />
 

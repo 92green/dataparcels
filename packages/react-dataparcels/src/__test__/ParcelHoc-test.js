@@ -1,18 +1,18 @@
 // @flow
 import React from 'react';
 
-import ParcelStateHoc from '../ParcelStateHoc';
+import ParcelHoc from '../ParcelHoc';
 import {CheckHockChildProps} from 'stampy/lib/util/TestHelpers';
 
-test('ParcelStateHoc config should accept an initial value', () => {
+test('ParcelHoc config should accept an initial value', () => {
     expect.assertions(2);
     CheckHockChildProps(
-        ParcelStateHoc({
+        ParcelHoc({
             initialValue: (props) => {
                 expect(123).toBe(props.abc);
                 return 456;
             },
-            prop: "proppy"
+            name: "proppy"
         }),
         {abc: 123},
         (props) => {
@@ -21,16 +21,16 @@ test('ParcelStateHoc config should accept an initial value', () => {
     );
 });
 
-test('ParcelStateHoc must be passed a prop, and throw an error if it isnt', () => {
+test('ParcelHoc must be passed a name, and throw an error if it isnt', () => {
     // $FlowFixMe - intentiaal misuse of types
-    expect(() => ParcelStateHoc({})).toThrow(`ParcelStateHoc() expects param "config.prop" to be a string, but got undefined`);
+    expect(() => ParcelHoc({})).toThrow(`ParcelHoc() expects param "config.name" to be a string, but got undefined`);
 });
 
 
-test('ParcelStateHoc config should default initial value to undefined', () => {
+test('ParcelHoc config should default initial value to undefined', () => {
     CheckHockChildProps(
-        ParcelStateHoc({
-            prop: "proppy"
+        ParcelHoc({
+            name: "proppy"
         }),
         {},
         (props) => {
@@ -39,11 +39,11 @@ test('ParcelStateHoc config should default initial value to undefined', () => {
     );
 });
 
-test('ParcelStateHoc changes should be put back into ParcelStateHoc state', () => {
+test('ParcelHoc changes should be put back into ParcelHoc state', () => {
     let Child = () => <div />;
-    let Hocked = ParcelStateHoc({
+    let Hocked = ParcelHoc({
         initialValue: () => 123,
-        prop: "proppy"
+        name: "proppy"
     })(Child);
 
     let wrapper = shallow(<Hocked />);
@@ -52,13 +52,13 @@ test('ParcelStateHoc changes should be put back into ParcelStateHoc state', () =
     expect(456).toBe(wrapper.update().props().proppy.value);
 });
 
-test('ParcelStateHoc config should accept an onChange function, and call it with the value when changed', () => {
+test('ParcelHoc config should accept an onChange function, and call it with the value when changed', () => {
     expect.assertions(1);
     let Child = () => <div />;
-    let Hocked = ParcelStateHoc({
+    let Hocked = ParcelHoc({
         initialValue: () => 123,
         onChange: (props) => (value) => props.onChange(value),
-        prop: "proppy"
+        name: "proppy"
     })(Child);
 
     let onChange = (value) => {
@@ -70,12 +70,12 @@ test('ParcelStateHoc config should accept an onChange function, and call it with
     proppy.onChange(456);
 });
 
-test('ParcelStateHoc config should accept a pipe function', () => {
+test('ParcelHoc config should accept a pipe function', () => {
     expect.assertions(3);
     CheckHockChildProps(
-        ParcelStateHoc({
+        ParcelHoc({
             initialValue: () => 456,
-            prop: "proppy",
+            name: "proppy",
             pipe: (props) => (parcel) => {
                 expect(456).toBe(parcel.value);
                 expect({}).toEqual(props);
@@ -89,12 +89,12 @@ test('ParcelStateHoc config should accept a pipe function', () => {
     );
 });
 
-test('ParcelStateHoc config should accept a debugRender boolean', () => {
+test('ParcelHoc config should accept a debugRender boolean', () => {
     expect.assertions(1);
     CheckHockChildProps(
-        ParcelStateHoc({
+        ParcelHoc({
             initialValue: () => 456,
-            prop: "proppy",
+            name: "proppy",
             debugRender: true
         }),
         {},
