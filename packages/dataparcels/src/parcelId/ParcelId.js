@@ -1,5 +1,6 @@
 // @flow
 import type {Key} from '../types/Types';
+import type {ParcelIdData} from '../types/Types';
 
 import doIf from 'unmutable/lib/doIf';
 import last from 'unmutable/lib/last';
@@ -11,12 +12,6 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
 export const stringifyPath = (path: string[]): string => path.map(escapeKey).join(".");
-
-type ParcelIdData = {
-    id: string[],
-    path: string[],
-    typedPath: string[]
-};
 
 const DEFAULT_PARCELID_DATA = {
     id: ["^"],

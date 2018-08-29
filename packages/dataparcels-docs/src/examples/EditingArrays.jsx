@@ -1,6 +1,15 @@
 import React from 'react';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
+
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
+    initialValue: (/* props */) => [
+        "Apple",
+        "Banana",
+        "Crumpets"
+    ]
+});
 
 const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
@@ -19,14 +28,5 @@ const FruitListEditor = (props) => {
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
 };
-
-const FruitListParcelHoc = ParcelStateHoc({
-    initialValue: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ],
-    prop: "fruitListParcel"
-});
 
 export default FruitListParcelHoc(ExampleHoc(FruitListEditor));

@@ -1,10 +1,9 @@
 // @flow
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
+import type Parcel from '../Parcel';
 import type {ParcelValueUpdater} from '../../types/Types';
 import Types from '../../types/Types';
-
-import type Parcel from '../Parcel';
 
 export default (_this: Parcel /*, dispatch: Function*/): Object => ({
     set: (key: Key|Index, value: *) => {

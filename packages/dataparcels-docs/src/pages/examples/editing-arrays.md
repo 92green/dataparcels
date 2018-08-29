@@ -2,16 +2,23 @@ import Link from 'gatsby-link';
 import EditingArrays from 'examples/EditingArrays';
 import EditingArraysFlipMove from 'examples/EditingArraysFlipMove';
 
-# Editing Arrays
-
 Dataparcels has a powerful set of methods for manipulating indexed data types, such as arrays. This example demonstrates an editor that allows the user to edit, append to and sort the elements in an array of strings.
 
 <EditingArrays />
 
 ```js
 import React from 'react';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
+
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
+    initialValue: (/* props */) => [
+        "Apple",
+        "Banana",
+        "Crumpets"
+    ]
+});
 
 const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
@@ -30,15 +37,6 @@ const FruitListEditor = (props) => {
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
 };
-
-const FruitListParcelHoc = ParcelStateHoc({
-    initialValue: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ],
-    prop: "fruitListParcel"
-});
 
 export default FruitListParcelHoc(FruitListEditor);
 ```
@@ -61,7 +59,7 @@ Dataparcels automatic keying plays nicely with [react-flip-move](https://github.
 ```js
 import React from 'react';
 import FlipMove from 'react-flip-move';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListEditor = (props) => {
@@ -82,13 +80,13 @@ const FruitListEditor = (props) => {
     </FlipMove>;
 };
 
-const FruitListParcelHoc = ParcelStateHoc({
+const FruitListParcelHoc = ParcelHoc({
     initialValue: (/* props */) => [
         "Apple",
         "Banana",
         "Crumpets"
     ],
-    prop: "fruitListParcel"
+    name: "fruitListParcel"
 });
 
 export default FruitListParcelHoc(ExampleHoc(FruitListEditor));

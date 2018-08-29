@@ -1,10 +1,10 @@
 // @flow
-import Types from '../../types/Types';
+import type ChangeRequest from '../../change/ChangeRequest';
 import type {ModifierFunction} from '../../types/Types';
 import type {ModifierObject} from '../../types/Types';
+import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
-
-import type ChangeRequest from '../../change/ChangeRequest';
+import Types from '../../types/Types';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
@@ -14,8 +14,6 @@ import set from 'unmutable/lib/set';
 import setIn from 'unmutable/lib/setIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
-
-import type Parcel from '../Parcel';
 
 export default (_this: Parcel): Object => ({
 

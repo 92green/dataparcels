@@ -1,7 +1,16 @@
 import React from 'react';
 import FlipMove from 'react-flip-move';
-import {ParcelStateHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, PureParcel} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
+
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
+    initialValue: (/* props */) => [
+        "Apple",
+        "Banana",
+        "Crumpets"
+    ]
+});
 
 const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
@@ -20,14 +29,5 @@ const FruitListEditor = (props) => {
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </FlipMove>;
 };
-
-const FruitListParcelHoc = ParcelStateHoc({
-    initialValue: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ],
-    prop: "fruitListParcel"
-});
 
 export default FruitListParcelHoc(ExampleHoc(FruitListEditor));

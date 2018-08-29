@@ -1,9 +1,10 @@
 // @flow
-import Types from '../../types/Types';
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelMetaUpdater} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
+import Types from '../../types/Types';
+
 import ChangeRequest from '../../change/ChangeRequest';
 import ActionCreators from '../../change/ActionCreators';
 

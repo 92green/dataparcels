@@ -58,6 +58,12 @@ export type Key = string;
 export type Index = number;
 export type Property = number|string;
 
+export type ParcelIdData = {
+    id: string[],
+    path: string[],
+    typedPath: string[]
+};
+
 const runtimeTypes = {
     ['boolean']: {
         name: "a boolean",

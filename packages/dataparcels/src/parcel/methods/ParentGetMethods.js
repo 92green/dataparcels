@@ -1,9 +1,11 @@
 // @flow
-import type {Index, Key, ParcelData, ParcelMapper} from '../../types/Types';
-import Types from '../../types/Types';
-
-import type Parcel from '../Parcel';
 import type ChangeRequest from '../../change/ChangeRequest';
+import type {Index} from '../../types/Types';
+import type {Key} from '../../types/Types';
+import type Parcel from '../Parcel';
+import type {ParcelData} from '../../types/Types';
+import type {ParcelMapper} from '../../types/Types';
+import Types from '../../types/Types';
 
 import parcelForEach from '../../parcelData/forEach';
 import parcelGet from '../../parcelData/get';

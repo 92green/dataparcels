@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import Markdown from 'pages/examples/managing-your-own-parcel-state.md';
+import Markdown from 'pages/examples/parcelhoc-example.md';
 import Example from 'component/Example';
 
 export default () => <Example
-    name="Managing Your Own Parcel State"
+    name="ParcelHoc - Example"
     md={Markdown}
 />;

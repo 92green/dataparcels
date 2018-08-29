@@ -1,12 +1,9 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
-import {Wrapper, Text, Typography} from 'dcme-style';
 import Markdown from 'pages/examples/editing-objects.md';
+import Example from 'component/Example';
 
-export default () => <Wrapper modifier="medium">
-    <Typography>
-        <Text element="h1" modifier="sizeGiga marginGiga">Editing Objects</Text>
-        <Markdown />
-    </Typography>
-</Wrapper>;
+export default () => <Example
+    name="Editing Objects"
+    md={Markdown}
+/>;

@@ -3,6 +3,8 @@ import type {Node} from 'react';
 import React from 'react';
 import {Box, Grid, GridItem, NavigationList, NavigationListItem, Text, Typography} from 'dcme-style';
 import Link from 'component/Link';
+import SiteNavigation from 'component/SiteNavigation';
+import PageLayout from 'component/PageLayout';
 
 const renderApi = (api) => api
     .split('\n')
@@ -13,7 +15,7 @@ const renderApi = (api) => api
         if(!line) {
             return <br />;
         }
-        return <Link to={`#${line.replace("()","")}`}>{line.replace("()","")}</Link>;
+        return <a className="Link" href={`#${line.replace("()","")}`}>{line.replace("()","")}</a>;
     })
     .map((line, key) => <NavigationListItem key={key}>{line}</NavigationListItem>);
 
@@ -50,22 +52,18 @@ type Props = {
 
 export default ({name, api, md}: Props) => {
     let Description = md._desc;
-    return <Box>
-        <Grid>
-            <GridItem modifier="9 padding">
-                <Box modifier="marginBottomGiga">
-                    <Typography>
-                        <Description />
-                    </Typography>
-                </Box>
-                {renderDoclets({api, md})}
-            </GridItem>
-            <GridItem modifier="3 padding">
-                <NavigationList>
-                    <NavigationListItem>{name}</NavigationListItem>
-                    {renderApi(api)}
-                </NavigationList>
-            </GridItem>
-        </Grid>
-    </Box>;
+    return <PageLayout
+        content={() => <Box>
+            <Box modifier="marginBottomGiga">
+                <Typography>
+                    <Description />
+                </Typography>
+            </Box>
+            {renderDoclets({api, md})}
+        </Box>}
+        nav={() => <NavigationList>
+            <NavigationListItem>{name}</NavigationListItem>
+            {renderApi(api)}
+        </NavigationList>}
+    />;
 };

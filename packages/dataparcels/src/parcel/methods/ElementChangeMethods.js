@@ -1,9 +1,9 @@
 // @flow
-import Types from '../../types/Types';
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
-
 import type Parcel from '../Parcel';
+import Types from '../../types/Types';
+
 import ActionCreators from '../../change/ActionCreators';
 
 export default (_this: Parcel, dispatch: Function): Object => ({
