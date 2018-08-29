@@ -40,7 +40,7 @@ export default (Component: ComponentType<*>) => class Example extends Layout<Pro
     data = (): Node => {
         return pipeWith(
             this.props,
-            filter((value, key) => key.substr(-6) === "Parcel"),
+            filter((value, key) => value && key.substr(-6) === "Parcel"),
             map((parcel, key) => <Box key={key}>
                 <Text element="div" modifier="monospace">{key}</Text>
                 <Terminal>{JSON.stringify(parcel.value, null, 4)}</Terminal>

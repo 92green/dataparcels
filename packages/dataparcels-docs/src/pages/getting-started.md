@@ -145,9 +145,15 @@ For more info see the documentation for <Link to="/api/Parcel">Parcel</Link>, <L
 
 ## More examples
 
+### Parcel
+
 * <Link to="/examples/editing-arrays">Editing Arrays</Link>
 * <Link to="/examples/managing-your-own-parcel-state">Managing Your Own Parcel State</Link>
+
+### ParcelHoc
+
 * <Link to="/examples/parcelhoc-example">ParcelHoc - Example</Link>
 * <Link to="/examples/parcelhoc-initialvalue">ParcelHoc - Getting initialValue from props</Link>
 * <Link to="/examples/parcelhoc-onchange">ParcelHoc - Using onChange</Link>
+* <Link to="/examples/parcelhoc-delayuntil">ParcelHoc - Using delayUntil</Link>
 

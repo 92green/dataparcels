@@ -9,66 +9,84 @@ import Types from 'dataparcels/lib/types/Types';
 
 type Props = {};
 type State = {
-    parcel: Parcel
+    parcel?: Parcel
 };
 type ChildProps = {};
 
 type ValueCreator = (props: Object) => *;
 
 type ParcelHocConfig = {
-    debugRender?: boolean,
+    name: string,
     initialValue?: ValueCreator,
-    onChange: (props: Object) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
-    pipe?: (props: Object) => (parcel: Parcel) => Parcel,
-    name: string
+    delayUntil?: (props: Object) => boolean,
+    onChange?: (props: Object) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
+    debugRender?: boolean,
+    pipe?: (props: Object) => (parcel: Parcel) => Parcel
 };
+
+let ConfigParam = (value, name, verb = "be", type = "function") => Types(`ParcelHoc() expects param "config.${name}" to ${verb}`, type)(value);
 
 export default (config: ParcelHocConfig): Function => {
     Types(`ParcelHoc() expects param "config" to be`, `object`)(config);
 
     let {
-        initialValue = (props) => undefined, /* eslint-disable-line no-unused-vars */
-        onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         name,
+        initialValue = (props) => undefined, /* eslint-disable-line no-unused-vars */
+        delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
+        onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         debugRender = false
     } = config;
 
-    Types(`ParcelHoc() expects param "config.initialValue" to be`, `function`)(initialValue);
-    Types(`ParcelHoc() expects param "config.onChange" to be`, `function`)(onChange);
-    Types(`ParcelHoc() expects param "config.name" to be`, `string`)(name);
-    Types(`ParcelHoc() expects param "config.pipe" to be`, `function`)(pipe);
-    Types(`ParcelHoc() expects param "config.debugRender" to be`, `boolean`)(debugRender);
+    ConfigParam(name, "name", "be", "string");
+    ConfigParam(initialValue, "initialValue");
+    ConfigParam(delayUntil, "delayUntil");
+    ConfigParam(onChange, "onChange");
+    ConfigParam(pipe, "pipe");
+    ConfigParam(debugRender, "debugRender", "be", "boolean");
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> { /* eslint-disable-line */
         constructor(props: Props) {
             super(props);
 
-            let parcel = new Parcel({
-                value: initialValue(props),
-                handleChange: this.handleChange,
-                debugRender
-            });
+            let parcel = delayUntil(props)
+                ? this.initialize(props)
+                : undefined;
 
             this.state = {
                 parcel
             };
         }
 
+        componentWillReceiveProps(nextProps: Props) {
+            if(!this.state.parcel && delayUntil(nextProps)) {
+                this.setState({
+                    parcel: this.initialize(nextProps)
+                });
+            }
+        }
+
+        initialize = (props: Props) => new Parcel({
+            value: initialValue(props),
+            handleChange: this.handleChange,
+            debugRender
+        });
+
         handleChange = (parcel, changeRequest) => {
             this.setState({parcel});
             let onChangeWithProps = onChange(this.props);
-            Types(`ParcelHoc() expects param "config.onChange" to return`, `function`)(onChangeWithProps);
+            ConfigParam(onChangeWithProps, "onChange", "return");
             onChangeWithProps(parcel.value, changeRequest);
         };
 
         render(): Node {
             let {parcel} = this.state;
-            if(pipe) {
+
+            if(pipe && parcel) {
                 let pipeWithProps = pipe(this.props);
-                Types(`ParcelHoc() expects param "config.pipe" to return`, `function`)(pipeWithProps);
+                ConfigParam(pipeWithProps, "pipe", "return");
                 parcel = pipeWithProps(parcel);
-                Types(`ParcelHoc() expects param "config.pipe(props)" to return`, `parcel`)(parcel);
+                ConfigParam(parcel, "pipe(props)", "return", "parcel");
             }
 
             let props = {

@@ -16,7 +16,7 @@ test('ParcelHoc config should accept an initial value', () => {
         }),
         {abc: 123},
         (props) => {
-            expect(456).toBe(props.proppy.value);
+            expect(props.proppy.value).toBe(456);
         }
     );
 });
@@ -68,6 +68,21 @@ test('ParcelHoc config should accept an onChange function, and call it with the 
     let wrapper = shallow(<Hocked onChange={onChange} />);
     let {proppy} = wrapper.props();
     proppy.onChange(456);
+});
+
+test('ParcelHoc config should accept an delayUntil function, and pass undefined until this evaluates to true', () => {
+    let Child = () => <div />;
+    let Hocked = ParcelHoc({
+        initialValue: () => 123,
+        delayUntil: (props) => props.go,
+        name: "proppy"
+    })(Child);
+
+    let wrapper = shallow(<Hocked go={false} />);
+    expect(wrapper.props().proppy).toBe(undefined);
+
+    wrapper.setProps({go: true});
+    expect(wrapper.props().proppy.value).toBe(123);
 });
 
 test('ParcelHoc config should accept a pipe function', () => {

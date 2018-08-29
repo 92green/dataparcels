@@ -6,7 +6,7 @@ import ParcelHocOnChange from 'pages/examples/parcelhoc-onchange.md';
 
 # ParcelHoc
 
-ParcelHoc is a higher order component that stores a Parcel in React state, passing the Parcel down as props. It abstracts away most of the binding between a Parcel and the lifecycle methods of a React component.
+ParcelHoc is a higher order component that creates a Parcel on mount, stores it in its own state, and passes the Parcel down as props. It abstracts away most of the binding between a Parcel and the lifecycle methods of a React component.
 
 It is recommended that you <Link to="/examples/editing-objects">use ParcelHoc</Link>, rather than <Link to="/examples/managing-your-own-parcel-state">managing your own Parcel state</Link>.
 
@@ -18,6 +18,7 @@ import {ParcelHoc} from 'react-dataparcels';
 ParcelHoc({
     name: string,
     initialValue?: Function,
+    delayUntil?: Function,
     onChange?: Function,
     pipe?: Function
     // debugging options
@@ -29,6 +30,8 @@ ParcelHoc({
   Sets the name of the prop that will contain the parcel.
 * <Param name="initialValue" optional type="(props: Object) => any" />
   The `initialValue` function will be called once when ParcelHoc mounts. It is passed `props`, and the returned value is used as the initial value of the ParcelHoc's Parcel.
+* <Param name="delayUntil" optional type="(props: Object) => boolean" />
+  You can delay the creation of the parcel by providing an `delayUntil` function. It will be called on mount and at every prop change until the parcel is created. It is passed `props`, and the Parcel will not be created until `true` is returned. A value of `undefined` will be passed down until the Parcel is created. Once the returned value is `true`, the Parcel will be created with the props at that time.
 * <Param name="onChange" optional type="(props: Object) => (parcel: Parcel, changeRequest: ChangeRequest) => void" />
   The `onChange` function is called whenever ParcelHoc changes. It expects to be given a double barrel function. The first function will be passed `props`, and the next is passed the recently-changed Parcel.
 
@@ -49,4 +52,6 @@ ParcelHoc({
 
 * <Link to="/examples/parcelhoc-initialvalue">ParcelHoc - Getting initialValue from props</Link>
 * <Link to="/examples/parcelhoc-onchange">ParcelHoc - Using onChange</Link>
+* <Link to="/examples/parcelhoc-delayuntil">ParcelHoc - Using delayUntil</Link>
+
 
