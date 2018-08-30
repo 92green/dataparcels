@@ -1,23 +1,11 @@
 // @flow
 
 // from http://bideowego.com/base-26-conversion
+// with optimisations
 
-function charRange(start: string, stop: string): string[] {
-    var result = [];
-
-    // get all chars from starting char
-    // to ending char
-    var i = start.charCodeAt(0),
-        last = stop.charCodeAt(0) + 1;
-    for (i; i < last; i++) {
-        result.push(String.fromCharCode(i));
-    }
-
-    return result;
-}
+let alpha = "abcdefghijklmnopqrstuvwxyz".split("");
 
 export function toInt26(str: string): number {
-    var alpha = charRange('a', 'z');
     var result = 0;
 
     // make sure we have a usable string
@@ -51,7 +39,6 @@ export function toInt26(str: string): number {
 }
 
 export function toString26(num: number): string {
-    var alpha = charRange('a', 'z');
     var result = '';
 
     // no letters for 0 or less
