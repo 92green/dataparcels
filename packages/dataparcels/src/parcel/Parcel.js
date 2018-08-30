@@ -134,6 +134,7 @@ export default class Parcel {
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
     _dispatchBuffer: ?Function;
+    _prepareChildKeys: Function;
 
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
