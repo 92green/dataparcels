@@ -5,9 +5,12 @@ import type {
     ParcelData
 } from '../types/Types';
 
+import pipeWith from 'unmutable/lib/util/pipeWith';
+
 import get from './get';
 import has from './has';
 import keyOrIndexToKey from './keyOrIndexToKey';
+import prepareChildKeys from './prepareChildKeys';
 
 export default (keyPath: Array<Key|Index>) => (parcelData: ParcelData): ParcelData => {
     for(let key of keyPath) {
@@ -20,7 +23,11 @@ export default (keyPath: Array<Key|Index>) => (parcelData: ParcelData): ParcelDa
                 child: undefined
             };
         }
-        parcelData = get(key)(parcelData);
+        parcelData = pipeWith(
+            parcelData,
+            prepareChildKeys(),
+            get(key)
+        );
     }
     return parcelData;
 };
