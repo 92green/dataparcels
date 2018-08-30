@@ -17,8 +17,7 @@ test('updateChild() removes child nodes from non-collections', () => {
     };
 
     let expectedData = {
-        value: 123,
-        meta: {}
+        value: 123
     };
 
     expect(expectedData).toEqual(updateChild()(data));
@@ -40,8 +39,7 @@ test('updateChild() adds child nodes for objects if they dont exist', () => {
         child: {
             a: {},
             b: {}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedData).toEqual(updateChild()(data));
@@ -108,8 +106,7 @@ test('updateChild() adds child nodes for arrays if they dont exist', () => {
 
     let expectedData = {
         value: [1,2,3],
-        child: [{}, {}, {}],
-        meta: {}
+        child: [{}, {}, {}]
     };
 
     expect(expectedData).toEqual(updateChild()(data));

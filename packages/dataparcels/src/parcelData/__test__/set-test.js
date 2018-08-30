@@ -18,8 +18,7 @@ test('set should work', () => {
             b: {key:"b"},
             c: {key:"c"},
             d: {key:"d"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(set('d', {value: 4})(parcelData));
@@ -41,8 +40,7 @@ test('set should work with existing child', () => {
             a: {key:"a", child: {z:1}},
             b: {key:"b"},
             c: {key:"c"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(set('a', {value: 4})(parcelData));
@@ -91,8 +89,7 @@ test('set should work when setting a child', () => {
             c: {
                 key:"c"
             }
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(set('a', {value: {d:4}, child: {d:{key: 'd'}} })(parcelData));
@@ -114,8 +111,7 @@ test('set should work with hashKey', () => {
             {key:"#a"},
             {key:"#b"},
             {key:"#c"}
-        ],
-        meta: {}
+        ]
     };
 
     expect(expectedParcelData).toEqual(set('#b', {value: 4})(parcelData));

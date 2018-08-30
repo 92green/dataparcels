@@ -23,8 +23,7 @@ test('updateIn should work', () => {
             b: {key:"b"},
             c: {key:"c"},
             d: {key:"d"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(updateIn(['d'], () => ({value: 4}))(parcelData));
@@ -46,8 +45,7 @@ test('updateIn should work with existing child', () => {
             a: {key:"a", child: {z:1}, meta:{}},
             b: {key:"b"},
             c: {key:"c"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(updateIn(['a'], addThree)(parcelData));
@@ -87,8 +85,7 @@ test('updateIn should work deeply', () => {
             },
             b: {key:"b"},
             c: {key:"c"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(updateIn(['a', 'd'], () => ({value: 4}))(parcelData));
@@ -138,8 +135,7 @@ test('updateIn should work deeply with existing child', () => {
             },
             b: {key:"b"},
             c: {key:"c"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(updateIn(['a', 'd'], addThree)(parcelData));

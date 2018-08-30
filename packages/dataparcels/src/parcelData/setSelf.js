@@ -12,6 +12,6 @@ export default (input: ParcelData) => (parcelData: ParcelData): ParcelData => {
     return pipeWith(
         parcelData,
         has('value')(input) ? set('value', input.value) : identity(),
-        has('meta')(input) ? update('meta', merge(input.meta)) : identity()
+        has('meta')(input) ? update('meta', {}, merge(input.meta)) : identity()
     );
 };

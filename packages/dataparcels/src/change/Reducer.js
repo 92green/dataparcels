@@ -34,7 +34,6 @@ export default function MultiReducer(parcelData: ParcelData, action: Action|Acti
     let reduced: ParcelData = actionArray.reduce(Reducer, parcelData);
     return {
         value: undefined,
-        meta: {},
         ...reduced
     };
 }

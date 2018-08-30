@@ -197,7 +197,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     get meta(): * {
-        let {meta} = this._parcelData;
+        let {meta = {}} = this._parcelData;
         return {...meta};
     }
 
@@ -314,7 +314,6 @@ export default class Parcel {
     isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
 
     // Advanced methods
-    toParcelNode = (): * => this._methods.toParcelNode();
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
     setInternalLocationShareData = (partialData: Object): * => this._methods.setInternalLocationShareData(partialData);
 }

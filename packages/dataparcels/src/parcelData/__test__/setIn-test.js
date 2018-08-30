@@ -18,8 +18,7 @@ test('setIn should work', () => {
             b: {key:"b"},
             c: {key:"c"},
             d: {key:"d"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(setIn(['d'], {value: 4})(parcelData));
@@ -41,8 +40,7 @@ test('setIn should work with existing child', () => {
             a: {key:"a", child: {z:1}},
             b: {key:"b"},
             c: {key:"c"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(setIn(['a'], {value: 4})(parcelData));
@@ -82,8 +80,7 @@ test('setIn should work deeply', () => {
             },
             b: {key:"b"},
             c: {key:"c"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(setIn(['a', 'd'], {value: 4})(parcelData));
@@ -132,8 +129,7 @@ test('setIn should work deeply with existing child', () => {
             },
             b: {key:"b"},
             c: {key:"c"}
-        },
-        meta: {}
+        }
     };
 
     expect(expectedParcelData).toEqual(setIn(['a', 'd'], {value: 4})(parcelData));

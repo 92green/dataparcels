@@ -6,7 +6,6 @@ import Action from '../Action';
 test('Reducer should throw error if action is not provided', () => {
     var data = {
         value: 123,
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -26,7 +25,6 @@ test('Reducer delete action should throw error if keyPath is empty', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -44,7 +42,6 @@ test('Reducer should delete key', () => {
             a: 1,
             b: 2
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -68,7 +65,6 @@ test('Reducer should delete deep key', () => {
             },
             c: 3
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -93,7 +89,6 @@ test('Reducer should delete array index', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -116,7 +111,6 @@ test('Reducer should delete array key', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -143,7 +137,6 @@ test('Reducer insertAfter action should throw error if keyPath is empty', () => 
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -164,7 +157,6 @@ test('Reducer should insertAfter by array index', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -192,7 +184,6 @@ test('Reducer should insertAfter by array key', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -224,7 +215,6 @@ test('Reducer should insertAfter by array index deeply', () => {
                 ]
             }
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -261,7 +251,6 @@ test('Reducer insertBefore action should throw error if keyPath is empty', () =>
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -282,7 +271,6 @@ test('Reducer should insertBefore by array index', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -310,7 +298,6 @@ test('Reducer should insertBefore by array key', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -342,7 +329,6 @@ test('Reducer should insertBefore by array index deeply', () => {
                 ]
             }
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -379,7 +365,6 @@ test('Reducer should ping', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -407,7 +392,6 @@ test('Reducer should pop', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -431,7 +415,6 @@ test('Reducer should pop deeply', () => {
                 2
             ]
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -456,7 +439,6 @@ test('Reducer pop action should throw error if array keys in keyPath are invalid
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -479,7 +461,6 @@ test('Reducer should push', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -510,7 +491,6 @@ test('Reducer should push deeply', () => {
                 ]
             }
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -545,7 +525,6 @@ test('Reducer should set with empty keyPath', () => {
             a: 1,
             b: 2
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -566,7 +545,6 @@ test('Reducer should set by key', () => {
             a: 1,
             b: 2
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -593,7 +571,6 @@ test('Reducer should set by deep key', () => {
                 c: 1
             }
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -622,7 +599,6 @@ test('Reducer should set by array index', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -648,7 +624,6 @@ test('Reducer should set by array key', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -677,7 +652,6 @@ test('Reducer should setMeta with empty keyPath', () => {
             a: 1,
             b: 2
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -732,7 +706,6 @@ test('Reducer should setMeta with keyPath', () => {
             a: 1,
             b: 2
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -774,7 +747,6 @@ test('Reducer should merge setMeta with keyPath', () => {
                 }
             }
         },
-        meta: {},
         key: "^"
     };
     var action = new Action({
@@ -814,7 +786,6 @@ test('Reducer should shift', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -838,7 +809,6 @@ test('Reducer should shift deeply', () => {
                 2
             ]
         },
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -866,7 +836,6 @@ test('Reducer swap action should throw error if keyPath is empty', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -887,7 +856,6 @@ test('Reducer swap action should throw error if payload.swapKey doesnt exist', (
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -907,7 +875,6 @@ test('Reducer should swap by array indexes', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -933,7 +900,6 @@ test('Reducer should swap by array keys', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -963,7 +929,6 @@ test('Reducer swapNext action should throw error if keyPath is empty', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -985,7 +950,6 @@ test('Reducer swapPrev action should throw error if keyPath is empty', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -1007,7 +971,6 @@ test('Reducer should unshift', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -1038,7 +1001,6 @@ test('Reducer should unshift deeply', () => {
                 ]
             }
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -1091,7 +1053,6 @@ test('Reducer should swap deeply', () => {
                 ]
             }
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -1145,7 +1106,6 @@ test('Reducer should push multiple', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -1185,7 +1145,6 @@ test('Reducer should throw error if action is not valid', () => {
             1,
             2
         ],
-        meta: {},
         key: "^",
         child: undefined
     };
@@ -1199,27 +1158,6 @@ test('Reducer should throw error if action is not valid', () => {
 //
 // meta
 //
-
-test('Reducer should set meta if not provided', () => {
-    var data = {
-        value: {
-            a: 1,
-            b: 2
-        },
-        meta: {},
-        key: "^",
-        child: undefined
-    };
-    var action = new Action({
-        type: "set",
-        keyPath: ["b"],
-        payload: {
-            value: 3
-        }
-    });
-
-    expect({}).toEqual(Reducer(data, action).meta);
-});
 
 test('Reducer should pass through meta if provided', () => {
     var meta = {
