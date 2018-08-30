@@ -28,10 +28,10 @@ export default () => (parcelData: ParcelData): ParcelData => {
         set('child', pipeWith(
             value,
             reduce(
-                (red, value, key) => pipeWith(
-                    red,
-                    set(key, child ? get(key, {})(child) : {})
-                ),
+                (red, value, key) => {
+                    red[key] = child ? get(key, {})(child) : {};
+                    return red;
+                },
                 pipeWith(
                     value,
                     shallowToJS(),

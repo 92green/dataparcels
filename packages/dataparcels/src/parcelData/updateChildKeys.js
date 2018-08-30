@@ -4,7 +4,6 @@ import type {ParcelData} from '../types/Types';
 import {toString26, toInt26} from './convert26';
 
 import filter from 'unmutable/lib/filter';
-import get from 'unmutable/lib/get';
 import identity from 'unmutable/lib/identity';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
@@ -44,10 +43,7 @@ export default () => (parcelData: ParcelData): ParcelData => {
     let keys = pipeWith(
         child,
         toArray(),
-        map(pipe(
-            get('key'),
-            toIntKey
-        ))
+        map(({key}) => toIntKey(key))
     );
 
     let highest = pipeWith(
@@ -58,12 +54,10 @@ export default () => (parcelData: ParcelData): ParcelData => {
 
     let updateChild = pipe(
         take(size()(value)),
-        map(
-            update('key', key => isKey(key)
-                ? key
-                : toStringKey(++highest)
-            )
-        )
+        map(({key, ...node}) => ({
+            key: isKey(key) ? key : toStringKey(++highest),
+            ...node
+        }))
     );
 
     return pipeWith(
