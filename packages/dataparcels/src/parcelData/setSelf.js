@@ -1,7 +1,12 @@
 // @flow
 import type {ParcelData} from '../types/Types';
 
-export default (value: *) => ({child, ...rest}: ParcelData): ParcelData => ({ /* eslint-disable-line no-unused-vars */
-    ...rest,
-    value
-});
+import del from 'unmutable/lib/delete';
+
+export default (value: *, keepChild: boolean) => (parcelData: ParcelData): ParcelData => {
+    let result = {
+        ...parcelData,
+        value
+    };
+    return keepChild ? result : del('child')(result);
+};
