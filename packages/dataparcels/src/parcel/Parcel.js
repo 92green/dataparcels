@@ -262,6 +262,7 @@ export default class Parcel {
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
     ping = () => this._methods.ping();
+    dangerouslyReplaceSelf = (value: *) => this._methods.dangerouslyReplaceSelf(value);
 
     // Parent get methods
     has = (key: Key|Index): boolean => this._methods.has(key);

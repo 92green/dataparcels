@@ -58,7 +58,7 @@ export default (_this: Parcel): Object => ({
             pipeWith(
                 changeRequest.data.value,
                 updater,
-                parcel.onChange
+                parcel.dangerouslyReplaceSelf
             );
         });
     },
