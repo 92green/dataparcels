@@ -112,6 +112,35 @@ test('updateChild() adds child nodes for arrays if they dont exist', () => {
     expect(expectedData).toEqual(updateChild()(data));
 });
 
+test('updateChild() adds child nodes for arrays if they partially exist', () => {
+    let data = {
+        value: [1,2,3],
+        child: [{key: "#a"}]
+    };
+
+    let expectedData = {
+        value: [1,2,3],
+        child: [{key: "#a"}, {}, {}]
+    };
+
+    expect(expectedData).toEqual(updateChild()(data));
+});
+
+test('updateChild() adds child nodes for arrays if they partially exist', () => {
+    let data = {
+        value: [1,2,3,undefined,4],
+        child: [{key: "#a"},{key: "#b"},{key: "#c"}]
+    };
+
+    let expectedData = {
+        value: [1,2,3,undefined,4],
+        child: [{key: "#a"},{key: "#b"},{key: "#c"},{},{}]
+    };
+
+    expect(expectedData).toEqual(updateChild()(data));
+});
+
+
 test('updateChild() keeps child nodes for arrays if they exist', () => {
     let data = {
         value: [1,2,3],

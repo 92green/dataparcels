@@ -10,11 +10,59 @@ test('get should work with objects', () => {
         }
     };
     let expectedParcelData = {
-        meta: {},
         value: {
             b: 1
         },
         key: "a"
+    };
+
+    expect(expectedParcelData).toEqual(get('a')(parcelData));
+});
+
+test('get should work with objects with child data', () => {
+    let parcelData = {
+        value: {
+            a: {
+                b: 1
+            }
+        },
+        meta: {
+            abc: 123
+        },
+        child: {
+            a: {
+                key: "a",
+                meta: {
+                    def: 456
+                },
+                child: {
+                    b: {
+                        key: "b",
+                        meta: {
+                            ghi: 789
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    let expectedParcelData = {
+        value: {
+            b: 1
+        },
+        meta: {
+            def: 456
+        },
+        key: "a",
+        child: {
+            b: {
+                key: "b",
+                meta: {
+                    ghi: 789
+                }
+            }
+        }
     };
 
     expect(expectedParcelData).toEqual(get('a')(parcelData));
@@ -29,7 +77,6 @@ test('get should work with objects with hashkey - just to make sure that hashkey
         }
     };
     let expectedParcelData = {
-        meta: {},
         value: {
             b: 1
         },
@@ -57,7 +104,6 @@ test('get should work with arrays that dont have keys yet', () => {
     };
 
     let expectedParcelData = {
-        meta: {},
         value: 'abc',
         key: "#a"
     };
@@ -71,7 +117,6 @@ test('get should work with arrays that dont have keys yet with hashkey', () => {
     };
 
     let expectedParcelData = {
-        meta: {},
         value: 'def',
         key: "#b"
     };
@@ -93,7 +138,6 @@ test('get should work with objects that already have children, and not recreate 
         }
     };
     let expectedParcelData = {
-        meta: {},
         value: {
             b: 1
         },
@@ -112,7 +156,6 @@ test('get should work with non existent keys', () => {
         }
     };
     let expectedParcelData = {
-        meta: {},
         value: undefined,
         key: "z"
     };
@@ -120,7 +163,6 @@ test('get should work with non existent keys', () => {
     expect(expectedParcelData).toEqual(get('z')(parcelData));
 
     let expectedParcelData2 = {
-        meta: {},
         value: "!!!",
         key: "z"
     };

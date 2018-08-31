@@ -53,7 +53,7 @@ export default (_this: Parcel) => ({
 
         return pipeWith(
             _this._parcelData,
-            _this._prepareChildKeys(),
+            _this._methods._prepareChildKeys(),
             parcelHas(key)
         );
     },
@@ -63,7 +63,7 @@ export default (_this: Parcel) => ({
 
         let childParcelData = pipeWith(
             _this._parcelData,
-            _this._prepareChildKeys(),
+            _this._methods._prepareChildKeys(),
             parcelGet(key, notFoundValue)
         );
 

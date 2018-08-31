@@ -1,42 +1,37 @@
 // @flow
-import type {
-    Key,
-    Index,
-    ParcelData,
-    Property
-} from '../types/Types';
+import type {Key} from '../types/Types';
+import type {Index} from '../types/Types';
+import type {ParcelData} from '../types/Types';
+import type {Property} from '../types/Types';
 
-import keyOrIndexToProperty from './keyOrIndexToProperty';
+import prepareChildKeys from './prepareChildKeys';
 import updateChild from './updateChild';
 import updateChildKeys from './updateChildKeys';
+import keyOrIndexToProperty from './keyOrIndexToProperty';
 
-import identity from 'unmutable/lib/identity';
-import has from 'unmutable/lib/has';
-import merge from 'unmutable/lib/merge';
 import set from 'unmutable/lib/set';
-import update from 'unmutable/lib/update';
-import updateIn from 'unmutable/lib/updateIn';
-import pipe from 'unmutable/lib/util/pipe';
+import size from 'unmutable/lib/size';
+import deleteIn from 'unmutable/lib/deleteIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index, input: ParcelData) => (parcelData: ParcelData): ParcelData => {
-    let property: ?Property = keyOrIndexToProperty(key)(parcelData);
+export default (key: Key|Index, newValue: *) => (parcelData: ParcelData): ParcelData => {
+    let parcelDataWithChildKeys = prepareChildKeys()(parcelData);
+    let property: ?Property = keyOrIndexToProperty(key)(parcelDataWithChildKeys);
 
-    if(typeof property === "undefined") {
-        return parcelData;
+    let {value, child, ...rest} = parcelDataWithChildKeys;
+    let result = {
+        ...rest,
+        value: set(property, newValue)(value),
+        child: deleteIn([property, 'child'], {})(child)
+    };
+
+    if(size()(result.value) > size()(value)) {
+        return pipeWith(
+            result,
+            updateChild(),
+            updateChildKeys()
+        );
     }
 
-    return pipeWith(
-        parcelData,
-        has('value')(input) ? update('value', set(property, input.value)) : identity(),
-        updateChild(),
-        updateIn(
-            ['child', property],
-            pipe(
-                input.child ? set('child', input.child) : identity(),
-                has('meta')(input) ? update('meta', {}, merge(input.meta)) : identity()
-            )
-        ),
-        updateChildKeys()
-    );
+    return result;
 };

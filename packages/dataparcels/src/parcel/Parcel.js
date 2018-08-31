@@ -183,7 +183,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set data(value: *) {
-        ReadOnlyError();
+        throw new ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -193,7 +193,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set value(value: *) {
-        ReadOnlyError();
+        throw new ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -204,7 +204,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set meta(value: *) {
-        ReadOnlyError();
+        throw new ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -214,7 +214,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set key(value: *) {
-        ReadOnlyError();
+        throw new ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -224,7 +224,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set id(value: *) {
-        ReadOnlyError();
+        throw new ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -234,7 +234,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set path(value: *) {
-        ReadOnlyError();
+        throw new ReadOnlyError();
     }
 
     //
