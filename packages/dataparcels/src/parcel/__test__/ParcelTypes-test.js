@@ -7,6 +7,7 @@ test('ParcelTypes should correctly identify primitive values', () => {
         value: 123
     };
     expect(new Parcel(data).isParent()).toBe(false);
+    expect(new Parcel(data).isLeaf()).toBe(true);
     expect(new Parcel(data).isIndexed()).toBe(false);
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
@@ -19,6 +20,7 @@ test('ParcelTypes should correctly identify date', () => {
         value: new Date()
     };
     expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isLeaf()).toBe(false);
     expect(new Parcel(data).isIndexed()).toBe(false);
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
@@ -33,6 +35,7 @@ test('ParcelTypes should correctly identify object values', () => {
         }
     };
     expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isLeaf()).toBe(false);
     expect(new Parcel(data).isIndexed()).toBe(false);
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
@@ -48,6 +51,7 @@ test('ParcelTypes should correctly identify class instance values', () => {
         value: new Thing()
     };
     expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isLeaf()).toBe(false);
     expect(new Parcel(data).isIndexed()).toBe(false);
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
@@ -62,6 +66,7 @@ test('ParcelTypes should correctly identify Immutable.js Map values', () => {
         })
     };
     expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isLeaf()).toBe(false);
     expect(new Parcel(data).isIndexed()).toBe(false);
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
@@ -75,6 +80,7 @@ test('ParcelTypes should correctly identify array values', () => {
         value: [1,2,3]
     };
     expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isLeaf()).toBe(false);
     expect(new Parcel(data).isIndexed()).toBe(true);
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
@@ -87,6 +93,7 @@ test('ParcelTypes should correctly identify Immutable.js List values', () => {
         value: List([1,2,3])
     };
     expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isLeaf()).toBe(false);
     expect(new Parcel(data).isIndexed()).toBe(true);
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
@@ -101,6 +108,7 @@ test('ParcelTypes should correctly identify child values', () => {
         }
     };
     expect(new Parcel(data).get("a").isParent()).toBe(false);
+    expect(new Parcel(data).get("a").isLeaf()).toBe(true);
     expect(new Parcel(data).get("a").isIndexed()).toBe(false);
     expect(new Parcel(data).get("a").isChild()).toBe(true);
     expect(new Parcel(data).get("a").isElement()).toBe(false);
@@ -113,6 +121,7 @@ test('ParcelTypes should correctly identify element values', () => {
         value: [1,2,3]
     };
     expect(new Parcel(data).get(0).isParent()).toBe(false);
+    expect(new Parcel(data).get(0).isLeaf()).toBe(true);
     expect(new Parcel(data).get(0).isIndexed()).toBe(false);
     expect(new Parcel(data).get(0).isChild()).toBe(true);
     expect(new Parcel(data).get(0).isElement()).toBe(true);
