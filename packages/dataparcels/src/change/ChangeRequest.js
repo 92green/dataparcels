@@ -1,6 +1,8 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
-import type {Key, Index} from '../types/Types';
+import type {Key} from '../types/Types';
+import type {Index} from '../types/Types';
+import type {ParcelData} from '../types/Types';
 import type Action from './Action';
 
 import {ReadOnlyError} from '../errors/Errors';
@@ -15,6 +17,7 @@ export default class ChangeRequest {
     _meta: * = {};
     _originId: ?string = null;
     _originPath: ?string[] = null;
+    _cachedData: ?ParcelData;
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
@@ -48,6 +51,10 @@ export default class ChangeRequest {
             throw new Error(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
         }
 
+        if(this._cachedData) {
+            return this._cachedData;
+        }
+
         let parcelDataFromRegistry = this
             ._baseParcel
             ._treeshare
@@ -55,7 +62,9 @@ export default class ChangeRequest {
             .get(this._baseParcel._id.id())
             .data;
 
-        return Reducer(parcelDataFromRegistry, this._actions);
+        let data = Reducer(parcelDataFromRegistry, this._actions);
+        this._cachedData = data;
+        return data;
     }
 
     // $FlowFixMe - this doesn't have side effects

@@ -2,6 +2,8 @@
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
 import Parcel from '../../parcel/Parcel';
+import TestTimeExecution from '../../util/__test__/TestTimeExecution-testUtil';
+import range from 'unmutable/lib/util/range';
 
 test('ChangeRequest should build an action', () => {
     let expectedDefaultData = {
@@ -242,4 +244,89 @@ test('ChangeRequest should keep originId and originPath even when going through 
         })
         .get('abc')
         .onChange(456);
+});
+
+test('ChangeRequest should cache its data after its calculated, so subsequent calls are faster', () => {
+
+    let amount = 1000;
+
+    let actions = range(amount).map((num) => new Action({
+        type: "set",
+        keyPath: ["a","b","c","d","e"],
+        payload: {
+            value: num
+        }
+    }));
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                b: {
+                    c: {
+                        d: {
+                            e: 123
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    let changeRequest = new ChangeRequest(actions)._setBaseParcel(parcel);
+    let data;
+
+    let ms = TestTimeExecution(() => {
+        data = changeRequest.data;
+    });
+
+    var expectedData = {
+        value: {
+            a: {
+                b: {
+                    c: {
+                        d: {
+                            e: amount - 1
+                        }
+                    }
+                }
+            }
+        },
+        key: "^",
+        meta: {},
+        child: {
+            a: {
+                key: "a",
+                child: {
+                    b: {
+                        key: "b",
+                        child: {
+                            c: {
+                                key: "c",
+                                child: {
+                                    d: {
+                                        key: "d",
+                                        child: {
+                                            e: {
+                                                key: "e"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    expect(expectedData).toEqual(data);
+
+    let ms2 = TestTimeExecution(() => {
+        data = changeRequest.data;
+    });
+
+    expect(expectedData).toEqual(data);
+
+    expect(ms2).toBeLessThan(ms / 100); // expect amazing performance boosts from having cached
 });

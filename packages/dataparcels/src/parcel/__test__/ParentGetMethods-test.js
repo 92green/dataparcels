@@ -1,5 +1,6 @@
 // @flow
 import Parcel from '../Parcel';
+import TestTimeExecution from '../../util/__test__/TestTimeExecution-testUtil';
 import map from 'unmutable/lib/map';
 import range from 'unmutable/lib/util/range';
 
@@ -189,20 +190,13 @@ test('ParentParcel.get() should cache its parcelData.child after its calculated,
 
     expect(parcel.getInternalLocationShareData()._childCache).toBe(undefined);
 
-    let timeExecution = (fn: Function) => {
-        let start = process.hrtime();
-        fn();
-        let end = process.hrtime(start);
-        return end[0] * 1000 + end[1] / 1000000;
-    };
-
-    let ms = timeExecution(() => {
+    let ms = TestTimeExecution(() => {
         parcel.get(1);
     });
 
     expect(parcel.getInternalLocationShareData()._childCache.length).toBe(count);
 
-    let ms2 = timeExecution(() => {
+    let ms2 = TestTimeExecution(() => {
         parcel.get(1);
     });
 
