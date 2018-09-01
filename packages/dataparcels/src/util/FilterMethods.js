@@ -15,7 +15,7 @@ export default (parcelType: string, methodCreator: Function) => (parcel: Parcel,
     return pipeWith(
         methods,
         map((value, key) => () => {
-            throw new Error(`.${key}() is not a function. Parcel at [${parcel.path.join(', ')}] has a value of "${parcel.value}"`);
+            throw new Error(`.${key}() is not a function. .${key}() only exists on parcels of type "${parcelType}". The parcel at [${parcel.path.join(', ')}] has a value of "${parcel.value}" and is not of type "${parcelType}".`);
         })
     );
 };
