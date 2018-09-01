@@ -34,13 +34,12 @@ export default (_this: Parcel): Object => ({
         }
 
         if(_onHandleChange) {
+            let changeRequestWithBase = changeRequest._setBaseParcel(_this);
             let parcelWithChangedData = _this._create({
-                parcelData: changeRequest
-                    ._setBaseParcel(_this)
-                    .data
+                parcelData: changeRequestWithBase.data
             });
 
-            _onHandleChange(parcelWithChangedData, changeRequest);
+            _onHandleChange(parcelWithChangedData, changeRequestWithBase);
             return;
         }
         _onDispatch && _onDispatch(changeRequest);
