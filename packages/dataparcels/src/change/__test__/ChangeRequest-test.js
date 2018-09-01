@@ -330,3 +330,30 @@ test('ChangeRequest should cache its data after its calculated, so subsequent ca
 
     expect(ms2).toBeLessThan(ms / 100); // expect amazing performance boosts from having cached
 });
+
+test('ChangeRequest data chache should be invalidated after every dispatch', () => {
+    expect.assertions(4);
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                b: 123
+            }
+        }
+    });
+
+    parcel
+        .get('a')
+        .modifyChange((parcel, changeRequest) => {
+            expect(changeRequest.data).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}});
+            expect(changeRequest.data).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
+            parcel.dispatch(changeRequest);
+        })
+        .get('b')
+        .modifyChange((parcel, changeRequest) => {
+            expect(changeRequest.data).toEqual({key: 'b', meta: {}, value: 456});
+            expect(changeRequest.data).toEqual({key: 'b', meta: {}, value: 456}); // get cached
+            parcel.dispatch(changeRequest);
+        })
+        .onChange(456);
+});
