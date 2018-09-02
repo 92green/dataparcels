@@ -7,6 +7,6 @@ module.exports = {
         "!**/node_modules/**",
         "!packages/dataparcels-docs/**"
     ],
-    testMatch: ["**/__test__/**/*.js?(x)"],
+    testMatch: ["**/__test__/**/*-test.js?(x)"],
     testURL: 'http://localhost'
 };
