@@ -1,6 +1,6 @@
 {
   "name": "dataparcels",
-  "version": "0.13.5",
+  "version": "0.14.0",
   "description": "Flexible forms and user input that work really well with React",
   "main": "lib/index.js",
   "license": "UNLICENSED",
