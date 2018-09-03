@@ -314,7 +314,6 @@ export default class Parcel {
     isIndexed = (): boolean => this._parcelTypes.isIndexed();
     isParent = (): boolean => this._parcelTypes.isParent();
     isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
-    isLeaf = (): boolean => this._parcelTypes.isLeaf();
 
     // Advanced methods
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
