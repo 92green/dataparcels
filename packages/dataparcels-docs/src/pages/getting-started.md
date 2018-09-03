@@ -20,7 +20,7 @@ If you'd like to use `dataparcels` *without* React:
 yarn add dataparcels # ...or npm install dataparcels --save
 ```
 
-Beware that most of the examples on these docs assume that React is being used. If you'd like to use `dataparcels` without React it's completely possible to do so; [drop us a line](https://www.github.com/blueflag/dataparcels/issues) if you do as we'd love ot know about your use case.
+Beware that most of the examples on these docs assume that React is being used. If you'd like to use `dataparcels` without React it's completely possible to do so; [drop us a line](https://www.github.com/blueflag/dataparcels/issues) if you do as we'd love to know about your use case.
 
 ## Hello World
 
