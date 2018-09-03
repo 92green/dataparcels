@@ -11,14 +11,19 @@
 @include DcmeCenteredLanding;
 @include DcmeGrid;
 @include DcmeImage;
+@include DcmeInput;
 @include DcmeLink;
 @include DcmeLabel;
-@include DcmeInput;
 @include DcmeMessage;
 @include DcmeNavigationList;
 @include DcmeOrderedList;
 @include DcmeTable;
 @include DcmeTerminal;
-@include DcmeText;
+@include DcmeText {
+    &-superDuper {
+        text-shadow: -6px 6px 0px darken(color('primary'), 20),
+            -12px 12px 0px darken(color('secondary'), 50)
+    }
+}
 @include DcmeTypography;
 @include DcmeWrapper;
