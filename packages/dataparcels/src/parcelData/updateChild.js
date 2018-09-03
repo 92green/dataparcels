@@ -9,7 +9,7 @@ import shallowToJS from 'unmutable/lib/shallowToJS';
 import isValueObject from 'unmutable/lib/util/isValueObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default () => (parcelData: ParcelData): ParcelData => {
+export default () => (parcelData: ParcelData): * => {
     let {value, child} = parcelData;
 
     if(!isValueObject(value)) {
