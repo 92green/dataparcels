@@ -21,8 +21,8 @@
 @include DcmeTerminal;
 @include DcmeText {
     &-superDuper {
-        text-shadow: -6px 6px 0px darken(color('primary'), 20),
-            -12px 12px 0px darken(color('secondary'), 50)
+        text-shadow: -6px 6px 0px darken(color('primary'), 15),
+            -12px 12px 0px darken(color('secondary'), 47)
     }
 }
 @include DcmeTypography;

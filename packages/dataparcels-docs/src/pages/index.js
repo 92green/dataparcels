@@ -13,7 +13,10 @@ export default () => <Box>
                     <CenteredLanding
                         modifier="heightHalf"
                         top={() => <Text element="h1" modifier="sizeTera superDuper">dataparcels</Text>}
-                        bottom={() => <Text element="p" modifier="monospace">A library for editing data structures that works really well with React.</Text>}
+                        bottom={() => <Box>
+                            <Text element="p" modifier="monospace margin">A library for editing data structures that works really well with React.</Text>
+                            <Text element="p" modifier="monospace"><a className="Link" href="https://github.com/blueflag/dataparcels">github</a> | <a className="Link" href="https://www.npmjs.com/package/dataparcels">npm</a></Text>
+                        </Box>}
                     />
                 </GridItem>
                 <GridItem modifier="4" />
