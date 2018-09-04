@@ -35,14 +35,26 @@ path
 spread()
 spreadDOM()
 
-# Composition methods
-pipe()
+# Branch methods
+get()
+getIn()
+toObject()
+toArray()
+
+# Parent methods
+has()
+size()
 
 # Change methods
 onChange()
 onChangeDOM()
-setSelf()
-updateSelf()
+set()
+setIn()
+update()
+updateIn()
+delete()
+
+# Advanced change methods
 setMeta()
 updateMeta()
 setChangeRequestMeta()
@@ -50,22 +62,7 @@ dispatch()
 batch()
 ping()
 
-# Parent get methods
-get()
-getIn()
-toObject()
-toArray()
-has()
-size()
-
-# Parent change methods
-set()
-setIn()
-update()
-updateIn()
-
-# Indexed change methods
-delete()
+# Indexed & element change methods
 insertAfter()
 insertBefore()
 push()
@@ -75,16 +72,6 @@ swap()
 swapNext()
 swapPrev()
 unshift()
-
-# Child change methods
-deleteSelf()
-
-# Element change methods
-insertAfterSelf()
-insertBeforeSelf()
-swapWithSelf()
-swapNextWithSelf()
-swapPrevWithSelf()
 
 # Modify methods
 modifyValue()
@@ -103,6 +90,9 @@ isTopLevel()
 
 # Status methods
 hasDispatched()
+
+# Composition methods
+pipe()
 
 `;
 

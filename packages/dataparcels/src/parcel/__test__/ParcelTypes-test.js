@@ -136,8 +136,8 @@ test('Correct methods are created for primitive values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).toThrowError(`.has() is not a function.`);
     expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function.`);
-    expect(() => new Parcel(data).deleteSelf()).toThrowError(`.deleteSelf() is not a function.`);
-    expect(() => new Parcel(data).swapNextWithSelf()).toThrowError(`.swapNextWithSelf() is not a function.`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
 });
 
 test('Correct methods are created for object values', () => {
@@ -147,8 +147,8 @@ test('Correct methods are created for object values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function.`);
-    expect(() => new Parcel(data).deleteSelf()).toThrowError(`.deleteSelf() is not a function.`);
-    expect(() => new Parcel(data).swapNextWithSelf()).toThrowError(`.swapNextWithSelf() is not a function.`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
 });
 
 test('Correct methods are created for array values', () => {
@@ -158,8 +158,8 @@ test('Correct methods are created for array values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).not.toThrow();
-    expect(() => new Parcel(data).deleteSelf()).toThrowError(`.deleteSelf() is not a function.`);
-    expect(() => new Parcel(data).swapNextWithSelf()).toThrowError(`.swapNextWithSelf() is not a function.`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
 });
 
 test('Correct methods are created for object child values', () => {
@@ -169,8 +169,8 @@ test('Correct methods are created for object child values', () => {
     expect(() => new Parcel(data).get("a").value).not.toThrow();
     expect(() => new Parcel(data).get("a").has('a')).toThrowError(`.has() is not a function.`);
     expect(() => new Parcel(data).get("a").pop()).toThrowError(`.pop() is not a function.`);
-    expect(() => new Parcel(data).get("a").deleteSelf()).not.toThrow();
-    expect(() => new Parcel(data).get("a").swapNextWithSelf()).toThrowError(`.swapNextWithSelf() is not a function.`);
+    expect(() => new Parcel(data).get("a").delete()).not.toThrow();
+    expect(() => new Parcel(data).get("a").swapNext()).toThrowError(`.swapNext() is not a function.`);
 });
 
 test('Correct methods are created for array element values', () => {
@@ -180,7 +180,7 @@ test('Correct methods are created for array element values', () => {
     expect(() => new Parcel(data).get(0).value).not.toThrow();
     expect(() => new Parcel(data).get(0).has('a')).toThrowError(`.has() is not a function.`);
     expect(() => new Parcel(data).get(0).pop()).toThrowError(`.pop() is not a function.`);
-    expect(() => new Parcel(data).get(0).deleteSelf()).not.toThrow();
-    expect(() => new Parcel(data).get(0).swapNextWithSelf()).not.toThrow();
+    expect(() => new Parcel(data).get(0).delete()).not.toThrow();
+    expect(() => new Parcel(data).get(0).swapNext()).not.toThrow();
 });
 

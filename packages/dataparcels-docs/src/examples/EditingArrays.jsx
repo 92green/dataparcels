@@ -18,10 +18,10 @@ const FruitListEditor = (props) => {
             return <PureParcel parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => <div>
                     <input type="text" {...parcel.spreadDOM()} />
-                    <button onClick={() => parcel.swapPrevWithSelf()}>^</button>
-                    <button onClick={() => parcel.swapNextWithSelf()}>v</button>
-                    <button onClick={() => parcel.insertAfterSelf(`${parcel.value} copy`)}>+</button>
-                    <button onClick={() => parcel.deleteSelf()}>x</button>
+                    <button onClick={() => parcel.swapPrev()}>^</button>
+                    <button onClick={() => parcel.swapNext()}>v</button>
+                    <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
+                    <button onClick={() => parcel.delete()}>x</button>
                 </div>}
             </PureParcel>;
         })}
