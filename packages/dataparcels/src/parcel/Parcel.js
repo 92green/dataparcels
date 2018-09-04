@@ -277,6 +277,7 @@ export default class Parcel {
         ["0"]: () => this._methods.deleteSelf(),
         ["1"]: (key: Key|Index) => this._methods.delete(key)
     });
+    deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
 
     // Advanced change methods
     setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);

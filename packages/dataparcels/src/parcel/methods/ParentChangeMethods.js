@@ -26,5 +26,10 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         Types(`updateIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
         Types(`update() expects param "updater" to be`, `function`)(updater);
         _this.getIn(keyPath).update(updater);
+    },
+
+    deleteIn: (keyPath: Array<Key|Index>) => {
+        Types(`deleteIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
+        _this.getIn(keyPath).delete();
     }
 });
