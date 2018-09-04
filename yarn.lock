@@ -3222,9 +3222,9 @@ dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
 
-dcme-style@^0.16.1:
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.16.1.tgz#b219a7f1ca0784bd4cf602e1f0c254281133dae8"
+dcme-style@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.16.2.tgz#9edbbb7cf1a8811dc6706f66068997cffc3947bd"
   dependencies:
     react-goose "^0.4.2"
     react-select "^1.0.0-rc.4"
