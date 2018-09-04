@@ -63,7 +63,7 @@ export default PersonParcelHoc(PersonEditor);
 ### What's going on
 
 * `react-dataparcels` is imported.
-* It stores the data in a `ParcelHoc` higher order component, which passes a parcel down as props.
+* It stores the data in a `ParcelHoc` higher order component, which creates and stores a parcel in state, and passes it down as props.
 * The `.get()` method is used on the parcel to create smaller parcels containing just `firstname` and `lastname`.
 * It uses the `PureParcel` React component to avoid needless re-rendering. This isn't *required*, but it is very recommended.
 * Finally `.spreadDOM()` is used to provide the `value` and `onChange` props to the `input` elements.

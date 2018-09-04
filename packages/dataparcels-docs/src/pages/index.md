@@ -1,35 +1,20 @@
 import Link from 'gatsby-link';
+import {Text} from 'dcme-style';
 
-# Dataparcels
+## What is it?
 
-Dataparcels lets you easily build UIs for editing data structures.
+Dataparcels lets you edit data structures in an extremely flexible, data-centric way.<br />
+It lets you traverse your data structures like [Immutable.js](https://facebook.github.io/immutable-js/) does, but with added two-way data binding magic.
 
-1. Put your data in a `Parcel`.
-2. Access pieces of your data shape using `Parcel` methods, and render inputs for these as you wish.
-3. Changes triggered by these inputs are merged into the original data shape.
-4. Build forms, search filters, anything with data-backed user interaction.
+You can trigger changes to small parts of your data, and those changes will propagate back up and merge into the original data shape automatically. When your data is held in React state, this can form the basis of almost any interactive user interface you can think of.
+
+It's designed for use with [React](https://reactjs.org/), and comes with components for easy state management and performant rendering. The heirarchical, componentized nature of React fits perfectly with the heirarchical, componentized nature of dataparcels.
+
+<Text modifier="weightKilo"><Link to="/examples/editing-arrays">See an example of dataparcels code in action</Link></Text>.
 
 ## Getting Started
 
 <Link to="/getting-started">Get started with dataparcels</Link>, installation instructions and a first example.
-
-## Features
-
-- Makes editing parts of data shapes <Link to="/examples/editing-objects">really easy</Link>.
-- Provides many common methods for <Link to="/examples/editing-arrays">editing arrays of items</Link>, like `push()`, `insert()` and `swap()`.
-- Integrates with React seamlessly with higher order components to hold Parcels in state, and pure rendering components to keep rendering fast.
-- Changes are immutable, and you can choose what happens when changes occur.
-- Array elements are uniquely keyed automatically, which makes it trivial to use array editing animation packages like <a target="_blank" href="https://github.com/joshwcomeau/react-flip-move">react-flip-move</a>.
-- Meta data can be easily stored against different locations in your data shape. For example, keeping track of the original value of each field in an object.
-
-## API
-
-* <Link to="/api/Parcel">Parcel</Link>
-* <Link to="/api/ParcelHoc">ParcelHoc</Link>
-* <Link to="/api/PureParcel">PureParcel</Link>
-* <Link to="/api/ChangeRequest">ChangeRequest</Link>
-* <Link to="/api/Action">Action</Link>
-* <Link to="/api/ActionCreators">ActionCreators</Link>
 
 ## Examples
 
@@ -45,3 +30,13 @@ Dataparcels lets you easily build UIs for editing data structures.
 * <Link to="/examples/parcelhoc-initialvalue">ParcelHoc - Getting initialValue from props</Link>
 * <Link to="/examples/parcelhoc-onchange">ParcelHoc - Using onChange</Link>
 * <Link to="/examples/parcelhoc-delayuntil">ParcelHoc - Using delayUntil</Link>
+
+
+## API
+
+* <Link to="/api/Parcel">Parcel</Link>
+* <Link to="/api/ParcelHoc">ParcelHoc</Link>
+* <Link to="/api/PureParcel">PureParcel</Link>
+* <Link to="/api/ChangeRequest">ChangeRequest</Link>
+* <Link to="/api/Action">Action</Link>
+* <Link to="/api/ActionCreators">ActionCreators</Link>
