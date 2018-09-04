@@ -4,7 +4,6 @@ import type {ParcelData} from '../types/Types';
 import clear from 'unmutable/lib/clear';
 import get from 'unmutable/lib/get';
 import reduce from 'unmutable/lib/reduce';
-import set from 'unmutable/lib/set';
 import shallowToJS from 'unmutable/lib/shallowToJS';
 import isValueObject from 'unmutable/lib/util/isValueObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
