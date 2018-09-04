@@ -299,7 +299,10 @@ export default class Parcel {
     push = (value: *) => this._methods.push(value);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
-    swap = (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB);
+    swap = overload({
+        ["1"]: (key: Key|Index) => this._methods.swapWithSelf(key),
+        ["2"]: (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB)
+    });
     swapNext = overload({
         ["0"]: () => this._methods.swapNextWithSelf(),
         ["1"]: (key: Key|Index) => this._methods.swapNext(key)
