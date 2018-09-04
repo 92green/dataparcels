@@ -38,7 +38,7 @@ export default function MultiReducer(parcelData: ParcelData, action: Action|Acti
 
 function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
     if(!(action instanceof Action)) {
-        throw new Error(`Reducer must receive an Action`);
+        throw Error(`Reducer must receive an Action`);
     }
 
     let {
@@ -59,7 +59,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
     switch(type) {
         case "delete": {
             if(keyPathIsEmpty) {
-                throw new ReducerKeyPathRequiredError(type);
+                throw ReducerKeyPathRequiredError(type);
             }
             return updateIn(
                 keyPathButLast,
@@ -69,7 +69,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "insertAfter": {
             if(keyPathIsEmpty) {
-                throw new ReducerKeyPathRequiredError(type);
+                throw ReducerKeyPathRequiredError(type);
             }
             return updateIn(
                 keyPathButLast,
@@ -79,7 +79,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "insertBefore": {
             if(keyPathIsEmpty) {
-                throw new ReducerKeyPathRequiredError(type);
+                throw ReducerKeyPathRequiredError(type);
             }
             return updateIn(
                 keyPathButLast,
@@ -147,11 +147,11 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "swap": {
             if(keyPathIsEmpty) {
-                throw new ReducerKeyPathRequiredError(type);
+                throw ReducerKeyPathRequiredError(type);
             }
             let {swapKey} = action.payload;
             if(typeof swapKey === "undefined") {
-                throw new ReducerSwapKeyError();
+                throw ReducerSwapKeyError();
             }
 
             return updateIn(
@@ -162,7 +162,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "swapNext": {
             if(keyPathIsEmpty) {
-                throw new ReducerKeyPathRequiredError(type);
+                throw ReducerKeyPathRequiredError(type);
             }
 
             return updateIn(
@@ -173,7 +173,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "swapPrev": {
             if(keyPathIsEmpty) {
-                throw new ReducerKeyPathRequiredError(type);
+                throw ReducerKeyPathRequiredError(type);
             }
 
             return updateIn(
@@ -190,5 +190,5 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
         }
     }
 
-    throw new ReducerInvalidActionError(type);
+    throw ReducerInvalidActionError(type);
 }

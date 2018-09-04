@@ -69,7 +69,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set data(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -79,7 +79,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set value(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -89,7 +89,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set meta(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     actions = (): Action[] => {
@@ -115,7 +115,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set changeRequestMeta(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     setChangeRequestMeta = (partialMeta: *): ChangeRequest => {
@@ -134,7 +134,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set originId(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -144,7 +144,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set originPath(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     toJS = (): Object => {

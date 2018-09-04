@@ -1,6 +1,6 @@
 // @flow
 
-export const ReadOnlyError = () => Error(`This property is read-only`);
-export const ReducerKeyPathRequiredError = (actionType: string) => Error(`${actionType} actions must have a keyPath with at least one key`);
-export const ReducerInvalidActionError = (actionType: string) => Error(`"${actionType}" is not a valid action`);
-export const ReducerSwapKeyError = () =>  Error(`swap actions must have a swapKey in their payload`);
+export const ReadOnlyError = () => new Error(`This property is read-only`);
+export const ReducerKeyPathRequiredError = (actionType: string) => new Error(`${actionType} actions must have a keyPath with at least one key`);
+export const ReducerInvalidActionError = (actionType: string) => new Error(`"${actionType}" is not a valid action`);
+export const ReducerSwapKeyError = () =>  new Error(`swap actions must have a swapKey in their payload`);
