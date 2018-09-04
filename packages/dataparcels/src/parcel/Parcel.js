@@ -134,6 +134,7 @@ export default class Parcel {
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
     _dispatchBuffer: ?Function;
+    _prepareChildKeys: Function;
 
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
@@ -182,7 +183,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set data(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -192,18 +193,18 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set value(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
     get meta(): * {
-        let {meta} = this._parcelData;
+        let {meta = {}} = this._parcelData;
         return {...meta};
     }
 
     // $FlowFixMe - this doesn't have side effects
     set meta(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -213,7 +214,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set key(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -223,7 +224,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set id(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -233,7 +234,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     set path(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     //
@@ -261,6 +262,7 @@ export default class Parcel {
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
     ping = () => this._methods.ping();
+    dangerouslyReplaceSelf = (value: *) => this._methods.dangerouslyReplaceSelf(value);
 
     // Parent get methods
     has = (key: Key|Index): boolean => this._methods.has(key);
@@ -314,7 +316,6 @@ export default class Parcel {
     isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
 
     // Advanced methods
-    toParcelNode = (): * => this._methods.toParcelNode();
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
     setInternalLocationShareData = (partialData: Object): * => this._methods.setInternalLocationShareData(partialData);
 }

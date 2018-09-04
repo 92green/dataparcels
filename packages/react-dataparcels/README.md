@@ -1,4 +1,4 @@
-# 📦 Parcels
+# 📦 Dataparcels
 
 A super declarative user input library that works really well with React.
 

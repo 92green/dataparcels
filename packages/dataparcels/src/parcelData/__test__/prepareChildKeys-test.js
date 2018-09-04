@@ -21,8 +21,7 @@ test('prepareChildKeys() adds child keys if they dont exist', () => {
             b: {
                 key: "b"
             }
-        },
-        meta: {}
+        }
     };
 
     expect(expectedData).toEqual(prepareChildKeys()(data));
@@ -41,8 +40,7 @@ test('prepareChildKeys() doesnt change anything if child keys all exist', () => 
             b: {
                 key: "b"
             }
-        },
-        meta: {}
+        }
     };
 
     expect(data).toEqual(prepareChildKeys()(data));

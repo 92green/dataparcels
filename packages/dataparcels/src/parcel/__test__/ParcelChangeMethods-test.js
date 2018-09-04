@@ -2,7 +2,7 @@
 import Parcel from '../Parcel';
 
 test('Parcel.setSelf() should call the Parcels handleChange function with the new parcelData', () => {
-    expect.assertions(2);
+    expect.assertions(3);
 
     var data = {
         value: 123
@@ -27,6 +27,7 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
+            expect(expectedData).toEqual(changeRequest.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).setSelf(456);

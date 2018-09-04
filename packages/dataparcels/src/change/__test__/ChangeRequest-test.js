@@ -2,6 +2,8 @@
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
 import Parcel from '../../parcel/Parcel';
+import TestTimeExecution from '../../util/__test__/TestTimeExecution-testUtil';
+import range from 'unmutable/lib/util/range';
 
 test('ChangeRequest should build an action', () => {
     let expectedDefaultData = {
@@ -241,5 +243,123 @@ test('ChangeRequest should keep originId and originPath even when going through 
             parcel.dispatch(changeRequest);
         })
         .get('abc')
+        .onChange(456);
+});
+
+test('ChangeRequest should cache its data after its calculated, so subsequent calls are faster', () => {
+
+    let amount = 1000;
+
+    let actions = range(amount).map((num) => new Action({
+        type: "set",
+        keyPath: ["a","b","c","d","e"],
+        payload: {
+            value: num
+        }
+    }));
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                b: {
+                    c: {
+                        d: {
+                            e: 123
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    let changeRequest = new ChangeRequest(actions)._setBaseParcel(parcel);
+    let data;
+
+    let ms = TestTimeExecution(() => {
+        data = changeRequest.data;
+    });
+
+    var expectedData = {
+        value: {
+            a: {
+                b: {
+                    c: {
+                        d: {
+                            e: amount - 1
+                        }
+                    }
+                }
+            }
+        },
+        key: "^",
+        meta: {},
+        child: {
+            a: {
+                key: "a",
+                child: {
+                    b: {
+                        key: "b",
+                        child: {
+                            c: {
+                                key: "c",
+                                child: {
+                                    d: {
+                                        key: "d",
+                                        child: {
+                                            e: {
+                                                key: "e"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    expect(expectedData).toEqual(data);
+
+    let ms2 = TestTimeExecution(() => {
+        data = changeRequest.data;
+    });
+
+    expect(expectedData).toEqual(data);
+
+    expect(ms2).toBeLessThan(ms / 100); // expect amazing performance boosts from having cached
+});
+
+test('ChangeRequest data chache should be invalidated correctly', () => {
+    expect.assertions(6);
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                b: 123
+            }
+        }
+    });
+
+    parcel
+        .get('a')
+        .modifyChange((parcel, changeRequest) => {
+            expect(changeRequest.data).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}});
+            expect(changeRequest.data).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
+            parcel.dispatch(changeRequest);
+        })
+        .modifyChange((parcel, changeRequest) => {
+            expect(changeRequest.data).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}});
+            expect(changeRequest.data).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
+            parcel.dispatch(changeRequest);
+            parcel.setMeta({abc: 123});
+        })
+        .get('b')
+        .modifyChange((parcel, changeRequest) => {
+            expect(changeRequest.data).toEqual({key: 'b', meta: {}, value: 456});
+            expect(changeRequest.data).toEqual({key: 'b', meta: {}, value: 456}); // get cached
+            parcel.dispatch(changeRequest);
+        })
         .onChange(456);
 });

@@ -2,31 +2,72 @@
 import type ChangeRequest from '../../change/ChangeRequest';
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
-import type Parcel from '../Parcel';
 import type {ParcelData} from '../../types/Types';
+import type Parcel from '../Parcel';
 import type {ParcelMapper} from '../../types/Types';
 import Types from '../../types/Types';
 
-import parcelForEach from '../../parcelData/forEach';
 import parcelGet from '../../parcelData/get';
 import parcelHas from '../../parcelData/has';
+import prepareChildKeys from '../../parcelData/prepareChildKeys';
 
+import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
+import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel) => ({
 
+    // prepare child keys only once per location
+    // by preparing them and saving them to location share data
+
+    _prepareChildKeys: () => (parcelData: ParcelData): ParcelData => {
+        let {_childCache} = _this.getInternalLocationShareData();
+        if(!parcelData.child) {
+            if(!_childCache) {
+                _childCache = prepareChildKeys()(parcelData).child;
+                _this.setInternalLocationShareData({
+                    _childCache
+                });
+            }
+
+            return {
+                ...parcelData,
+                child: _childCache
+            };
+
+        }
+
+        if(_childCache) {
+            // once parcelData contains child, remove the temporary child cache
+            _this.setInternalLocationShareData({
+                _childCache: undefined
+            });
+        }
+
+        return parcelData;
+    },
+
     has: (key: Key|Index): boolean => {
         Types(`has() expects param "key" to be`, `keyIndex`)(key);
-        return parcelHas(key)(_this._parcelData);
+
+        return pipeWith(
+            _this._parcelData,
+            _this._methods._prepareChildKeys(),
+            parcelHas(key)
+        );
     },
 
     get: (key: Key|Index, notFoundValue: any): Parcel => {
         Types(`get() expects param "key" to be`, `keyIndex`)(key);
-        let childParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
+
+        let childParcelData = pipeWith(
+            _this._parcelData,
+            _this._methods._prepareChildKeys(),
+            parcelGet(key, notFoundValue)
+        );
 
         let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
-            // $FlowFixMe - key *will* exist, but our types are too flexible and can't tell that
             _this.dispatch(changeRequest._unget(childParcelData.key));
         };
 
@@ -49,15 +90,14 @@ export default (_this: Parcel) => ({
 
     toObject: (mapper: ParcelMapper): { [key: string]: * } => {
         Types(`toObject() expects param "mapper" to be`, `function`)(mapper);
-        let obj = {};
 
-        parcelForEach((parcelData: ParcelData, index: string|number) => {
-            let item = _this.get(index);
-            let mapped = mapper(item, index, _this);
-            obj[index] = mapped;
-        })(_this._parcelData);
-
-        return obj;
+        return pipeWith(
+            _this._parcelData.value,
+            map((ii: *, key: string|number) => {
+                let item = _this.get(key);
+                return mapper(item, key, _this);
+            })
+        );
     },
 
     toArray: (mapper: ParcelMapper): Array<*> => {

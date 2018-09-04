@@ -1,13 +1,14 @@
 // @flow
-import type {ParcelDataEvaluator} from '../types/Types';
-import pop from 'unmutable/lib/pop';
-import update from 'unmutable/lib/update';
-import pipe from 'unmutable/lib/util/pipe';
+import type {ParcelData} from '../types/Types';
+import prepareChildKeys from './prepareChildKeys';
 
-export default (): ParcelDataEvaluator => {
-    let fn = pop();
-    return pipe(
-        update('value', fn),
-        update('child', fn)
-    );
+import pop from 'unmutable/lib/pop';
+
+export default () => (parcelData: ParcelData): ParcelData => {
+    let {value, child, ...rest} = prepareChildKeys()(parcelData);
+    return {
+        ...rest,
+        value: pop()(value),
+        child: pop()(child)
+    };
 };

@@ -1,13 +1,14 @@
 // @flow
-import type {ParcelDataEvaluator} from '../types/Types';
-import shift from 'unmutable/lib/shift';
-import update from 'unmutable/lib/update';
-import pipe from 'unmutable/lib/util/pipe';
+import type {ParcelData} from '../types/Types';
+import prepareChildKeys from './prepareChildKeys';
 
-export default (): ParcelDataEvaluator => {
-    let fn = shift();
-    return pipe(
-        update('value', fn),
-        update('child', fn)
-    );
+import shift from 'unmutable/lib/shift';
+
+export default () => (parcelData: ParcelData): ParcelData => {
+    let {value, child, ...rest} = prepareChildKeys()(parcelData);
+    return {
+        ...rest,
+        value: shift()(value),
+        child: shift()(child)
+    };
 };

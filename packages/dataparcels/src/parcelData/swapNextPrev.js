@@ -5,21 +5,25 @@ import type {ParcelData} from '../types/Types';
 
 import prepareChildKeys from './prepareChildKeys';
 import keyOrIndexToIndex from './keyOrIndexToIndex';
+import wrapNumber from './wrapNumber';
 
+import size from 'unmutable/lib/size';
 import swap from 'unmutable/lib/swap';
 
-export default (keyA: Key|Index, keyB: Key|Index) => (parcelData: ParcelData): ParcelData => {
+export default (key: Key|Index, next: boolean = false) => (parcelData: ParcelData): ParcelData => {
 
     let parcelDataWithChildKeys = prepareChildKeys()(parcelData);
+    let indexA: ?Index = keyOrIndexToIndex(key)(parcelDataWithChildKeys);
 
-    let indexA: ?Index = keyOrIndexToIndex(keyA)(parcelDataWithChildKeys);
-    let indexB: ?Index = keyOrIndexToIndex(keyB)(parcelDataWithChildKeys);
-
-    if(typeof indexA === "undefined" || typeof indexB === "undefined") {
+    if(typeof indexA !== "number") {
         return parcelData;
     }
 
     let {value, child} = parcelDataWithChildKeys;
+
+    let valueSize = size()(value);
+    indexA = wrapNumber(indexA, valueSize);
+    let indexB: Index = wrapNumber(indexA + (next ? 1 : -1), valueSize);
 
     return {
         ...parcelDataWithChildKeys,
