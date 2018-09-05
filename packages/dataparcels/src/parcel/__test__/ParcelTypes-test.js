@@ -136,8 +136,8 @@ test('Correct methods are created for primitive values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).toThrowError(`.has() is not a function.`);
     expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function.`);
-    expect(() => new Parcel(data).delete()).toThrowError(`.deleteSelf() is not a function.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNextWithSelf() is not a function.`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments.`);
 });
 
 test('Correct methods are created for object values', () => {
@@ -147,8 +147,8 @@ test('Correct methods are created for object values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function.`);
-    expect(() => new Parcel(data).delete()).toThrowError(`.deleteSelf() is not a function.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNextWithSelf() is not a function.`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments.`);
 });
 
 test('Correct methods are created for array values', () => {
@@ -158,8 +158,8 @@ test('Correct methods are created for array values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).not.toThrow();
-    expect(() => new Parcel(data).delete()).toThrowError(`.deleteSelf() is not a function.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNextWithSelf() is not a function.`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments.`);
 });
 
 test('Correct methods are created for object child values', () => {
@@ -170,7 +170,7 @@ test('Correct methods are created for object child values', () => {
     expect(() => new Parcel(data).get("a").has('a')).toThrowError(`.has() is not a function.`);
     expect(() => new Parcel(data).get("a").pop()).toThrowError(`.pop() is not a function.`);
     expect(() => new Parcel(data).get("a").delete()).not.toThrow();
-    expect(() => new Parcel(data).get("a").swapNext()).toThrowError(`.swapNextWithSelf() is not a function.`);
+    expect(() => new Parcel(data).get("a").swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments.`);
 });
 
 test('Correct methods are created for array element values', () => {

@@ -301,15 +301,15 @@ export default class Parcel {
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
     swap = overload({
-        ["1"]: (key: Key|Index) => this._methods.swapWithSelf(key),
+        ["1"]: (key: Key|Index) => this._methods.swapSelf(key),
         ["2"]: (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB)
     });
     swapNext = overload({
-        ["0"]: () => this._methods.swapNextWithSelf(),
+        ["0"]: () => this._methods.swapNextSelf(),
         ["1"]: (key: Key|Index) => this._methods.swapNext(key)
     });
     swapPrev = overload({
-        ["0"]: () => this._methods.swapPrevWithSelf(),
+        ["0"]: () => this._methods.swapPrevSelf(),
         ["1"]: (key: Key|Index) => this._methods.swapPrev(key)
     });
     unshift = (value: *) => this._methods.unshift(value);
