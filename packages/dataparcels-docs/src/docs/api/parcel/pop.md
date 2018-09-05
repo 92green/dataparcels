@@ -1,3 +1,3 @@
 ```flow
-pop(): void
+pop(): void // only on IndexedParcels
 ```

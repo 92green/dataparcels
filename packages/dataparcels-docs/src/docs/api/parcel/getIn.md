@@ -1,6 +1,6 @@
 ```flow
-getIn(keyPath: Array<string|number>): Parcel
-getIn(keyPath: Array<string|number>, notSetValue: any): Parcel
+getIn(keyPath: Array<string|number>): Parcel // only on ParentParcels
+getIn(keyPath: Array<string|number>, notSetValue: any): Parcel // only on ParentParcels
 ```
 
 Returns a Parcel containing the value associated with the provided key path.

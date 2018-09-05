@@ -1,3 +1,3 @@
 ```flow
-toObject(mapper?: Function): Object
+toObject(mapper?: Function): Object // only on ParentParcels
 ```

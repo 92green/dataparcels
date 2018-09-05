@@ -1,3 +1,3 @@
 ```flow
-toArray(mapper?: Function): Parcel[]
+toArray(mapper?: Function): Parcel[] // only on ParentParcels
 ```

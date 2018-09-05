@@ -1,3 +1,3 @@
 ```flow
-push(value: *): void
+push(value: *): void // only on IndexedParcels
 ```

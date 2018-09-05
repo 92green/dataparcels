@@ -1,3 +1,3 @@
 ```flow
-has(key: string|number): boolean
+has(key: string|number): boolean // only on ParentParcels
 ```

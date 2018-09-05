@@ -1,3 +1,3 @@
 ```flow
-size(): number
+size(): number // only on ParentParcels
 ```
