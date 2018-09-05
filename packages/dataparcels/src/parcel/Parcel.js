@@ -35,6 +35,8 @@ import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
 
+import overload from 'unmutable/lib/util/overload';
+
 const DEFAULT_CONFIG_INTERNAL = () => ({
     onDispatch: undefined,
     child: undefined,
@@ -245,60 +247,72 @@ export default class Parcel {
     spread = (): * => this._methods.spread();
     spreadDOM = (): * => this._methods.spreadDOM();
 
-    // Composition methods
-    pipe = (...updaters: Function[]): Parcel => this._methods.pipe(...updaters);
+    // Branch methods
+    get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
+    getIn = (keyPath: Array<Key|Index>, notFoundValue: ?* = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);
+    toObject = (mapper: ParcelMapper = _ => _): { [key: string]: * } => this._methods.toObject(mapper);
+    toArray = (mapper: ParcelMapper = _ => _): Array<*> => this._methods.toArray(mapper);
+
+    // Parent methods
+    has = (key: Key|Index): boolean => this._methods.has(key);
+    size = (): number => this._methods.size();
 
     // Status methods
     hasDispatched = (): boolean => this._methods.hasDispatched();
 
     // Change methods
-    setSelf = (value: *) => this._methods.setSelf(value);
-    updateSelf = (updater: Function) => this._methods.updateSelf(updater);
     onChange = (value: *) => this._methods.onChange(value);
     onChangeDOM = (event: *) => this._methods.onChangeDOM(event);
+    set = overload({
+        ["1"]: (value: *) => this._methods.setSelf(value),
+        ["2"]: (key: Key|Index, value: *) => this._methods.set(key, value)
+    });
+    update = overload({
+        ["1"]: (updater: ParcelValueUpdater) => this._methods.updateSelf(updater),
+        ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
+    });
+    setIn = (keyPath: Array<Key|Index>, value: *) => this._methods.setIn(keyPath, value);
+    updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
+    delete = overload({
+        ["0"]: () => this._methods.deleteSelf(),
+        ["1"]: (key: Key|Index) => this._methods.delete(key)
+    });
+    deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
+
+    // Advanced change methods
     setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
     updateMeta = (updater: ParcelMetaUpdater) => this._methods.updateMeta(updater);
     setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
     ping = () => this._methods.ping();
-    dangerouslyReplaceSelf = (value: *) => this._methods.dangerouslyReplaceSelf(value);
-
-    // Parent get methods
-    has = (key: Key|Index): boolean => this._methods.has(key);
-    get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
-    getIn = (keyPath: Array<Key|Index>, notFoundValue: ?* = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);
-    toObject = (mapper: ParcelMapper = _ => _): { [key: string]: * } => this._methods.toObject(mapper);
-    toArray = (mapper: ParcelMapper = _ => _): Array<*> => this._methods.toArray(mapper);
-    size = (): number => this._methods.size();
-
-    // Parent change methods
-    set = (key: Key|Index, value: *) => this._methods.set(key, value);
-    update = (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater);
-    setIn = (keyPath: Array<Key|Index>, value: *) => this._methods.setIn(keyPath, value);
-    updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
+    dangerouslyReplace = (value: *) => this._methods.dangerouslyReplace(value);
 
     // Indexed methods
-    delete = (key: Key|Index) => this._methods.delete(key);
-    insertAfter = (key: Key|Index, value: *) => this._methods.insertAfter(key, value);
-    insertBefore = (key: Key|Index, value: *) => this._methods.insertBefore(key, value);
+    insertAfter = overload({
+        ["1"]: (value: *) => this._methods.insertAfterSelf(value),
+        ["2"]: (key: Key|Index, value: *) => this._methods.insertAfter(key, value)
+    });
+    insertBefore = overload({
+        ["1"]: (value: *) => this._methods.insertBeforeSelf(value),
+        ["2"]: (key: Key|Index, value: *) => this._methods.insertBefore(key, value)
+    });
     push = (value: *) => this._methods.push(value);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
-    swap = (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB);
-    swapNext = (key: Key|Index) => this._methods.swapNext(key);
-    swapPrev = (key: Key|Index) => this._methods.swapPrev(key);
+    swap = overload({
+        ["1"]: (key: Key|Index) => this._methods.swapSelf(key),
+        ["2"]: (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB)
+    });
+    swapNext = overload({
+        ["0"]: () => this._methods.swapNextSelf(),
+        ["1"]: (key: Key|Index) => this._methods.swapNext(key)
+    });
+    swapPrev = overload({
+        ["0"]: () => this._methods.swapPrevSelf(),
+        ["1"]: (key: Key|Index) => this._methods.swapPrev(key)
+    });
     unshift = (value: *) => this._methods.unshift(value);
-
-    // Child methods
-    deleteSelf = () => this._methods.deleteSelf();
-
-    // Element methods
-    insertAfterSelf = (value: *) => this._methods.insertAfterSelf(value);
-    insertBeforeSelf = (value: *) => this._methods.insertBeforeSelf(value);
-    swapNextWithSelf = () => this._methods.swapNextWithSelf();
-    swapPrevWithSelf = () => this._methods.swapPrevWithSelf();
-    swapWithSelf = (key: Key|Index) => this._methods.swapWithSelf(key);
 
     // Modify methods
     modifyValue = (updater: Function): Parcel => this._methods.modifyValue(updater);
@@ -314,6 +328,9 @@ export default class Parcel {
     isIndexed = (): boolean => this._parcelTypes.isIndexed();
     isParent = (): boolean => this._parcelTypes.isParent();
     isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
+
+    // Composition methods
+    pipe = (...updaters: Function[]): Parcel => this._methods.pipe(...updaters);
 
     // Advanced methods
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();

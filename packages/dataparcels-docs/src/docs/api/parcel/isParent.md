@@ -1,0 +1,3 @@
+```flow
+isParent(): boolean
+```

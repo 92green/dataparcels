@@ -200,7 +200,7 @@ test('ParentParcel.get() should cache its parcelData.child after its calculated,
         parcel.get(1);
     });
 
-    expect(ms / 100 > ms2).toBe(true); // expect amazing performance boosts from having cached
+    expect(ms / 25).toBeGreaterThan(ms2); // expect amazing performance boosts from having cached
 
     parcel.get(0).onChange(123);
 });

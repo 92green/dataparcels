@@ -18,11 +18,11 @@ export default (_this: Parcel, dispatch: Function) => ({
 
     updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf() expects param "updater" to be`, `function`)(updater);
-        _this.setSelf(updater(_this.value));
+        _this.set(updater(_this.value));
     },
 
     onChange: (value: *) => {
-        _this.setSelf(value);
+        _this.set(value);
     },
 
     onChangeDOM: (event: Object) => {
@@ -55,7 +55,7 @@ export default (_this: Parcel, dispatch: Function) => ({
         dispatch(ActionCreators.ping());
     },
 
-    dangerouslyReplaceSelf: (value: *) => {
-        dispatch(ActionCreators.dangerouslyReplaceSelf(value));
+    dangerouslyReplace: (value: *) => {
+        dispatch(ActionCreators.dangerouslyReplace(value));
     }
 });

@@ -75,3 +75,19 @@ test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange functi
         return "???";
     });
 });
+
+test('ParentParcel.deleteIn(keyPath) should delete deeply', () => {
+    var data = {
+        value: {
+            a: {
+                b: "!!!"
+            }
+        },
+        handleChange: (parcel) => {
+            let {value} = parcel.data;
+            expect(value).toEqual({a: {}});
+        }
+    };
+
+    new Parcel(data).deleteIn(["a", "b"]);
+});

@@ -1,7 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 
-test('ChildParcel.deleteSelf() should delete self', () => {
+test('ChildParcel.delete() should delete self', () => {
     expect.assertions(1);
 
     var expectedValue = {
@@ -19,10 +19,10 @@ test('ChildParcel.deleteSelf() should delete self', () => {
         }
     };
 
-    new Parcel(data).get('a').deleteSelf();
+    new Parcel(data).get('a').delete();
 });
 
-test('ChildParcel.deleteSelf() should delete self when indexed', () => {
+test('ChildParcel.delete() should delete self when indexed', () => {
     expect.assertions(1);
 
     var expectedValue = [1,3];
@@ -35,5 +35,5 @@ test('ChildParcel.deleteSelf() should delete self when indexed', () => {
         }
     };
 
-    new Parcel(data).get('#b').deleteSelf();
+    new Parcel(data).get('#b').delete();
 });

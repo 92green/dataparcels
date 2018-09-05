@@ -1,7 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 
-test('Parcel.setSelf() should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.set() should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(3);
 
     var data = {
@@ -30,10 +30,10 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
             expect(expectedData).toEqual(changeRequest.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
-    }).setSelf(456);
+    }).set(456);
 });
 
-test('Parcel.updateSelf() should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.update() should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(3);
 
     var data = {
@@ -63,7 +63,7 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
             expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
-    }).updateSelf((ii) => {
+    }).update((ii) => {
         expect(expectedArg).toEqual(ii);
         return 456;
     });

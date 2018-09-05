@@ -16,16 +16,16 @@ export default (_this: Parcel, dispatch: Function): Object => ({
         dispatch(ActionCreators.insertBeforeSelf(value));
     },
 
-    swapNextWithSelf: () => {
-        dispatch(ActionCreators.swapNextWithSelf());
+    swapNextSelf: () => {
+        dispatch(ActionCreators.swapNextSelf());
     },
 
-    swapPrevWithSelf: () => {
-        dispatch(ActionCreators.swapPrevWithSelf());
+    swapPrevSelf: () => {
+        dispatch(ActionCreators.swapPrevSelf());
     },
 
-    swapWithSelf: (key: Key|Index) => {
-        Types(`swapWithSelf() expects param "key" to be`, `keyIndex`)(key);
-        dispatch(ActionCreators.swapWithSelf(key));
+    swapSelf: (key: Key|Index) => {
+        Types(`swapSelf() expects param "key" to be`, `keyIndex`)(key);
+        dispatch(ActionCreators.swapSelf(key));
     }
 });
