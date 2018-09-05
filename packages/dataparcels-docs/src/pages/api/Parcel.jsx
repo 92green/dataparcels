@@ -40,6 +40,12 @@ import Markdown_swap from 'docs/api/parcel/swap.md';
 import Markdown_swapNext from 'docs/api/parcel/swapNext.md';
 import Markdown_swapPrev from 'docs/api/parcel/swapPrev.md';
 import Markdown_unshift from 'docs/api/parcel/unshift.md';
+import Markdown_modifyValue from 'docs/api/parcel/modifyValue.md';
+import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
+import Markdown_modifyChangeValue from 'docs/api/parcel/modifyChangeValue.md';
+import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
+import Markdown_addModifier from 'docs/api/parcel/addModifier.md';
+import Markdown_addDescendantModifier from 'docs/api/parcel/addDescendantModifier.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
 import Markdown_isElement from 'docs/api/parcel/isElement.md';
 import Markdown_isIndexed from 'docs/api/parcel/isIndexed.md';
@@ -87,6 +93,12 @@ const md = {
     swapNext: Markdown_swapNext,
     swapPrev: Markdown_swapPrev,
     unshift: Markdown_unshift,
+    modifyValue: Markdown_modifyValue,
+    modifyChange: Markdown_modifyChange,
+    modifyChangeValue: Markdown_modifyChangeValue,
+    initialMeta: Markdown_initialMeta,
+    addModifier: Markdown_addModifier,
+    addDescendantModifier: Markdown_addDescendantModifier,
     isChild: Markdown_isChild,
     isElement: Markdown_isElement,
     isIndexed: Markdown_isIndexed,
