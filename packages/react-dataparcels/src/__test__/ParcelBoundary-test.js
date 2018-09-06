@@ -81,6 +81,25 @@ test('ParcelBoundary should not rerender if parcel has not changed value', () =>
     expect(renders).toBe(1);
 });
 
+test('ParcelBoundary should rerender if parcel has not changed value and pure = false', () => {
+    let parcel = new Parcel();
+    let parcel2 = new Parcel({value: 456});
+    let renders = 0;
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} pure={false}>
+        {(pp) => {
+            renders++;
+        }}
+    </ParcelBoundary>);
+
+    wrapper.setProps({
+        parcel,
+        somethingElse: true
+    });
+
+    expect(renders).toBe(2);
+});
+
 test('ParcelBoundary should rerender if parcel has not changed value but forceUpdate has', () => {
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});

@@ -13,7 +13,8 @@ type Props = {
     children: RenderFunction,
     debounce?: number,
     forceUpdate?: Array<*>,
-    parcel: Parcel
+    parcel: Parcel,
+    pure?: boolean
 };
 
 type State = {
@@ -24,6 +25,10 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
     changeCount: number = 0;
 
+    static defaultProps: * = {
+        pure: true
+    };
+
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -32,6 +37,10 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     }
 
     shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+        if(!nextProps.pure) {
+            return true;
+        }
+
         let parcelDataChanged: boolean = nextProps.debounce
             ? !ParcelBoundaryEquals(this.state.parcel, nextState.parcel)
             : !ParcelBoundaryEquals(this.props.parcel, nextProps.parcel);
