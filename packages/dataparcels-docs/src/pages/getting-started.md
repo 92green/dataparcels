@@ -94,7 +94,7 @@ This is the same example with a few improvements added: better rendering perform
 
 ```js
 import React from 'react';
-import {ParcelHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",
@@ -111,19 +111,19 @@ const PersonEditor = (props) => {
     let {personParcel} = props;
     return <div>
         <label>firstname</label>
-        <PureParcel parcel={personParcel.get('firstname')}>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
             {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
-        </PureParcel>
+        </ParcelBoundary>
 
         <label>lastname</label>
-        <PureParcel parcel={personParcel.get('lastname')}>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
             {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
-        </PureParcel>
+        </ParcelBoundary>
 
         <label>postcode</label>
-        <PureParcel parcel={personParcel.getIn(['address', 'postcode'])}>
+        <ParcelBoundary parcel={personParcel.getIn(['address', 'postcode'])}>
             {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
-        </PureParcel>
+        </ParcelBoundary>
     </div>;
 };
 
@@ -133,12 +133,12 @@ export default PersonParcelHoc(PersonEditor);
 
 ### What's better about it?
 
-* It's now using the `PureParcel` React component to make sure that inputs are only re-rendered if their values have changed. This isn't *required*, but it is **very** recommended. Without this, all inputs will re-render any time any data changes.
+* It's now using the `ParcelBoundary` React component to make sure that inputs are only re-rendered if their values have changed. This isn't *required*, but it is **very** recommended. Without this, all inputs will re-render any time any data changes.
 * `.spreadDOM()` is used to provide the `value` and `onChangeDOM` props to the `input` elements more easily.
 
 ## Docs
 
-For more info see the documentation for <Link to="/api/Parcel">Parcel</Link>, <Link to="/api/ParcelHoc">ParcelHoc</Link> and <Link to="/api/PureParcel">PureParcel</Link>.
+For more info see the documentation for <Link to="/api/Parcel">Parcel</Link>, <Link to="/api/ParcelHoc">ParcelHoc</Link> and <Link to="/api/ParcelBoundary">ParcelBoundary</Link>.
 
 ## More examples
 

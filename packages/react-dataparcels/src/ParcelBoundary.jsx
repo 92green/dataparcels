@@ -4,7 +4,7 @@ import type {Node} from 'react';
 import Parcel from 'dataparcels';
 import type {ChangeRequest} from 'dataparcels';
 
-import PureParcelEquals from './util/PureParcelEquals';
+import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
 type RenderFunction = (parcel: Parcel) => Node;
@@ -20,7 +20,7 @@ type State = {
     parcel: Parcel
 };
 
-export default class PureParcel extends React.Component<Props, State> { /* eslint-disable-line react/no-deprecated */
+export default class ParcelBoundary extends React.Component<Props, State> { /* eslint-disable-line react/no-deprecated */
 
     changeCount: number = 0;
 
@@ -33,8 +33,8 @@ export default class PureParcel extends React.Component<Props, State> { /* eslin
 
     shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
         let parcelDataChanged: boolean = nextProps.debounce
-            ? !PureParcelEquals(this.state.parcel, nextState.parcel)
-            : !PureParcelEquals(this.props.parcel, nextProps.parcel);
+            ? !ParcelBoundaryEquals(this.state.parcel, nextState.parcel)
+            : !ParcelBoundaryEquals(this.props.parcel, nextProps.parcel);
 
         let forceUpdateChanged: boolean = !shallowEquals(this.props.forceUpdate || [])(nextProps.forceUpdate || []);
         return parcelDataChanged || forceUpdateChanged;
@@ -42,7 +42,7 @@ export default class PureParcel extends React.Component<Props, State> { /* eslin
 
     componentWillReceiveProps(nextProps: Object) {
         let {parcel} = nextProps;
-        if(!PureParcelEquals(this.props.parcel, parcel)) {
+        if(!ParcelBoundaryEquals(this.props.parcel, parcel)) {
             this.setState({
                 parcel
             });

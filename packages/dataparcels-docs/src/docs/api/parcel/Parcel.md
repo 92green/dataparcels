@@ -29,7 +29,7 @@ Please see the <Link to="/getting-started">getting started</Link> page to see ho
   
   In `handleChange` you would typically implement logic to replace your current parcel with `newParcel`, but if you're using React you should read <Link to="/getting-started">getting started</Link> to save you the trouble of implementing this yourself.
 * <Param name="debugRender" optional type="boolean" default="false" />
-  For debugging purposes. When set to `true` this causes all downstream <Link to="/api/PureParcel">PureParcel</Link>s to display when they are being rendered and re-rendered.
+  For debugging purposes. When set to `true` this causes all downstream <Link to="/api/ParcelBoundary">ParcelBoundary</Link>s to display when they are being rendered and re-rendered.
 
 ```js
 // creates a Parcel that contains a value of 123

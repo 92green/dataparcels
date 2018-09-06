@@ -6,22 +6,22 @@ import Adapter from 'enzyme-adapter-react-16';
 configure({adapter: new Adapter()});
 
 import {shallow} from 'enzyme';
-import PureParcel from '../PureParcel';
-import PureParcelEquals from '../util/PureParcelEquals';
+import ParcelBoundary from '../ParcelBoundary';
+import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
 import Parcel from 'dataparcels';
 
-test('PureParcel should pass a *value equivalent* parcel to children', () => {
+test('ParcelBoundary should pass a *value equivalent* parcel to children', () => {
     expect.assertions(1);
     let parcel = new Parcel();
 
-    let wrapper = shallow(<PureParcel parcel={parcel}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel}>
         {(pp) => {
-            expect(PureParcelEquals(pp, parcel)).toBe(true);
+            expect(ParcelBoundaryEquals(pp, parcel)).toBe(true);
         }}
-    </PureParcel>);
+    </ParcelBoundary>);
 });
 
-test('PureParcel should send correct changes back up when debounce = 0', () => {
+test('ParcelBoundary should send correct changes back up when debounce = 0', () => {
     expect.assertions(2);
     let hasChanged = false;
     let parcel = new Parcel({
@@ -32,46 +32,46 @@ test('PureParcel should send correct changes back up when debounce = 0', () => {
         }
     });
 
-    let wrapper = shallow(<PureParcel parcel={parcel}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel}>
         {(pp) => {
             pp.onChange(123);
             expect(hasChanged).toBe(true)
         }}
-    </PureParcel>);
+    </ParcelBoundary>);
 });
 
-test('PureParcel should pass a NEW *value equivalent* parcel to children when props change', () => {
+test('ParcelBoundary should pass a NEW *value equivalent* parcel to children when props change', () => {
     expect.assertions(2);
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
     let renders = 0;
 
-    let wrapper = shallow(<PureParcel parcel={parcel}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel}>
         {(pp) => {
             if(renders === 0) {
-                expect(PureParcelEquals(pp, parcel)).toBe(true);
+                expect(ParcelBoundaryEquals(pp, parcel)).toBe(true);
             } else if(renders === 1) {
-                expect(PureParcelEquals(pp, parcel2)).toBe(true);
+                expect(ParcelBoundaryEquals(pp, parcel2)).toBe(true);
             }
             renders++;
         }}
-    </PureParcel>);
+    </ParcelBoundary>);
 
     wrapper.setProps({
         parcel: parcel2
     });
 });
 
-test('PureParcel should not rerender if parcel has not changed value', () => {
+test('ParcelBoundary should not rerender if parcel has not changed value', () => {
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
     let renders = 0;
 
-    let wrapper = shallow(<PureParcel parcel={parcel}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel}>
         {(pp) => {
             renders++;
         }}
-    </PureParcel>);
+    </ParcelBoundary>);
 
     wrapper.setProps({
         parcel,
@@ -81,16 +81,16 @@ test('PureParcel should not rerender if parcel has not changed value', () => {
     expect(renders).toBe(1);
 });
 
-test('PureParcel should rerender if parcel has not changed value but forceUpdate has', () => {
+test('ParcelBoundary should rerender if parcel has not changed value but forceUpdate has', () => {
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
     let renders = 0;
 
-    let wrapper = shallow(<PureParcel parcel={parcel} forceUpdate={["abc"]}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} forceUpdate={["abc"]}>
         {(pp) => {
             renders++;
         }}
-    </PureParcel>);
+    </ParcelBoundary>);
 
     wrapper.setProps({
         parcel,
@@ -100,7 +100,7 @@ test('PureParcel should rerender if parcel has not changed value but forceUpdate
     expect(renders).toBe(2);
 });
 
-test('PureParcel should debounce', async () => {
+test('ParcelBoundary should debounce', async () => {
     expect.assertions(5);
     return new Promise((resolve) => {
         let handleChangeCalls = 0;
@@ -113,7 +113,7 @@ test('PureParcel should debounce', async () => {
 
         let renders = 0;
 
-        let wrapper = shallow(<PureParcel parcel={parcel} debounce={30}>
+        let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={30}>
             {(pp) => {
                 if(renders === 0) {
                     pp.onChange(123);
@@ -128,7 +128,7 @@ test('PureParcel should debounce', async () => {
                 }
                 renders++;
             }}
-        </PureParcel>);
+        </ParcelBoundary>);
 
         setTimeout(() => {
             wrapper.instance().forceUpdate();
@@ -154,7 +154,7 @@ test('PureParcel should debounce', async () => {
     });
 });
 
-test('PureParcel should ignore debounce when sending a ping', () => {
+test('ParcelBoundary should ignore debounce when sending a ping', () => {
     expect.assertions(2);
     let hasChanged = false;
     let parcel = new Parcel({
@@ -165,15 +165,15 @@ test('PureParcel should ignore debounce when sending a ping', () => {
         }
     });
 
-    let wrapper = shallow(<PureParcel parcel={parcel} debounce={100}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={100}>
         {(pp) => {
             pp.ping();
             expect(hasChanged).toBe(true)
         }}
-    </PureParcel>);
+    </ParcelBoundary>);
 });
 
-test('PureParcel should render colours when debugRender is true', () => {
+test('ParcelBoundary should render colours when debugRender is true', () => {
     let hasChanged = false;
     let parcel = new Parcel({
         value: 123,
@@ -181,7 +181,7 @@ test('PureParcel should render colours when debugRender is true', () => {
     });
 
     expect(
-        shallow(<PureParcel parcel={parcel} debounce={100}>{(pp) => "???"}</PureParcel>)
+        shallow(<ParcelBoundary parcel={parcel} debounce={100}>{(pp) => "???"}</ParcelBoundary>)
         .render()
         .get(0)
         .attribs
