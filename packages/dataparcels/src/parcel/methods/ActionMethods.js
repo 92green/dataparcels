@@ -12,6 +12,7 @@ export default (_this: Parcel): Object => ({
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
         Types(`dispatch() expects param "dispatchable" to be`, `dispatchable`)(dispatchable);
 
+
         let {
             _onDispatch,
             _onHandleChange
@@ -26,6 +27,10 @@ export default (_this: Parcel): Object => ({
         if(!changeRequest._originId) {
             changeRequest._originId = _this.id;
             changeRequest._originPath = _this.path;
+        }
+
+        if(_this._log) {
+            console.log(`Parcel ${_this._logName} changed:`, changeRequest);
         }
 
         if(_this._dispatchBuffer) {

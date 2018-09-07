@@ -137,6 +137,8 @@ export default class Parcel {
     _parcelTypes: ParcelTypes;
     _dispatchBuffer: ?Function;
     _prepareChildKeys: Function;
+    _log: boolean = false;
+    _logName: string = "";
 
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
@@ -259,6 +261,9 @@ export default class Parcel {
 
     // Status methods
     hasDispatched = (): boolean => this._methods.hasDispatched();
+
+    // Debug methods
+    log = (name: string = ""): Parcel => this._methods.log(name);
 
     // Change methods
     onChange = (value: *) => this._methods.onChange(value);
