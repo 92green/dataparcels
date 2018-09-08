@@ -62,12 +62,12 @@ test('ParcelBoundary should pass a NEW *value equivalent* parcel to children whe
     });
 });
 
-test('ParcelBoundary should not rerender if parcel has not changed value', () => {
+test('ParcelBoundary should not rerender if parcel has not changed value and pure = true', () => {
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
     let renders = 0;
 
-    let wrapper = shallow(<ParcelBoundary parcel={parcel}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} pure>
         {(pp) => {
             renders++;
         }}
@@ -119,14 +119,71 @@ test('ParcelBoundary should rerender if parcel has not changed value but forceUp
     expect(renders).toBe(2);
 });
 
+test('ParcelBoundary should not send changes up when hold = true', async () => {
+    let handleChangeCalls = 0;
+    let parcel = new Parcel({
+        handleChange: (newParcel) => {
+            handleChangeCalls++;
+        }
+    });
+
+    let renders = 0;
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {(pp) => {
+            if(renders === 0) {
+                pp.onChange(123);
+            }
+            renders++;
+        }}
+    </ParcelBoundary>);
+
+    expect(handleChangeCalls).toBe(0);
+});
+
+test('ParcelBoundary should release changes when called', async () => {
+    let handleChangeCalls = 0;
+    expect.assertions(2);
+    return new Promise((resolve) => {
+        let parcel = new Parcel({
+            handleChange: (newParcel) => {
+                handleChangeCalls++;
+                expect(newParcel.value).toBe(123);
+            }
+        });
+
+        let renders = 0;
+
+        let wrapper = shallow(<ParcelBoundary parcel={parcel} hold={true}>
+            {(pp, {release}) => {
+                if(renders === 0) {
+                    pp.onChange(123);
+                } else if(renders === 1) {
+                    release();
+                }
+                renders++;
+            }}
+        </ParcelBoundary>);
+
+        expect(handleChangeCalls).toBe(0);
+
+        setTimeout(() => {
+            wrapper.instance().forceUpdate();
+            wrapper.update().render();
+            resolve();
+        }, 20);
+    });
+});
+
 test('ParcelBoundary should debounce', async () => {
     expect.assertions(5);
     return new Promise((resolve) => {
         let handleChangeCalls = 0;
         let parcel = new Parcel({
-            handleChange: (newParcel) => {
+            value: {a:1, b:2},
+            handleChange: (newParcel, changeRequest) => {
                 handleChangeCalls++;
-                expect(newParcel.value).toBe(789);
+                expect(newParcel.value).toEqual({a:789, b:789});
             }
         });
 
@@ -135,15 +192,16 @@ test('ParcelBoundary should debounce', async () => {
         let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={30}>
             {(pp) => {
                 if(renders === 0) {
-                    pp.onChange(123);
+                    pp.get('a').onChange(123);
                 } else if(renders === 1) {
-                    expect(123).toBe(pp.value);
-                    pp.onChange(456);
+                    expect(pp.value).toEqual({a:123, b:2});
+                    pp.get('a').onChange(456);
                 } else if(renders === 2) {
-                    expect(456).toBe(pp.value);
-                    pp.onChange(789);
+                    expect(pp.value).toEqual({a:456, b:2});
+                    pp.get('a').onChange(789);
+                    pp.get('b').onChange(789);
                 } else if(renders === 3) {
-                    expect(789).toBe(pp.value);
+                    expect(pp.value).toEqual({a:789, b:789});
                 }
                 renders++;
             }}
@@ -171,6 +229,28 @@ test('ParcelBoundary should debounce', async () => {
             resolve();
         }, 1000);
     });
+});
+
+test('ParcelBoundary should not send changes up when hold = true', async () => {
+    let handleChangeCalls = 0;
+    let parcel = new Parcel({
+        handleChange: (newParcel) => {
+            handleChangeCalls++;
+        }
+    });
+
+    let renders = 0;
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {(pp) => {
+            if(renders === 0) {
+                pp.onChange(123);
+            }
+            renders++;
+        }}
+    </ParcelBoundary>);
+
+    expect(handleChangeCalls).toBe(0);
 });
 
 test('ParcelBoundary should ignore debounce when sending a ping', () => {
@@ -208,4 +288,3 @@ test('ParcelBoundary should render colours when debugRender is true', () => {
         .indexOf('background-color') !== -1
     ).toBe(true);
 });
-
