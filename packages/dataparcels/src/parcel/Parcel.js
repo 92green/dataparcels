@@ -57,7 +57,7 @@ export default class Parcel {
             debugRender = false
         } = config;
 
-        Types(`Parcel() expects param "config.handleChange" to be`, `functionOptional`)(handleChange);
+        handleChange && Types(`Parcel() expects param "config.handleChange" to be`, `function`)(handleChange);
         Types(`Parcel() expects param "config.debugRender" to be`, `boolean`)(debugRender);
 
         let {
@@ -79,6 +79,11 @@ export default class Parcel {
             key: id.key(),
             meta
         };
+
+        // parent
+        if(parent) {
+            this._parent = parent;
+        }
 
         // types
         this._parcelTypes = new ParcelTypes(
@@ -135,6 +140,7 @@ export default class Parcel {
     _modifiers: Modifiers;
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
+    _parent: ?Parcel;
     _dispatchBuffer: ?Function;
     _prepareChildKeys: Function;
     _log: boolean = false;
@@ -149,12 +155,14 @@ export default class Parcel {
                 meta = {}
             },
             parent,
-            onDispatch = this.dispatch
+            onDispatch = this.dispatch,
+            handleChange
         } = createParcelConfig;
 
         let parcel: Parcel = new Parcel(
             {
-                value
+                value,
+                handleChange
             },
             {
                 child,
@@ -326,6 +334,7 @@ export default class Parcel {
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     addModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addModifier(modifier);
     addDescendantModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addDescendantModifier(modifier);
+    _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
 
     // Type methods
     isChild = (): boolean => this._parcelTypes.isChild();
