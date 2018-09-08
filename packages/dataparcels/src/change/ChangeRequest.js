@@ -149,10 +149,14 @@ export default class ChangeRequest {
 
     toJS = (): Object => {
         return {
-            actions: this._actions,
+            actions: this._actions.map(action => action.toJS()),
             meta: this._meta,
             originId: this._originId,
             originPath: this._originPath
         };
+    };
+
+    toConsole = () => {
+        console.log(this.toJS());
     };
 }
