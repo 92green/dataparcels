@@ -15,7 +15,9 @@ export default ({content, nav}: Props) => <Wrapper modifier="marginBottom">
             {content()}
         </GridItem>
         <GridItem modifier="3 padding">
-            <SiteNavigation />
+            <Box modifier="paddingTopMega">
+                <SiteNavigation />
+            </Box>
             {nav && nav()}
         </GridItem>
     </Grid>

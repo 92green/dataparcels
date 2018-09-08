@@ -9,13 +9,16 @@
 @include DcmeBulletList;
 @include DcmeButton;
 @include DcmeCenteredLanding;
+@include DcmeDivider;
 @include DcmeGrid;
 @include DcmeImage;
 @include DcmeInput;
 @include DcmeLink;
 @include DcmeLabel;
 @include DcmeMessage;
-@include DcmeNavigationList;
+@include DcmeNavigationList {
+    padding-top: 0;
+}
 @include DcmeOrderedList;
 @include DcmeTable;
 @include DcmeTerminal;

@@ -1,7 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import React from 'react';
-import {Box, CenteredLanding, Grid, GridItem, Text, Typography, Wrapper} from 'dcme-style';
+import {Box, CenteredLanding, Grid, GridItem, NavigationList,NavigationListItem, Text, Typography, Wrapper} from 'dcme-style';
 import IndexMarkdown from 'pages/index.md';
 import PageLayout from 'component/PageLayout';
 
@@ -25,7 +25,15 @@ export default () => <Box>
     </Box>
     <Box modifier="paddingTopKilo">
         <Wrapper modifier="marginBottom">
-            <Typography><IndexMarkdown /></Typography>
+            <PageLayout
+                content={() => <Typography><IndexMarkdown /></Typography>}
+                nav={() => <NavigationList>
+                    <NavigationListItem><a className="Link" href={`#What-is-it`}>What is it?</a></NavigationListItem>
+                    <NavigationListItem><a className="Link" href={`#Getting-Started`}>Getting Started</a></NavigationListItem>
+                    <NavigationListItem><a className="Link" href={`#Examples`}>Examples</a></NavigationListItem>
+                    <NavigationListItem><a className="Link" href={`#API`}>API</a></NavigationListItem>
+                </NavigationList>}
+            />
         </Wrapper>
     </Box>
 </Box>
