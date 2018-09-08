@@ -30,7 +30,8 @@ export default (_this: Parcel): Object => ({
         }
 
         if(_this._log) {
-            console.log(`Parcel ${_this._logName} changed:`, changeRequest);
+            console.log(`Parcel change: ${_this._logName}`);
+            changeRequest.toConsole();
         }
 
         if(_this._dispatchBuffer) {
