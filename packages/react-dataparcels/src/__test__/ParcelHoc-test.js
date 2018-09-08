@@ -114,7 +114,7 @@ test('ParcelHoc config should accept a debugRender boolean', () => {
         }),
         {},
         (props) => {
-            expect(props.proppy._treeshare.getDebugRender()).toBe(true);
+            expect(props.proppy._treeshare.debugRender).toBe(true);
         }
     );
 });
