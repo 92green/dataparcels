@@ -4,22 +4,11 @@ import Action from '../Action';
 
 test('Reducer should set with empty keyPath', () => {
     var data = {
-        value: {
-            a: 1,
-            b: 2
-        },
+        value: 123,
         meta: {
             abc: 123
         },
-        key: "^",
-        child: {
-            a: {
-                key: "a"
-            },
-            b: {
-                key: "b"
-            }
-        }
+        key: "^"
     };
     var action = new Action({
         type: "set",
@@ -36,6 +25,8 @@ test('Reducer should set with empty keyPath', () => {
         }
     };
 
+    // value should be replaced
+    // key and meta should be untouched
     expect(Reducer(data, action)).toEqual(expectedData);
 });
 
@@ -81,6 +72,9 @@ test('Reducer should set with empty keyPath and clear existing child', () => {
         }
     };
 
+    // value should be replaced
+    // key and meta should be untouched
+    // child should be removed
     expect(Reducer(data, action)).toEqual(expectedData);
 });
 
@@ -130,6 +124,9 @@ test('Reducer should set with keyPath of 1 element', () => {
         }
     };
 
+    // value should be replaced at keypath
+    // key and meta should be untouched
+    // top level child should be kept
     expect(Reducer(data, action)).toEqual(expectedData);
 });
 
@@ -158,7 +155,8 @@ test('Reducer should clear child from set key', () => {
                 }
             },
             b: {
-                key: "b"
+                key: "b",
+                meta: {}
             }
         }
     };
@@ -184,11 +182,16 @@ test('Reducer should clear child from set key', () => {
                 key: "a"
             },
             b: {
-                key: "b"
+                key: "b",
+                meta: {}
             }
         }
     };
 
+    // value should be replaced at keyPath
+    // child should be removed at keyPath
+    // top level key and meta should be untouched
+    // child.b.meta should be untouched
     expect(Reducer(data, action)).toEqual(expectedData);
 });
 
@@ -245,6 +248,9 @@ test('Reducer should set with keyPath of 2 elements', () => {
         }
     };
 
+    // value should be replaced at keypath
+    // key and meta should be untouched
+    // top level child should be kept
     expect(Reducer(data, action)).toEqual(expectedData);
 });
 
@@ -263,14 +269,14 @@ test('Reducer should set with keyPath of 2 elements on arrays', () => {
         type: "set",
         keyPath: ["#b", "#c"],
         payload: {
-            value: [4]
+            value: 4
         }
     });
 
     var expectedData = {
         value: [
             [],
-            [1,2,[4]]
+            [1,2,4]
         ],
         meta: {
             abc: 123
@@ -290,18 +296,17 @@ test('Reducer should set with keyPath of 2 elements on arrays', () => {
                         key: "#b"
                     },
                     {
-                        key: "#c",
-                        child: [
-                            {
-                                key: "#a"
-                            }
-                        ]
+                        key: "#c"
                     },
                 ]
             }
         ]
     };
 
+    // value should be replaced at keypath
+    // key and meta should be untouched
+    // top level child should be kept
+    // keys should be generated for existing value, and for newly set value
     expect(Reducer(data, action)).toEqual(expectedData);
 });
 
@@ -342,6 +347,10 @@ test('Reducer should set with an unkeyed array and give it keys', () => {
         ]
     };
 
+    // value should be replaced
+    // key and meta should be untouched
+    // top level child should be kept
+    // keys should be generated for newly set value
     expect(Reducer(data, action)).toEqual(expectedData);
 });
 
@@ -388,5 +397,9 @@ test('Reducer should set (with a keyPath) with an unkeyed array and give it keys
         }
     };
 
+    // value should be replaced at keypath
+    // key and meta should be untouched
+    // top level child should be kept
+    // keys should be generated for newly set value
     expect(Reducer(data, action)).toEqual(expectedData);
 });
