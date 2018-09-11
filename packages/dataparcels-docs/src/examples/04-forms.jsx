@@ -1,5 +1,5 @@
 import React from 'react';
-import Parcel, {PureParcel} from 'react-dataparcels';
+import Parcel, {ParcelBoundary} from 'react-dataparcels';
 import ParcelsPluginForm from 'parcels-plugin-form';
 
 import example from '../components/Example';
@@ -70,41 +70,41 @@ export default class ExampleMeta extends React.Component {
 
         return example(this, desc, <div>
 
-            <PureParcel parcel={lunch.get('name')}>
+            <ParcelBoundary parcel={lunch.get('name')}>
                 {(name) => <div>
                     <label className="Label">what is your name?</label>
                     <input className="Input" type="text" {...name.spreadDOM()} />
                     {renderError(name)}
                     {"dispatched: " + name.hasDispatched()}
                 </div>}
-            </PureParcel>
+            </ParcelBoundary>
 
-            <PureParcel parcel={lunch.get('email')}>
+            <ParcelBoundary parcel={lunch.get('email')}>
                 {(email) => <div>
                     <label className="Label">what is your email?</label>
                     <input className="Input" type="tel" {...email.spreadDOM()} />
                     {renderError(email)}
                 </div>}
-            </PureParcel>
+            </ParcelBoundary>
 
-            <PureParcel parcel={lunch.getIn(['food', 'type'])}>
+            <ParcelBoundary parcel={lunch.getIn(['food', 'type'])}>
                 {(type) => <div>
                     <label className="Label">what type of food would you like?</label>
                     <input className="Input" type="text" {...type.spreadDOM()} />
                     {renderError(type)}
                 </div>}
-            </PureParcel>
+            </ParcelBoundary>
 
-            <PureParcel parcel={lunch.getIn(['food', 'quantity'])}>
+            <ParcelBoundary parcel={lunch.getIn(['food', 'quantity'])}>
                 {(quantity) => <div>
                     <label className="Label">how many would you like?</label>
                     <input className="Input" type="tel" {...quantity.spreadDOM()} />
                     {renderError(quantity)}
                 </div>}
-            </PureParcel>
+            </ParcelBoundary>
 
             {/*lunch.get('pets').toArray((pet) => {
-                return <PureParcel parcel={pet} key={pet.key}>
+                return <ParcelBoundary parcel={pet} key={pet.key}>
                     {(pet) => {
                         let name = pet.get('name');
                         return <div>
@@ -113,7 +113,7 @@ export default class ExampleMeta extends React.Component {
                             {renderError(name)}
                         </div>;
                     }}
-                </PureParcel>;
+                </ParcelBoundary>;
             })*/}
 
             <button className="Button Button-primary" onClick={lunch.meta.submit}>Submit</button>

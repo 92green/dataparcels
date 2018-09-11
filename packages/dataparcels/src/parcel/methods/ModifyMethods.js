@@ -109,5 +109,18 @@ export default (_this: Parcel): Object => ({
         // explicitly mutate, see https://github.com/blueflag/parcels/issues/43
         _this._modifiers =_this._modifiers.add(modifier);
         return _this;
+    },
+
+    _boundarySplit: ({handleChange}: *): Parcel => {
+        return pipeWith(
+            _this._parcelData,
+            parcelData => ({
+                parcelData,
+                id: _this._id.pushModifier('mb'),
+                parent: _this._parent,
+                handleChange
+            }),
+            _this._create
+        );
     }
 });

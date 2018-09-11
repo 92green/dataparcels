@@ -41,7 +41,7 @@ ParcelHoc({
 
   The `pipe` function expects to be given a double barrel function. The first function will be passed `props`, and the next is passed the Parcel. The result of the `pipe` function will then be passed down as props.
 * <Param name="debugRender" optional type="boolean" default="false" />
-  For debugging purposes. When set to `true` this causes all downstream <Link to="/api/PureParcel">PureParcel</Link>s to display when they are being rendered and re-rendered.
+  For debugging purposes. When set to `true` this causes all downstream <Link to="/api/ParcelBoundary">ParcelBoundary</Link>s to display when they are being rendered and re-rendered.
 
 
 ## Example

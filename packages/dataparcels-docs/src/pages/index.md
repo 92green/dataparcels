@@ -36,7 +36,7 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 
 * <Link to="/api/Parcel">Parcel</Link>
 * <Link to="/api/ParcelHoc">ParcelHoc</Link>
-* <Link to="/api/PureParcel">PureParcel</Link>
+* <Link to="/api/ParcelBoundary">ParcelBoundary</Link>
 * <Link to="/api/ChangeRequest">ChangeRequest</Link>
 * <Link to="/api/Action">Action</Link>
 * <Link to="/api/ActionCreators">ActionCreators</Link>

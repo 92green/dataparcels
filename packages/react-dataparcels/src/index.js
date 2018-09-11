@@ -17,4 +17,4 @@ export type {Index} from 'dataparcels';
 export type {Property} from 'dataparcels';
 
 export {default as ParcelHoc} from './ParcelHoc';
-export {default as PureParcel} from './PureParcel';
+export {default as ParcelBoundary} from './ParcelBoundary';

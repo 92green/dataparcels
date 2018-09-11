@@ -74,11 +74,6 @@ test('Types() can identify a function array', () => testTypes(`functionArray`, [
     'functionArray'
 ]));
 
-test('Types() can identify an optional function', () => testTypes(`functionOptional`, [
-    'function',
-    'undefined'
-]));
-
 test('Types() can identify a keyIndex', () => testTypes(`keyIndex`, [
     'number',
     'string'

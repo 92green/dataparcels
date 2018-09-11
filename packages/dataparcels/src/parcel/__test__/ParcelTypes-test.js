@@ -134,10 +134,10 @@ test('Correct methods are created for primitive values', () => {
         value: 123
     };
     expect(() => new Parcel(data).value).not.toThrow();
-    expect(() => new Parcel(data).has('a')).toThrowError(`.has() is not a function.`);
-    expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function.`);
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments.`);
+    expect(() => new Parcel(data).has('a')).toThrowError(`.has() is not a function`);
+    expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
 });
 
 test('Correct methods are created for object values', () => {
@@ -146,9 +146,9 @@ test('Correct methods are created for object values', () => {
     };
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
-    expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function.`);
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments.`);
+    expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
 });
 
 test('Correct methods are created for array values', () => {
@@ -158,8 +158,8 @@ test('Correct methods are created for array values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).not.toThrow();
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments.`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
 });
 
 test('Correct methods are created for object child values', () => {
@@ -167,10 +167,10 @@ test('Correct methods are created for object child values', () => {
         value: {a: 123}
     };
     expect(() => new Parcel(data).get("a").value).not.toThrow();
-    expect(() => new Parcel(data).get("a").has('a')).toThrowError(`.has() is not a function.`);
-    expect(() => new Parcel(data).get("a").pop()).toThrowError(`.pop() is not a function.`);
+    expect(() => new Parcel(data).get("a").has('a')).toThrowError(`.has() is not a function`);
+    expect(() => new Parcel(data).get("a").pop()).toThrowError(`.pop() is not a function`);
     expect(() => new Parcel(data).get("a").delete()).not.toThrow();
-    expect(() => new Parcel(data).get("a").swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments.`);
+    expect(() => new Parcel(data).get("a").swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
 });
 
 test('Correct methods are created for array element values', () => {
@@ -178,8 +178,8 @@ test('Correct methods are created for array element values', () => {
         value: [1,2,3]
     };
     expect(() => new Parcel(data).get(0).value).not.toThrow();
-    expect(() => new Parcel(data).get(0).has('a')).toThrowError(`.has() is not a function.`);
-    expect(() => new Parcel(data).get(0).pop()).toThrowError(`.pop() is not a function.`);
+    expect(() => new Parcel(data).get(0).has('a')).toThrowError(`.has() is not a function`);
+    expect(() => new Parcel(data).get(0).pop()).toThrowError(`.pop() is not a function`);
     expect(() => new Parcel(data).get(0).delete()).not.toThrow();
     expect(() => new Parcel(data).get(0).swapNext()).not.toThrow();
 });

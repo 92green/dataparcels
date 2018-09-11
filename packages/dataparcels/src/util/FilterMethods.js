@@ -15,10 +15,10 @@ export default (parcelType: string, methodCreator: Function) => (parcel: Parcel,
     return pipeWith(
         methods,
         map((value, key) => (...args: Array<*>) => {
-            let suffix = `It can only be called on parcels of type "${parcelType}". This parcel has a value of "${parcel.value}" and is not of type "${parcelType}" (keyPath: [${parcel.path.join(', ')}]).`;
+            let suffix = `(keyPath: [${parcel.path.join(', ')}]).`;
 
             if(key.slice(-4) === "Self") {
-                throw new Error(`.${key.slice(0, -4)}() cannot be called with ${args.length} argument${args.length === 1 ? "" : "s"}. ${suffix}`);
+                throw new Error(`.${key.slice(0, -4)}() cannot be called with ${args.length} argument${args.length === 1 ? "" : "s"} on a value of "${parcel.value}". ${suffix}`);
             }
             throw new Error(`.${key}() is not a function. It can only be called on parcels of type "${parcelType}". ${suffix}`);
         })

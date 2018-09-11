@@ -12,6 +12,7 @@ export default (_this: Parcel): Object => ({
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
         Types(`dispatch() expects param "dispatchable" to be`, `dispatchable`)(dispatchable);
 
+
         let {
             _onDispatch,
             _onHandleChange
@@ -28,6 +29,11 @@ export default (_this: Parcel): Object => ({
             changeRequest._originPath = _this.path;
         }
 
+        if(_this._log) {
+            console.log(`Parcel change: ${_this._logName}`);
+            changeRequest.toConsole();
+        }
+
         if(_this._dispatchBuffer) {
             _this._dispatchBuffer(changeRequest);
             return;
@@ -35,9 +41,12 @@ export default (_this: Parcel): Object => ({
 
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._setBaseParcel(_this);
-            let parcelWithChangedData = _this._create({
-                parcelData: changeRequestWithBase.data
-            });
+            let parcelWithChangedData = undefined;
+            try {
+                parcelWithChangedData = _this._create({
+                    parcelData: changeRequestWithBase.data
+                });
+            } catch (e) {} /* eslint-disable-line */
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
             return;
@@ -52,7 +61,7 @@ export default (_this: Parcel): Object => ({
         let lastBuffer = _this._dispatchBuffer;
 
         let buffer = changeRequest
-            ? changeRequest.updateActions(() => []) // TODO - if changeRequest implements caching, is this enough data clearing?
+            ? changeRequest.updateActions(() => [])
             : new ChangeRequest();
 
         _this._dispatchBuffer = (changeRequest: ChangeRequest) => {
