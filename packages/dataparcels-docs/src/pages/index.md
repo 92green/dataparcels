@@ -17,10 +17,6 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 
 <Link to="/getting-started">Get started with dataparcels</Link>, installation instructions and a first example.
 
-## API
-
-<API />
-
 ## Examples
 
 ### Parcel

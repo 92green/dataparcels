@@ -11,7 +11,13 @@
 @include DcmeCenteredLanding;
 @include DcmeDivider;
 @include DcmeGrid;
-@include DcmeImage;
+@include DcmeImage {
+    &-logo {
+        @include BruceBreakpoint('small') {
+            margin-top: -50%;
+        }
+    }
+}
 @include DcmeInput;
 @include DcmeLink;
 @include DcmeLabel;
