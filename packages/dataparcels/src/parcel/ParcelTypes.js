@@ -1,7 +1,7 @@
 // @flow
 import type ParcelId from '../parcelId/ParcelId';
-import isIndexed from 'unmutable/lib/util/isIndexed';
-import isValueObject from 'unmutable/lib/util/isValueObject';
+import isIndexedValue from '../parcelData/isIndexedValue';
+import isParentValue from '../parcelData/isParentValue';
 
 export default class ParcelTypes {
 
@@ -14,8 +14,8 @@ export default class ParcelTypes {
     constructor(value: *, parentParcelTypes: ?ParcelTypes, id: ?ParcelId) {
         this._isChild = !!parentParcelTypes;
         this._isElement = !!(parentParcelTypes && parentParcelTypes.isIndexed());
-        this._isIndexed = isIndexed(value);
-        this._isParent = isValueObject(value);
+        this._isIndexed = isIndexedValue(value);
+        this._isParent = isParentValue(value);
         this._isTopLevel = !!(id && id.path().length === 0);
     }
 
