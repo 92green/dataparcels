@@ -5,8 +5,11 @@ import type {Property} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 
 import get from './get';
+import isParentValue from './isParentValue';
 import prepareChildKeys from './prepareChildKeys';
 import keyOrIndexToProperty from './keyOrIndexToProperty';
+import updateChild from './updateChild';
+import updateChildKeys from './updateChildKeys';
 
 import set from 'unmutable/lib/set';
 import update from 'unmutable/lib/update';
@@ -32,6 +35,7 @@ let updateIn = (keyPath: Array<Key|Index>, updater: Function) => (parcelData: Pa
 
     let {
         value: updatedValue,
+        child: updatedChild,
         ...updatedChildValues
     } = updateIn(rest, updater)(before);
 
@@ -44,15 +48,26 @@ let updateIn = (keyPath: Array<Key|Index>, updater: Function) => (parcelData: Pa
         parcelDataWithChildKeys.child,
         update(property, (node) => ({
             ...node,
+            child: updatedChild,
             ...updatedChildValues
         }))
     );
 
-    return {
+    let result = {
         ...parcelDataWithChildKeys,
         value,
         child
     };
+
+    if(isParentValue(result.value)) {
+        return pipeWith(
+            result,
+            updateChild(),
+            updateChildKeys()
+        );
+    }
+
+    return result;
 };
 
 export default updateIn;

@@ -133,7 +133,6 @@ test('Reducer should set with keyPath of 1 element', () => {
     expect(Reducer(data, action)).toEqual(expectedData);
 });
 
-
 test('Reducer should clear child from set key', () => {
     var data = {
         value: {
@@ -291,11 +290,102 @@ test('Reducer should set with keyPath of 2 elements on arrays', () => {
                         key: "#b"
                     },
                     {
-                        key: "#c"
+                        key: "#c",
+                        child: [
+                            {
+                                key: "#a"
+                            }
+                        ]
                     },
                 ]
             }
         ]
+    };
+
+    expect(Reducer(data, action)).toEqual(expectedData);
+});
+
+test('Reducer should set with an unkeyed array and give it keys', () => {
+    var data = {
+        value: 9,
+        meta: {
+            abc: 123
+        },
+        key: "^",
+        child: {
+            a: {
+                key: "a"
+            },
+            b: {
+                key: "b"
+            }
+        }
+    };
+    var action = new Action({
+        type: "set",
+        keyPath: [],
+        payload: {
+            value: [1,2,3]
+        }
+    });
+
+    var expectedData = {
+        value: [1,2,3],
+        meta: {
+            abc: 123
+        },
+        key: "^",
+        child: [
+            {key: "#a"},
+            {key: "#b"},
+            {key: "#c"}
+        ]
+    };
+
+    expect(Reducer(data, action)).toEqual(expectedData);
+});
+
+test('Reducer should set (with a keyPath) with an unkeyed array and give it keys', () => {
+    var data = {
+        value: {
+            a: [0,0,0]
+        },
+        meta: {
+            abc: 123
+        },
+        key: "^",
+        child: {
+            a: {
+                key: "a"
+            }
+        }
+    };
+    var action = new Action({
+        type: "set",
+        keyPath: ["a"],
+        payload: {
+            value: [1,2,3]
+        }
+    });
+
+    var expectedData = {
+        value: {
+            a: [1,2,3]
+        },
+        meta: {
+            abc: 123
+        },
+        key: "^",
+        child: {
+            a: {
+                key: "a",
+                child: [
+                    {key: "#a"},
+                    {key: "#b"},
+                    {key: "#c"}
+                ]
+            }
+        }
     };
 
     expect(Reducer(data, action)).toEqual(expectedData);
