@@ -16,7 +16,6 @@ import parcelInsert from '../parcelData/insert';
 
 import parcelPop from '../parcelData/pop';
 import parcelPush from '../parcelData/push';
-import parcelSet from '../parcelData/set';
 import parcelSetMeta from '../parcelData/setMeta';
 import parcelSetSelf from '../parcelData/setSelf';
 import parcelShift from '../parcelData/shift';
