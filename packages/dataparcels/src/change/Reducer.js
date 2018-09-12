@@ -16,7 +16,6 @@ import parcelInsert from '../parcelData/insert';
 
 import parcelPop from '../parcelData/pop';
 import parcelPush from '../parcelData/push';
-import parcelSet from '../parcelData/set';
 import parcelSetMeta from '../parcelData/setMeta';
 import parcelSetSelf from '../parcelData/setSelf';
 import parcelShift from '../parcelData/shift';
@@ -106,29 +105,18 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
         }
 
         case "replace": {
-            if(keyPathIsEmpty) {
-                return updateIn(
-                    keyPath,
-                    parcelSetSelf(value, true)
-                );
-            }
             return updateIn(
-                keyPathButLast,
-                parcelSet(keyPathLast, value)
+                keyPath,
+                parcelSetSelf(value, true)
             );
         }
 
         case "set": {
-            if(keyPathIsEmpty) {
-                return updateIn(
-                    keyPath,
-                    parcelSetSelf(value, false)
-                );
-            }
             return updateIn(
-                keyPathButLast,
-                parcelSet(keyPathLast, value)
+                keyPath,
+                parcelSetSelf(value, false)
             );
+
         }
 
         case "setMeta": {
