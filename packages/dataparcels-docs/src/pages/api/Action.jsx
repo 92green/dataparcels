@@ -1,7 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import React from 'react';
-import Class from 'component/Class';
+import ApiPage from 'component/ApiPage';
 import Markdown_Action from 'docs/api/action/Action.md';
 
 const md = {
@@ -16,7 +16,7 @@ isMetaAction()
 toJS()
 `;
 
-export default () => <Class
+export default () => <ApiPage
     name="Action"
     api={api}
     md={md}

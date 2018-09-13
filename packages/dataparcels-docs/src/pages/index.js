@@ -41,7 +41,7 @@ export default () => <Box>
                     <NavigationListItem><a className="Link" href={`#API`}>API</a></NavigationListItem>
                 </NavigationList>}
             />
-            <Text element="h2" modifier="sizeMega">API</Text>
+            <Text id="API" element="h2" modifier="sizeMega">API</Text>
             <API />
         </Wrapper>
     </Box>

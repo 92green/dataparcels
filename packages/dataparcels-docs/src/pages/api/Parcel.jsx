@@ -1,7 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import React from 'react';
-import Class from 'component/Class';
+import ApiPage from 'component/ApiPage';
 import Markdown_Parcel from 'docs/api/parcel/Parcel.md';
 import Markdown_value from 'docs/api/parcel/value.md';
 import Markdown_meta from 'docs/api/parcel/meta.md';
@@ -183,7 +183,7 @@ pipe()
 
 `;
 
-export default () => <Class
+export default () => <ApiPage
     name="Parcel"
     api={api}
     md={md}
