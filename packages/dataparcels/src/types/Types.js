@@ -33,8 +33,9 @@ export type ParcelConfigInternal = {
 
 export type CreateParcelConfigType = {
     onDispatch?: Function,
-    id: ParcelId,
-    parcelData: ParcelData,
+    id?: ParcelId,
+    modifiers?: Modifiers,
+    parcelData?: ParcelData,
     parent?: Parcel,
     handleChange?: Function
 };
