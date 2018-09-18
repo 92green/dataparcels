@@ -149,15 +149,18 @@ export default class Parcel {
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
             id = this._id,
-            parcelData: {
-                child,
-                value,
-                meta = {}
-            },
-            parent,
             onDispatch = this.dispatch,
-            handleChange
+            handleChange,
+            modifiers = this._modifiers,
+            parent,
+            parcelData = this._parcelData
         } = createParcelConfig;
+
+        let {
+            child,
+            value,
+            meta = {}
+        } = parcelData;
 
         let parcel: Parcel = new Parcel(
             {
@@ -168,7 +171,7 @@ export default class Parcel {
                 child,
                 meta,
                 id,
-                modifiers: this._modifiers,
+                modifiers,
                 onDispatch,
                 parent,
                 treeshare: this._treeshare

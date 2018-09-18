@@ -32,20 +32,15 @@ export default (_this: Parcel): Object => ({
 
     modifyChange: (batcher: Function): Parcel => {
         Types(`modifyChange() expects param "batcher" to be`, `function`)(batcher);
-        return pipeWith(
-            _this._parcelData,
-            parcelData => ({
-                parcelData,
-                id: _this._id.pushModifier('mc'),
-                onDispatch: (changeRequest: ChangeRequest) => {
-                    _this.batch(
-                        (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),
-                        changeRequest
-                    );
-                }
-            }),
-            _this._create
-        );
+        return _this._create({
+            id: _this._id.pushModifier('mc'),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.batch(
+                    (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),
+                    changeRequest
+                );
+            }
+        });
     },
 
     modifyChangeValue: (updater: Function): Parcel => {
@@ -85,11 +80,9 @@ export default (_this: Parcel): Object => ({
             );
 
         return pipeWith(
-            _this._parcelData,
-            parcelData => ({
-                parcelData,
+            {
                 id: _this._id.pushModifier('im')
-            }),
+            },
             metaSetter,
             _this._create
         );
@@ -106,21 +99,17 @@ export default (_this: Parcel): Object => ({
 
     addDescendantModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
         Types(`addDescendantModifier() expects param "modifier" to be`, `modifier`)(modifier);
-        // explicitly mutate, see https://github.com/blueflag/parcels/issues/43
-        _this._modifiers =_this._modifiers.add(modifier);
-        return _this;
+        return _this._create({
+            id: _this._id.pushModifier('am'),
+            modifiers: _this._modifiers.add(modifier)
+        });
     },
 
     _boundarySplit: ({handleChange}: *): Parcel => {
-        return pipeWith(
-            _this._parcelData,
-            parcelData => ({
-                parcelData,
-                id: _this._id.pushModifier('mb'),
-                parent: _this._parent,
-                handleChange
-            }),
-            _this._create
-        );
+        return _this._create({
+            id: _this._id.pushModifier('mb'),
+            parent: _this._parent,
+            handleChange
+        });
     }
 });
