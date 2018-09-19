@@ -24,17 +24,17 @@ export default () => <Box>
     <Grid>
         <Item
             name="Parcel"
-            description="A thing that does a thing and also does whatever you think the other really good thing aout the thing might could possibly be."
+            description="Parcel is a data container. It's job is to hold your data, split it into smaller parts, and merge changes back together."
             image={IconParcel}
         />
         <Item
             name="ParcelHoc"
-            description="A thing that does a thing and also does whatever you think the other really good thing aout the thing might could possibly be."
+            description="ParcelHoc is a React higher order component. It's job is to provide a parcel as props, and to handle how the parcel responds to the React lifecycle."
             image={IconParcelHoc}
         />
         <Item
             name="ParcelBoundary"
-            description="A thing that does a thing and also does whatever you think the other really good thing aout the thing might could possibly be."
+            description="ParcelBoundary is a React component. It's job is to optimise rendering performance, and to optionally control the flow of parcel changes."
             image={IconParcelBoundary}
         />
     </Grid>

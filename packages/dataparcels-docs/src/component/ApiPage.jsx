@@ -64,6 +64,7 @@ export default ({name, api, md, after}: Props) => {
             {After && <Typography><After /></Typography>}
         </Box>}
         nav={() => <NavigationList>
+            <NavigationListItem><Link to="/api">Api</Link></NavigationListItem>
             <NavigationListItem>{name}</NavigationListItem>
             {renderApi(api)}
         </NavigationList>}
