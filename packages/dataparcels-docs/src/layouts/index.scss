@@ -52,7 +52,7 @@
 @include DcmeText {
     &-superDuper {
         text-shadow: -6px 6px 0px darken(color('primary'), 15),
-            -12px 12px 0px darken(color('secondary'), 47)
+            -12px 12px 0px darken(color('secondary'), 40)
     }
 }
 @include DcmeTypography;

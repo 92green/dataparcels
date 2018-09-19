@@ -24,17 +24,26 @@ export default () => <Box>
     <Grid>
         <Item
             name="Parcel"
-            description="Parcel is a data container. It's job is to hold your data, split it into smaller parts, and merge changes back together."
+            description={<Box>
+                <Text element="p" modifier="marginMilli">Parcel is a data container.</Text>
+                <Text element="p">It's job is to hold your data, split it into smaller parts, and merge changes back together.</Text>
+            </Box>}
             image={IconParcel}
         />
         <Item
             name="ParcelHoc"
-            description="ParcelHoc is a React higher order component. It's job is to provide a parcel as props, and to handle how the parcel responds to the React lifecycle."
+            description={<Box>
+                <Text element="p" modifier="marginMilli">ParcelHoc is a React higher order component.</Text>
+                <Text element="p">It's job is to provide a parcel as a prop, and to handle how the parcel binds to React props and lifecycle events.</Text>
+            </Box>}
             image={IconParcelHoc}
         />
         <Item
             name="ParcelBoundary"
-            description="ParcelBoundary is a React component. It's job is to optimise rendering performance, and to optionally control the flow of parcel changes."
+            description={<Box>
+                <Text element="p" modifier="marginMilli">ParcelBoundary is a React component.</Text>
+                <Text element="p">It's job is to optimise rendering performance, and to optionally control the flow of parcel changes.</Text>
+            </Box>}
             image={IconParcelBoundary}
         />
     </Grid>

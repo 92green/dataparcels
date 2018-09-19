@@ -1,0 +1,3 @@
+```flow
+pure?: boolean
+```
