@@ -26,6 +26,18 @@
             margin-top: -50%;
         }
     }
+    &-apiPageIcon {
+        display: none !important;
+        float: right;
+        width: 30%;
+        margin-top: -2rem;
+        margin-bottom: 0;
+        margin-left: 1rem;
+
+        @include BruceBreakpoint('large') {
+            display: block !important;
+        }
+    }
 }
 @include DcmeInput;
 @include DcmeLink;

@@ -1,12 +1,16 @@
 import Link from 'component/Link';
 import Param from 'component/Param';
+import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelCreateReact from 'docs/notes/ParcelCreateReact.md';
+import IconParcel from 'content/icon-parcel0001.png';
 
 # Parcel
 
+<ApiPageIcon>{IconParcel}</ApiPageIcon>
+
 Parcel is a data container. It's job is to hold your data, split it into smaller parts, and merge changes back together.
 
-Please see the <Link to="/getting-started">getting started</Link> page to see how to best use Parcels in a React app.
+If you're using React, you probably wont be instanciating parcels directly. Please see the <Link to="/getting-started">getting started</Link> page to see how to best use Parcels in a React app.
 
 ```js
 import Parcel from 'dataparcels';

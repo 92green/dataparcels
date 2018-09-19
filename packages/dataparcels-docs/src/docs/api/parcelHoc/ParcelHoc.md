@@ -1,10 +1,14 @@
 import Link from 'component/Link';
 import Param from 'component/Param';
+import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelHocExample from 'pages/examples/parcelhoc-example.md';
 import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-initialvalue.md';
 import ParcelHocOnChange from 'pages/examples/parcelhoc-onchange.md';
+import IconParcelHoc from 'content/icon-parcelhoc0001.png';
 
 # ParcelHoc
+
+<ApiPageIcon>{IconParcelHoc}</ApiPageIcon>
 
 ParcelHoc is a higher order component that creates a Parcel on mount, stores it in its own state, and passes the Parcel down as props. It abstracts away most of the binding between a Parcel and the lifecycle methods of a React component.
 
