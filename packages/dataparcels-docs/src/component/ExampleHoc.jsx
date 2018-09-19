@@ -22,15 +22,17 @@ type LayoutProps = {
 export default (Component: ComponentType<*>) => class Example extends Layout<Props> {
     static elements = ['demo', 'data'];
 
-    static layout = ({demo, data}) => <Box modifier="paddingRowKilo">
-        <Grid>
-            <GridItem modifier="6 padding">
-                {demo()}
-            </GridItem>
-            <GridItem modifier="6 padding">
-                {data()}
-            </GridItem>
-        </Grid>
+    static layout = ({demo, data}) => <Box modifier="paddingRowKilo example">
+        <Box modifier="exampleInner">
+            <Grid>
+                <GridItem modifier="6 padding">
+                    {demo()}
+                </GridItem>
+                <GridItem modifier="6 padding">
+                    {data()}
+                </GridItem>
+            </Grid>
+        </Box>
     </Box>;
 
     demo = (): Node => {

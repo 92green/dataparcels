@@ -5,7 +5,16 @@
 @include DcmeConfig;
 
 @include DcmeBase;
-@include DcmeBox;
+@include DcmeBox {
+    &-example {
+        margin-left: -2rem;
+        margin-right: -2rem;
+    }
+    &-exampleInner {
+        border: 2px dashed grey(90);
+        padding: 2rem;
+    }
+}
 @include DcmeBulletList;
 @include DcmeButton;
 @include DcmeCenteredLanding;
