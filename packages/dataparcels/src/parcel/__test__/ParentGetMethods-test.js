@@ -184,23 +184,18 @@ test('ParentParcel.get() should cache its parcelData.child after its calculated,
         handleChange: (parcel) => {
             parcel.get(1);
             expect(parcel.data.child.length).toBe(count);
-            expect(parcel.getInternalLocationShareData()._childCache).toBe(undefined);
         }
     });
-
-    expect(parcel.getInternalLocationShareData()._childCache).toBe(undefined);
 
     let ms = TestTimeExecution(() => {
         parcel.get(1);
     });
 
-    expect(parcel.getInternalLocationShareData()._childCache.length).toBe(count);
-
     let ms2 = TestTimeExecution(() => {
         parcel.get(1);
     });
 
-    expect(ms / 25).toBeGreaterThan(ms2); // expect amazing performance boosts from having cached
+    expect(ms / 10).toBeGreaterThan(ms2); // expect amazing performance boosts from having cached
 
     parcel.get(0).onChange(123);
 });

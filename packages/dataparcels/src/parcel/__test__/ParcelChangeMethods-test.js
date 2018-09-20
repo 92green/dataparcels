@@ -33,6 +33,40 @@ test('Parcel.set() should call the Parcels handleChange function with the new pa
     }).set(456);
 });
 
+test('Parcel.set() should remove and replace child data when setting a deep data structure', () => {
+    expect.assertions(2);
+
+    var data = {
+        value: [[1,2,3],[4]]
+    };
+
+    var expectedData = {
+        child: [
+            {"key": "#a"},
+            {"key": "#b"}
+        ],
+        key: "^",
+        meta: {},
+        value: [[6], [2, 3, 4]]
+    };
+
+    var expectedDeepData = {
+        child: undefined,
+        meta: {},
+        value: 6,
+        key: '#a'
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel) => {
+            expect(parcel.data).toEqual(expectedData);
+            let deep = parcel.getIn([0,0]).data;
+            expect(deep).toEqual(expectedDeepData);
+        }
+    }).set([[6],[2,3,4]]);
+});
+
 test('Parcel.update() should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(3);
 
