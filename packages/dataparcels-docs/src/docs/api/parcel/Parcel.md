@@ -1,8 +1,16 @@
 import Link from 'component/Link';
 import Param from 'component/Param';
+import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelCreateReact from 'docs/notes/ParcelCreateReact.md';
+import IconParcel from 'content/icon-parcel0001.png';
 
 # Parcel
+
+<ApiPageIcon>{IconParcel}</ApiPageIcon>
+
+Parcel is a data container. It's job is to hold your data, split it into smaller parts, and merge changes back together.
+
+If you're using React, you probably wont be instanciating parcels directly. Please see the <Link to="/getting-started">getting started</Link> page to see how to best use Parcels in a React app.
 
 ```js
 import Parcel from 'dataparcels';
@@ -18,12 +26,8 @@ new Parcel({
 });
 ```
 
-Creates a new Parcel.
-
-Please see the <Link to="/getting-started">getting started</Link> page to see how to best use Parcels in a React app.
-
 * <Param name="value" optional type="any" default="undefined" />
-  The value you want to put in the Parcel. This value will be changed immutably when change methods are called on the Paercel. The data type of the `value` will determine the type of Parcel that will be created, and will determine which methods you can use to change the value. Please read <Link to="/parcel-types">Parcel types</Link> for more info.
+  The value you want to put in the Parcel. This value will be changed immutably when change methods are called on the Parcel. The data type of the `value` will determine the type of Parcel that will be created, and will determine which methods you can use to change the value. Please read <Link to="/parcel-types">Parcel types</Link> for more info.
 * <Param name="handleChange" optional type="(newParcel: Parcel, changeRequest: ChangeRequest) => void" />
   The `handleChange` function will be called whenever the Parcel's value has been triggered to change. It is passed `newParcel`, a replacement Parcel containing the changes; and `changeRequest`, a <Link to="/api/ChangeRequest">ChangeRequest</Link> that contains details about the change itself.
   

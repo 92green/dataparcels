@@ -50,8 +50,9 @@ type Props = {
     md: *
 };
 
-export default ({name, api, md}: Props) => {
+export default ({name, api, md, after}: Props) => {
     let Description = md._desc;
+    let After = md._after;
     return <PageLayout
         content={() => <Box>
             <Box modifier="marginBottomGiga">
@@ -60,8 +61,10 @@ export default ({name, api, md}: Props) => {
                 </Typography>
             </Box>
             {renderDoclets({api, md})}
+            {After && <Typography><After /></Typography>}
         </Box>}
         nav={() => <NavigationList>
+            <NavigationListItem><Link to="/api">Api</Link></NavigationListItem>
             <NavigationListItem>{name}</NavigationListItem>
             {renderApi(api)}
         </NavigationList>}

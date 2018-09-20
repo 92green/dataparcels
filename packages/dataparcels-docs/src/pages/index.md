@@ -1,5 +1,6 @@
 import Link from 'gatsby-link';
-import {Text} from 'dcme-style';
+import API from 'content/API';
+import {Divider, Grid, GridItem, Text} from 'dcme-style';
 
 ## What is it?
 
@@ -26,17 +27,9 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 
 ### ParcelHoc
 
-* <Link to="/examples/parcelhoc-example">ParcelHoc - Example</Link>
-* <Link to="/examples/parcelhoc-initialvalue">ParcelHoc - Getting initialValue from props</Link>
-* <Link to="/examples/parcelhoc-onchange">ParcelHoc - Using onChange</Link>
-* <Link to="/examples/parcelhoc-delayuntil">ParcelHoc - Using delayUntil</Link>
+* <Link to="/examples/parcelhoc-example">ParcelHoc Example</Link>
+* <Link to="/examples/parcelhoc-initialvalue">Getting initialValue from props</Link>
+* <Link to="/examples/parcelhoc-onchange">Using onChange</Link>
+* <Link to="/examples/parcelhoc-delayuntil">Using delayUntil</Link>
 
 
-## API
-
-* <Link to="/api/Parcel">Parcel</Link>
-* <Link to="/api/ParcelHoc">ParcelHoc</Link>
-* <Link to="/api/ParcelBoundary">ParcelBoundary</Link>
-* <Link to="/api/ChangeRequest">ChangeRequest</Link>
-* <Link to="/api/Action">Action</Link>
-* <Link to="/api/ActionCreators">ActionCreators</Link>
