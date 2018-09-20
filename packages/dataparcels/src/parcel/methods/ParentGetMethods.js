@@ -2,7 +2,6 @@
 import type ChangeRequest from '../../change/ChangeRequest';
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
-import type {ParcelData} from '../../types/Types';
 import type Parcel from '../Parcel';
 import type {ParcelMapper} from '../../types/Types';
 import Types from '../../types/Types';
@@ -18,54 +17,27 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel) => ({
 
-    // prepare child keys only once per location
-    // by preparing them and saving them to location share data
+    // prepare child keys only once per parcel instance
+    // by preparing them and mutating this.parcelData
 
-    _prepareChildKeys: () => (parcelData: ParcelData): ParcelData => {
-        let {_childCache} = _this.getInternalLocationShareData();
-        if(!parcelData.child) {
-            if(!_childCache) {
-                _childCache = prepareChildKeys()(parcelData).child;
-                _this.setInternalLocationShareData({
-                    _childCache
-                });
-            }
-
-            return {
-                ...parcelData,
-                child: _childCache
-            };
-
+    _prepareChildKeys: () => {
+        if(!_this._parcelData.child) {
+            _this._parcelData = prepareChildKeys()(_this._parcelData);
         }
-
-        if(_childCache) {
-            // once parcelData contains child, remove the temporary child cache
-            _this.setInternalLocationShareData({
-                _childCache: undefined
-            });
-        }
-
-        return parcelData;
     },
 
     has: (key: Key|Index): boolean => {
         Types(`has() expects param "key" to be`, `keyIndex`)(key);
 
-        return pipeWith(
-            _this._parcelData,
-            _this._methods._prepareChildKeys(),
-            parcelHas(key)
-        );
+        _this._methods._prepareChildKeys();
+        return parcelHas(key)(_this._parcelData);
     },
 
     get: (key: Key|Index, notFoundValue: any): Parcel => {
         Types(`get() expects param "key" to be`, `keyIndex`)(key);
 
-        let childParcelData = pipeWith(
-            _this._parcelData,
-            _this._methods._prepareChildKeys(),
-            parcelGet(key, notFoundValue)
-        );
+        _this._methods._prepareChildKeys();
+        let childParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
 
         let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
             _this.dispatch(changeRequest._unget(childParcelData.key));
