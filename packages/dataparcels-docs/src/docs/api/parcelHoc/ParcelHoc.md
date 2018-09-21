@@ -4,7 +4,7 @@ import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelHocExample from 'pages/examples/parcelhoc-example.md';
 import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-initialvalue.md';
 import ParcelHocOnChange from 'pages/examples/parcelhoc-onchange.md';
-import IconParcelHoc from 'content/icon-parcelhoc0001.png';
+import IconParcelHoc from 'content/parcelhoc.gif';
 
 # ParcelHoc
 

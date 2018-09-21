@@ -4,9 +4,9 @@ import Link from 'gatsby-link';
 import {Box, Grid, GridItem, Image, NavigationList, NavigationListItem, Text} from 'dcme-style';
 import SpruceClassName from 'stampy/lib/util/SpruceClassName';
 
-import IconParcel from 'content/icon-parcel0001.png';
-import IconParcelHoc from 'content/icon-parcelhoc0001.png';
-import IconParcelBoundary from 'content/icon-parcelboundary0001.png';
+import IconParcel from 'content/parcel.gif';
+import IconParcelHoc from 'content/parcelhoc.gif';
+import IconParcelBoundary from 'content/parcelboundary.gif';
 
 const Item = ({name, description, image}) => <GridItem modifier="4">
     <Link to={`/api/${name}`}>

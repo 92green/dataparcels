@@ -5,7 +5,7 @@ import React from 'react';
 import {Box, Text} from 'dcme-style';
 import PageLayout from 'component/PageLayout';
 import API from 'content/API';
-import IconParcel from 'content/icon-parcelinverted0001.png';
+import IconParcel from 'content/parcelinverted.gif';
 
 export default () => <PageLayout
     content={() => <Box modifier="paddingTopKilo">
