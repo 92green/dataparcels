@@ -92,7 +92,10 @@ export default class Parcel {
             id
         );
 
-        this._id = id.setTypeCode(this._parcelTypes.toTypeCode());
+        this._id = id;
+        if(!_configInternal || parent) {
+            this._id.setTypeCode(this._parcelTypes.toTypeCode());
+        }
 
         // modifiers
         this._modifiers = modifiers || new Modifiers();
