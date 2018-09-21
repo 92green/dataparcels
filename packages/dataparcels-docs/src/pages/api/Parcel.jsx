@@ -17,6 +17,8 @@ import Markdown_toObject from 'docs/api/parcel/toObject.md';
 import Markdown_toArray from 'docs/api/parcel/toArray.md';
 import Markdown_has from 'docs/api/parcel/has.md';
 import Markdown_size from 'docs/api/parcel/size.md';
+import Markdown_isFirst from 'docs/api/parcel/isFirst.md';
+import Markdown_isLast from 'docs/api/parcel/isLast.md';
 import Markdown_onChange from 'docs/api/parcel/onChange.md';
 import Markdown_onChangeDOM from 'docs/api/parcel/onChangeDOM.md';
 import Markdown_set from 'docs/api/parcel/set.md';
@@ -70,6 +72,8 @@ const md = {
     toArray: Markdown_toArray,
     has: Markdown_has,
     size: Markdown_size,
+    isFirst: Markdown_isFirst,
+    isLast: Markdown_isLast,
     onChange: Markdown_onChange,
     onChangeDOM: Markdown_onChangeDOM,
     set: Markdown_set,
@@ -130,6 +134,10 @@ toArray()
 # Parent methods
 has()
 size()
+
+# Child methods
+isFirst()
+isLast()
 
 # Change methods
 onChange()

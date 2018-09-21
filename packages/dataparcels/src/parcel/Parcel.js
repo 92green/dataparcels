@@ -24,6 +24,7 @@ import ParcelChangeMethods from './methods/ParcelChangeMethods';
 import ActionMethods from './methods/ActionMethods';
 import ParentGetMethods from './methods/ParentGetMethods';
 import ParentChangeMethods from './methods/ParentChangeMethods';
+import ChildGetMethods from './methods/ChildGetMethods';
 import IndexedChangeMethods from './methods/IndexedChangeMethods';
 import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
@@ -115,6 +116,8 @@ export default class Parcel {
             // $FlowFixMe
             ...FilterMethods("Parent", ParentGetMethods)(this),
             // $FlowFixMe
+            ...FilterMethods("Child", ChildGetMethods)(this),
+            // $FlowFixMe
             ...ParcelChangeMethods(this, dispatch),
             // $FlowFixMe
             ...FilterMethods("Parent", ParentChangeMethods)(this, dispatch),
@@ -146,6 +149,8 @@ export default class Parcel {
     _parent: ?Parcel;
     _dispatchBuffer: ?Function;
     _prepareChildKeys: Function;
+    _isFirst: boolean = false;
+    _isLast: boolean = false;
     _log: boolean = false;
     _logName: string = "";
 
@@ -272,6 +277,10 @@ export default class Parcel {
     // Parent methods
     has = (key: Key|Index): boolean => this._methods.has(key);
     size = (): number => this._methods.size();
+
+    // Child methods
+    isFirst = (): boolean => this._methods.isFirst();
+    isLast = (): boolean => this._methods.isLast();
 
     // Status methods
     hasDispatched = (): boolean => this._methods.hasDispatched();
