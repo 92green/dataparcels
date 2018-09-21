@@ -4,7 +4,7 @@ import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelHocExample from 'pages/examples/parcelhoc-example.md';
 import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-initialvalue.md';
 import ParcelHocOnChange from 'pages/examples/parcelhoc-onchange.md';
-import IconParcelBoundary from 'content/icon-parcelboundary0001.png';
+import IconParcelBoundary from 'content/parcelboundary.gif';
 
 # ParcelBoundary
 
@@ -12,9 +12,9 @@ import IconParcelBoundary from 'content/icon-parcelboundary0001.png';
 
 ParcelBoundary is a React component. It's job is to optimise rendering performance, and to optionally control the flow of parcel changes.
 
-Each ParcelBoundary is passed a Parcel, and by default the ParcelBoundary will only update when the Parcel's data changes. This avoids unnecessary re-rendering.
+Each ParcelBoundary is passed a Parcel. By default the ParcelBoundary uses pure rendering, and will only update when the Parcel's data changes to avoid unnecessary re-rendering.
 
-There are also options for conditionally stopping changes from propagating out of the ParcelBoundary, which can be used for debounding and buffering changes.
+ParcelBoundaries have an internal action buffer that can hold onto changes as they exit the boundary. These are normally released immediately, but also allow for debouncing changes, or putting a hold on all changes so they can be released later.
 
 ```js
 import {ParcelBoundary} from 'react-dataparcels';
