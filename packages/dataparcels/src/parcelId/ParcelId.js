@@ -49,9 +49,10 @@ export default class ParcelId {
     };
 
     push: Function = (key: Key, isElement: boolean): ParcelId => {
+        let escapedKey = escapeKey(key);
         let escapeAndPush: Function = isElement
             ? push(key)
-            : push(escapeKey(key));
+            : push(escapedKey);
 
         return pipeWith(
             this.toJS(),
