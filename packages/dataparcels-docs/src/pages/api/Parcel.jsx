@@ -27,12 +27,6 @@ import Markdown_update from 'docs/api/parcel/update.md';
 import Markdown_updateIn from 'docs/api/parcel/updateIn.md';
 import Markdown_delete from 'docs/api/parcel/delete.md';
 import Markdown_deleteIn from 'docs/api/parcel/deleteIn.md';
-import Markdown_setMeta from 'docs/api/parcel/setMeta.md';
-import Markdown_updateMeta from 'docs/api/parcel/updateMeta.md';
-import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
-import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
-import Markdown_batch from 'docs/api/parcel/batch.md';
-import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_insertAfter from 'docs/api/parcel/insertAfter.md';
 import Markdown_insertBefore from 'docs/api/parcel/insertBefore.md';
 import Markdown_pop from 'docs/api/parcel/pop.md';
@@ -42,6 +36,12 @@ import Markdown_swap from 'docs/api/parcel/swap.md';
 import Markdown_swapNext from 'docs/api/parcel/swapNext.md';
 import Markdown_swapPrev from 'docs/api/parcel/swapPrev.md';
 import Markdown_unshift from 'docs/api/parcel/unshift.md';
+import Markdown_setMeta from 'docs/api/parcel/setMeta.md';
+import Markdown_updateMeta from 'docs/api/parcel/updateMeta.md';
+import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
+import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
+import Markdown_batch from 'docs/api/parcel/batch.md';
+import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_modifyValue from 'docs/api/parcel/modifyValue.md';
 import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
 import Markdown_modifyChangeValue from 'docs/api/parcel/modifyChangeValue.md';
@@ -85,12 +85,6 @@ const md = {
     updateIn: Markdown_updateIn,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
-    setMeta: Markdown_setMeta,
-    updateMeta: Markdown_updateMeta,
-    setChangeRequestMeta: Markdown_setChangeRequestMeta,
-    dispatch: Markdown_dispatch,
-    batch: Markdown_batch,
-    ping: Markdown_ping,
     insertAfter: Markdown_insertAfter,
     insertBefore: Markdown_insertBefore,
     pop: Markdown_pop,
@@ -100,6 +94,12 @@ const md = {
     swapNext: Markdown_swapNext,
     swapPrev: Markdown_swapPrev,
     unshift: Markdown_unshift,
+    setMeta: Markdown_setMeta,
+    updateMeta: Markdown_updateMeta,
+    setChangeRequestMeta: Markdown_setChangeRequestMeta,
+    dispatch: Markdown_dispatch,
+    batch: Markdown_batch,
+    ping: Markdown_ping,
     modifyValue: Markdown_modifyValue,
     modifyChange: Markdown_modifyChange,
     modifyChangeValue: Markdown_modifyChangeValue,
@@ -155,14 +155,6 @@ updateIn()
 delete()
 deleteIn()
 
-# Advanced change methods
-setMeta()
-updateMeta()
-setChangeRequestMeta()
-dispatch()
-batch()
-ping()
-
 # Indexed & element change methods
 insertAfter()
 insertBefore()
@@ -173,6 +165,14 @@ swap()
 swapNext()
 swapPrev()
 unshift()
+
+# Advanced change methods
+setMeta()
+updateMeta()
+setChangeRequestMeta()
+dispatch()
+batch()
+ping()
 
 # Modify methods
 modifyValue()
