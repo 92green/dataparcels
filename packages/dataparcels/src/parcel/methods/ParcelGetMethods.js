@@ -1,4 +1,5 @@
 // @flow
+import type ChangeRequest from '../../change/ChangeRequest';
 import type Parcel from '../../parcel/Parcel';
 import Types from '../../types/Types';
 
@@ -53,7 +54,19 @@ export default (_this: Parcel) => ({
     },
 
     spy: (sideEffect: Function): Parcel => {
+        Types(`spy() expects param "sideEffect" to be`, `function`)(sideEffect);
         sideEffect(_this);
         return _this;
+    },
+
+    spyChange: (sideEffect: Function): Parcel => {
+        Types(`spyChange() expects param "sideEffect" to be`, `function`)(sideEffect);
+        return _this._create({
+            id: _this._id.pushModifier('sc'),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                sideEffect(changeRequest._setBaseParcel(_this));
+                _this.dispatch(changeRequest);
+            }
+        });
     }
 });

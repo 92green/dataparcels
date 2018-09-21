@@ -56,6 +56,7 @@ import Markdown_isTopLevel from 'docs/api/parcel/isTopLevel.md';
 import Markdown_hasDispatched from 'docs/api/parcel/hasDispatched.md';
 import Markdown_log from 'docs/api/parcel/log.md';
 import Markdown_spy from 'docs/api/parcel/spy.md';
+import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
 
 const md = {
@@ -113,6 +114,7 @@ const md = {
     hasDispatched: Markdown_hasDispatched,
     log: Markdown_log,
     spy: Markdown_spy,
+    spyChange: Markdown_spyChange,
     pipe: Markdown_pipe
 }
 
@@ -193,6 +195,7 @@ hasDispatched()
 # Side-effect methods
 log()
 spy()
+spyChange()
 
 # Composition methods
 pipe()

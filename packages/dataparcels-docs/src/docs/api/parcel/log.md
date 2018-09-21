@@ -1,3 +1,3 @@
 ```flow
-log(): Parcel
+log(name: string?): Parcel
 ```

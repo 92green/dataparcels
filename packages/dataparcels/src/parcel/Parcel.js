@@ -288,6 +288,7 @@ export default class Parcel {
     // Side-effect methods
     log = (name: string = ""): Parcel => this._methods.log(name);
     spy = (sideEffect: Function): Parcel => this._methods.spy(sideEffect);
+    spyChange = (sideEffect: Function): Parcel => this._methods.spyChange(sideEffect);
 
     // Change methods
     onChange = (value: *) => this._methods.onChange(value);
