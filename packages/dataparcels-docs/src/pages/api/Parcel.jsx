@@ -54,6 +54,8 @@ import Markdown_isIndexed from 'docs/api/parcel/isIndexed.md';
 import Markdown_isParent from 'docs/api/parcel/isParent.md';
 import Markdown_isTopLevel from 'docs/api/parcel/isTopLevel.md';
 import Markdown_hasDispatched from 'docs/api/parcel/hasDispatched.md';
+import Markdown_log from 'docs/api/parcel/log.md';
+import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
 
 const md = {
@@ -109,6 +111,8 @@ const md = {
     isParent: Markdown_isParent,
     isTopLevel: Markdown_isTopLevel,
     hasDispatched: Markdown_hasDispatched,
+    log: Markdown_log,
+    spy: Markdown_spy,
     pipe: Markdown_pipe
 }
 
@@ -185,6 +189,10 @@ isTopLevel()
 
 # Status methods
 hasDispatched()
+
+# Side-effect methods
+log()
+spy()
 
 # Composition methods
 pipe()

@@ -42,13 +42,18 @@ export default (_this: Parcel) => ({
         return _this._treeshare.dispatch.hasPathDispatched(_this.path);
     },
 
-    // Log methods
+    // Side-effect methods
 
     log: (name: string): Parcel => {
         _this._log = true;
         _this._logName = name;
         console.log(`Parcel data: ${name} `);
         console.log(JSON.parse(JSON.stringify(_this.data)));
+        return _this;
+    },
+
+    spy: (sideEffect: Function): Parcel => {
+        sideEffect(_this);
         return _this;
     }
 });

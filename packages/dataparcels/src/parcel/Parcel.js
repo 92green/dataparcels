@@ -285,8 +285,9 @@ export default class Parcel {
     // Status methods
     hasDispatched = (): boolean => this._methods.hasDispatched();
 
-    // Debug methods
+    // Side-effect methods
     log = (name: string = ""): Parcel => this._methods.log(name);
+    spy = (sideEffect: Function): Parcel => this._methods.spy(sideEffect);
 
     // Change methods
     onChange = (value: *) => this._methods.onChange(value);
