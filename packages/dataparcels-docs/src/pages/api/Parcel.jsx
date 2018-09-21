@@ -175,12 +175,7 @@ batch()
 ping()
 
 # Modify methods
-modifyValue()
-modifyChange()
-modifyChangeValue()
 initialMeta()
-addModifier()
-addDescendantModifier()
 
 # Type methods
 isChild()
