@@ -41,7 +41,7 @@ test('ChildParcel.delete() should delete self when indexed', () => {
 
 test('ChildParcel.isFirst() should detect first child parcel', () => {
     let parcel = new Parcel({
-        value: [1,2,3,4]
+        value: [1,2,1,4]
     });
 
     expect(parcel.get(0).isFirst()).toBe(true);
