@@ -1,4 +1,5 @@
 // @flow
+import type ChangeRequest from '../../change/ChangeRequest';
 import type Parcel from '../../parcel/Parcel';
 import Types from '../../types/Types';
 
@@ -42,7 +43,7 @@ export default (_this: Parcel) => ({
         return _this._treeshare.dispatch.hasPathDispatched(_this.path);
     },
 
-    // Log methods
+    // Side-effect methods
 
     log: (name: string): Parcel => {
         _this._log = true;
@@ -50,5 +51,22 @@ export default (_this: Parcel) => ({
         console.log(`Parcel data: ${name} `);
         console.log(JSON.parse(JSON.stringify(_this.data)));
         return _this;
+    },
+
+    spy: (sideEffect: Function): Parcel => {
+        Types(`spy() expects param "sideEffect" to be`, `function`)(sideEffect);
+        sideEffect(_this);
+        return _this;
+    },
+
+    spyChange: (sideEffect: Function): Parcel => {
+        Types(`spyChange() expects param "sideEffect" to be`, `function`)(sideEffect);
+        return _this._create({
+            id: _this._id.pushModifier('sc'),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                sideEffect(changeRequest._setBaseParcel(_this));
+                _this.dispatch(changeRequest);
+            }
+        });
     }
 });

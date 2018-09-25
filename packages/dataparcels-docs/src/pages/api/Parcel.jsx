@@ -17,6 +17,8 @@ import Markdown_toObject from 'docs/api/parcel/toObject.md';
 import Markdown_toArray from 'docs/api/parcel/toArray.md';
 import Markdown_has from 'docs/api/parcel/has.md';
 import Markdown_size from 'docs/api/parcel/size.md';
+import Markdown_isFirst from 'docs/api/parcel/isFirst.md';
+import Markdown_isLast from 'docs/api/parcel/isLast.md';
 import Markdown_onChange from 'docs/api/parcel/onChange.md';
 import Markdown_onChangeDOM from 'docs/api/parcel/onChangeDOM.md';
 import Markdown_set from 'docs/api/parcel/set.md';
@@ -25,12 +27,6 @@ import Markdown_update from 'docs/api/parcel/update.md';
 import Markdown_updateIn from 'docs/api/parcel/updateIn.md';
 import Markdown_delete from 'docs/api/parcel/delete.md';
 import Markdown_deleteIn from 'docs/api/parcel/deleteIn.md';
-import Markdown_setMeta from 'docs/api/parcel/setMeta.md';
-import Markdown_updateMeta from 'docs/api/parcel/updateMeta.md';
-import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
-import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
-import Markdown_batch from 'docs/api/parcel/batch.md';
-import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_insertAfter from 'docs/api/parcel/insertAfter.md';
 import Markdown_insertBefore from 'docs/api/parcel/insertBefore.md';
 import Markdown_pop from 'docs/api/parcel/pop.md';
@@ -40,6 +36,12 @@ import Markdown_swap from 'docs/api/parcel/swap.md';
 import Markdown_swapNext from 'docs/api/parcel/swapNext.md';
 import Markdown_swapPrev from 'docs/api/parcel/swapPrev.md';
 import Markdown_unshift from 'docs/api/parcel/unshift.md';
+import Markdown_setMeta from 'docs/api/parcel/setMeta.md';
+import Markdown_updateMeta from 'docs/api/parcel/updateMeta.md';
+import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
+import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
+import Markdown_batch from 'docs/api/parcel/batch.md';
+import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_modifyValue from 'docs/api/parcel/modifyValue.md';
 import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
 import Markdown_modifyChangeValue from 'docs/api/parcel/modifyChangeValue.md';
@@ -52,6 +54,9 @@ import Markdown_isIndexed from 'docs/api/parcel/isIndexed.md';
 import Markdown_isParent from 'docs/api/parcel/isParent.md';
 import Markdown_isTopLevel from 'docs/api/parcel/isTopLevel.md';
 import Markdown_hasDispatched from 'docs/api/parcel/hasDispatched.md';
+import Markdown_log from 'docs/api/parcel/log.md';
+import Markdown_spy from 'docs/api/parcel/spy.md';
+import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
 
 const md = {
@@ -70,6 +75,8 @@ const md = {
     toArray: Markdown_toArray,
     has: Markdown_has,
     size: Markdown_size,
+    isFirst: Markdown_isFirst,
+    isLast: Markdown_isLast,
     onChange: Markdown_onChange,
     onChangeDOM: Markdown_onChangeDOM,
     set: Markdown_set,
@@ -78,12 +85,6 @@ const md = {
     updateIn: Markdown_updateIn,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
-    setMeta: Markdown_setMeta,
-    updateMeta: Markdown_updateMeta,
-    setChangeRequestMeta: Markdown_setChangeRequestMeta,
-    dispatch: Markdown_dispatch,
-    batch: Markdown_batch,
-    ping: Markdown_ping,
     insertAfter: Markdown_insertAfter,
     insertBefore: Markdown_insertBefore,
     pop: Markdown_pop,
@@ -93,6 +94,12 @@ const md = {
     swapNext: Markdown_swapNext,
     swapPrev: Markdown_swapPrev,
     unshift: Markdown_unshift,
+    setMeta: Markdown_setMeta,
+    updateMeta: Markdown_updateMeta,
+    setChangeRequestMeta: Markdown_setChangeRequestMeta,
+    dispatch: Markdown_dispatch,
+    batch: Markdown_batch,
+    ping: Markdown_ping,
     modifyValue: Markdown_modifyValue,
     modifyChange: Markdown_modifyChange,
     modifyChangeValue: Markdown_modifyChangeValue,
@@ -105,6 +112,9 @@ const md = {
     isParent: Markdown_isParent,
     isTopLevel: Markdown_isTopLevel,
     hasDispatched: Markdown_hasDispatched,
+    log: Markdown_log,
+    spy: Markdown_spy,
+    spyChange: Markdown_spyChange,
     pipe: Markdown_pipe
 }
 
@@ -131,6 +141,10 @@ toArray()
 has()
 size()
 
+# Child methods
+isFirst()
+isLast()
+
 # Change methods
 onChange()
 onChangeDOM()
@@ -140,14 +154,6 @@ update()
 updateIn()
 delete()
 deleteIn()
-
-# Advanced change methods
-setMeta()
-updateMeta()
-setChangeRequestMeta()
-dispatch()
-batch()
-ping()
 
 # Indexed & element change methods
 insertAfter()
@@ -160,13 +166,16 @@ swapNext()
 swapPrev()
 unshift()
 
+# Advanced change methods
+setMeta()
+updateMeta()
+setChangeRequestMeta()
+dispatch()
+batch()
+ping()
+
 # Modify methods
-modifyValue()
-modifyChange()
-modifyChangeValue()
 initialMeta()
-addModifier()
-addDescendantModifier()
 
 # Type methods
 isChild()
@@ -177,6 +186,11 @@ isTopLevel()
 
 # Status methods
 hasDispatched()
+
+# Side-effect methods
+log()
+spy()
+spyChange()
 
 # Composition methods
 pipe()
