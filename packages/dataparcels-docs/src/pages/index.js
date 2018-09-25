@@ -6,7 +6,7 @@ import {Box, CenteredLanding, Grid, GridItem, Image, NavigationList,NavigationLi
 import IndexMarkdown from 'pages/index.md';
 import PageLayout from 'component/PageLayout';
 import API from 'content/API';
-import IconParcel from 'content/icon-parcelinverted0001.png';
+import IconParcel from 'content/parcelinverted.gif';
 
 export default () => <Box>
     <Box modifier="invertedCopy invertedBackground">

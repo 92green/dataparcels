@@ -2,7 +2,7 @@ import Link from 'component/Link';
 import Param from 'component/Param';
 import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelCreateReact from 'docs/notes/ParcelCreateReact.md';
-import IconParcel from 'content/icon-parcel0001.png';
+import IconParcel from 'content/parcel.gif';
 
 # Parcel
 
