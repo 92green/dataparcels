@@ -1,7 +1,7 @@
 {
   "name": "dataparcels",
   "version": "0.15.0-3",
-  "description": "Flexible forms and user input that work really well with React",
+  "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "UNLICENSED",
   "author": "Damien Clarke",
