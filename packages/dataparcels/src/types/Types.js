@@ -49,13 +49,6 @@ export type ParcelValueUpdater = (value: *) => *;
 
 export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
 
-export type ModifierFunction = Function;
-
-export type ModifierObject = {|
-    match?: string,
-    modifier: ModifierFunction
-|};
-
 export type Key = string;
 export type Index = number;
 export type Property = number|string;
@@ -101,10 +94,6 @@ const runtimeTypes = {
         check: ii => ii
             && Array.isArray(ii)
             && ii.every(jj => typeof jj === "string" || typeof jj === "number")
-    },
-    ['modifier']: {
-        name: "a modifier function, or an object like {modifier: Function, match: ?string}",
-        check: ii => typeof ii === "function" || (typeof ii === "object" && ii.modifier && typeof ii.modifier === "function")
     },
     ['number']: {
         name: "a number",
