@@ -349,8 +349,6 @@ export default class Parcel {
     modifyChange = (batcher: Function): Parcel => this._methods.modifyChange(batcher);
     modifyChangeValue = (updater: Function): Parcel => this._methods.modifyChangeValue(updater);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
-    addModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addModifier(modifier);
-    addDescendantModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addDescendantModifier(modifier);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
 
     // Type methods
@@ -362,6 +360,7 @@ export default class Parcel {
 
     // Composition methods
     pipe = (...updaters: Function[]): Parcel => this._methods.pipe(...updaters);
+    matchPipe = (match: string, ...updaters: Function[]): Parcel => this._methods.matchPipe(match, ...updaters);
 
     // Advanced methods
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
