@@ -1,7 +1,5 @@
 // @flow
 import type ChangeRequest from '../../change/ChangeRequest';
-import type {ModifierFunction} from '../../types/Types';
-import type {ModifierObject} from '../../types/Types';
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import Types from '../../types/Types';
