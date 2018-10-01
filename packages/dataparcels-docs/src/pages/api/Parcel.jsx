@@ -46,8 +46,6 @@ import Markdown_modifyValue from 'docs/api/parcel/modifyValue.md';
 import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
 import Markdown_modifyChangeValue from 'docs/api/parcel/modifyChangeValue.md';
 import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
-import Markdown_addModifier from 'docs/api/parcel/addModifier.md';
-import Markdown_addDescendantModifier from 'docs/api/parcel/addDescendantModifier.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
 import Markdown_isElement from 'docs/api/parcel/isElement.md';
 import Markdown_isIndexed from 'docs/api/parcel/isIndexed.md';
@@ -58,6 +56,7 @@ import Markdown_log from 'docs/api/parcel/log.md';
 import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
+import Markdown_matchPipe from 'docs/api/parcel/matchPipe.md';
 
 const md = {
     _desc: Markdown_Parcel,
@@ -104,8 +103,6 @@ const md = {
     modifyChange: Markdown_modifyChange,
     modifyChangeValue: Markdown_modifyChangeValue,
     initialMeta: Markdown_initialMeta,
-    addModifier: Markdown_addModifier,
-    addDescendantModifier: Markdown_addDescendantModifier,
     isChild: Markdown_isChild,
     isElement: Markdown_isElement,
     isIndexed: Markdown_isIndexed,
@@ -115,7 +112,8 @@ const md = {
     log: Markdown_log,
     spy: Markdown_spy,
     spyChange: Markdown_spyChange,
-    pipe: Markdown_pipe
+    pipe: Markdown_pipe,
+    matchPipe: Markdown_matchPipe
 }
 
 const api = `
@@ -194,6 +192,7 @@ spyChange()
 
 # Composition methods
 pipe()
+matchPipe()
 
 `;
 
