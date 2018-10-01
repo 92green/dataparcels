@@ -37,6 +37,11 @@ export default (_this: Parcel) => ({
         );
     },
 
+    matchPipe: (match: string, ...updaters: Function[]): Parcel => {
+        Types(`matchPipe() expects first param to be`, `string`)(match);
+        Types(`matchPipe() expects all but the first param to be`, `functionArray`)(updaters);
+    },
+
     // Status methods
 
     hasDispatched: (): boolean => {
