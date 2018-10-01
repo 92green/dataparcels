@@ -88,23 +88,6 @@ export default (_this: Parcel): Object => ({
         );
     },
 
-    addModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
-        Types(`addModifier() expects param "modifier" to be`, `modifier`)(modifier);
-        return pipeWith(
-            modifier,
-            _this.addDescendantModifier,
-            parcel => parcel._applyModifiers()
-        );
-    },
-
-    addDescendantModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
-        Types(`addDescendantModifier() expects param "modifier" to be`, `modifier`)(modifier);
-        return _this._create({
-            id: _this._id.pushModifier('am'),
-            modifiers: _this._modifiers.add(modifier)
-        });
-    },
-
     _boundarySplit: ({handleChange}: *): Parcel => {
         return _this._create({
             id: _this._id.pushModifier('mb'),
