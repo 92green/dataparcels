@@ -1,6 +1,8 @@
 // @flow
 import type ChangeRequest from '../../change/ChangeRequest';
 import type Parcel from '../../parcel/Parcel';
+import type {ParcelUpdater} from '../types/Types';
+
 import Types from '../../types/Types';
 
 import map from 'unmutable/lib/map';
@@ -23,7 +25,7 @@ export default (_this: Parcel) => ({
 
     // Composition methods
 
-    pipe: (...updaters: Function[]): Parcel => {
+    pipe: (...updaters: ParcelUpdater[]): Parcel => {
         Types(`pipe() expects all params to be`, `functionArray`)(updaters);
         return pipeWith(
             _this,
@@ -37,7 +39,7 @@ export default (_this: Parcel) => ({
         );
     },
 
-    matchPipe: (match: string, ...updaters: Function[]): Parcel => {
+    matchPipe: (match: string, ...updaters: ParcelUpdater[]): Parcel => {
         Types(`matchPipe() expects first param to be`, `string`)(match);
         Types(`matchPipe() expects all but the first param to be`, `functionArray`)(updaters);
     },

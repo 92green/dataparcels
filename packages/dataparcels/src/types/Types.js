@@ -1,6 +1,5 @@
 // @flow
 import type ParcelId from '../parcelId/ParcelId';
-import type Modifiers from '../modifiers/Modifiers';
 import type Treeshare from '../treeshare/Treeshare';
 
 import Parcel from '../parcel/Parcel';
@@ -26,7 +25,7 @@ export type ParcelConfigInternal = {
     child: *,
     meta: ParcelMeta,
     id: ParcelId,
-    modifiers?: Modifiers,
+    matchPipes?: Matcher[],
     parent?: Parcel,
     treeshare: Treeshare
 };
@@ -34,7 +33,7 @@ export type ParcelConfigInternal = {
 export type CreateParcelConfigType = {
     onDispatch?: Function,
     id?: ParcelId,
-    modifiers?: Modifiers,
+    matchPipes?: Matcher[],
     parcelData?: ParcelData,
     parent?: Parcel,
     handleChange?: Function
@@ -45,9 +44,13 @@ export type ParcelMetaUpdater = (meta: ParcelMeta) => ParcelMeta;
 
 export type ParcelBatcher = (item: Parcel) => void;
 export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
+export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *) => *;
 
-export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
+export type Matcher = {
+    match: string,
+    updaters: ParcelUpdater[]
+};
 
 export type Key = string;
 export type Index = number;
