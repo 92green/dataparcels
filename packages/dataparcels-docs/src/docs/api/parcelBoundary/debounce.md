@@ -22,3 +22,5 @@ Debouncing can be good for rendering performance because parcels outside the Par
     {(personParcel) => <input type="text" {...personParcel.spreadDOM} />}
 </ParcelBoundary>
 ```
+
+<Link to="/examples/parcelboundary-debounce">Example</Link>

@@ -24,9 +24,9 @@ import {ParcelBoundary} from 'react-dataparcels';
 <ParcelBoundary
     parcel={Parcel}
     debounce={?number}
-    hold={?boolean}
-    forceUpdate={?Array<*>}
     pure={?boolean}
+    forceUpdate={?Array<*>}
+    hold={?boolean}
     debugBuffer={?boolean}
 >
     {(parcel, actions) => Node}
