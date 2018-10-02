@@ -30,6 +30,35 @@ let matchTests = [
         shouldMatch: ["top"]
     },
     {
+        name: "match self with depth = 1",
+        match: ".",
+        shouldMatch: [
+            "childValue",
+            "childObject",
+            "childArray",
+            "escapeChars"
+        ],
+        depth: 1
+    },
+    {
+        name: "match self with depth = 2",
+        match: ".",
+        shouldMatch: [
+            "grandchildValue",
+            "grandchildWithDot",
+            "grandchildElement"
+        ],
+        depth: 2
+    },
+    {
+        name: "match self with depth = 3",
+        match: ".",
+        shouldMatch: [
+            "greatGrandchild"
+        ],
+        depth: 3
+    },
+    {
         name: "match by full name",
         match: "^",
         shouldMatch: ["top"]
@@ -352,11 +381,11 @@ let matchTests = [
 
 pipeWith(
     matchTests,
-    map(({name, match, matchParsed, shouldMatch}) => {
+    map(({name, match, matchParsed, shouldMatch, depth = 0}) => {
         test(`${name}`, () => {
             let matched: string[] = pipeWith(
                 typedPathStrings,
-                map((typedPathString, name) => Matcher(typedPathString, match)),
+                map((typedPathString, name) => Matcher(typedPathString, match, depth)),
                 filter(identity()),
                 keyArray()
             );

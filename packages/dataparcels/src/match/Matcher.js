@@ -4,6 +4,7 @@ import escapeStringRegexp from 'escape-string-regexp';
 import join from 'unmutable/lib/join';
 import keyArray from 'unmutable/lib/keyArray';
 import map from 'unmutable/lib/map';
+import skip from 'unmutable/lib/skip';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
@@ -90,7 +91,17 @@ const regexifyPart = (part: string): string => {
     return `${name}:${MATCH_ANY_IN_PART}[${typeSelector}]${MATCH_ANY_IN_PART}`;
 };
 
-export default (typedPathString: string, match: string): boolean => {
+export default (typedPathString: string, match: string, depth: number = 0): boolean => {
+    let test = escapeSpecialChars(typedPathString);
+    if(depth > 0) {
+        test = pipeWith(
+            test,
+            ii => ii.split("."),
+            skip(depth),
+            join(".")
+        );
+    }
+
     return escapeSpecialChars(match)
         .split("|")
         .some((escapedMatch: string): boolean => {
@@ -110,11 +121,7 @@ export default (typedPathString: string, match: string): boolean => {
                 regexifyGlobstars,
                 regexifyWildcards,
                 regex => `^${regex}$`,
-                (regex: string): boolean => {
-                    let test = escapeSpecialChars(typedPathString);
-                    let ok = new RegExp(regex, "g").test(test);
-                    return ok;
-                }
+                (regex) => new RegExp(regex, "g").test(test)
             );
         });
 };
