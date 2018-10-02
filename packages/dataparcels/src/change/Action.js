@@ -1,19 +1,16 @@
 // @flow
-import type {
-    Key,
-    Index
-} from '../types/Types';
+import type {Key} from '../types/Types';
 
 type ActionData = {
     type?: string,
     payload?: Object,
-    keyPath?: Array<Key|Index>
+    keyPath?: Array<Key>
 };
 
 export default class Action {
     type: string = "";
     payload: Object = {};
-    keyPath: Array<Key|Index> = [];
+    keyPath: Array<Key> = [];
 
     constructor(actionData: ActionData = {}) {
         this.type = actionData.type || this.type;
@@ -21,7 +18,7 @@ export default class Action {
         this.keyPath = actionData.keyPath || this.keyPath;
     }
 
-    _unget = (key: Key|Index): Action => {
+    _unget = (key: Key): Action => {
         let {type, payload, keyPath} = this;
         return new Action({
             type,
