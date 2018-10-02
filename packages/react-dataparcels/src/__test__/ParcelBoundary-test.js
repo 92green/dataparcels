@@ -119,28 +119,6 @@ test('ParcelBoundary should rerender if parcel has not changed value but forceUp
     expect(renders).toBe(2);
 });
 
-test('ParcelBoundary should not send changes up when hold = true', async () => {
-    let handleChangeCalls = 0;
-    let parcel = new Parcel({
-        handleChange: (newParcel) => {
-            handleChangeCalls++;
-        }
-    });
-
-    let renders = 0;
-
-    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
-        {(pp) => {
-            if(renders === 0) {
-                pp.onChange(123);
-            }
-            renders++;
-        }}
-    </ParcelBoundary>);
-
-    expect(handleChangeCalls).toBe(0);
-});
-
 test('ParcelBoundary should release changes when called', async () => {
     let handleChangeCalls = 0;
     expect.assertions(2);
@@ -232,25 +210,38 @@ test('ParcelBoundary should debounce', async () => {
 });
 
 test('ParcelBoundary should not send changes up when hold = true', async () => {
-    let handleChangeCalls = 0;
-    let parcel = new Parcel({
-        handleChange: (newParcel) => {
-            handleChangeCalls++;
-        }
-    });
+    expect.assertions(2);
+    return new Promise((resolve) => {
 
-    let renders = 0;
-
-    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
-        {(pp) => {
-            if(renders === 0) {
-                pp.onChange(123);
+        let handleChangeCalls = 0;
+        let parcel = new Parcel({
+            handleChange: (newParcel) => {
+                handleChangeCalls++;
             }
-            renders++;
-        }}
-    </ParcelBoundary>);
+        });
 
-    expect(handleChangeCalls).toBe(0);
+        let renders = 0;
+
+        let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+            {(pp) => {
+                if(renders === 0) {
+                    pp.onChange(123);
+
+                } else if(renders === 1) {
+                    expect(pp.value).toEqual(123);
+                }
+                renders++;
+            }}
+        </ParcelBoundary>);
+
+        expect(handleChangeCalls).toBe(0);
+
+        setTimeout(() => {
+            wrapper.instance().forceUpdate();
+            wrapper.update().render();
+            resolve();
+        }, 20);
+    });
 });
 
 test('ParcelBoundary should ignore debounce when sending a ping', () => {

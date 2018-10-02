@@ -52,7 +52,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             return true;
         }
 
-        let parcelDataChanged: boolean = nextProps.debounce
+        let parcelDataChanged: boolean = (nextProps.debounce || nextProps.hold)
             ? !ParcelBoundaryEquals(this.state.parcel, nextState.parcel)
             : !ParcelBoundaryEquals(this.props.parcel, nextProps.parcel);
 
