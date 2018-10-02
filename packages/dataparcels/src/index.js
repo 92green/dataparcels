@@ -3,7 +3,6 @@ import Parcel from './parcel/Parcel';
 export default Parcel;
 
 export {default as Action} from './change/Action';
-export {default as ActionCreators} from './change/ActionCreators';
 export {default as ChangeRequest} from './change/ChangeRequest';
 
 export type {ParcelData} from './types/Types';
