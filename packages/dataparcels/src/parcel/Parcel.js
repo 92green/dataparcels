@@ -4,7 +4,7 @@ import type ChangeRequest from '../change/ChangeRequest';
 import type {CreateParcelConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
-import type {Matcher} from '../types/Types';
+import type {MatchPipe} from '../types/Types';
 import type {ParcelBatcher} from '../types/Types';
 import type {ParcelConfigInternal} from '../types/Types';
 import type {ParcelConfig} from '../types/Types';
@@ -87,7 +87,7 @@ export default class Parcel {
         }
 
         // match pipes
-        this._matchPipes = matchPipes;
+        this._matchPipes = matchPipes || [];
 
         // types
         this._parcelTypes = new ParcelTypes(
@@ -143,12 +143,11 @@ export default class Parcel {
     _onDispatch: ?Function;
     _parcelData: ParcelData;
     _id: ParcelId;
-    _matchPipes: Matcher[];
+    _matchPipes: MatchPipe[];
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
     _parent: ?Parcel;
     _dispatchBuffer: ?Function;
-    _prepareChildKeys: Function;
     _isFirst: boolean = false;
     _isLast: boolean = false;
     _log: boolean = false;
@@ -187,12 +186,8 @@ export default class Parcel {
         );
 
         return parent
-            ? parcel._applyModifiers()
+            ? parcel._methods._applyMatchPipes()
             : parcel;
-    };
-
-    _applyModifiers = (): Parcel => {
-        return this; // TODO!!!!!
     };
 
     //
