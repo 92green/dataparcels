@@ -138,20 +138,23 @@ export default class Parcel {
     // private
     //
 
+    // from constructor
+    _id: ParcelId;
     _methods: { [key: string]: * };
     _onHandleChange: ?Function;
     _onDispatch: ?Function;
     _parcelData: ParcelData;
-    _id: ParcelId;
-    _matchPipes: MatchPipe[];
-    _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
     _parent: ?Parcel;
-    _dispatchBuffer: ?Function;
+    _treeshare: Treeshare;
     _isFirst: boolean = false;
     _isLast: boolean = false;
-    _log: boolean = false;
-    _logName: string = "";
+
+    // from methods
+    _dispatchBuffer: ?Function; // used by batch()
+    _log: boolean = false; // used by log()
+    _logName: string = ""; // used by log()
+    _matchPipes: MatchPipe[]; // used by matchPipe() and passed to all subsequent parcels
 
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
