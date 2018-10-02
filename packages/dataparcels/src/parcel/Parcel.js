@@ -147,8 +147,6 @@ export default class Parcel {
     _parcelTypes: ParcelTypes;
     _parent: ?Parcel;
     _treeshare: Treeshare;
-    _isFirst: boolean = false;
-    _isLast: boolean = false;
 
     // from methods
     _dispatchBuffer: ?Function; // used by batch()
