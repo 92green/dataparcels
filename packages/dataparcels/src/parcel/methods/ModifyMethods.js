@@ -15,6 +15,13 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel): Object => ({
 
+    modify: (updater: Function): Parcel => {
+        Types(`modify() expects param "updater" to be`, `function`)(updater);
+        return _this._create({
+            id: _this._id.pushModifier('m')
+        });
+    },
+
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
         return pipeWith(
