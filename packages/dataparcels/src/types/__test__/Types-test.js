@@ -21,8 +21,6 @@ let types = {
     ['event']: {currentTarget: {value: null}},
     ['function']: () => {},
     ['functionArray']: [() => {}, () => {}],
-    ['modifierObject']: {modifier: () => {}},
-    ['modifierObjectWrong']: {modifier: 123},
     ['number']: 123,
     ['numberArray']: [123, 456],
     ['object']: {},
@@ -84,11 +82,6 @@ test('Types() can identify a keyIndexPath', () => testTypes(`keyIndexPath`, [
     'stringArray'
 ]));
 
-test('Types() can identify a modifier', () => testTypes(`modifier`, [
-    'function',
-    'modifierObject'
-]));
-
 test('Types() can identify a number', () => testTypes(`number`, [
     'number'
 ]));
@@ -100,8 +93,6 @@ test('Types() can identify a object', () => testTypes(`object`, [
     'changeRequest',
     'event',
     'functionArray',
-    'modifierObject',
-    'modifierObjectWrong',
     'numberArray',
     'object',
     'parcel',
