@@ -4,6 +4,6 @@ import Markdown from 'pages/examples/parcelboundary-hold.md';
 import Example from 'component/Example';
 
 export default () => <Example
-    name="ParcelBoundary - Hold"
+    name="ParcelBoundary: Using hold"
     md={Markdown}
 />;

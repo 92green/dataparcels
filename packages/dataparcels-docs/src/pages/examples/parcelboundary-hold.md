@@ -1,6 +1,9 @@
+import Link from 'gatsby-link';
 import ParcelBoundaryHold from 'examples/ParcelBoundaryHold';
 
 This example demonstrates ParcelBoundary's `hold` feature.
+
+<Link to="/api/ParcelBoundary#hold">API reference for ParcelBoundary.hold</Link>
 
 <ParcelBoundaryHold />
 

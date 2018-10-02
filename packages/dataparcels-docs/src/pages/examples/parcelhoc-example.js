@@ -4,6 +4,6 @@ import Markdown from 'pages/examples/parcelhoc-example.md';
 import Example from 'component/Example';
 
 export default () => <Example
-    name="ParcelHoc - Example"
+    name="ParcelHoc example"
     md={Markdown}
 />;

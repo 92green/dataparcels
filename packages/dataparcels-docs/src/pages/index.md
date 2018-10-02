@@ -1,6 +1,7 @@
 import Link from 'gatsby-link';
 import API from 'content/API';
 import {Divider, Grid, GridItem, Text} from 'dcme-style';
+import Examples from 'content/Examples.md';
 
 ## What is it?
 
@@ -19,17 +20,4 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 
 ## Examples
 
-### Parcel
-
-* <Link to="/examples/editing-objects">Editing Objects</Link>
-* <Link to="/examples/editing-arrays">Editing Arrays</Link>
-* <Link to="/examples/managing-your-own-parcel-state">Managing Your Own Parcel State</Link>
-
-### ParcelHoc
-
-* <Link to="/examples/parcelhoc-example">ParcelHoc Example</Link>
-* <Link to="/examples/parcelhoc-initialvalue">Getting initialValue from props</Link>
-* <Link to="/examples/parcelhoc-onchange">Using onChange</Link>
-* <Link to="/examples/parcelhoc-delayuntil">Using delayUntil</Link>
-
-
+<Examples />

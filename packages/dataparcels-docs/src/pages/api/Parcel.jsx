@@ -3,6 +3,7 @@ import type {Node} from 'react';
 import React from 'react';
 import ApiPage from 'component/ApiPage';
 import Markdown_Parcel from 'docs/api/parcel/Parcel.md';
+import Markdown_ParcelAfter from 'docs/api/parcel/ParcelAfter.md';
 import Markdown_value from 'docs/api/parcel/value.md';
 import Markdown_meta from 'docs/api/parcel/meta.md';
 import Markdown_data from 'docs/api/parcel/data.md';
@@ -61,6 +62,7 @@ import Markdown_pipe from 'docs/api/parcel/pipe.md';
 
 const md = {
     _desc: Markdown_Parcel,
+    _after: Markdown_ParcelAfter,
     value: Markdown_value,
     meta: Markdown_meta,
     data: Markdown_data,

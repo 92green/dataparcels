@@ -1,5 +1,5 @@
 ```flow
-pure?: boolean = true
+pure?: boolean = true // optional
 ```
 
 Enables pure rendering. When `pure` is true, ParcelBoundary will only re-render when `parcel`'s data changes. It defaults to `true`.

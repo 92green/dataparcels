@@ -1,7 +1,7 @@
 import Link from 'component/Link';
 
 ```flow
-hold?: boolean = false
+hold?: boolean = false // optional
 ```
 
 When `hold` is true, all changes made to the parcel inside the ParcelBoundary are prevented from being propagated out of the boundary. The inner parcel will continue to update as normal. You can then call `actions.release()` to release all the buffered changes at once. This can be useful for building UIs that have a submit action.

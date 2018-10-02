@@ -1,6 +1,9 @@
+import Link from 'gatsby-link';
 import ParcelBoundaryDebounce from 'examples/ParcelBoundaryDebounce';
 
-This example demonstrates ParcelBoundary's `debounce` feature. The first field is debounced. It is slower to update state but causes less re-renders.
+This example demonstrates ParcelBoundary's `debounce` feature. The first field is debounced. It is slower to update state, and updates less often which causes less re-renders to happen.
+
+<Link to="/api/ParcelBoundary#debounce">API reference for ParcelBoundary.debounce</Link>
 
 <ParcelBoundaryDebounce />
 

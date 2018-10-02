@@ -1,6 +1,9 @@
+import Link from 'gatsby-link';
 import ParcelBoundaryExample from 'examples/ParcelBoundaryExample';
 
 This example demonstrates nested ParcelBoundaries and their pure rendering feature. ParcelBoundaries appear as coloured boxes. As you type in an input, the colours will change to indicate which ParcelBoundaries have re-rendered. 
+
+<Link to="/api/ParcelBoundary">API reference for ParcelBoundary</Link>
 
 <ParcelBoundaryExample />
 
