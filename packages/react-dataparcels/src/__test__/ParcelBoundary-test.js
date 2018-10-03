@@ -13,31 +13,37 @@ import Parcel from 'dataparcels';
 test('ParcelBoundary should pass a *value equivalent* parcel to children', () => {
     expect.assertions(1);
     let parcel = new Parcel();
+    let childRenderer = jest.fn();
 
     let wrapper = shallow(<ParcelBoundary parcel={parcel}>
-        {(pp) => {
-            expect(ParcelBoundaryEquals(pp, parcel)).toBe(true);
-        }}
+        {childRenderer}
     </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+
+    expect(ParcelBoundaryEquals(childParcel, parcel)).toBe(true);
 });
 
 test('ParcelBoundary should send correct changes back up when debounce = 0', () => {
     expect.assertions(2);
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
     let hasChanged = false;
+
     let parcel = new Parcel({
         value: 456,
-        handleChange: (newParcel) => {
-            hasChanged = true;
-            expect(123).toBe(newParcel.value);
-        }
+        handleChange
     });
 
     let wrapper = shallow(<ParcelBoundary parcel={parcel}>
-        {(pp) => {
-            pp.onChange(123);
-            expect(hasChanged).toBe(true)
-        }}
+        {childRenderer}
     </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    expect(handleChange.mock.calls.length).toBe(1);
+    let newParcel = handleChange.mock.calls[0][0];
+    expect(newParcel.value).toBe(123);
 });
 
 test('ParcelBoundary should pass a NEW *value equivalent* parcel to children when props change', () => {
