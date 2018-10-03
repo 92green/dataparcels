@@ -1,6 +1,9 @@
+import Link from 'gatsby-link';
 import ParcelHocExample from 'examples/ParcelHocExample';
 
 This example demonstrates a simple usage of `ParcelHoc`.
+
+<Link to="/api/ParcelHoc">API reference for ParcelHoc</Link>
 
 <ParcelHocExample />
 
