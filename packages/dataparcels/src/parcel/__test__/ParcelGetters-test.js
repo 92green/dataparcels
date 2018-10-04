@@ -58,11 +58,11 @@ test('Parcel.key should return the Parcels key', () => {
             ['something.:@']: 123
         }
     };
-    expect("^").toBe(new Parcel(data).key);
-    expect("a").toBe(new Parcel(data).get("a").key);
-    expect("#a").toBe(new Parcel(data).getIn(["a",0]).key);
-    expect("something.:@").toBe(new Parcel(data).get("something.:@").key);
-    expect("b").toBe(new Parcel(data).get("b").key);
+    expect(new Parcel(data).key).toBe("^");
+    expect(new Parcel(data).get("a").key).toBe("a");
+    expect(new Parcel(data).getIn(["a",0]).key).toBe("#a");
+    expect(new Parcel(data).get("something.:@").key).toBe("something.:@");
+    expect(new Parcel(data).get("b").key).toBe("b");
     // t.is("#a", new Parcel(data).getIn(["a",?????]).key); TODO
 });
 

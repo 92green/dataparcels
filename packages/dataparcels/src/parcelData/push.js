@@ -1,15 +1,15 @@
 // @flow
-import type {ParcelData, ParcelDataEvaluator} from '../types/Types';
+import type {ParcelData} from '../types/Types';
+import prepareChildKeys from './prepareChildKeys';
 import updateChildKeys from './updateChildKeys';
 
 import push from 'unmutable/lib/push';
-import update from 'unmutable/lib/update';
-import pipe from 'unmutable/lib/util/pipe';
 
-export default ({value}: ParcelData): ParcelDataEvaluator => {
-    return pipe(
-        update('value', push(value)),
-        update('child', push({})),
-        updateChildKeys()
-    );
+export default (newValue: *) => (parcelData: ParcelData): ParcelData => {
+    let {value, child, ...rest} = prepareChildKeys()(parcelData);
+    return updateChildKeys()({
+        ...rest,
+        value: push(newValue)(value),
+        child: push({})(child)
+    });
 };

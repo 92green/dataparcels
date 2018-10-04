@@ -1,6 +1,6 @@
 {
   "name": "dataparcels-docs",
-  "version": "0.14.0",
+  "version": "0.15.0-4",
   "description": "Dataparcels Documentation",
   "author": "Damien Clarke",
   "license": "MIT",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "bruce": "^4.0.0",
-    "dcme-style": "^0.15.13",
+    "dcme-style": "^0.16.3",
     "gatsby": "^1.9.223",
     "gatsby-link": "^1.6.38",
     "gatsby-plugin-react-helmet": "^2.0.6",

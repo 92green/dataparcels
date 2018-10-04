@@ -8,7 +8,7 @@ Dataparcels has a powerful set of methods for manipulating indexed data types, s
 
 ```js
 import React from 'react';
-import {ParcelHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListParcelHoc = ParcelHoc({
@@ -24,15 +24,15 @@ const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
     return <div>
         {fruitListParcel.toArray((fruitParcel) => {
-            return <PureParcel parcel={fruitParcel} key={fruitParcel.key}>
+            return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => <div>
                     <input type="text" {...parcel.spreadDOM()} />
-                    <button onClick={() => parcel.swapPrevWithSelf()}>^</button>
-                    <button onClick={() => parcel.swapNextWithSelf()}>v</button>
-                    <button onClick={() => parcel.insertAfterSelf(`${parcel.value} copy`)}>+</button>
-                    <button onClick={() => parcel.deleteSelf()}>x</button>
+                    <button onClick={() => parcel.swapPrev()}>^</button>
+                    <button onClick={() => parcel.swapNext()}>v</button>
+                    <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
+                    <button onClick={() => parcel.delete()}>x</button>
                 </div>}
-            </PureParcel>;
+            </ParcelBoundary>;
         })}
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
@@ -46,7 +46,7 @@ export default FruitListParcelHoc(FruitListEditor);
 * `fruitListParcel` contains an array.
 * `Parcel.toArray()` is used to iterate over the Parcel's elements, and it is passed a `mapper` function to return React elements.
 * Each element parcel's `key` property is used to uniquely key each React element.
-* `PureParcel` is used to ensure great rendering performance.
+* `ParcelBoundary` is used to ensure great rendering performance.
 
 For the full list of methods you can use on indexed data types, see <Link to="/api/Parcel#indexed_change_methods">Indexed Change Methods</Link> and <Link to="/api/Parcel#element_change_methods">Element Change Methods</Link> in the Parcel API reference.
 
@@ -59,22 +59,22 @@ Dataparcels automatic keying plays nicely with [react-flip-move](https://github.
 ```js
 import React from 'react';
 import FlipMove from 'react-flip-move';
-import {ParcelHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
     return <FlipMove>
         {fruitListParcel.toArray((fruitParcel) => {
-            return <PureParcel parcel={fruitParcel} key={fruitParcel.key}>
+            return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => <div>
                     <input type="text" {...parcel.spreadDOM()} />
-                    <button onClick={() => parcel.swapPrevWithSelf()}>^</button>
-                    <button onClick={() => parcel.swapNextWithSelf()}>v</button>
-                    <button onClick={() => parcel.insertAfterSelf(`${parcel.value} copy`)}>+</button>
-                    <button onClick={() => parcel.deleteSelf()}>x</button>
+                    <button onClick={() => parcel.swapPrev()}>^</button>
+                    <button onClick={() => parcel.swapNext()}>v</button>
+                    <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
+                    <button onClick={() => parcel.delete()}>x</button>
                 </div>}
-            </PureParcel>;
+            </ParcelBoundary>;
         })}
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </FlipMove>;

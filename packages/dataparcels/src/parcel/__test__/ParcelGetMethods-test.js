@@ -86,3 +86,42 @@ test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareD
     expect({x:1}).toEqual(p.get('def').getInternalLocationShareData());
 
 });
+
+test('Parcel.spy() should be called with parcel', () => {
+
+    let spy = jest.fn();
+    let spy2 = jest.fn();
+
+    let p = new Parcel({
+        value: {
+            abc: 123
+        }
+    });
+
+    let p2 = p.spy(spy).get('abc')
+
+    let childValue = p2.spy(spy2).value;
+
+    expect(spy.mock.calls[0][0]).toBe(p);
+    expect(spy2.mock.calls[0][0]).toBe(p2);
+    expect(childValue).toBe(123);
+});
+
+test('Parcel.spyChange() should be called with changeRequest', () => {
+
+    let spy = jest.fn();
+    let spy2 = jest.fn();
+
+    new Parcel({
+        value: {
+            abc: 123
+        }
+    })
+        .spyChange(spy)
+        .get('abc')
+        .spyChange(spy2)
+        .onChange(456);
+
+    expect(spy2.mock.calls[0][0].value).toEqual(456);
+    expect(spy.mock.calls[0][0].value).toEqual({abc: 456});
+});

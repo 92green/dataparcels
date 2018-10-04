@@ -33,9 +33,11 @@ export type ParcelConfigInternal = {
 
 export type CreateParcelConfigType = {
     onDispatch?: Function,
-    id: ParcelId,
-    parcelData: ParcelData,
-    parent?: Parcel
+    id?: ParcelId,
+    modifiers?: Modifiers,
+    parcelData?: ParcelData,
+    parent?: Parcel,
+    handleChange?: Function
 };
 
 export type ParcelMeta = {[key: string]: *};
@@ -88,11 +90,6 @@ const runtimeTypes = {
         check: ii => ii
             && Array.isArray(ii)
             && ii.every(jj => typeof jj === "function")
-    },
-    ['functionOptional']: {
-        name: "a function",
-        check: ii => typeof ii === "undefined"
-            || typeof ii === "function"
     },
     ['keyIndex']: {
         name: "a key or an index (string or number)",

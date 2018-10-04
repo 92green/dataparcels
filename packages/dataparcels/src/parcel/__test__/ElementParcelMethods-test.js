@@ -1,7 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 
-test('ElementParcel.insertBeforeSelf() should insert', () => {
+test('ElementParcel.insertBefore() should insert', () => {
     expect.assertions(4);
 
     var data = {
@@ -41,7 +41,7 @@ test('ElementParcel.insertBeforeSelf() should insert', () => {
         }
     })
         .get(1)
-        .insertBeforeSelf(4);
+        .insertBefore(4);
 
     new Parcel({
         ...data,
@@ -51,10 +51,10 @@ test('ElementParcel.insertBeforeSelf() should insert', () => {
         }
     })
         .get("#b")
-        .insertBeforeSelf(4);
+        .insertBefore(4);
 });
 
-test('ElementParcel.insertAfterSelf() should insert', () => {
+test('ElementParcel.insertAfter() should insert', () => {
     expect.assertions(4);
 
     var data = {
@@ -94,7 +94,7 @@ test('ElementParcel.insertAfterSelf() should insert', () => {
         }
     })
         .get(1)
-        .insertAfterSelf(4);
+        .insertAfter(4);
 
     new Parcel({
         ...data,
@@ -104,10 +104,10 @@ test('ElementParcel.insertAfterSelf() should insert', () => {
         }
     })
         .get("#b")
-        .insertAfterSelf(4);
+        .insertAfter(4);
 });
 
-test('ElementParcel.swapWithSelf() should swap', () => {
+test('ElementParcel.swap() should swap', () => {
     expect.assertions(2);
 
     var data = {
@@ -146,10 +146,10 @@ test('ElementParcel.swapWithSelf() should swap', () => {
         }
     })
         .get(0)
-        .swapWithSelf(2);
+        .swap(2);
 });
 
-test('ElementParcel.swapNextWithSelf() should swapNext', () => {
+test('ElementParcel.swapNext() should swapNext', () => {
     expect.assertions(4);
 
     var data = {
@@ -186,7 +186,7 @@ test('ElementParcel.swapNextWithSelf() should swapNext', () => {
         }
     })
         .get(0)
-        .swapNextWithSelf();
+        .swapNext();
 
     expectedAction = {
         type: "swapNext",
@@ -204,7 +204,7 @@ test('ElementParcel.swapNextWithSelf() should swapNext', () => {
 });
 
 
-test('ElementParcel.swapPrevWithSelf() should swapPrev', () => {
+test('ElementParcel.swapPrev() should swapPrev', () => {
     expect.assertions(2);
 
     var data = {
@@ -241,5 +241,5 @@ test('ElementParcel.swapPrevWithSelf() should swapPrev', () => {
         }
     })
         .get("#b")
-        .swapPrevWithSelf();
+        .swapPrev();
 });

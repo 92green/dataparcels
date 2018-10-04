@@ -1,5 +1,5 @@
 import React from 'react';
-import Parcel, {PureParcel} from 'react-dataparcels';
+import Parcel, {ParcelBoundary} from 'react-dataparcels';
 
 export default class ManagingOwnParcelState extends React.Component {
     constructor(props) {
@@ -20,14 +20,14 @@ export default class ManagingOwnParcelState extends React.Component {
         let {personParcel} = this.state;
         return <div>
             <label>firstname</label>
-            <PureParcel parcel={personParcel.get('firstname')}>
+            <ParcelBoundary parcel={personParcel.get('firstname')}>
                 {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
-            </PureParcel>
+            </ParcelBoundary>
 
             <label>lastname</label>
-            <PureParcel parcel={personParcel.get('lastname')}>
+            <ParcelBoundary parcel={personParcel.get('lastname')}>
                 {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
-            </PureParcel>
+            </ParcelBoundary>
         </div>;
     }
 }

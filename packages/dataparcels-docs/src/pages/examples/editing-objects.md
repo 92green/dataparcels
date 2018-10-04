@@ -18,7 +18,7 @@ This example demonstrates a pretty typical React setup to do that.
 
 ```js
 import React from 'react';
-import {ParcelHoc, PureParcel} from 'react-dataparcels';
+import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",
@@ -40,19 +40,19 @@ const PersonEditor = (props) => {
 
     return <div>
         <label>firstname</label>
-        <PureParcel parcel={firstname}>
+        <ParcelBoundary parcel={firstname}>
             {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
-        </PureParcel>
+        </ParcelBoundary>
 
         <label>lastname</label>
-        <PureParcel parcel={lastname}>
+        <ParcelBoundary parcel={lastname}>
             {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
-        </PureParcel>
+        </ParcelBoundary>
 
         <label>postcode</label>
-        <PureParcel parcel={postcode}>
+        <ParcelBoundary parcel={postcode}>
             {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
-        </PureParcel>
+        </ParcelBoundary>
     </div>;
 };
 
@@ -63,8 +63,8 @@ export default PersonParcelHoc(PersonEditor);
 ### What's going on
 
 * `react-dataparcels` is imported.
-* It stores the data in a `ParcelHoc` higher order component, which passes a parcel down as props.
+* It stores the data in a `ParcelHoc` higher order component, which creates and stores a parcel in state, and passes it down as props.
 * The `.get()` method is used on the parcel to create smaller parcels containing just `firstname` and `lastname`.
-* It uses the `PureParcel` React component to avoid needless re-rendering. This isn't *required*, but it is very recommended.
+* It uses the `ParcelBoundary` React component to avoid needless re-rendering. This isn't *required*, but it is very recommended.
 * Finally `.spreadDOM()` is used to provide the `value` and `onChange` props to the `input` elements.
 

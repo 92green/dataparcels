@@ -3,30 +3,43 @@ import type ChangeRequest from '../../change/ChangeRequest';
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
 import type Parcel from '../Parcel';
-import type {ParcelData} from '../../types/Types';
 import type {ParcelMapper} from '../../types/Types';
 import Types from '../../types/Types';
 
-import parcelForEach from '../../parcelData/forEach';
 import parcelGet from '../../parcelData/get';
 import parcelHas from '../../parcelData/has';
+import prepareChildKeys from '../../parcelData/prepareChildKeys';
 
+import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
+import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel) => ({
 
+    // prepare child keys only once per parcel instance
+    // by preparing them and mutating this.parcelData
+
+    _prepareChildKeys: () => {
+        if(!_this._parcelData.child) {
+            _this._parcelData = prepareChildKeys()(_this._parcelData);
+        }
+    },
+
     has: (key: Key|Index): boolean => {
         Types(`has() expects param "key" to be`, `keyIndex`)(key);
+
+        _this._methods._prepareChildKeys();
         return parcelHas(key)(_this._parcelData);
     },
 
     get: (key: Key|Index, notFoundValue: any): Parcel => {
         Types(`get() expects param "key" to be`, `keyIndex`)(key);
+
+        _this._methods._prepareChildKeys();
         let childParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
 
         let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
-            // $FlowFixMe - key *will* exist, but our types are too flexible and can't tell that
             _this.dispatch(changeRequest._unget(childParcelData.key));
         };
 
@@ -49,15 +62,14 @@ export default (_this: Parcel) => ({
 
     toObject: (mapper: ParcelMapper): { [key: string]: * } => {
         Types(`toObject() expects param "mapper" to be`, `function`)(mapper);
-        let obj = {};
 
-        parcelForEach((parcelData: ParcelData, index: string|number) => {
-            let item = _this.get(index);
-            let mapped = mapper(item, index, _this);
-            obj[index] = mapped;
-        })(_this._parcelData);
-
-        return obj;
+        return pipeWith(
+            _this._parcelData.value,
+            map((ii: *, key: string|number) => {
+                let item = _this.get(key);
+                return mapper(item, key, _this);
+            })
+        );
     },
 
     toArray: (mapper: ParcelMapper): Array<*> => {

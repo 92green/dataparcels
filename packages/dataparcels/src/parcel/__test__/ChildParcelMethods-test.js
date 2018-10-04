@@ -1,7 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 
-test('ChildParcel.deleteSelf() should delete self', () => {
+test('ChildParcel.delete() should delete self', () => {
     expect.assertions(1);
 
     var expectedValue = {
@@ -19,10 +19,10 @@ test('ChildParcel.deleteSelf() should delete self', () => {
         }
     };
 
-    new Parcel(data).get('a').deleteSelf();
+    new Parcel(data).get('a').delete();
 });
 
-test('ChildParcel.deleteSelf() should delete self when indexed', () => {
+test('ChildParcel.delete() should delete self when indexed', () => {
     expect.assertions(1);
 
     var expectedValue = [1,3];
@@ -35,5 +35,28 @@ test('ChildParcel.deleteSelf() should delete self when indexed', () => {
         }
     };
 
-    new Parcel(data).get('#b').deleteSelf();
+    new Parcel(data).get('#b').delete();
+});
+
+
+test('ChildParcel.isFirst() should detect first child parcel', () => {
+    let parcel = new Parcel({
+        value: [1,2,1,4]
+    });
+
+    expect(parcel.get(0).isFirst()).toBe(true);
+    expect(parcel.get(1).isFirst()).toBe(false);
+    expect(parcel.get(2).isFirst()).toBe(false);
+    expect(parcel.get(3).isFirst()).toBe(false);
+});
+
+test('ChildParcel.isLast() should detect first child parcel', () => {
+    let parcel = new Parcel({
+        value: [1,2,3,4]
+    });
+
+    expect(parcel.get(0).isLast()).toBe(false);
+    expect(parcel.get(1).isLast()).toBe(false);
+    expect(parcel.get(2).isLast()).toBe(false);
+    expect(parcel.get(3).isLast()).toBe(true);
 });

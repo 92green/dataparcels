@@ -22,13 +22,13 @@ const PersonEditor = (props) => {
 
     return <div>
         <label>firstname</label>
-        <input type="text" value={firstname.value} onChange={firstname.onChange} />
+        <input type="text" value={firstname.value} onChange={firstname.onChangeDOM} />
 
         <label>lastname</label>
-        <input type="text" value={lastname.value} onChange={lastname.onChange} />
+        <input type="text" value={lastname.value} onChange={lastname.onChangeDOM} />
 
         <label>postcode</label>
-        <input type="text" value={postcode.value} onChange={postcode.onChange} />
+        <input type="text" value={postcode.value} onChange={postcode.onChangeDOM} />
     </div>;
 };
 

@@ -1,8 +1,8 @@
 // @flow
-import PureParcelEquals from '../PureParcelEquals';
+import ParcelBoundaryEquals from '../ParcelBoundaryEquals';
 import Parcel from 'dataparcels';
 
-test('PureParcelEquals should test equality to see if a re-render should occur', () => {
+test('ParcelBoundaryEquals should test equality to see if a re-render should occur', () => {
     var child = {};
     var parcelCreator = (merge = {}) => {
         let p = new Parcel();
@@ -20,9 +20,9 @@ test('PureParcelEquals should test equality to see if a re-render should occur',
         return p;
     };
 
-    expect(PureParcelEquals(parcelCreator(), parcelCreator())).toBe(true);
-    expect(PureParcelEquals(parcelCreator(), parcelCreator({value: 456}))).toBe(false);
-    expect(PureParcelEquals(parcelCreator(), parcelCreator({meta: {abc: 123}}))).toBe(false);
-    expect(PureParcelEquals(parcelCreator(), parcelCreator({child: {}}))).toBe(false);
-    expect(PureParcelEquals(parcelCreator(), parcelCreator({key: "b"}))).toBe(false);
+    expect(ParcelBoundaryEquals(parcelCreator(), parcelCreator())).toBe(true);
+    expect(ParcelBoundaryEquals(parcelCreator(), parcelCreator({value: 456}))).toBe(false);
+    expect(ParcelBoundaryEquals(parcelCreator(), parcelCreator({meta: {abc: 123}}))).toBe(false);
+    expect(ParcelBoundaryEquals(parcelCreator(), parcelCreator({child: {}}))).toBe(false);
+    expect(ParcelBoundaryEquals(parcelCreator(), parcelCreator({key: "b"}))).toBe(false);
 });

@@ -1,10 +1,9 @@
-# 📦 Parcels
+# Dataparcels
 
-A super declarative user input library that works really well with React.
+A library for editing data structures that works really well with React.
 
-*Almost done!*
 
-### [See the very very unfinished docs](https://blueflag.github.io/dataparcels)
+### [See the semi-unfinished docs](https://blueflag.github.io/dataparcels)
 
 ## Installation
 

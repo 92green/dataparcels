@@ -1,17 +1,28 @@
 // @flow
 import type {ParcelData} from '../types/Types';
 
-import has from 'unmutable/lib/has';
-import identity from 'unmutable/lib/identity';
-import merge from 'unmutable/lib/merge';
-import set from 'unmutable/lib/set';
-import update from 'unmutable/lib/update';
+import isParentValue from './isParentValue';
+import updateChild from './updateChild';
+import updateChildKeys from './updateChildKeys';
+
+import del from 'unmutable/lib/delete';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (input: ParcelData) => (parcelData: ParcelData): ParcelData => {
+export default (value: *, keepChild: boolean) => (parcelData: ParcelData): ParcelData => {
+    let result = {
+        ...parcelData,
+        value
+    };
+
+    result = keepChild ? result : del('child')(result);
+
+    if(!isParentValue(value)) {
+        return result;
+    }
+
     return pipeWith(
-        parcelData,
-        has('value')(input) ? set('value', input.value) : identity(),
-        has('meta')(input) ? update('meta', merge(input.meta)) : identity()
+        result,
+        updateChild(),
+        updateChildKeys()
     );
 };

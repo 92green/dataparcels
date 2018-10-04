@@ -1,0 +1,3 @@
+```flow
+onChange(value: *): void
+```

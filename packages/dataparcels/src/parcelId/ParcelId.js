@@ -2,12 +2,10 @@
 import type {Key} from '../types/Types';
 import type {ParcelIdData} from '../types/Types';
 
-import doIf from 'unmutable/lib/doIf';
 import last from 'unmutable/lib/last';
 import push from 'unmutable/lib/push';
 import rest from 'unmutable/lib/rest';
 import update from 'unmutable/lib/update';
-import updateIn from 'unmutable/lib/updateIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
@@ -51,9 +49,10 @@ export default class ParcelId {
     };
 
     push: Function = (key: Key, isElement: boolean): ParcelId => {
+        let escapedKey = escapeKey(key);
         let escapeAndPush: Function = isElement
             ? push(key)
-            : push(escapeKey(key));
+            : push(escapedKey);
 
         return pipeWith(
             this.toJS(),
@@ -78,14 +77,7 @@ export default class ParcelId {
         typedPath: this._typedPath
     });
 
-    setTypeCode: Function = (typeCode: string): ParcelId => {
-        return pipeWith(
-            this.toJS(),
-            updateIn(['typedPath', -1], doIf(
-                ii => ii.replace(/%:/g, "").indexOf(":") === -1,
-                ii =>`${ii}:${typeCode}`
-            )),
-            this._create
-        );
+    setTypeCode: Function = (typeCode: string) => {
+        this._typedPath = update(-1, ii =>`${ii}:${typeCode}`)(this._typedPath);
     };
 }

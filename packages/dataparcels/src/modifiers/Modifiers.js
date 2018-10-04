@@ -28,7 +28,6 @@ export default class Modifiers {
     };
 
     add: Function = (modifier: ModifierFunction|ModifierObject): Modifiers => {
-        // TODO - add validation
         return pipeWith(
             this._modifiers,
             push(this.toModifierObject(modifier)),

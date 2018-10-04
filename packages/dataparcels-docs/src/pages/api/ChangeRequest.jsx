@@ -1,7 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import React from 'react';
-import Class from 'component/Class';
+import ApiPage from 'component/ApiPage';
 import Markdown_ChangeRequest from 'docs/api/changeRequest/ChangeRequest.md';
 
 const md = {
@@ -26,7 +26,7 @@ toJS()
 
 `;
 
-export default () => <Class
+export default () => <ApiPage
     name="ChangeRequest"
     api={api}
     md={md}

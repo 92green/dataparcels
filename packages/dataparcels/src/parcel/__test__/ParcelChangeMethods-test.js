@@ -1,8 +1,8 @@
 // @flow
 import Parcel from '../Parcel';
 
-test('Parcel.setSelf() should call the Parcels handleChange function with the new parcelData', () => {
-    expect.assertions(2);
+test('Parcel.set() should call the Parcels handleChange function with the new parcelData', () => {
+    expect.assertions(3);
 
     var data = {
         value: 123
@@ -27,12 +27,47 @@ test('Parcel.setSelf() should call the Parcels handleChange function with the ne
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
+            expect(expectedData).toEqual(changeRequest.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
-    }).setSelf(456);
+    }).set(456);
 });
 
-test('Parcel.updateSelf() should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.set() should remove and replace child data when setting a deep data structure', () => {
+    expect.assertions(2);
+
+    var data = {
+        value: [[1,2,3],[4]]
+    };
+
+    var expectedData = {
+        child: [
+            {"key": "#a"},
+            {"key": "#b"}
+        ],
+        key: "^",
+        meta: {},
+        value: [[6], [2, 3, 4]]
+    };
+
+    var expectedDeepData = {
+        child: undefined,
+        meta: {},
+        value: 6,
+        key: '#a'
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel) => {
+            expect(parcel.data).toEqual(expectedData);
+            let deep = parcel.getIn([0,0]).data;
+            expect(deep).toEqual(expectedDeepData);
+        }
+    }).set([[6],[2,3,4]]);
+});
+
+test('Parcel.update() should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(3);
 
     var data = {
@@ -62,7 +97,7 @@ test('Parcel.updateSelf() should call the Parcels handleChange function with the
             expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
-    }).updateSelf((ii) => {
+    }).update((ii) => {
         expect(expectedArg).toEqual(ii);
         return 456;
     });

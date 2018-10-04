@@ -39,17 +39,39 @@ class LocationShareRegistry {
     };
 }
 
-export default class Treeshare {
-    _debugRender: boolean = false;
-    registry: ParcelRegistry = new ParcelRegistry();
-    dispatch: DispatchRegistry = new DispatchRegistry();
-    locationShare: LocationShareRegistry = new LocationShareRegistry();
+type Config = {
+    registry?: ParcelRegistry,
+    dispatch?: DispatchRegistry,
+    locationShare?: LocationShareRegistry,
+    debugRender: boolean
+};
 
-    constructor({debugRender}: Object) {
-        this._debugRender = debugRender;
+export default class Treeshare {
+    debugRender: boolean;
+    registry: ParcelRegistry;
+    dispatch: DispatchRegistry;
+    locationShare: LocationShareRegistry;
+
+    constructor(config: Config) {
+        let {
+            registry,
+            dispatch,
+            locationShare,
+            debugRender
+        } = config;
+
+        this.registry = registry || new ParcelRegistry();
+        this.dispatch = dispatch || new DispatchRegistry();
+        this.locationShare = locationShare || new LocationShareRegistry();
+        this.debugRender = debugRender || false;
     }
 
-    getDebugRender: Function = (): boolean => {
-        return this._debugRender;
+    boundarySplit: Function = (): Treeshare => {
+        return new Treeshare({
+            // do not pass in registry
+            dispatch: this.dispatch,
+            locationShare: this.locationShare,
+            debugRender: this.debugRender
+        });
     }
 }

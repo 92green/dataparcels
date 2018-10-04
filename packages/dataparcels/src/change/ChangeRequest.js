@@ -1,6 +1,8 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
-import type {Key, Index} from '../types/Types';
+import type {Key} from '../types/Types';
+import type {Index} from '../types/Types';
+import type {ParcelData} from '../types/Types';
 import type Action from './Action';
 
 import {ReadOnlyError} from '../errors/Errors';
@@ -15,6 +17,7 @@ export default class ChangeRequest {
     _meta: * = {};
     _originId: ?string = null;
     _originPath: ?string[] = null;
+    _cachedData: ?ParcelData;
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
@@ -48,6 +51,10 @@ export default class ChangeRequest {
             throw new Error(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
         }
 
+        if(this._cachedData) {
+            return this._cachedData;
+        }
+
         let parcelDataFromRegistry = this
             ._baseParcel
             ._treeshare
@@ -55,12 +62,14 @@ export default class ChangeRequest {
             .get(this._baseParcel._id.id())
             .data;
 
-        return Reducer(parcelDataFromRegistry, this._actions);
+        let data = Reducer(parcelDataFromRegistry, this._actions);
+        this._cachedData = data;
+        return data;
     }
 
     // $FlowFixMe - this doesn't have side effects
     set data(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -70,7 +79,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set value(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -80,7 +89,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set meta(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     actions = (): Action[] => {
@@ -106,7 +115,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set changeRequestMeta(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     setChangeRequestMeta = (partialMeta: *): ChangeRequest => {
@@ -125,7 +134,7 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set originId(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -135,15 +144,19 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     set originPath(value: *) {
-        ReadOnlyError();
+        throw ReadOnlyError();
     }
 
     toJS = (): Object => {
         return {
-            actions: this._actions,
+            actions: this._actions.map(action => action.toJS()),
             meta: this._meta,
             originId: this._originId,
             originPath: this._originPath
         };
+    };
+
+    toConsole = () => {
+        console.log(this.toJS());
     };
 }

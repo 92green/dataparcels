@@ -1,7 +1,7 @@
 {
   "name": "react-dataparcels",
-  "version": "0.14.0",
-  "description": "Parcels + a couple of helpful React components for optimal rendering",
+  "version": "0.15.0-4",
+  "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "UNLICENSED",
   "author": "Damien Clarke",
@@ -22,7 +22,7 @@
     "watch": "yarn run build -w"
   },
   "dependencies": {
-    "dataparcels": "^0.14.0",
+    "dataparcels": "^0.15.0-4",
     "unmutable": "^0.34.0"
   }
 }

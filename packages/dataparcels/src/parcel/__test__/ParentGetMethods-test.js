@@ -1,6 +1,8 @@
 // @flow
 import Parcel from '../Parcel';
+import TestTimeExecution from '../../util/__test__/TestTimeExecution-testUtil';
 import map from 'unmutable/lib/map';
+import range from 'unmutable/lib/util/range';
 
 test('ParentParcel.size() should return size of parcel', () => {
     var data = {
@@ -173,6 +175,29 @@ test('ParentParcel.get(keyDoesntExist, "notset") should return a parcel with val
     };
 
     expect(new Parcel(data).get("z", "notset").value).toBe("notset");
+});
+
+test('ParentParcel.get() should cache its parcelData.child after its calculated, so subsequent calls are faster', () => {
+    let count = 10000;
+    let parcel = new Parcel({
+        value: range(count),
+        handleChange: (parcel) => {
+            parcel.get(1);
+            expect(parcel.data.child.length).toBe(count);
+        }
+    });
+
+    let ms = TestTimeExecution(() => {
+        parcel.get(1);
+    });
+
+    let ms2 = TestTimeExecution(() => {
+        parcel.get(1);
+    });
+
+    expect(ms / 10).toBeGreaterThan(ms2); // expect amazing performance boosts from having cached
+
+    parcel.get(0).onChange(123);
 });
 
 test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => {

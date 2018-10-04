@@ -1,8 +1,8 @@
 import IndexedKeys from 'docs/notes/IndexedKeys.md';
 
 ```flow
-get(key: string|number): Parcel
-get(key: string|number, notSetValue: any): Parcel
+get(key: string|number): Parcel // only on ParentParcels
+get(key: string|number, notSetValue: any): Parcel // only on ParentParcels
 ```
 
 Returns a Parcel containing the value associated with the provided key / index.
