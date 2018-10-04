@@ -11,7 +11,6 @@ import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
 import Parcel from 'dataparcels';
 
 test('ParcelBoundary should pass a *value equivalent* parcel to children', () => {
-    expect.assertions(1);
     let parcel = new Parcel();
     let childRenderer = jest.fn();
 
@@ -25,10 +24,8 @@ test('ParcelBoundary should pass a *value equivalent* parcel to children', () =>
 });
 
 test('ParcelBoundary should send correct changes back up when debounce = 0', () => {
-    expect.assertions(2);
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
-    let hasChanged = false;
 
     let parcel = new Parcel({
         value: 456,
@@ -47,36 +44,36 @@ test('ParcelBoundary should send correct changes back up when debounce = 0', () 
 });
 
 test('ParcelBoundary should pass a NEW *value equivalent* parcel to children when props change', () => {
-    expect.assertions(2);
+    let childRenderer = jest.fn();
+
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
-    let renders = 0;
 
     let wrapper = shallow(<ParcelBoundary parcel={parcel}>
-        {(pp) => {
-            if(renders === 0) {
-                expect(ParcelBoundaryEquals(pp, parcel)).toBe(true);
-            } else if(renders === 1) {
-                expect(ParcelBoundaryEquals(pp, parcel2)).toBe(true);
-            }
-            renders++;
-        }}
+        {childRenderer}
     </ParcelBoundary>);
 
     wrapper.setProps({
         parcel: parcel2
     });
+
+    wrapper.update();
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    let childParcel2 = childRenderer.mock.calls[1][0];
+
+    expect(ParcelBoundaryEquals(childParcel, parcel)).toBe(true);
+    expect(ParcelBoundaryEquals(childParcel2, parcel2)).toBe(true);
 });
 
 test('ParcelBoundary should not rerender if parcel has not changed value and pure = true', () => {
+    let childRenderer = jest.fn();
+
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
-    let renders = 0;
 
     let wrapper = shallow(<ParcelBoundary parcel={parcel} pure>
-        {(pp) => {
-            renders++;
-        }}
+        {childRenderer}
     </ParcelBoundary>);
 
     wrapper.setProps({
@@ -84,18 +81,19 @@ test('ParcelBoundary should not rerender if parcel has not changed value and pur
         somethingElse: true
     });
 
-    expect(renders).toBe(1);
+    wrapper.update();
+
+    expect(childRenderer.mock.calls.length).toBe(1);
 });
 
 test('ParcelBoundary should rerender if parcel has not changed value and pure = false', () => {
+    let childRenderer = jest.fn();
+
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
-    let renders = 0;
 
     let wrapper = shallow(<ParcelBoundary parcel={parcel} pure={false}>
-        {(pp) => {
-            renders++;
-        }}
+        {childRenderer}
     </ParcelBoundary>);
 
     wrapper.setProps({
@@ -103,18 +101,20 @@ test('ParcelBoundary should rerender if parcel has not changed value and pure = 
         somethingElse: true
     });
 
-    expect(renders).toBe(2);
+    wrapper.update();
+
+    expect(childRenderer.mock.calls.length).toBe(2);
 });
 
 test('ParcelBoundary should rerender if parcel has not changed value but forceUpdate has', () => {
+    let childRenderer = jest.fn();
+
     let parcel = new Parcel();
     let parcel2 = new Parcel({value: 456});
     let renders = 0;
 
     let wrapper = shallow(<ParcelBoundary parcel={parcel} forceUpdate={["abc"]}>
-        {(pp) => {
-            renders++;
-        }}
+        {childRenderer}
     </ParcelBoundary>);
 
     wrapper.setProps({
@@ -122,7 +122,9 @@ test('ParcelBoundary should rerender if parcel has not changed value but forceUp
         forceUpdate: ["def"]
     });
 
-    expect(renders).toBe(2);
+    wrapper.update();
+
+    expect(childRenderer.mock.calls.length).toBe(2);
 });
 
 test('ParcelBoundary should release changes when called', async () => {
