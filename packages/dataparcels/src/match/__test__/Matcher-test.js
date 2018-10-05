@@ -25,68 +25,107 @@ let typedPathStrings = {
 
 let matchTests = [
     {
-        name: "match root",
+        name: "match self",
+        match: ".",
+        shouldMatch: ["top"]
+    },
+    {
+        name: "match self with depth = 1",
+        match: ".",
+        shouldMatch: [
+            "childValue",
+            "childObject",
+            "childArray",
+            "escapeChars"
+        ],
+        depth: 1
+    },
+    {
+        name: "match self with depth = 2",
+        match: ".",
+        shouldMatch: [
+            "grandchildValue",
+            "grandchildWithDot",
+            "grandchildElement"
+        ],
+        depth: 2
+    },
+    {
+        name: "match self with depth = 3",
+        match: ".",
+        shouldMatch: [
+            "greatGrandchild"
+        ],
+        depth: 3
+    },
+    {
+        name: "match by full name",
         match: "^",
         shouldMatch: ["top"]
     },
     {
         name: "match child by full name",
-        match: "abc",
+        match: ".abc",
         shouldMatch: ["childValue"]
     },
     {
         name: "match child with escape chars",
-        match: "jkl%.%:%|%#%,",
+        match: ".jkl%.%:%|%#%,",
         shouldMatch: ["escapeChars"]
     },
     {
         name: "match child that doesnt exist / dont match grandchild",
-        match: "defkid",
+        match: ".defkid",
         shouldMatch: []
     },
     {
         name: "match grandchild",
-        match: "def.defkid",
+        match: ".def.defkid",
         shouldMatch: ["grandchildValue"]
     },
     {
         name: "match grandchild element",
-        match: "ghi.#a",
+        match: ".ghi.#a",
         shouldMatch: ["grandchildElement"]
     },
     {
+        name: "match multiple",
+        match: ".abc|.ghi.#a",
+        shouldMatch: ["childValue", "grandchildElement"]
+    },
+    {
         name: "match wildcard",
-        match: "*",
+        match: ".*",
         shouldMatch: ["childValue", "childObject", "childArray", "escapeChars"]
     },
     {
         name: "match wildcard start",
-        match: "*f",
+        match: ".*f",
         shouldMatch: ["childObject"]
     },
     {
         name: "match wildcard middle",
-        match: "*e*",
+        match: ".*e*",
         shouldMatch: ["childObject"]
     },
     {
         name: "match wildcard end",
-        match: "d*",
+        match: ".d*",
         shouldMatch: ["childObject"]
     },
     {
         name: "match wildcard in array",
-        match: "ghi.*",
+        match: ".ghi.*",
         shouldMatch: ["grandchildElement"]
     },
     {
         name: "match wildcards in keypath",
-        match: "def.*.abc",
+        match: ".def.*.abc",
         shouldMatch: ["greatGrandchild"]
     },
     {
         name: "match wildcards in keypath",
-        match: "*.*.*",
+        match: ".*.*.*",
         shouldMatch: ["greatGrandchild"] // and NOT grandchildWithDot
     },
     {
@@ -126,92 +165,101 @@ let matchTests = [
     },
     {
         name: "match globstar end",
-        match: "ghi.**",
+        match: ".ghi.**",
         shouldMatch: ["grandchildElement"]
     },
     {
-        name: "match root with type",
-        match: "^:Parent",
+        name: "match globstar children",
+        match: ".**",
+        shouldMatch: [
+            "childValue",
+            "childObject",
+            "grandchildValue",
+            "grandchildWithDot",
+            "greatGrandchild",
+            "childArray",
+            "grandchildElement",
+            "escapeChars"
+        ]
+    },
+    {
+        name: "match self with type",
+        match: ".:Parent",
         shouldMatch: ["top"]
     },
     {
-        name: "match root with type",
-        match: "^:Indexed",
+        name: "match self with type",
+        match: ".:Indexed",
         shouldMatch: []
     },
     {
         name: "match child by full name with type",
-        match: "abc:Child",
+        match: ".abc:Child",
         shouldMatch: ["childValue"]
     },
     {
         name: "match child by full name with type",
-        match: "abc:Parent",
+        match: ".abc:Parent",
         shouldMatch: []
     },
     {
         name: "match child with escape chars with type",
-        match: "jkl%.%:%|%#%,:Child",
+        match: ".jkl%.%:%|%#%,:Child",
         shouldMatch: ["escapeChars"]
     },
     {
         name: "match child with escape chars with type",
-        match: "jkl%.%:%|%#%,:Parent",
+        match: ".jkl%.%:%|%#%,:Parent",
         shouldMatch: []
     },
     {
         name: "match wildcard children with type",
-        match: "*:Child",
+        match: ".*:Child",
         shouldMatch: ["childValue", "childObject", "childArray", "escapeChars"]
     },
     {
         name: "match wildcard children with type",
-        match: "*:Parent",
+        match: ".*:Parent",
         shouldMatch: ["childObject", "childArray"]
     },
     {
         name: "match wildcard children with type",
-        match: "*:Indexed",
+        match: ".*:Indexed",
         shouldMatch: ["childArray"]
     },
     {
         name: "match wildcard children with type",
-        match: "*:Element",
+        match: ".*:Element",
         shouldMatch: []
     },
     {
         name: "match wildcard children with type",
-        match: "*:TopLevel",
-        shouldMatch: []
-    },
-    {
-        name: "match wildcard children with multiple types",
-        match: "*:Element|Child",
-        shouldMatch: ["childValue", "childObject", "childArray", "escapeChars"]
-    },
-    {
-        name: "match wildcard children with negative type",
-        match: "*:!Child",
+        match: ".*:TopLevel",
         shouldMatch: []
     },
     {
         name: "match wildcard children with negative type",
-        match: "*:!Parent",
+        match: ".*:!Child",
+        shouldMatch: []
+    },
+    {
+        name: "match wildcard children with negative type",
+        match: ".*:!Parent",
         shouldMatch: ["childValue", "escapeChars"]
     },
     {
         name: "match wildcard children with negative type",
-        match: "*:!Indexed",
+        match: ".*:!Indexed",
         shouldMatch: ["childValue", "childObject", "escapeChars"]
     },
     {
         name: "match wildcard children with negative type",
-        match: "*:!Element",
+        match: ".*:!Element",
         shouldMatch: ["childValue", "childObject", "childArray", "escapeChars"]
     },
     {
         name: "match wildcard children with negative type",
-        match: "*:!TopLevel",
+        match: ".*:!TopLevel",
         shouldMatch: ["childValue", "childObject", "childArray", "escapeChars"]
     },
     {
@@ -333,15 +381,15 @@ let matchTests = [
 
 pipeWith(
     matchTests,
-    map(({name, match, matchParsed, shouldMatch}) => {
+    map(({name, match, matchParsed, shouldMatch, depth = 0}) => {
         test(`${name}`, () => {
             let matched: string[] = pipeWith(
                 typedPathStrings,
-                map((typedPathString, name) => Matcher(typedPathString, match)),
+                map((typedPathString, name) => Matcher(typedPathString, match, depth)),
                 filter(identity()),
                 keyArray()
             );
-            expect(shouldMatch).toEqual(matched);
+            expect(matched).toEqual(shouldMatch);
         });
     })
 );

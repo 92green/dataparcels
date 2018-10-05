@@ -1,7 +1,5 @@
 // @flow
 import type ChangeRequest from '../../change/ChangeRequest';
-import type {ModifierFunction} from '../../types/Types';
-import type {ModifierObject} from '../../types/Types';
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import Types from '../../types/Types';
@@ -86,23 +84,6 @@ export default (_this: Parcel): Object => ({
             metaSetter,
             _this._create
         );
-    },
-
-    addModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
-        Types(`addModifier() expects param "modifier" to be`, `modifier`)(modifier);
-        return pipeWith(
-            modifier,
-            _this.addDescendantModifier,
-            parcel => parcel._applyModifiers()
-        );
-    },
-
-    addDescendantModifier: (modifier: ModifierFunction|ModifierObject): Parcel => {
-        Types(`addDescendantModifier() expects param "modifier" to be`, `modifier`)(modifier);
-        return _this._create({
-            id: _this._id.pushModifier('am'),
-            modifiers: _this._modifiers.add(modifier)
-        });
     },
 
     _boundarySplit: ({handleChange}: *): Parcel => {

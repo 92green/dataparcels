@@ -1,6 +1,5 @@
 // @flow
 import type ParcelId from '../parcelId/ParcelId';
-import type Modifiers from '../modifiers/Modifiers';
 import type Treeshare from '../treeshare/Treeshare';
 
 import Parcel from '../parcel/Parcel';
@@ -26,7 +25,7 @@ export type ParcelConfigInternal = {
     child: *,
     meta: ParcelMeta,
     id: ParcelId,
-    modifiers?: Modifiers,
+    matchPipes?: MatchPipe[],
     parent?: Parcel,
     treeshare: Treeshare
 };
@@ -34,7 +33,7 @@ export type ParcelConfigInternal = {
 export type CreateParcelConfigType = {
     onDispatch?: Function,
     id?: ParcelId,
-    modifiers?: Modifiers,
+    matchPipes?: MatchPipe[],
     parcelData?: ParcelData,
     parent?: Parcel,
     handleChange?: Function
@@ -45,16 +44,14 @@ export type ParcelMetaUpdater = (meta: ParcelMeta) => ParcelMeta;
 
 export type ParcelBatcher = (item: Parcel) => void;
 export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
+export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *) => *;
 
-export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
-
-export type ModifierFunction = Function;
-
-export type ModifierObject = {|
-    match?: string,
-    modifier: ModifierFunction
-|};
+export type MatchPipe = {
+    match: string,
+    depth: number,
+    updater: ParcelUpdater
+};
 
 export type Key = string;
 export type Index = number;
@@ -101,10 +98,6 @@ const runtimeTypes = {
         check: ii => ii
             && Array.isArray(ii)
             && ii.every(jj => typeof jj === "string" || typeof jj === "number")
-    },
-    ['modifier']: {
-        name: "a modifier function, or an object like {modifier: Function, match: ?string}",
-        check: ii => typeof ii === "function" || (typeof ii === "object" && ii.modifier && typeof ii.modifier === "function")
     },
     ['number']: {
         name: "a number",
