@@ -63,6 +63,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     componentWillReceiveProps(nextProps: Object) {
         let {parcel} = nextProps;
         if(!ParcelBoundaryEquals(this.props.parcel, parcel)) {
+            this.cachedChangeRequest = undefined;
             this.setState({
                 parcel: this.makeBoundarySplit(parcel)
             });

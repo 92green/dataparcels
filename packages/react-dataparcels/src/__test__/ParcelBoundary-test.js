@@ -223,6 +223,46 @@ test('ParcelBoundary should debounce', async () => {
     expect(handleChange.mock.calls[0][0].value).toEqual({a:789, b:789});
 });
 
+test('ParcelBoundary should cancel unreleased changes when receiving a new parcel prop', () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    });
+    let parcel2 = new Parcel({
+        value: 456,
+        handleChange
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(789);
+
+    let childParcel2 = childRenderer.mock.calls[1][0];
+
+    // verify that the current value of the parcel has been updated
+    expect(childParcel2.value).toBe(789);
+
+    wrapper.setProps({
+        parcel: parcel2
+    });
+
+    let childParcel3 = childRenderer.mock.calls[2][0];
+    // the new value received via props should be passed down WITHOUT the previous 789 change applied
+    expect(childParcel3.value).toBe(456);
+
+    let actions = childRenderer.mock.calls[2][1];
+    actions.release();
+
+    // after release()ing the buffer, handleChange should not be called, because there should not be anything in the buffer
+    expect(handleChange).toHaveBeenCalledTimes(0);
+});
+
 test('ParcelBoundary should ignore debounce when sending a ping', () => {
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
