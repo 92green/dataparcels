@@ -128,37 +128,36 @@ test('ParcelBoundary should rerender if parcel has not changed value but forceUp
 });
 
 test('ParcelBoundary should release changes when called', async () => {
-    let handleChangeCalls = 0;
-    expect.assertions(2);
-    return new Promise((resolve) => {
-        let parcel = new Parcel({
-            handleChange: (newParcel) => {
-                handleChangeCalls++;
-                expect(newParcel.value).toBe(123);
-            }
-        });
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
 
-        let renders = 0;
-
-        let wrapper = shallow(<ParcelBoundary parcel={parcel} hold={true}>
-            {(pp, {release}) => {
-                if(renders === 0) {
-                    pp.onChange(123);
-                } else if(renders === 1) {
-                    release();
-                }
-                renders++;
-            }}
-        </ParcelBoundary>);
-
-        expect(handleChangeCalls).toBe(0);
-
-        setTimeout(() => {
-            wrapper.instance().forceUpdate();
-            wrapper.update().render();
-            resolve();
-        }, 20);
+    let parcel = new Parcel({
+        handleChange
     });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    // handleChange shouldn't be called yet because hold is true
+    expect(handleChange.mock.calls.length).toBe(0);
+
+    wrapper.update();
+
+    let [childParcel2, actions] = childRenderer.mock.calls[1];
+    // inside the parcel boundary, the last change should be applied to the parcel
+    expect(childParcel2.value).toBe(123);
+
+    actions.release();
+
+    // handleChange should be called now because release() was called
+    expect(handleChange.mock.calls.length).toBe(1);
+    let newParcel = handleChange.mock.calls[0][0];
+
+    // handleChange should have been called with the correct value
+    expect(newParcel.value).toBe(123);
 });
 
 test('ParcelBoundary should debounce', async () => {
