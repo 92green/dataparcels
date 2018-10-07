@@ -10,6 +10,8 @@ import ParcelBoundary from '../ParcelBoundary';
 import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
 import Parcel from 'dataparcels';
 
+jest.useFakeTimers();
+
 test('ParcelBoundary should pass a *value equivalent* parcel to children', () => {
     let parcel = new Parcel();
     let childRenderer = jest.fn();
@@ -161,59 +163,64 @@ test('ParcelBoundary should release changes when called', async () => {
 });
 
 test('ParcelBoundary should debounce', async () => {
-    expect.assertions(5);
-    return new Promise((resolve) => {
-        let handleChangeCalls = 0;
-        let parcel = new Parcel({
-            value: {a:1, b:2},
-            handleChange: (newParcel, changeRequest) => {
-                handleChangeCalls++;
-                expect(newParcel.value).toEqual({a:789, b:789});
-            }
-        });
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
 
-        let renders = 0;
-
-        let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={30}>
-            {(pp) => {
-                if(renders === 0) {
-                    pp.get('a').onChange(123);
-                } else if(renders === 1) {
-                    expect(pp.value).toEqual({a:123, b:2});
-                    pp.get('a').onChange(456);
-                } else if(renders === 2) {
-                    expect(pp.value).toEqual({a:456, b:2});
-                    pp.get('a').onChange(789);
-                    pp.get('b').onChange(789);
-                } else if(renders === 3) {
-                    expect(pp.value).toEqual({a:789, b:789});
-                }
-                renders++;
-            }}
-        </ParcelBoundary>);
-
-        setTimeout(() => {
-            wrapper.instance().forceUpdate();
-            wrapper.update().render();
-        }, 20);
-
-        setTimeout(() => {
-            wrapper.instance().forceUpdate();
-            wrapper.update().render();
-        }, 40);
-
-        setTimeout(() => {
-            wrapper.instance().forceUpdate();
-            wrapper.update().render();
-        }, 60);
-
-        setTimeout(() => {
-            expect(handleChangeCalls).toBe(1);
-            wrapper.instance().forceUpdate();
-            wrapper.update().render();
-            resolve();
-        }, 1000);
+    let parcel = new Parcel({
+        value: {a:1, b:2},
+        handleChange
     });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={30}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+
+    // make a change with a value
+    childParcel.get('a').onChange(123);
+
+    // handleChange shouldn't be called yet
+    expect(handleChange).toHaveBeenCalledTimes(0);
+
+    // wait 20ms
+    jest.advanceTimersByTime(20);
+
+    // handleChange shouldn't be called yet
+    expect(handleChange).toHaveBeenCalledTimes(0);
+
+    wrapper.update();
+    let childParcel2 = childRenderer.mock.calls[1][0];
+
+    // parcel inside parcel boundary should have updated
+    expect(childParcel2.value).toEqual({a:123, b:2});
+
+    // make another change with a value
+    childParcel2.get('a').onChange(456);
+
+    // wait another 20ms
+    jest.advanceTimersByTime(20);
+
+    // handleChange still shouldn't be called yet
+    expect(handleChange).toHaveBeenCalledTimes(0);
+
+    wrapper.update();
+    let childParcel3 = childRenderer.mock.calls[2][0];
+
+    // parcel inside parcel boundary should have updated
+    expect(childParcel3.value).toEqual({a:456, b:2});
+
+    // make another 2 changes with a value
+    childParcel3.get('a').onChange(789);
+    childParcel3.get('b').onChange(789);
+
+    // wait another 40ms - with an interval this big, debounce should have finally had time to kick in
+    jest.advanceTimersByTime(40);
+
+    // handleChange should have been called
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    // handleChange should have been called with the most recent set of changes
+    expect(handleChange.mock.calls[0][0].value).toEqual({a:789, b:789});
 });
 
 test('ParcelBoundary should ignore debounce when sending a ping', () => {
