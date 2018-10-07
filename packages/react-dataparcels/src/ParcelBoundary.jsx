@@ -92,11 +92,26 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         this.changeCount++;
     };
 
+    cancelBuffer: Function = () => {
+        let {debugBuffer, parcel} = this.props;
+        if(debugBuffer) {
+            console.log("ParcelBoundary: Clear buffer:");
+            this.cachedChangeRequest && this.cachedChangeRequest.toConsole();
+        }
+        if(!this.cachedChangeRequest) {
+            return;
+        }
+        this.cachedChangeRequest = undefined;
+        this.setState({
+            parcel: this.makeBoundarySplit(parcel)
+        });
+    };
+
     releaseBuffer: Function = () => {
         let {debugBuffer} = this.props;
         if(debugBuffer) {
             console.log("ParcelBoundary: Release buffer:");
-            this.cachedChangeRequest &&  this.cachedChangeRequest.toConsole();
+            this.cachedChangeRequest && this.cachedChangeRequest.toConsole();
         }
         if(!this.cachedChangeRequest) {
             return;
@@ -148,6 +163,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         let {children} = this.props;
         let {parcel} = this.state;
         let actions = {
+            cancel: this.cancelBuffer,
             release: this.releaseBuffer
         };
 
