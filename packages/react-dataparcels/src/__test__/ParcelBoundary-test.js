@@ -38,7 +38,7 @@ test('ParcelBoundary should send correct changes back up when debounce = 0', () 
 
     let childParcel = childRenderer.mock.calls[0][0];
     childParcel.onChange(123);
-    expect(handleChange.mock.calls.length).toBe(1);
+    expect(handleChange).toHaveBeenCalledTimes(1);
     let newParcel = handleChange.mock.calls[0][0];
     expect(newParcel.value).toBe(123);
 });
@@ -83,7 +83,7 @@ test('ParcelBoundary should not rerender if parcel has not changed value and pur
 
     wrapper.update();
 
-    expect(childRenderer.mock.calls.length).toBe(1);
+    expect(childRenderer).toHaveBeenCalledTimes(1);
 });
 
 test('ParcelBoundary should rerender if parcel has not changed value and pure = false', () => {
@@ -103,7 +103,7 @@ test('ParcelBoundary should rerender if parcel has not changed value and pure = 
 
     wrapper.update();
 
-    expect(childRenderer.mock.calls.length).toBe(2);
+    expect(childRenderer).toHaveBeenCalledTimes(2);
 });
 
 test('ParcelBoundary should rerender if parcel has not changed value but forceUpdate has', () => {
@@ -124,7 +124,7 @@ test('ParcelBoundary should rerender if parcel has not changed value but forceUp
 
     wrapper.update();
 
-    expect(childRenderer.mock.calls.length).toBe(2);
+    expect(childRenderer).toHaveBeenCalledTimes(2);
 });
 
 test('ParcelBoundary should release changes when called', async () => {
@@ -142,7 +142,7 @@ test('ParcelBoundary should release changes when called', async () => {
     let childParcel = childRenderer.mock.calls[0][0];
     childParcel.onChange(123);
     // handleChange shouldn't be called yet because hold is true
-    expect(handleChange.mock.calls.length).toBe(0);
+    expect(handleChange).toHaveBeenCalledTimes(0);
 
     wrapper.update();
 
@@ -153,7 +153,7 @@ test('ParcelBoundary should release changes when called', async () => {
     actions.release();
 
     // handleChange should be called now because release() was called
-    expect(handleChange.mock.calls.length).toBe(1);
+    expect(handleChange).toHaveBeenCalledTimes(1);
     let newParcel = handleChange.mock.calls[0][0];
 
     // handleChange should have been called with the correct value
@@ -233,7 +233,7 @@ test('ParcelBoundary should ignore debounce when sending a ping', () => {
     childParcel.ping();
 
     // even with debounce applied, handleChange should have been called immediately
-    expect(handleChange.mock.calls.length).toBe(1);
+    expect(handleChange).toHaveBeenCalledTimes(1);
 
     // handleChange should have the same value as before
     expect(handleChange.mock.calls[0][0].value).toBe(123);
