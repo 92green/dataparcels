@@ -217,22 +217,26 @@ test('ParcelBoundary should debounce', async () => {
 });
 
 test('ParcelBoundary should ignore debounce when sending a ping', () => {
-    expect.assertions(2);
-    let hasChanged = false;
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
     let parcel = new Parcel({
         value: 123,
-        handleChange: (newParcel) => {
-            hasChanged = true;
-            expect(123).toBe(newParcel.value);
-        }
+        handleChange
     });
 
     let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={100}>
-        {(pp) => {
-            pp.ping();
-            expect(hasChanged).toBe(true)
-        }}
+        {childRenderer}
     </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.ping();
+
+    // even with debounce applied, handleChange should have been called immediately
+    expect(handleChange.mock.calls.length).toBe(1);
+
+    // handleChange should have the same value as before
+    expect(handleChange.mock.calls[0][0].value).toBe(123);
 });
 
 test('ParcelBoundary should render colours when debugRender is true', () => {
