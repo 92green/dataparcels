@@ -37,7 +37,8 @@ export type CreateParcelConfigType = {
     modifiers?: Modifiers,
     parcelData?: ParcelData,
     parent?: Parcel,
-    handleChange?: Function
+    handleChange?: Function,
+    treeshare?: Treeshare
 };
 
 export type ParcelMeta = {[key: string]: *};

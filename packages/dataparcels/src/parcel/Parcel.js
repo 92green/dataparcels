@@ -161,7 +161,8 @@ export default class Parcel {
             handleChange,
             modifiers = this._modifiers,
             parent,
-            parcelData = this._parcelData
+            parcelData = this._parcelData,
+            treeshare = this._treeshare
         } = createParcelConfig;
 
         let {
@@ -182,7 +183,7 @@ export default class Parcel {
                 modifiers,
                 onDispatch,
                 parent,
-                treeshare: this._treeshare
+                treeshare
             }
         );
 

@@ -246,6 +246,40 @@ test('ParcelBoundary should ignore debounce when sending a ping', () => {
     expect(handleChange.mock.calls[0][0].value).toBe(123);
 });
 
+test('ParcelBoundary should use an internal boundary split to stop parcel boundaries using the same parcel from sharing their parcel registries', () => {
+    let parcel = new Parcel({
+        value: {
+            abc: 123,
+            def: 123
+        }
+    });
+    let childRendererA = jest.fn();
+    let childRendererB = jest.fn();
+
+    let wrapper1 = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRendererA}
+    </ParcelBoundary>);
+
+    let wrapper2 = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRendererB}
+    </ParcelBoundary>);
+
+    let childParcelA = childRendererA.mock.calls[0][0];
+    childParcelA.get('abc').onChange(456);
+
+    let childParcelB = childRendererB.mock.calls[0][0];
+    childParcelB.get('def').onChange(456);
+
+    wrapper1.update();
+    wrapper2.update();
+
+    let childParcelA2 = childRendererA.mock.calls[1][0];
+    let childParcelB2 = childRendererB.mock.calls[1][0];
+
+    expect(childParcelA2.value).toEqual({abc: 456, def: 123});
+    expect(childParcelB2.value).toEqual({abc: 123, def: 456});
+});
+
 test('ParcelBoundary should render colours when debugRender is true', () => {
     let hasChanged = false;
     let parcel = new Parcel({
