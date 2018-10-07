@@ -216,28 +216,6 @@ test('ParcelBoundary should debounce', async () => {
     });
 });
 
-test('ParcelBoundary should not send changes up when hold = true', async () => {
-    let handleChange = jest.fn();
-    let childRenderer = jest.fn();
-
-    let handleChangeCalls = 0;
-    let parcel = new Parcel({
-        handleChange
-    });
-
-    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
-        {childRenderer}
-    </ParcelBoundary>);
-
-    let childRendererParcel = childRenderer.mock.calls[0][0];
-    childRendererParcel.onChange(123);
-    wrapper.update();
-
-    expect(handleChange.mock.calls.length).toBe(0);
-    expect(childRenderer.mock.calls.length).toBe(2);
-    expect(childRenderer.mock.calls[1][0].value).toEqual(123);
-});
-
 test('ParcelBoundary should ignore debounce when sending a ping', () => {
     expect.assertions(2);
     let hasChanged = false;
