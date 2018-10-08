@@ -160,7 +160,8 @@ export default class Parcel {
             handleChange,
             matchPipes = this._matchPipes,
             parent,
-            parcelData = this._parcelData
+            parcelData = this._parcelData,
+            treeshare = this._treeshare
         } = createParcelConfig;
 
         let {
@@ -181,7 +182,7 @@ export default class Parcel {
                 matchPipes,
                 onDispatch,
                 parent,
-                treeshare: this._treeshare
+                treeshare
             }
         );
 

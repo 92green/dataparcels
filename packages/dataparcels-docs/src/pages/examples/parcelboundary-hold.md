@@ -21,9 +21,10 @@ const FoodEditor = (props) => {
     return <div>
         <label>name</label>
         <ParcelBoundary parcel={nameParcel} hold debugBuffer>
-            {(nameParcel, {release}) => <div>
+            {(nameParcel, {release, cancel}) => <div>
                 <input type="text" {...nameParcel.spreadDOM()} />
                 <button onClick={() => release()}>Submit</button>
+                <button onClick={() => cancel()}>Cancel</button>
             </div>}
         </ParcelBoundary>
     </div>;

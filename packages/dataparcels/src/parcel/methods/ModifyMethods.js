@@ -90,7 +90,8 @@ export default (_this: Parcel): Object => ({
         return _this._create({
             id: _this._id.pushModifier('mb'),
             parent: _this._parent,
-            handleChange
+            handleChange,
+            treeshare: _this._treeshare.boundarySplit()
         });
     }
 });

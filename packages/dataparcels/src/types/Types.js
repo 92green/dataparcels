@@ -36,7 +36,8 @@ export type CreateParcelConfigType = {
     matchPipes?: MatchPipe[],
     parcelData?: ParcelData,
     parent?: Parcel,
-    handleChange?: Function
+    handleChange?: Function,
+    treeshare?: Treeshare
 };
 
 export type ParcelMeta = {[key: string]: *};
