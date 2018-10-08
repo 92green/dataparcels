@@ -64,7 +64,7 @@ export type ParcelIdData = {
     typedPath: string[]
 };
 
-const runtimeTypes = {
+const RUNTIME_TYPES = {
     ['boolean']: {
         name: "a boolean",
         check: ii => typeof ii === "boolean"
@@ -82,12 +82,6 @@ const runtimeTypes = {
     ['function']: {
         name: "a function",
         check: ii => typeof ii === "function"
-    },
-    ['functionArray']: {
-        name: "functions",
-        check: ii => ii
-            && Array.isArray(ii)
-            && ii.every(jj => typeof jj === "function")
     },
     ['keyIndex']: {
         name: "a key or an index (string or number)",
@@ -122,14 +116,30 @@ const runtimeTypes = {
     }
 };
 
-export default (message: string, type: string) => (value: any): * => {
-    let runtimeType = runtimeTypes[type];
-    if(!runtimeType) {
-        throw new Error(`Unknown type check`);
-    }
-    if(!runtimeType.check(value)) {
+export default (expecter: string, param: string, type: string|string[]) => (value: any): * => {
+    let types = [].concat(type);
+
+    let runtimeTypes = types.map(type => {
+        let runtimeType = RUNTIME_TYPES[type];
+        if(!runtimeType) {
+            throw new Error(`Unknown type check`);
+        }
+        return runtimeType;
+    });
+
+    let valid = runtimeTypes.some(ii => ii.check(value));
+
+    if(!valid) {
+        if(param.indexOf(' ') === -1) {
+            param = `param "${param}"`;
+        }
+        let typeNames = runtimeTypes
+            .map(type => type.name)
+            .join(", ");
+
         // $FlowFixMe - I want to make value into a string regardless of flows opinions https://github.com/facebook/flow/issues/1460
-        throw new Error(`${message} ${runtimeType.name}, but got ${(value + "")}`);
+        throw new Error(`${expecter} expects ${param} to be ${typeNames}, but got ${(value + "")}`);
     }
+
     return value;
 };
