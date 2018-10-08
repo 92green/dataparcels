@@ -1,6 +1,9 @@
+import Link from 'gatsby-link';
 import ParcelHocExampleInitialValueFromProps from 'examples/ParcelHocExampleInitialValueFromProps';
 
 This example demonstrates a `ParcelHoc` with an initial value that originates from props.
+
+<Link to="/api/ParcelHoc#initialValue">API reference for ParcelHoc.initialValue</Link>
 
 <ParcelHocExampleInitialValueFromProps />
 

@@ -1,7 +1,7 @@
 import Link from 'component/Link';
 
 ```flow
-debounce?: number
+debounce?: number // optional
 ```
 
 If set, `debounce` will debounce any changes that occur inside the ParcelBoundary. The number indicates the number of milliseconds to debounce.
@@ -22,3 +22,5 @@ Debouncing can be good for rendering performance because parcels outside the Par
     {(personParcel) => <input type="text" {...personParcel.spreadDOM} />}
 </ParcelBoundary>
 ```
+
+<Link to="/examples/parcelboundary-debounce">Example</Link>

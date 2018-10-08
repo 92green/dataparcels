@@ -29,11 +29,15 @@ export default class ParcelHocDelayUntilExample extends React.Component {
         this.state = {
             seconds: 0
         };
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.setState(({seconds}) => ({
                 seconds: seconds + 1
             }));
         }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     render() {
