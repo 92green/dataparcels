@@ -9,19 +9,21 @@ import Types from 'dataparcels/lib/types/Types';
 
 type Props = {};
 type State = {
-    parcel?: Parcel
+    parcel?: Parcel,
+    initialize: (props: Props) => Parcel
 };
-type ChildProps = {};
-
-type ValueCreator = (props: Object) => *;
+type ChildProps = {
+    // ${name}: Parcel
+};
 
 type ParcelHocConfig = {
     name: string,
-    valueFromProps?: ValueCreator,
-    delayUntil?: (props: Object) => boolean,
-    onChange?: (props: Object) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
+    valueFromProps?: (props: *) => *,
+    controlled?: boolean,
+    delayUntil?: (props: *) => boolean,
+    onChange?: (props: *) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     debugRender?: boolean,
-    pipe?: (props: Object) => (parcel: Parcel) => Parcel
+    pipe?: (props: *) => (parcel: Parcel) => Parcel
 };
 
 const PARCEL_HOC_NAME = `ParcelHoc()`;
@@ -32,6 +34,7 @@ export default (config: ParcelHocConfig): Function => {
     let {
         name,
         valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
+        controlled = false, /* eslint-disable-line no-unused-vars */
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
@@ -45,32 +48,33 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
     Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
 
-    return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> { /* eslint-disable-line */
+    return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
         constructor(props: Props) {
             super(props);
 
+            let initialize = (props: Props) => new Parcel({
+                value: valueFromProps(props),
+                handleChange: this.handleChange,
+                debugRender
+            });
+
             let parcel = delayUntil(props)
-                ? this.initialize(props)
+                ? initialize(props)
                 : undefined;
 
             this.state = {
-                parcel
+                parcel,
+                initialize
             };
         }
 
-        componentWillReceiveProps(nextProps: Props) {
-            if(!this.state.parcel && delayUntil(nextProps)) {
-                this.setState({
-                    parcel: this.initialize(nextProps)
-                });
+        static getDerivedStateFromProps(props: Props, state: State): * {
+            if(!state.parcel && delayUntil(props)) {
+                return {
+                    parcel: state.initialize(props)
+                };
             }
         }
-
-        initialize = (props: Props) => new Parcel({
-            value: valueFromProps(props),
-            handleChange: this.handleChange,
-            debugRender
-        });
 
         handleChange = (parcel, changeRequest) => {
             this.setState({parcel});
