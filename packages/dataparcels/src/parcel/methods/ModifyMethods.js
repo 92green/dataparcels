@@ -16,7 +16,7 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 export default (_this: Parcel): Object => ({
 
     modifyValue: (updater: Function): Parcel => {
-        Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
+        Types(`modifyValue()`, `updater`, `function`)(updater);
         return pipeWith(
             _this._parcelData,
             set('value', updater(_this._parcelData.value, _this)),
@@ -29,7 +29,7 @@ export default (_this: Parcel): Object => ({
     },
 
     modifyChange: (batcher: Function): Parcel => {
-        Types(`modifyChange() expects param "batcher" to be`, `function`)(batcher);
+        Types(`modifyChange()`, `batcher`, `function`)(batcher);
         return _this._create({
             id: _this._id.pushModifier('mc'),
             onDispatch: (changeRequest: ChangeRequest) => {
@@ -42,7 +42,7 @@ export default (_this: Parcel): Object => ({
     },
 
     modifyChangeValue: (updater: Function): Parcel => {
-        Types(`modifyChangeValue() expects param "updater" to be`, `function`)(updater);
+        Types(`modifyChangeValue()`, `updater`, `function`)(updater);
         return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
             let valueActionFilter = actions => actions.filter(action => !action.isValueAction());
@@ -57,7 +57,7 @@ export default (_this: Parcel): Object => ({
     },
 
     initialMeta: (initialMeta: ParcelMeta = {}): Parcel => {
-        Types(`initialMeta() expects param "initialMeta" to be`, `object`)(initialMeta);
+        Types(`initialMeta()`, `initialMeta`, `object`)(initialMeta);
         let {meta} = _this._parcelData;
 
         let partialMetaToSet = pipeWith(
@@ -88,7 +88,7 @@ export default (_this: Parcel): Object => ({
 
     _boundarySplit: ({handleChange}: *): Parcel => {
         return _this._create({
-            id: _this._id.pushModifier('mb'),
+            id: _this._id.pushModifier('bs'),
             parent: _this._parent,
             handleChange,
             treeshare: _this._treeshare.boundarySplit()

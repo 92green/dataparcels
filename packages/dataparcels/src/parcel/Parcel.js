@@ -49,7 +49,7 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
 
 export default class Parcel {
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
-        Types(`Parcel() expects param "config" to be`, `object`)(config);
+        Types(`Parcel()`, `config`, `object`)(config);
 
         let {
             handleChange,
@@ -57,8 +57,8 @@ export default class Parcel {
             debugRender = false
         } = config;
 
-        handleChange && Types(`Parcel() expects param "config.handleChange" to be`, `function`)(handleChange);
-        Types(`Parcel() expects param "config.debugRender" to be`, `boolean`)(debugRender);
+        handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
+        Types(`Parcel()`, `config.debugRender`, `boolean`)(debugRender);
 
         let {
             onDispatch,

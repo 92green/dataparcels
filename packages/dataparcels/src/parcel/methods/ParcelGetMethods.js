@@ -28,22 +28,22 @@ export default (_this: Parcel) => ({
     // Composition methods
 
     pipe: (...updaters: ParcelUpdater[]): Parcel => {
-        Types(`pipe() expects all params to be`, `functionArray`)(updaters);
+        updaters.forEach(Types(`pipe()`, `all updaters`, `function`));
         return pipeWith(
             _this,
             ...pipeWith(
                 updaters,
                 map(updater => pipe(
                     updater,
-                    Types(`pipe() expects the result of all functions to be`, `parcel`)
+                    Types(`pipe()`, `the result of all functions`, `parcel`)
                 ))
             )
         );
     },
 
     matchPipe: (match: string, ...updaters: ParcelUpdater[]): Parcel => {
-        Types(`matchPipe() expects first param to be`, `string`)(match);
-        Types(`matchPipe() expects all but the first param to be`, `functionArray`)(updaters);
+        Types(`matchPipe()`, `first param`, `string`)(match);
+        updaters.forEach(Types(`matchPipe()`, `all updaters`, `function`));
 
         let parcel = _this._create({
             id: _this._id.pushModifier('mp'),
@@ -57,7 +57,7 @@ export default (_this: Parcel) => ({
                             updaters,
                             map(updater => pipe(
                                 updater,
-                                Types(`matchPipe() expects the result of all functions to be`, `parcel`)
+                                Types(`matchPipe() `, `the result of all functions`, `parcel`)
                             ))
                         )
                     )
@@ -97,13 +97,13 @@ export default (_this: Parcel) => ({
     },
 
     spy: (sideEffect: Function): Parcel => {
-        Types(`spy() expects param "sideEffect" to be`, `function`)(sideEffect);
+        Types(`spy()`, `sideEffect`, `function`)(sideEffect);
         sideEffect(_this);
         return _this;
     },
 
     spyChange: (sideEffect: Function): Parcel => {
-        Types(`spyChange() expects param "sideEffect" to be`, `function`)(sideEffect);
+        Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
         return _this._create({
             id: _this._id.pushModifier('sc'),
             onDispatch: (changeRequest: ChangeRequest) => {

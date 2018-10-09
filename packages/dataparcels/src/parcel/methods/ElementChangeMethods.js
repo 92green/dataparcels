@@ -25,7 +25,7 @@ export default (_this: Parcel, dispatch: Function): Object => ({
     },
 
     swapSelf: (key: Key|Index) => {
-        Types(`swapSelf() expects param "key" to be`, `keyIndex`)(key);
+        Types(`swapSelf()`, `key`, `keyIndex`)(key);
         dispatch(ActionCreators.swapSelf(key));
     }
 });

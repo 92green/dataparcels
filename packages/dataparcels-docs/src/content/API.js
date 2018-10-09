@@ -47,5 +47,5 @@ export default () => <Box>
             image={IconParcelBoundary}
         />
     </Grid>
-    <Text element="p" modifier="margin">See also: <Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link>, <Link className="Link" to="/api/Action">Action</Link>.</Text>
+    <Text element="p" modifier="margin">See also: <Link className="Link" to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link>, <Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link>, <Link className="Link" to="/api/Action">Action</Link>.</Text>
 </Box>;

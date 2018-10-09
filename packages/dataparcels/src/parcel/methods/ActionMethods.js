@@ -10,7 +10,7 @@ import ChangeRequest from '../../change/ChangeRequest';
 export default (_this: Parcel): Object => ({
 
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
-        Types(`dispatch() expects param "dispatchable" to be`, `dispatchable`)(dispatchable);
+        Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
 
 
         let {
@@ -55,7 +55,7 @@ export default (_this: Parcel): Object => ({
     },
 
     batch: (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => {
-        Types(`batch() expects param "batcher" to be`, `function`)(batcher);
+        Types(`batch()`, `batcher`, `function`)(batcher);
 
         let parcelData: ParcelData = _this._parcelData;
         let lastBuffer = _this._dispatchBuffer;
