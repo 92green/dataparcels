@@ -88,7 +88,7 @@ export default (_this: Parcel): Object => ({
 
     _boundarySplit: ({handleChange}: *): Parcel => {
         return _this._create({
-            id: _this._id.pushModifier('mb'),
+            id: _this._id.pushModifier('bs'),
             parent: _this._parent,
             handleChange,
             treeshare: _this._treeshare.boundarySplit()
