@@ -29,6 +29,7 @@ import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
 import AdvancedMethods from './methods/AdvancedMethods';
+import TopLevelMethods from './methods/TopLevelMethods';
 
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
@@ -130,7 +131,9 @@ export default class Parcel {
             // $FlowFixMe
             ...ModifyMethods(this),
             // $FlowFixMe
-            ...AdvancedMethods(this)
+            ...AdvancedMethods(this),
+            // $FlowFixMe
+            ...FilterMethods("TopLevel", TopLevelMethods)(this, dispatch)
         };
     }
 
@@ -311,6 +314,7 @@ export default class Parcel {
     setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
+    batchAndReturn = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batchAndReturn(batcher, changeRequest);
     ping = () => this._methods.ping();
     dangerouslyReplace = (value: *) => this._methods.dangerouslyReplace(value);
 
