@@ -22,7 +22,7 @@ import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",
-    initialValue: (/* props */) => ({
+    valueFromProps: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {

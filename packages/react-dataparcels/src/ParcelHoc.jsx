@@ -17,7 +17,7 @@ type ValueCreator = (props: Object) => *;
 
 type ParcelHocConfig = {
     name: string,
-    initialValue?: ValueCreator,
+    valueFromProps?: ValueCreator,
     delayUntil?: (props: Object) => boolean,
     onChange?: (props: Object) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     debugRender?: boolean,
@@ -31,7 +31,7 @@ export default (config: ParcelHocConfig): Function => {
 
     let {
         name,
-        initialValue = (props) => undefined, /* eslint-disable-line no-unused-vars */
+        valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
@@ -39,7 +39,7 @@ export default (config: ParcelHocConfig): Function => {
     } = config;
 
     Types(PARCEL_HOC_NAME, "config.name", "string")(name);
-    Types(PARCEL_HOC_NAME, "config.initialValue", "function")(initialValue);
+    Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
     Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
@@ -67,7 +67,7 @@ export default (config: ParcelHocConfig): Function => {
         }
 
         initialize = (props: Props) => new Parcel({
-            value: initialValue(props),
+            value: valueFromProps(props),
             handleChange: this.handleChange,
             debugRender
         });

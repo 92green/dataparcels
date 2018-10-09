@@ -8,7 +8,7 @@ test('ParcelHoc config should accept an initial value', () => {
     expect.assertions(2);
     CheckHockChildProps(
         ParcelHoc({
-            initialValue: (props) => {
+            valueFromProps: (props) => {
                 expect(123).toBe(props.abc);
                 return 456;
             },
@@ -42,7 +42,7 @@ test('ParcelHoc config should default initial value to undefined', () => {
 test('ParcelHoc changes should be put back into ParcelHoc state', () => {
     let Child = () => <div />;
     let Hocked = ParcelHoc({
-        initialValue: () => 123,
+        valueFromProps: () => 123,
         name: "proppy"
     })(Child);
 
@@ -56,7 +56,7 @@ test('ParcelHoc config should accept an onChange function, and call it with the 
     expect.assertions(1);
     let Child = () => <div />;
     let Hocked = ParcelHoc({
-        initialValue: () => 123,
+        valueFromProps: () => 123,
         onChange: (props) => (value) => props.onChange(value),
         name: "proppy"
     })(Child);
@@ -73,7 +73,7 @@ test('ParcelHoc config should accept an onChange function, and call it with the 
 test('ParcelHoc config should accept an delayUntil function, and pass undefined until this evaluates to true', () => {
     let Child = () => <div />;
     let Hocked = ParcelHoc({
-        initialValue: () => 123,
+        valueFromProps: () => 123,
         delayUntil: (props) => props.go,
         name: "proppy"
     })(Child);
@@ -89,7 +89,7 @@ test('ParcelHoc config should accept a pipe function', () => {
     expect.assertions(3);
     CheckHockChildProps(
         ParcelHoc({
-            initialValue: () => 456,
+            valueFromProps: () => 456,
             name: "proppy",
             pipe: (props) => (parcel) => {
                 expect(456).toBe(parcel.value);
@@ -108,7 +108,7 @@ test('ParcelHoc config should accept a debugRender boolean', () => {
     expect.assertions(1);
     CheckHockChildProps(
         ParcelHoc({
-            initialValue: () => 456,
+            valueFromProps: () => 456,
             name: "proppy",
             debugRender: true
         }),

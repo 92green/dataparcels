@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import Markdown from 'pages/examples/parcelhoc-initialvalue.md';
+import Markdown from 'pages/examples/parcelhoc-valuefromprops.md';
 import Example from 'component/Example';
 
 export default () => <Example
-    name="ParcelHoc: Getting initialValue from props"
+    name="ParcelHoc: Getting valueFromProps from props"
     md={Markdown}
 />;
