@@ -36,7 +36,7 @@ test('ParcelBoundaryHoc config should pass props through with no parcel found', 
         ParcelBoundaryHoc({
             name: 'testParcel'
         })
-    ).dive().props();
+    ).props();
 
     expect(propsGivenToInnerComponent.abc).toBe(123);
     expect(propsGivenToInnerComponent.def).toBe(456);
