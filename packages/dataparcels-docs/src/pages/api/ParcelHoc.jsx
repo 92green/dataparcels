@@ -10,6 +10,7 @@ import Markdown_delayUntil from 'docs/api/parcelHoc/delayUntil.md';
 import Markdown_onChange from 'docs/api/parcelHoc/onChange.md';
 import Markdown_pipe from 'docs/api/parcelHoc/pipe.md';
 import Markdown_debugRender from 'docs/api/parcelHoc/debugRender.md';
+import Markdown_childName from 'docs/api/parcelHoc/childName.md';
 
 const md = {
     _desc: Markdown_ParcelHoc,
@@ -19,7 +20,8 @@ const md = {
     delayUntil: Markdown_delayUntil,
     onChange: Markdown_onChange,
     pipe: Markdown_pipe,
-    debugRender: Markdown_debugRender
+    debugRender: Markdown_debugRender,
+    ['${name}']: Markdown_childName
 }
 
 const api = `
@@ -30,6 +32,9 @@ delayUntil
 onChange
 pipe
 debugRender
+
+# Child props
+$\{name\}
 `;
 
 export default () => <ApiPage
