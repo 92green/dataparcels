@@ -24,3 +24,4 @@ export type {Property} from 'dataparcels';
 
 export {default as ParcelHoc} from './ParcelHoc';
 export {default as ParcelBoundary} from './ParcelBoundary';
+export {default as ParcelBoundaryHoc} from './ParcelBoundaryHoc';
