@@ -26,6 +26,23 @@ test('ParcelBoundaryHoc config should pass props through', () => {
     expect(propsGivenToInnerComponent.def).toBe(456);
 });
 
+
+test('ParcelBoundaryHoc config should pass props through with no parcel found', () => {
+    let propsGivenToInnerComponent = shallowRenderHoc(
+        {
+            abc: 123,
+            def: 456
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel'
+        })
+    ).dive().props();
+
+    expect(propsGivenToInnerComponent.abc).toBe(123);
+    expect(propsGivenToInnerComponent.def).toBe(456);
+});
+
+
 test('ParcelBoundaryHoc config should pass ParcelBoundary parcel down under same prop name', () => {
     let propsGivenToInnerComponent = shallowRenderHoc(
         {
