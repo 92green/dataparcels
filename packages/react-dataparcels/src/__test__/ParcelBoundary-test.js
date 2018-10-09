@@ -13,7 +13,9 @@ import Parcel from 'dataparcels';
 jest.useFakeTimers();
 
 test('ParcelBoundary should pass a *value equivalent* parcel to children', () => {
-    let parcel = new Parcel();
+    let parcel = new Parcel({
+        value: 123
+    });
     let childRenderer = jest.fn();
 
     let wrapper = shallow(<ParcelBoundary parcel={parcel}>
