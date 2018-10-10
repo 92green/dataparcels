@@ -70,20 +70,21 @@ export default (config: ParcelHocConfig): Function => {
         }
 
         static getDerivedStateFromProps(props: Props, state: State): * {
+            let {parcel} = state;
             let newState = {};
 
-            if(!state.parcel && delayUntil(props)) {
+            if(!parcel && delayUntil(props)) {
                 let value = valueFromProps(props);
                 newState.prevValueFromProps = value;
                 newState.parcel = state.initialize(value);
             }
 
-            if(state.parcel && controlled) {
+            if(parcel && controlled) {
                 let value = valueFromProps(props);
                 newState.prevValueFromProps = value;
 
                 if(shouldControlledHocUpdate(value, state.prevValueFromProps)) {
-                    newState.parcel = state.parcel.batchAndReturn((parcel: Parcel) => {
+                    newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
                         parcel.set(value);
                     });
                 }
