@@ -64,7 +64,8 @@ export default (config: ParcelHocConfig): Function => {
 
             this.state = {
                 parcel: undefined,
-                initialize
+                initialize,
+                prevValueFromProps: undefined
             };
         }
 
