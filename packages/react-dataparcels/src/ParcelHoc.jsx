@@ -9,8 +9,9 @@ import Types from 'dataparcels/lib/types/Types';
 
 type Props = {};
 type State = {
-    parcel?: Parcel,
-    initialize: (props: Props) => Parcel
+    parcel: ?Parcel,
+    initialize: (value: *) => Parcel,
+    prevValueFromProps: *
 };
 type ChildProps = {
     // ${name}: Parcel
@@ -20,10 +21,11 @@ type ParcelHocConfig = {
     name: string,
     valueFromProps?: (props: *) => *,
     controlled?: boolean,
+    shouldControlledHocUpdate?: (valueA: *, valueB: *) => boolean,
     delayUntil?: (props: *) => boolean,
     onChange?: (props: *) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
-    debugRender?: boolean,
-    pipe?: (props: *) => (parcel: Parcel) => Parcel
+    pipe?: (props: *) => (parcel: Parcel) => Parcel,
+    debugRender?: boolean
 };
 
 const PARCEL_HOC_NAME = `ParcelHoc()`;
@@ -35,9 +37,11 @@ export default (config: ParcelHocConfig): Function => {
         name,
         valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
         controlled = false, /* eslint-disable-line no-unused-vars */
+        shouldControlledHocUpdate = (valueA, valueB) => valueA !== valueB,
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
+        // debug options
         debugRender = false
     } = config;
 
@@ -52,28 +56,39 @@ export default (config: ParcelHocConfig): Function => {
         constructor(props: Props) {
             super(props);
 
-            let initialize = (props: Props) => new Parcel({
-                value: valueFromProps(props),
+            let initialize = (value: *) => new Parcel({
+                value,
                 handleChange: this.handleChange,
                 debugRender
             });
 
-            let parcel = delayUntil(props)
-                ? initialize(props)
-                : undefined;
-
             this.state = {
-                parcel,
+                parcel: undefined,
                 initialize
             };
         }
 
         static getDerivedStateFromProps(props: Props, state: State): * {
+            let newState = {};
+
             if(!state.parcel && delayUntil(props)) {
-                return {
-                    parcel: state.initialize(props)
-                };
+                let value = valueFromProps(props);
+                newState.prevValueFromProps = value;
+                newState.parcel = state.initialize(value);
             }
+
+            if(state.parcel && controlled) {
+                let value = valueFromProps(props);
+                newState.prevValueFromProps = value;
+
+                if(shouldControlledHocUpdate(value, state.prevValueFromProps)) {
+                    newState.parcel = state.parcel.batchAndReturn((parcel: Parcel) => {
+                        parcel.set(value);
+                    });
+                }
+            }
+
+            return newState;
         }
 
         handleChange = (parcel, changeRequest) => {

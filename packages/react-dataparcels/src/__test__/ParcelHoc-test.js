@@ -7,7 +7,7 @@ let shallowRenderHoc = (props, hock) => {
     let Component = hock((props) => <div />);
     return shallow(<Component {...props}/>);
 };
-
+/*
 test('ParcelHoc config should accept an initial valueFromProps', () => {
     let valueFromProps = jest.fn((props) => 456);
 
@@ -20,10 +20,7 @@ test('ParcelHoc config should accept an initial valueFromProps', () => {
         ParcelHoc({
             valueFromProps,
             name: "proppy"
-        }),
-        (props) => {
-
-        }
+        })
     ).props();
 
     // valueFromProps should be props
@@ -126,4 +123,50 @@ test('ParcelHoc config should accept a debugRender boolean', () => {
 
     expect(childProps.proppy._treeshare.debugRender).toBe(true);
 });
+*/
 
+test('ParcelHoc controlled = true should update value from props when result of valueFromProps is not strictly equal to previous result of valueFromProps', () => {
+    let valueFromProps = jest.fn((props) => props.abc);
+
+    let props = {
+        abc: 123,
+        def: 456
+    };
+
+    let wrapper = shallowRenderHoc(
+        props,
+        ParcelHoc({
+            valueFromProps,
+            name: "proppy",
+            controlled: true
+        })
+    );
+
+    let childProps = wrapper.props();
+
+    // valueFromProps should be props
+    expect(valueFromProps.mock.calls[0][0]).toEqual(props);
+
+    // child parcel should contain result of valueFromProps
+    expect(childProps.proppy.value).toBe(123);
+
+    // set prop that SHOULDN'T cause a controlled update
+    wrapper.setProps({
+        def: 789
+    });
+
+    let childProps2 = wrapper.props();
+
+    // child parcel should still contain original result of valueFromProps
+    expect(childProps2.proppy.value).toBe(123);
+
+    // set prop that SHOULD cause a controlled update
+    wrapper.setProps({
+        abc: "!!!"
+    });
+
+    let childProps3 = wrapper.props();
+
+    // child parcel should now contain new result of valueFromProps
+    expect(childProps3.proppy.value).toBe("!!!");
+});
