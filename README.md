@@ -1,4 +1,4 @@
-![dataparcels](https://user-images.githubusercontent.com/345320/46734979-84f21b80-cce0-11e8-908c-03d11c801ceb.png)
+![dataparcels](https://user-images.githubusercontent.com/345320/46786065-80c90b00-cd7f-11e8-8d59-abf6aec965bf.png)
 
 <a href="https://www.npmjs.com/package/react-router"><img src="https://img.shields.io/npm/v/dataparcels.svg?style=flat-square"></a>
 [![CircleCI](https://circleci.com/gh/blueflag/dataparcels/tree/master.svg?style=shield)](https://circleci.com/gh/blueflag/dataparcels/tree/master)
