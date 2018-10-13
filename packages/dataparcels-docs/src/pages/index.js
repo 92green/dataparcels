@@ -40,12 +40,13 @@ export default () => <Box>
                     <NavigationListItem><a className="Link" href={`#Getting-Started`}>Getting Started</a></NavigationListItem>
                     <NavigationListItem><a className="Link" href={`#Examples`}>Examples</a></NavigationListItem>
                     <NavigationListItem><a className="Link" href={`#API`}>API</a></NavigationListItem>
+                    <NavigationListItem><a className="Link" href={`#API-Examples`}>API Examples</a></NavigationListItem>
                 </NavigationList>}
             />
             <Wrapper>
                 <Text id="API" element="h2" modifier="sizeMega">API</Text>
                 <API />
-                <Text id="API Examples" element="h2" modifier="sizeMega">API Examples</Text>
+                <Text id="API-Examples" element="h2" modifier="sizeMega">API Examples</Text>
                 <Typography>
                     <APIExamples />
                 </Typography>
