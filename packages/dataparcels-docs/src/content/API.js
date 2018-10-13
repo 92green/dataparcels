@@ -55,7 +55,7 @@ export default () => <Box>
         name="ParcelBoundaryHoc"
         description={<Box>
             <Text element="p" modifier="marginMilli">ParcelBoundaryHoc is a React higher order component.</Text>
-            <Text element="p">It's job is to control the flow of parcel changes. It is the higher oder component version of a ParcelBoundary.</Text>
+            <Text element="p">It's job is to control the flow of parcel changes. It is the higher order component version of a ParcelBoundary.</Text>
         </Box>}
         image={IconParcelBoundaryHoc}
     />

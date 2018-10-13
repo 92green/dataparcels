@@ -11,7 +11,7 @@ import {Box, Message} from 'dcme-style';
 
 <ApiPageIcon>{IconParcelBoundaryHoc}</ApiPageIcon>
 
-ParcelBoundaryHoc is a React higher order component. It's job is to control the flow of parcel changes. It is the higher oder component version of a <Link to="/api/ParcelBoundary">ParcelBoundary</Link>.
+ParcelBoundaryHoc is a React higher order component. It's job is to control the flow of parcel changes. It is the higher order component version of a <Link to="/api/ParcelBoundary">ParcelBoundary</Link>.
 
 Each ParcelBoundaryHoc is given a name, and expects that it will be given Parcel as a prop of the same name.
 
