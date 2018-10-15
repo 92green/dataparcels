@@ -7,6 +7,7 @@ import IndexMarkdown from 'pages/index.md';
 import PageLayout from 'component/PageLayout';
 import API from 'content/API';
 import IconParcel from 'content/parcelinverted.gif';
+import APIExamples from 'content/APIExamples.md';
 
 export default () => <Box>
     <Box modifier="invertedCopy invertedBackground">
@@ -39,10 +40,17 @@ export default () => <Box>
                     <NavigationListItem><a className="Link" href={`#Getting-Started`}>Getting Started</a></NavigationListItem>
                     <NavigationListItem><a className="Link" href={`#Examples`}>Examples</a></NavigationListItem>
                     <NavigationListItem><a className="Link" href={`#API`}>API</a></NavigationListItem>
+                    <NavigationListItem><a className="Link" href={`#API-Examples`}>API Examples</a></NavigationListItem>
                 </NavigationList>}
             />
-            <Text id="API" element="h2" modifier="sizeMega">API</Text>
-            <API />
+            <Wrapper>
+                <Text id="API" element="h2" modifier="sizeMega">API</Text>
+                <API />
+                <Text id="API-Examples" element="h2" modifier="sizeMega">API Examples</Text>
+                <Typography>
+                    <APIExamples />
+                </Typography>
+            </Wrapper>
         </Wrapper>
     </Box>
 </Box>
