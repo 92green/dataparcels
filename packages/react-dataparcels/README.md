@@ -7,7 +7,7 @@ A library for editing data structures that works really well with React.
 
 ## Docs
 
-**[See the docs](https://blueflag.github.io/dataparcels)**
+**[See the docs](https://dataparcels.blueflag.codes)**
 
 ## Packages
 
