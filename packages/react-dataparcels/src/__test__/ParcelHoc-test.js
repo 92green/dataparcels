@@ -7,7 +7,7 @@ let shallowRenderHoc = (props, hock) => {
     let Component = hock((props) => <div />);
     return shallow(<Component {...props}/>);
 };
-/*
+
 test('ParcelHoc config should accept an initial valueFromProps', () => {
     let valueFromProps = jest.fn((props) => 456);
 
@@ -123,7 +123,6 @@ test('ParcelHoc config should accept a debugRender boolean', () => {
 
     expect(childProps.proppy._treeshare.debugRender).toBe(true);
 });
-*/
 
 test('ParcelHoc controlled = true should update value from props when result of valueFromProps is not strictly equal to previous result of valueFromProps', () => {
     let valueFromProps = jest.fn((props) => props.abc);
@@ -169,4 +168,60 @@ test('ParcelHoc controlled = true should update value from props when result of 
 
     // child parcel should now contain new result of valueFromProps
     expect(childProps3.proppy.value).toBe("!!!");
+});
+
+test('ParcelHoc controlled.shouldHocUpdate should be sued for equality while controlled', () => {
+    let valueFromProps = jest.fn((props) => props.abc);
+
+    let props = {
+        abc: {
+            foo: "A",
+            bar: 123
+        }
+    };
+
+    let wrapper = shallowRenderHoc(
+        props,
+        ParcelHoc({
+            valueFromProps,
+            name: "proppy",
+            controlled: {
+                shouldHocUpdate: (a: *, b: *) => a.foo !== b.foo
+            }
+        })
+    );
+
+    let childProps = wrapper.props();
+
+    // set prop that SHOULDN'T cause a controlled update
+    wrapper.setProps({
+        abc: {
+            foo: "A",
+            bar: 456
+        }
+    });
+
+    let childProps2 = wrapper.props();
+
+    // child parcel should still contain original result of valueFromProps
+    expect(childProps2.proppy.value).toEqual({
+        foo: "A",
+        bar: 123
+    });
+
+    // set prop that SHOULD cause a controlled update
+    wrapper.setProps({
+        abc: {
+            foo: "B",
+            bar: 789
+        }
+    });
+
+    let childProps3 = wrapper.props();
+
+    // child parcel should now contain new result of valueFromProps
+    expect(childProps3.proppy.value).toEqual({
+        foo: "B",
+        bar: 789
+    });
 });

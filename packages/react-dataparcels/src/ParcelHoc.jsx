@@ -17,11 +17,18 @@ type ChildProps = {
     // ${name}: Parcel
 };
 
+type ParcelHocControlledConfig = {
+    shouldHocUpdate?: (valueA: *, valueB: *) => boolean
+};
+
+const DEFAULT_CONTROLLED_CONFIG: ParcelHocControlledConfig = {
+    shouldHocUpdate: (valueA, valueB) => valueA !== valueB
+};
+
 type ParcelHocConfig = {
     name: string,
     valueFromProps?: (props: *) => *,
-    controlled?: boolean,
-    shouldControlledHocUpdate?: (valueA: *, valueB: *) => boolean,
+    controlled?: boolean | ParcelHocControlledConfig,
     delayUntil?: (props: *) => boolean,
     onChange?: (props: *) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
@@ -37,7 +44,6 @@ export default (config: ParcelHocConfig): Function => {
         name,
         valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
         controlled = false, /* eslint-disable-line no-unused-vars */
-        shouldControlledHocUpdate = (valueA, valueB) => valueA !== valueB,
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
@@ -51,6 +57,17 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
     Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
+
+    if(controlled) {
+        if(controlled === true) {
+            controlled = {};
+        }
+
+        controlled = {
+            ...DEFAULT_CONTROLLED_CONFIG,
+            ...controlled
+        };
+    }
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
         constructor(props: Props) {
@@ -83,7 +100,8 @@ export default (config: ParcelHocConfig): Function => {
                 let value = valueFromProps(props);
                 newState.prevValueFromProps = value;
 
-                if(shouldControlledHocUpdate(value, state.prevValueFromProps)) {
+                // $FlowFixMe - controlled is obviously not undefined, because we wouldn't make it in here if it were
+                if(controlled.shouldHocUpdate(value, state.prevValueFromProps)) {
                     newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
                         parcel.set(value);
                     });
