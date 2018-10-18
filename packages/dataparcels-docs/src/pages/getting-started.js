@@ -6,5 +6,6 @@ import GettingStartedMarkdown from 'pages/getting-started.md';
 import PageLayout from 'component/PageLayout';
 
 export default () => <PageLayout
+    modifier="marginBottom"
     content={() => <Typography><GettingStartedMarkdown /></Typography>}
 />;

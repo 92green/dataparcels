@@ -9,6 +9,7 @@ type Props = {
 };
 
 export default ({name, md: Markdown}: Props) => <PageLayout
+    modifier="marginBottom"
     content={() => <Typography>
         <Text element="h1">{name}</Text>
         <Markdown />
