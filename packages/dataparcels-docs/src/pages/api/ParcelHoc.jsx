@@ -5,6 +5,7 @@ import ApiPage from 'component/ApiPage';
 import Markdown_ParcelHoc from 'docs/api/parcelHoc/ParcelHoc.md';
 import Markdown_ParcelHocAfter from 'docs/api/parcelHoc/ParcelHocAfter.md';
 import Markdown_name from 'docs/api/parcelHoc/name.md';
+import Markdown_controlled from 'docs/api/parcelHoc/controlled.md';
 import Markdown_valueFromProps from 'docs/api/parcelHoc/valueFromProps.md';
 import Markdown_delayUntil from 'docs/api/parcelHoc/delayUntil.md';
 import Markdown_onChange from 'docs/api/parcelHoc/onChange.md';
@@ -17,6 +18,7 @@ const md = {
     _after: Markdown_ParcelHocAfter,
     name: Markdown_name,
     valueFromProps: Markdown_valueFromProps,
+    controlled: Markdown_controlled,
     delayUntil: Markdown_delayUntil,
     onChange: Markdown_onChange,
     pipe: Markdown_pipe,
@@ -28,8 +30,9 @@ const api = `
 # Config
 name
 valueFromProps
-delayUntil
 onChange
+controlled
+delayUntil
 pipe
 debugRender
 

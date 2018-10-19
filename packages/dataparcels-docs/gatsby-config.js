@@ -5,6 +5,7 @@ module.exports = {
         title: 'Dataparcels'
     },
     plugins: [
+        'gatsby-plugin-react-next',
         'gatsby-plugin-sass',
         'gatsby-plugin-react-helmet',
         'gatsby-plugin-resolve-src',
