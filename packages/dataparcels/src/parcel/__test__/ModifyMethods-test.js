@@ -24,6 +24,19 @@ test('Parcel.modifyValue() should return a new parcel with updated parcelData', 
     expect(expectedData).toEqual(updated);
 });
 
+test('Parcel.modifyValue() should recognise if value changes types, and set value if type changes', () => {
+    let handleChange = jest.fn();
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    })
+        .modifyValue(value => [])
+        .push(123);
+
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].value).toEqual([123]);
+});
+
 test('Parcel.modifyChange() should allow you to change the payload of a changed parcel', () => {
     expect.assertions(1);
 

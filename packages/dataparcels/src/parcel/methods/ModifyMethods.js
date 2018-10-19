@@ -4,6 +4,8 @@ import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import Types from '../../types/Types';
 
+import ParcelTypes from '../ParcelTypes';
+
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
@@ -17,15 +19,33 @@ export default (_this: Parcel): Object => ({
 
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue()`, `updater`, `function`)(updater);
-        return pipeWith(
-            _this._parcelData,
-            set('value', updater(_this._parcelData.value, _this)),
-            parcelData => ({
-                parcelData,
-                id: _this._id.pushModifier('mv')
-            }),
-            _this._create
-        );
+
+        let value = updater(_this._parcelData.value, _this);
+
+        let newType = new ParcelTypes(value);
+        let changedType: boolean = newType.isParent() !== _this._parcelTypes.isParent()
+            || newType.isIndexed() !== _this._parcelTypes.isIndexed();
+
+        let onDispatch = changedType
+            ? (changeRequest: ChangeRequest) => {
+                _this.batch(
+                    (parcel: Parcel) => {
+                        parcel.set(value);
+                        parcel.dispatch(changeRequest);
+                    },
+                    changeRequest
+                );
+            }
+            : undefined;
+
+        return _this._create({
+            id: _this._id.pushModifier('mv'),
+            parcelData: {
+                ..._this._parcelData,
+                value
+            },
+            onDispatch
+        });
     },
 
     modifyChange: (batcher: Function): Parcel => {
