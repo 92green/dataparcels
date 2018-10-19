@@ -94,7 +94,7 @@ export default class Parcel {
         this._parcelTypes = new ParcelTypes(
             value,
             parent && parent._parcelTypes,
-            id
+            !!(id && id.path().length === 0)
         );
 
         this._id = id;
