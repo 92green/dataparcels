@@ -124,10 +124,10 @@ test('ParcelHoc config should accept a debugRender boolean', () => {
     expect(childProps.proppy._treeshare.debugRender).toBe(true);
 });
 
-test('ParcelHoc shouldHocUpdate should update value from props when it is returned true', () => {
+test('ParcelHoc shouldParcelUpdate should update value from props when it is returned true', () => {
     let valueFromProps = jest.fn((props) => props.abc);
 
-    let shouldHocUpdate = jest.fn((prevValue: *, nextValue: *) => prevValue !== nextValue);
+    let shouldParcelUpdate = jest.fn((prevValue: *, nextValue: *) => prevValue !== nextValue);
 
     let props = {
         abc: 123,
@@ -139,7 +139,7 @@ test('ParcelHoc shouldHocUpdate should update value from props when it is return
         ParcelHoc({
             valueFromProps,
             name: "proppy",
-            shouldHocUpdate
+            shouldParcelUpdate
         })
     );
 
@@ -158,9 +158,9 @@ test('ParcelHoc shouldHocUpdate should update value from props when it is return
 
     let childProps2 = wrapper.props();
 
-    // shouldHocUpdate should have been called with correct prevValue and nextValue
-    expect(shouldHocUpdate.mock.calls[0][0]).toBe(123);
-    expect(shouldHocUpdate.mock.calls[0][1]).toBe(123);
+    // shouldParcelUpdate should have been called with correct prevValue and nextValue
+    expect(shouldParcelUpdate.mock.calls[0][0]).toBe(123);
+    expect(shouldParcelUpdate.mock.calls[0][1]).toBe(123);
 
     // child parcel should still contain original result of valueFromProps
     expect(childProps2.proppy.value).toBe(123);
@@ -172,9 +172,9 @@ test('ParcelHoc shouldHocUpdate should update value from props when it is return
 
     let childProps3 = wrapper.props();
 
-    // shouldHocUpdate should have been called with correct prevValue and nextValue
-    expect(shouldHocUpdate.mock.calls[1][0]).toBe(123);
-    expect(shouldHocUpdate.mock.calls[1][1]).toBe("!!!");
+    // shouldParcelUpdate should have been called with correct prevValue and nextValue
+    expect(shouldParcelUpdate.mock.calls[1][0]).toBe(123);
+    expect(shouldParcelUpdate.mock.calls[1][1]).toBe("!!!");
 
     // child parcel should now contain new result of valueFromProps
     expect(childProps3.proppy.value).toBe("!!!");
