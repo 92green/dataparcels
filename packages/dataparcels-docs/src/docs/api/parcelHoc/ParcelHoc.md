@@ -22,7 +22,7 @@ import {ParcelHoc} from 'react-dataparcels';
 ParcelHoc({
     name: string,
     valueFromProps?: Function,
-    shouldParcelUpdate?: Function,
+    shouldParcelUpdateFromProps?: Function,
     onChange?: Function,
     delayUntil?: Function,
     pipe?: Function

@@ -20,7 +20,7 @@ type ChildProps = {
 type ParcelHocConfig = {
     name: string,
     valueFromProps?: (props: *) => *,
-    shouldParcelUpdate?: (prevValue: *, nextValue: *) => boolean,
+    shouldParcelUpdateFromProps?: (prevValue: *, nextValue: *) => boolean,
     delayUntil?: (props: *) => boolean,
     onChange?: (props: *) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
@@ -35,7 +35,7 @@ export default (config: ParcelHocConfig): Function => {
     let {
         name,
         valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
-        shouldParcelUpdate, /* eslint-disable-line no-unused-vars */
+        shouldParcelUpdateFromProps, /* eslint-disable-line no-unused-vars */
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
@@ -77,11 +77,11 @@ export default (config: ParcelHocConfig): Function => {
                 newState.parcel = state.initialize(value);
             }
 
-            if(parcel && shouldParcelUpdate) {
+            if(parcel && shouldParcelUpdateFromProps) {
                 let value = valueFromProps(props);
                 newState.prevValueFromProps = value;
 
-                if(shouldParcelUpdate(state.prevValueFromProps, value)) {
+                if(shouldParcelUpdateFromProps(state.prevValueFromProps, value)) {
                     newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
                         parcel.set(value);
                     });
