@@ -15,7 +15,7 @@ import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 
 const ColourParcelHoc = ParcelHoc({
     name: "colourParcel",
-    initialValue: (/* props */) => "Option A"
+    valueFromProps: (/* props */) => "Option A"
 });
 
 const ColourEditor = (props) => {

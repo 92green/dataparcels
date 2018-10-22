@@ -4,7 +4,7 @@ import ExampleHoc from 'component/ExampleHoc';
 
 const DelayParcelHoc = ParcelHoc({
     name: "delayParcel",
-    initialValue: (props) => `Created at ${props.seconds} seconds!`,
+    valueFromProps: (props) => `Created at ${props.seconds} seconds!`,
     delayUntil: (props) => props.seconds > 3
 });
 
