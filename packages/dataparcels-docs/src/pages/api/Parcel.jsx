@@ -59,6 +59,7 @@ import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
 import Markdown_matchPipe from 'docs/api/parcel/matchPipe.md';
+import Markdown_toConsole from 'docs/api/parcel/toConsole.md';
 
 const md = {
     _desc: Markdown_Parcel,
@@ -117,7 +118,8 @@ const md = {
     spy: Markdown_spy,
     spyChange: Markdown_spyChange,
     pipe: Markdown_pipe,
-    matchPipe: Markdown_matchPipe
+    matchPipe: Markdown_matchPipe,
+    toConsole: Markdown_toConsole
 }
 
 const api = `
@@ -191,13 +193,16 @@ isTopLevel()
 hasDispatched()
 
 # Side-effect methods
-log()
 spy()
 spyChange()
 
 # Composition methods
 pipe()
 matchPipe()
+
+# Debug methods
+log()
+toConsole()
 
 `;
 

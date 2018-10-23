@@ -21,7 +21,8 @@ type ParcelBoundaryHocConfig = {
     debounce?: number|(props: *) => number,
     hold?: boolean|(props: *) => boolean,
     originalParcelProp?: string|(props: *) => string,
-    debugBuffer?: boolean
+    debugBuffer?: boolean,
+    debugParcel?: boolean
 };
 
 const PARCEL_BOUNDARY_HOC_NAME = `ParcelBoundaryHoc()`;
@@ -43,11 +44,13 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             // $FlowFixMe
             let originalParcelProp: ?string = fromProps(config.originalParcelProp);
             let debugBuffer: boolean = config.debugBuffer || false;
+            let debugParcel: boolean = config.debugParcel || false;
 
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.name", "string")(name);
             debounce && Types(PARCEL_BOUNDARY_HOC_NAME, "config.debounce", "number")(debounce);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.hold", "boolean")(hold);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugBuffer", "boolean")(debugBuffer);
+            Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
             originalParcelProp && Types(PARCEL_BOUNDARY_HOC_NAME, "config.originalParcelProp", "string")(originalParcelProp);
 
             let parcel = this.props[name];
@@ -62,6 +65,7 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                 debounce={debounce}
                 hold={hold}
                 debugBuffer={debugBuffer}
+                debugParcel={debugParcel}
                 pure={false}
             >
                 {(innerParcel, actions) => {
