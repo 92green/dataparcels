@@ -31,6 +31,7 @@ ParcelBoundaryHoc({
     originalParcelProp?: string | (props: *) => string,
     // debugging options
     debugBuffer?: boolean
+    debugParcel?: boolean
 });
 ```
 
