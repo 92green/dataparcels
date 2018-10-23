@@ -92,7 +92,7 @@ export default (_this: Parcel) => ({
         _this._log = true;
         _this._logName = name;
         console.log(`Parcel data: ${name} `);
-        console.log(JSON.parse(JSON.stringify(_this.data)));
+        _this.toConsole();
         return _this;
     },
 
@@ -111,5 +111,11 @@ export default (_this: Parcel) => ({
                 _this.dispatch(changeRequest);
             }
         });
+    },
+
+    // Debug methods
+
+    toConsole: () => {
+        console.log(JSON.parse(JSON.stringify(_this.data)));
     }
 });

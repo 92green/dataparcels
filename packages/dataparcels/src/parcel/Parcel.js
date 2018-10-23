@@ -365,4 +365,7 @@ export default class Parcel {
     // Advanced methods
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
     setInternalLocationShareData = (partialData: Object): * => this._methods.setInternalLocationShareData(partialData);
+
+    // Debug methods
+    toConsole = () => this._methods.toConsole();
 }
