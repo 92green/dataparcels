@@ -24,6 +24,7 @@ type ParcelHocConfig = {
     delayUntil?: (props: *) => boolean,
     onChange?: (props: *) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
+    debugParcel?: boolean,
     debugRender?: boolean
 };
 
@@ -40,6 +41,7 @@ export default (config: ParcelHocConfig): Function => {
         onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
+        debugParcel = false,
         debugRender = false
     } = config;
 
@@ -48,6 +50,7 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
     Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
+    Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
     Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
@@ -75,6 +78,11 @@ export default (config: ParcelHocConfig): Function => {
                 let value = valueFromProps(props);
                 newState.prevValueFromProps = value;
                 newState.parcel = state.initialize(value);
+
+                if(debugParcel) {
+                    console.log(`Parcel received initial value:`);
+                    newState.parcel.toConsole();
+                }
             }
 
             if(parcel && shouldParcelUpdateFromProps) {
@@ -85,6 +93,11 @@ export default (config: ParcelHocConfig): Function => {
                     newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
                         parcel.set(value);
                     });
+
+                    if(debugParcel) {
+                        console.log(`Parcel updated from props:`);
+                        newState.parcel.toConsole();
+                    }
                 }
             }
 
@@ -93,6 +106,11 @@ export default (config: ParcelHocConfig): Function => {
 
         handleChange = (parcel, changeRequest) => {
             this.setState({parcel});
+            if(debugParcel) {
+                console.log(`Parcel changed:`);
+                parcel.toConsole();
+            }
+
             let onChangeWithProps = onChange(this.props);
             Types(`handleChange()`, "return value of onChange", "function")(onChangeWithProps);
             onChangeWithProps(parcel.value, changeRequest);
