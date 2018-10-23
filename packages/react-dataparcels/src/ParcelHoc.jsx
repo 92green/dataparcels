@@ -7,6 +7,8 @@ import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 
+const log = (...args) => console.log(`ParcelHoc:`, ...args);
+
 type Props = {};
 type State = {
     parcel: ?Parcel,
@@ -80,7 +82,7 @@ export default (config: ParcelHocConfig): Function => {
                 newState.parcel = state.initialize(value);
 
                 if(debugParcel) {
-                    console.log(`Parcel received initial value:`);
+                    log(`Received initial value:`);
                     newState.parcel.toConsole();
                 }
             }
@@ -95,7 +97,7 @@ export default (config: ParcelHocConfig): Function => {
                     });
 
                     if(debugParcel) {
-                        console.log(`Parcel updated from props:`);
+                        log(`Parcel updated from props:`);
                         newState.parcel.toConsole();
                     }
                 }
@@ -107,7 +109,7 @@ export default (config: ParcelHocConfig): Function => {
         handleChange = (parcel, changeRequest) => {
             this.setState({parcel});
             if(debugParcel) {
-                console.log(`Parcel changed:`);
+                log(`Parcel changed:`);
                 parcel.toConsole();
             }
 
