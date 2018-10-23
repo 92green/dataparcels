@@ -11,6 +11,7 @@ import Markdown_debounce from 'docs/api/parcelBoundary/debounce.md';
 import Markdown_hold from 'docs/api/parcelBoundary/hold.md';
 import Markdown_pure from 'docs/api/parcelBoundary/pure.md';
 import Markdown_debugBuffer from 'docs/api/parcelBoundary/debugBuffer.md';
+import Markdown_debugParcel from 'docs/api/parcelBoundary/debugParcel.md';
 
 const md = {
     _desc: Markdown_ParcelBoundary,
@@ -21,7 +22,8 @@ const md = {
     debounce: Markdown_debounce,
     hold: Markdown_hold,
     pure: Markdown_pure,
-    debugBuffer: Markdown_debugBuffer
+    debugBuffer: Markdown_debugBuffer,
+    debugParcel: Markdown_debugParcel
 }
 
 const api = `
@@ -35,6 +37,7 @@ pure
 forceUpdate
 hold
 debugBuffer
+debugParcel
 `;
 
 export default () => <ApiPage
