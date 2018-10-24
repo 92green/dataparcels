@@ -41,12 +41,9 @@ export default (_this: Parcel): Object => ({
 
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._setBaseParcel(_this);
-            let parcelWithChangedData = undefined;
-            try {
-                parcelWithChangedData = _this._create({
-                    parcelData: changeRequestWithBase.data
-                });
-            } catch (e) {} /* eslint-disable-line */
+            let parcelWithChangedData = _this._create({
+                parcelData: changeRequestWithBase.data
+            });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
             return;
