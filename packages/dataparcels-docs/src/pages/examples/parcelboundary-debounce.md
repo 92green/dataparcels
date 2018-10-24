@@ -13,7 +13,7 @@ import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 
 const FoodParcelHoc = ParcelHoc({
     name: "foodParcel",
-    valueFromProps: (/* props */) => ({
+    initialValue: (/* props */) => ({
         mains: "Soup",
         dessert: "Strudel"
     })

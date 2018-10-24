@@ -4,7 +4,7 @@ import ExampleHoc from 'component/ExampleHoc';
 
 const ColourParcelHoc = ParcelHoc({
     name: "colourParcel",
-    valueFromProps: (/* props */) => "Option A"
+    initialValue: (/* props */) => "Option A"
 });
 
 const ColourEditor = (props) => {

@@ -7,29 +7,29 @@ import Types from '../../types/Types';
 
 export default (_this: Parcel /*, dispatch: Function*/): Object => ({
     set: (key: Key|Index, value: *) => {
-        Types(`set()`, `key`, `keyIndex`)(key);
+        Types(`set() expects param "key" to be`, `keyIndex`)(key);
         _this.get(key).set(value);
     },
 
     update: (key: Key|Index, updater: ParcelValueUpdater) => {
-        Types(`update()`, `key`, `keyIndex`)(key);
-        Types(`update()`, `updater`, `function`)(updater);
+        Types(`update() expects param "key" to be`, `keyIndex`)(key);
+        Types(`update() expects param "updater" to be`, `function`)(updater);
         _this.get(key).update(updater);
     },
 
     setIn: (keyPath: Array<Key|Index>, value: *) => {
-        Types(`setIn()`, `keyPath`, `keyIndexPath`)(keyPath);
+        Types(`setIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
         _this.getIn(keyPath).set(value);
     },
 
     updateIn: (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => {
-        Types(`updateIn()`, `keyPath`, `keyIndexPath`)(keyPath);
-        Types(`update()`, `updater`, `function`)(updater);
+        Types(`updateIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
+        Types(`update() expects param "updater" to be`, `function`)(updater);
         _this.getIn(keyPath).update(updater);
     },
 
     deleteIn: (keyPath: Array<Key|Index>) => {
-        Types(`deleteIn()`, `keyPath`, `keyIndexPath`)(keyPath);
+        Types(`deleteIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
         _this.getIn(keyPath).delete();
     }
 });

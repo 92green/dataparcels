@@ -15,7 +15,7 @@ import {ParcelHoc} from 'react-dataparcels';
 
 const WordParcelHoc = ParcelHoc({
     name: "wordParcel",
-    valueFromProps: (props) => props.defaultValue,
+    initialValue: (props) => props.defaultValue,
     onChange: (props) => (value) => props.onChange(value)
 });
 
@@ -36,7 +36,7 @@ export default (/* props */) => {
 ### What's going on
 
 * `WordExample` passes down an initial `word` prop.
-* When `ParcelHoc` mounts, it calls `valueFromProps` and puts the result ("word") into its Parcel.
+* When `ParcelHoc` mounts, it calls `initialValue` and puts the result ("word") into its Parcel.
 
   From this point forward, ParcelHoc is the source of truth. If `defaultValue` were to change, it would have no effect on `ParcelHoc` or the Parcel's value.
 * `wordParcel` is passed to `WordEditor` for editing. Changes to `wordParcel` are stored in `ParcelHoc`s state.

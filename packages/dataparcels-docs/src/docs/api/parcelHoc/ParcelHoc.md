@@ -2,7 +2,7 @@ import Link from 'component/Link';
 import Param from 'component/Param';
 import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelHocExample from 'pages/examples/parcelhoc-example.md';
-import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-valuefromprops.md';
+import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-initialvalue.md';
 import ParcelHocOnChange from 'pages/examples/parcelhoc-onchange.md';
 import IconParcelHoc from 'content/parcelhoc.gif';
 
@@ -21,14 +21,11 @@ import {ParcelHoc} from 'react-dataparcels';
 ```flow
 ParcelHoc({
     name: string,
-    valueFromProps?: Function,
-    shouldParcelUpdateFromProps?: Function,
-    onChange?: Function,
+    initialValue?: Function,
     delayUntil?: Function,
+    onChange?: Function,
     pipe?: Function
     // debugging options
-    debugParcel?: boolean
     debugRender?: boolean
 });
 ```
-

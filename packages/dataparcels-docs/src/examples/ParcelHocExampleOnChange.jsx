@@ -4,7 +4,7 @@ import ExampleHoc from 'component/ExampleHoc';
 
 const WordParcelHoc = ParcelHoc({
     name: "wordParcel",
-    valueFromProps: (props) => props.defaultValue,
+    initialValue: (props) => props.defaultValue,
     onChange: (props) => (value) => props.onChange(value)
 });
 

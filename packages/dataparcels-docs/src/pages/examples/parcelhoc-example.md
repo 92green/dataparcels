@@ -13,7 +13,7 @@ import {ParcelHoc} from 'react-dataparcels';
 
 const WordParcelHoc = ParcelHoc({
     name: "wordParcel",
-    valueFromProps: () => "word"
+    initialValue: () => "word"
 });
 
 const WordEditor = (props) => {
@@ -26,5 +26,5 @@ export default WordParcelHoc(WordEditor);
 
 ### What's going on
 
-* When `ParcelHoc` mounts, it calls `valueFromProps` and puts the result ("word") into its Parcel.
+* When `ParcelHoc` mounts, it calls `initialValue` and puts the result ("word") into its Parcel.
 * `wordParcel` is passed to `WordEditor` for editing. Changes to `wordParcel` are stored in `ParcelHoc`s state.

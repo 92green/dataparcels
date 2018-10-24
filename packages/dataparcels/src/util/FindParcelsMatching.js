@@ -1,6 +1,6 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
-import {containsWildcard, split} from '../match/Matcher';
+import {containsWildcard, split} from '../modifiers/Matcher';
 
 import flatMap from 'unmutable/lib/flatMap';
 import shallowEquals from 'unmutable/lib/shallowEquals';

@@ -56,9 +56,9 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
     );
 
     let addModifier = (validatorArray: Function[], match: string) => (parcel: Parcel): Parcel => {
-        return parcel.matchPipe(
-            match,
-            ii => ii.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+        return parcel.addModifier({
+            modifier: ii => ii.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+
                 let error = pipeWith(
                     validatorArray,
                     reduce((error: *, validator: Function): * => {
@@ -73,8 +73,9 @@ export default (validatorCreator: ValidModifierConfig) => (parcel: Parcel): Parc
                 parcel.setMeta({
                     error
                 });
-            })
-        );
+            }),
+            match
+        });
     };
 
     let addValidModifier = (parcel: Parcel): Parcel => {

@@ -20,6 +20,9 @@ let types = {
     ['changeRequest']: new ChangeRequest(),
     ['event']: {currentTarget: {value: null}},
     ['function']: () => {},
+    ['functionArray']: [() => {}, () => {}],
+    ['modifierObject']: {modifier: () => {}},
+    ['modifierObjectWrong']: {modifier: 123},
     ['number']: 123,
     ['numberArray']: [123, 456],
     ['object']: {},
@@ -31,13 +34,14 @@ let types = {
 };
 
 let testTypes = (type: string, shouldAllow: string[]) => {
+    let message = `Expected thing to be`;
     pipeWith(
         types,
         map((data, dataType) => {
             if(shouldAllow.indexOf(dataType) !== -1) {
-                expect(() => Types(`Thing`, `Thing`, type)(data)).not.toThrowError(`${type} should not throw when given ${dataType}`);
+                expect(() => Types(message, type)(data)).not.toThrowError(`${type} should not throw when given ${dataType}`);
             } else {
-                expect(() => Types(`Thing`, `Thing`, type)(data)).toThrowError(`but got`);
+                expect(() => Types(message, type)(data)).toThrowError(`but got`);
             }
         })
     );
@@ -66,6 +70,10 @@ test('Types() can identify a function', () => testTypes(`function`, [
     'function'
 ]));
 
+test('Types() can identify a function array', () => testTypes(`functionArray`, [
+    'functionArray'
+]));
+
 test('Types() can identify a keyIndex', () => testTypes(`keyIndex`, [
     'number',
     'string'
@@ -74,6 +82,11 @@ test('Types() can identify a keyIndex', () => testTypes(`keyIndex`, [
 test('Types() can identify a keyIndexPath', () => testTypes(`keyIndexPath`, [
     'numberArray',
     'stringArray'
+]));
+
+test('Types() can identify a modifier', () => testTypes(`modifier`, [
+    'function',
+    'modifierObject'
 ]));
 
 test('Types() can identify a number', () => testTypes(`number`, [
@@ -86,6 +99,9 @@ test('Types() can identify a object', () => testTypes(`object`, [
     'botchedActionArray',
     'changeRequest',
     'event',
+    'functionArray',
+    'modifierObject',
+    'modifierObjectWrong',
     'numberArray',
     'object',
     'parcel',

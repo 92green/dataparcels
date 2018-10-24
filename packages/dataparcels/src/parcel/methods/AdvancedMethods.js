@@ -9,7 +9,7 @@ export default (_this: Parcel): Object => ({
     },
 
     setInternalLocationShareData: (partialData: Object) => {
-        Types(`setInternalLocationShareData()`, `partialData`, `object`)(partialData);
+        Types(`setInternalLocationShareData() expects param "partialData" to be`, `object`)(partialData);
         _this._treeshare.locationShare.set(_this.path, partialData);
     }
 });

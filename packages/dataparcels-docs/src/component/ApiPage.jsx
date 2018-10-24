@@ -1,7 +1,6 @@
 // @flow
 import type {Node} from 'react';
 import React from 'react';
-import {Fragment} from 'react';
 import {Box, Grid, GridItem, NavigationList, NavigationListItem, Text, Typography} from 'dcme-style';
 import Link from 'component/Link';
 import SiteNavigation from 'component/SiteNavigation';
@@ -55,7 +54,6 @@ export default ({name, api, md, after}: Props) => {
     let Description = md._desc;
     let After = md._after;
     return <PageLayout
-        modifier="marginBottom"
         content={() => <Box>
             <Box modifier="marginBottomGiga">
                 <Typography>
@@ -65,18 +63,10 @@ export default ({name, api, md, after}: Props) => {
             {renderDoclets({api, md})}
             {After && <Typography><After /></Typography>}
         </Box>}
-        nav={() => <Fragment>
-            <NavigationList>
-                <NavigationListItem><Link to="/api">Api</Link></NavigationListItem>
-                <NavigationListItem><Link to="/api/Parcel">Parcel</Link></NavigationListItem>
-                <NavigationListItem><Link to="/api/ParcelHoc">ParcelHoc</Link></NavigationListItem>
-                <NavigationListItem><Link to="/api/ParcelBoundary">ParcelBoundary</Link></NavigationListItem>
-                <NavigationListItem><Link to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link></NavigationListItem>
-            </NavigationList>
-            <NavigationList>
-                <NavigationListItem>{name}</NavigationListItem>
-                {renderApi(api)}
-            </NavigationList>
-        </Fragment>}
+        nav={() => <NavigationList>
+            <NavigationListItem><Link to="/api">Api</Link></NavigationListItem>
+            <NavigationListItem>{name}</NavigationListItem>
+            {renderApi(api)}
+        </NavigationList>}
     />;
 };

@@ -27,14 +27,14 @@ export default (_this: Parcel) => ({
     },
 
     has: (key: Key|Index): boolean => {
-        Types(`has()`, `key`, `keyIndex`)(key);
+        Types(`has() expects param "key" to be`, `keyIndex`)(key);
 
         _this._methods._prepareChildKeys();
         return parcelHas(key)(_this._parcelData);
     },
 
     get: (key: Key|Index, notFoundValue: any): Parcel => {
-        Types(`get()`, `key`, `keyIndex`)(key);
+        Types(`get() expects param "key" to be`, `keyIndex`)(key);
 
         _this._methods._prepareChildKeys();
         let childParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
@@ -52,7 +52,7 @@ export default (_this: Parcel) => ({
     },
 
     getIn: (keyPath: Array<Key|Index>, notFoundValue: any): Parcel => {
-        Types(`getIn()`, `keyPath`, `keyIndexPath`)(keyPath);
+        Types(`getIn() expects param "keyPath" to be`, `keyIndexPath`)(keyPath);
         var parcel = _this;
         for(let i = 0; i < keyPath.length; i++) {
             parcel = parcel.get(keyPath[i], i < keyPath.length - 1 ? {} : notFoundValue);
@@ -61,7 +61,7 @@ export default (_this: Parcel) => ({
     },
 
     toObject: (mapper: ParcelMapper): { [key: string]: * } => {
-        Types(`toObject()`, `mapper`, `function`)(mapper);
+        Types(`toObject() expects param "mapper" to be`, `function`)(mapper);
 
         return pipeWith(
             _this._parcelData.value,
@@ -73,7 +73,7 @@ export default (_this: Parcel) => ({
     },
 
     toArray: (mapper: ParcelMapper): Array<*> => {
-        Types(`toArray()`, `mapper`, `function`)(mapper);
+        Types(`toArray() expects param "mapper" to be`, `function`)(mapper);
         return toArray()(_this.toObject(mapper));
     },
 

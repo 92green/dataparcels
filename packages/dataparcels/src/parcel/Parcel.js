@@ -4,7 +4,8 @@ import type ChangeRequest from '../change/ChangeRequest';
 import type {CreateParcelConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
-import type {MatchPipe} from '../types/Types';
+import type {ModifierFunction} from '../types/Types';
+import type {ModifierObject} from '../types/Types';
 import type {ParcelBatcher} from '../types/Types';
 import type {ParcelConfigInternal} from '../types/Types';
 import type {ParcelConfig} from '../types/Types';
@@ -12,12 +13,12 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelMapper} from '../types/Types';
 import type {ParcelMetaUpdater} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
-import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
 
+import Modifiers from '../modifiers/Modifiers';
 import ParcelGetMethods from './methods/ParcelGetMethods';
 import ParcelChangeMethods from './methods/ParcelChangeMethods';
 import ActionMethods from './methods/ActionMethods';
@@ -29,7 +30,6 @@ import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
 import AdvancedMethods from './methods/AdvancedMethods';
-import TopLevelMethods from './methods/TopLevelMethods';
 
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
@@ -43,14 +43,14 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
     meta: {},
     id: new ParcelId(),
-    matchPipes: [],
+    modifiers: undefined,
     parent: undefined,
     treeshare: undefined
 });
 
 export default class Parcel {
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
-        Types(`Parcel()`, `config`, `object`)(config);
+        Types(`Parcel() expects param "config" to be`, `object`)(config);
 
         let {
             handleChange,
@@ -58,15 +58,15 @@ export default class Parcel {
             debugRender = false
         } = config;
 
-        handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
-        Types(`Parcel()`, `config.debugRender`, `boolean`)(debugRender);
+        handleChange && Types(`Parcel() expects param "config.handleChange" to be`, `function`)(handleChange);
+        Types(`Parcel() expects param "config.debugRender" to be`, `boolean`)(debugRender);
 
         let {
             onDispatch,
             child,
             meta,
             id,
-            matchPipes,
+            modifiers,
             parent,
             treeshare
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
@@ -83,12 +83,8 @@ export default class Parcel {
 
         // parent
         if(parent) {
-            // $FlowFixMe
             this._parent = parent;
         }
-
-        // match pipes
-        this._matchPipes = matchPipes || [];
 
         // types
         this._parcelTypes = new ParcelTypes(
@@ -101,6 +97,9 @@ export default class Parcel {
         if(!_configInternal || parent) {
             this._id.setTypeCode(this._parcelTypes.toTypeCode());
         }
+
+        // modifiers
+        this._modifiers = modifiers || new Modifiers();
 
         // treeshare
         this._treeshare = treeshare || new Treeshare({debugRender});
@@ -131,9 +130,7 @@ export default class Parcel {
             // $FlowFixMe
             ...ModifyMethods(this),
             // $FlowFixMe
-            ...AdvancedMethods(this),
-            // $FlowFixMe
-            ...FilterMethods("TopLevel", TopLevelMethods)(this, dispatch)
+            ...AdvancedMethods(this)
         };
     }
 
@@ -146,11 +143,12 @@ export default class Parcel {
     _onDispatch: ?Function;
     _parcelData: ParcelData;
     _id: ParcelId;
-    _matchPipes: MatchPipe[];
+    _modifiers: Modifiers;
     _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
     _parent: ?Parcel;
     _dispatchBuffer: ?Function;
+    _prepareChildKeys: Function;
     _isFirst: boolean = false;
     _isLast: boolean = false;
     _log: boolean = false;
@@ -161,10 +159,9 @@ export default class Parcel {
             id = this._id,
             onDispatch = this.dispatch,
             handleChange,
-            matchPipes = this._matchPipes,
+            modifiers = this._modifiers,
             parent,
-            parcelData = this._parcelData,
-            treeshare = this._treeshare
+            parcelData = this._parcelData
         } = createParcelConfig;
 
         let {
@@ -182,16 +179,20 @@ export default class Parcel {
                 child,
                 meta,
                 id,
-                matchPipes,
+                modifiers,
                 onDispatch,
                 parent,
-                treeshare
+                treeshare: this._treeshare
             }
         );
 
         return parent
-            ? parcel._methods._applyMatchPipes()
+            ? parcel._applyModifiers()
             : parcel;
+    };
+
+    _applyModifiers = (): Parcel => {
+        return this._modifiers.applyTo(this);
     };
 
     //
@@ -314,7 +315,6 @@ export default class Parcel {
     setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
-    batchAndReturn = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batchAndReturn(batcher, changeRequest);
     ping = () => this._methods.ping();
     dangerouslyReplace = (value: *) => this._methods.dangerouslyReplace(value);
 
@@ -349,6 +349,8 @@ export default class Parcel {
     modifyChange = (batcher: Function): Parcel => this._methods.modifyChange(batcher);
     modifyChangeValue = (updater: Function): Parcel => this._methods.modifyChangeValue(updater);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
+    addModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addModifier(modifier);
+    addDescendantModifier = (modifier: ModifierFunction|ModifierObject): Parcel => this._methods.addDescendantModifier(modifier);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
 
     // Type methods
@@ -359,13 +361,9 @@ export default class Parcel {
     isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
 
     // Composition methods
-    pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
-    matchPipe = (match: string, ...updaters: ParcelUpdater[]): Parcel => this._methods.matchPipe(match, ...updaters);
+    pipe = (...updaters: Function[]): Parcel => this._methods.pipe(...updaters);
 
     // Advanced methods
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
     setInternalLocationShareData = (partialData: Object): * => this._methods.setInternalLocationShareData(partialData);
-
-    // Debug methods
-    toConsole = () => this._methods.toConsole();
 }
