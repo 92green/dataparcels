@@ -12305,9 +12305,9 @@ unmutable@0.29.2, unmutable@^0.29.2:
     fast-deep-equal "^1.0.0"
     is-plain-object "^2.0.4"
 
-unmutable@^0.37.0:
-  version "0.37.0"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.37.0.tgz#728dc1d503206475d4ab49d72e4b16adb69a3c8f"
+unmutable@^0.38.0:
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.38.0.tgz#95e5cce11fd18d3e99e5b2c48a02ecc2be353bd5"
   dependencies:
     fast-deep-equal "^1.0.0"
     is-plain-object "^2.0.4"
