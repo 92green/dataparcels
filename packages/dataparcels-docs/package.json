@@ -1,6 +1,6 @@
 {
   "name": "dataparcels-docs",
-  "version": "0.15.0",
+  "version": "0.16.0-1",
   "description": "Dataparcels Documentation",
   "author": "Damien Clarke",
   "license": "MIT",
@@ -18,6 +18,7 @@
     "gatsby": "^1.9.223",
     "gatsby-link": "^1.6.38",
     "gatsby-plugin-react-helmet": "^2.0.6",
+    "gatsby-plugin-react-next": "^1.0.11",
     "gatsby-plugin-resolve-src": "^1.1.4",
     "gatsby-plugin-sass": "^1.0.20",
     "gatsby-remark-prismjs": "^1.2.21",
@@ -30,6 +31,7 @@
     "prismjs": "^1.11.0",
     "react-flip-move": "^3.0.2",
     "react-helmet": "^5.2.0",
+    "react-lifecycles-compat": "^3.0.4",
     "stampy": "^0.41.0",
     "unmutable": "^0.29.2"
   }

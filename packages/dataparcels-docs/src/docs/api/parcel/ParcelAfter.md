@@ -1,5 +1,5 @@
-import ExamplesParcel from 'content/ExamplesParcel.md';
+import Examples from 'content/Examples.md';
 
 ### Examples
 
-<ExamplesParcel />
+<Examples />

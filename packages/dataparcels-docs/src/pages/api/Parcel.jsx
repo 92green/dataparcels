@@ -42,13 +42,12 @@ import Markdown_updateMeta from 'docs/api/parcel/updateMeta.md';
 import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
 import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
 import Markdown_batch from 'docs/api/parcel/batch.md';
+import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
 import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_modifyValue from 'docs/api/parcel/modifyValue.md';
 import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
 import Markdown_modifyChangeValue from 'docs/api/parcel/modifyChangeValue.md';
 import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
-import Markdown_addModifier from 'docs/api/parcel/addModifier.md';
-import Markdown_addDescendantModifier from 'docs/api/parcel/addDescendantModifier.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
 import Markdown_isElement from 'docs/api/parcel/isElement.md';
 import Markdown_isIndexed from 'docs/api/parcel/isIndexed.md';
@@ -59,6 +58,8 @@ import Markdown_log from 'docs/api/parcel/log.md';
 import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
+import Markdown_matchPipe from 'docs/api/parcel/matchPipe.md';
+import Markdown_toConsole from 'docs/api/parcel/toConsole.md';
 
 const md = {
     _desc: Markdown_Parcel,
@@ -101,13 +102,12 @@ const md = {
     setChangeRequestMeta: Markdown_setChangeRequestMeta,
     dispatch: Markdown_dispatch,
     batch: Markdown_batch,
+    batchAndReturn: Markdown_batchAndReturn,
     ping: Markdown_ping,
     modifyValue: Markdown_modifyValue,
     modifyChange: Markdown_modifyChange,
     modifyChangeValue: Markdown_modifyChangeValue,
     initialMeta: Markdown_initialMeta,
-    addModifier: Markdown_addModifier,
-    addDescendantModifier: Markdown_addDescendantModifier,
     isChild: Markdown_isChild,
     isElement: Markdown_isElement,
     isIndexed: Markdown_isIndexed,
@@ -117,7 +117,9 @@ const md = {
     log: Markdown_log,
     spy: Markdown_spy,
     spyChange: Markdown_spyChange,
-    pipe: Markdown_pipe
+    pipe: Markdown_pipe,
+    matchPipe: Markdown_matchPipe,
+    toConsole: Markdown_toConsole
 }
 
 const api = `
@@ -174,6 +176,7 @@ updateMeta()
 setChangeRequestMeta()
 dispatch()
 batch()
+batchAndReturn()
 ping()
 
 # Modify methods
@@ -190,12 +193,16 @@ isTopLevel()
 hasDispatched()
 
 # Side-effect methods
-log()
 spy()
 spyChange()
 
 # Composition methods
 pipe()
+matchPipe()
+
+# Debug methods
+log()
+toConsole()
 
 `;
 
