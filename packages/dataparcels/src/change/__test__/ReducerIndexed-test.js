@@ -16,7 +16,6 @@ let EXPECTED_KEY_AND_META = {
 };
 
 [
-    "delete",
     "insertAfter",
     "insertBefore",
     "swap",

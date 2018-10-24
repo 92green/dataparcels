@@ -5,6 +5,7 @@ export default Parcel;
 export {default as Action} from './change/Action';
 export {default as ActionCreators} from './change/ActionCreators';
 export {default as ChangeRequest} from './change/ChangeRequest';
+export {default as DeletedParcelMarker} from './parcelData/DeletedParcelMarker';
 
 export type {ParcelData} from './types/Types';
 export type {ParcelConfig} from './types/Types';

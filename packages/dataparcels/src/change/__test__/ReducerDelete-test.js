@@ -1,6 +1,7 @@
 // @flow
 import Reducer from '../Reducer';
 import Action from '../Action';
+import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
 
 test('Reducer should delete key', () => {
     var data = {
@@ -19,7 +20,8 @@ test('Reducer should delete key', () => {
     var expectedValue = {
         b: 2
     };
-    expect(expectedValue).toEqual(Reducer(data, action).value);
+
+    expect(Reducer(data, action).value).toEqual(expectedValue);
 });
 
 test('Reducer should delete deep key', () => {
@@ -45,5 +47,27 @@ test('Reducer should delete deep key', () => {
         },
         c: 3
     };
-    expect(expectedValue).toEqual(Reducer(data, action).value);
+
+    expect(Reducer(data, action).value).toEqual(expectedValue);
+});
+
+test('Reducer should set value to DeletedParcelMarker symbol if deleted with no keypath', () => {
+    var data = {
+        value: {
+            a: 1,
+            b: 2
+        },
+        key: "^",
+        child: undefined
+    };
+    var action = new Action({
+        type: "delete",
+        keyPath: []
+    });
+
+    var expectedData = {
+        value: DeletedParcelMarker
+    };
+
+    expect(Reducer(data, action)).toEqual(expectedData);
 });
