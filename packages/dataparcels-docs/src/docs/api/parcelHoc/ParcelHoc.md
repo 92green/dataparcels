@@ -22,16 +22,13 @@ import {ParcelHoc} from 'react-dataparcels';
 ParcelHoc({
     name: string,
     valueFromProps?: Function,
-    controlled?: boolean or ParcelHocControlledConfig,
+    shouldParcelUpdateFromProps?: Function,
     onChange?: Function,
     delayUntil?: Function,
     pipe?: Function
     // debugging options
+    debugParcel?: boolean
     debugRender?: boolean
 });
-
-type ParcelHocControlledConfig = {
-    shouldHocUpdate?: (valueA: *, valueB: *) => boolean
-}
 ```
 

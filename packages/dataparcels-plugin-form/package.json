@@ -1,6 +1,6 @@
 {
   "name": "dataparcels-plugin-form",
-  "version": "0.15.0",
+  "version": "0.16.0-1",
   "description": "Super experimental dataparcels modifiers to add classic web form behaviours like submit, hooks for validators etc.",
   "main": "lib/index.js",
   "license": "UNLICENSED",

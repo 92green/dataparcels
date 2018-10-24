@@ -7,6 +7,8 @@ import type {ChangeRequest} from 'dataparcels';
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
+const log = (...args) => console.log(`ParcelBoundary:`, ...args);
+
 type Actions = {
     release: Function
 };
@@ -17,6 +19,7 @@ type Props = {
     children: RenderFunction,
     debounce: number,
     debugBuffer: boolean,
+    debugParcel: boolean,
     hold: boolean,
     forceUpdate: Array<*>,
     parcel: Parcel,
@@ -35,6 +38,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     static defaultProps: * = {
         debounce: 0,
         debugBuffer: false,
+        debugParcel: false,
         hold: false,
         forceUpdate: [],
         pure: true
@@ -45,6 +49,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         this.state = {
             parcel: this.makeBoundarySplit(props.parcel)
         };
+
+        if(props.debugParcel) {
+            log(`Received initial value`);
+            props.parcel.toConsole();
+        }
     }
 
     shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
@@ -67,6 +76,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             this.setState({
                 parcel: this.makeBoundarySplit(parcel)
             });
+
+            if(nextProps.debugParcel) {
+                log(`Parcel replaced from props:`);
+                parcel.toConsole();
+            }
         }
     }
 
@@ -94,7 +108,12 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     };
 
     cancelBuffer: Function = () => {
-        let {debugBuffer, parcel} = this.props;
+        let {
+            debugBuffer,
+            debugParcel,
+            parcel
+        } = this.props;
+
         if(debugBuffer) {
             console.log("ParcelBoundary: Clear buffer:");
             this.cachedChangeRequest && this.cachedChangeRequest.toConsole();
@@ -106,6 +125,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         this.setState({
             parcel: this.makeBoundarySplit(parcel)
         });
+
+        if(debugParcel) {
+            log(`Buffer cancelled. Parcel reverted:`);
+            parcel.toConsole();
+        }
     };
 
     releaseBuffer: Function = () => {
@@ -122,6 +146,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     };
 
     makeBoundarySplit: Function = (parcel: Parcel): Parcel => {
+        let {debugParcel} = this.props;
         return parcel._boundarySplit({
             handleChange: (newParcel: Parcel, changeRequest: ChangeRequest) => {
                 let {
@@ -132,6 +157,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                 this.setState({
                     parcel: newParcel
                 });
+
+                if(debugParcel) {
+                    log(`Parcel changed:`);
+                    newParcel.toConsole();
+                }
 
                 this.addToBuffer(changeRequest);
 

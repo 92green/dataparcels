@@ -29,6 +29,7 @@ import {ParcelBoundary} from 'react-dataparcels';
     forceUpdate={?Array<*>}
     hold={?boolean}
     debugBuffer={?boolean}
+    debugParcel={?boolean}
 >
     {(parcel, actions) => Node}
 </ParcelBoundary>

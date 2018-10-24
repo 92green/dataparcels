@@ -7,6 +7,8 @@ import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 
+const log = (...args) => console.log(`ParcelHoc:`, ...args);
+
 type Props = {};
 type State = {
     parcel: ?Parcel,
@@ -17,21 +19,14 @@ type ChildProps = {
     // ${name}: Parcel
 };
 
-type ParcelHocControlledConfig = {
-    shouldHocUpdate?: (valueA: *, valueB: *) => boolean
-};
-
-const DEFAULT_CONTROLLED_CONFIG: ParcelHocControlledConfig = {
-    shouldHocUpdate: (valueA, valueB) => valueA !== valueB
-};
-
 type ParcelHocConfig = {
     name: string,
     valueFromProps?: (props: *) => *,
-    controlled?: boolean | ParcelHocControlledConfig,
+    shouldParcelUpdateFromProps?: (prevValue: *, nextValue: *) => boolean,
     delayUntil?: (props: *) => boolean,
     onChange?: (props: *) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
+    debugParcel?: boolean,
     debugRender?: boolean
 };
 
@@ -43,11 +38,12 @@ export default (config: ParcelHocConfig): Function => {
     let {
         name,
         valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
-        controlled = false, /* eslint-disable-line no-unused-vars */
+        shouldParcelUpdateFromProps, /* eslint-disable-line no-unused-vars */
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
+        debugParcel = false,
         debugRender = false
     } = config;
 
@@ -56,18 +52,8 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
     Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
+    Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
     Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
-
-    if(controlled) {
-        if(controlled === true) {
-            controlled = {};
-        }
-
-        controlled = {
-            ...DEFAULT_CONTROLLED_CONFIG,
-            ...controlled
-        };
-    }
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
         constructor(props: Props) {
@@ -94,17 +80,26 @@ export default (config: ParcelHocConfig): Function => {
                 let value = valueFromProps(props);
                 newState.prevValueFromProps = value;
                 newState.parcel = state.initialize(value);
+
+                if(debugParcel) {
+                    log(`Received initial value:`);
+                    newState.parcel.toConsole();
+                }
             }
 
-            if(parcel && controlled) {
+            if(parcel && shouldParcelUpdateFromProps) {
                 let value = valueFromProps(props);
                 newState.prevValueFromProps = value;
 
-                // $FlowFixMe - controlled is obviously not undefined, because we wouldn't make it in here if it were
-                if(controlled.shouldHocUpdate(value, state.prevValueFromProps)) {
+                if(shouldParcelUpdateFromProps(state.prevValueFromProps, value)) {
                     newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
                         parcel.set(value);
                     });
+
+                    if(debugParcel) {
+                        log(`Parcel updated from props:`);
+                        newState.parcel.toConsole();
+                    }
                 }
             }
 
@@ -113,6 +108,11 @@ export default (config: ParcelHocConfig): Function => {
 
         handleChange = (parcel, changeRequest) => {
             this.setState({parcel});
+            if(debugParcel) {
+                log(`Parcel changed:`);
+                parcel.toConsole();
+            }
+
             let onChangeWithProps = onChange(this.props);
             Types(`handleChange()`, "return value of onChange", "function")(onChangeWithProps);
             onChangeWithProps(parcel.value, changeRequest);
