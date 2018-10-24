@@ -116,6 +116,6 @@ export default (_this: Parcel) => ({
     // Debug methods
 
     toConsole: () => {
-        console.log(JSON.parse(JSON.stringify(_this.data)));
+        console.log(_this.data);
     }
 });
