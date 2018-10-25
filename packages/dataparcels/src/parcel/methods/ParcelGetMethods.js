@@ -67,7 +67,7 @@ export default (_this: Parcel) => ({
         return parcel._methods._applyMatchPipes();
     },
 
-    _applyMatchPipes: () => {
+    _applyMatchPipes: (): Parcel => {
         let typedPathString = _this._id.typedPathString();
         return pipeWith(
             _this,

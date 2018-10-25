@@ -26,7 +26,7 @@ export type ParcelConfigInternal = {
     meta: ParcelMeta,
     id: ParcelId,
     matchPipes?: MatchPipe[],
-    parent?: Parcel,
+    parent?: ?Parcel,
     treeshare: Treeshare
 };
 
@@ -35,7 +35,7 @@ export type CreateParcelConfigType = {
     id?: ParcelId,
     matchPipes?: MatchPipe[],
     parcelData?: ParcelData,
-    parent?: Parcel,
+    parent?: ?Parcel,
     handleChange?: Function,
     treeshare?: Treeshare
 };
@@ -119,7 +119,7 @@ const RUNTIME_TYPES = {
 export default (expecter: string, param: string, type: string|string[]) => (value: any): * => {
     let types = [].concat(type);
 
-    let runtimeTypes = types.map(type => {
+    let runtimeTypes = types.map((type: string): * => {
         let runtimeType = RUNTIME_TYPES[type];
         if(!runtimeType) {
             throw new Error(`Unknown type check`);
