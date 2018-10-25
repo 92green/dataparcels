@@ -5,6 +5,7 @@ export default dataparcels;
 export {Action} from 'dataparcels';
 export {ActionCreators} from 'dataparcels';
 export {ChangeRequest} from 'dataparcels';
+export {DeletedParcelMarker} from 'dataparcels';
 
 export type {ParcelData} from 'dataparcels';
 export type {ParcelConfig} from 'dataparcels';
