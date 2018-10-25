@@ -151,8 +151,6 @@ export default class Parcel {
     _parcelTypes: ParcelTypes;
     _parent: ?Parcel;
     _dispatchBuffer: ?Function;
-    _isFirst: boolean = false;
-    _isLast: boolean = false;
     _log: boolean = false;
     _logName: string = "";
 

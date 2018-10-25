@@ -30,7 +30,7 @@ ParcelBoundaryHoc({
     hold?: boolean | (props: *) => boolean,
     originalParcelProp?: string | (props: *) => string,
     // debugging options
-    debugBuffer?: boolean
+    debugBuffer?: boolean,
     debugParcel?: boolean
 });
 ```

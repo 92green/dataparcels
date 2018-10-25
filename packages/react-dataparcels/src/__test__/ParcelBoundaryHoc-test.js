@@ -2,7 +2,6 @@
 import React from 'react';
 
 import Parcel from 'dataparcels';
-import {shallow} from 'enzyme';
 import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
 
 let shallowRenderHoc = (props, hock) => {

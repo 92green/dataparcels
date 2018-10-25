@@ -2366,7 +2366,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.4, classnames@^2.2.5:
+classnames@^2.2.4, classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -3228,13 +3228,14 @@ dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
 
-dcme-style@^0.16.3:
-  version "0.16.3"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.16.3.tgz#0b26095362a27209af70e3a7f6982db682c81b7f"
+dcme-style@^0.18.1:
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-0.18.1.tgz#993f05be4d4ad6acbfb4ad107b5c36da2f67b457"
   dependencies:
-    react-goose "^0.4.2"
+    react-goose "^0.6.1"
     react-select "^1.0.0-rc.4"
-    stampy "^0.41.0"
+    react-spruce "^0.1.0"
+    stampy "^0.43.3"
     unmutable "^0.29.2"
 
 death@^1.0.0:
@@ -8723,13 +8724,6 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
-parcels@^0.13.5:
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/parcels/-/parcels-0.13.5.tgz#6cbabcdafdd43f7f3a505c78f24c900fcc21981f"
-  dependencies:
-    escape-string-regexp "^1.0.5"
-    unmutable "0.29.2"
-
 parse-asn1@^5.0.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/parse-asn1/-/parse-asn1-5.1.1.tgz#f6bf293818332bd0dab54efb16087724745e6ca8"
@@ -9906,11 +9900,11 @@ react-flip-move@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/react-flip-move/-/react-flip-move-3.0.2.tgz#2f6f16ca6cb0a8490fba15a98b3440a76127e825"
 
-react-goose@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/react-goose/-/react-goose-0.4.2.tgz#5d7034b7474e9059af350350fa7d753d3c1b25c1"
+react-goose@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-goose/-/react-goose-0.6.1.tgz#6b59ee4ec26ca4c1092e228ed7587359d063bbf9"
   dependencies:
-    stampy "^0.41.0"
+    stampy "^0.43.3"
 
 react-helmet@^5.2.0:
   version "5.2.0"
@@ -9997,6 +9991,12 @@ react-side-effect@^1.1.0:
   dependencies:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
+
+react-spruce@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-spruce/-/react-spruce-0.1.0.tgz#e1b048e5e5c445b867215be2c48fff034a38f667"
+  dependencies:
+    classnames "^2.2.6"
 
 react-test-renderer@^16.0.0-0:
   version "16.4.2"
@@ -11443,6 +11443,16 @@ stampy@^0.41.0:
     unmutable "^0.29.2"
     url-search-params "^0.9.0"
 
+stampy@^0.43.3:
+  version "0.43.3"
+  resolved "https://registry.yarnpkg.com/stampy/-/stampy-0.43.3.tgz#62960ce37f80920649b7b6418fa99f6cd9457d4a"
+  dependencies:
+    classnames "^2.2.5"
+    element-resize-detector "^1.1.12"
+    is-plain-object "^2.0.3"
+    unmutable "^0.34.1"
+    url-search-params "^0.9.0"
+
 state-toggle@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/state-toggle/-/state-toggle-1.0.1.tgz#c3cb0974f40a6a0f8e905b96789eb41afa1cde3a"
@@ -12291,23 +12301,24 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
-unmutable@0.27.0:
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.27.0.tgz#f6b2fd33a672c3239e47522a701d57f7df0a7975"
-  dependencies:
-    fast-deep-equal "^1.0.0"
-    is-plain-object "^2.0.4"
-
-unmutable@0.29.2, unmutable@^0.29.2:
+unmutable@^0.29.2:
   version "0.29.2"
   resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.29.2.tgz#8463a104c7088e13c5b958131c14fa2bd01ae65f"
   dependencies:
     fast-deep-equal "^1.0.0"
     is-plain-object "^2.0.4"
 
-unmutable@^0.37.0:
-  version "0.37.0"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.37.0.tgz#728dc1d503206475d4ab49d72e4b16adb69a3c8f"
+unmutable@^0.34.1:
+  version "0.34.1"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.34.1.tgz#e417973cf11540756565fb15027402275401b311"
+  dependencies:
+    fast-deep-equal "^1.0.0"
+    is-plain-object "^2.0.4"
+    lodash.range "^3.2.0"
+
+unmutable@^0.39.0:
+  version "0.39.0"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.39.0.tgz#8ccdfb237ba4c572cba793cbbbd7d503227ad576"
   dependencies:
     fast-deep-equal "^1.0.0"
     is-plain-object "^2.0.4"

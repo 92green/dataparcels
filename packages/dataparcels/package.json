@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
-    "unmutable": "^0.37.0"
+    "unmutable": "^0.39.0"
   }
 }

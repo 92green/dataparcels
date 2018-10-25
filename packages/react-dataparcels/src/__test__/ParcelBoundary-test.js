@@ -1,11 +1,5 @@
 // @flow
 import React from 'react';
-
-import {configure} from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-configure({adapter: new Adapter()});
-
-import {shallow} from 'enzyme';
 import ParcelBoundary from '../ParcelBoundary';
 import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
 import Parcel from 'dataparcels';
