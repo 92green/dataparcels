@@ -8724,13 +8724,6 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
-parcels@^0.13.5:
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/parcels/-/parcels-0.13.5.tgz#6cbabcdafdd43f7f3a505c78f24c900fcc21981f"
-  dependencies:
-    escape-string-regexp "^1.0.5"
-    unmutable "0.29.2"
-
 parse-asn1@^5.0.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/parse-asn1/-/parse-asn1-5.1.1.tgz#f6bf293818332bd0dab54efb16087724745e6ca8"
@@ -12308,14 +12301,7 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
-unmutable@0.27.0:
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.27.0.tgz#f6b2fd33a672c3239e47522a701d57f7df0a7975"
-  dependencies:
-    fast-deep-equal "^1.0.0"
-    is-plain-object "^2.0.4"
-
-unmutable@0.29.2, unmutable@^0.29.2:
+unmutable@^0.29.2:
   version "0.29.2"
   resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.29.2.tgz#8463a104c7088e13c5b958131c14fa2bd01ae65f"
   dependencies:
