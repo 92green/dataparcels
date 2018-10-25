@@ -2,7 +2,7 @@
 import type {Node} from 'react';
 
 import React from 'react';
-import {Box, CenteredLanding, Grid, GridItem, Image, NavigationList,NavigationListItem, Text, Typography, Wrapper} from 'dcme-style';
+import {Box, CenteredLanding, Grid, GridItem, Image, Link as HtmlLink, NavigationList,NavigationListItem, Text, Typography, Wrapper} from 'dcme-style';
 import IndexMarkdown from 'pages/index.md';
 import PageLayout from 'component/PageLayout';
 import API from 'content/API';
@@ -18,7 +18,7 @@ export default () => <Box>
                 bottom={() => <Grid>
                     <GridItem modifier="8 padding">
                         <Text element="p" modifier="monospace margin">A library for editing data structures that works really well with React.</Text>
-                        <Text element="p" modifier="monospace"><a className="Link" href="https://github.com/blueflag/dataparcels">github</a></Text>
+                        <Text element="p" modifier="monospace"><HtmlLink href="https://github.com/blueflag/dataparcels">github</HtmlLink> | <HtmlLink href="https://www.npmjs.com/package/react-dataparcels">npm</HtmlLink> | <HtmlLink href="#API">api</HtmlLink></Text>
                     </GridItem>
                     <GridItem modifier="4 padding">
                         <Image modifier="center logo" src={IconParcel} />
@@ -36,11 +36,11 @@ export default () => <Box>
                     </Typography>
                 </Box>}
                 nav={() => <NavigationList>
-                    <NavigationListItem><a className="Link" href={`#What-is-it`}>What is it?</a></NavigationListItem>
-                    <NavigationListItem><a className="Link" href={`#Getting-Started`}>Getting Started</a></NavigationListItem>
-                    <NavigationListItem><a className="Link" href={`#Examples`}>Examples</a></NavigationListItem>
-                    <NavigationListItem><a className="Link" href={`#API`}>API</a></NavigationListItem>
-                    <NavigationListItem><a className="Link" href={`#API-Examples`}>API Examples</a></NavigationListItem>
+                    <NavigationListItem><HtmlLink href={`#What-is-it`}>What is it?</HtmlLink></NavigationListItem>
+                    <NavigationListItem><HtmlLink href={`#Getting-Started`}>Getting Started</HtmlLink></NavigationListItem>
+                    <NavigationListItem><HtmlLink href={`#Examples`}>Examples</HtmlLink></NavigationListItem>
+                    <NavigationListItem><HtmlLink href={`#API`}>API</HtmlLink></NavigationListItem>
+                    <NavigationListItem><HtmlLink href={`#API-Examples`}>API Examples</HtmlLink></NavigationListItem>
                 </NavigationList>}
             />
             <Wrapper>
