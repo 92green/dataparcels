@@ -63,6 +63,15 @@ test('Parcel.modifyValue() should throw error if changed parent types with child
     }).toThrowError(`modifyValue()`);
 });
 
+test('Parcel.modifyValue() should throw error if childless is turned into parent types with children', () => {
+    expect(() => {
+        new Parcel({
+            value: 123
+        }).modifyValue(value => [123, 456]);
+
+    }).toThrowError(`modifyValue()`);
+});
+
 test('Parcel.modifyValue() should recognise if value changes types, and set value if type changes', () => {
     let handleChange = jest.fn();
     let parcel = new Parcel({
@@ -75,7 +84,6 @@ test('Parcel.modifyValue() should recognise if value changes types, and set valu
     expect(handleChange).toHaveBeenCalledTimes(1);
     expect(handleChange.mock.calls[0][0].value).toEqual([123]);
 });
-
 
 test('Parcel.modifyChange() should allow you to change the payload of a changed parcel', () => {
     expect.assertions(1);
