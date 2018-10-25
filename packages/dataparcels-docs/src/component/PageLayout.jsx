@@ -6,10 +6,11 @@ import SiteNavigation from 'component/SiteNavigation';
 
 type Props = {
     content: () => Node,
-    nav?: () => Node
+    nav?: () => Node,
+    modifier?: string
 };
 
-export default ({content, nav}: Props) => <Wrapper modifier="marginBottom">
+export default ({content, nav, modifier}: Props) => <Wrapper modifier={modifier}>
     <Grid>
         <GridItem modifier="9 padding">
             {content()}

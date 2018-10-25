@@ -24,6 +24,19 @@ test('Parcel.modifyValue() should return a new parcel with updated parcelData', 
     expect(expectedData).toEqual(updated);
 });
 
+test('Parcel.modifyValue() should recognise if value changes types, and set value if type changes', () => {
+    let handleChange = jest.fn();
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    })
+        .modifyValue(value => [])
+        .push(123);
+
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].value).toEqual([123]);
+});
+
 test('Parcel.modifyChange() should allow you to change the payload of a changed parcel', () => {
     expect.assertions(1);
 
@@ -138,111 +151,4 @@ test('Parcel.initialMeta() should merge', () => {
     parcel.setMeta({
         b: 3
     });
-});
-
-test('Parcel should addModifier', () => {
-    var data = {
-        value: [1,2,3]
-    };
-
-    let parcel = new Parcel(data)
-        .addModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
-
-    expect([1,2,3,4]).toEqual(parcel.value);
-
-    let element = parcel.get(0);
-    expect(11).toEqual(element.value);
-});
-
-test('Parcel should addDescendantModifier', () => {
-    var data = {
-        value: [1,2,3]
-    };
-
-    let parcel = new Parcel(data)
-        .addDescendantModifier((parcel) => parcel.modifyValue(ii => Array.isArray(ii) ? [...ii, 4] : ii + 10));
-
-    expect([1,2,3]).toEqual(parcel.value);
-
-    let element = parcel.get(0);
-    expect(11).toEqual(element.value);
-});
-
-test('Parcel should addModifier with simple match', () => {
-    var data = {
-        value: {
-            abc: 123,
-            def: 456
-        }
-    };
-
-    let parcel = new Parcel(data)
-        .addModifier({
-            modifier: (parcel) => parcel.modifyValue(ii => ii + 1),
-            match: "abc"
-        });
-
-    expect(124).toBe(parcel.get('abc').value);
-    expect(456).toBe(parcel.get('def').value);
-});
-
-test('Parcel should addModifier with deep match', () => {
-    var data = {
-        value: {
-            abc: {
-                ghi: 123
-            },
-            def: 456
-        }
-    };
-
-    let parcel = new Parcel(data)
-        .addModifier({
-            modifier: (parcel) => parcel.modifyValue(ii => ii + 1),
-            match: "abc.ghi"
-        });
-
-    expect(124).toBe(parcel.getIn(['abc', 'ghi']).value);
-    expect(456).toBe(parcel.get('def').value);
-});
-
-test('Parcel should addModifier with globstar', () => {
-    var data = {
-        value: {
-            abc: {
-                ghi: 123
-            },
-            def: 456
-        }
-    };
-
-    let parcel = new Parcel(data)
-        .addModifier({
-            modifier: (parcel) => parcel.modifyValue(ii => typeof ii === "number" ?  ii + 1 : {...ii, woo: true}),
-            match: "**.*"
-        });
-
-    expect(124).toBe(parcel.getIn(['abc', 'ghi']).value);
-    expect(457).toBe(parcel.get('def').value);
-});
-
-test('Parcel should addModifier with typed match', () => {
-    var data = {
-        value: {
-            abc: {
-                ghi: [1,2,3],
-                jkl: 123
-            },
-            def: 456,
-            mno: [4,5,6]
-        }
-    };
-
-    let parcel = new Parcel(data)
-        .addModifier({
-            modifier: (parcel) => parcel.modifyValue(ii => [...ii, 999]),
-            match: "**.*:Indexed"
-        });
-
-    expect([4,5,6,999]).toEqual(parcel.get('mno').value);
 });

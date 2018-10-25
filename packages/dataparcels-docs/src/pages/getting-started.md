@@ -45,9 +45,13 @@ We could do something like this.
 import React from 'react';
 import {ParcelHoc} from 'react-dataparcels';
 
+// PLEASE DON'T USE THIS CODE
+// THIS CODE IS FOR DEMONSTRAION PURPOSES ONLY
+// THERE'S A BETTER WAY OF DOING IT BELOW
+
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",
-    initialValue: (/* props */) => ({
+    valueFromProps: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {
@@ -99,7 +103,7 @@ import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",
-    initialValue: (/* props */) => ({
+    valueFromProps: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {

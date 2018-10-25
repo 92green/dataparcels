@@ -10,7 +10,7 @@ import IconParcel from 'content/parcel.gif';
 
 Parcel is a data container. It's job is to hold your data, split it into smaller parts, and merge changes back together.
 
-If you're using React, you probably wont be instanciating parcels directly. Please see the <Link to="/getting-started">getting started</Link> page to see how to best use Parcels in a React app.
+If you're using React, you probably won't be instanciating parcels directly. Please see the <Link to="/getting-started">getting started</Link> page to see how to best use Parcels in a React app.
 
 ```js
 import Parcel from 'dataparcels';

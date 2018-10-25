@@ -18,12 +18,12 @@ test('ParcelTypes should correctly identify date', () => {
     var data = {
         value: new Date()
     };
-    expect(new Parcel(data).isParent()).toBe(true);
+    expect(new Parcel(data).isParent()).toBe(false);
     expect(new Parcel(data).isIndexed()).toBe(false);
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
 });
 
 test('ParcelTypes should correctly identify object values', () => {
@@ -47,6 +47,22 @@ test('ParcelTypes should correctly identify class instance values', () => {
     var data = {
         value: new Thing()
     };
+    expect(new Parcel(data).isParent()).toBe(false);
+    expect(new Parcel(data).isIndexed()).toBe(false);
+    expect(new Parcel(data).isChild()).toBe(false);
+    expect(new Parcel(data).isElement()).toBe(false);
+    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
+});
+
+test('ParcelTypes should correctly identify unmutable compatible class instance values', () => {
+    class UnmutableCompatible {
+        __UNMUTABLE_COMPATIBLE__ = true;
+        foo = "123";
+    }
+    var data = {
+        value: new UnmutableCompatible()
+    };
     expect(new Parcel(data).isParent()).toBe(true);
     expect(new Parcel(data).isIndexed()).toBe(false);
     expect(new Parcel(data).isChild()).toBe(false);
@@ -54,6 +70,7 @@ test('ParcelTypes should correctly identify class instance values', () => {
     expect(new Parcel(data).isTopLevel()).toBe(true);
     expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
 });
+
 
 test('ParcelTypes should correctly identify Immutable.js Map values', () => {
     var data = {

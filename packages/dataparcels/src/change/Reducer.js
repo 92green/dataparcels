@@ -12,6 +12,7 @@ import isEmpty from 'unmutable/lib/isEmpty';
 import last from 'unmutable/lib/last';
 
 import parcelDelete from '../parcelData/delete';
+import parcelDeleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import parcelInsert from '../parcelData/insert';
 
 import parcelPop from '../parcelData/pop';
@@ -58,7 +59,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
     switch(type) {
         case "delete": {
             if(keyPathIsEmpty) {
-                throw ReducerKeyPathRequiredError(type);
+                return parcelDeleteSelfWithMarker();
             }
             return updateIn(
                 keyPathButLast,

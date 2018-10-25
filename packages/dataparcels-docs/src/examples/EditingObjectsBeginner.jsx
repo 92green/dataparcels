@@ -4,7 +4,7 @@ import ExampleHoc from 'component/ExampleHoc';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",
-    initialValue: (/* props */) => ({
+    valueFromProps: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {

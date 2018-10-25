@@ -1,6 +1,5 @@
 // @flow
 import type ParcelId from '../parcelId/ParcelId';
-import type Modifiers from '../modifiers/Modifiers';
 import type Treeshare from '../treeshare/Treeshare';
 
 import Parcel from '../parcel/Parcel';
@@ -26,18 +25,19 @@ export type ParcelConfigInternal = {
     child: *,
     meta: ParcelMeta,
     id: ParcelId,
-    modifiers?: Modifiers,
-    parent?: Parcel,
+    matchPipes?: MatchPipe[],
+    parent?: ?Parcel,
     treeshare: Treeshare
 };
 
 export type CreateParcelConfigType = {
     onDispatch?: Function,
     id?: ParcelId,
-    modifiers?: Modifiers,
+    matchPipes?: MatchPipe[],
     parcelData?: ParcelData,
-    parent?: Parcel,
-    handleChange?: Function
+    parent?: ?Parcel,
+    handleChange?: Function,
+    treeshare?: Treeshare
 };
 
 export type ParcelMeta = {[key: string]: *};
@@ -45,16 +45,14 @@ export type ParcelMetaUpdater = (meta: ParcelMeta) => ParcelMeta;
 
 export type ParcelBatcher = (item: Parcel) => void;
 export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
+export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *) => *;
 
-export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
-
-export type ModifierFunction = Function;
-
-export type ModifierObject = {|
-    match?: string,
-    modifier: ModifierFunction
-|};
+export type MatchPipe = {
+    match: string,
+    depth: number,
+    updater: ParcelUpdater
+};
 
 export type Key = string;
 export type Index = number;
@@ -66,7 +64,7 @@ export type ParcelIdData = {
     typedPath: string[]
 };
 
-const runtimeTypes = {
+const RUNTIME_TYPES = {
     ['boolean']: {
         name: "a boolean",
         check: ii => typeof ii === "boolean"
@@ -85,12 +83,6 @@ const runtimeTypes = {
         name: "a function",
         check: ii => typeof ii === "function"
     },
-    ['functionArray']: {
-        name: "functions",
-        check: ii => ii
-            && Array.isArray(ii)
-            && ii.every(jj => typeof jj === "function")
-    },
     ['keyIndex']: {
         name: "a key or an index (string or number)",
         check: ii => typeof ii === "string"
@@ -101,10 +93,6 @@ const runtimeTypes = {
         check: ii => ii
             && Array.isArray(ii)
             && ii.every(jj => typeof jj === "string" || typeof jj === "number")
-    },
-    ['modifier']: {
-        name: "a modifier function, or an object like {modifier: Function, match: ?string}",
-        check: ii => typeof ii === "function" || (typeof ii === "object" && ii.modifier && typeof ii.modifier === "function")
     },
     ['number']: {
         name: "a number",
@@ -128,14 +116,30 @@ const runtimeTypes = {
     }
 };
 
-export default (message: string, type: string) => (value: any): * => {
-    let runtimeType = runtimeTypes[type];
-    if(!runtimeType) {
-        throw new Error(`Unknown type check`);
-    }
-    if(!runtimeType.check(value)) {
+export default (expecter: string, param: string, type: string|string[]) => (value: any): * => {
+    let types = [].concat(type);
+
+    let runtimeTypes = types.map((type: string): * => {
+        let runtimeType = RUNTIME_TYPES[type];
+        if(!runtimeType) {
+            throw new Error(`Unknown type check`);
+        }
+        return runtimeType;
+    });
+
+    let valid = runtimeTypes.some(ii => ii.check(value));
+
+    if(!valid) {
+        if(param.indexOf(' ') === -1) {
+            param = `param "${param}"`;
+        }
+        let typeNames = runtimeTypes
+            .map(type => type.name)
+            .join(", ");
+
         // $FlowFixMe - I want to make value into a string regardless of flows opinions https://github.com/facebook/flow/issues/1460
-        throw new Error(`${message} ${runtimeType.name}, but got ${(value + "")}`);
+        throw new Error(`${expecter} expects ${param} to be ${typeNames}, but got ${(value + "")}`);
     }
+
     return value;
 };

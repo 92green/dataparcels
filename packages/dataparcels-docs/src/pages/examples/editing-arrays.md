@@ -13,7 +13,7 @@ import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListParcelHoc = ParcelHoc({
     name: "fruitListParcel",
-    initialValue: (/* props */) => [
+    valueFromProps: (/* props */) => [
         "Apple",
         "Banana",
         "Crumpets"
@@ -81,7 +81,7 @@ const FruitListEditor = (props) => {
 };
 
 const FruitListParcelHoc = ParcelHoc({
-    initialValue: (/* props */) => [
+    valueFromProps: (/* props */) => [
         "Apple",
         "Banana",
         "Crumpets"
