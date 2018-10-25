@@ -24,6 +24,45 @@ test('Parcel.modifyValue() should return a new parcel with updated parcelData', 
     expect(expectedData).toEqual(updated);
 });
 
+test('Parcel.modifyValue() should allow non-parent types to be returned', () => {
+    let updatedValue = new Parcel({
+        value: 123
+    })
+        .modifyValue(value => value + 1)
+        .value;
+
+    expect(updatedValue).toEqual(124);
+});
+
+test('Parcel.modifyValue() should allow childless parent types to be returned', () => {
+    let updatedValue = new Parcel({
+        value: 123
+    })
+        .modifyValue(value => [])
+        .value;
+
+    expect(updatedValue).toEqual([]);
+});
+
+test('Parcel.modifyValue() should allow parent types to be returned if they dont change', () => {
+    let updatedValue = new Parcel({
+        value: [123]
+    })
+        .modifyValue(value => value)
+        .value;
+
+    expect(updatedValue).toEqual([123]);
+});
+
+test('Parcel.modifyValue() should throw error if changed parent types with children are returned', () => {
+    expect(() => {
+        new Parcel({
+            value: [123]
+        }).modifyValue(value => [...value, 456]);
+
+    }).toThrowError(`modifyValue()`);
+});
+
 test('Parcel.modifyValue() should recognise if value changes types, and set value if type changes', () => {
     let handleChange = jest.fn();
     let parcel = new Parcel({
@@ -36,6 +75,7 @@ test('Parcel.modifyValue() should recognise if value changes types, and set valu
     expect(handleChange).toHaveBeenCalledTimes(1);
     expect(handleChange.mock.calls[0][0].value).toEqual([123]);
 });
+
 
 test('Parcel.modifyChange() should allow you to change the payload of a changed parcel', () => {
     expect.assertions(1);

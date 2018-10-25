@@ -5,7 +5,9 @@ import type {ParcelMeta} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ParcelTypes from '../ParcelTypes';
+import {ModifyValueChildReturnError} from '../../errors/Errors';
 
+import equals from 'unmutable/lib/equals';
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
@@ -20,29 +22,35 @@ export default (_this: Parcel): Object => ({
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue()`, `updater`, `function`)(updater);
 
-        let value = updater(_this._parcelData.value, _this);
+        let {value} = _this._parcelData;
+        let updatedValue = updater(value, _this);
+        let updatedType = new ParcelTypes(updatedValue);
 
-        let newType = new ParcelTypes(value);
-        let changedType: boolean = newType.isParent() !== _this._parcelTypes.isParent()
-            || newType.isIndexed() !== _this._parcelTypes.isIndexed();
+        if(updatedType.isParent() && !isEmpty()(updatedValue) && !equals(value)(updatedValue)) {
+            throw ModifyValueChildReturnError();
+        }
 
-        let onDispatch = changedType
-            ? (changeRequest: ChangeRequest) => {
+        let updatedTypeChanged: boolean = updatedType.isParent() !== _this._parcelTypes.isParent()
+            || updatedType.isIndexed() !== _this._parcelTypes.isIndexed();
+
+        let onDispatch;
+        if(updatedTypeChanged) {
+            onDispatch = (changeRequest: ChangeRequest) => {
                 _this.batch(
                     (parcel: Parcel) => {
-                        parcel.set(value);
+                        parcel.set(updatedValue);
                         parcel.dispatch(changeRequest);
                     },
                     changeRequest
                 );
-            }
-            : undefined;
+            };
+        }
 
         return _this._create({
             id: _this._id.pushModifier('mv'),
             parcelData: {
                 ..._this._parcelData,
-                value
+                value: updatedValue
             },
             onDispatch
         });
