@@ -120,20 +120,54 @@ test('Parcel.modifyChange() should allow you to stop a change by not calling dis
     expect(handleChange).toHaveBeenCalledTimes(0);
 });
 
-test('Parcel.modifyChangeValue() should allow you to change the payload of a changed parcel with an updater', () => {
-    expect.assertions(1);
-
-    var data = {
+test('Parcel.modifyChangeValue() should allow you to change the payload of a changed parcel with an updater (and should allow non-parent types to be returned)', () => {
+    var handleChange = jest.fn();
+    new Parcel({
         value: 123,
-        handleChange: (parcel: Parcel) => {
-            let {value} = parcel.data;
-            expect(457).toBe(value);
-        }
-    };
-
-    new Parcel(data)
+        handleChange
+    })
         .modifyChangeValue(value => value + 1)
         .onChange(456);
+
+    expect(handleChange.mock.calls[0][0].value).toBe(457);
+});
+
+
+test('Parcel.modifyChangeValue() should allow parent types to be returned', () => {
+    var handleChange = jest.fn();
+    new Parcel({
+        value: 123,
+        handleChange
+    })
+        .modifyChangeValue(value => [123,456])
+        .onChange(456);
+
+    expect(handleChange.mock.calls[0][0].value).toEqual([123,456]);
+});
+
+test('Parcel.modifyChangeValue() should allow parent types to be returned if they dont change', () => {
+    var handleChange = jest.fn();
+    new Parcel({
+        value: [123],
+        handleChange
+    })
+        .modifyChangeValue(value => value)
+        .onChange([456]);
+
+    expect(handleChange.mock.calls[0][0].value).toEqual([456]);
+});
+
+test('Parcel.modifyChangeValue() should throw error if changed parent types with children are returned', () => {
+    expect(() => {
+        var handleChange = jest.fn();
+        new Parcel({
+            value: [123],
+            handleChange
+        })
+            .modifyChangeValue(value => [...value, 456])
+            .onChange([456]);
+
+    }).toThrowError(`modifyChangeValue()`);
 });
 
 test('Parcel.modifyChangeValue() should allow changes to meta through', () => {

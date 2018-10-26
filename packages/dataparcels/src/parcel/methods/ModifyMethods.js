@@ -6,6 +6,7 @@ import Types from '../../types/Types';
 
 import ParcelTypes from '../ParcelTypes';
 import {ModifyValueChildReturnError} from '../../errors/Errors';
+import {ModifyValueChangeChildReturnError} from '../../errors/Errors';
 
 import equals from 'unmutable/lib/equals';
 import filterNot from 'unmutable/lib/filterNot';
@@ -73,14 +74,24 @@ export default (_this: Parcel): Object => ({
         Types(`modifyChangeValue()`, `updater`, `function`)(updater);
         return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
+            let {value} = changeRequest;
+            let type = new ParcelTypes(value);
+
+            let updatedValue = updater(value, _this);
+
+            if(type.isParent()) {
+                if(!equals(value)(updatedValue)) {
+                    throw ModifyValueChangeChildReturnError();
+                }
+                parcel.dispatch(changeRequest);
+                return;
+            }
+
+            // dispatch all non-value actions in this change request
             let valueActionFilter = actions => actions.filter(action => !action.isValueAction());
             parcel.dispatch(changeRequest.updateActions(valueActionFilter));
 
-            pipeWith(
-                changeRequest.data.value,
-                updater,
-                parcel.dangerouslyReplace
-            );
+            parcel.set(updatedValue);
         });
     },
 
