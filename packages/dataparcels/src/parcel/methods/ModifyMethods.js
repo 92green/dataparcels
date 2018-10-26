@@ -57,8 +57,8 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyChange: (batcher: Function): Parcel => {
-        Types(`modifyChange()`, `batcher`, `function`)(batcher);
+    modifyChangeBatch: (batcher: Function): Parcel => {
+        Types(`modifyChangeBatch()`, `batcher`, `function`)(batcher);
         return _this._create({
             id: _this._id.pushModifier('mc'),
             onDispatch: (changeRequest: ChangeRequest) => {
@@ -72,7 +72,7 @@ export default (_this: Parcel): Object => ({
 
     modifyChangeValue: (updater: Function): Parcel => {
         Types(`modifyChangeValue()`, `updater`, `function`)(updater);
-        return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+        return _this.modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
 
             let {value} = changeRequest;
             let type = new ParcelTypes(value);

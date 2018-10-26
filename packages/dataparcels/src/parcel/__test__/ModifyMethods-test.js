@@ -85,7 +85,7 @@ test('Parcel.modifyValue() should recognise if value changes types, and set valu
     expect(handleChange.mock.calls[0][0].value).toEqual([123]);
 });
 
-test('Parcel.modifyChange() should allow you to change the payload of a changed parcel', () => {
+test('Parcel.modifyChangeBatch() should allow you to change the payload of a changed parcel', () => {
     expect.assertions(1);
 
     var data = {
@@ -97,13 +97,13 @@ test('Parcel.modifyChange() should allow you to change the payload of a changed 
     };
 
     new Parcel(data)
-        .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+        .modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
             parcel.set(changeRequest.data.value + 1);
         })
         .onChange(456);
 });
 
-test('Parcel.modifyChange() should allow you to stop a change by not calling dispatch', () => {
+test('Parcel.modifyChangeBatch() should allow you to stop a change by not calling dispatch', () => {
     var handleChange = jest.fn();
 
     var data = {
@@ -112,7 +112,7 @@ test('Parcel.modifyChange() should allow you to stop a change by not calling dis
     };
 
     new Parcel(data)
-        .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+        .modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
             // nothing here
         })
         .onChange(456);
