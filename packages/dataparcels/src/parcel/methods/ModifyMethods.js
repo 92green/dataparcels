@@ -7,6 +7,7 @@ import Types from '../../types/Types';
 import ParcelTypes from '../ParcelTypes';
 import {ModifyValueChildReturnError} from '../../errors/Errors';
 import {ModifyValueChangeChildReturnError} from '../../errors/Errors';
+import HashString from '../../util/HashString';
 
 import equals from 'unmutable/lib/equals';
 import filterNot from 'unmutable/lib/filterNot';
@@ -17,6 +18,8 @@ import set from 'unmutable/lib/set';
 import setIn from 'unmutable/lib/setIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
+
+let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
 export default (_this: Parcel): Object => ({
 
@@ -48,7 +51,7 @@ export default (_this: Parcel): Object => ({
         }
 
         return _this._create({
-            id: _this._id.pushModifier('mv'),
+            id: _this._id.pushModifier(`mv-${HashFunction(updater)}`),
             parcelData: {
                 ..._this._parcelData,
                 value: updatedValue
@@ -60,7 +63,7 @@ export default (_this: Parcel): Object => ({
     modifyChangeBatch: (batcher: Function): Parcel => {
         Types(`modifyChangeBatch()`, `batcher`, `function`)(batcher);
         return _this._create({
-            id: _this._id.pushModifier('mc'),
+            id: _this._id.pushModifier(`mcb-${HashFunction(batcher)}`),
             onDispatch: (changeRequest: ChangeRequest) => {
                 _this.batch(
                     (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),

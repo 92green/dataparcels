@@ -233,7 +233,7 @@ test('ChangeRequest should keep originId and originPath even when going through 
         },
         handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
             expect(['abc']).toEqual(changeRequest.originPath);
-            expect('^.~mc.abc').toEqual(changeRequest.originId);
+            expect('^.~mcb-1049856033.abc').toEqual(changeRequest.originId);
         }
     };
 

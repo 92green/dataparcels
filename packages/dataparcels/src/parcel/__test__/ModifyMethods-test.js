@@ -85,6 +85,17 @@ test('Parcel.modifyValue() should recognise if value changes types, and set valu
     expect(handleChange.mock.calls[0][0].value).toEqual([123]);
 });
 
+test('Parcel.modifyValue() should have id which is unique to updater', () => {
+    let updater = value => [];
+    let parcel = new Parcel().modifyValue(updater);
+    let parcel2 = new Parcel().modifyValue(updater);
+    let parcel3 = new Parcel().modifyValue(a => 1 + 2);
+
+    expect(parcel.id).toBe("^.~mv-643198612");
+    expect(parcel2.id).toBe("^.~mv-643198612"); // same updater should produce the same hash
+    expect(parcel3.id).not.toBe("^.~mv-643198612"); // different updater should produce different hash
+});
+
 test('Parcel.modifyChangeBatch() should allow you to change the payload of a changed parcel', () => {
     expect.assertions(1);
 
@@ -118,6 +129,17 @@ test('Parcel.modifyChangeBatch() should allow you to stop a change by not callin
         .onChange(456);
 
     expect(handleChange).toHaveBeenCalledTimes(0);
+});
+
+test('Parcel.modifyChangeBatch() should have id which is unique to updater', () => {
+    let updater = value => [];
+    let parcel = new Parcel().modifyChangeBatch(updater);
+    let parcel2 = new Parcel().modifyChangeBatch(updater);
+    let parcel3 = new Parcel().modifyChangeBatch(a => "woop");
+
+    expect(parcel.id).toBe("^.~mcb-643198612");
+    expect(parcel2.id).toBe("^.~mcb-643198612"); // same updater should produce the same hash
+    expect(parcel3.id).not.toBe("^.~mcb-643198612"); // different updater should produce different hash
 });
 
 test('Parcel.modifyChangeValue() should allow you to change the payload of a changed parcel with an updater (and should allow non-parent types to be returned)', () => {
