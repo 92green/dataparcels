@@ -5,15 +5,6 @@ import type {
 } from '../types/Types';
 import Action from './Action';
 
-const dangerouslyReplace: Function = (value: *): Action => {
-    return new Action({
-        type: "replace",
-        payload: {
-            value
-        }
-    });
-};
-
 const del: Function = (key: Key|Index): Action => {
     return new Action({
         type: "delete",
@@ -165,7 +156,6 @@ const unshift: Function = (value: *): Action => {
 };
 
 export default {
-    dangerouslyReplace,
     delete: del,
     deleteSelf,
     insertAfter,

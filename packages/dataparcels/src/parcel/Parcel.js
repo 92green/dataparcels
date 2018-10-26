@@ -314,7 +314,6 @@ export default class Parcel {
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
     batchAndReturn = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batchAndReturn(batcher, changeRequest);
     ping = () => this._methods.ping();
-    dangerouslyReplace = (value: *) => this._methods.dangerouslyReplace(value);
 
     // Indexed methods
     insertAfter = overload({
