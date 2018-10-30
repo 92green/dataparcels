@@ -2,7 +2,6 @@
 
 import Reducer from '../Reducer';
 import Action from '../Action';
-// import prepareChildKeys from '../../parcelData/prepareChildKeys';
 
 let data = {
     value: [0,1,2],
@@ -22,8 +21,8 @@ let EXPECTED_KEY_AND_META = {
     "swapNext",
     "swapPrev"
 ].forEach((type: string) => {
-    test(`Reducer ${type} action should throw error if keyPath is empty`, () => {
-        expect(() => Reducer(data, new Action({type}))).toThrowError(`${type} actions must have a keyPath with at least one key`);
+    test(`Reducer ${type} action should return unchanged parcelData if keyPath is empty`, () => {
+        expect(Reducer(data, new Action({type}))).toEqual(data);
     });
 });
 
