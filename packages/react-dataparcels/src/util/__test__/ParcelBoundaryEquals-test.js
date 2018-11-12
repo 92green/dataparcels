@@ -52,3 +52,14 @@ test('ParcelBoundaryEquals should return false if isFirst or isLast change', () 
     // #a should be false as it used to be first but now isnt (value and meta are the same)
     expect(ParcelBoundaryEquals(p.get("#a"), p2.get("#a"))).toBe(false);
 });
+
+test('ParcelBoundaryEquals should return false if either argument is undefined', () => {
+    var child = {};
+
+    let p = new Parcel({
+        value: [123,456]
+    });
+
+    expect(ParcelBoundaryEquals(p, undefined)).toBe(false);
+    expect(ParcelBoundaryEquals(undefined, p)).toBe(false);
+});

@@ -12,6 +12,7 @@ type Props = {
 type ChildProps = {
     // [config.name]?: Parcel,
     // [config.name + "Actions"]?: Parcel,
+    // [config.name + "Buffered"]?: Parcel,
     // [config.originalParcelProp]?: Parcel
     // ...
 };
@@ -68,13 +69,15 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                 debugParcel={debugParcel}
                 pure={false}
             >
-                {(innerParcel, actions) => {
+                {(innerParcel, actions, buffered) => {
                     let childProps = {
                         ...this.props,
                         // $FlowFixMe - I want to use a computed property, flow
                         [name]: innerParcel,
                         // $FlowFixMe - I want to use a computed property, flow
-                        [name + "Actions"]: actions
+                        [name + "Actions"]: actions,
+                        // $FlowFixMe - I want to use a computed property, flow
+                        [name + "Buffered"]: buffered
                     };
 
                     if(originalParcelProp) {
