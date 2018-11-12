@@ -158,6 +158,29 @@ test('ParcelBoundary should release changes when called', async () => {
     expect(newParcel.value).toBe(123);
 });
 
+test('ParcelBoundary should pass buffered status to childRenderer', async () => {
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel();
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let [childParcel, actions, buffered] = childRenderer.mock.calls[0];
+    childParcel.onChange(123);
+    // handleChange shouldn't be called yet because hold is true
+    expect(buffered).toBe(false);
+
+    let [childParcel2, actions2, buffered2] = childRenderer.mock.calls[1];
+    expect(buffered2).toBe(true);
+
+    actions.release();
+
+    let [childParcel3, actions3, buffered3] = childRenderer.mock.calls[2];
+    expect(buffered3).toBe(false);
+});
+
 test('ParcelBoundary should debounce', async () => {
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
