@@ -5,7 +5,11 @@ import type {ParcelMeta} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ParcelTypes from '../ParcelTypes';
+import {ModifyValueChildReturnError} from '../../errors/Errors';
+import {ModifyValueChangeChildReturnError} from '../../errors/Errors';
+import HashString from '../../util/HashString';
 
+import equals from 'unmutable/lib/equals';
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
@@ -15,43 +19,51 @@ import setIn from 'unmutable/lib/setIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
+let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
+
 export default (_this: Parcel): Object => ({
 
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue()`, `updater`, `function`)(updater);
 
-        let value = updater(_this._parcelData.value, _this);
+        let {value} = _this._parcelData;
+        let updatedValue = updater(value, _this);
+        let updatedType = new ParcelTypes(updatedValue);
 
-        let newType = new ParcelTypes(value);
-        let changedType: boolean = newType.isParent() !== _this._parcelTypes.isParent()
-            || newType.isIndexed() !== _this._parcelTypes.isIndexed();
+        if(updatedType.isParent() && !isEmpty()(updatedValue) && !equals(value)(updatedValue)) {
+            throw ModifyValueChildReturnError();
+        }
 
-        let onDispatch = changedType
-            ? (changeRequest: ChangeRequest) => {
+        let updatedTypeChanged: boolean = updatedType.isParent() !== _this._parcelTypes.isParent()
+            || updatedType.isIndexed() !== _this._parcelTypes.isIndexed();
+
+        let onDispatch;
+        if(updatedTypeChanged) {
+            onDispatch = (changeRequest: ChangeRequest) => {
                 _this.batch(
                     (parcel: Parcel) => {
-                        parcel.set(value);
+                        parcel.set(updatedValue);
                         parcel.dispatch(changeRequest);
                     },
                     changeRequest
                 );
-            }
-            : undefined;
+            };
+        }
 
         return _this._create({
-            id: _this._id.pushModifier('mv'),
+            id: _this._id.pushModifier(`mv-${HashFunction(updater)}`),
             parcelData: {
                 ..._this._parcelData,
-                value
+                value: updatedValue
             },
             onDispatch
         });
     },
 
-    modifyChange: (batcher: Function): Parcel => {
-        Types(`modifyChange()`, `batcher`, `function`)(batcher);
+    modifyChangeBatch: (batcher: Function): Parcel => {
+        Types(`modifyChangeBatch()`, `batcher`, `function`)(batcher);
         return _this._create({
-            id: _this._id.pushModifier('mc'),
+            id: _this._id.pushModifier(`mcb-${HashFunction(batcher)}`),
             onDispatch: (changeRequest: ChangeRequest) => {
                 _this.batch(
                     (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),
@@ -63,16 +75,26 @@ export default (_this: Parcel): Object => ({
 
     modifyChangeValue: (updater: Function): Parcel => {
         Types(`modifyChangeValue()`, `updater`, `function`)(updater);
-        return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+        return _this.modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
 
+            let {value} = changeRequest;
+            let type = new ParcelTypes(value);
+
+            let updatedValue = updater(value, _this);
+
+            if(type.isParent()) {
+                if(!equals(value)(updatedValue)) {
+                    throw ModifyValueChangeChildReturnError();
+                }
+                parcel.dispatch(changeRequest);
+                return;
+            }
+
+            // dispatch all non-value actions in this change request
             let valueActionFilter = actions => actions.filter(action => !action.isValueAction());
             parcel.dispatch(changeRequest.updateActions(valueActionFilter));
 
-            pipeWith(
-                changeRequest.data.value,
-                updater,
-                parcel.dangerouslyReplace
-            );
+            parcel.set(updatedValue);
         });
     },
 

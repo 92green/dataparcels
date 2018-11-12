@@ -53,9 +53,5 @@ export default (_this: Parcel, dispatch: Function) => ({
 
     ping: () => {
         dispatch(ActionCreators.ping());
-    },
-
-    dangerouslyReplace: (value: *) => {
-        dispatch(ActionCreators.dangerouslyReplace(value));
     }
 });
