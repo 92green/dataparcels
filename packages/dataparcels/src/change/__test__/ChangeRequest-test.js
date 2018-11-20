@@ -153,56 +153,6 @@ test('ChangeRequest should throw error if data is accessed before _setBaseParcel
     expect(() => new ChangeRequest().data).toThrowError(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
 });
 
-test('ChangeRequest value() should be a shortcut for data().value', () => {
-    var action = new Action({
-        type: "set",
-        keyPath: ["b"],
-        payload: {
-            value: 3
-        }
-    });
-
-    var parcel = new Parcel({
-        value: {
-            a: 1,
-            b: 2
-        }
-    });
-
-    let value = new ChangeRequest(action)
-        ._setBaseParcel(parcel)
-        .value;
-
-    var expectedValue = {
-        a: 1,
-        b: 3
-    };
-
-    expect(expectedValue).toEqual(value);
-});
-
-test('ChangeRequest .meta should be a shortcut for data().meta', () => {
-    var action = new Action({
-        type: "setMeta",
-        payload: {
-            meta: {
-                abc: 123
-            }
-        }
-    });
-
-    var parcel = new Parcel();
-
-    let {meta} = new ChangeRequest(action)
-        ._setBaseParcel(parcel);
-
-    var expectedMeta = {
-        abc: 123
-    };
-
-    expect(expectedMeta).toEqual(meta);
-});
-
 test('ChangeRequest should keep originId and originPath', () => {
     expect.assertions(2);
 

@@ -72,26 +72,6 @@ export default class ChangeRequest {
         throw ReadOnlyError();
     }
 
-    // $FlowFixMe - this doesn't have side effects
-    get value(): * {
-        return this.data.value;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set value(value: *) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    get meta (): * {
-        return this.data.meta;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set meta(value: *) {
-        throw ReadOnlyError();
-    }
-
     actions = (): Action[] => {
         return this._actions;
     };

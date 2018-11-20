@@ -77,7 +77,7 @@ export default (_this: Parcel): Object => ({
         Types(`modifyChangeValue()`, `updater`, `function`)(updater);
         return _this.modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
 
-            let {value} = changeRequest;
+            let {value} = changeRequest.data;
             let type = new ParcelTypes(value);
 
             let updatedValue = updater(value, _this);
