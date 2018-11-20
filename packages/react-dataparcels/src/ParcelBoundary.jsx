@@ -109,6 +109,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
             return newState;
         }
+
+        return null;
     }
 
     debugRenderStyle: Function = (): Object => {
