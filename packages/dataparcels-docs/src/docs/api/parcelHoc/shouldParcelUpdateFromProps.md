@@ -1,4 +1,5 @@
 import {Box, Message} from 'dcme-style';
+import Link from 'component/Link';
 
 ```flow
 shouldParcelUpdateFromProps?: (prevValue: *, nextValue: *) => boolean // optional
@@ -20,4 +21,8 @@ ParcelHoc({
 });
 ```
 
-<Message>In future there will be more options to allow partial changes, and to allow key and meta data to be retained.</Message>
+<Box modifier="margin">
+    <Message>In future there will be more options to allow partial changes, and to allow key and meta data to be retained.</Message>
+</Box>
+
+<Link to="/examples/parcelhoc-updatefromprops">Example</Link>
