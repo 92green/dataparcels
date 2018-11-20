@@ -42,7 +42,7 @@ export default (_this: Parcel): Object => ({
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._setBaseParcel(_this);
             let parcelWithChangedData = _this._create({
-                parcelData: changeRequestWithBase.data
+                parcelData: changeRequestWithBase.nextData
             });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
@@ -65,7 +65,7 @@ export default (_this: Parcel): Object => ({
             buffer = buffer.merge(changeRequest);
             _this._parcelData = changeRequest
                 ._setBaseParcel(_this)
-                .data;
+                .nextData;
         };
 
         batcher(_this);

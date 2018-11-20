@@ -6,6 +6,7 @@ import type {ParcelData} from '../types/Types';
 import type Action from './Action';
 
 import {ReadOnlyError} from '../errors/Errors';
+import {ChangeRequestUnbasedError} from '../errors/Errors';
 import Reducer from '../change/Reducer';
 
 type ActionUpdater = (actions: Action[]) => Action[];
@@ -46,9 +47,9 @@ export default class ChangeRequest {
     };
 
     // $FlowFixMe - this doesn't have side effects
-    get data(): * {
+    get nextData(): * {
         if(!this._baseParcel) {
-            throw new Error(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
+            throw ChangeRequestUnbasedError();
         }
 
         if(this._cachedData) {
@@ -68,7 +69,7 @@ export default class ChangeRequest {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set data(value: *) {
+    set nextData(value: *) {
         throw ReadOnlyError();
     }
 

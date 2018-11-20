@@ -109,7 +109,7 @@ test('Parcel.modifyChangeBatch() should allow you to change the payload of a cha
 
     new Parcel(data)
         .modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
-            parcel.set(changeRequest.data.value + 1);
+            parcel.set(changeRequest.nextData.value + 1);
         })
         .onChange(456);
 });

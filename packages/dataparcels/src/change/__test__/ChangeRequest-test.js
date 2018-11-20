@@ -104,7 +104,7 @@ test('ChangeRequest _setBaseParcel() and data should use Reducer', () => {
 
     let {value} = new ChangeRequest(action)
         ._setBaseParcel(parcel)
-        .data;
+        .nextData;
 
     var expectedValue = {
         a: 1,
@@ -133,7 +133,7 @@ test('ChangeRequest data should get latest parcel data from treeshare when calle
             b: 2
         },
         handleChange: (parcel) => {
-            let {value} = ref.changeRequest.data;
+            let {value} = ref.changeRequest.nextData;
 
             var expectedValue = {
                 a: 4,
@@ -150,7 +150,7 @@ test('ChangeRequest data should get latest parcel data from treeshare when calle
 
 
 test('ChangeRequest should throw error if data is accessed before _setBaseParcel()', () => {
-    expect(() => new ChangeRequest().data).toThrowError(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
+    expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcel()`);
 });
 
 test('ChangeRequest should keep originId and originPath', () => {
@@ -226,7 +226,7 @@ test('ChangeRequest should cache its data after its calculated, so subsequent ca
     let data;
 
     let ms = TestTimeExecution(() => {
-        data = changeRequest.data;
+        data = changeRequest.nextData;
     });
 
     var expectedData = {
@@ -273,7 +273,7 @@ test('ChangeRequest should cache its data after its calculated, so subsequent ca
     expect(expectedData).toEqual(data);
 
     let ms2 = TestTimeExecution(() => {
-        data = changeRequest.data;
+        data = changeRequest.nextData;
     });
 
     expect(expectedData).toEqual(data);
@@ -295,20 +295,20 @@ test('ChangeRequest data chache should be invalidated correctly', () => {
     parcel
         .get('a')
         .modifyChangeBatch((parcel, changeRequest) => {
-            expect(changeRequest.data).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}});
-            expect(changeRequest.data).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
+            expect(changeRequest.nextData).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}});
+            expect(changeRequest.nextData).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
             parcel.dispatch(changeRequest);
         })
         .modifyChangeBatch((parcel, changeRequest) => {
-            expect(changeRequest.data).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}});
-            expect(changeRequest.data).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
+            expect(changeRequest.nextData).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}});
+            expect(changeRequest.nextData).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
             parcel.dispatch(changeRequest);
             parcel.setMeta({abc: 123});
         })
         .get('b')
         .modifyChangeBatch((parcel, changeRequest) => {
-            expect(changeRequest.data).toEqual({key: 'b', meta: {}, value: 456});
-            expect(changeRequest.data).toEqual({key: 'b', meta: {}, value: 456}); // get cached
+            expect(changeRequest.nextData).toEqual({key: 'b', meta: {}, value: 456});
+            expect(changeRequest.nextData).toEqual({key: 'b', meta: {}, value: 456}); // get cached
             parcel.dispatch(changeRequest);
         })
         .onChange(456);
