@@ -23,6 +23,7 @@ updateActions()
 merge()
 getDataIn()
 hasValueChanged()
+shouldBeSynchronous()
 toJS()
 toConsole()
 `;

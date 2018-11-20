@@ -210,9 +210,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                     newParcel.toConsole();
                 }
 
-                let shouldBeSynchronous = () => changeRequest
-                    .actions()
-                    .some(action => action.shouldBeSynchronous());
+                let shouldBeSynchronous = () => changeRequest.shouldBeSynchronous();
 
                 let updateParcel = set('parcel', newParcel);
                 let addToBuffer = this.addToBuffer(changeRequest);
