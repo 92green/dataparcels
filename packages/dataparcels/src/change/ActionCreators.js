@@ -1,16 +1,8 @@
 // @flow
-import type {
-    Key,
-    Index
-} from '../types/Types';
-import Action from './Action';
+import type {Key} from '../types/Types';
+import type {Index} from '../types/Types';
 
-const del: Function = (key: Key|Index): Action => {
-    return new Action({
-        type: "delete",
-        keyPath: [key]
-    });
-};
+import Action from './Action';
 
 const deleteSelf: Function = (): Action => {
     return new Action({
@@ -156,7 +148,6 @@ const unshift: Function = (value: *): Action => {
 };
 
 export default {
-    delete: del,
     deleteSelf,
     insertAfter,
     insertAfterSelf,

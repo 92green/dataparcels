@@ -6,7 +6,11 @@ import type {ParcelData} from '../types/Types';
 import type Action from './Action';
 
 import {ReadOnlyError} from '../errors/Errors';
+import {ChangeRequestUnbasedError} from '../errors/Errors';
 import Reducer from '../change/Reducer';
+import parcelGet from '../parcelData/get';
+
+import pipe from 'unmutable/lib/util/pipe';
 
 type ActionUpdater = (actions: Action[]) => Action[];
 
@@ -46,9 +50,9 @@ export default class ChangeRequest {
     };
 
     // $FlowFixMe - this doesn't have side effects
-    get data(): * {
+    get nextData(): * {
         if(!this._baseParcel) {
-            throw new Error(`ChangeRequest.data cannot be accessed before calling _setBaseParcel()`);
+            throw ChangeRequestUnbasedError();
         }
 
         if(this._cachedData) {
@@ -68,27 +72,20 @@ export default class ChangeRequest {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set data(value: *) {
+    set nextData(value: *) {
         throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
-    get value(): * {
-        return this.data.value;
+    get prevData(): * {
+        if(!this._baseParcel) {
+            throw ChangeRequestUnbasedError();
+        }
+        return this._baseParcel.data;
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set value(value: *) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    get meta (): * {
-        return this.data.meta;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set meta(value: *) {
+    set prevData(value: *) {
         throw ReadOnlyError();
     }
 
@@ -146,6 +143,28 @@ export default class ChangeRequest {
     set originPath(value: *) {
         throw ReadOnlyError();
     }
+
+    getDataIn = (keyPath: Array<Key|Index>): {next: *, prev: *} => {
+        let getIn = pipe(
+            ...keyPath.map(key => parcelGet(key))
+        );
+
+        return {
+            next: getIn(this.nextData),
+            prev: getIn(this.prevData)
+        };
+    };
+
+    hasValueChanged = (keyPath: Array<Key|Index> = []): boolean => {
+        let {next, prev} = this.getDataIn(keyPath);
+        return next.value !== prev.value;
+    };
+
+    shouldBeSynchronous = (): boolean => {
+        return this
+            ._actions
+            .some(action => action.shouldBeSynchronous());
+    };
 
     toJS = (): Object => {
         return {

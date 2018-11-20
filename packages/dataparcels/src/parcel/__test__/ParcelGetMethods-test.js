@@ -122,8 +122,8 @@ test('Parcel.spyChange() should be called with changeRequest', () => {
         .spyChange(spy2)
         .onChange(456);
 
-    expect(spy2.mock.calls[0][0].value).toEqual(456);
-    expect(spy.mock.calls[0][0].value).toEqual({abc: 456});
+    expect(spy2.mock.calls[0][0].nextData.value).toEqual(456);
+    expect(spy.mock.calls[0][0].nextData.value).toEqual({abc: 456});
 });
 
 test('Parcel.pipe() should pass itself in and return what pipe() returns', () => {

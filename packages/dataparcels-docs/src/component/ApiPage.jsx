@@ -68,10 +68,10 @@ export default ({name, api, md, after}: Props) => {
         nav={() => <Fragment>
             <NavigationList>
                 <NavigationListItem><Link to="/api">Api</Link></NavigationListItem>
-                <NavigationListItem>1. <Link to="/api/Parcel">Parcel</Link></NavigationListItem>
-                <NavigationListItem>2. <Link to="/api/ParcelHoc">ParcelHoc</Link></NavigationListItem>
-                <NavigationListItem>3. <Link to="/api/ParcelBoundary">ParcelBoundary</Link></NavigationListItem>
-                <NavigationListItem>4. <Link to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link></NavigationListItem>
+                <NavigationListItem>- <Link to="/api/Parcel">Parcel</Link></NavigationListItem>
+                <NavigationListItem>- <Link to="/api/ParcelHoc">ParcelHoc</Link></NavigationListItem>
+                <NavigationListItem>- <Link to="/api/ParcelBoundary">ParcelBoundary</Link></NavigationListItem>
+                <NavigationListItem>- <Link to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link></NavigationListItem>
             </NavigationList>
             <NavigationList>
                 <NavigationListItem>{name}</NavigationListItem>
