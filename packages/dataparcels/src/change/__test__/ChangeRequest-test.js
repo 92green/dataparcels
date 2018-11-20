@@ -342,3 +342,104 @@ test('ChangeRequest data chache should be invalidated correctly', () => {
         })
         .onChange(456);
 });
+
+test('ChangeRequest getDataIn should return previous and next value at keyPath', () => {
+    var action = new Action({
+        type: "set",
+        keyPath: ["a", "c", "#a"],
+        payload: {
+            value: 100
+        }
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                c: [0,1],
+                d: 2
+            },
+            b: 3
+        }
+    });
+
+    let basedChangeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
+    let {next, prev} = basedChangeRequest.getDataIn(['a', 'c', '#a']);
+
+    expect(next.value).toBe(100);
+    expect(prev.value).toBe(0);
+});
+
+test('ChangeRequest hasValueChanged should indicate if value changed at path', () => {
+    var action = new Action({
+        type: "set",
+        keyPath: ["a", "c", "#a"],
+        payload: {
+            value: 100
+        }
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                c: [0,1],
+                d: 2
+            },
+            b: 3
+        }
+    });
+
+    let basedChangeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
+
+    expect(basedChangeRequest.hasValueChanged(['a', 'c', '#a'])).toBe(true);
+    expect(basedChangeRequest.hasValueChanged(['a', 'c', '#b'])).toBe(false);
+    expect(basedChangeRequest.hasValueChanged(['a', 'c'])).toBe(true);
+    expect(basedChangeRequest.hasValueChanged(['a', 'd'])).toBe(false);
+    expect(basedChangeRequest.hasValueChanged(['a'])).toBe(true);
+    expect(basedChangeRequest.hasValueChanged(['b'])).toBe(false);
+    expect(basedChangeRequest.hasValueChanged()).toBe(true);
+});
+
+test('ChangeRequest hasValueChanged should indicate if value changed at path due to deletion', () => {
+    var action = new Action({
+        type: "delete",
+        keyPath: ["a"]
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                b: 100
+            },
+            b: 2
+        }
+    });
+
+    let basedChangeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
+
+    expect(basedChangeRequest.hasValueChanged(['a'])).toBe(true);
+    expect(basedChangeRequest.hasValueChanged(['a', 'b'])).toBe(true);
+    expect(basedChangeRequest.hasValueChanged(['b'])).toBe(false);
+});
+
+test('ChangeRequest hasValueChanged should indicate if value changed in array, identifying elements by key', () => {
+    var action = new Action({
+        type: "insertBefore",
+        keyPath: ["#b"],
+        payload: {
+            value: 999
+        }
+    });
+
+    var parcel = new Parcel({
+        value: [0,1,2,3]
+    });
+
+    let basedChangeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
+
+    expect(basedChangeRequest.hasValueChanged(['#a'])).toBe(false);
+    expect(basedChangeRequest.hasValueChanged(['#b'])).toBe(false);
+    expect(basedChangeRequest.hasValueChanged(['#c'])).toBe(false);
+    expect(basedChangeRequest.hasValueChanged(['#d'])).toBe(false);
+    expect(basedChangeRequest.hasValueChanged(['#e'])).toBe(true);
+    expect(basedChangeRequest.hasValueChanged()).toBe(true);
+});
