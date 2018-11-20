@@ -18,7 +18,7 @@ export default () => <Box>
                 bottom={() => <Grid>
                     <GridItem modifier="8 padding">
                         <Text element="p" modifier="monospace margin">A library for editing data structures that works really well with React.</Text>
-                        <Text element="p" modifier="monospace"><HtmlLink href="https://github.com/blueflag/dataparcels">github</HtmlLink> | <HtmlLink href="https://www.npmjs.com/package/react-dataparcels">npm</HtmlLink> | <HtmlLink href="#API">api</HtmlLink></Text>
+                        <Text element="p" modifier="monospace"><HtmlLink href="https://github.com/blueflag/dataparcels">github</HtmlLink> | <HtmlLink href="https://www.npmjs.com/package/react-dataparcels">npm</HtmlLink> | <HtmlLink href="#API">api documentation</HtmlLink></Text>
                     </GridItem>
                     <GridItem modifier="4 padding">
                         <Image modifier="center logo" src={IconParcel} />

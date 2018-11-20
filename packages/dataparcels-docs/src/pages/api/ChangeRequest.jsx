@@ -10,9 +10,8 @@ const md = {
 
 const api = `
 # Properties
-value
-meta
-data
+prevData
+nextData
 changeRequestMeta
 originId
 originPath
@@ -22,8 +21,10 @@ setChangeRequestMeta()
 actions()
 updateActions()
 merge()
+getDataIn()
+hasValueChanged()
 toJS()
-
+toConsole()
 `;
 
 export default () => <ApiPage
