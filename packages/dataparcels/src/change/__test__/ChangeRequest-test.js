@@ -114,6 +114,34 @@ test('ChangeRequest _setBaseParcel() and data should use Reducer', () => {
     expect(expectedValue).toEqual(value);
 });
 
+test('ChangeRequest prevData should return previous data', () => {
+    var action = new Action({
+        type: "set",
+        keyPath: ["b"],
+        payload: {
+            value: 3
+        }
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: 1,
+            b: 2
+        }
+    });
+
+    let {value} = new ChangeRequest(action)
+        ._setBaseParcel(parcel)
+        .prevData;
+
+    var expectedValue = {
+        a: 1,
+        b: 2
+    };
+
+    expect(expectedValue).toEqual(value);
+});
+
 test('ChangeRequest data should get latest parcel data from treeshare when called to prevent basing onto stale data', () => {
     expect.assertions(1);
 
@@ -151,6 +179,7 @@ test('ChangeRequest data should get latest parcel data from treeshare when calle
 
 test('ChangeRequest should throw error if data is accessed before _setBaseParcel()', () => {
     expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcel()`);
+    expect(() => new ChangeRequest().prevData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcel()`);
 });
 
 test('ChangeRequest should keep originId and originPath', () => {

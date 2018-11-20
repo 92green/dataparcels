@@ -73,6 +73,19 @@ export default class ChangeRequest {
         throw ReadOnlyError();
     }
 
+    // $FlowFixMe - this doesn't have side effects
+    get prevData(): * {
+        if(!this._baseParcel) {
+            throw ChangeRequestUnbasedError();
+        }
+        return this._baseParcel.data;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set prevData(value: *) {
+        throw ReadOnlyError();
+    }
+
     actions = (): Action[] => {
         return this._actions;
     };
