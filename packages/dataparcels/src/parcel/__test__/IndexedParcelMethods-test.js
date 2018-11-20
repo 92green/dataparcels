@@ -2,7 +2,6 @@
 import Parcel from '../Parcel';
 
 test('IndexedParcel.delete() should delete', () => {
-    expect.assertions(4);
 
     var data = {
         value: [1,2,3],
@@ -25,31 +24,27 @@ test('IndexedParcel.delete() should delete', () => {
 
     var expectedAction = {
         type: "delete",
-        keyPath: [0],
-        payload: {}
-    };
-
-    var expectedActionWithKey = {
-        type: "delete",
         keyPath: ["#a"],
         payload: {}
     };
 
+    var indexedHandleChange = jest.fn();
+    var keyedHandleChange = jest.fn();
+
     new Parcel({
         ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
-        }
+        handleChange: indexedHandleChange
     }).delete(0);
 
     new Parcel({
         ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
-        }
+        handleChange: keyedHandleChange
     }).delete("#a");
+
+    expect(indexedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
+    expect(indexedHandleChange.mock.calls[0][1].actions()[0].toJS()).toEqual(expectedAction);
+    expect(keyedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
+    expect(keyedHandleChange.mock.calls[0][1].actions()[0].toJS()).toEqual(expectedAction);
 
 });
 
@@ -77,7 +72,6 @@ test('IndexedParcel.get(hashkey) should return a new child Parcel', () => {
 });
 
 test('IndexedParcel.insertBefore() should insertBefore', () => {
-    expect.assertions(4);
 
     var data = {
         value: [1,2,3],
@@ -116,25 +110,27 @@ test('IndexedParcel.insertBefore() should insertBefore', () => {
         }
     };
 
+    var indexedHandleChange = jest.fn();
+    var keyedHandleChange = jest.fn();
+
     new Parcel({
         ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
-        }
+        handleChange: indexedHandleChange
     }).insertBefore(1, 4);
 
     new Parcel({
         ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
-        }
+        handleChange: keyedHandleChange
     }).insertBefore("#b", 4);
+
+    expect(indexedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
+    expect(indexedHandleChange.mock.calls[0][1].actions()[0].toJS()).toEqual(expectedAction);
+    expect(keyedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
+    expect(keyedHandleChange.mock.calls[0][1].actions()[0].toJS()).toEqual(expectedActionWithKey);
+
 });
 
 test('IndexedParcel.insertAfter() should insertAfter', () => {
-    expect.assertions(4);
 
     var data = {
         value: [1,2,3],
@@ -173,21 +169,23 @@ test('IndexedParcel.insertAfter() should insertAfter', () => {
         }
     };
 
+    var indexedHandleChange = jest.fn();
+    var keyedHandleChange = jest.fn();
+
     new Parcel({
         ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
-        }
+        handleChange: indexedHandleChange
     }).insertAfter(1, 4);
 
     new Parcel({
         ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedActionWithKey).toEqual(changeRequest.actions()[0].toJS());
-        }
+        handleChange: keyedHandleChange
     }).insertAfter("#b", 4);
+
+    expect(indexedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
+    expect(indexedHandleChange.mock.calls[0][1].actions()[0].toJS()).toEqual(expectedAction);
+    expect(keyedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
+    expect(keyedHandleChange.mock.calls[0][1].actions()[0].toJS()).toEqual(expectedActionWithKey);
 });
 
 test('IndexedParcel.push() should push', () => {
