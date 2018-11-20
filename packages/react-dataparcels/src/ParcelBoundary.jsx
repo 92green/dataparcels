@@ -10,7 +10,7 @@ import shallowEquals from 'unmutable/lib/shallowEquals';
 import set from 'unmutable/lib/set';
 import pipe from 'unmutable/lib/util/pipe';
 
-const log = (...args) => console.log(`ParcelBoundary:`, ...args);
+const log = (...args) => console.log(`ParcelBoundary:`, ...args); // eslint-disable-line
 
 type Actions = {
     release: Function
@@ -130,7 +130,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         } = state;
 
         if(debugBuffer) {
-            console.log("ParcelBoundary: Add to buffer:");
+            log("Add to buffer:");
             changeRequest.toConsole();
         }
 
@@ -155,7 +155,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         let {cachedChangeRequest} = state;
 
         if(debugBuffer) {
-            console.log("ParcelBoundary: Clear buffer:");
+            log("Clear buffer:");
             cachedChangeRequest && cachedChangeRequest.toConsole();
         }
         if(!cachedChangeRequest) {
@@ -180,7 +180,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         let {cachedChangeRequest} = state;
 
         if(debugBuffer) {
-            console.log("ParcelBoundary: Release buffer:");
+            log("Release buffer:");
             cachedChangeRequest && cachedChangeRequest.toConsole();
         }
 

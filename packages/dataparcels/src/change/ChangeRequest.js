@@ -176,6 +176,6 @@ export default class ChangeRequest {
     };
 
     toConsole = () => {
-        console.log(this.toJS());
+        console.log(this.toJS()); // eslint-disable-line
     };
 }

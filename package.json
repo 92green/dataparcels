@@ -28,7 +28,7 @@
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.0",
     "babel-preset-blueflag": "^0.6.0",
-    "blueflag-test": "0.20.0",
+    "blueflag-test": "^0.21.0",
     "lerna": "^2.9.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",

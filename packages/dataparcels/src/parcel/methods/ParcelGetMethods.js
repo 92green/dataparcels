@@ -91,7 +91,7 @@ export default (_this: Parcel) => ({
     log: (name: string): Parcel => {
         _this._log = true;
         _this._logName = name;
-        console.log(`Parcel data: ${name} `);
+        console.log(`Parcel data: ${name} `); // eslint-disable-line
         _this.toConsole();
         return _this;
     },
@@ -116,6 +116,6 @@ export default (_this: Parcel) => ({
     // Debug methods
 
     toConsole: () => {
-        console.log(_this.data);
+        console.log(_this.data); // eslint-disable-line
     }
 });

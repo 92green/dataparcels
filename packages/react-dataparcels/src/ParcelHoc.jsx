@@ -7,7 +7,7 @@ import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 
-const log = (...args) => console.log(`ParcelHoc:`, ...args);
+const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
 
 type Props = {};
 type State = {
