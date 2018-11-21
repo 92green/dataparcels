@@ -6,22 +6,30 @@ import type {MatchPipe} from '../../types/Types';
 
 import Types from '../../types/Types';
 import Matcher from '../../match/Matcher';
+import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
 
 import map from 'unmutable/lib/map';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
+let getValue = (_this: Parcel, notFoundValue: *): * => {
+    let {value} = _this;
+    return value === DeletedParcelMarker || typeof value === "undefined"
+        ? notFoundValue
+        : value;
+};
+
 export default (_this: Parcel) => ({
 
     // Spread Methods
 
-    spread: (): Object => ({
-        value: _this.value,
+    spread: (notFoundValue: ?* = undefined): Object => ({
+        value: getValue(_this, notFoundValue),
         onChange: _this.onChange
     }),
 
-    spreadDOM: (): Object => ({
-        value: _this.value,
+    spreadDOM: (notFoundValue: ?* = undefined): Object => ({
+        value: getValue(_this, notFoundValue),
         onChange: _this.onChangeDOM
     }),
 
