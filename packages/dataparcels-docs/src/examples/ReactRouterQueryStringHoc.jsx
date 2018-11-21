@@ -12,7 +12,8 @@ import map from 'unmutable/lib/map';
 
 type Config = {
     method: string,
-    name: string
+    name: string,
+    silent: boolean
 };
 
 type Props = {
@@ -28,10 +29,26 @@ type Props = {
 export default (config: Config) => {
     let {
         method = "push",
-        name
+        name,
+        silent = false
     } = config;
 
     return (Component: ComponentType<*>) => class ReactRouterQueryStringHoc extends React.Component<Props> {
+
+        checkAvailable = () => {
+            if(typeof URLSearchParams === "undefined") {
+                throw new Error(`ReactRouterQueryStringHoc requires URLSearchParams to be defined`);
+            }
+
+            let {
+                history,
+                location
+            } = this.props;
+
+            if(!history || !location) {
+                throw new Error(`ReactRouterQueryStringHoc requires React Router history and location props`);
+            }
+        };
 
         handleChange = (newValue: *) => {
             let {history} = this.props;
@@ -46,26 +63,35 @@ export default (config: Config) => {
 
         render(): Node {
 
-            let {
-                history,
-                location
-            } = this.props;
+            let message = {
+                value: {},
+                onChange: () => {},
+                available: false
+            };
 
-            if(!history || !location) {
-                throw new Error(`ReactRouterQueryStringHoc requires React Router history and location props`);
-            }
+            try {
+                this.checkAvailable();
 
-            let query = {};
-            let searchParams = new URLSearchParams(location.search);
-            for (let [key, value] of searchParams) {
-                query[key] = value;
+                let query = {};
+                let searchParams = new URLSearchParams(location.search);
+                for (let [key, value] of searchParams) {
+                    query[key] = value;
+                }
+
+                message = {
+                    value: query,
+                    onChange: this.handleChange,
+                    available: true
+                };
+
+            } catch(e) {
+                if(!silent) {
+                    throw e;
+                }
             }
 
             let childProps = {
-                [name]: {
-                    value: query,
-                    onChange: this.handleChange
-                }
+                [name]: message
             };
 
             return <Component
