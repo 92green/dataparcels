@@ -3,7 +3,7 @@ import {ParcelHoc} from 'react-dataparcels';
 import {ParcelBoundary} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
 import IsRenderingStaticHtml from 'utils/IsRenderingStaticHtml';
-import ReactRouterQueryStringHoc from './ReactRouterQueryStringHoc';
+import ReactRouterQueryStringHoc from 'react-cool-storage/lib/ReactRouterQueryStringHoc';
 
 import composeWith from 'unmutable/lib/util/composeWith';
 
