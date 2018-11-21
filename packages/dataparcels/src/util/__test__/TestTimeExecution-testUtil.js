@@ -1,6 +1,6 @@
 // @flow
 
-export default (fn: Function) => {
+export default (fn: Function): number => {
     let start = process.hrtime();
     fn();
     let end = process.hrtime(start);

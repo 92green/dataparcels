@@ -44,7 +44,7 @@ let testTypes = (type: string, shouldAllow: string[]) => {
 };
 
 test('Types will error if type is not found', () => {
-    expect(() => Types('???', 'notfound')({abc: 123})).toThrowError("Unknown type check");
+    expect(() => Types('???', 'param', 'notfound')({abc: 123})).toThrowError("Unknown type check");
 });
 
 test('Types() can identify a boolean', () => testTypes(`boolean`, [

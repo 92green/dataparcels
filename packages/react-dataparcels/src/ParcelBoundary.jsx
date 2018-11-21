@@ -122,7 +122,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         };
     };
 
-    addToBuffer: Function = (changeRequest: ChangeRequest) => (state: *) => {
+    addToBuffer: Function = (changeRequest: ChangeRequest) => (state: State): State => {
         let {debugBuffer} = this.props;
         let {
             cachedChangeRequest,
@@ -145,7 +145,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         };
     };
 
-    cancelBuffer: Function = () => (state: *) => {
+    cancelBuffer: Function = () => (state: State): State => {
         let {
             debugBuffer,
             debugParcel,
@@ -175,7 +175,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         };
     };
 
-    releaseBuffer: Function = () => (state: *) => {
+    releaseBuffer: Function = () => (state: State): State => {
         let {debugBuffer} = this.props;
         let {cachedChangeRequest} = state;
 
