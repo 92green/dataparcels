@@ -10,7 +10,7 @@ import shallowEquals from 'unmutable/lib/shallowEquals';
 import set from 'unmutable/lib/set';
 import pipe from 'unmutable/lib/util/pipe';
 
-const log = (...args) => console.log(`ParcelBoundary:`, ...args);
+const log = (...args) => console.log(`ParcelBoundary:`, ...args); // eslint-disable-line
 
 type Actions = {
     release: Function
@@ -109,6 +109,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
             return newState;
         }
+
+        return null;
     }
 
     debugRenderStyle: Function = (): Object => {
@@ -120,7 +122,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         };
     };
 
-    addToBuffer: Function = (changeRequest: ChangeRequest) => (state: *) => {
+    addToBuffer: Function = (changeRequest: ChangeRequest) => (state: State): State => {
         let {debugBuffer} = this.props;
         let {
             cachedChangeRequest,
@@ -128,7 +130,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         } = state;
 
         if(debugBuffer) {
-            console.log("ParcelBoundary: Add to buffer:");
+            log("Add to buffer:");
             changeRequest.toConsole();
         }
 
@@ -143,7 +145,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         };
     };
 
-    cancelBuffer: Function = () => (state: *) => {
+    cancelBuffer: Function = () => (state: State): State => {
         let {
             debugBuffer,
             debugParcel,
@@ -153,7 +155,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         let {cachedChangeRequest} = state;
 
         if(debugBuffer) {
-            console.log("ParcelBoundary: Clear buffer:");
+            log("Clear buffer:");
             cachedChangeRequest && cachedChangeRequest.toConsole();
         }
         if(!cachedChangeRequest) {
@@ -173,12 +175,12 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         };
     };
 
-    releaseBuffer: Function = () => (state: *) => {
+    releaseBuffer: Function = () => (state: State): State => {
         let {debugBuffer} = this.props;
         let {cachedChangeRequest} = state;
 
         if(debugBuffer) {
-            console.log("ParcelBoundary: Release buffer:");
+            log("Release buffer:");
             cachedChangeRequest && cachedChangeRequest.toConsole();
         }
 

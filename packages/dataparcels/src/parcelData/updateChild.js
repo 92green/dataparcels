@@ -21,7 +21,7 @@ export default () => (parcelData: ParcelData): * => {
         child: pipeWith(
             value,
             reduce(
-                (red, value, key) => {
+                (red: *, value: *, key: *): * => {
                     red[key] = child ? get(key, {})(child) : {};
                     return red;
                 },

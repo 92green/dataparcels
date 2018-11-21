@@ -7,7 +7,7 @@ import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 
-const log = (...args) => console.log(`ParcelHoc:`, ...args);
+const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
 
 type Props = {};
 type State = {
@@ -19,12 +19,16 @@ type ChildProps = {
     // ${name}: Parcel
 };
 
+type AnyProps = {
+    [key: string]: any
+};
+
 type ParcelHocConfig = {
     name: string,
-    valueFromProps?: (props: *) => *,
+    valueFromProps?: (props: AnyProps) => *,
     shouldParcelUpdateFromProps?: (prevValue: *, nextValue: *) => boolean,
-    delayUntil?: (props: *) => boolean,
-    onChange?: (props: *) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
+    delayUntil?: (props: AnyProps) => boolean,
+    onChange?: (props: AnyProps) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean,
     debugRender?: boolean
@@ -106,7 +110,7 @@ export default (config: ParcelHocConfig): Function => {
             return newState;
         }
 
-        handleChange = (parcel, changeRequest) => {
+        handleChange = (parcel: Parcel, changeRequest: ChangeRequest) => {
             this.setState({parcel});
             if(debugParcel) {
                 log(`Parcel changed:`);

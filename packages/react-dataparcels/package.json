@@ -22,6 +22,7 @@
     "watch": "yarn run build -w"
   },
   "dependencies": {
+    "babel-runtime": "6.23.0",
     "dataparcels": "^0.16.1",
     "unmutable": "^0.39.0"
   }

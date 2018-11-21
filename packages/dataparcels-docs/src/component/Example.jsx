@@ -8,11 +8,11 @@ type Props = {
     md: *
 };
 
-export default ({name, md: Markdown}: Props) => <PageLayout
+export default ({name, md: Markdown, ...rest}: Props) => <PageLayout
     modifier="marginBottom"
     content={() => <Typography>
         <Text element="h1">{name}</Text>
-        <Markdown />
+        <Markdown {...rest} />
     </Typography>}
     nav={() => <NavigationList></NavigationList>}
 />;

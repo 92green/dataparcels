@@ -262,8 +262,8 @@ export default class Parcel {
     //
 
     // Spread methods
-    spread = (): * => this._methods.spread();
-    spreadDOM = (): * => this._methods.spreadDOM();
+    spread = (notFoundValue: ?* = undefined): * => this._methods.spread(notFoundValue);
+    spreadDOM = (notFoundValue: ?* = undefined): * => this._methods.spreadDOM(notFoundValue);
 
     // Branch methods
     get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
