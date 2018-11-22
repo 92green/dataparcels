@@ -23,5 +23,5 @@ When a parcel is a parent parcel, it allows the use of branching methods.
 
 A parcel is a child parcel if it contains a child value from a parent parcel. Child parcels are created using branhing methods.
 
-when a parcel is a parent parcel, it allows the use of child methods.
+When a parcel is a child parcel, it allows the use of child methods.
 
