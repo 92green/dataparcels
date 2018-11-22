@@ -1,10 +1,11 @@
 # Parcel Types
 
-Each parcel has one or more parcel types that are determined by the kind of data it has in its value.
+Each parcel has one or more parcel types that are determined by the kind of data it contains.
+Any parcel can be more than one type at once.
 
 ### ParentParcel
 
-A parcel is a parent parcel if its value contains editable child values. Child values are considered editable if they are compatible with the unmutable data collection library. These value types are currently supported.
+A parcel is a parent parcel if its value contains editable child values. Child values are considered editable if they are compatible with the [unmutable](http://github.com/blueflag/unmutable) data collection library. These value types are currently supported:
 
 - Objects
 - Arrays
@@ -14,8 +15,13 @@ A parcel is a parent parcel if its value contains editable child values. Child v
 
 Unmutable guarantees that data is edited immutably, which is very important for dataparcels.
 
-If you want the ability to edit the child values on a data type not listed, please make a request in the unmutable issue tracker.
+If you want the ability to edit the child values on a data type not listed, please make a request in the  [unmutable issue tracker](http://github.com/blueflag/unmutable/issues).
 
 When a parcel is a parent parcel, it allows the use of branching methods.
 
 ### ChildParcel
+
+A parcel is a child parcel if it contains a child value from a parent parcel. Child parcels are created using branhing methods.
+
+when a parcel is a parent parcel, it allows the use of child methods.
+
