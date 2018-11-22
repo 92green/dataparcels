@@ -25,3 +25,14 @@ A parcel is a child parcel if it contains a child value from a parent parcel. Ch
 
 When a parcel is a child parcel, it allows the use of child methods.
 
+### IndexedParcel
+
+A parcel is an indexed parcel if it contains an indexed data type, such as an array or an Immutable.js List. IndexedParcels are also always parent parcels.
+
+When a parcel is an indexed parcel, it allows the used of indexed methods.
+
+### ElementParcel
+
+A parcel is an element parcel if it contains the child value of an indexed parcel.
+
+When a parcel is an element parcel, it allows th 
