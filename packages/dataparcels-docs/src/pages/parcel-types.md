@@ -39,3 +39,5 @@ When a parcel is an element parcel, it allows the use of element methods.
 
 ### TopLevelParcel
 
+A parcel is a top level parcel if it is not a child parcel. Examples: the parcel provided by a ParcelHoc, or a parcel created with `new Parcel`.
+
