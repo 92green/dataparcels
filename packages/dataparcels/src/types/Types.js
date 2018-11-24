@@ -65,6 +65,10 @@ export type ParcelIdData = {
 };
 
 const RUNTIME_TYPES = {
+    ['array']: {
+        name: "an array",
+        check: ii => Array.isArray(ii)
+    },
     ['boolean']: {
         name: "a boolean",
         check: ii => typeof ii === "boolean"

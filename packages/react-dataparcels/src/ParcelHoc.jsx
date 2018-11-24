@@ -7,6 +7,15 @@ import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 
+import flatMap from 'unmutable/lib/flatMap';
+import filter from 'unmutable/lib/filter';
+import get from 'unmutable/lib/get';
+import isKeyed from 'unmutable/lib/isKeyed';
+import merge from 'unmutable/lib/merge';
+import omit from 'unmutable/lib/omit';
+import pick from 'unmutable/lib/pick';
+import pipeWith from 'unmutable/lib/pipeWith';
+
 const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
 
 type Props = {};
@@ -23,12 +32,24 @@ type AnyProps = {
     [key: string]: any
 };
 
+type ValueFromProps = (props: AnyProps) => *;
+type ShouldParcelUpdateFromProps = (prevValue: *, nextValue: *) => boolean;
+type OnChange = (parcel: Parcel, changeRequest: ChangeRequest) => void;
+
+type Partial = {
+    valueFromProps?: ValueFromProps,
+    shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
+    onChange?: (props: AnyProps) => OnChange,
+    keys: string[]
+};
+
 type ParcelHocConfig = {
     name: string,
-    valueFromProps?: (props: AnyProps) => *,
-    shouldParcelUpdateFromProps?: (prevValue: *, nextValue: *) => boolean,
+    valueFromProps?: ValueFromProps,
+    shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
+    onChange?: (props: AnyProps) => OnChange,
+    partials?: Array<Partial>,
     delayUntil?: (props: AnyProps) => boolean,
-    onChange?: (props: AnyProps) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean,
     debugRender?: boolean
@@ -42,9 +63,10 @@ export default (config: ParcelHocConfig): Function => {
     let {
         name,
         valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
-        shouldParcelUpdateFromProps, /* eslint-disable-line no-unused-vars */
+        shouldParcelUpdateFromProps,
+        onChange,
+        partials,
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
-        onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
         debugParcel = false,
@@ -52,9 +74,22 @@ export default (config: ParcelHocConfig): Function => {
     } = config;
 
     Types(PARCEL_HOC_NAME, "config.name", "string")(name);
-    Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
+
+    if(partials) {
+        Types(PARCEL_HOC_NAME, "config.partials", "array")(partials);
+        partials.forEach(({keys, valueFromProps, onChange, shouldParcelUpdateFromProps}) => {
+            valueFromProps && Types(PARCEL_HOC_NAME, "config.partials[].valueFromProps", "function")(valueFromProps);
+            onChange && Types(PARCEL_HOC_NAME, "config.partials[].onChange", "function")(onChange);
+            shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.partials[].shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
+            keys && Types(PARCEL_HOC_NAME, "config.partials[].keys", "array")(keys);
+        });
+    } else {
+        Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
+        onChange && Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
+        shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
+    }
+
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
-    Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
     Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
     Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
@@ -81,7 +116,37 @@ export default (config: ParcelHocConfig): Function => {
             let newState = {};
 
             if(!parcel && delayUntil(props)) {
-                let value = valueFromProps(props);
+                let value;
+
+                if(partials) {
+                    let getKeys = get('keys');
+
+                    let namedKeys = pipeWith(
+                        partials,
+                        filter(getKeys),
+                        flatMap(getKeys)
+                    );
+
+                    value = pipeWith(
+                        {},
+                        // $FlowFixMe
+                        ...partials.map((partial, index) => {
+                            let partialValue = partial.valueFromProps(props);
+                            let keys = getKeys(partial);
+                            if(!isKeyed(partialValue)) {
+                                throw new Error(`Result of partial[${index}].valueFromProps() should be object, but got ${partialValue}`);
+                            }
+                            return pipeWith(
+                                partialValue,
+                                keys ? pick(keys) : omit(namedKeys),
+                                merge
+                            );
+                        })
+                    );
+                } else {
+                    value = valueFromProps(props);
+                }
+
                 newState.prevValueFromProps = value;
                 newState.parcel = state.initialize(value);
 
@@ -117,9 +182,11 @@ export default (config: ParcelHocConfig): Function => {
                 parcel.toConsole();
             }
 
-            let onChangeWithProps = onChange(this.props);
-            Types(`handleChange()`, "return value of onChange", "function")(onChangeWithProps);
-            onChangeWithProps(parcel.value, changeRequest);
+            if(onChange) {
+                let onChangeWithProps = onChange(this.props);
+                Types(`handleChange()`, "return value of onChange", "function")(onChangeWithProps);
+                onChangeWithProps(parcel.value, changeRequest);
+            }
         };
 
         render(): Node {
