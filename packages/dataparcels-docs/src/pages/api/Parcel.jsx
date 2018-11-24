@@ -180,6 +180,9 @@ batchAndReturn()
 ping()
 
 # Modify methods
+modifyValue()
+modifyChangeBatch()
+modifyChangeValue()
 initialMeta()
 
 # Type methods
