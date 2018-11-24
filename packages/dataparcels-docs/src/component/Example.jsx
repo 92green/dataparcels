@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
+import {Fragment} from 'react';
 import {Box, NavigationList, Text, Typography} from 'dcme-style';
 import PageLayout from 'component/PageLayout';
+import APINavigation from 'component/APINavigation';
 
 type Props = {
     name: string,
@@ -14,5 +16,9 @@ export default ({name, md: Markdown, ...rest}: Props) => <PageLayout
         <Text element="h1">{name}</Text>
         <Markdown {...rest} />
     </Typography>}
-    nav={() => <NavigationList></NavigationList>}
+    nav={() => <Fragment>
+        <APINavigation />
+        <NavigationList>
+        </NavigationList>
+    </Fragment>}
 />;

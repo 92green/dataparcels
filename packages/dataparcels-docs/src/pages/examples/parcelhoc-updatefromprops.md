@@ -60,7 +60,7 @@ export default class ParcelHocUpdateFromPropsExample extends React.Component {
 
 ## Updating from query string
 
-This example shows how a ParcelHoc's value can be controlled from the query string using React Router.
+This example shows how a ParcelHoc's value can be controlled from the query string using [react-router](https://github.com/ReactTraining/react-router) and [react-cool-storage](http://github.com/blueflag/react-cool-storage).
 
 <ParcelHocUpdateFromQueryString history={history} location={location} />
 
@@ -68,7 +68,7 @@ This example shows how a ParcelHoc's value can be controlled from the query stri
 import React from 'react';
 import {ParcelHoc} from 'react-dataparcels';
 import {ParcelBoundary} from 'react-dataparcels';
-import ReactRouterQueryStringHoc from './ReactRouterQueryStringHoc';
+import ReactRouterQueryStringHoc from 'react-cool-storage/lib/ReactRouterQueryStringHoc';
 
 import composeWith from 'unmutable/lib/util/composeWith';
 
@@ -100,7 +100,7 @@ const QueryStringEditor = (props) => {
     </div>;
 };
 
-// unmutable composeWith(a,b,c) is equivalent to a(b(c))
+// unmutable's composeWith(a,b,c) is equivalent to a(b(c))
 
 export default composeWith(
     ReactRouterQueryStringHoc({
