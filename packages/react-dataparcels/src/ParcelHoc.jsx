@@ -78,7 +78,7 @@ export default (config: ParcelHocConfig): Function => {
     if(partials) {
         Types(PARCEL_HOC_NAME, "config.partials", "array")(partials);
         partials.forEach(({keys, valueFromProps, onChange, shouldParcelUpdateFromProps}) => {
-            valueFromProps && Types(PARCEL_HOC_NAME, "config.partials[].valueFromProps", "function")(valueFromProps);
+            Types(PARCEL_HOC_NAME, "config.partials[].valueFromProps", "function")(valueFromProps);
             onChange && Types(PARCEL_HOC_NAME, "config.partials[].onChange", "function")(onChange);
             shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.partials[].shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
             keys && Types(PARCEL_HOC_NAME, "config.partials[].keys", "array")(keys);
@@ -129,8 +129,8 @@ export default (config: ParcelHocConfig): Function => {
 
                     value = pipeWith(
                         {},
-                        // $FlowFixMe
                         ...partials.map((partial, index) => {
+                            // $FlowFixMe - flow can't tell that this will definitely be a function
                             let partialValue = partial.valueFromProps(props);
                             let keys = getKeys(partial);
                             if(!isKeyed(partialValue)) {
