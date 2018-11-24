@@ -62,7 +62,7 @@ export default (config: ParcelHocConfig): Function => {
 
     let {
         name,
-        valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
+        valueFromProps,
         shouldParcelUpdateFromProps,
         onChange,
         partials,
@@ -144,6 +144,7 @@ export default (config: ParcelHocConfig): Function => {
                         })
                     );
                 } else {
+                    // $FlowFixMe - flow can't tell that this will definitely be a function
                     value = valueFromProps(props);
                 }
 
@@ -157,6 +158,7 @@ export default (config: ParcelHocConfig): Function => {
             }
 
             if(parcel && shouldParcelUpdateFromProps) {
+                // $FlowFixMe - flow can't tell that this will definitely be a function
                 let value = valueFromProps(props);
                 newState.prevValueFromProps = value;
 

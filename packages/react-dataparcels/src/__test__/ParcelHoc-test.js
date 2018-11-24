@@ -36,15 +36,8 @@ test('ParcelHoc must be passed a name, and throw an error if it isnt', () => {
 });
 
 
-test('ParcelHoc config should default initial value to undefined', () => {
-    let childProps = shallowRenderHoc(
-        {},
-        ParcelHoc({
-            name: "proppy"
-        })
-    ).props();
-
-    expect(typeof childProps.proppy.value === "undefined").toBe(true);
+test('ParcelHoc config should throw error if valueFromProps is not provided', () => {
+    expect(() => ParcelHoc({name: "proppy"})).toThrow(`ParcelHoc() expects param "config.valueFromProps" to be a function, but got undefined`);
 });
 
 test('ParcelHoc changes should be put back into ParcelHoc state', () => {
