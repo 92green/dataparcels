@@ -140,7 +140,7 @@ export default composeWith(
 
 ## Updating parts of a parcel from more than one source of state
 
-ParcelHoc also allows parts of its parcel to be controlled by more than one source of state. This example shows how to update two values from in the query string, while another two are held exclusively in the ParcelHoc.
+ParcelHoc also allows parts of its parcel to be sourced and controlled by more than one source of state. This example shows how to update two values from in the query string, while another two are held exclusively in the ParcelHoc.
 
 For a ParcelHoc to be able to do this, it must contain a keyed data type such as an object.
 
