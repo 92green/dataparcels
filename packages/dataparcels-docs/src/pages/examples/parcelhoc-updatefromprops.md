@@ -16,7 +16,6 @@ This can be very powerful. You can make a ParcelHoc a slave to state that's held
 
 - <HtmlLink href={`#Updating-from-higher-up-state`}>Updating from higher-up state</HtmlLink>
 - <HtmlLink href={`#Updating-from-query-string`}>Updating from query string</HtmlLink>
-- <HtmlLink href={`#Updating-parts-of-a-parcel-from-more-than-one-source-of-state`}>Updating parts of a parcel from more than one source of state</HtmlLink>
 
 ## Updating from higher-up state
 
@@ -135,13 +134,3 @@ export default composeWith(
 );
 
 ```
-
-<Box modifier="marginTopMega" />
-
-## Updating parts of a parcel from more than one source of state
-
-ParcelHoc also allows parts of its parcel to be sourced and controlled by more than one source of state. This example shows how to update two values from in the query string, while another two are held exclusively in the ParcelHoc.
-
-For a ParcelHoc to be able to do this, it must contain a keyed data type such as an object.
-
-<ParcelHocUpdateFromQueryStringPartial history={history} location={location} />

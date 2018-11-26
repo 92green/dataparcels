@@ -7,17 +7,6 @@ import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 
-import defaults from 'unmutable/lib/defaults';
-import flatMap from 'unmutable/lib/flatMap';
-import filter from 'unmutable/lib/filter';
-import get from 'unmutable/lib/get';
-import isKeyed from 'unmutable/lib/isKeyed';
-import keyArray from 'unmutable/lib/keyArray';
-import merge from 'unmutable/lib/merge';
-import omit from 'unmutable/lib/omit';
-import pick from 'unmutable/lib/pick';
-import pipeWith from 'unmutable/lib/pipeWith';
-
 const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
 
 type Props = {};
@@ -37,22 +26,12 @@ type AnyProps = {
 type ValueFromProps = (props: AnyProps) => *;
 type ShouldParcelUpdateFromProps = (prevProps: AnyProps, nextProps: AnyProps, valueFromProps: any) => boolean;
 type OnChange = (parcel: Parcel, changeRequest: ChangeRequest) => void;
-type SegmentsConstructor = (value: {[key: string]: any}) => any;
-
-type ParcelHocSegmentConfig = {
-    valueFromProps: ValueFromProps,
-    shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
-    onChange?: (props: AnyProps) => OnChange,
-    keys?: string[]
-};
 
 type ParcelHocConfig = {
     name: string,
     valueFromProps: ValueFromProps,
     shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
     onChange?: (props: AnyProps) => OnChange,
-    segments?: Array<ParcelHocSegmentConfig>,
-    segmentsConstructor?: SegmentsConstructor,
     delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean,
@@ -69,8 +48,6 @@ export default (config: ParcelHocConfig): Function => {
         valueFromProps,
         shouldParcelUpdateFromProps,
         onChange,
-        segments,
-        segmentsConstructor = ii => ii, /* eslint-disable-line no-unused-vars */
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
@@ -79,45 +56,14 @@ export default (config: ParcelHocConfig): Function => {
     } = config;
 
     Types(PARCEL_HOC_NAME, "config.name", "string")(name);
-
-    let namedPartialKeys = [];
-
-    if(segments) {
-        Types(PARCEL_HOC_NAME, "config.segments", "array")(segments);
-        segments.forEach((segment: ParcelHocSegmentConfig) => {
-            let {
-                keys,
-                valueFromProps,
-                onChange,
-                shouldParcelUpdateFromProps
-            } = segment;
-
-            Types(PARCEL_HOC_NAME, "config.segments[].valueFromProps", "function")(valueFromProps);
-            onChange && Types(PARCEL_HOC_NAME, "config.segments[].onChange", "function")(onChange);
-            shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.segments[].shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
-            keys && Types(PARCEL_HOC_NAME, "config.segments[].keys", "array")(keys);
-        });
-
-        let getKeys = get('keys');
-        namedPartialKeys = pipeWith(
-            segments,
-            filter(getKeys),
-            flatMap(getKeys)
-        );
-    } else {
-        Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
-        onChange && Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
-        shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
-    }
+    Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
+    onChange && Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
+    shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
 
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
     Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
     Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
-
-    let partialPick = (keys) => keys
-        ? pick(keys)
-        : omit(namedPartialKeys);
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
         constructor(props: Props) {
@@ -136,36 +82,12 @@ export default (config: ParcelHocConfig): Function => {
             };
         }
 
-        static getPartialValueFromProps(props: Props): Function {
-            return (segments: Array<ParcelHocSegmentConfig>): {[key: string]: any} => pipeWith(
-                {},
-                ...segments.map(({valueFromProps, keys}: ParcelHocSegmentConfig, index: number): Function => {
-                    let partialValue = valueFromProps(props);
-                    if(!isKeyed(partialValue)) {
-                        throw new Error(`Result of segment[${index}].valueFromProps() should be object, but got ${partialValue}`);
-                    }
-                    return pipeWith(
-                        partialValue,
-                        partialPick(keys),
-                        merge
-                    );
-                })
-            );
-        }
-
         static getDerivedStateFromProps(props: Props, state: State): * {
             let {parcel} = state;
             let newState = {};
-            let partialValueFromProps = ParcelHoc.getPartialValueFromProps(props);
 
             if(!parcel && delayUntil(props)) {
-                let value = segments
-                    ? pipeWith(
-                        partialValueFromProps(segments),
-                        segmentsConstructor
-                    )
-                    : valueFromProps(props);
-
+                let value = valueFromProps(props);
                 newState.parcel = state.initialize(value);
 
                 if(debugParcel) {
@@ -174,42 +96,16 @@ export default (config: ParcelHocConfig): Function => {
                 }
             }
 
-            let newValueFromProps;
-            if(parcel) {
-                if(segments) {
-                    let segmentsToUpdate = segments.filter((segment: ParcelHocSegmentConfig): boolean => {
-                        let {
-                            shouldParcelUpdateFromProps,
-                            valueFromProps
-                        } = segment;
+            if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps)) {
+                // $FlowFixMe - parcel cant possibly be undefined here
+                newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
+                    // $FlowFixMe - newValueFromProps cant possibly be undefined here
+                    parcel.set(valueFromProps(props));
+                });
 
-                        return !!shouldParcelUpdateFromProps
-                            && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps);
-                    });
-
-                    if(segmentsToUpdate.length > 0) {
-                        newValueFromProps = pipeWith(
-                            segmentsToUpdate,
-                            partialValueFromProps,
-                            defaults(parcel.value)
-                        );
-                    }
-
-                } else if(shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps)) {
-                    newValueFromProps = valueFromProps(props);
-                }
-
-                if(newValueFromProps) {
-                    // $FlowFixMe - parcel cant possibly be undefined here
-                    newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
-                        // $FlowFixMe - newValueFromProps cant possibly be undefined here
-                        parcel.set(segmentsConstructor(newValueFromProps));
-                    });
-
-                    if(debugParcel) {
-                        log(`Parcel updated from props:`);
-                        newState.parcel.toConsole();
-                    }
+                if(debugParcel) {
+                    log(`Parcel updated from props:`);
+                    newState.parcel.toConsole();
                 }
             }
 
@@ -235,24 +131,6 @@ export default (config: ParcelHocConfig): Function => {
 
             if(changeRequest.hasValueChanged()) {
                 callOnChange(onChange, parcel.value);
-            }
-
-            if(segments) {
-                segments.forEach(({keys, onChange}: ParcelHocSegmentConfig) => {
-                    let partialValue = partialPick(keys)(parcel.value);
-                    if(!keys) {
-                        // get all unnamed keys from previous and next data, to see if any have changed
-                        keys = pipeWith(
-                            changeRequest.nextData.value,
-                            merge(changeRequest.prevData.value),
-                            omit(namedPartialKeys),
-                            keyArray()
-                        );
-                    }
-                    if(keys.some(key => changeRequest.hasValueChanged([key]))) {
-                        callOnChange(onChange, partialValue);
-                    }
-                });
             }
         };
 

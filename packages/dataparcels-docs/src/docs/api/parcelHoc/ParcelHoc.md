@@ -24,8 +24,6 @@ ParcelHoc({
     valueFromProps: Function,
     shouldParcelUpdateFromProps?: Function,
     onChange?: Function,
-    segments?: Array<ParcelHocSegmentConfig>,
-    segmentsConstructor?: Function,
     delayUntil?: Function,
     pipe?: Function
     // debugging options
