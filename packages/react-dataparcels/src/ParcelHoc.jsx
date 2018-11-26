@@ -7,10 +7,12 @@ import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 
+import defaults from 'unmutable/lib/defaults';
 import flatMap from 'unmutable/lib/flatMap';
 import filter from 'unmutable/lib/filter';
 import get from 'unmutable/lib/get';
 import isKeyed from 'unmutable/lib/isKeyed';
+import keyArray from 'unmutable/lib/keyArray';
 import merge from 'unmutable/lib/merge';
 import omit from 'unmutable/lib/omit';
 import pick from 'unmutable/lib/pick';
@@ -22,7 +24,7 @@ type Props = {};
 type State = {
     parcel: ?Parcel,
     initialize: (value: *) => Parcel,
-    prevValueFromProps: *
+    prevProps: {[key: string]: any}
 };
 type ChildProps = {
     // ${name}: Parcel
@@ -33,22 +35,22 @@ type AnyProps = {
 };
 
 type ValueFromProps = (props: AnyProps) => *;
-type ShouldParcelUpdateFromProps = (prevValue: *, nextValue: *) => boolean;
+type ShouldParcelUpdateFromProps = (prevProps: AnyProps, nextProps: AnyProps, valueFromProps: any) => boolean;
 type OnChange = (parcel: Parcel, changeRequest: ChangeRequest) => void;
 
-type Partial = {
-    valueFromProps?: ValueFromProps,
+type ParcelHocPartialConfig = {
+    valueFromProps: ValueFromProps,
     shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
     onChange?: (props: AnyProps) => OnChange,
-    keys: string[]
+    keys?: string[]
 };
 
 type ParcelHocConfig = {
     name: string,
-    valueFromProps?: ValueFromProps,
+    valueFromProps: ValueFromProps,
     shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
     onChange?: (props: AnyProps) => OnChange,
-    partials?: Array<Partial>,
+    partials?: Array<ParcelHocPartialConfig>,
     delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean,
@@ -75,6 +77,8 @@ export default (config: ParcelHocConfig): Function => {
 
     Types(PARCEL_HOC_NAME, "config.name", "string")(name);
 
+    let namedPartialKeys = [];
+
     if(partials) {
         Types(PARCEL_HOC_NAME, "config.partials", "array")(partials);
         partials.forEach(({keys, valueFromProps, onChange, shouldParcelUpdateFromProps}) => {
@@ -83,6 +87,13 @@ export default (config: ParcelHocConfig): Function => {
             shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.partials[].shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
             keys && Types(PARCEL_HOC_NAME, "config.partials[].keys", "array")(keys);
         });
+
+        let getKeys = get('keys');
+        namedPartialKeys = pipeWith(
+            partials,
+            filter(getKeys),
+            flatMap(getKeys)
+        );
     } else {
         Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
         onChange && Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
@@ -93,6 +104,10 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
     Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
     Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
+
+    let partialPick = (keys) => keys
+        ? pick(keys)
+        : omit(namedPartialKeys);
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
         constructor(props: Props) {
@@ -107,48 +122,37 @@ export default (config: ParcelHocConfig): Function => {
             this.state = {
                 parcel: undefined,
                 initialize,
-                prevValueFromProps: undefined
+                prevProps: {}
             };
+        }
+
+        static getPartialValueFromProps(props: Props) {
+            return (partials: Array<ParcelHocPartialConfig>): * => pipeWith(
+                {},
+                ...partials.map(({valueFromProps, keys}, index) => {
+                    let partialValue = valueFromProps(props);
+                    if(!isKeyed(partialValue)) {
+                        throw new Error(`Result of partial[${index}].valueFromProps() should be object, but got ${partialValue}`);
+                    }
+                    return pipeWith(
+                        partialValue,
+                        partialPick(keys),
+                        merge
+                    );
+                })
+            );
         }
 
         static getDerivedStateFromProps(props: Props, state: State): * {
             let {parcel} = state;
             let newState = {};
+            let partialValueFromProps = ParcelHoc.getPartialValueFromProps(props);
 
             if(!parcel && delayUntil(props)) {
-                let value;
+                let value = partials
+                    ? partialValueFromProps(partials)
+                    : valueFromProps(props);
 
-                if(partials) {
-                    let getKeys = get('keys');
-
-                    let namedKeys = pipeWith(
-                        partials,
-                        filter(getKeys),
-                        flatMap(getKeys)
-                    );
-
-                    value = pipeWith(
-                        {},
-                        ...partials.map((partial, index) => {
-                            // $FlowFixMe - flow can't tell that this will definitely be a function
-                            let partialValue = partial.valueFromProps(props);
-                            let keys = getKeys(partial);
-                            if(!isKeyed(partialValue)) {
-                                throw new Error(`Result of partial[${index}].valueFromProps() should be object, but got ${partialValue}`);
-                            }
-                            return pipeWith(
-                                partialValue,
-                                keys ? pick(keys) : omit(namedKeys),
-                                merge
-                            );
-                        })
-                    );
-                } else {
-                    // $FlowFixMe - flow can't tell that this will definitely be a function
-                    value = valueFromProps(props);
-                }
-
-                newState.prevValueFromProps = value;
                 newState.parcel = state.initialize(value);
 
                 if(debugParcel) {
@@ -157,14 +161,29 @@ export default (config: ParcelHocConfig): Function => {
                 }
             }
 
-            if(parcel && shouldParcelUpdateFromProps) {
-                // $FlowFixMe - flow can't tell that this will definitely be a function
-                let value = valueFromProps(props);
-                newState.prevValueFromProps = value;
+            let newValueFromProps;
+            if(parcel) {
+                if(partials) {
+                    let partialsToUpdate = partials.filter(({shouldParcelUpdateFromProps, valueFromProps}) => {
+                        return shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps);
+                    });
 
-                if(shouldParcelUpdateFromProps(state.prevValueFromProps, value)) {
+                    if(partialsToUpdate.length > 0) {
+                        newValueFromProps = pipeWith(
+                            partialsToUpdate,
+                            partialValueFromProps,
+                            defaults(parcel.value)
+                        );
+                    }
+
+                } else if(shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps)) {
+                    newValueFromProps = valueFromProps(props);
+                }
+
+                if(newValueFromProps) {
+                    // $FlowFixMe - parcel cant possibly be undefined here
                     newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
-                        parcel.set(value);
+                        parcel.set(newValueFromProps);
                     });
 
                     if(debugParcel) {
@@ -174,6 +193,7 @@ export default (config: ParcelHocConfig): Function => {
                 }
             }
 
+            newState.prevProps = props;
             return newState;
         }
 
@@ -184,10 +204,33 @@ export default (config: ParcelHocConfig): Function => {
                 parcel.toConsole();
             }
 
-            if(onChange) {
+            let callOnChange = (onChange, value) => {
+                if(!onChange) {
+                    return;
+                }
                 let onChangeWithProps = onChange(this.props);
                 Types(`handleChange()`, "return value of onChange", "function")(onChangeWithProps);
-                onChangeWithProps(parcel.value, changeRequest);
+                onChangeWithProps(value, changeRequest);
+            };
+
+            if(partials) {
+                partials.forEach(({keys, onChange}) => {
+                    let partialValue = partialPick(keys)(parcel.value);
+                    if(!keys) {
+                        // get all unnamed keys from previous and next data, to see if any have changed
+                        keys = pipeWith(
+                            changeRequest.nextData.value,
+                            merge(changeRequest.prevData.value),
+                            omit(namedPartialKeys),
+                            keyArray()
+                        );
+                    }
+                    if(keys.some(key => changeRequest.hasValueChanged([key]))) {
+                        callOnChange(onChange, partialValue);
+                    }
+                });
+            } else if(changeRequest.hasValueChanged()) {
+                callOnChange(onChange, parcel.value);
             }
         };
 
