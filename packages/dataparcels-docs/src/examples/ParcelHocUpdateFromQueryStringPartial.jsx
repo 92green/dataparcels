@@ -9,7 +9,7 @@ import composeWith from 'unmutable/lib/util/composeWith';
 
 const QueryStringParcelHoc = ParcelHoc({
     name: "exampleParcel",
-    partials: [
+    segments: [
         {
             // update foo and bar from query string
             valueFromProps: (props) => props.queryString.value,

@@ -37,9 +37,9 @@ type AnyProps = {
 type ValueFromProps = (props: AnyProps) => *;
 type ShouldParcelUpdateFromProps = (prevProps: AnyProps, nextProps: AnyProps, valueFromProps: any) => boolean;
 type OnChange = (parcel: Parcel, changeRequest: ChangeRequest) => void;
-type PartialsConstructor = (value: {[key: string]: any}) => any;
+type SegmentsConstructor = (value: {[key: string]: any}) => any;
 
-type ParcelHocPartialConfig = {
+type ParcelHocSegmentConfig = {
     valueFromProps: ValueFromProps,
     shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
     onChange?: (props: AnyProps) => OnChange,
@@ -51,8 +51,8 @@ type ParcelHocConfig = {
     valueFromProps: ValueFromProps,
     shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
     onChange?: (props: AnyProps) => OnChange,
-    partials?: Array<ParcelHocPartialConfig>,
-    partialsConstructor?: PartialsConstructor,
+    segments?: Array<ParcelHocSegmentConfig>,
+    segmentsConstructor?: SegmentsConstructor,
     delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean,
@@ -69,8 +69,8 @@ export default (config: ParcelHocConfig): Function => {
         valueFromProps,
         shouldParcelUpdateFromProps,
         onChange,
-        partials,
-        partialsConstructor = ii => ii, /* eslint-disable-line no-unused-vars */
+        segments,
+        segmentsConstructor = ii => ii, /* eslint-disable-line no-unused-vars */
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
@@ -82,18 +82,25 @@ export default (config: ParcelHocConfig): Function => {
 
     let namedPartialKeys = [];
 
-    if(partials) {
-        Types(PARCEL_HOC_NAME, "config.partials", "array")(partials);
-        partials.forEach(({keys, valueFromProps, onChange, shouldParcelUpdateFromProps}) => {
-            Types(PARCEL_HOC_NAME, "config.partials[].valueFromProps", "function")(valueFromProps);
-            onChange && Types(PARCEL_HOC_NAME, "config.partials[].onChange", "function")(onChange);
-            shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.partials[].shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
-            keys && Types(PARCEL_HOC_NAME, "config.partials[].keys", "array")(keys);
+    if(segments) {
+        Types(PARCEL_HOC_NAME, "config.segments", "array")(segments);
+        segments.forEach((segment: ParcelHocSegmentConfig) => {
+            let {
+                keys,
+                valueFromProps,
+                onChange,
+                shouldParcelUpdateFromProps
+            } = segment;
+
+            Types(PARCEL_HOC_NAME, "config.segments[].valueFromProps", "function")(valueFromProps);
+            onChange && Types(PARCEL_HOC_NAME, "config.segments[].onChange", "function")(onChange);
+            shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.segments[].shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
+            keys && Types(PARCEL_HOC_NAME, "config.segments[].keys", "array")(keys);
         });
 
         let getKeys = get('keys');
         namedPartialKeys = pipeWith(
-            partials,
+            segments,
             filter(getKeys),
             flatMap(getKeys)
         );
@@ -129,13 +136,13 @@ export default (config: ParcelHocConfig): Function => {
             };
         }
 
-        static getPartialValueFromProps(props: Props) {
-            return (partials: Array<ParcelHocPartialConfig>): * => pipeWith(
+        static getPartialValueFromProps(props: Props): Function {
+            return (segments: Array<ParcelHocSegmentConfig>): {[key: string]: any} => pipeWith(
                 {},
-                ...partials.map(({valueFromProps, keys}, index) => {
+                ...segments.map(({valueFromProps, keys}: ParcelHocSegmentConfig, index: number): Function => {
                     let partialValue = valueFromProps(props);
                     if(!isKeyed(partialValue)) {
-                        throw new Error(`Result of partial[${index}].valueFromProps() should be object, but got ${partialValue}`);
+                        throw new Error(`Result of segment[${index}].valueFromProps() should be object, but got ${partialValue}`);
                     }
                     return pipeWith(
                         partialValue,
@@ -152,10 +159,10 @@ export default (config: ParcelHocConfig): Function => {
             let partialValueFromProps = ParcelHoc.getPartialValueFromProps(props);
 
             if(!parcel && delayUntil(props)) {
-                let value = partials
+                let value = segments
                     ? pipeWith(
-                        partialValueFromProps(partials),
-                        partialsConstructor
+                        partialValueFromProps(segments),
+                        segmentsConstructor
                     )
                     : valueFromProps(props);
 
@@ -169,14 +176,20 @@ export default (config: ParcelHocConfig): Function => {
 
             let newValueFromProps;
             if(parcel) {
-                if(partials) {
-                    let partialsToUpdate = partials.filter(({shouldParcelUpdateFromProps, valueFromProps}) => {
-                        return shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps);
+                if(segments) {
+                    let segmentsToUpdate = segments.filter((segment: ParcelHocSegmentConfig): boolean => {
+                        let {
+                            shouldParcelUpdateFromProps,
+                            valueFromProps
+                        } = segment;
+
+                        return !!shouldParcelUpdateFromProps
+                            && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps);
                     });
 
-                    if(partialsToUpdate.length > 0) {
+                    if(segmentsToUpdate.length > 0) {
                         newValueFromProps = pipeWith(
-                            partialsToUpdate,
+                            segmentsToUpdate,
                             partialValueFromProps,
                             defaults(parcel.value)
                         );
@@ -190,7 +203,7 @@ export default (config: ParcelHocConfig): Function => {
                     // $FlowFixMe - parcel cant possibly be undefined here
                     newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
                         // $FlowFixMe - newValueFromProps cant possibly be undefined here
-                        parcel.set(partialsConstructor(newValueFromProps));
+                        parcel.set(segmentsConstructor(newValueFromProps));
                     });
 
                     if(debugParcel) {
@@ -211,7 +224,7 @@ export default (config: ParcelHocConfig): Function => {
                 parcel.toConsole();
             }
 
-            let callOnChange = (onChange, value) => {
+            let callOnChange = (onChange: ?Function, value: *) => {
                 if(!onChange) {
                     return;
                 }
@@ -220,8 +233,12 @@ export default (config: ParcelHocConfig): Function => {
                 onChangeWithProps(value, changeRequest);
             };
 
-            if(partials) {
-                partials.forEach(({keys, onChange}) => {
+            if(changeRequest.hasValueChanged()) {
+                callOnChange(onChange, parcel.value);
+            }
+
+            if(segments) {
+                segments.forEach(({keys, onChange}: ParcelHocSegmentConfig) => {
                     let partialValue = partialPick(keys)(parcel.value);
                     if(!keys) {
                         // get all unnamed keys from previous and next data, to see if any have changed
@@ -236,8 +253,6 @@ export default (config: ParcelHocConfig): Function => {
                         callOnChange(onChange, partialValue);
                     }
                 });
-            } else if(changeRequest.hasValueChanged()) {
-                callOnChange(onChange, parcel.value);
             }
         };
 

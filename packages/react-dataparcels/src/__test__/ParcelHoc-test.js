@@ -211,10 +211,10 @@ test('ParcelHoc shouldParcelUpdateFromProps should update value from props when 
 });
 
 //
-// partials
+// segments
 //
 
-test('ParcelHoc config should work with partials', () => {
+test('ParcelHoc config should work with segments', () => {
 
     let props = {
         fooData: {
@@ -232,7 +232,7 @@ test('ParcelHoc config should work with partials', () => {
     let Child = () => <div />;
 
     let Hocked = ParcelHoc({
-        partials: [
+        segments: [
             {
                 valueFromProps: (props) => props.fooData,
                 onChange: (props) => props.onFooChange,
@@ -271,7 +271,7 @@ test('ParcelHoc config should work with partials', () => {
         baz: "D"
     });
 
-    // changing foo should only affect foo's partial
+    // changing foo should only affect foo's segment
     proppy.get('foo').onChange("A!");
     expect(onFooChange).toHaveBeenCalledTimes(1);
     expect(onFooChange.mock.calls[0][0]).toEqual({
@@ -283,7 +283,7 @@ test('ParcelHoc config should work with partials', () => {
 
     proppy = wrapper.update().props().proppy;
 
-    // changing bar should only affect bar's partial
+    // changing bar should only affect bar's segment
     proppy.get('bar').onChange("C!");
     expect(onFooChange).toHaveBeenCalledTimes(1);
     expect(onBarChange).toHaveBeenCalledTimes(1);
@@ -294,7 +294,7 @@ test('ParcelHoc config should work with partials', () => {
 
     proppy = wrapper.update().props().proppy;
 
-    // changing other should only affect other partial
+    // changing other should only affect other segment
     proppy.get('baz').onChange("D!");
     expect(onFooChange).toHaveBeenCalledTimes(1);
     expect(onBarChange).toHaveBeenCalledTimes(1);
@@ -305,7 +305,7 @@ test('ParcelHoc config should work with partials', () => {
 
     proppy = wrapper.update().props().proppy;
 
-    // removing other key should only affect other partial
+    // removing other key should only affect other segment
     proppy.delete('baz');
     expect(onFooChange).toHaveBeenCalledTimes(1);
     expect(onBarChange).toHaveBeenCalledTimes(1);
@@ -313,7 +313,7 @@ test('ParcelHoc config should work with partials', () => {
     expect(onOtherChange.mock.calls[1][0]).toEqual({});
 });
 
-test('ParcelHoc partials should use partialsConstructor', () => {
+test('ParcelHoc segments should use segmentsConstructor', () => {
 
     let props = {
         fooData: {
@@ -325,13 +325,13 @@ test('ParcelHoc partials should use partialsConstructor', () => {
     let childProps = shallowRenderHoc(
         props,
         ParcelHoc({
-            partials: [
+            segments: [
                 {
                     valueFromProps: (props) => props.fooData,
                     keys: ['foo', 'foo2']
                 }
             ],
-            partialsConstructor: value => Map(value),
+            segmentsConstructor: value => Map(value),
             name: "proppy"
         })
     ).props();
@@ -340,12 +340,12 @@ test('ParcelHoc partials should use partialsConstructor', () => {
     expect(childProps.proppy.value.get('foo')).toBe("A");
 });
 
-test('ParcelHoc config should throw error if partials.valueFromProps doesnt return object', () => {
+test('ParcelHoc config should throw error if segments.valueFromProps doesnt return object', () => {
 
     let Child = () => <div />;
 
     let Hocked = ParcelHoc({
-        partials: [
+        segments: [
             {
                 valueFromProps: (props) => [],
                 keys: ['foo', 'foo2']
@@ -354,10 +354,10 @@ test('ParcelHoc config should throw error if partials.valueFromProps doesnt retu
         name: "proppy"
     })(Child);
 
-    expect(() => shallow(<Hocked thing />)).toThrow(`Result of partial[0].valueFromProps() should be object`);
+    expect(() => shallow(<Hocked thing />)).toThrow(`Result of segment[0].valueFromProps() should be object`);
 });
 
-test('ParcelHoc partial shouldParcelUpdateFromProps should update value from props when it is returned true', () => {
+test('ParcelHoc segment shouldParcelUpdateFromProps should update value from props when it is returned true', () => {
     let valueFromProps = jest.fn((props) => props.abc);
     let valueFromProps2 = jest.fn(props => props);
 
@@ -378,7 +378,7 @@ test('ParcelHoc partial shouldParcelUpdateFromProps should update value from pro
         props,
         ParcelHoc({
             name: "proppy",
-            partials: [
+            segments: [
                 {
                     valueFromProps,
                     shouldParcelUpdateFromProps,
@@ -444,7 +444,7 @@ test('ParcelHoc partial shouldParcelUpdateFromProps should update value from pro
         bar: 123
     });
 
-    // set prop that SHOULD cause a controlled update on ONE partial
+    // set prop that SHOULD cause a controlled update on ONE segment
      wrapper.setProps({
         abc: {
             foo: "A!",
@@ -485,7 +485,7 @@ test('ParcelHoc partial shouldParcelUpdateFromProps should update value from pro
         bar: 123
     });
 
-    // set prop that SHOULD cause a controlled update on TWO partials
+    // set prop that SHOULD cause a controlled update on TWO segments
      wrapper.setProps({
         abc: {
             foo: "A!",
