@@ -1,7 +1,6 @@
 import Link from 'gatsby-link';
 import ParcelHocUpdateFromProps from 'examples/ParcelHocUpdateFromProps';
 import ParcelHocUpdateFromQueryString from 'examples/ParcelHocUpdateFromQueryString';
-import ParcelHocUpdateFromQueryStringPartial from 'examples/ParcelHocUpdateFromQueryStringPartial';
 import {Box, Link as HtmlLink} from 'dcme-style';
 prop history
 prop location
