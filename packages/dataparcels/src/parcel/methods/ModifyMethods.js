@@ -23,13 +23,6 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
 export default (_this: Parcel): Object => ({
 
-    modify: (updater: Function): Parcel => {
-        Types(`modify() expects param "updater" to be`, `function`)(updater);
-        return _this._create({
-            id: _this._id.pushModifier('m')
-        });
-    },
-
     modifyValue: (updater: Function): Parcel => {
         Types(`modifyValue()`, `updater`, `function`)(updater);
 
