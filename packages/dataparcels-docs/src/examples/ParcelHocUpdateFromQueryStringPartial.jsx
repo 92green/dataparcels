@@ -14,7 +14,9 @@ const QueryStringParcelHoc = ParcelHoc({
             // update foo and bar from query string
             valueFromProps: (props) => props.queryString.value,
             onChange: (props) => props.queryString.onChange,
-            shouldParcelUpdateFromProps: (prevValue, nextValue) => prevValue !== nextValue,
+            shouldParcelUpdateFromProps: (prevProps, nextProps, valueFromProps) => {
+                return valueFromProps(prevProps) !== valueFromProps(nextProps);
+            },
             keys: ['foo', 'bar']
         },
         {
@@ -22,7 +24,8 @@ const QueryStringParcelHoc = ParcelHoc({
             valueFromProps: (props) => ({
                 baz: "baz",
                 fuzz: "fuzz"
-            })
+            }),
+            onChange: (props) => (value) => console.log("value", value)
         }
     ]
 });

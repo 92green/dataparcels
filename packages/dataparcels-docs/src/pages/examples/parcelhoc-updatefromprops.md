@@ -22,6 +22,10 @@ This can be very powerful. You can make a ParcelHoc a slave to state that's held
 
 This example shows how a ParcelHoc's value can be controlled by external state held in a React component.
 
+When you type in the first input, the higher-up state is updated, and the changes are passed down and adopted by the ParcelHoc, via `config.shouldParcelUpdateFromProps`.
+
+When you type in the second input, the ParcelHoc changes and notifies the higher component of the change, via `config.onChange`. The higher component then updates its own state in response to this.
+
 <ParcelHocUpdateFromProps />
 
 ```js
@@ -32,13 +36,15 @@ const NameParcelHoc = ParcelHoc({
     name: "nameParcel",
     valueFromProps: (props) => props.name,
     onChange: (props) => (value) => props.onChangeName(value),
-    shouldParcelUpdateFromProps: (prevValue, nextValue) => prevValue !== nextValue
+    shouldParcelUpdateFromProps: (prevProps, nextProps, valueFromProps) => {
+        return valueFromProps(prevProps) !== valueFromProps(nextProps);
+    }
 });
 
 const NameEditor = (props) => {
-    let {name, nameParcel} = props;
+    let {nameParcel} = props;
     return <div>
-        <div>Higher-up state: {name}</div>
+        <label>name</label>
         <input type="text" {...nameParcel.spreadDOM()} />
     </div>;
 };
@@ -57,10 +63,15 @@ export default class ParcelHocUpdateFromPropsExample extends React.Component {
             name: newName
         });
 
-        return <UpdateFromPropsExample
-            name={name}
-            onChangeName={onChangeName}
-        />;
+        return <div>
+            <p>Higher-up state: {name}</p>
+            <label>edit higher-up state directly</label>
+            <input value={name} onChange={(e) => onChangeName(e.currentTarget.value)} />
+            <UpdateFromPropsExample
+                name={name}
+                onChangeName={onChangeName}
+            />
+        </div>;
     }
 }
 ```
@@ -87,7 +98,9 @@ const QueryStringParcelHoc = ParcelHoc({
     name: "queryStringParcel",
     valueFromProps: (props) => props.queryString.value,
     onChange: (props) => props.queryString.onChange,
-    shouldParcelUpdateFromProps: (prevValue, nextValue) => prevValue !== nextValue
+    shouldParcelUpdateFromProps: (prevProps, nextProps, valueFromProps) => {
+        return valueFromProps(prevProps) !== valueFromProps(nextProps);
+    }
 });
 
 const QueryStringEditor = (props) => {
@@ -128,5 +141,7 @@ export default composeWith(
 ## Updating parts of a parcel from more than one source of state
 
 ParcelHoc also allows parts of its parcel to be controlled by more than one source of state. This example shows how to update two values from in the query string, while another two are held exclusively in the ParcelHoc.
+
+For a ParcelHoc to be able to do this, it must contain a keyed data type such as an object.
 
 <ParcelHocUpdateFromQueryStringPartial history={history} location={location} />
