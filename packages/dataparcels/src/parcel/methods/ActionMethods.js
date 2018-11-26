@@ -12,7 +12,6 @@ export default (_this: Parcel): Object => ({
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
         Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
 
-
         let {
             _onDispatch,
             _onHandleChange
@@ -42,6 +41,7 @@ export default (_this: Parcel): Object => ({
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._setBaseParcel(_this);
             let parcelWithChangedData = _this._create({
+                handleChange: _onHandleChange,
                 parcelData: changeRequestWithBase.nextData
             });
 

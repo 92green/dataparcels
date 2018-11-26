@@ -1,18 +1,21 @@
 import React from 'react';
 import {ParcelHoc} from 'react-dataparcels';
 import ExampleHoc from 'component/ExampleHoc';
+import {Box} from 'dcme-style';
 
 const NameParcelHoc = ParcelHoc({
     name: "nameParcel",
     valueFromProps: (props) => props.name,
     onChange: (props) => (value) => props.onChangeName(value),
-    shouldParcelUpdateFromProps: (prevValue, nextValue) => prevValue !== nextValue
+    shouldParcelUpdateFromProps: (prevProps, nextProps, valueFromProps) => {
+        return valueFromProps(prevProps) !== valueFromProps(nextProps);
+    }
 });
 
 const NameEditor = (props) => {
-    let {name, nameParcel} = props;
+    let {nameParcel} = props;
     return <div>
-        <div>Higher-up state: {name}</div>
+        <label>name</label>
         <input type="text" {...nameParcel.spreadDOM()} />
     </div>;
 };
@@ -31,9 +34,18 @@ export default class ParcelHocUpdateFromPropsExample extends React.Component {
             name: newName
         });
 
-        return <UpdateFromPropsExample
-            name={name}
-            onChangeName={onChangeName}
-        />;
+        return <Box modifier="example marginBottomKilo">
+            <Box modifier="exampleInner paddingKilo">
+                <p>Higher-up state: {name}</p>
+                <label>edit higher-up state directly</label>
+                <input value={name} onChange={(e) => onChangeName(e.currentTarget.value)} />
+                <Box modifier="paddingLeftKilo paddingRightKilo">
+                    <UpdateFromPropsExample
+                        name={name}
+                        onChangeName={onChangeName}
+                    />
+                </Box>
+            </Box>
+        </Box>;
     }
 }

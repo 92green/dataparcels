@@ -11,7 +11,9 @@ const QueryStringParcelHoc = ParcelHoc({
     name: "queryStringParcel",
     valueFromProps: (props) => props.queryString.value,
     onChange: (props) => props.queryString.onChange,
-    shouldParcelUpdateFromProps: (prevValue, nextValue) => prevValue !== nextValue
+    shouldParcelUpdateFromProps: (prevValue, nextValue, valueFromProps) => {
+        return valueFromProps(prevValue) !== valueFromProps(nextValue);
+    }
 });
 
 const QueryStringEditor = (props) => {
