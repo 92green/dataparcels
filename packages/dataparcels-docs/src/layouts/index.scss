@@ -52,7 +52,15 @@
 @include DcmeText {
     &-superDuper {
         text-shadow: -6px 6px 0px darken(color('primary'), 15),
-            -12px 12px 0px darken(color('secondary'), 40)
+            -12px 12px 0px #340e57
+    }
+
+    &-superDuperReadme {
+        color: #000;
+        line-height: 4.2rem;
+        padding-left: .7rem;
+        text-shadow: -6px 6px 0px lighten(color('primary'), 10),
+            -12px 12px 0px lighten(color('primary'), 30)
     }
 }
 @include DcmeTypography;

@@ -27,7 +27,7 @@ test('Parcel.set() should call the Parcels handleChange function with the new pa
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedData).toEqual(changeRequest.data);
+            expect(expectedData).toEqual(changeRequest.nextData);
             expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
         }
     }).set(456);

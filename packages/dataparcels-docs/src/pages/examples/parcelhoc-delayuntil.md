@@ -1,6 +1,9 @@
+import Link from 'gatsby-link';
 import ParcelHocExampleDelayUntil from 'examples/ParcelHocExampleDelayUntil';
 
-This example shows how to delay the creation of a Parcel with `ParcelHoc`. The example counts the number of seconds that have passed, and passes this into the `DelayExample` component. The `ParcelHoc` is set to delay until seconds > 3. Once seconds = 4, `initialValue` is called and the Parcel is created.
+This example shows how to delay the creation of a Parcel with `ParcelHoc`. The example counts the number of seconds that have passed, and passes this into the `DelayExample` component. The `ParcelHoc` is set to delay until seconds > 3. Once seconds = 4, `valueFromProps` is called and the Parcel is created.
+
+<Link to="/api/ParcelHoc#delayUntil">API reference for ParcelHoc.delayUntil</Link>
 
 <ParcelHocExampleDelayUntil />
 
@@ -10,7 +13,7 @@ import {ParcelHoc} from 'react-dataparcels';
 
 const DelayParcelHoc = ParcelHoc({
     name: "delayParcel",
-    initialValue: (props) => `Created at ${props.seconds} seconds!`,
+    valueFromProps: (props) => `Created at ${props.seconds} seconds!`,
     delayUntil: (props) => props.seconds > 3
 });
 

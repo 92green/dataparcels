@@ -2,9 +2,10 @@ import Link from 'component/Link';
 import Param from 'component/Param';
 import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelHocExample from 'pages/examples/parcelhoc-example.md';
-import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-initialvalue.md';
+import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-valuefromprops.md';
 import ParcelHocOnChange from 'pages/examples/parcelhoc-onchange.md';
 import IconParcelBoundary from 'content/parcelboundary.gif';
+import {Box, Message} from 'dcme-style';
 
 # ParcelBoundary
 
@@ -24,11 +25,16 @@ import {ParcelBoundary} from 'react-dataparcels';
 <ParcelBoundary
     parcel={Parcel}
     debounce={?number}
-    hold={?boolean}
-    forceUpdate={?Array<*>}
     pure={?boolean}
+    forceUpdate={?Array<*>}
+    hold={?boolean}
     debugBuffer={?boolean}
+    debugParcel={?boolean}
 >
-    {(parcel, actions) => Node}
+    {(parcel, actions, buffered) => Node}
 </ParcelBoundary>
 ```
+
+<Box modifier="margin">
+    <Message>ParcelBoundary is also available as a React higher order component, <Link to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link>.</Message>
+</Box>

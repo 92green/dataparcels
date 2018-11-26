@@ -29,6 +29,7 @@ import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
 import AdvancedMethods from './methods/AdvancedMethods';
+import TopLevelMethods from './methods/TopLevelMethods';
 
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
@@ -49,7 +50,7 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
 
 export default class Parcel {
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
-        Types(`Parcel() expects param "config" to be`, `object`)(config);
+        Types(`Parcel()`, `config`, `object`)(config);
 
         let {
             handleChange,
@@ -57,8 +58,8 @@ export default class Parcel {
             debugRender = false
         } = config;
 
-        handleChange && Types(`Parcel() expects param "config.handleChange" to be`, `function`)(handleChange);
-        Types(`Parcel() expects param "config.debugRender" to be`, `boolean`)(debugRender);
+        handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
+        Types(`Parcel()`, `config.debugRender`, `boolean`)(debugRender);
 
         let {
             onDispatch,
@@ -93,7 +94,7 @@ export default class Parcel {
         this._parcelTypes = new ParcelTypes(
             value,
             parent && parent._parcelTypes,
-            id
+            !!(id && id.path().length === 0)
         );
 
         this._id = id;
@@ -130,7 +131,9 @@ export default class Parcel {
             // $FlowFixMe
             ...ModifyMethods(this),
             // $FlowFixMe
-            ...AdvancedMethods(this)
+            ...AdvancedMethods(this),
+            // $FlowFixMe
+            ...FilterMethods("TopLevel", TopLevelMethods)(this, dispatch)
         };
     }
 
@@ -161,7 +164,8 @@ export default class Parcel {
             handleChange,
             matchPipes = this._matchPipes,
             parent,
-            parcelData = this._parcelData
+            parcelData = this._parcelData,
+            treeshare = this._treeshare
         } = createParcelConfig;
 
         let {
@@ -182,7 +186,7 @@ export default class Parcel {
                 matchPipes,
                 onDispatch,
                 parent,
-                treeshare: this._treeshare
+                treeshare
             }
         );
 
@@ -261,8 +265,8 @@ export default class Parcel {
     //
 
     // Spread methods
-    spread = (): * => this._methods.spread();
-    spreadDOM = (): * => this._methods.spreadDOM();
+    spread = (notFoundValue: ?* = undefined): * => this._methods.spread(notFoundValue);
+    spreadDOM = (notFoundValue: ?* = undefined): * => this._methods.spreadDOM(notFoundValue);
 
     // Branch methods
     get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
@@ -311,8 +315,8 @@ export default class Parcel {
     setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
+    batchAndReturn = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batchAndReturn(batcher, changeRequest);
     ping = () => this._methods.ping();
-    dangerouslyReplace = (value: *) => this._methods.dangerouslyReplace(value);
 
     // Indexed methods
     insertAfter = overload({
@@ -343,7 +347,7 @@ export default class Parcel {
     // Modify methods
     modify = (updater: Function): Parcel => this._methods.modify(updater);
     modifyValue = (updater: Function): Parcel => this._methods.modifyValue(updater);
-    modifyChange = (updater: Function): Parcel => this._methods.modifyChange(updater);
+    modifyChangeBatch = (batcher: Function): Parcel => this._methods.modifyChangeBatch(batcher);
     modifyChangeValue = (updater: Function): Parcel => this._methods.modifyChangeValue(updater);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
@@ -362,4 +366,7 @@ export default class Parcel {
     // Advanced methods
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
     setInternalLocationShareData = (partialData: Object): * => this._methods.setInternalLocationShareData(partialData);
+
+    // Debug methods
+    toConsole = () => this._methods.toConsole();
 }

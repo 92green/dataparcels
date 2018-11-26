@@ -10,7 +10,7 @@ import ChangeRequest from '../../change/ChangeRequest';
 export default (_this: Parcel): Object => ({
 
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
-        Types(`dispatch() expects param "dispatchable" to be`, `dispatchable`)(dispatchable);
+        Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
 
 
         let {
@@ -30,7 +30,7 @@ export default (_this: Parcel): Object => ({
         }
 
         if(_this._log) {
-            console.log(`Parcel change: ${_this._logName}`);
+            console.log(`Parcel change: ${_this._logName}`); // eslint-disable-line
             changeRequest.toConsole();
         }
 
@@ -41,12 +41,9 @@ export default (_this: Parcel): Object => ({
 
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._setBaseParcel(_this);
-            let parcelWithChangedData = undefined;
-            try {
-                parcelWithChangedData = _this._create({
-                    parcelData: changeRequestWithBase.data
-                });
-            } catch (e) {} /* eslint-disable-line */
+            let parcelWithChangedData = _this._create({
+                parcelData: changeRequestWithBase.nextData
+            });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
             return;
@@ -55,7 +52,7 @@ export default (_this: Parcel): Object => ({
     },
 
     batch: (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => {
-        Types(`batch() expects param "batcher" to be`, `function`)(batcher);
+        Types(`batch()`, `batcher`, `function`)(batcher);
 
         let parcelData: ParcelData = _this._parcelData;
         let lastBuffer = _this._dispatchBuffer;
@@ -68,7 +65,7 @@ export default (_this: Parcel): Object => ({
             buffer = buffer.merge(changeRequest);
             _this._parcelData = changeRequest
                 ._setBaseParcel(_this)
-                .data;
+                .nextData;
         };
 
         batcher(_this);

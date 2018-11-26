@@ -1,5 +1,6 @@
 // @flow
 import Parcel from '../Parcel';
+import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
 
 test('Parcel.spread() returns an object with value and onChange', () => {
     var data = {
@@ -21,6 +22,24 @@ test('Parcel.spread() returns an object with value and onChange', () => {
     expect(onChange).toBe(parcel.onChange);
 });
 
+test('Parcel.spread(notFoundValue) returns an object with notFoundValue', () => {
+    var parcel = new Parcel({
+        value: undefined
+    });
+
+    var parcel2 = new Parcel({
+        value: DeletedParcelMarker
+    });
+
+    var parcel3 = new Parcel({
+        value: "123"
+    });
+
+    expect(parcel.spread("???").value).toBe("???");
+    expect(parcel2.spread("???").value).toBe("???");
+    expect(parcel3.spread("???").value).toBe("123");
+});
+
 test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)', () => {
     var data = {
         value: 123,
@@ -39,6 +58,24 @@ test('Parcel.spreadDOM() returns an object with value and onChange (onChangeDOM)
 
     expect(value).toBe(parcel.value);
     expect(onChange).toBe(parcel.onChangeDOM);
+});
+
+test('Parcel.spreadDOM(notFoundValue) returns an object with notFoundValue', () => {
+    var parcel = new Parcel({
+        value: undefined
+    });
+
+    var parcel2 = new Parcel({
+        value: DeletedParcelMarker
+    });
+
+    var parcel3 = new Parcel({
+        value: "123"
+    });
+
+    expect(parcel.spreadDOM("???").value).toBe("???");
+    expect(parcel2.spreadDOM("???").value).toBe("???");
+    expect(parcel3.spreadDOM("???").value).toBe("123");
 });
 
 test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', () => {
@@ -122,8 +159,8 @@ test('Parcel.spyChange() should be called with changeRequest', () => {
         .spyChange(spy2)
         .onChange(456);
 
-    expect(spy2.mock.calls[0][0].value).toEqual(456);
-    expect(spy.mock.calls[0][0].value).toEqual({abc: 456});
+    expect(spy2.mock.calls[0][0].nextData.value).toEqual(456);
+    expect(spy.mock.calls[0][0].nextData.value).toEqual({abc: 456});
 });
 
 test('Parcel.pipe() should pass itself in and return what pipe() returns', () => {

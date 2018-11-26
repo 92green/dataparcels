@@ -17,7 +17,7 @@ export default (_this: Parcel, dispatch: Function) => ({
     },
 
     updateSelf: (updater: ParcelValueUpdater) => {
-        Types(`updateSelf() expects param "updater" to be`, `function`)(updater);
+        Types(`updateSelf()`, `updater`, `function`)(updater);
         _this.set(updater(_this.value));
     },
 
@@ -26,36 +26,32 @@ export default (_this: Parcel, dispatch: Function) => ({
     },
 
     onChangeDOM: (event: Object) => {
-        Types(`onChangeDOM() expects param "event" to be`, `event`)(event);
+        Types(`onChangeDOM()`, `event`, `event`)(event);
         _this.onChange(event.currentTarget.value);
     },
 
     setMeta: (partialMeta: ParcelMeta) => {
-        Types(`setMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
+        Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
         dispatch(ActionCreators.setMeta(partialMeta));
     },
 
     updateMeta: (updater: ParcelMetaUpdater) => {
-        Types(`updateMeta() expects param "updater" to be`, `function`)(updater);
+        Types(`updateMeta()`, `updater`, `function`)(updater);
         let {meta} = _this._parcelData;
         pipeWith(
             meta,
             updater,
-            Types(`updateMeta() expects the result of updater() to be`, `object`),
+            Types(`updateMeta()`, `the result of updater()`, `object`),
             _this.setMeta
         );
     },
 
     setChangeRequestMeta: (partialMeta: ParcelMeta) => {
-        Types(`setChangeRequestMeta() expects param "partialMeta" to be`, `object`)(partialMeta);
+        Types(`setChangeRequestMeta()`, `partialMeta`, `object`)(partialMeta);
         dispatch(new ChangeRequest().setChangeRequestMeta(partialMeta));
     },
 
     ping: () => {
         dispatch(ActionCreators.ping());
-    },
-
-    dangerouslyReplace: (value: *) => {
-        dispatch(ActionCreators.dangerouslyReplace(value));
     }
 });

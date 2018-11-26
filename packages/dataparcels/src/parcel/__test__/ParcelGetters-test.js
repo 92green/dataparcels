@@ -75,7 +75,7 @@ test('Parcel.id should return the Parcels id', () => {
     };
     expect("^").toBe(new Parcel(data).id);
     expect("^.a").toBe(new Parcel(data).get("a").id);
-    expect("^.~mv.a").toBe(new Parcel(data).modifyValue(ii => ii).get("a").id);
+    expect("^.~mv-364997092.a").toBe(new Parcel(data).modifyValue(ii => ii).get("a").id);
     expect("^.a.#a").toBe(new Parcel(data).getIn(["a",0]).id);
     expect("^.something%.%:%@").toBe(new Parcel(data).get("something.:@").id);
     expect("^.b").toBe(new Parcel(data).get("b").id);

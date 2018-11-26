@@ -3,6 +3,7 @@ import type {Node} from 'react';
 import React from 'react';
 import ApiPage from 'component/ApiPage';
 import Markdown_Parcel from 'docs/api/parcel/Parcel.md';
+import Markdown_ParcelAfter from 'docs/api/parcel/ParcelAfter.md';
 import Markdown_value from 'docs/api/parcel/value.md';
 import Markdown_meta from 'docs/api/parcel/meta.md';
 import Markdown_data from 'docs/api/parcel/data.md';
@@ -41,9 +42,10 @@ import Markdown_updateMeta from 'docs/api/parcel/updateMeta.md';
 import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
 import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
 import Markdown_batch from 'docs/api/parcel/batch.md';
+import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
 import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_modifyValue from 'docs/api/parcel/modifyValue.md';
-import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
+import Markdown_modifyChangeBatch from 'docs/api/parcel/modifyChangeBatch.md';
 import Markdown_modifyChangeValue from 'docs/api/parcel/modifyChangeValue.md';
 import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
@@ -57,9 +59,11 @@ import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
 import Markdown_matchPipe from 'docs/api/parcel/matchPipe.md';
+import Markdown_toConsole from 'docs/api/parcel/toConsole.md';
 
 const md = {
     _desc: Markdown_Parcel,
+    _after: Markdown_ParcelAfter,
     value: Markdown_value,
     meta: Markdown_meta,
     data: Markdown_data,
@@ -98,9 +102,10 @@ const md = {
     setChangeRequestMeta: Markdown_setChangeRequestMeta,
     dispatch: Markdown_dispatch,
     batch: Markdown_batch,
+    batchAndReturn: Markdown_batchAndReturn,
     ping: Markdown_ping,
     modifyValue: Markdown_modifyValue,
-    modifyChange: Markdown_modifyChange,
+    modifyChangeBatch: Markdown_modifyChangeBatch,
     modifyChangeValue: Markdown_modifyChangeValue,
     initialMeta: Markdown_initialMeta,
     isChild: Markdown_isChild,
@@ -113,7 +118,8 @@ const md = {
     spy: Markdown_spy,
     spyChange: Markdown_spyChange,
     pipe: Markdown_pipe,
-    matchPipe: Markdown_matchPipe
+    matchPipe: Markdown_matchPipe,
+    toConsole: Markdown_toConsole
 }
 
 const api = `
@@ -170,9 +176,13 @@ updateMeta()
 setChangeRequestMeta()
 dispatch()
 batch()
+batchAndReturn()
 ping()
 
 # Modify methods
+modifyValue()
+modifyChangeBatch()
+modifyChangeValue()
 initialMeta()
 
 # Type methods
@@ -186,13 +196,16 @@ isTopLevel()
 hasDispatched()
 
 # Side-effect methods
-log()
 spy()
 spyChange()
 
 # Composition methods
 pipe()
 matchPipe()
+
+# Debug methods
+log()
+toConsole()
 
 `;
 

@@ -60,3 +60,19 @@ test('ChildParcel.isLast() should detect first child parcel', () => {
     expect(parcel.get(2).isLast()).toBe(false);
     expect(parcel.get(3).isLast()).toBe(true);
 });
+
+test('ChildParcel.isFirst() should not detect first child parcel on empty parent', () => {
+    let parcel = new Parcel({
+        value: {}
+    });
+
+    expect(parcel.get('a').isFirst()).toBe(false);
+});
+
+test('ChildParcel.isLast() should not detect first child parcel on empty parent', () => {
+    let parcel = new Parcel({
+        value: {}
+    });
+
+    expect(parcel.get('a').isLast()).toBe(false);
+});

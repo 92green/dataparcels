@@ -6,44 +6,52 @@ import type {MatchPipe} from '../../types/Types';
 
 import Types from '../../types/Types';
 import Matcher from '../../match/Matcher';
+import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
 
 import map from 'unmutable/lib/map';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
+let getValue = (_this: Parcel, notFoundValue: *): * => {
+    let {value} = _this;
+    return value === DeletedParcelMarker || typeof value === "undefined"
+        ? notFoundValue
+        : value;
+};
+
 export default (_this: Parcel) => ({
 
     // Spread Methods
 
-    spread: (): Object => ({
-        value: _this.value,
+    spread: (notFoundValue: ?* = undefined): Object => ({
+        value: getValue(_this, notFoundValue),
         onChange: _this.onChange
     }),
 
-    spreadDOM: (): Object => ({
-        value: _this.value,
+    spreadDOM: (notFoundValue: ?* = undefined): Object => ({
+        value: getValue(_this, notFoundValue),
         onChange: _this.onChangeDOM
     }),
 
     // Composition methods
 
     pipe: (...updaters: ParcelUpdater[]): Parcel => {
-        Types(`pipe() expects all params to be`, `functionArray`)(updaters);
+        updaters.forEach(Types(`pipe()`, `all updaters`, `function`));
         return pipeWith(
             _this,
             ...pipeWith(
                 updaters,
                 map(updater => pipe(
                     updater,
-                    Types(`pipe() expects the result of all functions to be`, `parcel`)
+                    Types(`pipe()`, `the result of all functions`, `parcel`)
                 ))
             )
         );
     },
 
     matchPipe: (match: string, ...updaters: ParcelUpdater[]): Parcel => {
-        Types(`matchPipe() expects first param to be`, `string`)(match);
-        Types(`matchPipe() expects all but the first param to be`, `functionArray`)(updaters);
+        Types(`matchPipe()`, `first param`, `string`)(match);
+        updaters.forEach(Types(`matchPipe()`, `all updaters`, `function`));
 
         let parcel = _this._create({
             id: _this._id.pushModifier('mp'),
@@ -57,7 +65,7 @@ export default (_this: Parcel) => ({
                             updaters,
                             map(updater => pipe(
                                 updater,
-                                Types(`matchPipe() expects the result of all functions to be`, `parcel`)
+                                Types(`matchPipe() `, `the result of all functions`, `parcel`)
                             ))
                         )
                     )
@@ -67,7 +75,7 @@ export default (_this: Parcel) => ({
         return parcel._methods._applyMatchPipes();
     },
 
-    _applyMatchPipes: () => {
+    _applyMatchPipes: (): Parcel => {
         let typedPathString = _this._id.typedPathString();
         return pipeWith(
             _this,
@@ -91,19 +99,19 @@ export default (_this: Parcel) => ({
     log: (name: string): Parcel => {
         _this._log = true;
         _this._logName = name;
-        console.log(`Parcel data: ${name} `);
-        console.log(JSON.parse(JSON.stringify(_this.data)));
+        console.log(`Parcel data: ${name} `); // eslint-disable-line
+        _this.toConsole();
         return _this;
     },
 
     spy: (sideEffect: Function): Parcel => {
-        Types(`spy() expects param "sideEffect" to be`, `function`)(sideEffect);
+        Types(`spy()`, `sideEffect`, `function`)(sideEffect);
         sideEffect(_this);
         return _this;
     },
 
     spyChange: (sideEffect: Function): Parcel => {
-        Types(`spyChange() expects param "sideEffect" to be`, `function`)(sideEffect);
+        Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
         return _this._create({
             id: _this._id.pushModifier('sc'),
             onDispatch: (changeRequest: ChangeRequest) => {
@@ -111,5 +119,11 @@ export default (_this: Parcel) => ({
                 _this.dispatch(changeRequest);
             }
         });
+    },
+
+    // Debug methods
+
+    toConsole: () => {
+        console.log(_this.data); // eslint-disable-line
     }
 });

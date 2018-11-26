@@ -4,6 +4,7 @@ export default dataparcels;
 
 export {Action} from 'dataparcels';
 export {ChangeRequest} from 'dataparcels';
+export {DeletedParcelMarker} from 'dataparcels';
 
 export type {ParcelData} from 'dataparcels';
 export type {ParcelConfig} from 'dataparcels';
@@ -23,3 +24,4 @@ export type {Property} from 'dataparcels';
 
 export {default as ParcelHoc} from './ParcelHoc';
 export {default as ParcelBoundary} from './ParcelBoundary';
+export {default as ParcelBoundaryHoc} from './ParcelBoundaryHoc';

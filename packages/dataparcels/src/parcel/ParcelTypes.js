@@ -1,5 +1,4 @@
 // @flow
-import type ParcelId from '../parcelId/ParcelId';
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 
@@ -11,12 +10,12 @@ export default class ParcelTypes {
     _isParent: boolean = false;
     _isTopLevel: boolean = false;
 
-    constructor(value: *, parentParcelTypes: ?ParcelTypes, id: ?ParcelId) {
+    constructor(value: *, parentParcelTypes: ?ParcelTypes, isTopLevel: boolean = false) {
         this._isChild = !!parentParcelTypes;
         this._isElement = !!(parentParcelTypes && parentParcelTypes.isIndexed());
         this._isIndexed = isIndexedValue(value);
         this._isParent = isParentValue(value);
-        this._isTopLevel = !!(id && id.path().length === 0);
+        this._isTopLevel = isTopLevel;
     }
 
     isChild: Function = (): boolean => this._isChild;

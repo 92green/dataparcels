@@ -2,6 +2,7 @@ import Link from 'gatsby-link';
 import {Grid, GridItem} from 'dcme-style';
 import EditingObjectsBeginner from 'examples/EditingObjectsBeginner';
 import EditingObjects from 'examples/EditingObjects';
+import Examples from 'content/Examples.md';
 
 # Getting Started
 
@@ -44,9 +45,13 @@ We could do something like this.
 import React from 'react';
 import {ParcelHoc} from 'react-dataparcels';
 
+// PLEASE DON'T USE THIS CODE
+// THIS CODE IS FOR DEMONSTRAION PURPOSES ONLY
+// THERE'S A BETTER WAY OF DOING IT BELOW
+
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",
-    initialValue: (/* props */) => ({
+    valueFromProps: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {
@@ -98,7 +103,7 @@ import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",
-    initialValue: (/* props */) => ({
+    valueFromProps: (/* props */) => ({
         firstname: "Robert",
         lastname: "Clamps",
         address: {
@@ -142,15 +147,4 @@ For more info see the documentation for <Link to="/api/Parcel">Parcel</Link>, <L
 
 ## More examples
 
-### Parcel
-
-* <Link to="/examples/editing-arrays">Editing Arrays</Link>
-* <Link to="/examples/managing-your-own-parcel-state">Managing Your Own Parcel State</Link>
-
-### ParcelHoc
-
-* <Link to="/examples/parcelhoc-example">ParcelHoc - Example</Link>
-* <Link to="/examples/parcelhoc-initialvalue">ParcelHoc - Getting initialValue from props</Link>
-* <Link to="/examples/parcelhoc-onchange">ParcelHoc - Using onChange</Link>
-* <Link to="/examples/parcelhoc-delayuntil">ParcelHoc - Using delayUntil</Link>
-
+<Examples />

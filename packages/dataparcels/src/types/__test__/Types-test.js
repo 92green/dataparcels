@@ -20,7 +20,6 @@ let types = {
     ['changeRequest']: new ChangeRequest(),
     ['event']: {currentTarget: {value: null}},
     ['function']: () => {},
-    ['functionArray']: [() => {}, () => {}],
     ['number']: 123,
     ['numberArray']: [123, 456],
     ['object']: {},
@@ -32,21 +31,20 @@ let types = {
 };
 
 let testTypes = (type: string, shouldAllow: string[]) => {
-    let message = `Expected thing to be`;
     pipeWith(
         types,
         map((data, dataType) => {
             if(shouldAllow.indexOf(dataType) !== -1) {
-                expect(() => Types(message, type)(data)).not.toThrowError(`${type} should not throw when given ${dataType}`);
+                expect(() => Types(`Thing`, `Thing`, type)(data)).not.toThrowError(`${type} should not throw when given ${dataType}`);
             } else {
-                expect(() => Types(message, type)(data)).toThrowError(`but got`);
+                expect(() => Types(`Thing`, `Thing`, type)(data)).toThrowError(`but got`);
             }
         })
     );
 };
 
 test('Types will error if type is not found', () => {
-    expect(() => Types('???', 'notfound')({abc: 123})).toThrowError("Unknown type check");
+    expect(() => Types('???', 'param', 'notfound')({abc: 123})).toThrowError("Unknown type check");
 });
 
 test('Types() can identify a boolean', () => testTypes(`boolean`, [
@@ -66,10 +64,6 @@ test('Types() can identify an event', () => testTypes(`event`, [
 
 test('Types() can identify a function', () => testTypes(`function`, [
     'function'
-]));
-
-test('Types() can identify a function array', () => testTypes(`functionArray`, [
-    'functionArray'
 ]));
 
 test('Types() can identify a keyIndex', () => testTypes(`keyIndex`, [
@@ -92,7 +86,6 @@ test('Types() can identify a object', () => testTypes(`object`, [
     'botchedActionArray',
     'changeRequest',
     'event',
-    'functionArray',
     'numberArray',
     'object',
     'parcel',

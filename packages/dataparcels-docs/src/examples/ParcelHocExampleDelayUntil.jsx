@@ -4,7 +4,7 @@ import ExampleHoc from 'component/ExampleHoc';
 
 const DelayParcelHoc = ParcelHoc({
     name: "delayParcel",
-    initialValue: (props) => `Created at ${props.seconds} seconds!`,
+    valueFromProps: (props) => `Created at ${props.seconds} seconds!`,
     delayUntil: (props) => props.seconds > 3
 });
 
@@ -29,11 +29,15 @@ export default class ParcelHocDelayUntilExample extends React.Component {
         this.state = {
             seconds: 0
         };
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.setState(({seconds}) => ({
                 seconds: seconds + 1
             }));
         }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     render() {

@@ -11,3 +11,4 @@ module.system.node.resolve_dirname=src
 <PROJECT_ROOT>/example/.*
 <PROJECT_ROOT>/.*/gatsby-node.js
 <PROJECT_ROOT>/packages/dataparcels-docs/.*
+<PROJECT_ROOT>/node_modules/react-flip-move/src/.*

@@ -4,6 +4,12 @@ import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import Types from '../../types/Types';
 
+import ParcelTypes from '../ParcelTypes';
+import {ModifyValueChildReturnError} from '../../errors/Errors';
+import {ModifyValueChangeChildReturnError} from '../../errors/Errors';
+import HashString from '../../util/HashString';
+
+import equals from 'unmutable/lib/equals';
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
@@ -12,6 +18,8 @@ import set from 'unmutable/lib/set';
 import setIn from 'unmutable/lib/setIn';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
+
+let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
 export default (_this: Parcel): Object => ({
 
@@ -23,22 +31,46 @@ export default (_this: Parcel): Object => ({
     },
 
     modifyValue: (updater: Function): Parcel => {
-        Types(`modifyValue() expects param "updater" to be`, `function`)(updater);
-        return pipeWith(
-            _this._parcelData,
-            set('value', updater(_this._parcelData.value, _this)),
-            parcelData => ({
-                parcelData,
-                id: _this._id.pushModifier('mv')
-            }),
-            _this._create
-        );
+        Types(`modifyValue()`, `updater`, `function`)(updater);
+
+        let {value} = _this._parcelData;
+        let updatedValue = updater(value, _this);
+        let updatedType = new ParcelTypes(updatedValue);
+
+        if(updatedType.isParent() && !isEmpty()(updatedValue) && !equals(value)(updatedValue)) {
+            throw ModifyValueChildReturnError();
+        }
+
+        let updatedTypeChanged: boolean = updatedType.isParent() !== _this._parcelTypes.isParent()
+            || updatedType.isIndexed() !== _this._parcelTypes.isIndexed();
+
+        let onDispatch;
+        if(updatedTypeChanged) {
+            onDispatch = (changeRequest: ChangeRequest) => {
+                _this.batch(
+                    (parcel: Parcel) => {
+                        parcel.set(updatedValue);
+                        parcel.dispatch(changeRequest);
+                    },
+                    changeRequest
+                );
+            };
+        }
+
+        return _this._create({
+            id: _this._id.pushModifier(`mv-${HashFunction(updater)}`),
+            parcelData: {
+                ..._this._parcelData,
+                value: updatedValue
+            },
+            onDispatch
+        });
     },
 
-    modifyChange: (batcher: Function): Parcel => {
-        Types(`modifyChange() expects param "batcher" to be`, `function`)(batcher);
+    modifyChangeBatch: (batcher: Function): Parcel => {
+        Types(`modifyChangeBatch()`, `batcher`, `function`)(batcher);
         return _this._create({
-            id: _this._id.pushModifier('mc'),
+            id: _this._id.pushModifier(`mcb-${HashFunction(batcher)}`),
             onDispatch: (changeRequest: ChangeRequest) => {
                 _this.batch(
                     (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),
@@ -49,22 +81,32 @@ export default (_this: Parcel): Object => ({
     },
 
     modifyChangeValue: (updater: Function): Parcel => {
-        Types(`modifyChangeValue() expects param "updater" to be`, `function`)(updater);
-        return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
+        Types(`modifyChangeValue()`, `updater`, `function`)(updater);
+        return _this.modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
 
+            let {value} = changeRequest.nextData;
+            let type = new ParcelTypes(value);
+
+            let updatedValue = updater(value, _this);
+
+            if(type.isParent()) {
+                if(!equals(value)(updatedValue)) {
+                    throw ModifyValueChangeChildReturnError();
+                }
+                parcel.dispatch(changeRequest);
+                return;
+            }
+
+            // dispatch all non-value actions in this change request
             let valueActionFilter = actions => actions.filter(action => !action.isValueAction());
             parcel.dispatch(changeRequest.updateActions(valueActionFilter));
 
-            pipeWith(
-                changeRequest.data.value,
-                updater,
-                parcel.dangerouslyReplace
-            );
+            parcel.set(updatedValue);
         });
     },
 
     initialMeta: (initialMeta: ParcelMeta = {}): Parcel => {
-        Types(`initialMeta() expects param "initialMeta" to be`, `object`)(initialMeta);
+        Types(`initialMeta()`, `initialMeta`, `object`)(initialMeta);
         let {meta} = _this._parcelData;
 
         let partialMetaToSet = pipeWith(
@@ -95,9 +137,10 @@ export default (_this: Parcel): Object => ({
 
     _boundarySplit: ({handleChange}: *): Parcel => {
         return _this._create({
-            id: _this._id.pushModifier('mb'),
+            id: _this._id.pushModifier('bs'),
             parent: _this._parent,
-            handleChange
+            handleChange,
+            treeshare: _this._treeshare.boundarySplit()
         });
     }
 });

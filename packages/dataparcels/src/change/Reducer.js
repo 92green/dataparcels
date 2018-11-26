@@ -3,7 +3,6 @@ import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 
-import {ReducerKeyPathRequiredError} from '../errors/Errors';
 import {ReducerInvalidActionError} from '../errors/Errors';
 import {ReducerSwapKeyError} from '../errors/Errors';
 
@@ -12,6 +11,7 @@ import isEmpty from 'unmutable/lib/isEmpty';
 import last from 'unmutable/lib/last';
 
 import parcelDelete from '../parcelData/delete';
+import parcelDeleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import parcelInsert from '../parcelData/insert';
 
 import parcelPop from '../parcelData/pop';
@@ -58,7 +58,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
     switch(type) {
         case "delete": {
             if(keyPathIsEmpty) {
-                throw ReducerKeyPathRequiredError(type);
+                return parcelDeleteSelfWithMarker();
             }
             return updateIn(
                 keyPathButLast,
@@ -68,7 +68,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "insertAfter": {
             if(keyPathIsEmpty) {
-                throw ReducerKeyPathRequiredError(type);
+                return parcelData;
             }
             return updateIn(
                 keyPathButLast,
@@ -78,7 +78,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "insertBefore": {
             if(keyPathIsEmpty) {
-                throw ReducerKeyPathRequiredError(type);
+                return parcelData;
             }
             return updateIn(
                 keyPathButLast,
@@ -101,13 +101,6 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
             return updateIn(
                 keyPath,
                 parcelPush(value)
-            );
-        }
-
-        case "replace": {
-            return updateIn(
-                keyPath,
-                parcelSetSelf(value, true)
             );
         }
 
@@ -135,7 +128,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "swap": {
             if(keyPathIsEmpty) {
-                throw ReducerKeyPathRequiredError(type);
+                return parcelData;
             }
             let {swapKey} = action.payload;
             if(typeof swapKey === "undefined") {
@@ -150,7 +143,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "swapNext": {
             if(keyPathIsEmpty) {
-                throw ReducerKeyPathRequiredError(type);
+                return parcelData;
             }
 
             return updateIn(
@@ -161,7 +154,7 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
 
         case "swapPrev": {
             if(keyPathIsEmpty) {
-                throw ReducerKeyPathRequiredError(type);
+                return parcelData;
             }
 
             return updateIn(
