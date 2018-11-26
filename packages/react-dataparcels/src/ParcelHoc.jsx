@@ -37,6 +37,7 @@ type AnyProps = {
 type ValueFromProps = (props: AnyProps) => *;
 type ShouldParcelUpdateFromProps = (prevProps: AnyProps, nextProps: AnyProps, valueFromProps: any) => boolean;
 type OnChange = (parcel: Parcel, changeRequest: ChangeRequest) => void;
+type PartialsConstructor = (value: {[key: string]: any}) => any;
 
 type ParcelHocPartialConfig = {
     valueFromProps: ValueFromProps,
@@ -51,6 +52,7 @@ type ParcelHocConfig = {
     shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
     onChange?: (props: AnyProps) => OnChange,
     partials?: Array<ParcelHocPartialConfig>,
+    partialsConstructor?: PartialsConstructor,
     delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean,
@@ -68,6 +70,7 @@ export default (config: ParcelHocConfig): Function => {
         shouldParcelUpdateFromProps,
         onChange,
         partials,
+        partialsConstructor = ii => ii, /* eslint-disable-line no-unused-vars */
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
@@ -150,7 +153,10 @@ export default (config: ParcelHocConfig): Function => {
 
             if(!parcel && delayUntil(props)) {
                 let value = partials
-                    ? partialValueFromProps(partials)
+                    ? pipeWith(
+                        partialValueFromProps(partials),
+                        partialsConstructor
+                    )
                     : valueFromProps(props);
 
                 newState.parcel = state.initialize(value);
@@ -183,7 +189,8 @@ export default (config: ParcelHocConfig): Function => {
                 if(newValueFromProps) {
                     // $FlowFixMe - parcel cant possibly be undefined here
                     newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
-                        parcel.set(newValueFromProps);
+                        // $FlowFixMe - newValueFromProps cant possibly be undefined here
+                        parcel.set(partialsConstructor(newValueFromProps));
                     });
 
                     if(debugParcel) {

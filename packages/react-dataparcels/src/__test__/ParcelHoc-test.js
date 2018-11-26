@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-
+import {Map} from 'immutable';
 import ParcelHoc from '../ParcelHoc';
 
 let shallowRenderHoc = (props, hock) => {
@@ -311,6 +311,33 @@ test('ParcelHoc config should work with partials', () => {
     expect(onBarChange).toHaveBeenCalledTimes(1);
     expect(onOtherChange).toHaveBeenCalledTimes(2);
     expect(onOtherChange.mock.calls[1][0]).toEqual({});
+});
+
+test('ParcelHoc partials should use partialsConstructor', () => {
+
+    let props = {
+        fooData: {
+            foo: "A",
+            foo2: "B"
+        }
+    };
+
+    let childProps = shallowRenderHoc(
+        props,
+        ParcelHoc({
+            partials: [
+                {
+                    valueFromProps: (props) => props.fooData,
+                    keys: ['foo', 'foo2']
+                }
+            ],
+            partialsConstructor: value => Map(value),
+            name: "proppy"
+        })
+    ).props();
+
+    expect(Map.isMap(childProps.proppy.value)).toBe(true);
+    expect(childProps.proppy.value.get('foo')).toBe("A");
 });
 
 test('ParcelHoc config should throw error if partials.valueFromProps doesnt return object', () => {
