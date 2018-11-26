@@ -9828,9 +9828,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-cool-storage@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-cool-storage/-/react-cool-storage-0.1.0.tgz#3290e646748c9fc57e679ee767d64a8150759325"
+react-cool-storage@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-cool-storage/-/react-cool-storage-0.1.1.tgz#412b2ebbb0a9d791ec60cb60246856b4f1a1cd4d"
   dependencies:
     babel-runtime "6.23.0"
     storage-available "^1.1.0"
