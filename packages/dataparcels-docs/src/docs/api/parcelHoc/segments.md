@@ -12,7 +12,7 @@ type ParcelHocSegmentConfig = {
 };
 ```
 
-ParcelHoc allows segments of its data to be configured separately. This allows for a single Parcel to source parts of its top-level value from different sources of data, and potentially be controlled by different sources of state. When using `segments`, the value of the Parcel in the ParcelHoc defaults to an object, and each segment's config will apply to a defined set of keys on that object.
+ParcelHoc can allow for some segments of its data to be configured separately. This can allow for a single Parcel to source parts of its top-level value from different sources of data, and potentially be controlled by different sources of state. When using `segments`, the value of the Parcel in the ParcelHoc defaults to an object, and each segment's config will apply to a defined set of keys on that object.
 
 The `keys` ParcelHocSegmentConfig configuration option determines which keys each segment pertains to. A key cannot belong to two different segments at once. If `keys` is not set on a segment, then it affects all keys not mentioned in the other segments.
 
