@@ -42,7 +42,7 @@ const NameParcelHoc = ParcelHoc({
 const NameEditor = (props) => {
     let {nameParcel} = props;
     return <div>
-        <label>name</label>
+        <label>edit parcel state</label>
         <input type="text" {...nameParcel.spreadDOM()} />
     </div>;
 };
