@@ -17,6 +17,11 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         _this.get(key).update(updater);
     },
 
+    delete: (key: Key|Index) => {
+        Types(`delete()`, `key`, `keyIndex`)(key);
+        _this.get(key).delete();
+    },
+
     setIn: (keyPath: Array<Key|Index>, value: *) => {
         Types(`setIn()`, `keyPath`, `keyIndexPath`)(keyPath);
         _this.getIn(keyPath).set(value);

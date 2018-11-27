@@ -6,6 +6,7 @@ import {Box, Grid, GridItem, NavigationList, NavigationListItem, Text, Typograph
 import Link from 'component/Link';
 import SiteNavigation from 'component/SiteNavigation';
 import PageLayout from 'component/PageLayout';
+import APINavigation from 'component/APINavigation';
 
 const renderApi = (api) => api
     .split('\n')
@@ -66,13 +67,7 @@ export default ({name, api, md, after}: Props) => {
             {After && <Typography><After /></Typography>}
         </Box>}
         nav={() => <Fragment>
-            <NavigationList>
-                <NavigationListItem><Link to="/api">Api</Link></NavigationListItem>
-                <NavigationListItem><Link to="/api/Parcel">Parcel</Link></NavigationListItem>
-                <NavigationListItem><Link to="/api/ParcelHoc">ParcelHoc</Link></NavigationListItem>
-                <NavigationListItem><Link to="/api/ParcelBoundary">ParcelBoundary</Link></NavigationListItem>
-                <NavigationListItem><Link to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link></NavigationListItem>
-            </NavigationList>
+            <APINavigation />
             <NavigationList>
                 <NavigationListItem>{name}</NavigationListItem>
                 {renderApi(api)}

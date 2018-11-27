@@ -1,25 +1,8 @@
 // @flow
-import type {
-    Key,
-    Index
-} from '../types/Types';
+import type {Key} from '../types/Types';
+import type {Index} from '../types/Types';
+
 import Action from './Action';
-
-const dangerouslyReplace: Function = (value: *): Action => {
-    return new Action({
-        type: "replace",
-        payload: {
-            value
-        }
-    });
-};
-
-const del: Function = (key: Key|Index): Action => {
-    return new Action({
-        type: "delete",
-        keyPath: [key]
-    });
-};
 
 const deleteSelf: Function = (): Action => {
     return new Action({
@@ -165,8 +148,6 @@ const unshift: Function = (value: *): Action => {
 };
 
 export default {
-    dangerouslyReplace,
-    delete: del,
     deleteSelf,
     insertAfter,
     insertAfterSelf,

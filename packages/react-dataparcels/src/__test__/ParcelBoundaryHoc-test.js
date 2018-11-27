@@ -78,6 +78,22 @@ test('ParcelBoundaryHoc config should pass actions as config.name + "Actions', (
     expect(typeof propsGivenToInnerComponent.testParcelActions.cancel).toBe("function");
 });
 
+test('ParcelBoundaryHoc config should pass buffered prop as config.name + "Buffered', () => {
+    let propsGivenToInnerComponent = shallowRenderHoc(
+        {
+            testParcel: new Parcel({
+                value: 789
+            })
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel'
+        })
+    ).dive().props();
+
+    // testParcelBuffered should contain a boolean object
+    expect(typeof propsGivenToInnerComponent.testParcelBuffered).toBe("boolean");
+});
+
 test('ParcelBoundaryHoc config.name should accept props function returning string', () => {
     let propsGivenToInnerComponent = shallowRenderHoc(
         {

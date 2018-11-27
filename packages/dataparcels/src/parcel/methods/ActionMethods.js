@@ -12,7 +12,6 @@ export default (_this: Parcel): Object => ({
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
         Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
 
-
         let {
             _onDispatch,
             _onHandleChange
@@ -30,7 +29,7 @@ export default (_this: Parcel): Object => ({
         }
 
         if(_this._log) {
-            console.log(`Parcel change: ${_this._logName}`);
+            console.log(`Parcel change: ${_this._logName}`); // eslint-disable-line
             changeRequest.toConsole();
         }
 
@@ -42,7 +41,8 @@ export default (_this: Parcel): Object => ({
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._setBaseParcel(_this);
             let parcelWithChangedData = _this._create({
-                parcelData: changeRequestWithBase.data
+                handleChange: _onHandleChange,
+                parcelData: changeRequestWithBase.nextData
             });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
@@ -65,7 +65,7 @@ export default (_this: Parcel): Object => ({
             buffer = buffer.merge(changeRequest);
             _this._parcelData = changeRequest
                 ._setBaseParcel(_this)
-                .data;
+                .nextData;
         };
 
         batcher(_this);

@@ -15,7 +15,7 @@ export default ({content, nav, modifier}: Props) => <Wrapper modifier={modifier}
         <GridItem modifier="9 padding">
             {content()}
         </GridItem>
-        <GridItem modifier="3 padding">
+        <GridItem modifier="3">
             <Box modifier="paddingTopMega">
                 <SiteNavigation />
             </Box>

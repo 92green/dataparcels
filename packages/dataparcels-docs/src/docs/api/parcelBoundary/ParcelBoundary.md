@@ -31,7 +31,7 @@ import {ParcelBoundary} from 'react-dataparcels';
     debugBuffer={?boolean}
     debugParcel={?boolean}
 >
-    {(parcel, actions) => Node}
+    {(parcel, actions, buffered) => Node}
 </ParcelBoundary>
 ```
 

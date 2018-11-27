@@ -45,7 +45,7 @@ import Markdown_batch from 'docs/api/parcel/batch.md';
 import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
 import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_modifyValue from 'docs/api/parcel/modifyValue.md';
-import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
+import Markdown_modifyChangeBatch from 'docs/api/parcel/modifyChangeBatch.md';
 import Markdown_modifyChangeValue from 'docs/api/parcel/modifyChangeValue.md';
 import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
@@ -105,7 +105,7 @@ const md = {
     batchAndReturn: Markdown_batchAndReturn,
     ping: Markdown_ping,
     modifyValue: Markdown_modifyValue,
-    modifyChange: Markdown_modifyChange,
+    modifyChangeBatch: Markdown_modifyChangeBatch,
     modifyChangeValue: Markdown_modifyChangeValue,
     initialMeta: Markdown_initialMeta,
     isChild: Markdown_isChild,
@@ -180,6 +180,9 @@ batchAndReturn()
 ping()
 
 # Modify methods
+modifyValue()
+modifyChangeBatch()
+modifyChangeValue()
 initialMeta()
 
 # Type methods

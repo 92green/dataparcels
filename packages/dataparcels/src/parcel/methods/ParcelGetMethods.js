@@ -6,22 +6,30 @@ import type {MatchPipe} from '../../types/Types';
 
 import Types from '../../types/Types';
 import Matcher from '../../match/Matcher';
+import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
 
 import map from 'unmutable/lib/map';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
+let getValue = (_this: Parcel, notFoundValue: *): * => {
+    let {value} = _this;
+    return value === DeletedParcelMarker || typeof value === "undefined"
+        ? notFoundValue
+        : value;
+};
+
 export default (_this: Parcel) => ({
 
     // Spread Methods
 
-    spread: (): Object => ({
-        value: _this.value,
+    spread: (notFoundValue: ?* = undefined): Object => ({
+        value: getValue(_this, notFoundValue),
         onChange: _this.onChange
     }),
 
-    spreadDOM: (): Object => ({
-        value: _this.value,
+    spreadDOM: (notFoundValue: ?* = undefined): Object => ({
+        value: getValue(_this, notFoundValue),
         onChange: _this.onChangeDOM
     }),
 
@@ -91,7 +99,7 @@ export default (_this: Parcel) => ({
     log: (name: string): Parcel => {
         _this._log = true;
         _this._logName = name;
-        console.log(`Parcel data: ${name} `);
+        console.log(`Parcel data: ${name} `); // eslint-disable-line
         _this.toConsole();
         return _this;
     },
@@ -116,6 +124,6 @@ export default (_this: Parcel) => ({
     // Debug methods
 
     toConsole: () => {
-        console.log(_this.data);
+        console.log(_this.data); // eslint-disable-line
     }
 });

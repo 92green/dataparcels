@@ -262,8 +262,8 @@ export default class Parcel {
     //
 
     // Spread methods
-    spread = (): * => this._methods.spread();
-    spreadDOM = (): * => this._methods.spreadDOM();
+    spread = (notFoundValue: ?* = undefined): * => this._methods.spread(notFoundValue);
+    spreadDOM = (notFoundValue: ?* = undefined): * => this._methods.spreadDOM(notFoundValue);
 
     // Branch methods
     get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
@@ -314,7 +314,6 @@ export default class Parcel {
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
     batchAndReturn = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batchAndReturn(batcher, changeRequest);
     ping = () => this._methods.ping();
-    dangerouslyReplace = (value: *) => this._methods.dangerouslyReplace(value);
 
     // Indexed methods
     insertAfter = overload({
@@ -344,7 +343,7 @@ export default class Parcel {
 
     // Modify methods
     modifyValue = (updater: Function): Parcel => this._methods.modifyValue(updater);
-    modifyChange = (batcher: Function): Parcel => this._methods.modifyChange(batcher);
+    modifyChangeBatch = (batcher: Function): Parcel => this._methods.modifyChangeBatch(batcher);
     modifyChangeValue = (updater: Function): Parcel => this._methods.modifyChangeValue(updater);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);

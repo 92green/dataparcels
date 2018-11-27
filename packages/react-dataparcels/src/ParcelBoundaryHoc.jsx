@@ -1,6 +1,7 @@
 // @flow
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
+import type Parcel from 'dataparcels';
 
 import React from 'react';
 import ParcelBoundary from './ParcelBoundary';
@@ -12,15 +13,20 @@ type Props = {
 type ChildProps = {
     // [config.name]?: Parcel,
     // [config.name + "Actions"]?: Parcel,
+    // [config.name + "Buffered"]?: Parcel,
     // [config.originalParcelProp]?: Parcel
     // ...
 };
 
+type AnyProps = {
+    [key: string]: any
+};
+
 type ParcelBoundaryHocConfig = {
-    name: string|((props: *) => string),
-    debounce?: number|(props: *) => number,
-    hold?: boolean|(props: *) => boolean,
-    originalParcelProp?: string|(props: *) => string,
+    name: string|((props: AnyProps) => string),
+    debounce?: number|(props: AnyProps) => number,
+    hold?: boolean|(props: AnyProps) => boolean,
+    originalParcelProp?: string|(props: AnyProps) => string,
     debugBuffer?: boolean,
     debugParcel?: boolean
 };
@@ -68,13 +74,15 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                 debugParcel={debugParcel}
                 pure={false}
             >
-                {(innerParcel, actions) => {
+                {(innerParcel: Parcel, actions: *, buffered: boolean): Node => {
                     let childProps = {
                         ...this.props,
                         // $FlowFixMe - I want to use a computed property, flow
                         [name]: innerParcel,
                         // $FlowFixMe - I want to use a computed property, flow
-                        [name + "Actions"]: actions
+                        [name + "Actions"]: actions,
+                        // $FlowFixMe - I want to use a computed property, flow
+                        [name + "Buffered"]: buffered
                     };
 
                     if(originalParcelProp) {

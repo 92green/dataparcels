@@ -1,6 +1,6 @@
 {
   "name": "dataparcels-docs",
-  "version": "0.16.0",
+  "version": "0.17.0-1",
   "description": "Dataparcels Documentation",
   "author": "Damien Clarke",
   "license": "MIT",
@@ -29,6 +29,7 @@
     "mdx-loader": "1.0.0-beta.3",
     "mdxc": "^1.1.1",
     "prismjs": "^1.11.0",
+    "react-cool-storage": "^0.1.1",
     "react-flip-move": "^3.0.2",
     "react-helmet": "^5.2.0",
     "react-lifecycles-compat": "^3.0.4",

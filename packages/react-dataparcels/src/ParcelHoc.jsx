@@ -7,24 +7,32 @@ import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 
-const log = (...args) => console.log(`ParcelHoc:`, ...args);
+const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
 
 type Props = {};
 type State = {
     parcel: ?Parcel,
     initialize: (value: *) => Parcel,
-    prevValueFromProps: *
+    prevProps: {[key: string]: any}
 };
 type ChildProps = {
     // ${name}: Parcel
 };
 
+type AnyProps = {
+    [key: string]: any
+};
+
+type ValueFromProps = (props: AnyProps) => *;
+type ShouldParcelUpdateFromProps = (prevProps: AnyProps, nextProps: AnyProps, valueFromProps: any) => boolean;
+type OnChange = (parcel: Parcel, changeRequest: ChangeRequest) => void;
+
 type ParcelHocConfig = {
     name: string,
-    valueFromProps?: (props: *) => *,
-    shouldParcelUpdateFromProps?: (prevValue: *, nextValue: *) => boolean,
-    delayUntil?: (props: *) => boolean,
-    onChange?: (props: *) => (parcel: Parcel, changeRequest: ChangeRequest) => void,
+    valueFromProps: ValueFromProps,
+    shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
+    onChange?: (props: AnyProps) => OnChange,
+    delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean,
     debugRender?: boolean
@@ -37,10 +45,10 @@ export default (config: ParcelHocConfig): Function => {
 
     let {
         name,
-        valueFromProps = (props) => undefined, /* eslint-disable-line no-unused-vars */
-        shouldParcelUpdateFromProps, /* eslint-disable-line no-unused-vars */
+        valueFromProps,
+        shouldParcelUpdateFromProps,
+        onChange,
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
-        onChange = (props) => (value, changeRequest) => undefined, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
         debugParcel = false,
@@ -49,8 +57,10 @@ export default (config: ParcelHocConfig): Function => {
 
     Types(PARCEL_HOC_NAME, "config.name", "string")(name);
     Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
+    onChange && Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
+    shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
+
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
-    Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
     Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
     Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
@@ -68,7 +78,7 @@ export default (config: ParcelHocConfig): Function => {
             this.state = {
                 parcel: undefined,
                 initialize,
-                prevValueFromProps: undefined
+                prevProps: {}
             };
         }
 
@@ -78,7 +88,6 @@ export default (config: ParcelHocConfig): Function => {
 
             if(!parcel && delayUntil(props)) {
                 let value = valueFromProps(props);
-                newState.prevValueFromProps = value;
                 newState.parcel = state.initialize(value);
 
                 if(debugParcel) {
@@ -87,35 +96,42 @@ export default (config: ParcelHocConfig): Function => {
                 }
             }
 
-            if(parcel && shouldParcelUpdateFromProps) {
-                let value = valueFromProps(props);
-                newState.prevValueFromProps = value;
+            if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps)) {
+                // $FlowFixMe - parcel cant possibly be undefined here
+                newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
+                    // $FlowFixMe - newValueFromProps cant possibly be undefined here
+                    parcel.set(valueFromProps(props));
+                });
 
-                if(shouldParcelUpdateFromProps(state.prevValueFromProps, value)) {
-                    newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
-                        parcel.set(value);
-                    });
-
-                    if(debugParcel) {
-                        log(`Parcel updated from props:`);
-                        newState.parcel.toConsole();
-                    }
+                if(debugParcel) {
+                    log(`Parcel updated from props:`);
+                    newState.parcel.toConsole();
                 }
             }
 
+            newState.prevProps = props;
             return newState;
         }
 
-        handleChange = (parcel, changeRequest) => {
+        handleChange = (parcel: Parcel, changeRequest: ChangeRequest) => {
             this.setState({parcel});
             if(debugParcel) {
                 log(`Parcel changed:`);
                 parcel.toConsole();
             }
 
-            let onChangeWithProps = onChange(this.props);
-            Types(`handleChange()`, "return value of onChange", "function")(onChangeWithProps);
-            onChangeWithProps(parcel.value, changeRequest);
+            let callOnChange = (onChange: ?Function, value: *) => {
+                if(!onChange) {
+                    return;
+                }
+                let onChangeWithProps = onChange(this.props);
+                Types(`handleChange()`, "return value of onChange", "function")(onChangeWithProps);
+                onChangeWithProps(value, changeRequest);
+            };
+
+            if(changeRequest.hasValueChanged()) {
+                callOnChange(onChange, parcel.value);
+            }
         };
 
         render(): Node {

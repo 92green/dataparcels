@@ -104,13 +104,6 @@ function Reducer(parcelData: ParcelData, action: Action|Action[]): ParcelData {
             );
         }
 
-        case "replace": {
-            return updateIn(
-                keyPath,
-                parcelSetSelf(value, true)
-            );
-        }
-
         case "set": {
             return updateIn(
                 keyPath,

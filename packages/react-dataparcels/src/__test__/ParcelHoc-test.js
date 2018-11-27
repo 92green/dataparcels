@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-
+import {Map} from 'immutable';
 import ParcelHoc from '../ParcelHoc';
 
 let shallowRenderHoc = (props, hock) => {
@@ -36,15 +36,8 @@ test('ParcelHoc must be passed a name, and throw an error if it isnt', () => {
 });
 
 
-test('ParcelHoc config should default initial value to undefined', () => {
-    let childProps = shallowRenderHoc(
-        {},
-        ParcelHoc({
-            name: "proppy"
-        })
-    ).props();
-
-    expect(typeof childProps.proppy.value === "undefined").toBe(true);
+test('ParcelHoc config should throw error if valueFromProps is not provided', () => {
+    expect(() => ParcelHoc({name: "proppy"})).toThrow(`ParcelHoc() expects param "config.valueFromProps" to be a function, but got undefined`);
 });
 
 test('ParcelHoc changes should be put back into ParcelHoc state', () => {
@@ -61,8 +54,6 @@ test('ParcelHoc changes should be put back into ParcelHoc state', () => {
 });
 
 test('ParcelHoc config should accept an onChange function, and call it with the value when changed', () => {
-    expect.assertions(1);
-
     let Child = () => <div />;
     let Hocked = ParcelHoc({
         valueFromProps: () => 123,
@@ -75,7 +66,12 @@ test('ParcelHoc config should accept an onChange function, and call it with the 
     let {proppy} = wrapper.props();
     proppy.onChange(456);
 
+    expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange.mock.calls[0][0]).toBe(456);
+
+    // dont call onChange if the value hasnt changed
+    wrapper.update().props().proppy.onChange(456);
+    expect(onChange).toHaveBeenCalledTimes(1);
 });
 
 test('ParcelHoc config should accept an delayUntil function, and pass undefined until this evaluates to true', () => {
@@ -124,10 +120,28 @@ test('ParcelHoc config should accept a debugRender boolean', () => {
     expect(childProps.proppy._treeshare.debugRender).toBe(true);
 });
 
+test('ParcelHoc config should accept a debugParcel boolean', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let childProps = shallowRenderHoc(
+        {},
+        ParcelHoc({
+            valueFromProps: () => 456,
+            name: "proppy",
+            debugParcel: true
+        })
+    ).props();
+
+    expect(console.log).toHaveBeenCalled();
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
 test('ParcelHoc shouldParcelUpdateFromProps should update value from props when it is returned true', () => {
     let valueFromProps = jest.fn((props) => props.abc);
 
-    let shouldParcelUpdateFromProps = jest.fn((prevValue: *, nextValue: *) => prevValue !== nextValue);
+    let shouldParcelUpdateFromProps = jest.fn((prevProps: *, nextProps: *, valueFromProps: Function) => valueFromProps(prevProps) !== valueFromProps(nextProps));
 
     let props = {
         abc: 123,
@@ -158,9 +172,17 @@ test('ParcelHoc shouldParcelUpdateFromProps should update value from props when 
 
     let childProps2 = wrapper.props();
 
-    // shouldParcelUpdateFromProps should have been called with correct prevValue and nextValue
-    expect(shouldParcelUpdateFromProps.mock.calls[0][0]).toBe(123);
-    expect(shouldParcelUpdateFromProps.mock.calls[0][1]).toBe(123);
+    // shouldParcelUpdateFromProps should have been called with correct prevProps and nextProps
+    expect(shouldParcelUpdateFromProps).toHaveBeenCalledTimes(1);
+    expect(shouldParcelUpdateFromProps.mock.calls[0][0]).toEqual({
+        abc: 123,
+        def: 456
+    });
+
+    expect(shouldParcelUpdateFromProps.mock.calls[0][1]).toEqual({
+        abc: 123,
+        def: 789
+    });
 
     // child parcel should still contain original result of valueFromProps
     expect(childProps2.proppy.value).toBe(123);
@@ -172,9 +194,17 @@ test('ParcelHoc shouldParcelUpdateFromProps should update value from props when 
 
     let childProps3 = wrapper.props();
 
-    // shouldParcelUpdateFromProps should have been called with correct prevValue and nextValue
-    expect(shouldParcelUpdateFromProps.mock.calls[1][0]).toBe(123);
-    expect(shouldParcelUpdateFromProps.mock.calls[1][1]).toBe("!!!");
+    // shouldParcelUpdateFromProps should have been called with correct prevProps and nextProps
+    expect(shouldParcelUpdateFromProps).toHaveBeenCalledTimes(2);
+    expect(shouldParcelUpdateFromProps.mock.calls[1][0]).toEqual({
+        abc: 123,
+        def: 789
+    });
+
+    expect(shouldParcelUpdateFromProps.mock.calls[1][1]).toEqual({
+        abc: "!!!",
+        def: 789
+    });
 
     // child parcel should now contain new result of valueFromProps
     expect(childProps3.proppy.value).toBe("!!!");

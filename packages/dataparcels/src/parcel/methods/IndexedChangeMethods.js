@@ -8,11 +8,6 @@ import ActionCreators from '../../change/ActionCreators';
 
 export default (_this: Parcel, dispatch: Function): Object => ({
 
-    delete: (key: Key|Index) => {
-        Types(`delete()`, `key`, `keyIndex`)(key);
-        dispatch(ActionCreators.delete(key));
-    },
-
     insertAfter: (key: Key|Index, value: *) => {
         Types(`insertAfter()`, `key`, `keyIndex`)(key);
         dispatch(ActionCreators.insertAfter(key, value));
