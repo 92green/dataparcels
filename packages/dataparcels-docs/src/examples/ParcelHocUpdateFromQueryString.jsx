@@ -18,22 +18,15 @@ const QueryStringParcelHoc = ParcelHoc({
 
 const QueryStringEditor = (props) => {
     let {queryStringParcel} = props;
-
     return <div>
         <label>foo</label>
         <ParcelBoundary parcel={queryStringParcel.get('foo')} debounce={200}>
-            {(parcel) => <div>
-                <input type="text" {...parcel.spreadDOM('')} />
-                <button onClick={() => parcel.delete()}>x</button>
-            </div>}
+            {(parcel) => <input type="text" {...parcel.spreadDOM('')} />}
         </ParcelBoundary>
 
         <label>bar</label>
         <ParcelBoundary parcel={queryStringParcel.get('bar')} debounce={200}>
-            {(parcel) => <div>
-                <input type="text" {...parcel.spreadDOM('')} />
-                <button onClick={() => parcel.delete()}>x</button>
-            </div>}
+            {(parcel) => <input type="text" {...parcel.spreadDOM('')} />}
         </ParcelBoundary>
     </div>;
 };
