@@ -11,7 +11,7 @@ import updateChildKeys from './updateChildKeys';
 import insert from 'unmutable/lib/insert';
 import size from 'unmutable/lib/size';
 
-export default (key: Key|Index, newValue: *, after: boolean = false) => (parcelData: ParcelData): ParcelData => {
+export default (after: boolean) => (key: Key|Index, newValue: *) => (parcelData: ParcelData): ParcelData => {
     let parcelDataWithChildKeys = prepareChildKeys()(parcelData);
     let index: ?Index = keyOrIndexToIndex(key)(parcelDataWithChildKeys);
 
