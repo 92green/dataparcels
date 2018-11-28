@@ -96,7 +96,7 @@ test('Parcel.modifyValueDown() should have id which is unique to updater', () =>
     expect(parcel3.id).not.toBe("^.~mv-643198612"); // different updater should produce different hash
 });
 
-test('Parcel.modifyChangeBatch() should allow you to change the payload of a changed parcel', () => {
+test('Parcel.modifyChange() should allow you to change the payload of a changed parcel', () => {
     expect.assertions(1);
 
     var data = {
@@ -108,13 +108,13 @@ test('Parcel.modifyChangeBatch() should allow you to change the payload of a cha
     };
 
     new Parcel(data)
-        .modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
+        .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
             parcel.set(changeRequest.nextData.value + 1);
         })
         .onChange(456);
 });
 
-test('Parcel.modifyChangeBatch() should allow you to stop a change by not calling dispatch', () => {
+test('Parcel.modifyChange() should allow you to stop a change by not calling dispatch', () => {
     var handleChange = jest.fn();
 
     var data = {
@@ -123,7 +123,7 @@ test('Parcel.modifyChangeBatch() should allow you to stop a change by not callin
     };
 
     new Parcel(data)
-        .modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
+        .modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
             // nothing here
         })
         .onChange(456);
@@ -131,11 +131,11 @@ test('Parcel.modifyChangeBatch() should allow you to stop a change by not callin
     expect(handleChange).toHaveBeenCalledTimes(0);
 });
 
-test('Parcel.modifyChangeBatch() should have id which is unique to updater', () => {
+test('Parcel.modifyChange() should have id which is unique to updater', () => {
     let updater = value => [];
-    let parcel = new Parcel().modifyChangeBatch(updater);
-    let parcel2 = new Parcel().modifyChangeBatch(updater);
-    let parcel3 = new Parcel().modifyChangeBatch(a => "woop");
+    let parcel = new Parcel().modifyChange(updater);
+    let parcel2 = new Parcel().modifyChange(updater);
+    let parcel3 = new Parcel().modifyChange(a => "woop");
 
     expect(parcel.id).toBe("^.~mcb-643198612");
     expect(parcel2.id).toBe("^.~mcb-643198612"); // same updater should produce the same hash

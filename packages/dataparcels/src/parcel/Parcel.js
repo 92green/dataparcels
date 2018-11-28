@@ -345,7 +345,7 @@ export default class Parcel {
     unshift = (value: *) => this._methods.unshift(value);
 
     // Modify methods
-    modifyChangeBatch = (batcher: Function): Parcel => this._methods.modifyChangeBatch(batcher);
+    modifyChange = (batcher: Function): Parcel => this._methods.modifyChange(batcher);
     modifyValueDown = (updater: Function): Parcel => this._methods.modifyValueDown(updater);
     modifyValueUp = (updater: Function): Parcel => this._methods.modifyValueUp(updater);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
