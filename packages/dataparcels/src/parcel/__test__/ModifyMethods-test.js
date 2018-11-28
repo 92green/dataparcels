@@ -142,57 +142,57 @@ test('Parcel.modifyChangeBatch() should have id which is unique to updater', () 
     expect(parcel3.id).not.toBe("^.~mcb-643198612"); // different updater should produce different hash
 });
 
-test('Parcel.modifyChangeValue() should allow you to change the payload of a changed parcel with an updater (and should allow non-parent types to be returned)', () => {
+test('Parcel.modifyValueUp() should allow you to change the payload of a changed parcel with an updater (and should allow non-parent types to be returned)', () => {
     var handleChange = jest.fn();
     new Parcel({
         value: 123,
         handleChange
     })
-        .modifyChangeValue(value => value + 1)
+        .modifyValueUp(value => value + 1)
         .onChange(456);
 
     expect(handleChange.mock.calls[0][0].value).toBe(457);
 });
 
 
-test('Parcel.modifyChangeValue() should allow parent types to be returned', () => {
+test('Parcel.modifyValueUp() should allow parent types to be returned', () => {
     var handleChange = jest.fn();
     new Parcel({
         value: 123,
         handleChange
     })
-        .modifyChangeValue(value => [123,456])
+        .modifyValueUp(value => [123,456])
         .onChange(456);
 
     expect(handleChange.mock.calls[0][0].value).toEqual([123,456]);
 });
 
-test('Parcel.modifyChangeValue() should allow parent types to be returned if they dont change', () => {
+test('Parcel.modifyValueUp() should allow parent types to be returned if they dont change', () => {
     var handleChange = jest.fn();
     new Parcel({
         value: [123],
         handleChange
     })
-        .modifyChangeValue(value => value)
+        .modifyValueUp(value => value)
         .onChange([456]);
 
     expect(handleChange.mock.calls[0][0].value).toEqual([456]);
 });
 
-test('Parcel.modifyChangeValue() should throw error if changed parent types with children are returned', () => {
+test('Parcel.modifyValueUp() should throw error if changed parent types with children are returned', () => {
     expect(() => {
         var handleChange = jest.fn();
         new Parcel({
             value: [123],
             handleChange
         })
-            .modifyChangeValue(value => [...value, 456])
+            .modifyValueUp(value => [...value, 456])
             .onChange([456]);
 
-    }).toThrowError(`modifyChangeValue()`);
+    }).toThrowError(`modifyValueUp()`);
 });
 
-test('Parcel.modifyChangeValue() should allow changes to meta through', () => {
+test('Parcel.modifyValueUp() should allow changes to meta through', () => {
     expect.assertions(2);
 
     var data = {
@@ -205,7 +205,7 @@ test('Parcel.modifyChangeValue() should allow changes to meta through', () => {
     };
 
     new Parcel(data)
-        .modifyChangeValue(value => value + 1)
+        .modifyValueUp(value => value + 1)
         .batch(parcel => {
             parcel.onChange(456);
             parcel.setMeta({

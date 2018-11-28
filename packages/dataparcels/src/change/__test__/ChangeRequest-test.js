@@ -196,7 +196,6 @@ test('ChangeRequest should keep originId and originPath', () => {
     new Parcel(data)
         .get('abc')
         .onChange(456);
-        //.modifyChangeValue(value => value + 1)
 });
 
 

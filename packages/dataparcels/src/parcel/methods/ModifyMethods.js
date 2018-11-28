@@ -73,8 +73,8 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyChangeValue: (updater: Function): Parcel => {
-        Types(`modifyChangeValue()`, `updater`, `function`)(updater);
+    modifyValueUp: (updater: Function): Parcel => {
+        Types(`modifyValueUp()`, `updater`, `function`)(updater);
         return _this.modifyChangeBatch((parcel: Parcel, changeRequest: ChangeRequest) => {
 
             let {value} = changeRequest.nextData;
