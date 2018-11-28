@@ -44,9 +44,9 @@ import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
 import Markdown_batch from 'docs/api/parcel/batch.md';
 import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
 import Markdown_ping from 'docs/api/parcel/ping.md';
-import Markdown_modifyValue from 'docs/api/parcel/modifyValue.md';
-import Markdown_modifyChangeBatch from 'docs/api/parcel/modifyChangeBatch.md';
-import Markdown_modifyChangeValue from 'docs/api/parcel/modifyChangeValue.md';
+import Markdown_modifyValueDown from 'docs/api/parcel/modifyValueDown.md';
+import Markdown_modifyValueUp from 'docs/api/parcel/modifyValueUp.md';
+import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
 import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
 import Markdown_isElement from 'docs/api/parcel/isElement.md';
@@ -104,9 +104,9 @@ const md = {
     batch: Markdown_batch,
     batchAndReturn: Markdown_batchAndReturn,
     ping: Markdown_ping,
-    modifyValue: Markdown_modifyValue,
-    modifyChangeBatch: Markdown_modifyChangeBatch,
-    modifyChangeValue: Markdown_modifyChangeValue,
+    modifyValueDown: Markdown_modifyValueDown,
+    modifyValueUp: Markdown_modifyValueUp,
+    modifyChange: Markdown_modifyChange,
     initialMeta: Markdown_initialMeta,
     isChild: Markdown_isChild,
     isElement: Markdown_isElement,
@@ -180,9 +180,9 @@ batchAndReturn()
 ping()
 
 # Modify methods
-modifyValue()
-modifyChangeBatch()
-modifyChangeValue()
+modifyValueDown()
+modifyValueUp()
+modifyChange()
 initialMeta()
 
 # Type methods

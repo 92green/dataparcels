@@ -3,7 +3,6 @@ import dataparcels from 'dataparcels';
 export default dataparcels;
 
 export {Action} from 'dataparcels';
-export {ActionCreators} from 'dataparcels';
 export {ChangeRequest} from 'dataparcels';
 export {DeletedParcelMarker} from 'dataparcels';
 

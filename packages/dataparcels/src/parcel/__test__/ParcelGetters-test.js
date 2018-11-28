@@ -75,7 +75,7 @@ test('Parcel.id should return the Parcels id', () => {
     };
     expect("^").toBe(new Parcel(data).id);
     expect("^.a").toBe(new Parcel(data).get("a").id);
-    expect("^.~mv-364997092.a").toBe(new Parcel(data).modifyValue(ii => ii).get("a").id);
+    expect("^.~mv-364997092.a").toBe(new Parcel(data).modifyValueDown(ii => ii).get("a").id);
     expect("^.a.#a").toBe(new Parcel(data).getIn(["a",0]).id);
     expect("^.something%.%:%@").toBe(new Parcel(data).get("something.:@").id);
     expect("^.b").toBe(new Parcel(data).get("b").id);
@@ -91,7 +91,7 @@ test('Parcel.path should return the Parcels path', () => {
     };
     expect([]).toEqual(new Parcel(data).path);
     expect(["a"]).toEqual(new Parcel(data).get("a").path);
-    expect(["a"]).toEqual(new Parcel(data).modifyValue(ii => ii).get("a").path);
+    expect(["a"]).toEqual(new Parcel(data).modifyValueDown(ii => ii).get("a").path);
     expect(["a","#a"]).toEqual(new Parcel(data).getIn(["a",0]).path);
     expect(["something.:@"]).toEqual(new Parcel(data).get("something.:@").path);
     expect(["b"]).toEqual(new Parcel(data).get("b").path);
@@ -106,9 +106,9 @@ test('Parcel._id.typedPathString() should return the Parcels typed path', () => 
         }
     };
     expect("^:ceiPT").toEqual(new Parcel(data)._id.typedPathString());
-    expect("^:ceiPT").toEqual(new Parcel(data).modifyValue(ii => ii)._id.typedPathString());
+    expect("^:ceiPT").toEqual(new Parcel(data).modifyValueDown(ii => ii)._id.typedPathString());
     expect("^:ceiPT.a:CeIPt").toEqual(new Parcel(data).get("a")._id.typedPathString());
-    expect("^:ceiPT.a:CeIPt").toEqual(new Parcel(data).modifyValue(ii => ii).get("a")._id.typedPathString());
+    expect("^:ceiPT.a:CeIPt").toEqual(new Parcel(data).modifyValueDown(ii => ii).get("a")._id.typedPathString());
     expect("^:ceiPT.a:CeIPt.#a:CEipt").toEqual(new Parcel(data).getIn(["a",0])._id.typedPathString());
     expect("^:ceiPT.something%.%:%@:Ceipt").toEqual(new Parcel(data).get("something.:@")._id.typedPathString());
     expect("^:ceiPT.b:Ceipt").toEqual(new Parcel(data).get("b")._id.typedPathString());

@@ -52,8 +52,6 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
     let merged = a.merge(b);
 
     expect([...actionsA, ...actionsB]).toEqual(merged.actions());
-
-    // TODO - test originId, originPath and meta
 });
 
 
@@ -198,7 +196,6 @@ test('ChangeRequest should keep originId and originPath', () => {
     new Parcel(data)
         .get('abc')
         .onChange(456);
-        //.modifyChangeValue(value => value + 1)
 });
 
 
@@ -217,7 +214,7 @@ test('ChangeRequest should keep originId and originPath even when going through 
     };
 
     new Parcel(data)
-        .modifyChangeBatch((parcel, changeRequest) => {
+        .modifyChange((parcel, changeRequest) => {
             parcel.set('def', 789);
             parcel.dispatch(changeRequest);
         })
@@ -323,19 +320,19 @@ test('ChangeRequest data chache should be invalidated correctly', () => {
 
     parcel
         .get('a')
-        .modifyChangeBatch((parcel, changeRequest) => {
+        .modifyChange((parcel, changeRequest) => {
             expect(changeRequest.nextData).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}});
             expect(changeRequest.nextData).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
             parcel.dispatch(changeRequest);
         })
-        .modifyChangeBatch((parcel, changeRequest) => {
+        .modifyChange((parcel, changeRequest) => {
             expect(changeRequest.nextData).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}});
             expect(changeRequest.nextData).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
             parcel.dispatch(changeRequest);
             parcel.setMeta({abc: 123});
         })
         .get('b')
-        .modifyChangeBatch((parcel, changeRequest) => {
+        .modifyChange((parcel, changeRequest) => {
             expect(changeRequest.nextData).toEqual({key: 'b', meta: {}, value: 456});
             expect(changeRequest.nextData).toEqual({key: 'b', meta: {}, value: 456}); // get cached
             parcel.dispatch(changeRequest);

@@ -10,7 +10,7 @@ import wrapNumber from './wrapNumber';
 import size from 'unmutable/lib/size';
 import swap from 'unmutable/lib/swap';
 
-export default (key: Key|Index, next: boolean = false) => (parcelData: ParcelData): ParcelData => {
+export default (next: boolean) => (key: Key|Index) => (parcelData: ParcelData): ParcelData => {
 
     let parcelDataWithChildKeys = prepareChildKeys()(parcelData);
     let indexA: ?Index = keyOrIndexToIndex(key)(parcelDataWithChildKeys);

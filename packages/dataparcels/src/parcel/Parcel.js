@@ -141,18 +141,21 @@ export default class Parcel {
     // private
     //
 
+    // from constructor
+    _id: ParcelId;
     _methods: { [key: string]: * };
     _onHandleChange: ?Function;
     _onDispatch: ?Function;
     _parcelData: ParcelData;
-    _id: ParcelId;
-    _matchPipes: MatchPipe[];
-    _treeshare: Treeshare;
     _parcelTypes: ParcelTypes;
     _parent: ?Parcel;
-    _dispatchBuffer: ?Function;
-    _log: boolean = false;
-    _logName: string = "";
+    _treeshare: Treeshare;
+
+    // from methods
+    _dispatchBuffer: ?Function; // used by batch()
+    _log: boolean = false; // used by log()
+    _logName: string = ""; // used by log()
+    _matchPipes: MatchPipe[]; // used by matchPipe() and passed to all subsequent parcels
 
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
@@ -342,9 +345,9 @@ export default class Parcel {
     unshift = (value: *) => this._methods.unshift(value);
 
     // Modify methods
-    modifyValue = (updater: Function): Parcel => this._methods.modifyValue(updater);
-    modifyChangeBatch = (batcher: Function): Parcel => this._methods.modifyChangeBatch(batcher);
-    modifyChangeValue = (updater: Function): Parcel => this._methods.modifyChangeValue(updater);
+    modifyChange = (batcher: Function): Parcel => this._methods.modifyChange(batcher);
+    modifyValueDown = (updater: Function): Parcel => this._methods.modifyValueDown(updater);
+    modifyValueUp = (updater: Function): Parcel => this._methods.modifyValueUp(updater);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
 

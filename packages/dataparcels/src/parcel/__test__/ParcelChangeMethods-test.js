@@ -1,5 +1,6 @@
 // @flow
 import Parcel from '../Parcel';
+import GetAction from '../../util/__test__/GetAction-testUtil';
 
 test('Parcel.set() should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(3);
@@ -28,7 +29,7 @@ test('Parcel.set() should call the Parcels handleChange function with the new pa
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
             expect(expectedData).toEqual(changeRequest.nextData);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     }).set(456);
 });
@@ -95,7 +96,7 @@ test('Parcel.update() should call the Parcels handleChange function with the new
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     }).update((ii) => {
         expect(expectedArg).toEqual(ii);
@@ -129,7 +130,7 @@ test('Parcel.onChange() should work like set that only accepts a single argument
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     }).onChange(456);
 });
@@ -160,7 +161,7 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     }).onChangeDOM({
         currentTarget: {
@@ -204,7 +205,7 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
 
             if(changes === 1) {
                 expect(expectedMeta).toEqual(parcel.meta);
-                expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+                expect(expectedAction).toEqual(GetAction(changeRequest));
                 parcel.setMeta({
                     def: 456
                 });
@@ -253,7 +254,7 @@ test('Parcel.updateMeta() should call the Parcels handleChange function with the
 
             if(changes === 1) {
                 expect(expectedMeta).toEqual(parcel.meta);
-                expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+                expect(expectedAction).toEqual(GetAction(changeRequest));
                 parcel.updateMeta(meta => {
                     expect({abc: 123}).toEqual(meta)
                     return {

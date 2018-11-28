@@ -1,7 +1,13 @@
 // @flow
-
-import Reducer from '../Reducer';
+import ChangeRequest from '../ChangeRequest';
+import ChangeRequestReducer from '../ChangeRequestReducer';
 import Action from '../Action';
+import pipeWith from 'unmutable/lib/util/pipeWith';
+
+const makeReducer = (action) => pipeWith(
+    new ChangeRequest(action),
+    ChangeRequestReducer
+);
 
 let data = {
     value: [0,1,2],
@@ -22,7 +28,7 @@ let EXPECTED_KEY_AND_META = {
     "swapPrev"
 ].forEach((type: string) => {
     test(`Reducer ${type} action should return unchanged parcelData if keyPath is empty`, () => {
-        expect(Reducer(data, new Action({type}))).toEqual(data);
+        expect(makeReducer(new Action({type}))(data)).toEqual(data);
     });
 });
 
@@ -32,12 +38,12 @@ test('Reducer swap action should throw error if payload.swapKey doesnt exist', (
         keyPath: [0]
     });
 
-    expect(() => Reducer(data, action)).toThrowError(`swap actions must have a swapKey in their payload`);
+    expect(() => makeReducer(action)(data)).toThrowError(`swap actions must have a swapKey in their payload`);
 });
 
 const TestIndex = (arr) => arr.map(({action, expectedData}) => {
     test(`Reducer ${action.type} action should ${action.type} with keyPath ${JSON.stringify(action.keyPath)}`, () => {
-        expect(Reducer(data, new Action(action))).toEqual(expectedData);
+        expect(makeReducer(new Action(action))(data)).toEqual(expectedData);
     });
 
     let deepAction = {
@@ -75,7 +81,7 @@ const TestIndex = (arr) => arr.map(({action, expectedData}) => {
     };
 
     test(`Reducer ${action.type} action should ${action.type} deeply with keyPath ${JSON.stringify(deepAction.keyPath)}`, () => {
-        expect(Reducer(deepData, new Action(deepAction))).toEqual(deepExpectedData);
+        expect(makeReducer(new Action(deepAction))(deepData)).toEqual(deepExpectedData);
     });
 });
 
