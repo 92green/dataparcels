@@ -21,7 +21,7 @@ import {ParcelHoc} from 'react-dataparcels';
 ```flow
 ParcelHoc({
     name: string,
-    valueFromProps?: Function,
+    valueFromProps: Function,
     shouldParcelUpdateFromProps?: Function,
     onChange?: Function,
     delayUntil?: Function,

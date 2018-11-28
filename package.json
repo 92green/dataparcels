@@ -9,8 +9,8 @@
     "flow": "blueflag-test flow",
     "flow-coverage": "blueflag-test flow-coverage -M",
     "lint": "blueflag-test lint --monorepo",
-    "test": "yarn jest",
-    "test-all": "yarn lint && yarn flow && yarn test && yarn flow-coverage",
+    "test": "yarn jest --maxWorkers=4",
+    "test-all": "yarn lint && yarn flow && yarn test --maxWorkers=4 && yarn flow-coverage",
     "deploy-docs": "yarn lerna --scope dataparcels-docs run deploy",
     "view-coverage": "yarn run coverage; open ./coverage/lcov-report/index.html",
     "watch": "lerna run watch --parallel --"
