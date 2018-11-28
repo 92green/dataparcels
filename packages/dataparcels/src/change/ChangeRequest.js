@@ -1,12 +1,13 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
 import type {Key} from '../types/Types';
+import type {Index} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type Action from './Action';
 
 import {ReadOnlyError} from '../errors/Errors';
 import {ChangeRequestUnbasedError} from '../errors/Errors';
-import Reducer from '../change/Reducer';
+import ChangeRequestReducer from '../change/ChangeRequestReducer';
 import parcelGet from '../parcelData/get';
 
 import pipe from 'unmutable/lib/util/pipe';
@@ -36,10 +37,22 @@ export default class ChangeRequest {
         return changeRequest;
     };
 
-    _unget = (key: Key): ChangeRequest => {
+    _createMapActions = (updater: Function): ChangeRequest => {
         return this._create({
-            actions: this._actions.map(ii => ii._unget(key))
+            actions: this._actions.map(updater)
         });
+    };
+
+    _unget = (key: Key): ChangeRequest => {
+        return this._createMapActions(ii => ii._unget(key));
+    };
+
+    _addPre = (pre: Function): ChangeRequest => {
+        return this._createMapActions(ii => ii._addPre(pre));
+    };
+
+    _addPost = (post: Function): ChangeRequest => {
+        return this._createMapActions(ii => ii._addPost(post));
     };
 
     _setBaseParcel = (baseParcel: Parcel): ChangeRequest => {
@@ -65,7 +78,7 @@ export default class ChangeRequest {
             .get(this._baseParcel._id.id())
             .data;
 
-        let data = Reducer(parcelDataFromRegistry, this._actions);
+        let data = ChangeRequestReducer(this)(parcelDataFromRegistry);
         this._cachedData = data;
         return data;
     }

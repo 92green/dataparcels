@@ -1,9 +1,16 @@
 // @flow
-import Reducer from '../Reducer';
+import ChangeRequest from '../ChangeRequest';
+import ChangeRequestReducer from '../ChangeRequestReducer';
 import Action from '../Action';
 import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
+import pipeWith from 'unmutable/lib/util/pipeWith';
 
-test('Reducer should delete key', () => {
+const makeReducer = (action) => pipeWith(
+    new ChangeRequest(action),
+    ChangeRequestReducer
+);
+
+test('ChangeRequestReducer should delete key', () => {
     var data = {
         value: {
             a: 1,
@@ -21,10 +28,10 @@ test('Reducer should delete key', () => {
         b: 2
     };
 
-    expect(Reducer(data, action).value).toEqual(expectedValue);
+    expect(makeReducer(action)(data).value).toEqual(expectedValue);
 });
 
-test('Reducer should delete deep key', () => {
+test('ChangeRequestReducer should delete deep key', () => {
     var data = {
         value: {
             a: {
@@ -48,10 +55,10 @@ test('Reducer should delete deep key', () => {
         c: 3
     };
 
-    expect(Reducer(data, action).value).toEqual(expectedValue);
+    expect(makeReducer(action)(data).value).toEqual(expectedValue);
 });
 
-test('Reducer should set value to DeletedParcelMarker symbol if deleted with no keypath', () => {
+test('ChangeRequestReducer should set value to DeletedParcelMarker symbol if deleted with no keypath', () => {
     var data = {
         value: {
             a: 1,
@@ -69,5 +76,5 @@ test('Reducer should set value to DeletedParcelMarker symbol if deleted with no 
         value: DeletedParcelMarker
     };
 
-    expect(Reducer(data, action)).toEqual(expectedData);
+    expect(makeReducer(action)(data)).toEqual(expectedData);
 });
