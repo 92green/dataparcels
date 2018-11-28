@@ -14,6 +14,8 @@ export type ParcelData = {
     meta?: ParcelMeta
 };
 
+export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
+
 export type ParcelConfig = {
     handleChange?: Function,
     value?: *,
