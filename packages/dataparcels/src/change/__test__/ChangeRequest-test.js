@@ -52,8 +52,6 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
     let merged = a.merge(b);
 
     expect([...actionsA, ...actionsB]).toEqual(merged.actions());
-
-    // TODO - test originId, originPath and meta
 });
 
 
