@@ -1,6 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 import TestTimeExecution from '../../util/__test__/TestTimeExecution-testUtil';
+import GetAction from '../../util/__test__/GetAction-testUtil';
 import map from 'unmutable/lib/map';
 import range from 'unmutable/lib/util/range';
 
@@ -37,7 +38,7 @@ test('ParentParcel.get(key) should return a new child Parcel', () => {
             b: 4
         },
         handleChange: (parcel, changeRequest) => {
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
             expect(expectedValue).toEqual(parcel.value);
         }
     };
@@ -125,7 +126,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
         },
         handleChange: (parcel, changeRequest) => {
             expect(parcel.value).toEqual(expectedValue);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     };
 
@@ -214,7 +215,7 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => 
         },
         handleChange: (parcel, changeRequest) => {
             expect(parcel.value).toEqual(expectedValue);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     };
 
