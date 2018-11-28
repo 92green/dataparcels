@@ -1,43 +1,45 @@
 // @flow
+import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 
-import has from 'unmutable/lib/has';
-import set from 'unmutable/lib/set';
 import unshift from 'unmutable/lib/unshift';
+import update from 'unmutable/lib/update';
+
+import ActionKeyPathModifier from './ActionKeyPathModifier';
 
 type ActionData = {
     type?: string,
     payload?: Object,
-    keyPath?: Array<Key>
+    keyPath?: Array<Key|Index>,
+    keyPathModifiers?: Array<ActionKeyPathModifier>
 };
 
 type CreateActionData = {
     type?: string,
     payload?: Object,
-    keyPath?: Array<Key>,
-    keyPathModifiers?: Array<KeyPathModifiers>
-};
-
-type KeyPathModifiers = {
-    key?: Key,
-    pre?: Function,
-    post?: Function
+    keyPath?: Array<Key|Index>,
+    keyPathModifiers?: Array<ActionKeyPathModifier>
 };
 
 export default class Action {
     type: string = "";
     payload: Object = {};
-    keyPath: Array<Key> = [];
-    keyPathModifiers: Array<KeyPathModifiers> = [];
+    keyPath: Array<Key|Index> = [];
+    keyPathModifiers: Array<ActionKeyPathModifier>;
 
-    constructor({type, payload, keyPath}: ActionData = {}) {
+    constructor({type, payload, keyPath, keyPathModifiers}: ActionData = {}) {
+
+        if(keyPathModifiers) {
+            this.keyPathModifiers = keyPathModifiers;
+        } else if(!this.keyPathModifiers && keyPath) {
+            this.keyPathModifiers = keyPath.map(key => new ActionKeyPathModifier({key}));
+        } else {
+            this.keyPathModifiers = [];
+        }
+
         this.type = type || this.type;
         this.payload = payload || this.payload;
         this.keyPath = keyPath || this.keyPath;
-
-        if(keyPath) {
-            this.keyPathModifiers = keyPath.map(key => ({key}));
-        }
     }
 
     _create = (create: CreateActionData): Action => {
@@ -47,32 +49,29 @@ export default class Action {
         });
     };
 
-    _updateFirstKeyPathModifier = (obj: *, keyPathModifiers: Array<KeyPathModifiers>): Array<KeyPathModifiers> => {
-        let first = keyPathModifiers[0];
-        let fn = (!first || !has("key")(first))
-            ? unshift(obj)
-            : set(0, {...obj, ...first});
+    _add = (updater: Function): Action => {
+        let fn = this.keyPathModifiers.length === 0
+            ? unshift(updater(new ActionKeyPathModifier()))
+            : update(0, updater);
 
-        return fn(keyPathModifiers);
+        return this._create({
+            keyPathModifiers: fn(this.keyPathModifiers)
+        });
     };
 
     _unget = (key: Key): Action => {
         return this._create({
-            keyPath: unshift(key)(this.keyPath),
-            keyPathModifiers: this._updateFirstKeyPathModifier({key}, this.keyPathModifiers)
+            keyPathModifiers: unshift(new ActionKeyPathModifier()._addKey(key))(this.keyPathModifiers),
+            keyPath: unshift(key)(this.keyPath)
         });
     };
 
-    _addPre = (pre: Function) => {
-        return this._create({
-            keyPathModifiers: this._updateFirstKeyPathModifier({pre}, this.keyPathModifiers)
-        });
+    _addPre = (pre: Function): Action => {
+        return this._add(_ => _._addPre(pre));
     };
 
-    _addPost = (post: Function) => {
-        return this._create({
-            keyPathModifiers: this._updateFirstKeyPathModifier({post}, this.keyPathModifiers)
-        });
+    _addPost = (post: Function): Action => {
+        return this._add(_ => _._addPost(post));
     };
 
     shouldBeSynchronous = (): boolean => {
