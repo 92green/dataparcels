@@ -141,7 +141,7 @@ test('ParcelTypes should correctly identify top level values after modifiers', (
     var data = {
         value: [1,2,3]
     };
-    expect(new Parcel(data).modifyValue(ii => ii).isTopLevel()).toBe(true);
+    expect(new Parcel(data).modifyValueDown(ii => ii).isTopLevel()).toBe(true);
 });
 
 // method creators

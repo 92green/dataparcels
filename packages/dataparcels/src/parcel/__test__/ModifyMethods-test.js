@@ -2,14 +2,14 @@
 import Parcel from '../Parcel';
 import type ChangeRequest from '../../change/ChangeRequest';
 
-test('Parcel.modifyValue() should return a new parcel with updated parcelData', () => {
+test('Parcel.modifyValueDown() should return a new parcel with updated parcelData', () => {
     expect.assertions(2);
     var data = {
         value: [123]
     };
     var parcel = new Parcel(data).get(0);
     var updated = parcel
-        .modifyValue((value: *, parcelData: Parcel) => {
+        .modifyValueDown((value: *, parcelData: Parcel) => {
             expect(parcelData).toBe(parcel);
             return value + 1;
         })
@@ -24,72 +24,72 @@ test('Parcel.modifyValue() should return a new parcel with updated parcelData', 
     expect(expectedData).toEqual(updated);
 });
 
-test('Parcel.modifyValue() should allow non-parent types to be returned', () => {
+test('Parcel.modifyValueDown() should allow non-parent types to be returned', () => {
     let updatedValue = new Parcel({
         value: 123
     })
-        .modifyValue(value => value + 1)
+        .modifyValueDown(value => value + 1)
         .value;
 
     expect(updatedValue).toEqual(124);
 });
 
-test('Parcel.modifyValue() should allow childless parent types to be returned', () => {
+test('Parcel.modifyValueDown() should allow childless parent types to be returned', () => {
     let updatedValue = new Parcel({
         value: 123
     })
-        .modifyValue(value => [])
+        .modifyValueDown(value => [])
         .value;
 
     expect(updatedValue).toEqual([]);
 });
 
-test('Parcel.modifyValue() should allow parent types to be returned if they dont change', () => {
+test('Parcel.modifyValueDown() should allow parent types to be returned if they dont change', () => {
     let updatedValue = new Parcel({
         value: [123]
     })
-        .modifyValue(value => value)
+        .modifyValueDown(value => value)
         .value;
 
     expect(updatedValue).toEqual([123]);
 });
 
-test('Parcel.modifyValue() should throw error if changed parent types with children are returned', () => {
+test('Parcel.modifyValueDown() should throw error if changed parent types with children are returned', () => {
     expect(() => {
         new Parcel({
             value: [123]
-        }).modifyValue(value => [...value, 456]);
+        }).modifyValueDown(value => [...value, 456]);
 
-    }).toThrowError(`modifyValue()`);
+    }).toThrowError(`modifyValueDown()`);
 });
 
-test('Parcel.modifyValue() should throw error if childless is turned into parent types with children', () => {
+test('Parcel.modifyValueDown() should throw error if childless is turned into parent types with children', () => {
     expect(() => {
         new Parcel({
             value: 123
-        }).modifyValue(value => [123, 456]);
+        }).modifyValueDown(value => [123, 456]);
 
-    }).toThrowError(`modifyValue()`);
+    }).toThrowError(`modifyValueDown()`);
 });
 
-test('Parcel.modifyValue() should recognise if value changes types, and set value if type changes', () => {
+test('Parcel.modifyValueDown() should recognise if value changes types, and set value if type changes', () => {
     let handleChange = jest.fn();
     let parcel = new Parcel({
         value: 123,
         handleChange
     })
-        .modifyValue(value => [])
+        .modifyValueDown(value => [])
         .push(123);
 
     expect(handleChange).toHaveBeenCalledTimes(1);
     expect(handleChange.mock.calls[0][0].value).toEqual([123]);
 });
 
-test('Parcel.modifyValue() should have id which is unique to updater', () => {
+test('Parcel.modifyValueDown() should have id which is unique to updater', () => {
     let updater = value => [];
-    let parcel = new Parcel().modifyValue(updater);
-    let parcel2 = new Parcel().modifyValue(updater);
-    let parcel3 = new Parcel().modifyValue(a => 1 + 2);
+    let parcel = new Parcel().modifyValueDown(updater);
+    let parcel2 = new Parcel().modifyValueDown(updater);
+    let parcel3 = new Parcel().modifyValueDown(a => 1 + 2);
 
     expect(parcel.id).toBe("^.~mv-643198612");
     expect(parcel2.id).toBe("^.~mv-643198612"); // same updater should produce the same hash

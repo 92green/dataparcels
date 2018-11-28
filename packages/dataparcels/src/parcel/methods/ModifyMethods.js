@@ -5,8 +5,8 @@ import type {ParcelMeta} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ParcelTypes from '../ParcelTypes';
-import {ModifyValueChildReturnError} from '../../errors/Errors';
-import {ModifyValueChangeChildReturnError} from '../../errors/Errors';
+import {ModifyValueDownChildReturnError} from '../../errors/Errors';
+import {ModifyValueUpChildReturnError} from '../../errors/Errors';
 import HashString from '../../util/HashString';
 
 import equals from 'unmutable/lib/equals';
@@ -23,15 +23,15 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
 export default (_this: Parcel): Object => ({
 
-    modifyValue: (updater: Function): Parcel => {
-        Types(`modifyValue()`, `updater`, `function`)(updater);
+    modifyValueDown: (updater: Function): Parcel => {
+        Types(`modifyValueDown()`, `updater`, `function`)(updater);
 
         let {value} = _this._parcelData;
         let updatedValue = updater(value, _this);
         let updatedType = new ParcelTypes(updatedValue);
 
         if(updatedType.isParent() && !isEmpty()(updatedValue) && !equals(value)(updatedValue)) {
-            throw ModifyValueChildReturnError();
+            throw ModifyValueDownChildReturnError();
         }
 
         let updatedTypeChanged: boolean = updatedType.isParent() !== _this._parcelTypes.isParent()
@@ -84,7 +84,7 @@ export default (_this: Parcel): Object => ({
 
             if(type.isParent()) {
                 if(!equals(value)(updatedValue)) {
-                    throw ModifyValueChangeChildReturnError();
+                    throw ModifyValueUpChildReturnError();
                 }
                 parcel.dispatch(changeRequest);
                 return;
