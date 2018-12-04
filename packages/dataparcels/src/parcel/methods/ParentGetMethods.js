@@ -10,9 +10,11 @@ import parcelGet from '../../parcelData/get';
 import parcelHas from '../../parcelData/has';
 import prepareChildKeys from '../../parcelData/prepareChildKeys';
 
+import keyArray from 'unmutable/lib/keyArray';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
+import toObject from 'unmutable/lib/toObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel) => ({
@@ -73,16 +75,19 @@ export default (_this: Parcel) => ({
 
         return pipeWith(
             _this._parcelData.value,
-            map((ii: *, key: string|number): * => {
-                let item = _this.get(key);
-                return mapper(item, key, _this);
-            })
+            map((value, key) => mapper(_this.get(key), key, _this)),
+            toObject()
         );
     },
 
     toArray: (mapper: ParcelMapper): Array<*> => {
         Types(`toArray()`, `mapper`, `function`)(mapper);
-        return toArray()(_this.toObject(mapper));
+
+        return pipeWith(
+            _this._parcelData.value,
+            map((value, key) => mapper(_this.get(key), key, _this)),
+            toArray()
+        );
     },
 
     size: (): number => size()(_this.value)
