@@ -5,6 +5,7 @@ import type Treeshare from '../treeshare/Treeshare';
 import Parcel from '../parcel/Parcel';
 import Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
+import StaticParcel from '../staticParcel/StaticParcel';
 import isPlainObject from 'unmutable/lib/util/isPlainObject';
 
 export type ParcelData = {
@@ -115,6 +116,10 @@ const RUNTIME_TYPES = {
     ['parcelData']: {
         name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
         check: ii => isPlainObject(ii) && ii.hasOwnProperty('value')
+    },
+    ['staticParcel']: {
+        name: "a StaticParcel",
+        check: ii => ii instanceof StaticParcel
     },
     ['string']: {
         name: "a string",
