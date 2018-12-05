@@ -10,7 +10,6 @@ import type {ParcelConfigInternal} from '../types/Types';
 import type {ParcelConfig} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type {ParcelMapper} from '../types/Types';
-import type {ParcelMetaUpdater} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';

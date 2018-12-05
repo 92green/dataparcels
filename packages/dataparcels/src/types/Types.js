@@ -44,12 +44,12 @@ export type CreateParcelConfigType = {
 };
 
 export type ParcelMeta = {[key: string]: *};
-export type ParcelMetaUpdater = (meta: ParcelMeta) => ParcelMeta;
-
 export type ParcelBatcher = (item: Parcel) => void;
 export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *) => *;
+
+export type StaticParcelMapper = (item: StaticParcel, index: string|number, _this: StaticParcel) => *;
 
 export type MatchPipe = {
     match: string,

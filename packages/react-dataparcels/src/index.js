@@ -10,7 +10,6 @@ export type {ParcelData} from 'dataparcels';
 export type {ParcelConfig} from 'dataparcels';
 export type {ParcelConfigInternal} from 'dataparcels';
 export type {ParcelMeta} from 'dataparcels';
-export type {ParcelMetaUpdater} from 'dataparcels';
 
 export type {ParcelBatcher} from 'dataparcels';
 export type {ParcelMapper} from 'dataparcels';
