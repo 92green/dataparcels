@@ -51,12 +51,10 @@ export default class Parcel {
 
         let {
             handleChange,
-            value,
-            debugRender = false
+            value
         } = config;
 
         handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
-        Types(`Parcel()`, `config.debugRender`, `boolean`)(debugRender);
 
         let {
             onDispatch,
@@ -94,7 +92,7 @@ export default class Parcel {
         this._id = id;
 
         // treeshare
-        this._treeshare = treeshare || new Treeshare({debugRender});
+        this._treeshare = treeshare || new Treeshare();
         this._treeshare.registry.set(id.id(), this);
 
         let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);

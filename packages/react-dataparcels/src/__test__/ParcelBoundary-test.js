@@ -315,20 +315,3 @@ test('ParcelBoundary should use an internal boundary split to stop parcel bounda
     expect(childParcelA2.value).toEqual({abc: 456, def: 123});
     expect(childParcelB2.value).toEqual({abc: 123, def: 456});
 });
-
-test('ParcelBoundary should render colours when debugRender is true', () => {
-    let hasChanged = false;
-    let parcel = new Parcel({
-        value: 123,
-        debugRender: true
-    });
-
-    expect(
-        shallow(<ParcelBoundary parcel={parcel} debounce={100}>{(pp) => "???"}</ParcelBoundary>)
-        .render()
-        .get(0)
-        .attribs
-        .style
-        .indexOf('background-color') !== -1
-    ).toBe(true);
-});

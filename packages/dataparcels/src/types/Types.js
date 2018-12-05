@@ -18,8 +18,7 @@ export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
 
 export type ParcelConfig = {
     handleChange?: Function,
-    value?: *,
-    debugRender?: boolean
+    value?: *
 };
 
 export type ParcelConfigInternal = {

@@ -34,8 +34,7 @@ type ParcelHocConfig = {
     onChange?: (props: AnyProps) => OnChange,
     delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
-    debugParcel?: boolean,
-    debugRender?: boolean
+    debugParcel?: boolean
 };
 
 const PARCEL_HOC_NAME = `ParcelHoc()`;
@@ -51,8 +50,7 @@ export default (config: ParcelHocConfig): Function => {
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
-        debugParcel = false,
-        debugRender = false
+        debugParcel = false
     } = config;
 
     Types(PARCEL_HOC_NAME, "config.name", "string")(name);
@@ -63,7 +61,6 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
     Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
-    Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
         constructor(props: Props) {
@@ -71,8 +68,7 @@ export default (config: ParcelHocConfig): Function => {
 
             let initialize = (value: *) => new Parcel({
                 value,
-                handleChange: this.handleChange,
-                debugRender
+                handleChange: this.handleChange
             });
 
             this.state = {

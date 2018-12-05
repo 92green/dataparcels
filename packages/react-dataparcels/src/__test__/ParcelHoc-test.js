@@ -107,19 +107,6 @@ test('ParcelHoc config should accept a pipe function', () => {
     expect(457).toBe(childProps.proppy.value);
 });
 
-test('ParcelHoc config should accept a debugRender boolean', () => {
-    let childProps = shallowRenderHoc(
-        {},
-        ParcelHoc({
-            valueFromProps: () => 456,
-            name: "proppy",
-            debugRender: true
-        })
-    ).props();
-
-    expect(childProps.proppy._treeshare.debugRender).toBe(true);
-});
-
 test('ParcelHoc config should accept a debugParcel boolean', () => {
     let {log} = console;
     // $FlowFixMe
