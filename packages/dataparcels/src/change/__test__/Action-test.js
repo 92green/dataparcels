@@ -32,12 +32,6 @@ test('Action should build an action with a default keyPath', () => {
     expect(new Action({type: "???"}).keyPath).toEqual([]);
 });
 
-test('Action should be synchronous if it has a type of ping, else not', () => {
-    expect(new Action({type: "ping"}).shouldBeSynchronous()).toBe(true);
-    expect(new Action({type: "set"}).shouldBeSynchronous()).toBe(false);
-    expect(new Action({type: "???"}).shouldBeSynchronous()).toBe(false);
-});
-
 test('Action _unget should unshift key to front of empty keyPath', () => {
     let action = {
         type: "woo",
@@ -229,14 +223,12 @@ test('Action _addPost twice should put post functions in same keyPathModifiers',
         {key: 'a', post: [post, post2], pre: []}
     ]);
 });
-test('Action should be value action if it isnt ping or setMeta', () => {
-    expect(new Action({type: "ping"}).isValueAction()).toBe(false);
+test('Action should be value action if it isnt setMeta', () => {
     expect(new Action({type: "set"}).isValueAction()).toBe(true);
     expect(new Action({type: "setMeta"}).isValueAction()).toBe(false);
 });
 
 test('Action should be meta action if it is setMeta', () => {
-    expect(new Action({type: "ping"}).isMetaAction()).toBe(false);
     expect(new Action({type: "set"}).isMetaAction()).toBe(false);
     expect(new Action({type: "setMeta"}).isMetaAction()).toBe(true);
 });

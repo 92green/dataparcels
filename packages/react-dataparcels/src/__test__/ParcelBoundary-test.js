@@ -282,29 +282,6 @@ test('ParcelBoundary should cancel unreleased changes when receiving a new parce
     expect(handleChange).toHaveBeenCalledTimes(0);
 });
 
-test('ParcelBoundary should ignore debounce when sending a ping', () => {
-    let childRenderer = jest.fn();
-    let handleChange = jest.fn();
-
-    let parcel = new Parcel({
-        value: 123,
-        handleChange
-    });
-
-    let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={100}>
-        {childRenderer}
-    </ParcelBoundary>);
-
-    let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.ping();
-
-    // even with debounce applied, handleChange should have been called immediately
-    expect(handleChange).toHaveBeenCalledTimes(1);
-
-    // handleChange should have the same value as before
-    expect(handleChange.mock.calls[0][0].value).toBe(123);
-});
-
 test('ParcelBoundary should use an internal boundary split to stop parcel boundaries using the same parcel from sharing their parcel registries', () => {
     let parcel = new Parcel({
         value: {

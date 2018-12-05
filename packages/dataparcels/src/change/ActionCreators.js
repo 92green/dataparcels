@@ -48,12 +48,6 @@ const insertBeforeSelf: Function = (value: *): Action => {
     });
 };
 
-const ping: Function = (): Action => {
-    return new Action({
-        type: "ping"
-    });
-};
-
 const push: Function = (value: *): Action => {
     return new Action({
         type: "push",
@@ -153,7 +147,6 @@ export default {
     insertAfterSelf,
     insertBefore,
     insertBeforeSelf,
-    ping,
     push,
     pop,
     setMeta,

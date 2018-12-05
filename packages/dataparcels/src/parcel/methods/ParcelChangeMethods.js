@@ -35,9 +35,5 @@ export default (_this: Parcel, dispatch: Function) => ({
     setChangeRequestMeta: (partialMeta: ParcelMeta) => {
         Types(`setChangeRequestMeta()`, `partialMeta`, `object`)(partialMeta);
         dispatch(new ChangeRequest().setChangeRequestMeta(partialMeta));
-    },
-
-    ping: () => {
-        dispatch(ActionCreators.ping());
     }
 });

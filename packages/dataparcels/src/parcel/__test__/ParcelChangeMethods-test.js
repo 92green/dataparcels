@@ -234,25 +234,3 @@ test('Parcel.setChangeRequestMeta() should set change request meta', () => {
         parcel.setChangeRequestMeta({a: 3});
     });
 });
-
-test('Parcel.ping() should call the Parcels handleChange function with no change', () => {
-    expect.assertions(1);
-
-    var data = {
-        value: 123
-    };
-
-    var expectedData = {
-        child: undefined,
-        meta: {},
-        value: 123,
-        key: '^'
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-        }
-    }).ping(456);
-});

@@ -212,13 +212,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                     newParcel.toConsole();
                 }
 
-                let shouldBeSynchronous = () => changeRequest.shouldBeSynchronous();
-
                 let updateParcel = set('parcel', newParcel);
                 let addToBuffer = this.addToBuffer(changeRequest);
                 let releaseBuffer = this.releaseBuffer();
 
-                if((!debounce && !hold) || shouldBeSynchronous()) {
+                if(!debounce && !hold) {
                     this.setState(pipe(
                         updateParcel,
                         addToBuffer,

@@ -172,12 +172,6 @@ export default class ChangeRequest {
         return next.value !== prev.value;
     };
 
-    shouldBeSynchronous = (): boolean => {
-        return this
-            ._actions
-            .some(action => action.shouldBeSynchronous());
-    };
-
     toJS = (): Object => {
         return {
             actions: this._actions.map(action => action.toJS()),

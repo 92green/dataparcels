@@ -42,7 +42,6 @@ import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.
 import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
 import Markdown_batch from 'docs/api/parcel/batch.md';
 import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
-import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_modifyValueDown from 'docs/api/parcel/modifyValueDown.md';
 import Markdown_modifyValueUp from 'docs/api/parcel/modifyValueUp.md';
 import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
@@ -100,7 +99,6 @@ const md = {
     dispatch: Markdown_dispatch,
     batch: Markdown_batch,
     batchAndReturn: Markdown_batchAndReturn,
-    ping: Markdown_ping,
     modifyValueDown: Markdown_modifyValueDown,
     modifyValueUp: Markdown_modifyValueUp,
     modifyChange: Markdown_modifyChange,
@@ -172,7 +170,6 @@ setChangeRequestMeta()
 dispatch()
 batch()
 batchAndReturn()
-ping()
 
 # Modify methods
 modifyValueDown()

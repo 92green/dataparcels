@@ -74,12 +74,8 @@ export default class Action {
         return this._add(_ => _._addPost(post));
     };
 
-    shouldBeSynchronous = (): boolean => {
-        return this.type === "ping";
-    };
-
     isValueAction = (): boolean => {
-        return this.type !== "ping" && this.type !== "setMeta";
+        return this.type !== "setMeta";
     };
 
     isMetaAction = (): boolean => {
