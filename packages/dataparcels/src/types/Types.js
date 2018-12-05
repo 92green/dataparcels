@@ -28,7 +28,6 @@ export type ParcelConfigInternal = {
     child: *,
     meta: ParcelMeta,
     id: ParcelId,
-    matchPipes?: MatchPipe[],
     parent?: ?Parcel,
     treeshare: Treeshare
 };
@@ -36,7 +35,6 @@ export type ParcelConfigInternal = {
 export type CreateParcelConfigType = {
     onDispatch?: Function,
     id?: ParcelId,
-    matchPipes?: MatchPipe[],
     parcelData?: ParcelData,
     parent?: ?Parcel,
     handleChange?: Function,
@@ -50,12 +48,6 @@ export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *) => *;
 
 export type StaticParcelMapper = (item: StaticParcel, index: string|number, _this: StaticParcel) => *;
-
-export type MatchPipe = {
-    match: string,
-    depth: number,
-    updater: ParcelUpdater
-};
 
 export type Key = string;
 export type Index = number;

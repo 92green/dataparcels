@@ -57,7 +57,6 @@ import Markdown_log from 'docs/api/parcel/log.md';
 import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
-import Markdown_matchPipe from 'docs/api/parcel/matchPipe.md';
 import Markdown_toConsole from 'docs/api/parcel/toConsole.md';
 
 const md = {
@@ -116,7 +115,6 @@ const md = {
     spy: Markdown_spy,
     spyChange: Markdown_spyChange,
     pipe: Markdown_pipe,
-    matchPipe: Markdown_matchPipe,
     toConsole: Markdown_toConsole
 }
 
@@ -198,7 +196,6 @@ spyChange()
 
 # Composition methods
 pipe()
-matchPipe()
 
 # Debug methods
 log()

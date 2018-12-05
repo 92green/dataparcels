@@ -4,7 +4,6 @@ import type ChangeRequest from '../change/ChangeRequest';
 import type {CreateParcelConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
-import type {MatchPipe} from '../types/Types';
 import type {ParcelBatcher} from '../types/Types';
 import type {ParcelConfigInternal} from '../types/Types';
 import type {ParcelConfig} from '../types/Types';
@@ -42,7 +41,6 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
     meta: {},
     id: new ParcelId(),
-    matchPipes: [],
     parent: undefined,
     treeshare: undefined
 });
@@ -65,7 +63,6 @@ export default class Parcel {
             child,
             meta,
             id,
-            matchPipes,
             parent,
             treeshare
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
@@ -85,9 +82,6 @@ export default class Parcel {
             // $FlowFixMe
             this._parent = parent;
         }
-
-        // match pipes
-        this._matchPipes = matchPipes || [];
 
         // types
         this._parcelTypes = new ParcelTypes(
@@ -154,14 +148,12 @@ export default class Parcel {
     _dispatchBuffer: ?Function; // used by batch()
     _log: boolean = false; // used by log()
     _logName: string = ""; // used by log()
-    _matchPipes: MatchPipe[]; // used by matchPipe() and passed to all subsequent parcels
 
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
             id = this._id,
             onDispatch = this.dispatch,
             handleChange,
-            matchPipes = this._matchPipes,
             parent,
             parcelData = this._parcelData,
             treeshare = this._treeshare
@@ -173,7 +165,7 @@ export default class Parcel {
             meta = {}
         } = parcelData;
 
-        let parcel: Parcel = new Parcel(
+        return new Parcel(
             {
                 value,
                 handleChange
@@ -182,16 +174,11 @@ export default class Parcel {
                 child,
                 meta,
                 id,
-                matchPipes,
                 onDispatch,
                 parent,
                 treeshare
             }
         );
-
-        return parent
-            ? parcel._methods._applyMatchPipes()
-            : parcel;
     };
 
     //
@@ -360,7 +347,6 @@ export default class Parcel {
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
-    matchPipe = (match: string, ...updaters: ParcelUpdater[]): Parcel => this._methods.matchPipe(match, ...updaters);
 
     // Advanced methods
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
