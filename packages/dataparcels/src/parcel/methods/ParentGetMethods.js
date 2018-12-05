@@ -10,7 +10,6 @@ import parcelGet from '../../parcelData/get';
 import parcelHas from '../../parcelData/has';
 import prepareChildKeys from '../../parcelData/prepareChildKeys';
 
-import keyArray from 'unmutable/lib/keyArray';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
