@@ -90,10 +90,8 @@ export default class Parcel {
             !!(id && id.path().length === 0)
         );
 
+        // id
         this._id = id;
-        if(!_configInternal || parent) {
-            this._id.setTypeCode(this._parcelTypes.toTypeCode());
-        }
 
         // treeshare
         this._treeshare = treeshare || new Treeshare({debugRender});

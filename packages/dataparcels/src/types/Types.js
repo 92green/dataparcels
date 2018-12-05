@@ -5,7 +5,6 @@ import type Treeshare from '../treeshare/Treeshare';
 import Parcel from '../parcel/Parcel';
 import Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
-import StaticParcel from '../staticParcel/StaticParcel';
 import isPlainObject from 'unmutable/lib/util/isPlainObject';
 
 export type ParcelData = {
@@ -47,16 +46,13 @@ export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) =
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *) => *;
 
-export type StaticParcelMapper = (item: StaticParcel, index: string|number, _this: StaticParcel) => *;
-
 export type Key = string;
 export type Index = number;
 export type Property = number|string;
 
 export type ParcelIdData = {
     id: string[],
-    path: string[],
-    typedPath: string[]
+    path: string[]
 };
 
 const RUNTIME_TYPES = {
@@ -108,10 +104,6 @@ const RUNTIME_TYPES = {
     ['parcelData']: {
         name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
         check: ii => isPlainObject(ii) && ii.hasOwnProperty('value')
-    },
-    ['staticParcel']: {
-        name: "a StaticParcel",
-        check: ii => ii instanceof StaticParcel
     },
     ['string']: {
         name: "a string",
