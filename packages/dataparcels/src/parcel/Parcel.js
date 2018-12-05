@@ -311,7 +311,6 @@ export default class Parcel {
 
     // Advanced change methods
     setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
-    updateMeta = (updater: ParcelMetaUpdater) => this._methods.updateMeta(updater);
     setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);

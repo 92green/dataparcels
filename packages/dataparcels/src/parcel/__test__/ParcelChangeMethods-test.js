@@ -219,61 +219,6 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
     });
 });
 
-test('Parcel.updateMeta() should call the Parcels handleChange function with the new meta merged in', () => {
-    expect.assertions(5);
-
-    var data = {
-        value: 123
-    };
-
-    var expectedMeta = {
-        abc: 123
-    };
-
-    var expectedMeta2 = {
-        abc: 123,
-        def: 456
-    };
-
-    var expectedAction = {
-        type: "setMeta",
-        keyPath: [],
-        payload: {
-            meta: {
-                abc: 123
-            }
-        }
-    };
-
-    var changes = 0;
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            changes++;
-
-            if(changes === 1) {
-                expect(expectedMeta).toEqual(parcel.meta);
-                expect(expectedAction).toEqual(GetAction(changeRequest));
-                parcel.updateMeta(meta => {
-                    expect({abc: 123}).toEqual(meta)
-                    return {
-                        def: 456
-                    };
-                });
-
-            } else if(changes === 2) {
-                expect(expectedMeta2).toEqual(parcel.meta);
-            }
-        }
-    }).updateMeta(meta => {
-        expect({}).toEqual(meta)
-        return {
-            abc: 123
-        };
-    });
-});
-
 test('Parcel.setChangeRequestMeta() should set change request meta', () => {
     var data = {
         value: 123,

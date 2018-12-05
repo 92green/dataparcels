@@ -35,17 +35,6 @@ export default (_this: Parcel, dispatch: Function) => ({
         dispatch(ActionCreators.setMeta(partialMeta));
     },
 
-    updateMeta: (updater: ParcelMetaUpdater) => {
-        Types(`updateMeta()`, `updater`, `function`)(updater);
-        let {meta} = _this._parcelData;
-        pipeWith(
-            meta,
-            updater,
-            Types(`updateMeta()`, `the result of updater()`, `object`),
-            _this.setMeta
-        );
-    },
-
     setChangeRequestMeta: (partialMeta: ParcelMeta) => {
         Types(`setChangeRequestMeta()`, `partialMeta`, `object`)(partialMeta);
         dispatch(new ChangeRequest().setChangeRequestMeta(partialMeta));

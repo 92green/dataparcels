@@ -38,7 +38,6 @@ import Markdown_swapNext from 'docs/api/parcel/swapNext.md';
 import Markdown_swapPrev from 'docs/api/parcel/swapPrev.md';
 import Markdown_unshift from 'docs/api/parcel/unshift.md';
 import Markdown_setMeta from 'docs/api/parcel/setMeta.md';
-import Markdown_updateMeta from 'docs/api/parcel/updateMeta.md';
 import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
 import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
 import Markdown_batch from 'docs/api/parcel/batch.md';
@@ -98,7 +97,6 @@ const md = {
     swapPrev: Markdown_swapPrev,
     unshift: Markdown_unshift,
     setMeta: Markdown_setMeta,
-    updateMeta: Markdown_updateMeta,
     setChangeRequestMeta: Markdown_setChangeRequestMeta,
     dispatch: Markdown_dispatch,
     batch: Markdown_batch,
@@ -172,7 +170,6 @@ unshift()
 
 # Advanced change methods
 setMeta()
-updateMeta()
 setChangeRequestMeta()
 dispatch()
 batch()
