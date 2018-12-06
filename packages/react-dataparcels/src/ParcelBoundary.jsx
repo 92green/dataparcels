@@ -113,15 +113,6 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         return null;
     }
 
-    debugRenderStyle: Function = (): Object => {
-        let rand = () => Math.floor((Math.random() * 0.75 + 0.25) * 256);
-        return {
-            backgroundColor: `rgb(${rand()},${rand()},${rand()})`,
-            padding: "1rem",
-            marginBottom: "1rem"
-        };
-    };
-
     addToBuffer: Function = (changeRequest: ChangeRequest) => (state: State): State => {
         let {debugBuffer} = this.props;
         let {
@@ -212,13 +203,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                     newParcel.toConsole();
                 }
 
-                let shouldBeSynchronous = () => changeRequest.shouldBeSynchronous();
-
                 let updateParcel = set('parcel', newParcel);
                 let addToBuffer = this.addToBuffer(changeRequest);
                 let releaseBuffer = this.releaseBuffer();
 
-                if((!debounce && !hold) || shouldBeSynchronous()) {
+                if(!debounce && !hold) {
                     this.setState(pipe(
                         updateParcel,
                         addToBuffer,
@@ -262,13 +251,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             cancel: () => this.setState(this.cancelBuffer()),
             release: () => this.setState(this.releaseBuffer())
         };
+
         let buffered = changeCount > 0;
-
-        let element = children(parcel, actions, buffered);
-
-        if(parcel._treeshare.debugRender) {
-            return <div style={this.debugRenderStyle()}>{element}</div>;
-        }
-        return element;
+        return children(parcel, actions, buffered);
     }
 }

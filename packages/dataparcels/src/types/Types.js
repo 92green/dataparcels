@@ -18,8 +18,7 @@ export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
 
 export type ParcelConfig = {
     handleChange?: Function,
-    value?: *,
-    debugRender?: boolean
+    value?: *
 };
 
 export type ParcelConfigInternal = {
@@ -27,7 +26,6 @@ export type ParcelConfigInternal = {
     child: *,
     meta: ParcelMeta,
     id: ParcelId,
-    matchPipes?: MatchPipe[],
     parent?: ?Parcel,
     treeshare: Treeshare
 };
@@ -35,7 +33,6 @@ export type ParcelConfigInternal = {
 export type CreateParcelConfigType = {
     onDispatch?: Function,
     id?: ParcelId,
-    matchPipes?: MatchPipe[],
     parcelData?: ParcelData,
     parent?: ?Parcel,
     handleChange?: Function,
@@ -43,18 +40,10 @@ export type CreateParcelConfigType = {
 };
 
 export type ParcelMeta = {[key: string]: *};
-export type ParcelMetaUpdater = (meta: ParcelMeta) => ParcelMeta;
-
 export type ParcelBatcher = (item: Parcel) => void;
 export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *) => *;
-
-export type MatchPipe = {
-    match: string,
-    depth: number,
-    updater: ParcelUpdater
-};
 
 export type Key = string;
 export type Index = number;
@@ -62,8 +51,7 @@ export type Property = number|string;
 
 export type ParcelIdData = {
     id: string[],
-    path: string[],
-    typedPath: string[]
+    path: string[]
 };
 
 const RUNTIME_TYPES = {

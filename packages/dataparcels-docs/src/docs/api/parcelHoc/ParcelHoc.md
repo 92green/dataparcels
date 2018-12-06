@@ -28,7 +28,6 @@ ParcelHoc({
     pipe?: Function
     // debugging options
     debugParcel?: boolean
-    debugRender?: boolean
 });
 ```
 

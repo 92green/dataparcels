@@ -31,7 +31,6 @@ const actionMap = {
     delete: ({lastKey}) => del(lastKey),
     insertAfter: ({lastKey, value}) => insertAfter(lastKey, value),
     insertBefore: ({lastKey, value}) => insertBefore(lastKey, value),
-    ping: () => identity(),
     pop: () => pop(),
     push: ({value}) => push(value),
     setMeta: ({meta}) => setMeta(meta),

@@ -38,12 +38,10 @@ import Markdown_swapNext from 'docs/api/parcel/swapNext.md';
 import Markdown_swapPrev from 'docs/api/parcel/swapPrev.md';
 import Markdown_unshift from 'docs/api/parcel/unshift.md';
 import Markdown_setMeta from 'docs/api/parcel/setMeta.md';
-import Markdown_updateMeta from 'docs/api/parcel/updateMeta.md';
 import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
 import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
 import Markdown_batch from 'docs/api/parcel/batch.md';
 import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
-import Markdown_ping from 'docs/api/parcel/ping.md';
 import Markdown_modifyValueDown from 'docs/api/parcel/modifyValueDown.md';
 import Markdown_modifyValueUp from 'docs/api/parcel/modifyValueUp.md';
 import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
@@ -58,7 +56,6 @@ import Markdown_log from 'docs/api/parcel/log.md';
 import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
-import Markdown_matchPipe from 'docs/api/parcel/matchPipe.md';
 import Markdown_toConsole from 'docs/api/parcel/toConsole.md';
 
 const md = {
@@ -98,12 +95,10 @@ const md = {
     swapPrev: Markdown_swapPrev,
     unshift: Markdown_unshift,
     setMeta: Markdown_setMeta,
-    updateMeta: Markdown_updateMeta,
     setChangeRequestMeta: Markdown_setChangeRequestMeta,
     dispatch: Markdown_dispatch,
     batch: Markdown_batch,
     batchAndReturn: Markdown_batchAndReturn,
-    ping: Markdown_ping,
     modifyValueDown: Markdown_modifyValueDown,
     modifyValueUp: Markdown_modifyValueUp,
     modifyChange: Markdown_modifyChange,
@@ -118,7 +113,6 @@ const md = {
     spy: Markdown_spy,
     spyChange: Markdown_spyChange,
     pipe: Markdown_pipe,
-    matchPipe: Markdown_matchPipe,
     toConsole: Markdown_toConsole
 }
 
@@ -172,12 +166,10 @@ unshift()
 
 # Advanced change methods
 setMeta()
-updateMeta()
 setChangeRequestMeta()
 dispatch()
 batch()
 batchAndReturn()
-ping()
 
 # Modify methods
 modifyValueDown()
@@ -201,7 +193,6 @@ spyChange()
 
 # Composition methods
 pipe()
-matchPipe()
 
 # Debug methods
 log()

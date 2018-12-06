@@ -4,13 +4,11 @@ import type ChangeRequest from '../change/ChangeRequest';
 import type {CreateParcelConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
-import type {MatchPipe} from '../types/Types';
 import type {ParcelBatcher} from '../types/Types';
 import type {ParcelConfigInternal} from '../types/Types';
 import type {ParcelConfig} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type {ParcelMapper} from '../types/Types';
-import type {ParcelMetaUpdater} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
@@ -43,7 +41,6 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
     meta: {},
     id: new ParcelId(),
-    matchPipes: [],
     parent: undefined,
     treeshare: undefined
 });
@@ -54,19 +51,16 @@ export default class Parcel {
 
         let {
             handleChange,
-            value,
-            debugRender = false
+            value
         } = config;
 
         handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
-        Types(`Parcel()`, `config.debugRender`, `boolean`)(debugRender);
 
         let {
             onDispatch,
             child,
             meta,
             id,
-            matchPipes,
             parent,
             treeshare
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
@@ -87,9 +81,6 @@ export default class Parcel {
             this._parent = parent;
         }
 
-        // match pipes
-        this._matchPipes = matchPipes || [];
-
         // types
         this._parcelTypes = new ParcelTypes(
             value,
@@ -97,13 +88,11 @@ export default class Parcel {
             !!(id && id.path().length === 0)
         );
 
+        // id
         this._id = id;
-        if(!_configInternal || parent) {
-            this._id.setTypeCode(this._parcelTypes.toTypeCode());
-        }
 
         // treeshare
-        this._treeshare = treeshare || new Treeshare({debugRender});
+        this._treeshare = treeshare || new Treeshare();
         this._treeshare.registry.set(id.id(), this);
 
         let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
@@ -155,14 +144,12 @@ export default class Parcel {
     _dispatchBuffer: ?Function; // used by batch()
     _log: boolean = false; // used by log()
     _logName: string = ""; // used by log()
-    _matchPipes: MatchPipe[]; // used by matchPipe() and passed to all subsequent parcels
 
     _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
         let {
             id = this._id,
             onDispatch = this.dispatch,
             handleChange,
-            matchPipes = this._matchPipes,
             parent,
             parcelData = this._parcelData,
             treeshare = this._treeshare
@@ -174,7 +161,7 @@ export default class Parcel {
             meta = {}
         } = parcelData;
 
-        let parcel: Parcel = new Parcel(
+        return new Parcel(
             {
                 value,
                 handleChange
@@ -183,16 +170,11 @@ export default class Parcel {
                 child,
                 meta,
                 id,
-                matchPipes,
                 onDispatch,
                 parent,
                 treeshare
             }
         );
-
-        return parent
-            ? parcel._methods._applyMatchPipes()
-            : parcel;
     };
 
     //
@@ -311,12 +293,10 @@ export default class Parcel {
 
     // Advanced change methods
     setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
-    updateMeta = (updater: ParcelMetaUpdater) => this._methods.updateMeta(updater);
     setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
     batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
     batchAndReturn = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batchAndReturn(batcher, changeRequest);
-    ping = () => this._methods.ping();
 
     // Indexed methods
     insertAfter = overload({
@@ -345,9 +325,11 @@ export default class Parcel {
     unshift = (value: *) => this._methods.unshift(value);
 
     // Modify methods
-    modifyChange = (batcher: Function): Parcel => this._methods.modifyChange(batcher);
+    modifyDown = (updater: Function): Parcel => this._methods.modifyDown(updater);
+    modifyUp = (updater: Function): Parcel => this._methods.modifyUp(updater);
     modifyValueDown = (updater: Function): Parcel => this._methods.modifyValueDown(updater);
     modifyValueUp = (updater: Function): Parcel => this._methods.modifyValueUp(updater);
+    modifyChange = (batcher: ParcelBatcher): Parcel => this._methods.modifyChange(batcher);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
 
@@ -360,7 +342,6 @@ export default class Parcel {
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
-    matchPipe = (match: string, ...updaters: ParcelUpdater[]): Parcel => this._methods.matchPipe(match, ...updaters);
 
     // Advanced methods
     getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();

@@ -97,20 +97,3 @@ test('Parcel.path should return the Parcels path', () => {
     expect(["b"]).toEqual(new Parcel(data).get("b").path);
     // t.is("#a", new Parcel(data).getIn(["a",?????]).path); TODO
 });
-
-test('Parcel._id.typedPathString() should return the Parcels typed path', () => {
-    var data = {
-        value: {
-            a: [1,2,3],
-            ['something.:@']: 123
-        }
-    };
-    expect("^:ceiPT").toEqual(new Parcel(data)._id.typedPathString());
-    expect("^:ceiPT").toEqual(new Parcel(data).modifyValueDown(ii => ii)._id.typedPathString());
-    expect("^:ceiPT.a:CeIPt").toEqual(new Parcel(data).get("a")._id.typedPathString());
-    expect("^:ceiPT.a:CeIPt").toEqual(new Parcel(data).modifyValueDown(ii => ii).get("a")._id.typedPathString());
-    expect("^:ceiPT.a:CeIPt.#a:CEipt").toEqual(new Parcel(data).getIn(["a",0])._id.typedPathString());
-    expect("^:ceiPT.something%.%:%@:Ceipt").toEqual(new Parcel(data).get("something.:@")._id.typedPathString());
-    expect("^:ceiPT.b:Ceipt").toEqual(new Parcel(data).get("b")._id.typedPathString());
-    // t.is("#a", new Parcel(data).getIn(["a",?????])._id.typedPathString()); TODO
-});

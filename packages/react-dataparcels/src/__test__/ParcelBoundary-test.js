@@ -282,29 +282,6 @@ test('ParcelBoundary should cancel unreleased changes when receiving a new parce
     expect(handleChange).toHaveBeenCalledTimes(0);
 });
 
-test('ParcelBoundary should ignore debounce when sending a ping', () => {
-    let childRenderer = jest.fn();
-    let handleChange = jest.fn();
-
-    let parcel = new Parcel({
-        value: 123,
-        handleChange
-    });
-
-    let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={100}>
-        {childRenderer}
-    </ParcelBoundary>);
-
-    let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.ping();
-
-    // even with debounce applied, handleChange should have been called immediately
-    expect(handleChange).toHaveBeenCalledTimes(1);
-
-    // handleChange should have the same value as before
-    expect(handleChange.mock.calls[0][0].value).toBe(123);
-});
-
 test('ParcelBoundary should use an internal boundary split to stop parcel boundaries using the same parcel from sharing their parcel registries', () => {
     let parcel = new Parcel({
         value: {
@@ -337,21 +314,4 @@ test('ParcelBoundary should use an internal boundary split to stop parcel bounda
 
     expect(childParcelA2.value).toEqual({abc: 456, def: 123});
     expect(childParcelB2.value).toEqual({abc: 123, def: 456});
-});
-
-test('ParcelBoundary should render colours when debugRender is true', () => {
-    let hasChanged = false;
-    let parcel = new Parcel({
-        value: 123,
-        debugRender: true
-    });
-
-    expect(
-        shallow(<ParcelBoundary parcel={parcel} debounce={100}>{(pp) => "???"}</ParcelBoundary>)
-        .render()
-        .get(0)
-        .attribs
-        .style
-        .indexOf('background-color') !== -1
-    ).toBe(true);
 });

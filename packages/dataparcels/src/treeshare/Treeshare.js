@@ -42,36 +42,31 @@ class LocationShareRegistry {
 type Config = {
     registry?: ParcelRegistry,
     dispatch?: DispatchRegistry,
-    locationShare?: LocationShareRegistry,
-    debugRender: boolean
+    locationShare?: LocationShareRegistry
 };
 
 export default class Treeshare {
-    debugRender: boolean;
     registry: ParcelRegistry;
     dispatch: DispatchRegistry;
     locationShare: LocationShareRegistry;
 
-    constructor(config: Config) {
+    constructor(config: Config = {}) {
         let {
             registry,
             dispatch,
-            locationShare,
-            debugRender
+            locationShare
         } = config;
 
         this.registry = registry || new ParcelRegistry();
         this.dispatch = dispatch || new DispatchRegistry();
         this.locationShare = locationShare || new LocationShareRegistry();
-        this.debugRender = debugRender || false;
     }
 
     boundarySplit: Function = (): Treeshare => {
         return new Treeshare({
             // do not pass in registry
             dispatch: this.dispatch,
-            locationShare: this.locationShare,
-            debugRender: this.debugRender
+            locationShare: this.locationShare
         });
     }
 }

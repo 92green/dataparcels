@@ -278,6 +278,23 @@ test('ParentParcel.toObject() should make an object', () => {
 
 });
 
+test('ParentParcel.toObject() should make an object from an array', () => {
+    var data = {
+        value: [1,2,3],
+        meta: {
+            a: {a:4,b:5,c:6}
+        }
+    };
+
+    var expectedObject = {"0":1,"1":2,"2":3};
+    var parcel = new Parcel(data);
+    var obj = map(ii => ii.value)(parcel.toObject());
+
+    expect(obj).toEqual(expectedObject);
+
+});
+
+
 test('ParentParcel.toObject() should make an object with a mapper', () => {
     var data = {
         value: {a:1,b:2,c:3},

@@ -10,7 +10,6 @@ export type {ParcelData} from './types/Types';
 export type {ParcelConfig} from './types/Types';
 export type {ParcelConfigInternal} from './types/Types';
 export type {ParcelMeta} from './types/Types';
-export type {ParcelMetaUpdater} from './types/Types';
 
 export type {ParcelBatcher} from './types/Types';
 export type {ParcelMapper} from './types/Types';

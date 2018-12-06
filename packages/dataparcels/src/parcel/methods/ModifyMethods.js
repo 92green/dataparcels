@@ -23,6 +23,30 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
 export default (_this: Parcel): Object => ({
 
+    modifyDown: (updater: Function): Parcel => {
+        Types(`modifyDown()`, `updater`, `function`)(updater);
+        let parcelData = updater(_this._parcelData);
+
+        return _this._create({
+            id: _this._id.pushModifier(`md-${HashFunction(updater)}`),
+            parcelData,
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.dispatch(changeRequest._addPre(updater));
+            }
+        });
+    },
+
+    modifyUp: (updater: Function): Parcel => {
+        Types(`modifyUp()`, `updater`, `function`)(updater);
+
+        return _this._create({
+            id: _this._id.pushModifier(`mu-${HashFunction(updater)}`),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.dispatch(changeRequest._addPost(updater));
+            }
+        });
+    },
+
     modifyValueDown: (updater: Function): Parcel => {
         Types(`modifyValueDown()`, `updater`, `function`)(updater);
 
@@ -60,19 +84,6 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyChange: (batcher: Function): Parcel => {
-        Types(`modifyChange()`, `batcher`, `function`)(batcher);
-        return _this._create({
-            id: _this._id.pushModifier(`mcb-${HashFunction(batcher)}`),
-            onDispatch: (changeRequest: ChangeRequest) => {
-                _this.batch(
-                    (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),
-                    changeRequest
-                );
-            }
-        });
-    },
-
     modifyValueUp: (updater: Function): Parcel => {
         Types(`modifyValueUp()`, `updater`, `function`)(updater);
         return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
@@ -95,6 +106,19 @@ export default (_this: Parcel): Object => ({
             parcel.dispatch(changeRequest.updateActions(valueActionFilter));
 
             parcel.set(updatedValue);
+        });
+    },
+
+    modifyChange: (batcher: Function): Parcel => {
+        Types(`modifyChange()`, `batcher`, `function`)(batcher);
+        return _this._create({
+            id: _this._id.pushModifier(`mcb-${HashFunction(batcher)}`),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.batch(
+                    (parcel: Parcel) => batcher(parcel, changeRequest._setBaseParcel(parcel)),
+                    changeRequest
+                );
+            }
         });
     },
 

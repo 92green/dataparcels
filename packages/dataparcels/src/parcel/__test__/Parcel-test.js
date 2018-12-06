@@ -24,8 +24,3 @@ test('Parcels should be able to accept just handleChange in config', () => {
     expect(undefined).toEqual(parcel.value);
     parcel.onChange(456);
 });
-
-test('Parcel should store debugRender in treeshare', () => {
-    expect(new Parcel()._treeshare.debugRender).toBe(false);
-    expect(new Parcel({debugRender: true})._treeshare.debugRender).toBe(true);
-});
