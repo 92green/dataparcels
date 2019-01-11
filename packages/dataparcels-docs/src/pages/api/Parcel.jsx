@@ -25,7 +25,9 @@ import Markdown_onChangeDOM from 'docs/api/parcel/onChangeDOM.md';
 import Markdown_set from 'docs/api/parcel/set.md';
 import Markdown_setIn from 'docs/api/parcel/setIn.md';
 import Markdown_update from 'docs/api/parcel/update.md';
+import Markdown_updateDeep from 'docs/api/parcel/updateDeep.md';
 import Markdown_updateIn from 'docs/api/parcel/updateIn.md';
+import Markdown_updateInDeep from 'docs/api/parcel/updateInDeep.md';
 import Markdown_delete from 'docs/api/parcel/delete.md';
 import Markdown_deleteIn from 'docs/api/parcel/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/parcel/insertAfter.md';
@@ -42,8 +44,8 @@ import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.
 import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
 import Markdown_batch from 'docs/api/parcel/batch.md';
 import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
-import Markdown_modifyValueDown from 'docs/api/parcel/modifyValueDown.md';
-import Markdown_modifyValueUp from 'docs/api/parcel/modifyValueUp.md';
+import Markdown_modifyDown from 'docs/api/parcel/modifyDown.md';
+import Markdown_modifyUp from 'docs/api/parcel/modifyUp.md';
 import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
 import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
@@ -82,7 +84,9 @@ const md = {
     set: Markdown_set,
     setIn: Markdown_setIn,
     update: Markdown_update,
+    updateDeep: Markdown_updateDeep,
     updateIn: Markdown_updateIn,
+    updateInDeep: Markdown_updateInDeep,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
@@ -99,8 +103,8 @@ const md = {
     dispatch: Markdown_dispatch,
     batch: Markdown_batch,
     batchAndReturn: Markdown_batchAndReturn,
-    modifyValueDown: Markdown_modifyValueDown,
-    modifyValueUp: Markdown_modifyValueUp,
+    modifyDown: Markdown_modifyDown,
+    modifyUp: Markdown_modifyUp,
     modifyChange: Markdown_modifyChange,
     initialMeta: Markdown_initialMeta,
     isChild: Markdown_isChild,
@@ -148,10 +152,12 @@ onChange()
 onChangeDOM()
 set()
 setIn()
-update()
-updateIn()
 delete()
 deleteIn()
+update()
+updateDeep()
+updateIn()
+updateInDeep()
 
 # Indexed & element change methods
 insertAfter()
@@ -172,8 +178,8 @@ batch()
 batchAndReturn()
 
 # Modify methods
-modifyValueDown()
-modifyValueUp()
+modifyDown()
+modifyUp()
 modifyChange()
 initialMeta()
 

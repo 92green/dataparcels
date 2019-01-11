@@ -1,6 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 import map from 'unmutable/lib/map';
+import StaticParcel from '../../staticParcel/StaticParcel';
 
 test('ParentParcel.set(key) should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(1);
@@ -19,21 +20,36 @@ test('ParentParcel.set(key) should call the Parcels handleChange function with t
 });
 
 test('ParentParcel.update(key) should call the Parcels handleChange function with the new parcelData', () => {
-    expect.assertions(2);
+    let updater = jest.fn(ii => ii + 1);
+    let handleChange = jest.fn();
 
-    var data = {
+    new Parcel({
         value: {
-            a: "!!!"
+            abc: 123
         },
-        handleChange: (parcel) => {
-            let {value} = parcel.data;
-            expect({a: "???"}).toEqual(value);
-        }
-    };
+        handleChange
+    }).update("abc", updater);
 
-    new Parcel(data).update("a", ii => {
-        expect("!!!").toBe(ii);
-        return "???";
+    expect(updater.mock.calls[0][0]).toBe(123);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual({
+        abc: 124
+    });
+});
+
+test('ParentParcel.updateDeep(key) should call the Parcels handleChange function with the new parcelData', () => {
+    let updater = jest.fn(staticParcel => staticParcel.push(4));
+    let handleChange = jest.fn();
+
+    new Parcel({
+        value: {
+            abc: [1,2,3]
+        },
+        handleChange
+    }).updateDeep("abc", updater);
+
+    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual({
+        abc: [1,2,3,4]
     });
 });
 
@@ -91,6 +107,27 @@ test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange functi
     new Parcel(data).updateIn(["a", "b"], ii => {
         expect("!!!").toBe(ii);
         return "???";
+    });
+});
+
+test('ParentParcel.updateInDeep(keyPath) should call the Parcels handleChange function with the new parcelData', () => {
+    let updater = jest.fn(staticParcel => staticParcel.push(4));
+    let handleChange = jest.fn();
+
+    new Parcel({
+        value: {
+            abc: {
+                def: [1,2,3]
+            }
+        },
+        handleChange
+    }).updateInDeep(["abc", "def"], updater);
+
+    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual({
+        abc: {
+            def: [1,2,3,4]
+        }
     });
 });
 

@@ -2,7 +2,10 @@
 import type ChangeRequest from '../../change/ChangeRequest';
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
+import type {ParcelValueUpdater} from '../../types/Types';
+
 import Types from '../../types/Types';
+import StaticParcel from '../../staticParcel/StaticParcel';
 
 import ParcelTypes from '../ParcelTypes';
 import {ModifyValueDownChildReturnError} from '../../errors/Errors';
@@ -23,32 +26,8 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
 export default (_this: Parcel): Object => ({
 
-    modifyDown: (updater: Function): Parcel => {
+    modifyDown: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyDown()`, `updater`, `function`)(updater);
-        let parcelData = updater(_this._parcelData);
-
-        return _this._create({
-            id: _this._id.pushModifier(`md-${HashFunction(updater)}`),
-            parcelData,
-            onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPre(updater));
-            }
-        });
-    },
-
-    modifyUp: (updater: Function): Parcel => {
-        Types(`modifyUp()`, `updater`, `function`)(updater);
-
-        return _this._create({
-            id: _this._id.pushModifier(`mu-${HashFunction(updater)}`),
-            onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(updater));
-            }
-        });
-    },
-
-    modifyValueDown: (updater: Function): Parcel => {
-        Types(`modifyValueDown()`, `updater`, `function`)(updater);
 
         let {value} = _this._parcelData;
         let updatedValue = updater(value, _this);
@@ -84,8 +63,8 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyValueUp: (updater: Function): Parcel => {
-        Types(`modifyValueUp()`, `updater`, `function`)(updater);
+    modifyUp: (updater: ParcelValueUpdater): Parcel => {
+        Types(`modifyUp()`, `updater`, `function`)(updater);
         return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
             let {value} = changeRequest.nextData;
@@ -106,6 +85,33 @@ export default (_this: Parcel): Object => ({
             parcel.dispatch(changeRequest.updateActions(valueActionFilter));
 
             parcel.set(updatedValue);
+        });
+    },
+
+    modifyDownDeep: (updater: Function): Parcel => {
+        Types(`modifyDownDeep()`, `updater`, `function`)(updater);
+
+        let staticUpdater = StaticParcel._updateFromData(updater);
+
+        return _this._create({
+            id: _this._id.pushModifier(`md-${HashFunction(updater)}`),
+            parcelData: staticUpdater(_this._parcelData),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.dispatch(changeRequest._addPre(staticUpdater));
+            }
+        });
+    },
+
+    modifyUpDeep: (updater: Function): Parcel => {
+        Types(`modifyUpDeep()`, `updater`, `function`)(updater);
+
+        let staticUpdater = StaticParcel._updateFromData(updater);
+
+        return _this._create({
+            id: _this._id.pushModifier(`mu-${HashFunction(updater)}`),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.dispatch(changeRequest._addPost(staticUpdater));
+            }
         });
     },
 

@@ -12,6 +12,7 @@ import type {ParcelMapper} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
+import type {StaticParcelUpdater} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
@@ -283,8 +284,13 @@ export default class Parcel {
         ["1"]: (updater: ParcelValueUpdater) => this._methods.updateSelf(updater),
         ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
     });
+    updateDeep = overload({
+        ["1"]: (updater: StaticParcelUpdater) => this._methods.updateSelfDeep(updater),
+        ["2"]: (key: Key|Index, updater: StaticParcelUpdater) => this._methods.updateDeep(key, updater)
+    });
     setIn = (keyPath: Array<Key|Index>, value: *) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
+    updateInDeep = (keyPath: Array<Key|Index>, updater: StaticParcelUpdater) => this._methods.updateInDeep(keyPath, updater);
     delete = overload({
         ["0"]: () => this._methods.deleteSelf(),
         ["1"]: (key: Key|Index) => this._methods.delete(key)
@@ -327,8 +333,8 @@ export default class Parcel {
     // Modify methods
     modifyDown = (updater: Function): Parcel => this._methods.modifyDown(updater);
     modifyUp = (updater: Function): Parcel => this._methods.modifyUp(updater);
-    modifyValueDown = (updater: Function): Parcel => this._methods.modifyValueDown(updater);
-    modifyValueUp = (updater: Function): Parcel => this._methods.modifyValueUp(updater);
+    modifyDownDeep = (updater: Function): Parcel => this._methods.modifyDownDeep(updater);
+    modifyUpDeep = (updater: Function): Parcel => this._methods.modifyUpDeep(updater);
     modifyChange = (batcher: ParcelBatcher): Parcel => this._methods.modifyChange(batcher);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);

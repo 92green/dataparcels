@@ -3,6 +3,8 @@ import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
 import type Parcel from '../Parcel';
 import type {ParcelValueUpdater} from '../../types/Types';
+import type {StaticParcelUpdater} from '../../types/Types';
+
 import Types from '../../types/Types';
 
 export default (_this: Parcel /*, dispatch: Function*/): Object => ({
@@ -17,6 +19,12 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         _this.get(key).update(updater);
     },
 
+    updateDeep: (key: Key|Index, updater: StaticParcelUpdater) => {
+        Types(`update()`, `key`, `keyIndex`)(key);
+        Types(`update()`, `updater`, `function`)(updater);
+        _this.get(key).updateDeep(updater);
+    },
+
     delete: (key: Key|Index) => {
         Types(`delete()`, `key`, `keyIndex`)(key);
         _this.get(key).delete();
@@ -29,8 +37,14 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
 
     updateIn: (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => {
         Types(`updateIn()`, `keyPath`, `keyIndexPath`)(keyPath);
-        Types(`update()`, `updater`, `function`)(updater);
+        Types(`updateIn()`, `updater`, `function`)(updater);
         _this.getIn(keyPath).update(updater);
+    },
+
+    updateInDeep: (keyPath: Array<Key|Index>, updater: StaticParcelUpdater) => {
+        Types(`updateInDeep()`, `keyPath`, `keyIndexPath`)(keyPath);
+        Types(`updateInDeep()`, `updater`, `function`)(updater);
+        _this.getIn(keyPath).updateDeep(updater);
     },
 
     deleteIn: (keyPath: Array<Key|Index>) => {
