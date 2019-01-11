@@ -1,6 +1,7 @@
 // @flow
 import type {Key} from '../types/Types';
 import type {Index} from '../types/Types';
+import type {ParcelData} from '../types/Types';
 
 import Action from './Action';
 
@@ -60,6 +61,13 @@ const push: Function = (value: *): Action => {
 const pop: Function = (): Action => {
     return new Action({
         type: "pop"
+    });
+};
+
+const setData: Function = (parcelData: ParcelData): Action => {
+    return new Action({
+        type: "setData",
+        payload: parcelData
     });
 };
 
@@ -149,6 +157,7 @@ export default {
     insertBeforeSelf,
     push,
     pop,
+    setData,
     setMeta,
     setSelf,
     shift,

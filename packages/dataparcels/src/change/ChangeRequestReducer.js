@@ -33,6 +33,7 @@ const actionMap = {
     insertBefore: ({lastKey, value}) => insertBefore(lastKey, value),
     pop: () => pop(),
     push: ({value}) => push(value),
+    setData: parcelData => () => parcelData,
     setMeta: ({meta}) => setMeta(meta),
     set: ({value}) => setSelf(value),
     shift: () => shift(),
