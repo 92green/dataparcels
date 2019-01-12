@@ -14,6 +14,7 @@ import Markdown_spread from 'docs/api/parcel/spread.md';
 import Markdown_spreadDOM from 'docs/api/parcel/spreadDOM.md';
 import Markdown_get from 'docs/api/parcel/get.md';
 import Markdown_getIn from 'docs/api/parcel/getIn.md';
+import Markdown_children from 'docs/api/parcel/children.md';
 import Markdown_toObject from 'docs/api/parcel/toObject.md';
 import Markdown_toArray from 'docs/api/parcel/toArray.md';
 import Markdown_has from 'docs/api/parcel/has.md';
@@ -73,6 +74,7 @@ const md = {
     spreadDOM: Markdown_spreadDOM,
     get: Markdown_get,
     getIn: Markdown_getIn,
+    children: Markdown_children,
     toObject: Markdown_toObject,
     toArray: Markdown_toArray,
     has: Markdown_has,
@@ -136,6 +138,7 @@ spreadDOM()
 # Branch methods
 get()
 getIn()
+children()
 toObject()
 toArray()
 
