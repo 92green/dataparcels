@@ -2,6 +2,7 @@
 import Parcel from '../Parcel';
 import GetAction from '../../util/__test__/GetAction-testUtil';
 import StaticParcel from '../../staticParcel/StaticParcel';
+import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.set() should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(3);
@@ -81,6 +82,13 @@ test('Parcel.update() should call the Parcels handleChange function with the new
 
     expect(updater.mock.calls[0][0]).toBe(123);
     expect(handleChange.mock.calls[0][0].data.value).toBe(124);
+});
+
+test('Parcel.update() should validate value updater', () => {
+    TestValidateValueUpdater(
+        expect,
+        (value, updater) => new Parcel({value}).update(updater)
+    );
 });
 
 test('Parcel.updateDeep() should call the Parcels handleChange function with the new parcelData', () => {

@@ -8,6 +8,7 @@ import Types from '../../types/Types';
 import ChangeRequest from '../../change/ChangeRequest';
 import ActionCreators from '../../change/ActionCreators';
 import StaticParcel from '../../staticParcel/StaticParcel';
+import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 export default (_this: Parcel, dispatch: Function) => ({
 
@@ -17,7 +18,10 @@ export default (_this: Parcel, dispatch: Function) => ({
 
     updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf()`, `updater`, `function`)(updater);
-        _this.set(updater(_this.value));
+        let {value} = _this;
+        let updatedValue = updater(value, _this);
+        ValidateValueUpdater(value, updatedValue);
+        _this.set(updatedValue);
     },
 
     updateSelfDeep: (updater: StaticParcelUpdater) => {
