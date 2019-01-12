@@ -13,6 +13,21 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         _this.get(key).set(value);
     },
 
+    setIn: (keyPath: Array<Key|Index>, value: *) => {
+        Types(`setIn()`, `keyPath`, `keyIndexPath`)(keyPath);
+        _this.getIn(keyPath).set(value);
+    },
+
+    delete: (key: Key|Index) => {
+        Types(`delete()`, `key`, `keyIndex`)(key);
+        _this.get(key).delete();
+    },
+
+    deleteIn: (keyPath: Array<Key|Index>) => {
+        Types(`deleteIn()`, `keyPath`, `keyIndexPath`)(keyPath);
+        _this.getIn(keyPath).delete();
+    },
+
     update: (key: Key|Index, updater: ParcelValueUpdater) => {
         Types(`update()`, `key`, `keyIndex`)(key);
         Types(`update()`, `updater`, `function`)(updater);
@@ -25,16 +40,6 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         _this.get(key).updateDeep(updater);
     },
 
-    delete: (key: Key|Index) => {
-        Types(`delete()`, `key`, `keyIndex`)(key);
-        _this.get(key).delete();
-    },
-
-    setIn: (keyPath: Array<Key|Index>, value: *) => {
-        Types(`setIn()`, `keyPath`, `keyIndexPath`)(keyPath);
-        _this.getIn(keyPath).set(value);
-    },
-
     updateIn: (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => {
         Types(`updateIn()`, `keyPath`, `keyIndexPath`)(keyPath);
         Types(`updateIn()`, `updater`, `function`)(updater);
@@ -45,10 +50,5 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         Types(`updateInDeep()`, `keyPath`, `keyIndexPath`)(keyPath);
         Types(`updateInDeep()`, `updater`, `function`)(updater);
         _this.getIn(keyPath).updateDeep(updater);
-    },
-
-    deleteIn: (keyPath: Array<Key|Index>) => {
-        Types(`deleteIn()`, `keyPath`, `keyIndexPath`)(keyPath);
-        _this.getIn(keyPath).delete();
     }
 });
