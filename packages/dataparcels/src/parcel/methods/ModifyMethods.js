@@ -6,13 +6,11 @@ import type {ParcelValueUpdater} from '../../types/Types';
 
 import Types from '../../types/Types';
 import StaticParcel from '../../staticParcel/StaticParcel';
+import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 import ParcelTypes from '../ParcelTypes';
-import {ModifyValueDownChildReturnError} from '../../errors/Errors';
-import {ModifyValueUpChildReturnError} from '../../errors/Errors';
 import HashString from '../../util/HashString';
 
-import equals from 'unmutable/lib/equals';
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
@@ -31,12 +29,9 @@ export default (_this: Parcel): Object => ({
 
         let {value} = _this._parcelData;
         let updatedValue = updater(value, _this);
+        ValidateValueUpdater(value, updatedValue);
+
         let updatedType = new ParcelTypes(updatedValue);
-
-        if(updatedType.isParent() && !isEmpty()(updatedValue) && !equals(value)(updatedValue)) {
-            throw ModifyValueDownChildReturnError();
-        }
-
         let updatedTypeChanged: boolean = updatedType.isParent() !== _this._parcelTypes.isParent()
             || updatedType.isIndexed() !== _this._parcelTypes.isIndexed();
 
@@ -68,17 +63,8 @@ export default (_this: Parcel): Object => ({
         return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
             let {value} = changeRequest.nextData;
-            let type = new ParcelTypes(value);
-
             let updatedValue = updater(value, _this);
-
-            if(type.isParent()) {
-                if(!equals(value)(updatedValue)) {
-                    throw ModifyValueUpChildReturnError();
-                }
-                parcel.dispatch(changeRequest);
-                return;
-            }
+            ValidateValueUpdater(value, updatedValue);
 
             // dispatch all non-value actions in this change request
             let valueActionFilter = actions => actions.filter(action => !action.isValueAction());

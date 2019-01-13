@@ -3,6 +3,7 @@ import type ChangeRequest from '../../change/ChangeRequest';
 
 import Parcel from '../Parcel';
 import StaticParcel from '../../staticParcel/StaticParcel';
+import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.modifyDown() should return a new parcel with updated parcelData', () => {
     expect.assertions(2);
@@ -36,42 +37,11 @@ test('Parcel.modifyDown() should allow non-parent types to be returned', () => {
     expect(updatedValue).toEqual(124);
 });
 
-test('Parcel.modifyDown() should allow childless parent types to be returned', () => {
-    let updatedValue = new Parcel({
-        value: 123
-    })
-        .modifyDown(value => [])
-        .value;
-
-    expect(updatedValue).toEqual([]);
-});
-
-test('Parcel.modifyDown() should allow parent types to be returned if they dont change', () => {
-    let updatedValue = new Parcel({
-        value: [123]
-    })
-        .modifyDown(value => value)
-        .value;
-
-    expect(updatedValue).toEqual([123]);
-});
-
-test('Parcel.modifyDown() should throw error if changed parent types with children are returned', () => {
-    expect(() => {
-        new Parcel({
-            value: [123]
-        }).modifyDown(value => [...value, 456]);
-
-    }).toThrowError(`modifyDown()`);
-});
-
-test('Parcel.modifyDown() should throw error if childless is turned into parent types with children', () => {
-    expect(() => {
-        new Parcel({
-            value: 123
-        }).modifyDown(value => [123, 456]);
-
-    }).toThrowError(`modifyDown()`);
+test('Parcel.modifyDown() should validate value updater', () => {
+    TestValidateValueUpdater(
+        expect,
+        (value, updater) => new Parcel({value}).modifyDown(updater).value
+    );
 });
 
 test('Parcel.modifyDown() should recognise if value changes types, and set value if type changes', () => {
@@ -157,41 +127,11 @@ test('Parcel.modifyUp() should allow you to change the payload of a changed parc
 });
 
 
-test('Parcel.modifyUp() should allow parent types to be returned', () => {
-    var handleChange = jest.fn();
-    new Parcel({
-        value: 123,
-        handleChange
-    })
-        .modifyUp(value => [123,456])
-        .onChange(456);
-
-    expect(handleChange.mock.calls[0][0].value).toEqual([123,456]);
-});
-
-test('Parcel.modifyUp() should allow parent types to be returned if they dont change', () => {
-    var handleChange = jest.fn();
-    new Parcel({
-        value: [123],
-        handleChange
-    })
-        .modifyUp(value => value)
-        .onChange([456]);
-
-    expect(handleChange.mock.calls[0][0].value).toEqual([456]);
-});
-
-test('Parcel.modifyUp() should throw error if changed parent types with children are returned', () => {
-    expect(() => {
-        var handleChange = jest.fn();
-        new Parcel({
-            value: [123],
-            handleChange
-        })
-            .modifyUp(value => [...value, 456])
-            .onChange([456]);
-
-    }).toThrowError(`modifyUp()`);
+test('Parcel.modifyUp() should validate value updater', () => {
+    TestValidateValueUpdater(
+        expect,
+        (value, updater) => new Parcel({value: undefined}).modifyUp(updater).onChange(value)
+    );
 });
 
 test('Parcel.modifyUp() should allow changes to meta through', () => {
