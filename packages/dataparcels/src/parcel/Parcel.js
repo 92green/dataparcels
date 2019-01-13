@@ -1,7 +1,7 @@
 // @flow
 import type Action from '../change/Action';
 import type ChangeRequest from '../change/ChangeRequest';
-import type {CreateParcelConfigType} from '../types/Types';
+import type {ParcelCreateConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {ParcelBatcher} from '../types/Types';
@@ -147,7 +147,7 @@ export default class Parcel {
     _log: boolean = false; // used by log()
     _logName: string = ""; // used by log()
 
-    _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
+    _create = (createParcelConfig: ParcelCreateConfigType): Parcel => {
         let {
             id = this._id,
             onDispatch = this.dispatch,
