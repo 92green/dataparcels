@@ -5,7 +5,7 @@ import type {StaticParcelValueUpdater} from '../../types/Types';
 import type {StaticParcelSetMeta} from '../../types/Types';
 import type {StaticParcelUpdater} from '../../types/Types';
 
-import {DeepUpdaterNonStaticChildError} from '../../errors/Errors';
+import {ShapeUpdaterNonStaticChildError} from '../../errors/Errors';
 import isParentValue from '../../parcelData/isParentValue';
 import parcelSetMeta from '../../parcelData/setMeta';
 import parcelSetSelf from '../../parcelData/setSelf';
@@ -61,7 +61,7 @@ export default (_this: StaticParcel) => ({
                 updated,
                 map((childStaticParcel: StaticParcel, key: string|number): ParcelDataEvaluator => {
                     if(!_this._isStaticParcel(childStaticParcel)) {
-                        throw DeepUpdaterNonStaticChildError();
+                        throw ShapeUpdaterNonStaticChildError();
                     }
                     return parcelUpdate(key, () => childStaticParcel.data);
                 })

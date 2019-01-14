@@ -10,7 +10,7 @@ import IconParcel from 'content/parcel.gif';
 
 StaticParcel is a data container very similar to a <Link to="/api/Parcel">Parcel</Link> but without the automatic data binding. All it does is contain data, no strings attached, and provide methods for you to alter it's data.
 
-These exist to be used with <Link to="/deep-updaters">deep updaters</Link>, to provide a safe way to alter the shape of data in a Parcel.
+These exist to be used with <Link to="/shape-updaters">shape updaters</Link>, to provide a safe way to alter the shape of data in a Parcel.
 Its methods a subset of <Link to="/api/Parcel">Parcel</Link>'s methods.
 
 ```js

@@ -24,8 +24,8 @@ export default (_this: Parcel, dispatch: Function) => ({
         _this.set(updatedValue);
     },
 
-    updateSelfDeep: (updater: StaticParcelUpdater) => {
-        Types(`updateSelfDeep()`, `updater`, `function`)(updater);
+    updateSelfShape: (updater: StaticParcelUpdater) => {
+        Types(`updateSelfShape()`, `updater`, `function`)(updater);
         let staticParcelUpdater = StaticParcel._updateFromData(updater);
         let updated = staticParcelUpdater(_this._parcelData);
         dispatch(ActionCreators.setData(updated));

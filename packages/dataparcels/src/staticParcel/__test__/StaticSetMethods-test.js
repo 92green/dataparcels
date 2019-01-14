@@ -226,5 +226,5 @@ test('StaticParcels updateShape() should throw error if non staticparcel is a ch
         let arr = staticParcel.toArray();
         arr.push(789);
         return arr;
-    })).toThrow('Every child value on a collection returned from a deep updater must be a StaticParcel');
+    })).toThrow('Every child value on a collection returned from a shape updater must be a StaticParcel');
 });

@@ -287,7 +287,7 @@ export default class Parcel {
         ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
     });
     updateShape = overload({
-        ["1"]: (updater: StaticParcelUpdater) => this._methods.updateSelfDeep(updater),
+        ["1"]: (updater: StaticParcelUpdater) => this._methods.updateSelfShape(updater),
         ["2"]: (key: Key|Index, updater: StaticParcelUpdater) => this._methods.updateShape(key, updater)
     });
     setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
