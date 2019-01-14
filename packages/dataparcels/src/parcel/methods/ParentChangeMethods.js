@@ -34,10 +34,10 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         _this.get(key).update(updater);
     },
 
-    updateDeep: (key: Key|Index, updater: StaticParcelUpdater) => {
+    updateShape: (key: Key|Index, updater: StaticParcelUpdater) => {
         Types(`update()`, `key`, `keyIndex`)(key);
         Types(`update()`, `updater`, `function`)(updater);
-        _this.get(key).updateDeep(updater);
+        _this.get(key).updateShape(updater);
     },
 
     updateIn: (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => {
@@ -46,9 +46,9 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         _this.getIn(keyPath).update(updater);
     },
 
-    updateInDeep: (keyPath: Array<Key|Index>, updater: StaticParcelUpdater) => {
-        Types(`updateInDeep()`, `keyPath`, `keyIndexPath`)(keyPath);
-        Types(`updateInDeep()`, `updater`, `function`)(updater);
-        _this.getIn(keyPath).updateDeep(updater);
+    updateShapeIn: (keyPath: Array<Key|Index>, updater: StaticParcelUpdater) => {
+        Types(`updateShapeIn()`, `keyPath`, `keyIndexPath`)(keyPath);
+        Types(`updateShapeIn()`, `updater`, `function`)(updater);
+        _this.getIn(keyPath).updateShape(updater);
     }
 });

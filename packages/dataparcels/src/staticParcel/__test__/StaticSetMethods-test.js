@@ -86,7 +86,7 @@ test('StaticParcels update() should validate value updater', () => {
     );
 });
 
-test('StaticParcels updateDeep() should work with returned StaticParcel', () => {
+test('StaticParcels updateShape() should work with returned StaticParcel', () => {
     let staticParcel = StaticParcel.fromData({
         value: 123,
         meta: {
@@ -103,10 +103,10 @@ test('StaticParcels updateDeep() should work with returned StaticParcel', () => 
         key: "z"
     };
 
-    expect(staticParcel.updateDeep(staticParcel => staticParcel.set(456)).data).toEqual(expectedData);
+    expect(staticParcel.updateShape(staticParcel => staticParcel.set(456)).data).toEqual(expectedData);
 });
 
-test('StaticParcels updateDeep() should work with returned primitive', () => {
+test('StaticParcels updateShape() should work with returned primitive', () => {
     let staticParcel = StaticParcel.fromData({
         value: 123,
         meta: {
@@ -123,10 +123,10 @@ test('StaticParcels updateDeep() should work with returned primitive', () => {
         key: "z"
     };
 
-    expect(staticParcel.updateDeep(() => 456).data).toEqual(expectedData);
+    expect(staticParcel.updateShape(() => 456).data).toEqual(expectedData);
 });
 
-test('StaticParcels updateDeep() should work with returned parent value', () => {
+test('StaticParcels updateShape() should work with returned parent value', () => {
     let staticParcel = StaticParcel.fromData({
         value: [1,2,3],
         meta: {
@@ -148,7 +148,7 @@ test('StaticParcels updateDeep() should work with returned parent value', () => 
         key: "z"
     };
 
-    let {data} = staticParcel.updateDeep((staticParcel) => {
+    let {data} = staticParcel.updateShape((staticParcel) => {
         return staticParcel
             .children()
             .map((child => child.update(value => value + 1)))
@@ -157,7 +157,7 @@ test('StaticParcels updateDeep() should work with returned parent value', () => 
     expect(data).toEqual(expectedData);
 });
 
-test('StaticParcels updateDeep() should work with returned parent value of different type', () => {
+test('StaticParcels updateShape() should work with returned parent value of different type', () => {
     let staticParcel = StaticParcel.fromData({
         value: {
             abc: 123,
@@ -184,12 +184,12 @@ test('StaticParcels updateDeep() should work with returned parent value of diffe
         key: "z"
     };
 
-    let {data} = staticParcel.updateDeep((staticParcel) => staticParcel.toArray());
+    let {data} = staticParcel.updateShape((staticParcel) => staticParcel.toArray());
 
     expect(data).toEqual(expectedData);
 });
 
-test('StaticParcels updateDeep() should retain childs keys', () => {
+test('StaticParcels updateShape() should retain childs keys', () => {
     let staticParcel = StaticParcel.fromData({
         value: ["a","b","c","d"],
         child: [
@@ -208,7 +208,7 @@ test('StaticParcels updateDeep() should retain childs keys', () => {
         ]
     };
 
-    let {data} = staticParcel.updateDeep((staticParcel) => {
+    let {data} = staticParcel.updateShape((staticParcel) => {
         return staticParcel
             .toArray()
             .filter((value, key) => key % 2 === 1)
@@ -217,12 +217,12 @@ test('StaticParcels updateDeep() should retain childs keys', () => {
     expect(data).toEqual(expectedData);
 });
 
-test('StaticParcels updateDeep() should throw error if non staticparcel is a child of the return value', () => {
+test('StaticParcels updateShape() should throw error if non staticparcel is a child of the return value', () => {
     let staticParcel = StaticParcel.fromData({
         value: [123, 456]
     });
 
-    expect(() => staticParcel.updateDeep((staticParcel) => {
+    expect(() => staticParcel.updateShape((staticParcel) => {
         let arr = staticParcel.toArray();
         arr.push(789);
         return arr;

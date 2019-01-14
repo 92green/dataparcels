@@ -36,7 +36,7 @@ test('ParentParcel.update(key) should call the Parcels handleChange function wit
     });
 });
 
-test('ParentParcel.updateDeep(key) should call the Parcels handleChange function with the new parcelData', () => {
+test('ParentParcel.updateShape(key) should call the Parcels handleChange function with the new parcelData', () => {
     let updater = jest.fn(staticParcel => staticParcel.push(4));
     let handleChange = jest.fn();
 
@@ -45,7 +45,7 @@ test('ParentParcel.updateDeep(key) should call the Parcels handleChange function
             abc: [1,2,3]
         },
         handleChange
-    }).updateDeep("abc", updater);
+    }).updateShape("abc", updater);
 
     expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual({
@@ -110,7 +110,7 @@ test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange functi
     });
 });
 
-test('ParentParcel.updateInDeep(keyPath) should call the Parcels handleChange function with the new parcelData', () => {
+test('ParentParcel.updateShapeIn(keyPath) should call the Parcels handleChange function with the new parcelData', () => {
     let updater = jest.fn(staticParcel => staticParcel.push(4));
     let handleChange = jest.fn();
 
@@ -121,7 +121,7 @@ test('ParentParcel.updateInDeep(keyPath) should call the Parcels handleChange fu
             }
         },
         handleChange
-    }).updateInDeep(["abc", "def"], updater);
+    }).updateShapeIn(["abc", "def"], updater);
 
     expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual({

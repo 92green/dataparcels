@@ -203,7 +203,7 @@ test('StaticParcels updateIn(keyPath) should validate value updater', () => {
     );
 });
 
-test('StaticParcels updateDeep(key) should work', () => {
+test('StaticParcels updateShape(key) should work', () => {
     let staticParcel = StaticParcel.fromData({
         value: {
             abc: [1,2,3]
@@ -214,10 +214,10 @@ test('StaticParcels updateDeep(key) should work', () => {
         abc: [1,2,3,4]
     };
 
-    expect(staticParcel.updateDeep('abc', staticParcel => staticParcel.push(4)).value).toEqual(expectedValue);
+    expect(staticParcel.updateShape('abc', staticParcel => staticParcel.push(4)).value).toEqual(expectedValue);
 });
 
-test('StaticParcels updateInDeep(keyPath) should work', () => {
+test('StaticParcels updateShapeIn(keyPath) should work', () => {
     let staticParcel = StaticParcel.fromData({
         value: {
             abc: {
@@ -232,5 +232,5 @@ test('StaticParcels updateInDeep(keyPath) should work', () => {
         }
     };
 
-    expect(staticParcel.updateInDeep(['abc', 'def'], staticParcel => staticParcel.push(4)).value).toEqual(expectedValue);
+    expect(staticParcel.updateShapeIn(['abc', 'def'], staticParcel => staticParcel.push(4)).value).toEqual(expectedValue);
 });

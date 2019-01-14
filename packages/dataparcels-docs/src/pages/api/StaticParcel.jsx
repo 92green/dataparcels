@@ -17,9 +17,9 @@ import Markdown_size from 'docs/api/staticParcel/size.md';
 import Markdown_set from 'docs/api/staticParcel/set.md';
 import Markdown_setIn from 'docs/api/staticParcel/setIn.md';
 import Markdown_update from 'docs/api/staticParcel/update.md';
-import Markdown_updateDeep from 'docs/api/staticParcel/updateDeep.md';
+import Markdown_updateShape from 'docs/api/staticParcel/updateShape.md';
 import Markdown_updateIn from 'docs/api/staticParcel/updateIn.md';
-import Markdown_updateInDeep from 'docs/api/staticParcel/updateInDeep.md';
+import Markdown_updateShapeIn from 'docs/api/staticParcel/updateShapeIn.md';
 import Markdown_delete from 'docs/api/staticParcel/delete.md';
 import Markdown_deleteIn from 'docs/api/staticParcel/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/staticParcel/insertAfter.md';
@@ -55,9 +55,9 @@ const md = {
     set: Markdown_set,
     setIn: Markdown_setIn,
     update: Markdown_update,
-    updateDeep: Markdown_updateDeep,
+    updateShape: Markdown_updateShape,
     updateIn: Markdown_updateIn,
-    updateInDeep: Markdown_updateInDeep,
+    updateShapeIn: Markdown_updateShapeIn,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
@@ -100,9 +100,9 @@ setIn()
 delete()
 deleteIn()
 update()
-updateDeep()
+updateShape()
 updateIn()
-updateInDeep()
+updateShapeIn()
 
 # Indexed & element change methods
 insertAfter()

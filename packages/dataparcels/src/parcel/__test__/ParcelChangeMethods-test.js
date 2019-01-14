@@ -91,7 +91,7 @@ test('Parcel.update() should validate value updater', () => {
     );
 });
 
-test('Parcel.updateDeep() should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.updateShape() should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(staticParcel => staticParcel.push(4));
@@ -99,7 +99,7 @@ test('Parcel.updateDeep() should call the Parcels handleChange function with the
     new Parcel({
         value: [1,2,3],
         handleChange
-    }).updateDeep(updater);
+    }).updateShape(updater);
 
     expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);

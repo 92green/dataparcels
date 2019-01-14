@@ -44,7 +44,7 @@ export default (_this: StaticParcel) => ({
         return _this.set(updatedValue);
     },
 
-    updateDeep: (updater: StaticParcelUpdater): StaticParcel => {
+    updateShape: (updater: StaticParcelUpdater): StaticParcel => {
         let updated: any = updater(_this);
         if(_this._isStaticParcel(updated)) {
             return updated;

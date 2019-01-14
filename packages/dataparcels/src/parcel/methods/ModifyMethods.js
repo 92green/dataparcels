@@ -74,8 +74,8 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyDownDeep: (updater: Function): Parcel => {
-        Types(`modifyDownDeep()`, `updater`, `function`)(updater);
+    modifyShapeDown: (updater: Function): Parcel => {
+        Types(`modifyShapeDown()`, `updater`, `function`)(updater);
 
         let staticUpdater = StaticParcel._updateFromData(updater);
 
@@ -88,8 +88,8 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyUpDeep: (updater: Function): Parcel => {
-        Types(`modifyUpDeep()`, `updater`, `function`)(updater);
+    modifyShapeUp: (updater: Function): Parcel => {
+        Types(`modifyShapeUp()`, `updater`, `function`)(updater);
 
         let staticUpdater = StaticParcel._updateFromData(updater);
 

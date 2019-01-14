@@ -286,13 +286,13 @@ export default class Parcel {
         ["1"]: (updater: ParcelValueUpdater) => this._methods.updateSelf(updater),
         ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
     });
-    updateDeep = overload({
+    updateShape = overload({
         ["1"]: (updater: StaticParcelUpdater) => this._methods.updateSelfDeep(updater),
-        ["2"]: (key: Key|Index, updater: StaticParcelUpdater) => this._methods.updateDeep(key, updater)
+        ["2"]: (key: Key|Index, updater: StaticParcelUpdater) => this._methods.updateShape(key, updater)
     });
     setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
-    updateInDeep = (keyPath: Array<Key|Index>, updater: StaticParcelUpdater) => this._methods.updateInDeep(keyPath, updater);
+    updateShapeIn = (keyPath: Array<Key|Index>, updater: StaticParcelUpdater) => this._methods.updateShapeIn(keyPath, updater);
     delete = overload({
         ["0"]: () => this._methods.deleteSelf(),
         ["1"]: (key: Key|Index) => this._methods.delete(key)
@@ -335,8 +335,8 @@ export default class Parcel {
     // Modify methods
     modifyDown = (updater: Function): Parcel => this._methods.modifyDown(updater);
     modifyUp = (updater: Function): Parcel => this._methods.modifyUp(updater);
-    modifyDownDeep = (updater: Function): Parcel => this._methods.modifyDownDeep(updater);
-    modifyUpDeep = (updater: Function): Parcel => this._methods.modifyUpDeep(updater);
+    modifyShapeDown = (updater: Function): Parcel => this._methods.modifyShapeDown(updater);
+    modifyShapeUp = (updater: Function): Parcel => this._methods.modifyShapeUp(updater);
     modifyChange = (batcher: ParcelBatcher): Parcel => this._methods.modifyChange(batcher);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);

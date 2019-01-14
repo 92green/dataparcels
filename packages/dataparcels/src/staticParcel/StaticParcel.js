@@ -74,7 +74,7 @@ export default class StaticParcel {
     static _updateFromData(updater: StaticParcelUpdater): Function {
         return (parcelData: ParcelData): ParcelData => StaticParcel
             .fromData(parcelData)
-            .updateDeep(updater)
+            .updateShape(updater)
             .data;
     }
 
@@ -177,12 +177,12 @@ export default class StaticParcel {
         ["1"]: (updater: StaticParcelValueUpdater): StaticParcel => this._methods.update(updater),
         ["2"]: (key: Key|Index, updater: StaticParcelValueUpdater): StaticParcel => this.updateIn([key], updater)
     });
-    updateDeep = overload({
-        ["1"]: (updater: StaticParcelUpdater): StaticParcel => this._methods.updateDeep(updater),
-        ["2"]: (key: Key|Index, updater: StaticParcelUpdater): StaticParcel => this.updateInDeep([key], updater)
+    updateShape = overload({
+        ["1"]: (updater: StaticParcelUpdater): StaticParcel => this._methods.updateShape(updater),
+        ["2"]: (key: Key|Index, updater: StaticParcelUpdater): StaticParcel => this.updateShapeIn([key], updater)
     });
     updateIn = (keyPath: Array<Key|Index>, updater: StaticParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
-    updateInDeep = (keyPath: Array<Key|Index>, updater: StaticParcelValueUpdater) => this._methods.updateInDeep(keyPath, updater);
+    updateShapeIn = (keyPath: Array<Key|Index>, updater: StaticParcelValueUpdater) => this._methods.updateShapeIn(keyPath, updater);
 
     // Indexed methods
     insertAfter = (key: Key|Index, value: any) => this._methods.insertAfter(key, value);

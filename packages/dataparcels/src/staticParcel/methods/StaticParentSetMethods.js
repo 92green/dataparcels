@@ -47,7 +47,7 @@ export default (_this: StaticParcel) => ({
         );
     },
 
-    updateInDeep: (keyPath: Array<Key|Index>, updater: StaticParcelUpdater): StaticParcel => {
+    updateShapeIn: (keyPath: Array<Key|Index>, updater: StaticParcelUpdater): StaticParcel => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             parcelUpdateIn(

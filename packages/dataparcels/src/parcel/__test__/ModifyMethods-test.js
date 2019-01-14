@@ -156,7 +156,7 @@ test('Parcel.modifyUp() should allow changes to meta through', () => {
         });
 });
 
-test('Parcel.modifyDownDeep() should be called with static parcel and return with no change', () => {
+test('Parcel.modifyShapeDown() should be called with static parcel and return with no change', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(staticParcel => staticParcel);
@@ -167,7 +167,7 @@ test('Parcel.modifyDownDeep() should be called with static parcel and return wit
     });
 
     let {value} = parcel
-        .modifyDownDeep(updater)
+        .modifyShapeDown(updater)
         .data;
 
     let expectedValue = [1,2,3];
@@ -177,7 +177,7 @@ test('Parcel.modifyDownDeep() should be called with static parcel and return wit
     expect(updater.mock.calls[0][0].data.value).toEqual(expectedValue);
 });
 
-test('Parcel.modifyDownDeep() should modify value', () => {
+test('Parcel.modifyShapeDown() should modify value', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(staticParcel => staticParcel.push(4));
@@ -187,7 +187,7 @@ test('Parcel.modifyDownDeep() should modify value', () => {
         value: [1,2,3]
     });
 
-    let parcelWithModifier = parcel.modifyDownDeep(updater);
+    let parcelWithModifier = parcel.modifyShapeDown(updater);
     let {value} = parcelWithModifier.data;
     parcelWithModifier.push(5);
 
@@ -195,7 +195,7 @@ test('Parcel.modifyDownDeep() should modify value', () => {
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4,5]);
 });
 
-test('Parcel.modifyUpDeep() should be called with static parcel and return with no change', () => {
+test('Parcel.modifyShapeUp() should be called with static parcel and return with no change', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(staticParcel => staticParcel);
@@ -205,7 +205,7 @@ test('Parcel.modifyUpDeep() should be called with static parcel and return with 
         value: 123
     });
 
-    let parcelWithModifier = parcel.modifyUpDeep(updater);
+    let parcelWithModifier = parcel.modifyShapeUp(updater);
     let {value} = parcelWithModifier.data;
 
     expect(value).toEqual(123);
@@ -217,7 +217,7 @@ test('Parcel.modifyUpDeep() should be called with static parcel and return with 
     expect(updater.mock.calls[0][0].data.value).toEqual(456);
 });
 
-test('Parcel.modifyUpDeep() should modify value', () => {
+test('Parcel.modifyShapeUp() should modify value', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(staticParcel => staticParcel.push(5));
@@ -227,7 +227,7 @@ test('Parcel.modifyUpDeep() should modify value', () => {
         value: [1,2,3]
     });
 
-    let parcelWithModifier = parcel.modifyUpDeep(updater);
+    let parcelWithModifier = parcel.modifyShapeUp(updater);
     let {value} = parcelWithModifier.data;
 
     expect(value).toEqual([1,2,3]);
@@ -290,8 +290,8 @@ test('Sanity check: A big strange test of a big strange chain of deep updatery s
         handleChange,
         value: [1,2,3]
     })
-        .modifyDownDeep(staticParcel => staticParcel.children().reverse()) // 1. reverse the elements in the parcel (value: [3,2,1])
-        .modifyUpDeep(staticParcel => staticParcel.children().reverse()) // 6. reverse the elements in the parcel (value: [3333,2,1])
+        .modifyShapeDown(staticParcel => staticParcel.children().reverse()) // 1. reverse the elements in the parcel (value: [3,2,1])
+        .modifyShapeUp(staticParcel => staticParcel.children().reverse()) // 6. reverse the elements in the parcel (value: [3333,2,1])
         .get(0) // 2. get the first element (value: 3)
         .modifyDown(value => value + "") // 3. cast number to string value: "3")
         .modifyUp(value => parseInt(value, 10)) // 5. cast string to number (value will be: 3333)
