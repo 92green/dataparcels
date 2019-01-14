@@ -36,15 +36,5 @@
   },
   "dependencies": {
     "babel-plugin-extract-flow-types": "^1.0.0"
-  },
-  "size-limit": [
-    {
-      "limit": "25 KB",
-      "path": "packages/dataparcels/lib/index.js"
-    },
-    {
-      "limit": "30 KB",
-      "path": "packages/react-dataparcels/lib/index.js"
-    }
-  ]
+  }
 }
