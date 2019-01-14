@@ -15,9 +15,7 @@ import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
 import merge from 'unmutable/lib/merge';
-import set from 'unmutable/lib/set';
-import setIn from 'unmutable/lib/setIn';
-import pipe from 'unmutable/lib/util/pipe';
+import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
@@ -114,34 +112,36 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    initialMeta: (initialMeta: ParcelMeta = {}): Parcel => {
+    initialMeta: (initialMeta: ParcelMeta): Parcel => {
         Types(`initialMeta()`, `initialMeta`, `object`)(initialMeta);
         let {meta} = _this._parcelData;
 
-        let partialMetaToSet = pipeWith(
+        let partialMetaToSet: {[key: string]: any} = pipeWith(
             initialMeta,
             filterNot((value, key) => has(key)(meta))
         );
 
-        let metaSetter = isEmpty()(partialMetaToSet)
-            ? ii => ii
-            : pipe(
-                setIn(['parcelData', 'meta'], merge(partialMetaToSet)(meta)),
-                set('onDispatch', (changeRequest: ChangeRequest) => {
-                    _this.batch((parcel: Parcel) => {
-                        parcel.setMeta(partialMetaToSet);
-                        parcel.dispatch(changeRequest);
-                    });
-                })
-            );
+        let create = (other = {}) => _this._create({
+            id: _this._id.pushModifier('im'),
+            ...other
+        });
 
-        return pipeWith(
-            {
-                id: _this._id.pushModifier('im')
-            },
-            metaSetter,
-            _this._create
-        );
+        if(isEmpty()(partialMetaToSet)) {
+            return create();
+        }
+
+        return create({
+            parcelData: pipeWith(
+                _this._parcelData,
+                update('meta', merge(partialMetaToSet))
+            ),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.batch((parcel: Parcel) => {
+                    parcel.setMeta(partialMetaToSet);
+                    parcel.dispatch(changeRequest);
+                });
+            }
+        });
     },
 
     _boundarySplit: ({handleChange}: *): Parcel => {

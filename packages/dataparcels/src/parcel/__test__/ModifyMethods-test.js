@@ -240,45 +240,81 @@ test('Parcel.modifyShapeUp() should modify value', () => {
 });
 
 test('Parcel.initialMeta() should work', () => {
-    expect.assertions(3);
+    let handleChange = jest.fn();
 
-    let meta = {a:1, b:2};
-
-    var data = {
+    let parcel = new Parcel({
         value: 123,
-        handleChange: (parcel: Parcel) => {
-            let {meta} = parcel.data;
-            expect({a:1, b:3}).toEqual(meta);
-            expect({a:1, b:3}).toEqual(parcel.initialMeta().meta);
-        }
-    };
+        handleChange
+    }).initialMeta({a:1, b:2});
 
-    let parcel = new Parcel(data).initialMeta(meta);
-    expect(meta).toEqual(parcel.meta);
-    parcel.setMeta({
-        b: 3
+    expect(parcel.data).toEqual({
+        value: 123,
+        meta: {
+            a: 1,
+            b: 2
+        },
+        child: undefined,
+        key: "^"
+    });
+
+    parcel.setMeta({b: 3});
+
+    expect(handleChange.mock.calls[0][0].data).toEqual({
+        value: 123,
+        meta: {
+            a: 1,
+            b: 3
+        },
+        child: undefined,
+        key: "^"
     });
 });
 
 test('Parcel.initialMeta() should merge', () => {
-    expect.assertions(2);
+    let handleChange = jest.fn();
 
-    let meta = {a:1, b:2};
-    let meta2 = {b:1, c:3}; // this b will be ignored because it will have already been set by the time this is applied
-
-    var data = {
+    let parcel = new Parcel({
         value: 123,
-        handleChange: (parcel: Parcel) => {
-            let {meta} = parcel.data;
-            expect({a:1, b:3, c:3}).toEqual(meta);
-        }
-    };
+        handleChange
+    })
+        .initialMeta({a:1, b:2})
+        .initialMeta({b:3, c:4})
 
-    let parcel = new Parcel(data).initialMeta(meta).initialMeta(meta2);
-    expect({a:1, b:2, c:3}).toEqual(parcel.meta);
-    parcel.setMeta({
-        b: 3
+    expect(parcel.data).toEqual({
+        value: 123,
+        meta: {
+            a: 1,
+            b: 2,
+            c: 4
+        },
+        child: undefined,
+        key: "^"
     });
+
+    parcel.setMeta({d: 5});
+
+    expect(handleChange.mock.calls[0][0].data).toEqual({
+        value: 123,
+        meta: {
+            a: 1,
+            b: 2,
+            c: 4,
+            d: 5
+        },
+        child: undefined,
+        key: "^"
+    });
+});
+
+test('Parcel.initialMeta() should do nothing to data if all meta keys are already set', () => {
+
+    let parcel = new Parcel({
+        value: 123
+    }).initialMeta({a:1, b:2});
+
+    let parcel2 = parcel.initialMeta({a:1, b:2});
+
+    expect(parcel2.data).toEqual(parcel.data);
 });
 
 test('Sanity check: A big strange test of a big strange chain of deep updatery stuff', () => {
