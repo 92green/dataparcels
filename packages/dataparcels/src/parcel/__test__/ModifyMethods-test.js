@@ -2,7 +2,7 @@
 import type ChangeRequest from '../../change/ChangeRequest';
 
 import Parcel from '../Parcel';
-import StaticParcel from '../../staticParcel/StaticParcel';
+import ParcelShape from '../../parcelShape/ParcelShape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.modifyDown() should return a new parcel with updated parcelData', () => {
@@ -156,10 +156,10 @@ test('Parcel.modifyUp() should allow changes to meta through', () => {
         });
 });
 
-test('Parcel.modifyShapeDown() should be called with static parcel and return with no change', () => {
+test('Parcel.modifyShapeDown() should be called with parcelShape and return with no change', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(staticParcel => staticParcel);
+    let updater = jest.fn(parcelShape => parcelShape);
 
     let parcel = new Parcel({
         handleChange,
@@ -173,14 +173,14 @@ test('Parcel.modifyShapeDown() should be called with static parcel and return wi
     let expectedValue = [1,2,3];
 
     expect(value).toEqual(expectedValue);
-    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(updater.mock.calls[0][0].data.value).toEqual(expectedValue);
 });
 
 test('Parcel.modifyShapeDown() should modify value', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(staticParcel => staticParcel.push(4));
+    let updater = jest.fn(parcelShape => parcelShape.push(4));
 
     let parcel = new Parcel({
         handleChange,
@@ -195,10 +195,10 @@ test('Parcel.modifyShapeDown() should modify value', () => {
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4,5]);
 });
 
-test('Parcel.modifyShapeUp() should be called with static parcel and return with no change', () => {
+test('Parcel.modifyShapeUp() should be called with parcelShape and return with no change', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(staticParcel => staticParcel);
+    let updater = jest.fn(parcelShape => parcelShape);
 
     let parcel = new Parcel({
         handleChange,
@@ -213,14 +213,14 @@ test('Parcel.modifyShapeUp() should be called with static parcel and return with
 
     parcelWithModifier.set(456);
 
-    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(updater.mock.calls[0][0].data.value).toEqual(456);
 });
 
 test('Parcel.modifyShapeUp() should modify value', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(staticParcel => staticParcel.push(5));
+    let updater = jest.fn(parcelShape => parcelShape.push(5));
 
     let parcel = new Parcel({
         handleChange,
@@ -235,7 +235,7 @@ test('Parcel.modifyShapeUp() should modify value', () => {
 
     parcelWithModifier.push(4);
 
-    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4,5]);
 });
 
@@ -290,8 +290,8 @@ test('Sanity check: A big strange test of a big strange chain of deep updatery s
         handleChange,
         value: [1,2,3]
     })
-        .modifyShapeDown(staticParcel => staticParcel.children().reverse()) // 1. reverse the elements in the parcel (value: [3,2,1])
-        .modifyShapeUp(staticParcel => staticParcel.children().reverse()) // 6. reverse the elements in the parcel (value: [3333,2,1])
+        .modifyShapeDown(parcelShape => parcelShape.children().reverse()) // 1. reverse the elements in the parcel (value: [3,2,1])
+        .modifyShapeUp(parcelShape => parcelShape.children().reverse()) // 6. reverse the elements in the parcel (value: [3333,2,1])
         .get(0) // 2. get the first element (value: 3)
         .modifyDown(value => value + "") // 3. cast number to string value: "3")
         .modifyUp(value => parseInt(value, 10)) // 5. cast string to number (value will be: 3333)

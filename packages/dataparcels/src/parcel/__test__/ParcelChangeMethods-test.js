@@ -1,7 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 import GetAction from '../../util/__test__/GetAction-testUtil';
-import StaticParcel from '../../staticParcel/StaticParcel';
+import ParcelShape from '../../parcelShape/ParcelShape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.set() should call the Parcels handleChange function with the new parcelData', () => {
@@ -94,14 +94,14 @@ test('Parcel.update() should validate value updater', () => {
 test('Parcel.updateShape() should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(staticParcel => staticParcel.push(4));
+    let updater = jest.fn(parcelShape => parcelShape.push(4));
 
     new Parcel({
         value: [1,2,3],
         handleChange
     }).updateShape(updater);
 
-    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
 

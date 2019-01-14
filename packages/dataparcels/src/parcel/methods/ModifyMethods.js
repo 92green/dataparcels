@@ -5,7 +5,7 @@ import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
 
 import Types from '../../types/Types';
-import StaticParcel from '../../staticParcel/StaticParcel';
+import ParcelShape from '../../parcelShape/ParcelShape';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 import ParcelTypes from '../ParcelTypes';
@@ -77,13 +77,13 @@ export default (_this: Parcel): Object => ({
     modifyShapeDown: (updater: Function): Parcel => {
         Types(`modifyShapeDown()`, `updater`, `function`)(updater);
 
-        let staticUpdater = StaticParcel._updateFromData(updater);
+        let shapeUpdater = ParcelShape._updateFromData(updater);
 
         return _this._create({
             id: _this._id.pushModifier(`md-${HashFunction(updater)}`),
-            parcelData: staticUpdater(_this._parcelData),
+            parcelData: shapeUpdater(_this._parcelData),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPre(staticUpdater));
+                _this.dispatch(changeRequest._addPre(shapeUpdater));
             }
         });
     },
@@ -91,12 +91,12 @@ export default (_this: Parcel): Object => ({
     modifyShapeUp: (updater: Function): Parcel => {
         Types(`modifyShapeUp()`, `updater`, `function`)(updater);
 
-        let staticUpdater = StaticParcel._updateFromData(updater);
+        let shapeUpdater = ParcelShape._updateFromData(updater);
 
         return _this._create({
             id: _this._id.pushModifier(`mu-${HashFunction(updater)}`),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(staticUpdater));
+                _this.dispatch(changeRequest._addPost(shapeUpdater));
             }
         });
     },

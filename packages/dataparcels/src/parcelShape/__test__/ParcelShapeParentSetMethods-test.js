@@ -1,9 +1,9 @@
 // @flow
-import StaticParcel from '../StaticParcel';
+import ParcelShape from '../ParcelShape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
-test('StaticParcels set(key) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes set(key) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             a: 1,
             b: 4
@@ -30,11 +30,11 @@ test('StaticParcels set(key) should work', () => {
         }
     };
 
-    expect(staticParcel.set('a', 456).data).toEqual(expectedData);
+    expect(parcelShape.set('a', 456).data).toEqual(expectedData);
 });
 
-test('StaticParcels setIn(keyPath) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes setIn(keyPath) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             a: {
                 b: 123
@@ -66,11 +66,11 @@ test('StaticParcels setIn(keyPath) should work', () => {
         }
     };
 
-    expect(staticParcel.setIn(['a', 'b'], 456).data).toEqual(expectedData);
+    expect(parcelShape.setIn(['a', 'b'], 456).data).toEqual(expectedData);
 });
 
-test('StaticParcels delete(key) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes delete(key) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             a: 1,
             b: 4
@@ -92,11 +92,11 @@ test('StaticParcels delete(key) should work', () => {
         }
     };
 
-    expect(staticParcel.delete('a').data).toEqual(expectedData);
+    expect(parcelShape.delete('a').data).toEqual(expectedData);
 });
 
-test('StaticParcels deleteIn(keyPath) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes deleteIn(keyPath) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             a: {
                 b: 123
@@ -121,11 +121,11 @@ test('StaticParcels deleteIn(keyPath) should work', () => {
         }
     };
 
-    expect(staticParcel.deleteIn(['a', 'b']).data).toEqual(expectedData);
+    expect(parcelShape.deleteIn(['a', 'b']).data).toEqual(expectedData);
 });
 
-test('StaticParcels update(key) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes update(key) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             a: 1,
             b: 4
@@ -149,20 +149,20 @@ test('StaticParcels update(key) should work', () => {
         }
     };
 
-    expect(staticParcel.update('a', ii => ii + 1).data).toEqual(expectedData);
+    expect(parcelShape.update('a', ii => ii + 1).data).toEqual(expectedData);
 });
 
-test('StaticParcels update(key) should validate value updater', () => {
+test('ParcelShapes update(key) should validate value updater', () => {
     TestValidateValueUpdater(
         expect,
-        (value, updater) => new StaticParcel({
+        (value, updater) => new ParcelShape({
             abc: value
         }).update('abc', updater)
     );
 });
 
-test('StaticParcels updateIn(keyPath) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateIn(keyPath) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             a: {
                 b: 123
@@ -189,13 +189,13 @@ test('StaticParcels updateIn(keyPath) should work', () => {
         }
     };
 
-    expect(staticParcel.updateIn(['a', 'b'], ii => ii + 1).data).toEqual(expectedData);
+    expect(parcelShape.updateIn(['a', 'b'], ii => ii + 1).data).toEqual(expectedData);
 });
 
-test('StaticParcels updateIn(keyPath) should validate value updater', () => {
+test('ParcelShapes updateIn(keyPath) should validate value updater', () => {
     TestValidateValueUpdater(
         expect,
-        (value, updater) => new StaticParcel({
+        (value, updater) => new ParcelShape({
             a: {
                 b: value
             }
@@ -203,8 +203,8 @@ test('StaticParcels updateIn(keyPath) should validate value updater', () => {
     );
 });
 
-test('StaticParcels updateShape(key) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateShape(key) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             abc: [1,2,3]
         }
@@ -214,11 +214,11 @@ test('StaticParcels updateShape(key) should work', () => {
         abc: [1,2,3,4]
     };
 
-    expect(staticParcel.updateShape('abc', staticParcel => staticParcel.push(4)).value).toEqual(expectedValue);
+    expect(parcelShape.updateShape('abc', parcelShape => parcelShape.push(4)).value).toEqual(expectedValue);
 });
 
-test('StaticParcels updateShapeIn(keyPath) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateShapeIn(keyPath) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             abc: {
                 def: [1,2,3]
@@ -232,5 +232,5 @@ test('StaticParcels updateShapeIn(keyPath) should work', () => {
         }
     };
 
-    expect(staticParcel.updateShapeIn(['abc', 'def'], staticParcel => staticParcel.push(4)).value).toEqual(expectedValue);
+    expect(parcelShape.updateShapeIn(['abc', 'def'], parcelShape => parcelShape.push(4)).value).toEqual(expectedValue);
 });

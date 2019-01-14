@@ -2,7 +2,7 @@
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
 import type {ParentType} from '../../types/Types';
-import type StaticParcel from '../StaticParcel';
+import type ParcelShape from '../ParcelShape';
 
 import parcelGet from '../../parcelData/get';
 import parcelHas from '../../parcelData/has';
@@ -14,7 +14,7 @@ import toArray from 'unmutable/lib/toArray';
 import toObject from 'unmutable/lib/toObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (_this: StaticParcel) => ({
+export default (_this: ParcelShape) => ({
 
     has: (key: Key|Index): boolean => {
         _this._prepareChildKeys();
@@ -25,7 +25,7 @@ export default (_this: StaticParcel) => ({
         return size()(_this._parcelData.value);
     },
 
-    get: (key: Key|Index, notFoundValue: ?* = undefined): StaticParcel => {
+    get: (key: Key|Index, notFoundValue: ?* = undefined): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             parcelGet(key, notFoundValue),
@@ -35,38 +35,38 @@ export default (_this: StaticParcel) => ({
         );
     },
 
-    getIn: (keyPath: Array<Key|Index>, notFoundValue: ?* = undefined): StaticParcel => {
-        let staticParcel = _this;
+    getIn: (keyPath: Array<Key|Index>, notFoundValue: ?* = undefined): ParcelShape => {
+        let parcelShape = _this;
 
         for(let key of keyPath) {
-            if(!staticParcel.isParent() || !staticParcel.has(key)) {
+            if(!parcelShape.isParent() || !parcelShape.has(key)) {
                 return _this._pipeSelf(
                     () => ({
                         value: notFoundValue,
-                        key: parcelKeyOrIndexToKey(key)(staticParcel.data)
+                        key: parcelKeyOrIndexToKey(key)(parcelShape.data)
                     }),
                     {
                         parent: _this
                     }
                 );
             }
-            staticParcel = staticParcel.get(key, notFoundValue);
+            parcelShape = parcelShape.get(key, notFoundValue);
         }
-        return staticParcel;
+        return parcelShape;
     },
 
-    children: (): ParentType<StaticParcel> => {
+    children: (): ParentType<ParcelShape> => {
         return pipeWith(
             _this._parcelData.value,
             map((value, key) => _this.get(key))
         );
     },
 
-    toObject: (): { [key: string]: StaticParcel } => {
+    toObject: (): { [key: string]: ParcelShape } => {
         return toObject()(_this.children());
     },
 
-    toArray: (): Array<StaticParcel> => {
+    toArray: (): Array<ParcelShape> => {
         return toArray()(_this.children());
     }
 });

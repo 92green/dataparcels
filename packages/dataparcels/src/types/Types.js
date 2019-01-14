@@ -5,7 +5,7 @@ import type Treeshare from '../treeshare/Treeshare';
 import Parcel from '../parcel/Parcel';
 import Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
-import StaticParcel from '../staticParcel/StaticParcel';
+import ParcelShape from '../parcelShape/ParcelShape';
 import isPlainObject from 'unmutable/lib/util/isPlainObject';
 
 export type ParcelData = {
@@ -46,12 +46,12 @@ export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) =
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *, parcel: Parcel) => *;
 
-export type StaticParcelSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
-export type StaticParcelUpdater = (item: StaticParcel) => StaticParcel;
-export type StaticParcelValueUpdater = (value: *, parcel: StaticParcel) => *;
+export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
+export type ParcelShapeUpdater = (item: ParcelShape) => ParcelShape;
+export type ParcelShapeValueUpdater = (value: *, parcel: ParcelShape) => *;
 
-export type StaticParcelConfigInternal = {
-    parent?: ?StaticParcel
+export type ParcelShapeConfigInternal = {
+    parent?: ?ParcelShape
 };
 
 export type Key = string;
@@ -115,9 +115,9 @@ const RUNTIME_TYPES = {
         name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
         check: ii => isPlainObject(ii) && ii.hasOwnProperty('value')
     },
-    ['staticParcel']: {
-        name: "a StaticParcel",
-        check: ii => ii instanceof StaticParcel
+    ['parcelShape']: {
+        name: "a ParcelShape",
+        check: ii => ii instanceof ParcelShape
     },
     ['string']: {
         name: "a string",

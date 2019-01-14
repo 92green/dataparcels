@@ -2,12 +2,12 @@
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
-import type {StaticParcelUpdater} from '../../types/Types';
+import type {ParcelShapeUpdater} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ChangeRequest from '../../change/ChangeRequest';
 import ActionCreators from '../../change/ActionCreators';
-import StaticParcel from '../../staticParcel/StaticParcel';
+import ParcelShape from '../../parcelShape/ParcelShape';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 export default (_this: Parcel, dispatch: Function) => ({
@@ -24,10 +24,10 @@ export default (_this: Parcel, dispatch: Function) => ({
         _this.set(updatedValue);
     },
 
-    updateSelfShape: (updater: StaticParcelUpdater) => {
+    updateSelfShape: (updater: ParcelShapeUpdater) => {
         Types(`updateSelfShape()`, `updater`, `function`)(updater);
-        let staticParcelUpdater = StaticParcel._updateFromData(updater);
-        let updated = staticParcelUpdater(_this._parcelData);
+        let parcelShapeUpdater = ParcelShape._updateFromData(updater);
+        let updated = parcelShapeUpdater(_this._parcelData);
         dispatch(ActionCreators.setData(updated));
     },
 
