@@ -315,7 +315,7 @@ export default class Parcel {
         ["1"]: (value: any) => this._methods.insertBeforeSelf(value),
         ["2"]: (key: Key|Index, value: any) => this._methods.insertBefore(key, value)
     });
-    push = (value: any) => this._methods.push(value);
+    push = (...values: Array<any>) => this._methods.push(...values);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
     swap = overload({
@@ -330,7 +330,7 @@ export default class Parcel {
         ["0"]: () => this._methods.swapPrevSelf(),
         ["1"]: (key: Key|Index) => this._methods.swapPrev(key)
     });
-    unshift = (value: any) => this._methods.unshift(value);
+    unshift = (...values: Array<any>) => this._methods.unshift(...values);
 
     // Modify methods
     modifyDown = (updater: Function): Parcel => this._methods.modifyDown(updater);

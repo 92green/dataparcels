@@ -22,7 +22,7 @@ test('StaticParcels push(value) should work', () => {
         value: [0,1,2]
     });
 
-    expect(staticParcel.push(3).data.value).toEqual([0,1,2,3]);
+    expect(staticParcel.push(3,4).data.value).toEqual([0,1,2,3,4]);
 });
 
 test('StaticParcels pop() should work', () => {
@@ -70,5 +70,5 @@ test('StaticParcels unshift(value) should work', () => {
         value: [0,1,2]
     });
 
-    expect(staticParcel.unshift(3).data.value).toEqual([3,0,1,2]);
+    expect(staticParcel.unshift(3,4).data.value).toEqual([3,4,0,1,2]);
 });

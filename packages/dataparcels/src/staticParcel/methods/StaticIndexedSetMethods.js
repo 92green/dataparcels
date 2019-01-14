@@ -36,10 +36,10 @@ export default (_this: StaticParcel) => ({
         );
     },
 
-    push: (value: *): StaticParcel => {
+    push: (...values: Array<*>): StaticParcel => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            push(value)
+            push(...values)
         );
     },
 
@@ -71,10 +71,10 @@ export default (_this: StaticParcel) => ({
         );
     },
 
-    unshift: (value: *): StaticParcel => {
+    unshift: (...values: Array<*>): StaticParcel => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            unshift(value)
+            unshift(...values)
         );
     }
 });

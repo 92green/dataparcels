@@ -32,12 +32,12 @@ const actionMap = {
     insertAfter: ({lastKey, value}) => insertAfter(lastKey, value),
     insertBefore: ({lastKey, value}) => insertBefore(lastKey, value),
     pop: () => pop(),
-    push: ({value}) => push(value),
+    push: ({values}) => push(...values),
     setData: parcelData => () => parcelData,
     setMeta: ({meta}) => setMeta(meta),
     set: ({value}) => setSelf(value),
     shift: () => shift(),
-    swap: ({lastKey, swapKey}) => {
+    swap: ({lastKey, swapKey}: any): ParcelDataEvaluator => {
         if(typeof swapKey === "undefined") {
             throw ReducerSwapKeyError();
         }
@@ -45,7 +45,7 @@ const actionMap = {
     },
     swapNext: ({lastKey}) => swapNext(lastKey),
     swapPrev: ({lastKey}) => swapPrev(lastKey),
-    unshift: ({value}) => unshift(value)
+    unshift: ({values}) => unshift(...values)
 };
 
 const parentActionMap = {

@@ -18,8 +18,8 @@ export default (_this: Parcel, dispatch: Function): Object => ({
         dispatch(ActionCreators.insertBefore(key, value));
     },
 
-    push: (value: *) => {
-        dispatch(ActionCreators.push(value));
+    push: (...values: Array<*>) => {
+        dispatch(ActionCreators.push(values));
     },
 
     pop: () => {
@@ -46,7 +46,7 @@ export default (_this: Parcel, dispatch: Function): Object => ({
         dispatch(ActionCreators.swapPrev(key));
     },
 
-    unshift: (value: *) => {
-        dispatch(ActionCreators.unshift(value));
+    unshift: (...values: Array<*>) => {
+        dispatch(ActionCreators.unshift(values));
     }
 });
