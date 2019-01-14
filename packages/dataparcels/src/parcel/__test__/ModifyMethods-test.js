@@ -247,7 +247,15 @@ test('Parcel.initialMeta() should work', () => {
         handleChange
     }).initialMeta({a:1, b:2});
 
-    expect(parcel.meta).toEqual({a:1, b:2});
+    expect(parcel.data).toEqual({
+        value: 123,
+        meta: {
+            a: 1,
+            b: 2
+        },
+        child: undefined,
+        key: "^"
+    });
 
     parcel.setMeta({b: 3});
 
@@ -272,7 +280,16 @@ test('Parcel.initialMeta() should merge', () => {
         .initialMeta({a:1, b:2})
         .initialMeta({b:3, c:4})
 
-    expect(parcel.meta).toEqual({a:1, b:2, c:4});
+    expect(parcel.data).toEqual({
+        value: 123,
+        meta: {
+            a: 1,
+            b: 2,
+            c: 4
+        },
+        child: undefined,
+        key: "^"
+    });
 
     parcel.setMeta({d: 5});
 
@@ -283,6 +300,27 @@ test('Parcel.initialMeta() should merge', () => {
             b: 2,
             c: 4,
             d: 5
+        },
+        child: undefined,
+        key: "^"
+    });
+});
+
+test('Parcel.initialMeta() should do nothing to data if all meta keys are already set', () => {
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    })
+        .initialMeta({a:1, b:2})
+        .initialMeta({a:1, b:2}) // do nothing to data
+
+    expect(parcel.data).toEqual({
+        value: 123,
+        meta: {
+            a: 1,
+            b: 2
         },
         child: undefined,
         key: "^"
