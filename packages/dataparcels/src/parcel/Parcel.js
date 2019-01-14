@@ -338,7 +338,7 @@ export default class Parcel {
     modifyShapeDown = (updater: Function): Parcel => this._methods.modifyShapeDown(updater);
     modifyShapeUp = (updater: Function): Parcel => this._methods.modifyShapeUp(updater);
     modifyChange = (batcher: ParcelBatcher): Parcel => this._methods.modifyChange(batcher);
-    initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
+    initialMeta = (initialMeta: ParcelMeta): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
 
     // Type methods
