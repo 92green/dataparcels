@@ -32,6 +32,6 @@ let staticParcel = new StaticParcel(123);
 
 ## Example Usage
 
-StaticParcels are used in a very similar way to (Immutable.js Maps and Lists)[https://facebook.github.io/immutable-js/docs/], by calling methods that return new and updated StaticParcels.
+StaticParcels are used in a very similar way to [Immutable.js Maps and Lists](https://facebook.github.io/immutable-js/docs/), by calling methods that return new and updated StaticParcels.
 
 TODO
