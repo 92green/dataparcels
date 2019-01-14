@@ -1,6 +1,8 @@
 // @flow
 import Parcel from '../Parcel';
 import GetAction from '../../util/__test__/GetAction-testUtil';
+import StaticParcel from '../../staticParcel/StaticParcel';
+import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.set() should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(3);
@@ -69,39 +71,38 @@ test('Parcel.set() should remove and replace child data when setting a deep data
 });
 
 test('Parcel.update() should call the Parcels handleChange function with the new parcelData', () => {
-    expect.assertions(3);
 
-    var data = {
-        value: 123
-    };
-
-    var expectedArg = 123;
-
-    var expectedData = {
-        child: undefined,
-        meta: {},
-        value: 456,
-        key: '^'
-    };
-
-    var expectedAction = {
-        type: "set",
-        keyPath: [],
-        payload: {
-            value: 456
-        }
-    };
+    let handleChange = jest.fn();
+    let updater = jest.fn(ii => ii + 1);
 
     new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).update((ii) => {
-        expect(expectedArg).toEqual(ii);
-        return 456;
-    });
+        value: 123,
+        handleChange
+    }).update(updater);
+
+    expect(updater.mock.calls[0][0]).toBe(123);
+    expect(handleChange.mock.calls[0][0].data.value).toBe(124);
+});
+
+test('Parcel.update() should validate value updater', () => {
+    TestValidateValueUpdater(
+        expect,
+        (value, updater) => new Parcel({value}).update(updater)
+    );
+});
+
+test('Parcel.updateShape() should call the Parcels handleChange function with the new parcelData', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(staticParcel => staticParcel.push(4));
+
+    new Parcel({
+        value: [1,2,3],
+        handleChange
+    }).updateShape(updater);
+
+    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
 
 test('Parcel.onChange() should work like set that only accepts a single argument', () => {

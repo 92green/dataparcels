@@ -2,10 +2,13 @@
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
+import type {StaticParcelUpdater} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ChangeRequest from '../../change/ChangeRequest';
 import ActionCreators from '../../change/ActionCreators';
+import StaticParcel from '../../staticParcel/StaticParcel';
+import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 export default (_this: Parcel, dispatch: Function) => ({
 
@@ -15,12 +18,20 @@ export default (_this: Parcel, dispatch: Function) => ({
 
     updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf()`, `updater`, `function`)(updater);
-        _this.set(updater(_this.value));
+        let {value} = _this;
+        let updatedValue = updater(value, _this);
+        ValidateValueUpdater(value, updatedValue);
+        _this.set(updatedValue);
     },
 
-    onChange: (value: *) => {
-        _this.set(value);
+    updateSelfShape: (updater: StaticParcelUpdater) => {
+        Types(`updateSelfShape()`, `updater`, `function`)(updater);
+        let staticParcelUpdater = StaticParcel._updateFromData(updater);
+        let updated = staticParcelUpdater(_this._parcelData);
+        dispatch(ActionCreators.setData(updated));
     },
+
+    onChange: _this.set,
 
     onChangeDOM: (event: Object) => {
         Types(`onChangeDOM()`, `event`, `event`)(event);

@@ -2,14 +2,15 @@
 import type ChangeRequest from '../../change/ChangeRequest';
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
+import type {ParcelValueUpdater} from '../../types/Types';
+
 import Types from '../../types/Types';
+import StaticParcel from '../../staticParcel/StaticParcel';
+import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 import ParcelTypes from '../ParcelTypes';
-import {ModifyValueDownChildReturnError} from '../../errors/Errors';
-import {ModifyValueUpChildReturnError} from '../../errors/Errors';
 import HashString from '../../util/HashString';
 
-import equals from 'unmutable/lib/equals';
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
 import isEmpty from 'unmutable/lib/isEmpty';
@@ -23,41 +24,14 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
 export default (_this: Parcel): Object => ({
 
-    modifyDown: (updater: Function): Parcel => {
+    modifyDown: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyDown()`, `updater`, `function`)(updater);
-        let parcelData = updater(_this._parcelData);
-
-        return _this._create({
-            id: _this._id.pushModifier(`md-${HashFunction(updater)}`),
-            parcelData,
-            onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPre(updater));
-            }
-        });
-    },
-
-    modifyUp: (updater: Function): Parcel => {
-        Types(`modifyUp()`, `updater`, `function`)(updater);
-
-        return _this._create({
-            id: _this._id.pushModifier(`mu-${HashFunction(updater)}`),
-            onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(updater));
-            }
-        });
-    },
-
-    modifyValueDown: (updater: Function): Parcel => {
-        Types(`modifyValueDown()`, `updater`, `function`)(updater);
 
         let {value} = _this._parcelData;
         let updatedValue = updater(value, _this);
+        ValidateValueUpdater(value, updatedValue);
+
         let updatedType = new ParcelTypes(updatedValue);
-
-        if(updatedType.isParent() && !isEmpty()(updatedValue) && !equals(value)(updatedValue)) {
-            throw ModifyValueDownChildReturnError();
-        }
-
         let updatedTypeChanged: boolean = updatedType.isParent() !== _this._parcelTypes.isParent()
             || updatedType.isIndexed() !== _this._parcelTypes.isIndexed();
 
@@ -84,28 +58,46 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyValueUp: (updater: Function): Parcel => {
-        Types(`modifyValueUp()`, `updater`, `function`)(updater);
+    modifyUp: (updater: ParcelValueUpdater): Parcel => {
+        Types(`modifyUp()`, `updater`, `function`)(updater);
         return _this.modifyChange((parcel: Parcel, changeRequest: ChangeRequest) => {
 
             let {value} = changeRequest.nextData;
-            let type = new ParcelTypes(value);
-
             let updatedValue = updater(value, _this);
-
-            if(type.isParent()) {
-                if(!equals(value)(updatedValue)) {
-                    throw ModifyValueUpChildReturnError();
-                }
-                parcel.dispatch(changeRequest);
-                return;
-            }
+            ValidateValueUpdater(value, updatedValue);
 
             // dispatch all non-value actions in this change request
             let valueActionFilter = actions => actions.filter(action => !action.isValueAction());
             parcel.dispatch(changeRequest.updateActions(valueActionFilter));
 
             parcel.set(updatedValue);
+        });
+    },
+
+    modifyShapeDown: (updater: Function): Parcel => {
+        Types(`modifyShapeDown()`, `updater`, `function`)(updater);
+
+        let staticUpdater = StaticParcel._updateFromData(updater);
+
+        return _this._create({
+            id: _this._id.pushModifier(`md-${HashFunction(updater)}`),
+            parcelData: staticUpdater(_this._parcelData),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.dispatch(changeRequest._addPre(staticUpdater));
+            }
+        });
+    },
+
+    modifyShapeUp: (updater: Function): Parcel => {
+        Types(`modifyShapeUp()`, `updater`, `function`)(updater);
+
+        let staticUpdater = StaticParcel._updateFromData(updater);
+
+        return _this._create({
+            id: _this._id.pushModifier(`mu-${HashFunction(updater)}`),
+            onDispatch: (changeRequest: ChangeRequest) => {
+                _this.dispatch(changeRequest._addPost(staticUpdater));
+            }
         });
     },
 

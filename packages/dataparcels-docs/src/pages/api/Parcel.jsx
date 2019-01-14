@@ -14,6 +14,7 @@ import Markdown_spread from 'docs/api/parcel/spread.md';
 import Markdown_spreadDOM from 'docs/api/parcel/spreadDOM.md';
 import Markdown_get from 'docs/api/parcel/get.md';
 import Markdown_getIn from 'docs/api/parcel/getIn.md';
+import Markdown_children from 'docs/api/parcel/children.md';
 import Markdown_toObject from 'docs/api/parcel/toObject.md';
 import Markdown_toArray from 'docs/api/parcel/toArray.md';
 import Markdown_has from 'docs/api/parcel/has.md';
@@ -25,7 +26,9 @@ import Markdown_onChangeDOM from 'docs/api/parcel/onChangeDOM.md';
 import Markdown_set from 'docs/api/parcel/set.md';
 import Markdown_setIn from 'docs/api/parcel/setIn.md';
 import Markdown_update from 'docs/api/parcel/update.md';
+import Markdown_updateShape from 'docs/api/parcel/updateShape.md';
 import Markdown_updateIn from 'docs/api/parcel/updateIn.md';
+import Markdown_updateInShape from 'docs/api/parcel/updateInShape.md';
 import Markdown_delete from 'docs/api/parcel/delete.md';
 import Markdown_deleteIn from 'docs/api/parcel/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/parcel/insertAfter.md';
@@ -42,8 +45,10 @@ import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.
 import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
 import Markdown_batch from 'docs/api/parcel/batch.md';
 import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
-import Markdown_modifyValueDown from 'docs/api/parcel/modifyValueDown.md';
-import Markdown_modifyValueUp from 'docs/api/parcel/modifyValueUp.md';
+import Markdown_modifyDown from 'docs/api/parcel/modifyDown.md';
+import Markdown_modifyUp from 'docs/api/parcel/modifyUp.md';
+import Markdown_modifyShapeDown from 'docs/api/parcel/modifyShapeDown.md';
+import Markdown_modifyShapeUp from 'docs/api/parcel/modifyShapeUp.md';
 import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
 import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
@@ -71,6 +76,7 @@ const md = {
     spreadDOM: Markdown_spreadDOM,
     get: Markdown_get,
     getIn: Markdown_getIn,
+    children: Markdown_children,
     toObject: Markdown_toObject,
     toArray: Markdown_toArray,
     has: Markdown_has,
@@ -82,7 +88,9 @@ const md = {
     set: Markdown_set,
     setIn: Markdown_setIn,
     update: Markdown_update,
+    updateShape: Markdown_updateShape,
     updateIn: Markdown_updateIn,
+    updateInShape: Markdown_updateInShape,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
@@ -99,8 +107,10 @@ const md = {
     dispatch: Markdown_dispatch,
     batch: Markdown_batch,
     batchAndReturn: Markdown_batchAndReturn,
-    modifyValueDown: Markdown_modifyValueDown,
-    modifyValueUp: Markdown_modifyValueUp,
+    modifyDown: Markdown_modifyDown,
+    modifyUp: Markdown_modifyUp,
+    modifyShapeDown: Markdown_modifyShapeDown,
+    modifyShapeUp: Markdown_modifyShapeUp,
     modifyChange: Markdown_modifyChange,
     initialMeta: Markdown_initialMeta,
     isChild: Markdown_isChild,
@@ -128,30 +138,29 @@ path
 # Spread methods
 spread()
 spreadDOM()
+onChange()
+onChangeDOM()
 
 # Branch methods
 get()
 getIn()
+children()
 toObject()
 toArray()
-
-# Parent methods
-has()
-size()
 
 # Child methods
 isFirst()
 isLast()
 
 # Change methods
-onChange()
-onChangeDOM()
 set()
 setIn()
-update()
-updateIn()
 delete()
 deleteIn()
+update()
+updateShape()
+updateIn()
+updateShapeIn()
 
 # Indexed & element change methods
 insertAfter()
@@ -164,18 +173,9 @@ swapNext()
 swapPrev()
 unshift()
 
-# Advanced change methods
-setMeta()
-setChangeRequestMeta()
-dispatch()
-batch()
-batchAndReturn()
-
-# Modify methods
-modifyValueDown()
-modifyValueUp()
-modifyChange()
-initialMeta()
+# Parent methods
+has()
+size()
 
 # Type methods
 isChild()
@@ -184,7 +184,20 @@ isIndexed()
 isParent()
 isTopLevel()
 
-# Status methods
+# Modify methods
+modifyDown()
+modifyUp()
+modifyShapeDown()
+modifyShapeUp()
+modifyChange()
+initialMeta()
+
+# Advanced change methods
+setMeta()
+setChangeRequestMeta()
+dispatch()
+batch()
+batchAndReturn()
 hasDispatched()
 
 # Side-effect methods

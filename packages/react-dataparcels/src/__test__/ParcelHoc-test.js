@@ -99,7 +99,7 @@ test('ParcelHoc config should accept a pipe function', () => {
             pipe: (props) => (parcel) => {
                 expect(456).toBe(parcel.value);
                 expect({}).toEqual(props);
-                return parcel.modifyValueDown(ii => ii + 1);
+                return parcel.modifyDown(ii => ii + 1);
             }
         })
     ).props();

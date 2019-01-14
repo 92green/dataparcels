@@ -1,7 +1,7 @@
 // @flow
 import type Action from '../change/Action';
 import type ChangeRequest from '../change/ChangeRequest';
-import type {CreateParcelConfigType} from '../types/Types';
+import type {ParcelCreateConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {ParcelBatcher} from '../types/Types';
@@ -12,6 +12,8 @@ import type {ParcelMapper} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
+import type {ParentType} from '../types/Types';
+import type {StaticParcelUpdater} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
@@ -145,7 +147,7 @@ export default class Parcel {
     _log: boolean = false; // used by log()
     _logName: string = ""; // used by log()
 
-    _create = (createParcelConfig: CreateParcelConfigType): Parcel => {
+    _create = (createParcelConfig: ParcelCreateConfigType): Parcel => {
         let {
             id = this._id,
             onDispatch = this.dispatch,
@@ -187,7 +189,7 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set data(value: *) {
+    set data(value: any) {
         throw ReadOnlyError();
     }
 
@@ -197,7 +199,7 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set value(value: *) {
+    set value(value: any) {
         throw ReadOnlyError();
     }
 
@@ -208,7 +210,7 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set meta(value: *) {
+    set meta(value: any) {
         throw ReadOnlyError();
     }
 
@@ -218,7 +220,7 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set key(value: *) {
+    set key(value: any) {
         throw ReadOnlyError();
     }
 
@@ -228,7 +230,7 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set id(value: *) {
+    set id(value: any) {
         throw ReadOnlyError();
     }
 
@@ -238,7 +240,7 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set path(value: *) {
+    set path(value: any) {
         throw ReadOnlyError();
     }
 
@@ -247,14 +249,15 @@ export default class Parcel {
     //
 
     // Spread methods
-    spread = (notFoundValue: ?* = undefined): * => this._methods.spread(notFoundValue);
-    spreadDOM = (notFoundValue: ?* = undefined): * => this._methods.spreadDOM(notFoundValue);
+    spread = (notFoundValue: any = undefined): * => this._methods.spread(notFoundValue);
+    spreadDOM = (notFoundValue: any = undefined): * => this._methods.spreadDOM(notFoundValue);
 
     // Branch methods
-    get = (key: Key|Index, notFoundValue: ?* = undefined): Parcel => this._methods.get(key, notFoundValue);
-    getIn = (keyPath: Array<Key|Index>, notFoundValue: ?* = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);
-    toObject = (mapper: ParcelMapper = _ => _): { [key: string]: * } => this._methods.toObject(mapper);
-    toArray = (mapper: ParcelMapper = _ => _): Array<*> => this._methods.toArray(mapper);
+    get = (key: Key|Index, notFoundValue: any = undefined): Parcel => this._methods.get(key, notFoundValue);
+    getIn = (keyPath: Array<Key|Index>, notFoundValue: any = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);
+    children = (mapper: ParcelMapper = _ => _): ParentType<Parcel> => this._methods.children(mapper);
+    toObject = (mapper: ParcelMapper = _ => _): { [key: string]: Parcel } => this._methods.toObject(mapper);
+    toArray = (mapper: ParcelMapper = _ => _): Array<Parcel> => this._methods.toArray(mapper);
 
     // Parent methods
     has = (key: Key|Index): boolean => this._methods.has(key);
@@ -273,18 +276,23 @@ export default class Parcel {
     spyChange = (sideEffect: Function): Parcel => this._methods.spyChange(sideEffect);
 
     // Change methods
-    onChange = (value: *) => this._methods.onChange(value);
+    onChange = (value: any) => this._methods.onChange(value);
     onChangeDOM = (event: *) => this._methods.onChangeDOM(event);
     set = overload({
-        ["1"]: (value: *) => this._methods.setSelf(value),
-        ["2"]: (key: Key|Index, value: *) => this._methods.set(key, value)
+        ["1"]: (value: any) => this._methods.setSelf(value),
+        ["2"]: (key: Key|Index, value: any) => this._methods.set(key, value)
     });
     update = overload({
         ["1"]: (updater: ParcelValueUpdater) => this._methods.updateSelf(updater),
         ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
     });
-    setIn = (keyPath: Array<Key|Index>, value: *) => this._methods.setIn(keyPath, value);
+    updateShape = overload({
+        ["1"]: (updater: StaticParcelUpdater) => this._methods.updateSelfShape(updater),
+        ["2"]: (key: Key|Index, updater: StaticParcelUpdater) => this._methods.updateShape(key, updater)
+    });
+    setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
+    updateShapeIn = (keyPath: Array<Key|Index>, updater: StaticParcelUpdater) => this._methods.updateShapeIn(keyPath, updater);
     delete = overload({
         ["0"]: () => this._methods.deleteSelf(),
         ["1"]: (key: Key|Index) => this._methods.delete(key)
@@ -300,14 +308,14 @@ export default class Parcel {
 
     // Indexed methods
     insertAfter = overload({
-        ["1"]: (value: *) => this._methods.insertAfterSelf(value),
-        ["2"]: (key: Key|Index, value: *) => this._methods.insertAfter(key, value)
+        ["1"]: (value: any) => this._methods.insertAfterSelf(value),
+        ["2"]: (key: Key|Index, value: any) => this._methods.insertAfter(key, value)
     });
     insertBefore = overload({
-        ["1"]: (value: *) => this._methods.insertBeforeSelf(value),
-        ["2"]: (key: Key|Index, value: *) => this._methods.insertBefore(key, value)
+        ["1"]: (value: any) => this._methods.insertBeforeSelf(value),
+        ["2"]: (key: Key|Index, value: any) => this._methods.insertBefore(key, value)
     });
-    push = (value: *) => this._methods.push(value);
+    push = (value: any) => this._methods.push(value);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
     swap = overload({
@@ -322,13 +330,13 @@ export default class Parcel {
         ["0"]: () => this._methods.swapPrevSelf(),
         ["1"]: (key: Key|Index) => this._methods.swapPrev(key)
     });
-    unshift = (value: *) => this._methods.unshift(value);
+    unshift = (value: any) => this._methods.unshift(value);
 
     // Modify methods
     modifyDown = (updater: Function): Parcel => this._methods.modifyDown(updater);
     modifyUp = (updater: Function): Parcel => this._methods.modifyUp(updater);
-    modifyValueDown = (updater: Function): Parcel => this._methods.modifyValueDown(updater);
-    modifyValueUp = (updater: Function): Parcel => this._methods.modifyValueUp(updater);
+    modifyShapeDown = (updater: Function): Parcel => this._methods.modifyShapeDown(updater);
+    modifyShapeUp = (updater: Function): Parcel => this._methods.modifyShapeUp(updater);
     modifyChange = (batcher: ParcelBatcher): Parcel => this._methods.modifyChange(batcher);
     initialMeta = (initialMeta: ParcelMeta = {}): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
