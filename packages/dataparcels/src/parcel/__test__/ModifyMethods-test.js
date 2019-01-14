@@ -280,3 +280,23 @@ test('Parcel.initialMeta() should merge', () => {
         b: 3
     });
 });
+
+test('Sanity check: A big strange test of a big strange chain of deep updatery stuff', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(value => value + "333");
+
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    })
+        .modifyDownDeep(staticParcel => staticParcel.children().reverse()) // 1. reverse the elements in the parcel (value: [3,2,1])
+        .modifyUpDeep(staticParcel => staticParcel.children().reverse()) // 6. reverse the elements in the parcel (value: [3333,2,1])
+        .get(0) // 2. get the first element (value: 3)
+        .modifyDown(value => value + "") // 3. cast number to string value: "3")
+        .modifyUp(value => parseInt(value, 10)) // 5. cast string to number (value will be: 3333)
+        .update(updater); // 4. make a change to the data, append three threes (value will be: "3333")
+
+    expect(updater.mock.calls[0][0]).toBe("3");
+    expect(handleChange.mock.calls[0][0].value).toEqual([1,2,3333]);
+});
