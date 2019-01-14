@@ -3,6 +3,7 @@ import type ChangeRequest from '../../change/ChangeRequest';
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
+import type {ParcelShapeUpdater} from '../../types/Types';
 
 import Types from '../../types/Types';
 import ParcelShape from '../../parcelShape/ParcelShape';
@@ -74,7 +75,7 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyShapeDown: (updater: Function): Parcel => {
+    modifyShapeDown: (updater: ParcelShapeUpdater): Parcel => {
         Types(`modifyShapeDown()`, `updater`, `function`)(updater);
 
         let shapeUpdater = ParcelShape._updateFromData(updater);
@@ -88,7 +89,7 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyShapeUp: (updater: Function): Parcel => {
+    modifyShapeUp: (updater: ParcelShapeUpdater): Parcel => {
         Types(`modifyShapeUp()`, `updater`, `function`)(updater);
 
         let shapeUpdater = ParcelShape._updateFromData(updater);

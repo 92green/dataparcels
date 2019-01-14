@@ -44,11 +44,11 @@ export type ParcelMeta = {[key: string]: *};
 export type ParcelBatcher = (item: Parcel) => void;
 export type ParcelMapper = (item: Parcel, index: string|number, _this: Parcel) => *;
 export type ParcelUpdater = (item: Parcel) => Parcel;
-export type ParcelValueUpdater = (value: *, parcel: Parcel) => *;
+export type ParcelValueUpdater = (value: *, parcel: Parcel) => any;
+export type ParcelShapeUpdater = (item: ParcelShape) => any;
 
 export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
-export type ParcelShapeValueUpdater = (value: *, parcel: ParcelShape) => *;
-export type ParcelShapeShapeUpdater = (item: ParcelShape) => ParcelShape;
+export type ParcelShapeValueUpdater = (value: *, parcel: ParcelShape) => any;
 
 export type ParcelShapeConfigInternal = {
     parent?: ?ParcelShape
