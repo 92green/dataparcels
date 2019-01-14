@@ -2,7 +2,7 @@
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
-import type {ParcelShapeShapeUpdater} from '../../types/Types';
+import type {ParcelShapeUpdater} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ChangeRequest from '../../change/ChangeRequest';
@@ -24,7 +24,7 @@ export default (_this: Parcel, dispatch: Function) => ({
         _this.set(updatedValue);
     },
 
-    updateSelfShape: (updater: ParcelShapeShapeUpdater) => {
+    updateSelfShape: (updater: ParcelShapeUpdater) => {
         Types(`updateSelfShape()`, `updater`, `function`)(updater);
         let parcelShapeUpdater = ParcelShape._updateFromData(updater);
         let updated = parcelShapeUpdater(_this._parcelData);

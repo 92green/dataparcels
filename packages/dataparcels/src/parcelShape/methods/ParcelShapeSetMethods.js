@@ -3,7 +3,7 @@ import type ParcelShape from '../ParcelShape';
 import type {ParcelDataEvaluator} from '../../types/Types';
 import type {ParcelShapeValueUpdater} from '../../types/Types';
 import type {ParcelShapeSetMeta} from '../../types/Types';
-import type {ParcelShapeShapeUpdater} from '../../types/Types';
+import type {ParcelShapeUpdater} from '../../types/Types';
 
 import {ShapeUpdaterNonShapeChildError} from '../../errors/Errors';
 import isParentValue from '../../parcelData/isParentValue';
@@ -44,7 +44,7 @@ export default (_this: ParcelShape) => ({
         return _this.set(updatedValue);
     },
 
-    updateShape: (updater: ParcelShapeShapeUpdater): ParcelShape => {
+    updateShape: (updater: ParcelShapeUpdater): ParcelShape => {
         let updated: any = updater(_this);
         if(_this._isParcelShape(updated)) {
             return updated;
