@@ -5,7 +5,7 @@ import type {ParcelData} from '../types/Types';
 import type {ParentType} from '../types/Types';
 import type {ParcelShapeValueUpdater} from '../types/Types';
 import type {ParcelShapeConfigInternal} from '../types/Types';
-import type {ParcelShapeUpdater} from '../types/Types';
+import type {ParcelShapeShapeUpdater} from '../types/Types';
 import type {ParcelShapeSetMeta} from '../types/Types';
 
 import Types from '../types/Types';
@@ -71,7 +71,7 @@ export default class ParcelShape {
     _parcelData: ParcelData;
     _parcelTypes: ParcelTypes;
 
-    static _updateFromData(updater: ParcelShapeUpdater): Function {
+    static _updateFromData(updater: ParcelShapeShapeUpdater): Function {
         return (parcelData: ParcelData): ParcelData => ParcelShape
             .fromData(parcelData)
             .updateShape(updater)
@@ -178,8 +178,8 @@ export default class ParcelShape {
         ["2"]: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => this.updateIn([key], updater)
     });
     updateShape = overload({
-        ["1"]: (updater: ParcelShapeUpdater): ParcelShape => this._methods.updateShape(updater),
-        ["2"]: (key: Key|Index, updater: ParcelShapeUpdater): ParcelShape => this.updateShapeIn([key], updater)
+        ["1"]: (updater: ParcelShapeShapeUpdater): ParcelShape => this._methods.updateShape(updater),
+        ["2"]: (key: Key|Index, updater: ParcelShapeShapeUpdater): ParcelShape => this.updateShapeIn([key], updater)
     });
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateIn(keyPath, updater);
     updateShapeIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateShapeIn(keyPath, updater);

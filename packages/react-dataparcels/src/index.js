@@ -28,8 +28,8 @@ export type {ParcelUpdater} from 'dataparcels';
 export type {ParcelValueUpdater} from 'dataparcels';
 
 export type {ParcelShapeSetMeta} from 'dataparcels';
-export type {ParcelShapeUpdater} from 'dataparcels';
 export type {ParcelShapeValueUpdater} from 'dataparcels';
+export type {ParcelShapeShapeUpdater} from 'dataparcels';
 export type {ParcelShapeConfigInternal} from 'dataparcels';
 
 export type {Key} from 'dataparcels';

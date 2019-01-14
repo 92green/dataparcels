@@ -1,7 +1,7 @@
 // @flow
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
-import type {ParcelShapeUpdater} from '../../types/Types';
+import type {ParcelShapeShapeUpdater} from '../../types/Types';
 import type {ParcelShapeValueUpdater} from '../../types/Types';
 import type ParcelShape from '../ParcelShape';
 
@@ -47,7 +47,7 @@ export default (_this: ParcelShape) => ({
         );
     },
 
-    updateShapeIn: (keyPath: Array<Key|Index>, updater: ParcelShapeUpdater): ParcelShape => {
+    updateShapeIn: (keyPath: Array<Key|Index>, updater: ParcelShapeShapeUpdater): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             parcelUpdateIn(

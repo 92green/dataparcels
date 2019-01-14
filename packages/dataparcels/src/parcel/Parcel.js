@@ -13,7 +13,7 @@ import type {ParcelMeta} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
-import type {ParcelShapeUpdater} from '../types/Types';
+import type {ParcelShapeShapeUpdater} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
@@ -287,12 +287,12 @@ export default class Parcel {
         ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
     });
     updateShape = overload({
-        ["1"]: (updater: ParcelShapeUpdater) => this._methods.updateSelfShape(updater),
-        ["2"]: (key: Key|Index, updater: ParcelShapeUpdater) => this._methods.updateShape(key, updater)
+        ["1"]: (updater: ParcelShapeShapeUpdater) => this._methods.updateSelfShape(updater),
+        ["2"]: (key: Key|Index, updater: ParcelShapeShapeUpdater) => this._methods.updateShape(key, updater)
     });
     setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
-    updateShapeIn = (keyPath: Array<Key|Index>, updater: ParcelShapeUpdater) => this._methods.updateShapeIn(keyPath, updater);
+    updateShapeIn = (keyPath: Array<Key|Index>, updater: ParcelShapeShapeUpdater) => this._methods.updateShapeIn(keyPath, updater);
     delete = overload({
         ["0"]: () => this._methods.deleteSelf(),
         ["1"]: (key: Key|Index) => this._methods.delete(key)

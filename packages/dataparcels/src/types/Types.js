@@ -47,8 +47,8 @@ export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *, parcel: Parcel) => *;
 
 export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
-export type ParcelShapeUpdater = (item: ParcelShape) => ParcelShape;
 export type ParcelShapeValueUpdater = (value: *, parcel: ParcelShape) => *;
+export type ParcelShapeShapeUpdater = (item: ParcelShape) => ParcelShape;
 
 export type ParcelShapeConfigInternal = {
     parent?: ?ParcelShape
