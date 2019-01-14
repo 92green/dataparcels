@@ -259,12 +259,12 @@ TestIndex([
             type: "push",
             keyPath: [],
             payload: {
-                value: 3
+                values: [3,4]
             }
         },
         expectedData: {
-            value: [0,1,2,3],
-            child: [{key: "#a"},{key: "#b"}, {key: "#c"},{key: "#d"}],
+            value: [0,1,2,3,4],
+            child: [{key: "#a"},{key: "#b"}, {key: "#c"},{key: "#d"},{key: "#e"}],
             ...EXPECTED_KEY_AND_META
         }
     }
@@ -430,12 +430,12 @@ TestIndex([
             type: "unshift",
             keyPath: [],
             payload: {
-                value: 3
+                values: [3,4]
             }
         },
         expectedData: {
-            value: [3,0,1,2],
-            child: [{key: "#d"},{key: "#a"},{key: "#b"}, {key: "#c"}],
+            value: [3,4,0,1,2],
+            child: [{key: "#d"},{key: "#e"},{key: "#a"},{key: "#b"}, {key: "#c"}],
             ...EXPECTED_KEY_AND_META
         }
     }

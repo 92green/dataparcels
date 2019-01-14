@@ -204,13 +204,14 @@ test('IndexedParcel.push() should push', () => {
 
     var expectedData = {
         meta: {},
-        value: [1,2,3,4],
+        value: [1,2,3,4,5],
         key: '^',
         child: [
             {key: "#a"},
             {key: "#b"},
             {key: "#c"},
-            {key: "#d"}
+            {key: "#d"},
+            {key: "#e"}
         ]
     };
 
@@ -218,7 +219,7 @@ test('IndexedParcel.push() should push', () => {
         type: "push",
         keyPath: [],
         payload: {
-            value: 4
+            values: [4,5]
         }
     };
 
@@ -228,7 +229,7 @@ test('IndexedParcel.push() should push', () => {
             expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(GetAction(changeRequest));
         }
-    }).push(4);
+    }).push(4,5);
 });
 
 test('IndexedParcel.pop() should pop', () => {
@@ -464,10 +465,11 @@ test('IndexedParcel.unshift() should unshift', () => {
 
     var expectedData = {
         meta: {},
-        value: [4,1,2,3],
+        value: [4,5,1,2,3],
         key: '^',
         child: [
             {key: "#d"},
+            {key: "#e"},
             {key: "#a"},
             {key: "#b"},
             {key: "#c"}
@@ -478,7 +480,7 @@ test('IndexedParcel.unshift() should unshift', () => {
         type: "unshift",
         keyPath: [],
         payload: {
-            value: 4
+            values: [4,5]
         }
     };
 
@@ -488,5 +490,5 @@ test('IndexedParcel.unshift() should unshift', () => {
             expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(GetAction(changeRequest));
         }
-    }).unshift(4);
+    }).unshift(4,5);
 });
