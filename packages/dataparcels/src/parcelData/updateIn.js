@@ -1,7 +1,6 @@
 // @flow
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
-import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
 import update from './update';
