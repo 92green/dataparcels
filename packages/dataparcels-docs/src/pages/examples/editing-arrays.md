@@ -51,9 +51,9 @@ export default FruitListParcelHoc(FruitListEditor);
 
 For the full list of methods you can use on indexed data types, see <Link to="/api/Parcel#indexed_change_methods">Indexed Change Methods</Link> and <Link to="/api/Parcel#element_change_methods">Element Change Methods</Link> in the Parcel API reference.
 
-## With react-sortable-hoc
+## Drag and drop with react-sortable-hoc
 
-Dataparcels' `move()` method plays nicely with [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc).
+Dataparcels' plays nicely with [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc). Drag items up and fown to change their order.
 
 <EditingArraysSortableHoc />
 
@@ -107,9 +107,9 @@ const FruitListEditor = (props) => {
 export default FruitListParcelHoc(FruitListEditor);
 ```
 
-## With react-flip-move
+## Animations with react-flip-move
 
-Dataparcels' automatic keying also plays nicely with [react-flip-move](https://github.com/joshwcomeau/react-flip-move).
+Dataparcels' also plays nicely with [react-flip-move](https://github.com/joshwcomeau/react-flip-move) because of its automatic keying. Add, remove and move items to see.
 
 <EditingArraysFlipMove />
 
