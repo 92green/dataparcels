@@ -49,6 +49,25 @@ const insertBeforeSelf: Function = (value: *): Action => {
     });
 };
 
+const move: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
+    return new Action({
+        type: "move",
+        keyPath: [keyA],
+        payload: {
+            moveKey: keyB
+        }
+    });
+};
+
+const moveSelf: Function = (keyB: Key|Index): Action => {
+    return new Action({
+        type: "move",
+        payload: {
+            moveKey: keyB
+        }
+    });
+};
+
 const push: Function = (values: Array<*>): Action => {
     return new Action({
         type: "push",
@@ -155,6 +174,8 @@ export default {
     insertAfterSelf,
     insertBefore,
     insertBeforeSelf,
+    move,
+    moveSelf,
     push,
     pop,
     setData,

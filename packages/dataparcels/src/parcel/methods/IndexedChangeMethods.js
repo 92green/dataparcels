@@ -18,6 +18,12 @@ export default (_this: Parcel, dispatch: Function): Object => ({
         dispatch(ActionCreators.insertBefore(key, value));
     },
 
+    move: (keyA: Key|Index, keyB: Key|Index) => {
+        Types(`move()`, `keyA`, `keyIndex`)(keyA);
+        Types(`move()`, `keyB`, `keyIndex`)(keyB);
+        dispatch(ActionCreators.move(keyA, keyB));
+    },
+
     push: (...values: Array<*>) => {
         dispatch(ActionCreators.push(values));
     },

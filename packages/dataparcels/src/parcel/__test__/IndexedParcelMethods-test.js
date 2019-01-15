@@ -190,6 +190,46 @@ test('IndexedParcel.insertAfter() should insertAfter', () => {
     expect(GetAction(keyedHandleChange.mock.calls[0][1])).toEqual(expectedActionWithKey);
 });
 
+test('IndexedParcel.move() should move', () => {
+    expect.assertions(2);
+
+    var data = {
+        value: [1,2,3],
+        child: [
+            {key: "#a"},
+            {key: "#b"},
+            {key: "#c"}
+        ]
+    };
+
+    var expectedData = {
+        meta: {},
+        value: [3,1,2],
+        key: '^',
+        child: [
+            {key: "#c"},
+            {key: "#a"},
+            {key: "#b"}
+        ]
+    };
+
+    var expectedAction = {
+        type: "move",
+        keyPath: [2],
+        payload: {
+            moveKey: 0
+        }
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel, changeRequest) => {
+            expect(expectedData).toEqual(parcel.data);
+            expect(expectedAction).toEqual(GetAction(changeRequest));
+        }
+    }).move(2,0);
+});
+
 test('IndexedParcel.push() should push', () => {
     expect.assertions(2);
 

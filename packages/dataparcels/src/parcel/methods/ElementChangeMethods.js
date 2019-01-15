@@ -16,6 +16,11 @@ export default (_this: Parcel, dispatch: Function): Object => ({
         dispatch(ActionCreators.insertBeforeSelf(value));
     },
 
+    moveSelf: (key: Key|Index) => {
+        Types(`moveSelf()`, `key`, `keyIndex`)(key);
+        dispatch(ActionCreators.moveSelf(key));
+    },
+
     swapNextSelf: () => {
         dispatch(ActionCreators.swapNextSelf());
     },
