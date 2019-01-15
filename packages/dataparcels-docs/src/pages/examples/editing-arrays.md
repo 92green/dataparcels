@@ -1,6 +1,7 @@
 import Link from 'gatsby-link';
 import EditingArrays from 'examples/EditingArrays';
 import EditingArraysFlipMove from 'examples/EditingArraysFlipMove';
+import EditingArraysSortableHoc from 'examples/EditingArraysSortableHoc';
 
 Dataparcels has a powerful set of methods for manipulating indexed data types, such as arrays. This example demonstrates an editor that allows the user to edit, append to and sort the elements in an array of strings.
 
@@ -50,9 +51,65 @@ export default FruitListParcelHoc(FruitListEditor);
 
 For the full list of methods you can use on indexed data types, see <Link to="/api/Parcel#indexed_change_methods">Indexed Change Methods</Link> and <Link to="/api/Parcel#element_change_methods">Element Change Methods</Link> in the Parcel API reference.
 
+## With react-sortable-hoc
+
+Dataparcels' `move()` method plays nicely with [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc).
+
+<EditingArraysSortableHoc />
+
+```js
+import React from 'react';
+import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
+    valueFromProps: (/* props */) => [
+        "Apple",
+        "Banana",
+        "Crumpets"
+    ]
+});
+
+const SortableFruitItem = SortableElement(({fruitParcel}) => {
+    return <ParcelBoundary parcel={fruitParcel}>
+        {(parcel) => <div>
+            <input type="text" {...parcel.spreadDOM()} />
+            <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
+            <button onClick={() => parcel.delete()}>x</button>
+        </div>}
+    </ParcelBoundary>;
+});
+
+const SortableFruitList = SortableContainer(({fruitListParcel}) => {
+    return <div>
+        {fruitListParcel.toArray((fruitParcel, index) => {
+            return <SortableFruitItem
+                key={fruitParcel.key}
+                index={index}
+                fruitParcel={fruitParcel}
+            />;
+        })}
+    </div>;
+});
+
+const FruitListEditor = (props) => {
+    let {fruitListParcel} = props;
+    return <div>
+        <SortableFruitList
+            fruitListParcel={fruitListParcel}
+            onSortEnd={({oldIndex, newIndex}) => fruitListParcel.move(oldIndex, newIndex)}
+        />
+        <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
+    </div>;
+};
+
+export default FruitListParcelHoc(FruitListEditor);
+```
+
 ## With react-flip-move
 
-Dataparcels automatic keying plays nicely with [react-flip-move](https://github.com/joshwcomeau/react-flip-move).
+Dataparcels' automatic keying also plays nicely with [react-flip-move](https://github.com/joshwcomeau/react-flip-move).
 
 <EditingArraysFlipMove />
 
