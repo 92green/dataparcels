@@ -5,11 +5,13 @@ import updateChildKeys from './updateChildKeys';
 
 import unshift from 'unmutable/lib/unshift';
 
-export default (newValue: *) => (parcelData: ParcelData): ParcelData => {
+export default (...newValues: Array<*>) => (parcelData: ParcelData): ParcelData => {
     let {value, child, ...rest} = prepareChildKeys()(parcelData);
+    let emptyChildren = newValues.map(() => ({}));
+
     return updateChildKeys()({
         ...rest,
-        value: unshift(newValue)(value),
-        child: unshift({})(child)
+        value: unshift(...newValues)(value),
+        child: unshift(...emptyChildren)(child)
     });
 };

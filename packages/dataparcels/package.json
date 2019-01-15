@@ -19,11 +19,15 @@
   "scripts": {
     "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore **/*-test.js",
     "build-all": "yarn build",
+    "size": "size-limit",
     "watch": "yarn run build -w"
   },
   "dependencies": {
     "babel-runtime": "6.23.0",
     "escape-string-regexp": "^1.0.5",
     "unmutable": "^0.39.0"
+  },
+  "devDependencies": {
+    "size-limit": "^0.21.1"
   }
 }

@@ -49,11 +49,11 @@ const insertBeforeSelf: Function = (value: *): Action => {
     });
 };
 
-const push: Function = (value: *): Action => {
+const push: Function = (values: Array<*>): Action => {
     return new Action({
         type: "push",
         payload: {
-            value
+            values
         }
     });
 };
@@ -140,11 +140,11 @@ const swapSelf: Function = (keyB: Key|Index): Action => {
     });
 };
 
-const unshift: Function = (value: *): Action => {
+const unshift: Function = (values: Array<*>): Action => {
     return new Action({
         type: "unshift",
         payload: {
-            value
+            values
         }
     });
 };

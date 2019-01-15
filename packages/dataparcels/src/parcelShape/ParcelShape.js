@@ -187,13 +187,13 @@ export default class ParcelShape {
     // Indexed methods
     insertAfter = (key: Key|Index, value: any) => this._methods.insertAfter(key, value);
     insertBefore = (key: Key|Index, value: any) => this._methods.insertBefore(key, value);
-    push = (value: any) => this._methods.push(value);
+    push = (...values: Array<any>) => this._methods.push(...values);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
     swap = (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB);
     swapNext = (key: Key|Index) => this._methods.swapNext(key);
     swapPrev = (key: Key|Index) => this._methods.swapPrev(key);
-    unshift = (value: any) => this._methods.unshift(value);
+    unshift = (...values: Array<any>) => this._methods.unshift(...values);
 
     // Type methods
     isChild = (): boolean => this._parcelTypes.isChild();

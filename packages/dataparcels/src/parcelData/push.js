@@ -5,11 +5,13 @@ import updateChildKeys from './updateChildKeys';
 
 import push from 'unmutable/lib/push';
 
-export default (newValue: *) => (parcelData: ParcelData): ParcelData => {
+export default (...newValues: Array<*>) => (parcelData: ParcelData): ParcelData => {
     let {value, child, ...rest} = prepareChildKeys()(parcelData);
+    let emptyChildren = newValues.map(() => ({}));
+
     return updateChildKeys()({
         ...rest,
-        value: push(newValue)(value),
-        child: push({})(child)
+        value: push(...newValues)(value),
+        child: push(...emptyChildren)(child)
     });
 };

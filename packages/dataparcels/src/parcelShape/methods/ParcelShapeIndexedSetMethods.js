@@ -36,10 +36,10 @@ export default (_this: ParcelShape) => ({
         );
     },
 
-    push: (value: *): ParcelShape => {
+    push: (...values: Array<*>): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            push(value)
+            push(...values)
         );
     },
 
@@ -71,10 +71,10 @@ export default (_this: ParcelShape) => ({
         );
     },
 
-    unshift: (value: *): ParcelShape => {
+    unshift: (...values: Array<*>): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            unshift(value)
+            unshift(...values)
         );
     }
 });

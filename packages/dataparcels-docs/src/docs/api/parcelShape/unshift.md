@@ -1,3 +1,3 @@
 ```flow
-unshift(value: *): void // only on IndexedParcels
+unshift(...values: Array<*>): void // only on IndexedParcels
 ```
