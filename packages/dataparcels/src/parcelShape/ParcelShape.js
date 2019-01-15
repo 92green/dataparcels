@@ -187,6 +187,7 @@ export default class ParcelShape {
     // Indexed methods
     insertAfter = (key: Key|Index, value: any) => this._methods.insertAfter(key, value);
     insertBefore = (key: Key|Index, value: any) => this._methods.insertBefore(key, value);
+    move = (keyA: Key|Index, keyB: Key|Index) => this._methods.move(keyA, keyB);
     push = (...values: Array<any>) => this._methods.push(...values);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
