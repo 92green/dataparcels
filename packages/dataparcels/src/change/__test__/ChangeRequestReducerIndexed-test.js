@@ -23,6 +23,7 @@ let EXPECTED_KEY_AND_META = {
 [
     "insertAfter",
     "insertBefore",
+    "move",
     "swap",
     "swapNext",
     "swapPrev"
@@ -30,15 +31,6 @@ let EXPECTED_KEY_AND_META = {
     test(`Reducer ${type} action should return unchanged parcelData if keyPath is empty`, () => {
         expect(makeReducer(new Action({type}))(data)).toEqual(data);
     });
-});
-
-test('Reducer swap action should throw error if payload.swapKey doesnt exist', () => {
-    let action = new Action({
-        type: "swap",
-        keyPath: [0]
-    });
-
-    expect(() => makeReducer(action)(data)).toThrowError(`swap actions must have a swapKey in their payload`);
 });
 
 const TestIndex = (arr) => arr.map(({action, expectedData}) => {
@@ -234,6 +226,23 @@ TestIndex([
         expectedData: {
             value: [3,0,1,2],
             child: [{key: "#d"},{key: "#a"},{key: "#b"}, {key: "#c"}],
+            ...EXPECTED_KEY_AND_META
+        }
+    }
+]);
+
+TestIndex([
+    {
+        action: {
+            type: "move",
+            payload: {
+                moveKey: 0
+            },
+            keyPath: [2]
+        },
+        expectedData: {
+            value: [2,0,1],
+            child: [{key: "#c"},{key: "#a"}, {key: "#b"}],
             ...EXPECTED_KEY_AND_META
         }
     }

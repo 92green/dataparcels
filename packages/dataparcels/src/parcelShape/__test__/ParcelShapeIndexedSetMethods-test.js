@@ -17,6 +17,14 @@ test('ParcelShapes insertBefore(key, value) should work', () => {
     expect(staticParcel.insertBefore(0, 3).data.value).toEqual([3,0,1,2]);
 });
 
+test('ParcelShapes move() should work', () => {
+    let staticParcel = ParcelShape.fromData({
+        value: [0,1,2]
+    });
+
+    expect(staticParcel.move(2,0).data.value).toEqual([2,0,1]);
+});
+
 test('ParcelShapes push(value) should work', () => {
     let staticParcel = ParcelShape.fromData({
         value: [0,1,2]

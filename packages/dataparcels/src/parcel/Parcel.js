@@ -315,6 +315,10 @@ export default class Parcel {
         ["1"]: (value: any) => this._methods.insertBeforeSelf(value),
         ["2"]: (key: Key|Index, value: any) => this._methods.insertBefore(key, value)
     });
+    move = overload({
+        ["1"]: (key: Key|Index) => this._methods.moveSelf(key),
+        ["2"]: (keyA: Key|Index, keyB: Key|Index) => this._methods.move(keyA, keyB)
+    });
     push = (...values: Array<any>) => this._methods.push(...values);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();

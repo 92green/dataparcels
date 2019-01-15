@@ -10,12 +10,12 @@ import pipe from 'unmutable/lib/util/pipe';
 import composeWith from 'unmutable/lib/util/composeWith';
 
 import {ReducerInvalidActionError} from '../errors/Errors';
-import {ReducerSwapKeyError} from '../errors/Errors';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
+import move from '../parcelData/move';
 import pop from '../parcelData/pop';
 import push from '../parcelData/push';
 import setMeta from '../parcelData/setMeta';
@@ -31,18 +31,14 @@ const actionMap = {
     delete: ({lastKey}) => del(lastKey),
     insertAfter: ({lastKey, value}) => insertAfter(lastKey, value),
     insertBefore: ({lastKey, value}) => insertBefore(lastKey, value),
+    move: ({lastKey, moveKey}) => move(lastKey, moveKey),
     pop: () => pop(),
     push: ({values}) => push(...values),
     setData: parcelData => () => parcelData,
     setMeta: ({meta}) => setMeta(meta),
     set: ({value}) => setSelf(value),
     shift: () => shift(),
-    swap: ({lastKey, swapKey}: any): ParcelDataEvaluator => {
-        if(typeof swapKey === "undefined") {
-            throw ReducerSwapKeyError();
-        }
-        return swap(lastKey, swapKey);
-    },
+    swap: ({lastKey, swapKey}) => swap(lastKey, swapKey),
     swapNext: ({lastKey}) => swapNext(lastKey),
     swapPrev: ({lastKey}) => swapPrev(lastKey),
     unshift: ({values}) => unshift(...values)
@@ -52,6 +48,7 @@ const parentActionMap = {
     delete: true,
     insertAfter: true,
     insertBefore: true,
+    move: true,
     swap: true,
     swapNext: true,
     swapPrev: true

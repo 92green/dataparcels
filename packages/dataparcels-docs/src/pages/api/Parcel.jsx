@@ -33,6 +33,7 @@ import Markdown_delete from 'docs/api/parcel/delete.md';
 import Markdown_deleteIn from 'docs/api/parcel/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/parcel/insertAfter.md';
 import Markdown_insertBefore from 'docs/api/parcel/insertBefore.md';
+import Markdown_move from 'docs/api/parcel/move.md';
 import Markdown_pop from 'docs/api/parcel/pop.md';
 import Markdown_push from 'docs/api/parcel/push.md';
 import Markdown_shift from 'docs/api/parcel/shift.md';
@@ -95,6 +96,7 @@ const md = {
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
     insertBefore: Markdown_insertBefore,
+    move: Markdown_move,
     pop: Markdown_pop,
     push: Markdown_push,
     shift: Markdown_shift,
@@ -165,6 +167,7 @@ updateShapeIn()
 # Indexed & element change methods
 insertAfter()
 insertBefore()
+move()
 push()
 pop()
 shift()
