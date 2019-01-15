@@ -1,7 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 import map from 'unmutable/lib/map';
-import StaticParcel from '../../staticParcel/StaticParcel';
+import ParcelShape from '../../parcelShape/ParcelShape';
 
 test('ParentParcel.set(key) should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(1);
@@ -37,7 +37,7 @@ test('ParentParcel.update(key) should call the Parcels handleChange function wit
 });
 
 test('ParentParcel.updateShape(key) should call the Parcels handleChange function with the new parcelData', () => {
-    let updater = jest.fn(staticParcel => staticParcel.push(4));
+    let updater = jest.fn(parcelShape => parcelShape.push(4));
     let handleChange = jest.fn();
 
     new Parcel({
@@ -47,7 +47,7 @@ test('ParentParcel.updateShape(key) should call the Parcels handleChange functio
         handleChange
     }).updateShape("abc", updater);
 
-    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual({
         abc: [1,2,3,4]
     });
@@ -111,7 +111,7 @@ test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange functi
 });
 
 test('ParentParcel.updateShapeIn(keyPath) should call the Parcels handleChange function with the new parcelData', () => {
-    let updater = jest.fn(staticParcel => staticParcel.push(4));
+    let updater = jest.fn(parcelShape => parcelShape.push(4));
     let handleChange = jest.fn();
 
     new Parcel({
@@ -123,7 +123,7 @@ test('ParentParcel.updateShapeIn(keyPath) should call the Parcels handleChange f
         handleChange
     }).updateShapeIn(["abc", "def"], updater);
 
-    expect(updater.mock.calls[0][0] instanceof StaticParcel).toBe(true);
+    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual({
         abc: {
             def: [1,2,3,4]

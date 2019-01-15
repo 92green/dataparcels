@@ -1,9 +1,9 @@
 // @flow
-import StaticParcel from '../StaticParcel';
+import ParcelShape from '../ParcelShape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
-test('StaticParcels set() should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes set() should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             a: 1,
             b: 4
@@ -18,11 +18,11 @@ test('StaticParcels set() should work', () => {
         value: 456
     };
 
-    expect(staticParcel.set(456).data).toEqual(expectedData);
+    expect(parcelShape.set(456).data).toEqual(expectedData);
 });
 
-test('StaticParcels setMeta(partialMeta) should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes setMeta(partialMeta) should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: 123,
         meta: {
             abc: 123
@@ -37,13 +37,13 @@ test('StaticParcels setMeta(partialMeta) should work', () => {
         }
     };
 
-    expect(staticParcel.setMeta({def: 456}).data).toEqual(expectedData);
+    expect(parcelShape.setMeta({def: 456}).data).toEqual(expectedData);
 });
 
-test('StaticParcels setMeta(updater) should work', () => {
+test('ParcelShapes setMeta(updater) should work', () => {
     let updater = jest.fn(meta => ({def: 456}));
 
-    let staticParcel = StaticParcel.fromData({
+    let parcelShape = ParcelShape.fromData({
         value: 123,
         meta: {
             abc: 123
@@ -58,7 +58,7 @@ test('StaticParcels setMeta(updater) should work', () => {
         }
     };
 
-    let {data} = staticParcel.setMeta(updater);
+    let {data} = parcelShape.setMeta(updater);
 
     expect(updater.mock.calls[0][0]).toEqual({
         abc: 123
@@ -67,8 +67,8 @@ test('StaticParcels setMeta(updater) should work', () => {
     expect(data).toEqual(expectedData);
 });
 
-test('StaticParcels update() should work', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes update() should work', () => {
+    let parcelShape = ParcelShape.fromData({
         value: 123
     });
 
@@ -76,18 +76,18 @@ test('StaticParcels update() should work', () => {
         value: 124
     };
 
-    expect(staticParcel.update(ii => ii + 1).data).toEqual(expectedData);
+    expect(parcelShape.update(ii => ii + 1).data).toEqual(expectedData);
 });
 
-test('StaticParcels update() should validate value updater', () => {
+test('ParcelShapes update() should validate value updater', () => {
     TestValidateValueUpdater(
         expect,
-        (value, updater) => new StaticParcel(value).update(updater)
+        (value, updater) => new ParcelShape(value).update(updater)
     );
 });
 
-test('StaticParcels updateShape() should work with returned StaticParcel', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateShape() should work with returned ParcelShape', () => {
+    let parcelShape = ParcelShape.fromData({
         value: 123,
         meta: {
             abc: 789
@@ -103,11 +103,11 @@ test('StaticParcels updateShape() should work with returned StaticParcel', () =>
         key: "z"
     };
 
-    expect(staticParcel.updateShape(staticParcel => staticParcel.set(456)).data).toEqual(expectedData);
+    expect(parcelShape.updateShape(parcelShape => parcelShape.set(456)).data).toEqual(expectedData);
 });
 
-test('StaticParcels updateShape() should work with returned primitive', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateShape() should work with returned primitive', () => {
+    let parcelShape = ParcelShape.fromData({
         value: 123,
         meta: {
             abc: 789
@@ -123,11 +123,11 @@ test('StaticParcels updateShape() should work with returned primitive', () => {
         key: "z"
     };
 
-    expect(staticParcel.updateShape(() => 456).data).toEqual(expectedData);
+    expect(parcelShape.updateShape(() => 456).data).toEqual(expectedData);
 });
 
-test('StaticParcels updateShape() should work with returned parent value', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateShape() should work with returned parent value', () => {
+    let parcelShape = ParcelShape.fromData({
         value: [1,2,3],
         meta: {
             abc: 789
@@ -148,8 +148,8 @@ test('StaticParcels updateShape() should work with returned parent value', () =>
         key: "z"
     };
 
-    let {data} = staticParcel.updateShape((staticParcel) => {
-        return staticParcel
+    let {data} = parcelShape.updateShape((parcelShape) => {
+        return parcelShape
             .children()
             .map((child => child.update(value => value + 1)))
     });
@@ -157,8 +157,8 @@ test('StaticParcels updateShape() should work with returned parent value', () =>
     expect(data).toEqual(expectedData);
 });
 
-test('StaticParcels updateShape() should work with returned parent value of different type', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateShape() should work with returned parent value of different type', () => {
+    let parcelShape = ParcelShape.fromData({
         value: {
             abc: 123,
             def: 456
@@ -184,13 +184,13 @@ test('StaticParcels updateShape() should work with returned parent value of diff
         key: "z"
     };
 
-    let {data} = staticParcel.updateShape((staticParcel) => staticParcel.toArray());
+    let {data} = parcelShape.updateShape((parcelShape) => parcelShape.toArray());
 
     expect(data).toEqual(expectedData);
 });
 
-test('StaticParcels updateShape() should retain childs keys', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateShape() should retain childs keys', () => {
+    let parcelShape = ParcelShape.fromData({
         value: ["a","b","c","d"],
         child: [
             {key: "#a", child: undefined},
@@ -208,8 +208,8 @@ test('StaticParcels updateShape() should retain childs keys', () => {
         ]
     };
 
-    let {data} = staticParcel.updateShape((staticParcel) => {
-        return staticParcel
+    let {data} = parcelShape.updateShape((parcelShape) => {
+        return parcelShape
             .toArray()
             .filter((value, key) => key % 2 === 1)
     });
@@ -217,14 +217,14 @@ test('StaticParcels updateShape() should retain childs keys', () => {
     expect(data).toEqual(expectedData);
 });
 
-test('StaticParcels updateShape() should throw error if non staticparcel is a child of the return value', () => {
-    let staticParcel = StaticParcel.fromData({
+test('ParcelShapes updateShape() should throw error if non ParcelShape is a child of the return value', () => {
+    let parcelShape = ParcelShape.fromData({
         value: [123, 456]
     });
 
-    expect(() => staticParcel.updateShape((staticParcel) => {
-        let arr = staticParcel.toArray();
+    expect(() => parcelShape.updateShape((parcelShape) => {
+        let arr = parcelShape.toArray();
         arr.push(789);
         return arr;
-    })).toThrow('Every child value on a collection returned from a shape updater must be a StaticParcel');
+    })).toThrow('Every child value on a collection returned from a shape updater must be a ParcelShape');
 });

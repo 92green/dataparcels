@@ -1,7 +1,7 @@
 // @flow
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
-import type StaticParcel from '../StaticParcel';
+import type ParcelShape from '../ParcelShape';
 
 import insertAfter from '../../parcelData/insertAfter';
 import insertBefore from '../../parcelData/insertBefore';
@@ -13,65 +13,65 @@ import swapNext from '../../parcelData/swapNext';
 import swapPrev from '../../parcelData/swapPrev';
 import unshift from '../../parcelData/unshift';
 
-export default (_this: StaticParcel) => ({
+export default (_this: ParcelShape) => ({
 
-    insertAfter: (key: Key|Index, value: *): StaticParcel => {
+    insertAfter: (key: Key|Index, value: *): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             insertAfter(key, value)
         );
     },
 
-    insertBefore: (key: Key|Index, value: *): StaticParcel => {
+    insertBefore: (key: Key|Index, value: *): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             insertBefore(key, value)
         );
     },
 
-    pop: (): StaticParcel => {
+    pop: (): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             pop()
         );
     },
 
-    push: (...values: Array<*>): StaticParcel => {
+    push: (...values: Array<*>): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             push(...values)
         );
     },
 
-    shift: (): StaticParcel => {
+    shift: (): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             shift()
         );
     },
 
-    swap: (keyA: Key|Index, keyB: Key|Index): StaticParcel => {
+    swap: (keyA: Key|Index, keyB: Key|Index): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             swap(keyA, keyB)
         );
     },
 
-    swapNext: (key: Key|Index): StaticParcel => {
+    swapNext: (key: Key|Index): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             swapNext(key)
         );
     },
 
-    swapPrev: (key: Key|Index): StaticParcel => {
+    swapPrev: (key: Key|Index): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             swapPrev(key)
         );
     },
 
-    unshift: (...values: Array<*>): StaticParcel => {
+    unshift: (...values: Array<*>): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             unshift(...values)

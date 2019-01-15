@@ -3,10 +3,10 @@ import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type {ParentType} from '../types/Types';
-import type {StaticParcelValueUpdater} from '../types/Types';
-import type {StaticParcelConfigInternal} from '../types/Types';
-import type {StaticParcelUpdater} from '../types/Types';
-import type {StaticParcelSetMeta} from '../types/Types';
+import type {ParcelShapeValueUpdater} from '../types/Types';
+import type {ParcelShapeConfigInternal} from '../types/Types';
+import type {ParcelShapeUpdater} from '../types/Types';
+import type {ParcelShapeSetMeta} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
@@ -14,10 +14,10 @@ import {ReadOnlyError} from '../errors/Errors';
 import ParcelTypes from '../parcel/ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
 
-import StaticParentGetMethods from './methods/StaticParentGetMethods';
-import StaticParentSetMethods from './methods/StaticParentSetMethods';
-import StaticSetMethods from './methods/StaticSetMethods';
-import StaticIndexedSetMethods from './methods/StaticIndexedSetMethods';
+import ParcelShapeParentGetMethods from './methods/ParcelShapeParentGetMethods';
+import ParcelShapeParentSetMethods from './methods/ParcelShapeParentSetMethods';
+import ParcelShapeSetMethods from './methods/ParcelShapeSetMethods';
+import ParcelShapeIndexedSetMethods from './methods/ParcelShapeIndexedSetMethods';
 
 import FilterMethods from '../util/FilterMethods';
 
@@ -26,8 +26,8 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 
-export default class StaticParcel {
-    constructor(value: any, _configInternal: ?StaticParcelConfigInternal) {
+export default class ParcelShape {
+    constructor(value: any, _configInternal: ?ParcelShapeConfigInternal) {
         this._parcelData = {
             value
         };
@@ -50,13 +50,13 @@ export default class StaticParcel {
         // methods
         this._methods = {
             // $FlowFixMe
-            ...FilterMethods("Parent", StaticParentGetMethods)(this),
+            ...FilterMethods("Parent", ParcelShapeParentGetMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Parent", StaticParentSetMethods)(this),
+            ...FilterMethods("Parent", ParcelShapeParentSetMethods)(this),
             // $FlowFixMe
-            ...StaticSetMethods(this),
+            ...ParcelShapeSetMethods(this),
             // $FlowFixMe
-            ...FilterMethods("Indexed", StaticIndexedSetMethods)(this)
+            ...FilterMethods("Indexed", ParcelShapeIndexedSetMethods)(this)
         };
     }
 
@@ -67,28 +67,28 @@ export default class StaticParcel {
     // from constructor
     _id: ParcelId;
     _methods: { [key: string]: any };
-    _parent: ?StaticParcel;
+    _parent: ?ParcelShape;
     _parcelData: ParcelData;
     _parcelTypes: ParcelTypes;
 
-    static _updateFromData(updater: StaticParcelUpdater): Function {
-        return (parcelData: ParcelData): ParcelData => StaticParcel
+    static _updateFromData(updater: ParcelShapeUpdater): Function {
+        return (parcelData: ParcelData): ParcelData => ParcelShape
             .fromData(parcelData)
             .updateShape(updater)
             .data;
     }
 
-    // only need this to reference static methods on StaticParcel
+    // only need this to reference static methods on ParcelShape
     // without creating circular dependencies
-    _instanceUpdateFromData = StaticParcel._updateFromData;
+    _instanceUpdateFromData = ParcelShape._updateFromData;
 
-    _pipeSelf = (fn: Function, _configInternal: ?StaticParcelConfigInternal): StaticParcel => pipeWith(
+    _pipeSelf = (fn: Function, _configInternal: ?ParcelShapeConfigInternal): ParcelShape => pipeWith(
         this._parcelData,
         fn,
-        data => StaticParcel.fromData(data, _configInternal)
+        data => ParcelShape.fromData(data, _configInternal)
     );
 
-    _isStaticParcel = (maybe: any): boolean => maybe instanceof StaticParcel;
+    _isParcelShape = (maybe: any): boolean => maybe instanceof ParcelShape;
 
     _prepareChildKeys = () => {
         // prepare child keys only once per parcel instance
@@ -148,41 +148,41 @@ export default class StaticParcel {
     // public methods
     //
 
-    static fromData(parcelData: ParcelData, _configInternal: ?StaticParcelConfigInternal): StaticParcel {
-        Types(`StaticParcel()`, `fromData`, `parcelData`)(parcelData);
-        let staticParcel = new StaticParcel(parcelData.value, _configInternal);
-        staticParcel._parcelData = parcelData;
-        return staticParcel;
+    static fromData(parcelData: ParcelData, _configInternal: ?ParcelShapeConfigInternal): ParcelShape {
+        Types(`ParcelShape()`, `fromData`, `parcelData`)(parcelData);
+        let parcelShape = new ParcelShape(parcelData.value, _configInternal);
+        parcelShape._parcelData = parcelData;
+        return parcelShape;
     }
 
     // Parent methods
     has = (key: Key|Index): boolean => this._methods.has(key);
     size = (): number => this._methods.size();
-    get = (key: Key|Index, notFoundValue: ?any = undefined): StaticParcel => this._methods.get(key, notFoundValue);
-    getIn = (keyPath: Array<Key|Index>, notFoundValue: ?any = undefined): StaticParcel => this._methods.getIn(keyPath, notFoundValue);
-    children = (): ParentType<StaticParcel> => this._methods.children();
-    toObject = (): { [key: string]: StaticParcel } => this._methods.toObject();
-    toArray = (): Array<StaticParcel> => this._methods.toArray();
+    get = (key: Key|Index, notFoundValue: ?any = undefined): ParcelShape => this._methods.get(key, notFoundValue);
+    getIn = (keyPath: Array<Key|Index>, notFoundValue: ?any = undefined): ParcelShape => this._methods.getIn(keyPath, notFoundValue);
+    children = (): ParentType<ParcelShape> => this._methods.children();
+    toObject = (): { [key: string]: ParcelShape } => this._methods.toObject();
+    toArray = (): Array<ParcelShape> => this._methods.toArray();
 
     // Change methods
     set = overload({
         ["1"]: (value: any) => this._methods.setSelf(value),
         ["2"]: (key: Key|Index, value: any) => this.setIn([key], value)
     });
-    setMeta = (partialMeta: StaticParcelSetMeta) => this._methods.setMeta(partialMeta);
+    setMeta = (partialMeta: ParcelShapeSetMeta) => this._methods.setMeta(partialMeta);
     setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
     delete = (key: Key|Index) => this.deleteIn([key]);
     deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
     update = overload({
-        ["1"]: (updater: StaticParcelValueUpdater): StaticParcel => this._methods.update(updater),
-        ["2"]: (key: Key|Index, updater: StaticParcelValueUpdater): StaticParcel => this.updateIn([key], updater)
+        ["1"]: (updater: ParcelShapeValueUpdater): ParcelShape => this._methods.update(updater),
+        ["2"]: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => this.updateIn([key], updater)
     });
     updateShape = overload({
-        ["1"]: (updater: StaticParcelUpdater): StaticParcel => this._methods.updateShape(updater),
-        ["2"]: (key: Key|Index, updater: StaticParcelUpdater): StaticParcel => this.updateShapeIn([key], updater)
+        ["1"]: (updater: ParcelShapeUpdater): ParcelShape => this._methods.updateShape(updater),
+        ["2"]: (key: Key|Index, updater: ParcelShapeUpdater): ParcelShape => this.updateShapeIn([key], updater)
     });
-    updateIn = (keyPath: Array<Key|Index>, updater: StaticParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
-    updateShapeIn = (keyPath: Array<Key|Index>, updater: StaticParcelValueUpdater) => this._methods.updateShapeIn(keyPath, updater);
+    updateIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateIn(keyPath, updater);
+    updateShapeIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateShapeIn(keyPath, updater);
 
     // Indexed methods
     insertAfter = (key: Key|Index, value: any) => this._methods.insertAfter(key, value);

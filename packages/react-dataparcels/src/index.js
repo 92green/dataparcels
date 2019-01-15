@@ -9,7 +9,7 @@ export default dataparcels;
 
 export {Action} from 'dataparcels';
 export {ChangeRequest} from 'dataparcels';
-export {StaticParcel} from 'dataparcels';
+export {ParcelShape} from 'dataparcels';
 export {DeletedParcelMarker} from 'dataparcels';
 
 //
@@ -26,11 +26,11 @@ export type {ParcelBatcher} from 'dataparcels';
 export type {ParcelMapper} from 'dataparcels';
 export type {ParcelUpdater} from 'dataparcels';
 export type {ParcelValueUpdater} from 'dataparcels';
+export type {ParcelShapeUpdater} from 'dataparcels';
 
-export type {StaticParcelSetMeta} from 'dataparcels';
-export type {StaticParcelUpdater} from 'dataparcels';
-export type {StaticParcelValueUpdater} from 'dataparcels';
-export type {StaticParcelConfigInternal} from 'dataparcels';
+export type {ParcelShapeSetMeta} from 'dataparcels';
+export type {ParcelShapeValueUpdater} from 'dataparcels';
+export type {ParcelShapeConfigInternal} from 'dataparcels';
 
 export type {Key} from 'dataparcels';
 export type {Index} from 'dataparcels';

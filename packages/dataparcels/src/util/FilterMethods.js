@@ -1,11 +1,11 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
-import type StaticParcel from '../staticParcel/StaticParcel';
+import type ParcelShape from '../parcelShape/ParcelShape';
 
 import map from 'unmutable/lib/map';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (parcelType: string, methodCreator: Function) => (parcel: Parcel|StaticParcel, ...args: Array<*>): { [key: string]: Function } => {
+export default (parcelType: string, methodCreator: Function) => (parcel: Parcel|ParcelShape, ...args: Array<*>): { [key: string]: Function } => {
     let methods: { [key: string]: Function } = methodCreator(parcel, ...args);
 
     // $FlowFixMe - I want to do this

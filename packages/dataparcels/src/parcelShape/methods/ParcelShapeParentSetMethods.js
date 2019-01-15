@@ -1,9 +1,9 @@
 // @flow
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
-import type {StaticParcelUpdater} from '../../types/Types';
-import type {StaticParcelValueUpdater} from '../../types/Types';
-import type StaticParcel from '../StaticParcel';
+import type {ParcelShapeUpdater} from '../../types/Types';
+import type {ParcelShapeValueUpdater} from '../../types/Types';
+import type ParcelShape from '../ParcelShape';
 
 import parcelDelete from '../../parcelData/delete';
 import parcelSetSelf from '../../parcelData/setSelf';
@@ -13,16 +13,16 @@ import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 import butLast from 'unmutable/lib/butLast';
 import last from 'unmutable/lib/last';
 
-export default (_this: StaticParcel) => ({
+export default (_this: ParcelShape) => ({
 
-    setIn: (keyPath: Array<Key|Index>, value: any): StaticParcel => {
+    setIn: (keyPath: Array<Key|Index>, value: any): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             parcelUpdateIn(keyPath, parcelSetSelf(value))
         );
     },
 
-    deleteIn: (keyPath: Array<Key|Index>): StaticParcel => {
+    deleteIn: (keyPath: Array<Key|Index>): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             parcelUpdateIn(
@@ -32,7 +32,7 @@ export default (_this: StaticParcel) => ({
         );
     },
 
-    updateIn: (keyPath: Array<Key|Index>, updater: StaticParcelValueUpdater): StaticParcel => {
+    updateIn: (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             parcelUpdateIn(
@@ -47,7 +47,7 @@ export default (_this: StaticParcel) => ({
         );
     },
 
-    updateShapeIn: (keyPath: Array<Key|Index>, updater: StaticParcelUpdater): StaticParcel => {
+    updateShapeIn: (keyPath: Array<Key|Index>, updater: ParcelShapeUpdater): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
             parcelUpdateIn(

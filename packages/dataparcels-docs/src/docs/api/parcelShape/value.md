@@ -4,4 +4,4 @@ import IndexedKeys from 'docs/notes/IndexedKeys.md';
 value: any
 ```
 
-Returns the StaticParcel's value.
+Returns the ParcelShape's value.
