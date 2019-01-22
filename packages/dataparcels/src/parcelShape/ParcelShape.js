@@ -10,6 +10,7 @@ import type {ParcelShapeSetMeta} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
+import {ShapeUpdaterUndefinedError} from '../errors/Errors';
 
 import ParcelTypes from '../parcel/ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
@@ -76,6 +77,21 @@ export default class ParcelShape {
             .fromData(parcelData)
             .updateShape(updater)
             .data;
+    }
+
+    static _updateFromDataUnlessUndefined(updater: ParcelShapeUpdater): Function {
+        return (parcelData: ParcelData): ParcelData => {
+            let parcelShape: ParcelShape = ParcelShape.fromData(parcelData);
+
+            let updated: any = updater(parcelShape);
+            if(updated === undefined) {
+                throw ShapeUpdaterUndefinedError();
+            }
+
+            return parcelShape
+                .updateShape(() => updated)
+                .data;
+        };
     }
 
     // only need this to reference static methods on ParcelShape
