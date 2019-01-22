@@ -105,6 +105,32 @@ test('Parcel.updateShape() should call the Parcels handleChange function with th
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
 
+test('Parcel.updateShape() should work with a returned primitive', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(() => 123);
+
+    new Parcel({
+        value: [1,2,3],
+        handleChange
+    }).updateShape(updater);
+
+    expect(handleChange.mock.calls[0][0].data.value).toEqual(123);
+});
+
+test('Parcel.updateShape() should work with a returned collection containing parcels for children', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(parcelShape => parcelShape.children().reverse());
+
+    new Parcel({
+        value: [1,2,3],
+        handleChange
+    }).updateShape(updater);
+
+    expect(handleChange.mock.calls[0][0].data.value).toEqual([3,2,1]);
+});
+
 test('Parcel.onChange() should work like set that only accepts a single argument', () => {
     expect.assertions(2);
 

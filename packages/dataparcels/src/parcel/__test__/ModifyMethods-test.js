@@ -37,6 +37,16 @@ test('Parcel.modifyDown() should allow non-parent types to be returned', () => {
     expect(updatedValue).toEqual(124);
 });
 
+test('Parcel.modifyDown() should allow undefined to be returned (unlike modifyShapeUp)', () => {
+    let updatedValue = new Parcel({
+        value: 123
+    })
+        .modifyDown(() => {})
+        .value;
+
+    expect(updatedValue).toEqual(undefined);
+});
+
 test('Parcel.modifyDown() should validate value updater', () => {
     TestValidateValueUpdater(
         expect,
@@ -126,6 +136,17 @@ test('Parcel.modifyUp() should allow you to change the payload of a changed parc
     expect(handleChange.mock.calls[0][0].value).toBe(457);
 });
 
+test('Parcel.modifyUp() should allow you to change the payload of a changed parcel to undefined (unlike modifyShapeUp)', () => {
+    var handleChange = jest.fn();
+    new Parcel({
+        value: 123,
+        handleChange
+    })
+        .modifyUp(() => {})
+        .onChange(456);
+
+    expect(handleChange.mock.calls[0][0].value).toBe(undefined);
+});
 
 test('Parcel.modifyUp() should validate value updater', () => {
     TestValidateValueUpdater(
@@ -166,15 +187,13 @@ test('Parcel.modifyShapeDown() should be called with parcelShape and return with
         value: [1,2,3]
     });
 
-    let {value} = parcel
-        .modifyShapeDown(updater)
-        .data;
+    let modifiedParcel = parcel.modifyShapeDown(updater);
+    modifiedParcel.push(4);
 
-    let expectedValue = [1,2,3];
-
-    expect(value).toEqual(expectedValue);
+    expect(modifiedParcel.value).toEqual([1,2,3]);
     expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
-    expect(updater.mock.calls[0][0].data.value).toEqual(expectedValue);
+    expect(updater.mock.calls[0][0].data.value).toEqual([1,2,3]);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
 
 test('Parcel.modifyShapeDown() should modify value', () => {
@@ -187,12 +206,67 @@ test('Parcel.modifyShapeDown() should modify value', () => {
         value: [1,2,3]
     });
 
-    let parcelWithModifier = parcel.modifyShapeDown(updater);
-    let {value} = parcelWithModifier.data;
-    parcelWithModifier.push(5);
+     let modifiedParcel = parcel.modifyShapeDown(updater);
+    modifiedParcel.push(5);
 
-    expect(value).toEqual([1,2,3,4]);
+    expect(modifiedParcel.value).toEqual([1,2,3,4]);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4,5]);
+
+});
+
+test('Parcel.modifyShapeDown() should work with a returned primitive', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(() => "!!!");
+
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    });
+
+    let modifiedParcel = parcel.modifyShapeDown(updater);
+    modifiedParcel.set(456)
+
+    expect(modifiedParcel.value).toEqual("!!!");
+    expect(handleChange.mock.calls[0][0].data.value).toEqual(456);
+});
+
+test('Parcel.modifyShapeDown() should work with a returned undefined (unlike modifyShapeUp)', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(() => {});
+
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    });
+
+    let modifiedParcel = parcel.modifyShapeDown(updater);
+    modifiedParcel.set(456)
+
+    let expectedValue = undefined;
+
+    expect(modifiedParcel.value).toEqual(expectedValue);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual(456);
+});
+
+test('Parcel.modifyShapeDown() should work with a returned collection containing parcels for children', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(parcelShape => parcelShape.children().reverse());
+
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    });
+
+    let modifiedParcel = parcel.modifyShapeDown(updater);
+    modifiedParcel.push(4);
+
+    let expectedValue = [3,2,1];
+
+    expect(modifiedParcel.value).toEqual(expectedValue);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual([3,2,1,4]);
 });
 
 test('Parcel.modifyShapeUp() should be called with parcelShape and return with no change', () => {
@@ -215,6 +289,7 @@ test('Parcel.modifyShapeUp() should be called with parcelShape and return with n
 
     expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(updater.mock.calls[0][0].data.value).toEqual(456);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual(456);
 });
 
 test('Parcel.modifyShapeUp() should modify value', () => {
@@ -228,16 +303,59 @@ test('Parcel.modifyShapeUp() should modify value', () => {
     });
 
     let parcelWithModifier = parcel.modifyShapeUp(updater);
-    let {value} = parcelWithModifier.data;
-
-    expect(value).toEqual([1,2,3]);
-    expect(updater).not.toHaveBeenCalled();
-
     parcelWithModifier.push(4);
 
-    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4,5]);
 });
+
+test('Parcel.modifyShapeUp() should work with a returned primitive', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(() => 123);
+
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    });
+
+    let parcelWithModifier = parcel.modifyShapeUp(updater);
+    parcelWithModifier.push(4);
+
+    expect(handleChange.mock.calls[0][0].data.value).toEqual(123);
+});
+
+test('Parcel.modifyShapeUp() should work with a returned collection containing parcels for children', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(parcelShape => parcelShape.children().reverse());
+
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    });
+
+    let parcelWithModifier = parcel.modifyShapeUp(updater);
+    parcelWithModifier.push(4);
+
+    expect(handleChange.mock.calls[0][0].data.value).toEqual([4,3,2,1]);
+});
+
+test('Parcel.modifyShapeUp() should STOP propagating a change if undefined is returned', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(() => {});
+
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    });
+
+    let parcelWithModifier = parcel.modifyShapeUp(updater);
+    parcelWithModifier.push(4);
+
+    expect(handleChange).not.toHaveBeenCalled();
+});
+
 
 test('Parcel.initialMeta() should work', () => {
     let handleChange = jest.fn();
