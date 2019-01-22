@@ -8,6 +8,7 @@ import type {ParcelShapeUpdater} from '../../types/Types';
 import Types from '../../types/Types';
 import ParcelShape from '../../parcelShape/ParcelShape';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
+import {ShapeUpdaterUndefinedError} from '../../errors/Errors';
 
 import ParcelTypes from '../ParcelTypes';
 import HashString from '../../util/HashString';
@@ -90,12 +91,20 @@ export default (_this: Parcel): Object => ({
     modifyShapeUp: (updater: ParcelShapeUpdater): Parcel => {
         Types(`modifyShapeUp()`, `updater`, `function`)(updater);
 
-        let shapeUpdater = ParcelShape._updateFromData(updater);
+        let shapeUpdater = ParcelShape._updateFromDataUnlessUndefined(updater);
 
         return _this._create({
             id: _this._id.pushModifier(`mu-${HashFunction(updater)}`),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(shapeUpdater));
+                let changeRequestWithBase = changeRequest._setBaseParcel(_this);
+                try {
+                    shapeUpdater(changeRequestWithBase.nextData);
+                    _this.dispatch(changeRequest._addPost(shapeUpdater));
+                } catch(e) {
+                    if(e.message !== ShapeUpdaterUndefinedError().message) {
+                        throw e;
+                    }
+                }
             }
         });
     },
