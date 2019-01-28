@@ -1,8 +1,9 @@
 // @flow
-import React from 'react';
 import type {Node} from 'react';
+import type ChangeRequest from 'dataparcels/ChangeRequest';
+
+import React from 'react';
 import Parcel from 'dataparcels';
-import type {ChangeRequest} from 'dataparcels';
 
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 import shallowEquals from 'unmutable/lib/shallowEquals';
