@@ -78,28 +78,6 @@ test('Parcel.spreadDOM(notFoundValue) returns an object with notFoundValue', () 
     expect(parcel3.spreadDOM("???").value).toBe("123");
 });
 
-test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', () => {
-    expect.assertions(6);
-
-    let p = new Parcel({
-        value: {
-            abc: 123,
-            def: 456
-        },
-        handleChange: (p2) => {
-            expect(p2.hasDispatched()).toBe(true);
-            expect(p2.get('abc').hasDispatched()).toBe(true);
-            expect(p2.get('def').hasDispatched()).toBe(false);
-        }
-    });
-
-    expect(p.hasDispatched()).toBe(false);
-    expect(p.get('abc').hasDispatched()).toBe(false);
-    expect(p.get('def').hasDispatched()).toBe(false);
-
-    p.get('abc').onChange(789);
-});
-
 test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', () => {
 
     let p = new Parcel({
