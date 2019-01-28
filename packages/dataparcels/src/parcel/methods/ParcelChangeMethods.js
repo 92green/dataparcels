@@ -2,12 +2,10 @@
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
-import type {ParcelShapeUpdater} from '../../types/Types';
+import type {ParcelShapeUpdateFunction} from '../../types/Types';
 import Types from '../../types/Types';
 
-import ChangeRequest from '../../change/ChangeRequest';
 import ActionCreators from '../../change/ActionCreators';
-import ParcelShape from '../../parcelShape/ParcelShape';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 export default (_this: Parcel, dispatch: Function) => ({
@@ -16,19 +14,19 @@ export default (_this: Parcel, dispatch: Function) => ({
         dispatch(ActionCreators.setSelf(value));
     },
 
-    updateSelf: (updater: ParcelValueUpdater) => {
+    updateSelf: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => {
         Types(`updateSelf()`, `updater`, `function`)(updater);
+        if(updater._isParcelUpdater) {
+            // $FlowFixMe - this branch should only be hit with ParcelShapeUpdateFunction
+            let updated = updater(_this._parcelData);
+            dispatch(ActionCreators.setData(updated));
+            return;
+        }
+
         let {value} = _this;
         let updatedValue = updater(value, _this);
         ValidateValueUpdater(value, updatedValue);
         _this.set(updatedValue);
-    },
-
-    updateSelfShape: (updater: ParcelShapeUpdater) => {
-        Types(`updateSelfShape()`, `updater`, `function`)(updater);
-        let parcelShapeUpdater = ParcelShape._updateFromData(updater);
-        let updated = parcelShapeUpdater(_this._parcelData);
-        dispatch(ActionCreators.setData(updated));
     },
 
     onChange: _this.set,

@@ -36,7 +36,7 @@ test('ParentParcel.update(key) should call the Parcels handleChange function wit
     });
 });
 
-test('ParentParcel.updateShape(key) should call the Parcels handleChange function with the new parcelData', () => {
+test('ParentParcel.update(key, parcelShapeUpdater) should call the Parcels handleChange function with the new parcelData', () => {
     let updater = jest.fn(parcelShape => parcelShape.push(4));
     let handleChange = jest.fn();
 
@@ -45,7 +45,7 @@ test('ParentParcel.updateShape(key) should call the Parcels handleChange functio
             abc: [1,2,3]
         },
         handleChange
-    }).updateShape("abc", updater);
+    }).update("abc", ParcelShape.update(updater));
 
     expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual({
@@ -110,7 +110,7 @@ test('ParentParcel.updateIn(keyPath) should call the Parcels handleChange functi
     });
 });
 
-test('ParentParcel.updateShapeIn(keyPath) should call the Parcels handleChange function with the new parcelData', () => {
+test('ParentParcel.updateIn(keyPath, parcelShapeUpdater) should call the Parcels handleChange function with the new parcelData', () => {
     let updater = jest.fn(parcelShape => parcelShape.push(4));
     let handleChange = jest.fn();
 
@@ -121,7 +121,7 @@ test('ParentParcel.updateShapeIn(keyPath) should call the Parcels handleChange f
             }
         },
         handleChange
-    }).updateShapeIn(["abc", "def"], updater);
+    }).updateIn(["abc", "def"], ParcelShape.update(updater));
 
     expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual({

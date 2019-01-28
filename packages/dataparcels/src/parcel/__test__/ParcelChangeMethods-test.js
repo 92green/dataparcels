@@ -91,7 +91,7 @@ test('Parcel.update() should validate value updater', () => {
     );
 });
 
-test('Parcel.updateShape() should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.update(parcelShape) should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(parcelShape => parcelShape.push(4));
@@ -99,13 +99,13 @@ test('Parcel.updateShape() should call the Parcels handleChange function with th
     new Parcel({
         value: [1,2,3],
         handleChange
-    }).updateShape(updater);
+    }).update(ParcelShape.update(updater));
 
     expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
 
-test('Parcel.updateShape() should work with a returned primitive', () => {
+test('Parcel.update(parcelShape) should work with a returned primitive', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(() => 123);
@@ -113,12 +113,12 @@ test('Parcel.updateShape() should work with a returned primitive', () => {
     new Parcel({
         value: [1,2,3],
         handleChange
-    }).updateShape(updater);
+    }).update(ParcelShape.update(updater));
 
     expect(handleChange.mock.calls[0][0].data.value).toEqual(123);
 });
 
-test('Parcel.updateShape() should work with a returned collection containing parcels for children', () => {
+test('Parcel.update(parcelShape) should work with a returned collection containing parcels for children', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(parcelShape => parcelShape.children().reverse());
@@ -126,7 +126,7 @@ test('Parcel.updateShape() should work with a returned collection containing par
     new Parcel({
         value: [1,2,3],
         handleChange
-    }).updateShape(updater);
+    }).update(ParcelShape.update(updater));
 
     expect(handleChange.mock.calls[0][0].data.value).toEqual([3,2,1]);
 });
@@ -243,21 +243,5 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
         }
     }).setMeta({
         abc: 123
-    });
-});
-
-test('Parcel.setChangeRequestMeta() should set change request meta', () => {
-    var data = {
-        value: 123,
-        handleChange: (parcel, changeRequest) => {
-            expect({a: 3, b: 2}).toEqual(changeRequest.changeRequestMeta);
-        }
-    };
-
-    var parcel = new Parcel(data).batch(parcel => {
-        parcel.setChangeRequestMeta({a: 1});
-        parcel.onChange(456);
-        parcel.setChangeRequestMeta({b: 2});
-        parcel.setChangeRequestMeta({a: 3});
     });
 });
