@@ -1,15 +1,19 @@
 // @flow
 import type ChangeRequest from './ChangeRequest';
 import type Action from './Action';
+import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
 import butLast from 'unmutable/lib/butLast';
 import identity from 'unmutable/lib/identity';
 import last from 'unmutable/lib/last';
 import pipe from 'unmutable/lib/util/pipe';
+import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
 
 import {ReducerInvalidActionError} from '../errors/Errors';
+
+import {IsReducerCancelAction} from './ReducerCancelAction';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
@@ -86,8 +90,26 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
     );
 };
 
-export default (changeRequest: ChangeRequest): ParcelDataEvaluator => pipe(
-    ...changeRequest
-        .actions()
-        .map(doDeepAction)
-);
+export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?ParcelData => {
+    let cancelled = 0;
+    let actions = changeRequest.actions();
+
+    let newParcelData = pipeWith(
+        parcelData,
+        ...actions.map((action): ParcelDataEvaluator => (parcelData: ParcelData): ParcelData => {
+            try {
+                return doDeepAction(action)(parcelData);
+            } catch(e) {
+                if(IsReducerCancelAction(e)) {
+                    cancelled++;
+                    return parcelData;
+                }
+                throw e;
+            }
+        })
+    );
+
+    return cancelled > 0 && cancelled === actions.length
+        ? undefined
+        : newParcelData;
+};
