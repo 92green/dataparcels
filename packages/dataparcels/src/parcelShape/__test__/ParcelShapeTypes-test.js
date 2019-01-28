@@ -132,50 +132,40 @@ test('ParcelShapeTypes should correctly identify element values with getIn', () 
     expect(new ParcelShape(value).getIn(["b",0]).isTopLevel()).toBe(false);
 });
 
-// // method creators
+// method creators
 
-// // test('Correct methods are created for primitive values', () => {
-// //     var value = 123;
-// //     expect(() => new ParcelShape(value).set('A')).not.toThrow();
-// //     expect(() => new ParcelShape(value).has('a')).toThrowError(`.has() is not a function`);
-// //     expect(() => new ParcelShape(value).pop()).toThrowError(`.pop() is not a function`);
-// //     expect(() => new ParcelShape(value).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
-// //     expect(() => new ParcelShape(value).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
-// // });
+test('Correct methods are created for primitive values', () => {
+    var value = 123;
+    expect(() => new ParcelShape(value).set('A')).not.toThrow();
+    expect(() => new ParcelShape(value).has('a')).toThrowError(`.has() is not a function`);
+    expect(() => new ParcelShape(value).pop()).toThrowError(`.pop() is not a function`);
+});
 
-// // test('Correct methods are created for object values', () => {
-// //     var value = {a: 123};
-// //     expect(() => new ParcelShape(value).set('A')).not.toThrow();
-// //     expect(() => new ParcelShape(value).has('a')).not.toThrow();
-// //     expect(() => new ParcelShape(value).pop()).toThrowError(`.pop() is not a function`);
-// //     expect(() => new ParcelShape(value).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
-// //     expect(() => new ParcelShape(value).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
-// // });
+test('Correct methods are created for object values', () => {
+    var value = {a: 123};
+    expect(() => new ParcelShape(value).set('A')).not.toThrow();
+    expect(() => new ParcelShape(value).has('a')).not.toThrow();
+    expect(() => new ParcelShape(value).pop()).toThrowError(`.pop() is not a function`);
+});
 
-// // test('Correct methods are created for array values', () => {
-// //     var value = [1,2,3];
-// //     expect(() => new ParcelShape(value).set('A')).not.toThrow();
-// //     expect(() => new ParcelShape(value).has('a')).not.toThrow();
-// //     expect(() => new ParcelShape(value).pop()).not.toThrow();
-// //     expect(() => new ParcelShape(value).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
-// //     expect(() => new ParcelShape(value).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
-// // });
+test('Correct methods are created for array values', () => {
+    var value = [1,2,3];
+    expect(() => new ParcelShape(value).set('A')).not.toThrow();
+    expect(() => new ParcelShape(value).has('a')).not.toThrow();
+    expect(() => new ParcelShape(value).pop()).not.toThrow();
+});
 
-// // test('Correct methods are created for object child values', () => {
-// //     var value = {a: 123};
-// //     expect(() => new ParcelShape(value).get("a").set('A')).not.toThrow();
-// //     expect(() => new ParcelShape(value).get("a").has('a')).toThrowError(`.has() is not a function`);
-// //     expect(() => new ParcelShape(value).get("a").pop()).toThrowError(`.pop() is not a function`);
-// //     expect(() => new ParcelShape(value).get("a").delete()).not.toThrow();
-// //     expect(() => new ParcelShape(value).get("a").swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
-// // });
+test('Correct methods are created for object child values', () => {
+    var value = {a: 123};
+    expect(() => new ParcelShape(value).get("a").set('A')).not.toThrow();
+    expect(() => new ParcelShape(value).get("a").has('a')).toThrowError(`.has() is not a function`);
+    expect(() => new ParcelShape(value).get("a").pop()).toThrowError(`.pop() is not a function`);
+});
 
-// // test('Correct methods are created for array element values', () => {
-// //     var value = [1,2,3];
-// //     expect(() => new ParcelShape(value).get(0).set('A')).not.toThrow();
-// //     expect(() => new ParcelShape(value).get(0).has('a')).toThrowError(`.has() is not a function`);
-// //     expect(() => new ParcelShape(value).get(0).pop()).toThrowError(`.pop() is not a function`);
-// //     expect(() => new ParcelShape(value).get(0).delete()).not.toThrow();
-// //     expect(() => new ParcelShape(value).get(0).swapNext()).not.toThrow();
-// // });
+test('Correct methods are created for array element values', () => {
+    var value = [1,2,3];
+    expect(() => new ParcelShape(value).get(0).set('A')).not.toThrow();
+    expect(() => new ParcelShape(value).get(0).has('a')).toThrowError(`.has() is not a function`);
+    expect(() => new ParcelShape(value).get(0).pop()).toThrowError(`.pop() is not a function`);
+});
 
