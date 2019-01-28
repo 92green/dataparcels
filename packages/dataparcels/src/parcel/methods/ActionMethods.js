@@ -1,14 +1,11 @@
 // @flow
 import type Action from '../../change/Action';
 import type Parcel from '../Parcel';
-import type {ParcelData} from '../../types/Types';
-import type {ParcelBatcher} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ChangeRequest from '../../change/ChangeRequest';
 
 export default (_this: Parcel): Object => ({
-
     dispatch: (dispatchable: Action|Action[]|ChangeRequest) => {
         Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
 
@@ -16,8 +13,6 @@ export default (_this: Parcel): Object => ({
             _onDispatch,
             _onHandleChange
         } = _this;
-
-        _this._treeshare.dispatch.markPathAsDispatched(_this.path);
 
         let changeRequest: ChangeRequest = dispatchable instanceof ChangeRequest
             ? dispatchable
@@ -33,48 +28,22 @@ export default (_this: Parcel): Object => ({
             changeRequest.toConsole();
         }
 
-        if(_this._dispatchBuffer) {
-            _this._dispatchBuffer(changeRequest);
-            return;
-        }
-
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._setBaseParcel(_this);
+            let parcelData = changeRequestWithBase.nextData;
+
+            if(!parcelData) {
+                return;
+            }
+
             let parcelWithChangedData = _this._create({
                 handleChange: _onHandleChange,
-                parcelData: changeRequestWithBase.nextData
+                parcelData
             });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
             return;
         }
         _onDispatch && _onDispatch(changeRequest);
-    },
-
-    batch: (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => {
-        Types(`batch()`, `batcher`, `function`)(batcher);
-
-        let parcelData: ParcelData = _this._parcelData;
-        let lastBuffer = _this._dispatchBuffer;
-
-        let buffer = changeRequest
-            ? changeRequest.updateActions(() => [])
-            : new ChangeRequest();
-
-        _this._dispatchBuffer = (changeRequest: ChangeRequest) => {
-            buffer = buffer.merge(changeRequest);
-            _this._parcelData = changeRequest
-                ._setBaseParcel(_this)
-                .nextData;
-        };
-
-        batcher(_this);
-        _this._dispatchBuffer = lastBuffer;
-        if(buffer.actions().length === 0) {
-            return;
-        }
-
-        _this._parcelData = parcelData;
-        _this.dispatch(buffer);
     }
 });
