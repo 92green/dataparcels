@@ -47,12 +47,6 @@ export default (_this: Parcel) => ({
         );
     },
 
-    // Status methods
-
-    hasDispatched: (): boolean => {
-        return _this._treeshare.dispatch.hasPathDispatched(_this.path);
-    },
-
     // Side-effect methods
 
     log: (name: string): Parcel => {
