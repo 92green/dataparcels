@@ -16,7 +16,7 @@ const NameParcelHoc = ParcelHoc({
     valueFromProps: (/* props */) => "Gregor"
 });
 
-const FoodEditor = (props) => {
+const NameEditor = (props) => {
     let {nameParcel} = props;
     return <div>
         <label>name</label>
@@ -30,5 +30,5 @@ const FoodEditor = (props) => {
     </div>;
 };
 
-export default NameParcelHoc(FoodEditor);
+export default NameParcelHoc(NameEditor);
 ```

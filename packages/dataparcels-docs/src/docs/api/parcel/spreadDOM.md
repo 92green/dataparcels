@@ -1,6 +1,8 @@
 ```flow
-spreadDOM(): {value: *, onChange: Function}
-spreadDOM(notFoundValue: any): {value: *, onChange: Function}
+spreadDOM(): {value: *, onChange: OnChangeDOMFunction}
+spreadDOM(notFoundValue: any): {value: *, onChange: OnChangeDOMFunction}
+
+type OnChangeDOMFunction = (event: HTMLEvent) => void;
 ```
 
 Returns an object with the Parcel's value and its onChangeDOM function.

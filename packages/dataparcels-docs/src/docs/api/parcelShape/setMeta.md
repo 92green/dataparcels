@@ -1,3 +1,3 @@
 ```flow
-setMeta(partialMeta: Object): void
+setMeta(partialMeta: Object): ParcelShape
 ```

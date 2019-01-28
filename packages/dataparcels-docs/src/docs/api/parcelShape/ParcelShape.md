@@ -2,7 +2,7 @@ import Link from 'component/Link';
 import Param from 'component/Param';
 import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelCreateReact from 'docs/notes/ParcelCreateReact.md';
-import IconParcel from 'content/parcel.gif';
+import IconParcel from 'content/parcelshape.gif';
 
 # ParcelShape
 
@@ -14,8 +14,8 @@ These exist to be used with <Link to="/shape-updaters">shape updaters</Link>, to
 ParcelShape's methods are a subset of <Link to="/api/Parcel">Parcel</Link>'s methods.
 
 ```js
-import {ParcelShape} from 'dataparcels';
-import {ParcelShape} from 'react-dataparcels';
+import ParcelShape from 'dataparcels/ParcelShape';
+import ParcelShape from 'react-dataparcels/ParcelShape';
 ```
 
 ```flow

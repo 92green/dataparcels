@@ -1,3 +1,3 @@
 ```flow
-deleteIn(keyPath: Array<string|number>): void // only on ParentParcels
+deleteIn(keyPath: Array<string|number>): ParcelShape // only on ParentParcels
 ```

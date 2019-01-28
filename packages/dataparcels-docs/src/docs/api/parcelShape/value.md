@@ -1,5 +1,3 @@
-import IndexedKeys from 'docs/notes/IndexedKeys.md';
-
 ```flow
 value: any
 ```

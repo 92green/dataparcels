@@ -1,7 +1,7 @@
 import {Box, Link, Message, Text} from 'dcme-style';
 
 ```flow
-onChange(value: *): void
+onChange(value: any): void
 ```
 
 This is designed for use with input components that call `onChange` with a new value.
@@ -9,7 +9,7 @@ It triggers a change that replaces the current value in the Parcel with the `val
 
 If called on a ParentParcel, any child information that the Parcel had is removed, such as child keys or meta.
 
-It is equivalent to calling <Link href="#set">set</Link> with no key.
+It is equivalent to calling <Link href="#set">set()</Link> with no key.
 
 ```js
 let parcel = new Parcel({
