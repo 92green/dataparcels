@@ -39,10 +39,5 @@ export default (_this: Parcel, dispatch: Function) => ({
     setMeta: (partialMeta: ParcelMeta) => {
         Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
         dispatch(ActionCreators.setMeta(partialMeta));
-    },
-
-    setChangeRequestMeta: (partialMeta: ParcelMeta) => {
-        Types(`setChangeRequestMeta()`, `partialMeta`, `object`)(partialMeta);
-        dispatch(new ChangeRequest().setChangeRequestMeta(partialMeta));
     }
 });
