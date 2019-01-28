@@ -151,7 +151,7 @@ export default class ParcelShape {
             let parcelShape: ParcelShape = ParcelShape.fromData(parcelData);
 
             if(errorOnUndefined) {
-                // $FlowFixMe why flow why
+                // $FlowFixMe - this is passed a ParcelShape, but flow thinks that is incompatible with the argument of ParcelShapeUpdater
                 let updated: any = updater(parcelShape);
                 if(updated === undefined) {
                     ReducerCancelAction();

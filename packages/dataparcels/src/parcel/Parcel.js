@@ -176,7 +176,7 @@ export default class Parcel {
     };
 
     _setAndReturn = (value: any): Parcel => {
-        // $FlowFixMe whyyyyyyyyyyyyyyyyyy
+        // $FlowFixMe
         return this._create({
             handleChange: this._onHandleChange,
             parcelData: setSelf(value)(this._parcelData)
