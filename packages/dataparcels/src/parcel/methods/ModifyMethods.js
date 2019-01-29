@@ -5,8 +5,6 @@ import type {ParcelMeta} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ParcelTypes from '../ParcelTypes';
-import {ModifyValueChildReturnError} from '../../errors/Errors';
-import {ModifyValueChangeChildReturnError} from '../../errors/Errors';
 import HashString from '../../util/HashString';
 
 import equals from 'unmutable/lib/equals';
@@ -30,8 +28,8 @@ export default (_this: Parcel): Object => ({
         let updatedValue = updater(value, _this);
         let updatedType = new ParcelTypes(updatedValue);
 
-        if(updatedType.isParent() && !isEmpty()(updatedValue) && !equals(value)(updatedValue)) {
-            throw ModifyValueChildReturnError();
+        if(process.env.NODE_ENV !== 'production' && updatedType.isParent() && !isEmpty()(updatedValue) && !equals(value)(updatedValue)) {
+            console.warn(`modifyValue(): please ensure you do not change the shape of the value, as changing the data shape or moving children within the data shape can cause dataparcels to misplace its keying and meta information.`); /* eslint-disable-line */
         }
 
         let updatedTypeChanged: boolean = updatedType.isParent() !== _this._parcelTypes.isParent()
@@ -83,8 +81,8 @@ export default (_this: Parcel): Object => ({
             let updatedValue = updater(value, _this);
 
             if(type.isParent()) {
-                if(!equals(value)(updatedValue)) {
-                    throw ModifyValueChangeChildReturnError();
+                if(process.env.NODE_ENV !== 'production' && !equals(value)(updatedValue)) {
+                    console.warn(`modifyChangeValue(): please ensure you do not change the shape of the value, as changing the data shape or moving children within the data shape can cause dataparcels to misplace its keying and meta information.`); /* eslint-disable-line */
                 }
                 parcel.dispatch(changeRequest);
                 return;
