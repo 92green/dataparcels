@@ -9,7 +9,7 @@ This example demonstrates a simple usage of `ParcelHoc`.
 
 ```js
 import React from 'react';
-import {ParcelHoc} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
 
 const WordParcelHoc = ParcelHoc({
     name: "wordParcel",

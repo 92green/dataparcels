@@ -6,10 +6,12 @@ import type {ParentType} from '../types/Types';
 import type {ParcelShapeValueUpdater} from '../types/Types';
 import type {ParcelShapeConfigInternal} from '../types/Types';
 import type {ParcelShapeUpdater} from '../types/Types';
+import type {ParcelShapeUpdateFunction} from '../types/Types';
 import type {ParcelShapeSetMeta} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
+import ReducerCancelAction from '../change/ReducerCancelAction';
 
 import ParcelTypes from '../parcel/ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
@@ -70,17 +72,6 @@ export default class ParcelShape {
     _parent: ?ParcelShape;
     _parcelData: ParcelData;
     _parcelTypes: ParcelTypes;
-
-    static _updateFromData(updater: ParcelShapeUpdater): Function {
-        return (parcelData: ParcelData): ParcelData => ParcelShape
-            .fromData(parcelData)
-            .updateShape(updater)
-            .data;
-    }
-
-    // only need this to reference static methods on ParcelShape
-    // without creating circular dependencies
-    _instanceUpdateFromData = ParcelShape._updateFromData;
 
     _pipeSelf = (fn: Function, _configInternal: ?ParcelShapeConfigInternal): ParcelShape => pipeWith(
         this._parcelData,
@@ -154,6 +145,33 @@ export default class ParcelShape {
         parcelShape._parcelData = parcelData;
         return parcelShape;
     }
+
+    static update(updater: ParcelShapeUpdater): ParcelShapeUpdateFunction {
+        let fn = (parcelData: ParcelData, errorOnUndefined: ?boolean): ParcelData => {
+            let parcelShape: ParcelShape = ParcelShape.fromData(parcelData);
+
+            if(errorOnUndefined) {
+                // $FlowFixMe - this is passed a ParcelShape, but flow thinks that is incompatible with the argument of ParcelShapeUpdater
+                let updated: any = updater(parcelShape);
+                if(updated === undefined) {
+                    ReducerCancelAction();
+                }
+                updater = () => updated;
+            }
+
+            return parcelShape
+                .updateShape(updater)
+                .data;
+        };
+
+        fn._isParcelUpdater = true;
+        fn._updater = updater;
+        return fn;
+    }
+
+    // only need this to reference static methods on ParcelShape
+    // without creating circular dependencies
+    _parcelShapeUpdate = ParcelShape.update;
 
     // Parent methods
     has = (key: Key|Index): boolean => this._methods.has(key);

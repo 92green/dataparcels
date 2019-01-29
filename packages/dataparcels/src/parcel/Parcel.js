@@ -4,7 +4,6 @@ import type ChangeRequest from '../change/ChangeRequest';
 import type {ParcelCreateConfigType} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
-import type {ParcelBatcher} from '../types/Types';
 import type {ParcelConfigInternal} from '../types/Types';
 import type {ParcelConfig} from '../types/Types';
 import type {ParcelData} from '../types/Types';
@@ -13,7 +12,7 @@ import type {ParcelMeta} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
-import type {ParcelShapeUpdater} from '../types/Types';
+import type {ParcelShapeUpdateFunction} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
@@ -29,12 +28,12 @@ import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
 import AdvancedMethods from './methods/AdvancedMethods';
-import TopLevelMethods from './methods/TopLevelMethods';
 
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
 import Treeshare from '../treeshare/Treeshare';
+import setSelf from '../parcelData/setSelf';
 
 import overload from 'unmutable/lib/util/overload';
 
@@ -122,9 +121,7 @@ export default class Parcel {
             // $FlowFixMe
             ...ModifyMethods(this),
             // $FlowFixMe
-            ...AdvancedMethods(this),
-            // $FlowFixMe
-            ...FilterMethods("TopLevel", TopLevelMethods)(this, dispatch)
+            ...AdvancedMethods(this)
         };
     }
 
@@ -143,7 +140,6 @@ export default class Parcel {
     _treeshare: Treeshare;
 
     // from methods
-    _dispatchBuffer: ?Function; // used by batch()
     _log: boolean = false; // used by log()
     _logName: string = ""; // used by log()
 
@@ -177,6 +173,14 @@ export default class Parcel {
                 treeshare
             }
         );
+    };
+
+    _setAndReturn = (value: any): Parcel => {
+        // $FlowFixMe
+        return this._create({
+            handleChange: this._onHandleChange,
+            parcelData: setSelf(value)(this._parcelData)
+        });
     };
 
     //
@@ -267,9 +271,6 @@ export default class Parcel {
     isFirst = (): boolean => this._methods.isFirst();
     isLast = (): boolean => this._methods.isLast();
 
-    // Status methods
-    hasDispatched = (): boolean => this._methods.hasDispatched();
-
     // Side-effect methods
     log = (name: string = ""): Parcel => this._methods.log(name);
     spy = (sideEffect: Function): Parcel => this._methods.spy(sideEffect);
@@ -283,16 +284,11 @@ export default class Parcel {
         ["2"]: (key: Key|Index, value: any) => this._methods.set(key, value)
     });
     update = overload({
-        ["1"]: (updater: ParcelValueUpdater) => this._methods.updateSelf(updater),
-        ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
-    });
-    updateShape = overload({
-        ["1"]: (updater: ParcelShapeUpdater) => this._methods.updateSelfShape(updater),
-        ["2"]: (key: Key|Index, updater: ParcelShapeUpdater) => this._methods.updateShape(key, updater)
+        ["1"]: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => this._methods.updateSelf(updater),
+        ["2"]: (key: Key|Index, updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => this._methods.update(key, updater)
     });
     setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
-    updateShapeIn = (keyPath: Array<Key|Index>, updater: ParcelShapeUpdater) => this._methods.updateShapeIn(keyPath, updater);
     delete = overload({
         ["0"]: () => this._methods.deleteSelf(),
         ["1"]: (key: Key|Index) => this._methods.delete(key)
@@ -301,10 +297,7 @@ export default class Parcel {
 
     // Advanced change methods
     setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
-    setChangeRequestMeta = (partialMeta: ParcelMeta) => this._methods.setChangeRequestMeta(partialMeta);
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
-    batch = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batch(batcher, changeRequest);
-    batchAndReturn = (batcher: ParcelBatcher, changeRequest: ?ChangeRequest) => this._methods.batchAndReturn(batcher, changeRequest);
 
     // Indexed methods
     insertAfter = overload({
@@ -337,11 +330,8 @@ export default class Parcel {
     unshift = (...values: Array<any>) => this._methods.unshift(...values);
 
     // Modify methods
-    modifyDown = (updater: Function): Parcel => this._methods.modifyDown(updater);
-    modifyUp = (updater: Function): Parcel => this._methods.modifyUp(updater);
-    modifyShapeDown = (updater: Function): Parcel => this._methods.modifyShapeDown(updater);
-    modifyShapeUp = (updater: Function): Parcel => this._methods.modifyShapeUp(updater);
-    modifyChange = (batcher: ParcelBatcher): Parcel => this._methods.modifyChange(batcher);
+    modifyDown = (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => this._methods.modifyDown(updater);
+    modifyUp = (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => this._methods.modifyUp(updater);
     initialMeta = (initialMeta: ParcelMeta): Parcel => this._methods.initialMeta(initialMeta);
     _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
 

@@ -2,11 +2,6 @@
 import Parcel from './parcel/Parcel';
 export default Parcel;
 
-export {default as Action} from './change/Action';
-export {default as ChangeRequest} from './change/ChangeRequest';
-export {default as ParcelShape} from './parcelShape/ParcelShape';
-export {default as DeletedParcelMarker} from './parcelData/DeletedParcelMarker';
-
 //
 // types
 //
@@ -17,7 +12,6 @@ export type {ParcelConfigInternal} from './types/Types';
 export type {ParcelCreateConfigType} from './types/Types';
 export type {ParcelMeta} from './types/Types';
 
-export type {ParcelBatcher} from './types/Types';
 export type {ParcelMapper} from './types/Types';
 export type {ParcelUpdater} from './types/Types';
 export type {ParcelValueUpdater} from './types/Types';

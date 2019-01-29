@@ -62,7 +62,7 @@ export default class ChangeRequest {
     };
 
     // $FlowFixMe - this doesn't have side effects
-    get nextData(): * {
+    get nextData(): ?ParcelData {
         if(!this._baseParcel) {
             throw ChangeRequestUnbasedError();
         }
@@ -89,7 +89,7 @@ export default class ChangeRequest {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    get prevData(): * {
+    get prevData(): ParcelData {
         if(!this._baseParcel) {
             throw ChangeRequestUnbasedError();
         }

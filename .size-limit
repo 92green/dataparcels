@@ -4,7 +4,11 @@
         path: "packages/dataparcels/lib/index.js"
     },
     {
-        limit: "30 KB",
+        limit: "25 KB",
+        path: "packages/dataparcels/ParcelShape.js"
+    },
+    {
+        limit: "25 KB",
         path: "packages/react-dataparcels/lib/index.js"
     }
 ]

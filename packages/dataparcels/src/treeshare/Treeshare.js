@@ -12,18 +12,6 @@ class ParcelRegistry {
     };
 }
 
-class DispatchRegistry {
-    _dispatchedPaths: Object = {};
-
-    hasPathDispatched = (path: string[]): boolean => {
-        return !!this._dispatchedPaths[stringifyPath(path)];
-    };
-
-    markPathAsDispatched = (path: string[]) => {
-        this._dispatchedPaths[stringifyPath(path)] = true;
-    };
-}
-
 class LocationShareRegistry {
     _locationShareData: Object = {};
 
@@ -41,31 +29,26 @@ class LocationShareRegistry {
 
 type Config = {
     registry?: ParcelRegistry,
-    dispatch?: DispatchRegistry,
     locationShare?: LocationShareRegistry
 };
 
 export default class Treeshare {
     registry: ParcelRegistry;
-    dispatch: DispatchRegistry;
     locationShare: LocationShareRegistry;
 
     constructor(config: Config = {}) {
         let {
             registry,
-            dispatch,
             locationShare
         } = config;
 
         this.registry = registry || new ParcelRegistry();
-        this.dispatch = dispatch || new DispatchRegistry();
         this.locationShare = locationShare || new LocationShareRegistry();
     }
 
     boundarySplit: Function = (): Treeshare => {
         return new Treeshare({
             // do not pass in registry
-            dispatch: this.dispatch,
             locationShare: this.locationShare
         });
     }

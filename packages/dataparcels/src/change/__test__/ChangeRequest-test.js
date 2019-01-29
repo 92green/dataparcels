@@ -198,30 +198,6 @@ test('ChangeRequest should keep originId and originPath', () => {
         .onChange(456);
 });
 
-
-test('ChangeRequest should keep originId and originPath even when going through a batch() where another change is fired before the original one', () => {
-    expect.assertions(2);
-
-    var data = {
-        value: {
-            abc: 123,
-            def: 456
-        },
-        handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
-            expect(['abc']).toEqual(changeRequest.originPath);
-            expect('^.~mcb-1049856033.abc').toEqual(changeRequest.originId);
-        }
-    };
-
-    new Parcel(data)
-        .modifyChange((parcel, changeRequest) => {
-            parcel.set('def', 789);
-            parcel.dispatch(changeRequest);
-        })
-        .get('abc')
-        .onChange(456);
-});
-
 test('ChangeRequest should cache its data after its calculated, so subsequent calls are faster', () => {
 
     let amount = 1000;
@@ -305,39 +281,6 @@ test('ChangeRequest should cache its data after its calculated, so subsequent ca
     expect(expectedData).toEqual(data);
 
     expect(ms2).toBeLessThan(ms / 100); // expect amazing performance boosts from having cached
-});
-
-test('ChangeRequest data chache should be invalidated correctly', () => {
-    expect.assertions(6);
-
-    var parcel = new Parcel({
-        value: {
-            a: {
-                b: 123
-            }
-        }
-    });
-
-    parcel
-        .get('a')
-        .modifyChange((parcel, changeRequest) => {
-            expect(changeRequest.nextData).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}});
-            expect(changeRequest.nextData).toEqual({key: 'a', meta: {abc: 123}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
-            parcel.dispatch(changeRequest);
-        })
-        .modifyChange((parcel, changeRequest) => {
-            expect(changeRequest.nextData).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}});
-            expect(changeRequest.nextData).toEqual({key: 'a', meta: {}, value: {b: 456}, child: {b:{key: "b"}}}); // get cached
-            parcel.dispatch(changeRequest);
-            parcel.setMeta({abc: 123});
-        })
-        .get('b')
-        .modifyChange((parcel, changeRequest) => {
-            expect(changeRequest.nextData).toEqual({key: 'b', meta: {}, value: 456});
-            expect(changeRequest.nextData).toEqual({key: 'b', meta: {}, value: 456}); // get cached
-            parcel.dispatch(changeRequest);
-        })
-        .onChange(456);
 });
 
 test('ChangeRequest getDataIn should return previous and next value at keyPath', () => {

@@ -52,7 +52,7 @@ export default (_this: ParcelShape) => ({
         return _this._pipeSelf(
             parcelUpdateIn(
                 keyPath,
-                (parcelData) => _this._instanceUpdateFromData(updater)(parcelData)
+                (parcelData) => _this._parcelShapeUpdate(updater)(parcelData)
             )
         );
     }

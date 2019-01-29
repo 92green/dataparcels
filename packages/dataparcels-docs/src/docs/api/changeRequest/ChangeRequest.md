@@ -3,8 +3,8 @@ import Link from 'component/Link';
 # ChangeRequest
 
 ```js
-import {ChangeRequest} from 'dataparcels';
-import {ChangeRequest} from 'react-dataparcels';
+import ChangeRequest from 'dataparcels/ChangeRequest';
+import ChangeRequest from 'react-dataparcels/ChangeRequest';
 ```
 
 ```flow

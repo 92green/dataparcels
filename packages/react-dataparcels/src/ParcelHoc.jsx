@@ -1,7 +1,7 @@
 // @flow
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
-import type {ChangeRequest} from 'dataparcels';
+import type ChangeRequest from 'dataparcels/ChangeRequest';
 
 import React from 'react';
 import Parcel from 'dataparcels';
@@ -94,10 +94,7 @@ export default (config: ParcelHocConfig): Function => {
 
             if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps)) {
                 // $FlowFixMe - parcel cant possibly be undefined here
-                newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
-                    // $FlowFixMe - newValueFromProps cant possibly be undefined here
-                    parcel.set(valueFromProps(props));
-                });
+                newState.parcel = parcel._setAndReturn(valueFromProps(props));
 
                 if(debugParcel) {
                     log(`Parcel updated from props:`);
