@@ -1,6 +1,6 @@
 {
   "name": "react-dataparcels",
-  "version": "0.17.1",
+  "version": "0.17.2",
   "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "UNLICENSED",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "babel-runtime": "6.23.0",
-    "dataparcels": "^0.17.1",
+    "dataparcels": "^0.17.2",
     "unmutable": "^0.39.0"
   }
 }
