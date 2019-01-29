@@ -1,5 +1,6 @@
 // @flow
 import type ChangeRequest from '../../change/ChangeRequest';
+import update from 'unmutable/lib/update';
 
 import Parcel from '../Parcel';
 import ParcelShape from '../../parcelShape/ParcelShape';
