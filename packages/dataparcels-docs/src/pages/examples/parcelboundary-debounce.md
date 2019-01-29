@@ -9,7 +9,8 @@ This example demonstrates ParcelBoundary's `debounce` feature. The first field i
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 const FoodParcelHoc = ParcelHoc({
     name: "foodParcel",

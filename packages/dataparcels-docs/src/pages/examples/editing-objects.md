@@ -18,7 +18,8 @@ This example demonstrates a pretty typical React setup to do that.
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",

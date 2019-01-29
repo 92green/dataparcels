@@ -9,7 +9,8 @@ Dataparcels has a powerful set of methods for manipulating indexed data types, s
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListParcelHoc = ParcelHoc({
@@ -59,7 +60,8 @@ Dataparcels' plays nicely with [react-sortable-hoc](https://github.com/clauderic
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 
 // this is a generic react-sortable-hoc + dataparcels list hoc
@@ -123,7 +125,8 @@ Dataparcels' also plays nicely with [react-flip-move](https://github.com/joshwco
 ```js
 import React from 'react';
 import FlipMove from 'react-flip-move';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListEditor = (props) => {

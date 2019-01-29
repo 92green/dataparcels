@@ -43,7 +43,7 @@ We could do something like this.
 
 ```js
 import React from 'react';
-import {ParcelHoc} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
 
 // PLEASE DON'T USE THIS CODE
 // THIS CODE IS FOR DEMONSTRAION PURPOSES ONLY
@@ -99,7 +99,8 @@ This is the same example with a few improvements added: better rendering perform
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",

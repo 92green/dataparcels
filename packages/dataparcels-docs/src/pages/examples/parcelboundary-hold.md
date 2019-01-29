@@ -9,7 +9,8 @@ This example demonstrates ParcelBoundary's `hold` feature.
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 const NameParcelHoc = ParcelHoc({
     name: "nameParcel",

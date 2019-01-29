@@ -7,7 +7,8 @@ If you don't want to use the <Link to="/api/ParcelHoc">ParcelHoc higher order co
 
 ```js
 import React from 'react';
-import Parcel, {ParcelBoundary} from 'react-dataparcels';
+import Parcel from 'react-dataparcels';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 export default class ManagingOwnParcelState extends React.Component {
     constructor(props) {

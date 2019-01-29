@@ -11,7 +11,8 @@ The `forceUpdate` option is used to force the ParcelBoundary to update when `opt
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 const ColourParcelHoc = ParcelHoc({
     name: "colourParcel",
