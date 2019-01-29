@@ -11,7 +11,7 @@ import {Box, Message} from 'dcme-style';
 
 <ApiPageIcon>{IconParcelBoundary}</ApiPageIcon>
 
-ParcelBoundary is a React component. It's job is to optimise rendering performance, and to optionally control the flow of parcel changes.
+ParcelBoundary is a React component. Its job is to optimise rendering performance, and to optionally control the flow of parcel changes.
 
 Each ParcelBoundary is passed a Parcel. By default the ParcelBoundary uses pure rendering, and will only update when the Parcel's data changes to avoid unnecessary re-rendering.
 
