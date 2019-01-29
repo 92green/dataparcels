@@ -80,12 +80,8 @@ export default (_this: Parcel): Object => ({
 
             let updatedValue = updater(value, _this);
 
-            if(type.isParent()) {
-                if(process.env.NODE_ENV !== 'production' && !equals(value)(updatedValue)) {
-                    console.warn(`modifyChangeValue(): please ensure you do not change the shape of the value, as changing the data shape or moving children within the data shape can cause dataparcels to misplace its keying and meta information.`); /* eslint-disable-line */
-                }
-                parcel.dispatch(changeRequest);
-                return;
+            if(type.isParent() && process.env.NODE_ENV !== 'production' && !equals(value)(updatedValue)) {
+                console.warn(`modifyChangeValue(): please ensure you do not change the shape of the value, as changing the data shape or moving children within the data shape can cause dataparcels to misplace its keying and meta information.`); /* eslint-disable-line */
             }
 
             // dispatch all non-value actions in this change request

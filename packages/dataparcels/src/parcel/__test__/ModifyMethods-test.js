@@ -1,6 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
 import type ChangeRequest from '../../change/ChangeRequest';
+import update from 'unmutable/lib/update';
 
 test('Parcel.modifyValue() should return a new parcel with updated parcelData', () => {
     expect.assertions(2);
@@ -159,6 +160,18 @@ test('Parcel.modifyChangeValue() should allow parent types to be returned if the
         .onChange([456]);
 
     expect(handleChange.mock.calls[0][0].value).toEqual([456]);
+});
+
+test('Parcel.modifyChangeValue() should allow parent types to be returned if they do change', () => {
+    var handleChange = jest.fn();
+    new Parcel({
+        value: [123],
+        handleChange
+    })
+        .modifyChangeValue(update(0, num => num + 1))
+        .onChange([456]);
+
+    expect(handleChange.mock.calls[0][0].value).toEqual([457]);
 });
 
 test('Parcel.modifyChangeValue() should allow changes to meta through', () => {
