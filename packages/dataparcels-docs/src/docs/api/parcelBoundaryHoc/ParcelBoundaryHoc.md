@@ -20,7 +20,7 @@ ParcelBoundaryHocs have an internal action buffer that can hold onto changes as 
 Unlike <Link to="/api/ParcelBoundary">ParcelBoundary</Link>, it cannot use pure rendering.
 
 ```js
-import {ParcelBoundaryHoc} from 'react-dataparcels';
+import ParcelBoundaryHoc from 'react-dataparcels/ParcelBoundaryHoc';
 ```
 
 ```js

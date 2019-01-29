@@ -1,5 +1,5 @@
 import React from 'react';
-import {ParcelHoc} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ExampleHoc from 'component/ExampleHoc';
 import {Box} from 'dcme-style';
 

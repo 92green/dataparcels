@@ -11,7 +11,8 @@ Note how the `height` field has a prop of `pure={false}`, and therefore updates 
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",

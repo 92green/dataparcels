@@ -18,7 +18,7 @@ Each ParcelBoundary is passed a Parcel. By default the ParcelBoundary uses pure 
 ParcelBoundaries have an internal action buffer that can hold onto changes as they exit the boundary. These are normally released immediately, but also allow for debouncing changes, or putting a hold on all changes so they can be released later.
 
 ```js
-import {ParcelBoundary} from 'react-dataparcels';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 ```
 
 ```js

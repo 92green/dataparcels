@@ -14,8 +14,8 @@ These exist to be used with <Link to="/shape-updaters">shape updaters</Link>, to
 ParcelShape's methods are a subset of <Link to="/api/Parcel">Parcel</Link>'s methods.
 
 ```js
-import {ParcelShape} from 'dataparcels';
-import {ParcelShape} from 'react-dataparcels';
+import ParcelShape from 'dataparcels/ParcelShape';
+import ParcelShape from 'react-dataparcels/ParcelShape';
 ```
 
 ```flow
@@ -34,4 +34,4 @@ let parcelShape = new ParcelShape(123);
 
 ParcelShapes are used in a very similar way to [Immutable.js Maps and Lists](https://facebook.github.io/immutable-js/docs/), by calling methods that return new and updated ParcelShapes.
 
-TODO
+TODOTODO

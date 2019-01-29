@@ -9,7 +9,7 @@ This example shows how to delay the creation of a Parcel with `ParcelHoc`. The e
 
 ```js
 import React from 'react';
-import {ParcelHoc} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
 
 const DelayParcelHoc = ParcelHoc({
     name: "delayParcel",

@@ -15,7 +15,7 @@ ParcelHoc is a React higher order component. It's job is to provide a parcel as 
 It is recommended that you <Link to="/examples/editing-objects">use ParcelHoc</Link>, rather than <Link to="/examples/managing-your-own-parcel-state">managing your own Parcel state</Link>.
 
 ```js
-import {ParcelHoc} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
 ```
 
 ```flow
