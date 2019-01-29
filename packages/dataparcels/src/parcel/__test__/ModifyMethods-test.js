@@ -54,24 +54,6 @@ test('Parcel.modifyValue() should allow parent types to be returned if they dont
     expect(updatedValue).toEqual([123]);
 });
 
-test('Parcel.modifyValue() should throw error if changed parent types with children are returned', () => {
-    expect(() => {
-        new Parcel({
-            value: [123]
-        }).modifyValue(value => [...value, 456]);
-
-    }).toThrowError(`modifyValue()`);
-});
-
-test('Parcel.modifyValue() should throw error if childless is turned into parent types with children', () => {
-    expect(() => {
-        new Parcel({
-            value: 123
-        }).modifyValue(value => [123, 456]);
-
-    }).toThrowError(`modifyValue()`);
-});
-
 test('Parcel.modifyValue() should recognise if value changes types, and set value if type changes', () => {
     let handleChange = jest.fn();
     let parcel = new Parcel({
@@ -177,19 +159,6 @@ test('Parcel.modifyChangeValue() should allow parent types to be returned if the
         .onChange([456]);
 
     expect(handleChange.mock.calls[0][0].value).toEqual([456]);
-});
-
-test('Parcel.modifyChangeValue() should throw error if changed parent types with children are returned', () => {
-    expect(() => {
-        var handleChange = jest.fn();
-        new Parcel({
-            value: [123],
-            handleChange
-        })
-            .modifyChangeValue(value => [...value, 456])
-            .onChange([456]);
-
-    }).toThrowError(`modifyChangeValue()`);
 });
 
 test('Parcel.modifyChangeValue() should allow changes to meta through', () => {
