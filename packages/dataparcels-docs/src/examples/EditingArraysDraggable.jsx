@@ -1,7 +1,7 @@
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import ParcelDraggable from 'react-dataparcels-draggable';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListParcelHoc = ParcelHoc({
@@ -13,35 +13,20 @@ const FruitListParcelHoc = ParcelHoc({
     ]
 });
 
-const SortableFruitItem = SortableElement(({fruitParcel}) => {
-    return <ParcelBoundary parcel={fruitParcel}>
+const SortableFruitList = ParcelDraggable({
+    element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
         {(parcel) => <div className="Box-draggable Typography">
             <input type="text" {...parcel.spreadDOM()} />
             <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
             <button onClick={() => parcel.delete()}>x</button>
         </div>}
-    </ParcelBoundary>;
-});
-
-const SortableFruitList = SortableContainer(({fruitListParcel}) => {
-    return <div>
-        {fruitListParcel.toArray((fruitParcel, index) => {
-            return <SortableFruitItem
-                key={fruitParcel.key}
-                index={index}
-                fruitParcel={fruitParcel}
-            />;
-        })}
-    </div>;
+    </ParcelBoundary>
 });
 
 const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
     return <div>
-        <SortableFruitList
-            fruitListParcel={fruitListParcel}
-            onSortEnd={({oldIndex, newIndex}) => fruitListParcel.move(oldIndex, newIndex)}
-        />
+        <SortableFruitList parcel={fruitListParcel} />
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
 };
