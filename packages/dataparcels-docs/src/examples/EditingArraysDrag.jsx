@@ -1,7 +1,7 @@
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ParcelDraggable from 'react-dataparcels-draggable';
+import ParcelDrag from 'react-dataparcels-drag';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListParcelHoc = ParcelHoc({
@@ -13,7 +13,7 @@ const FruitListParcelHoc = ParcelHoc({
     ]
 });
 
-const SortableFruitList = ParcelDraggable({
+const SortableFruitList = ParcelDrag({
     element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
         {(parcel) => <div className="Box-draggable Typography">
             <input type="text" {...parcel.spreadDOM()} />

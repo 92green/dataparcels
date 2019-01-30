@@ -1,7 +1,7 @@
 import Link from 'gatsby-link';
 import EditingArrays from 'examples/EditingArrays';
 import EditingArraysFlipMove from 'examples/EditingArraysFlipMove';
-import EditingArraysDraggable from 'examples/EditingArraysDraggable';
+import EditingArraysDrag from 'examples/EditingArraysDrag';
 
 Dataparcels has a powerful set of methods for manipulating indexed data types, such as arrays. This example demonstrates an editor that allows the user to edit, append to and sort the elements in an array of strings.
 
@@ -52,17 +52,17 @@ export default FruitListParcelHoc(FruitListEditor);
 
 For the full list of methods you can use on indexed data types, see <Link to="/api/Parcel#indexed_change_methods">Indexed Change Methods</Link> and <Link to="/api/Parcel#element_change_methods">Element Change Methods</Link> in the Parcel API reference.
 
-## Drag and drop with react-dataparcels-draggable
+## Drag and drop with react-dataparcels-drag
 
-Drag and drop is easy using [react-dataparcels-draggable](https://www.npmjs.com/package/react-dataparcels-draggable), which is a slim wrapper around [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc). Drag items up and fown to change their order.
+Drag and drop is easy using [react-dataparcels-drag](https://www.npmjs.com/package/react-dataparcels-drag), which is a slim wrapper around [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc). Drag items up and fown to change their order.
 
-<EditingArraysDraggable />
+<EditingArraysDrag />
 
 ```js
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ParcelDraggable from 'react-dataparcels-draggable';
+import ParcelDrag from 'react-dataparcels-drag';
 
 const FruitListParcelHoc = ParcelHoc({
     name: "fruitListParcel",
@@ -73,7 +73,7 @@ const FruitListParcelHoc = ParcelHoc({
     ]
 });
 
-const SortableFruitList = ParcelDraggable({
+const SortableFruitList = ParcelDrag({
     element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
         {(parcel) => <div className="Box-draggable Typography">
             <input type="text" {...parcel.spreadDOM()} />

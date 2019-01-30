@@ -1,9 +1,9 @@
 // @flow
 
 // dataparcels exports
-import Draggable from '../src/index';
-import InternalDraggable from '../src/Draggable';
+import Drag from '../src/index';
+import InternalDrag from '../src/Drag';
 
-test('index should export Draggable', () => {
-    expect(Draggable).toBe(InternalDraggable);
+test('index should export Drag', () => {
+    expect(Drag).toBe(InternalDrag);
 });

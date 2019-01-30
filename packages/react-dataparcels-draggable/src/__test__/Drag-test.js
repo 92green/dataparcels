@@ -1,9 +1,9 @@
 // // @flow
 import React from 'react';
 import Parcel from 'react-dataparcels';
-import Draggable from '../Draggable';
+import Drag from '../Drag';
 
-test('Draggable must pass props correctly', () => {
+test('Drag must pass props correctly', () => {
 
     let handleChange = jest.fn();
 
@@ -12,12 +12,12 @@ test('Draggable must pass props correctly', () => {
         handleChange
     });
 
-    let MyDraggable = Draggable({
+    let MyDrag = Drag({
         element: () => <div />
     });
 
     // $FlowFixMe
-    let wrapper = shallow(<MyDraggable parcel={parcel} />, {disableLifecycleMethods: true});
+    let wrapper = shallow(<MyDrag parcel={parcel} />, {disableLifecycleMethods: true});
 
     // first level in
     let props1 = wrapper.props();
@@ -34,7 +34,7 @@ test('Draggable must pass props correctly', () => {
     expect(props3.children.length).toBe(3);
 });
 
-test('Draggable must accept onSortEnd and still call internal onSortEnd', () => {
+test('Drag must accept onSortEnd and still call internal onSortEnd', () => {
 
     let handleChange = jest.fn();
 
@@ -43,14 +43,14 @@ test('Draggable must accept onSortEnd and still call internal onSortEnd', () => 
         handleChange
     });
 
-    let MyDraggable = Draggable({
+    let MyDrag = Drag({
         element: () => <div />
     });
 
     let onSortEnd = jest.fn();
 
     // $FlowFixMe
-    let wrapper = shallow(<MyDraggable parcel={parcel} onSortEnd={onSortEnd} />, {disableLifecycleMethods: true});
+    let wrapper = shallow(<MyDrag parcel={parcel} onSortEnd={onSortEnd} />, {disableLifecycleMethods: true});
 
     let props = wrapper.props();
     let sortEndArg = {oldIndex: 0, newIndex: 2};
@@ -62,24 +62,24 @@ test('Draggable must accept onSortEnd and still call internal onSortEnd', () => 
 });
 
 
-test('Draggable must accept additional params and pass them to react-sortable-hoc', () => {
+test('Drag must accept additional params and pass them to react-sortable-hoc', () => {
 
     let parcel = new Parcel({
         value: [1,2,3]
     });
 
-    let MyDraggable = Draggable({
+    let MyDrag = Drag({
         element: () => <div />
     });
 
     // $FlowFixMe
-    let wrapper = shallow(<MyDraggable parcel={parcel} woo={123} />, {disableLifecycleMethods: true});
+    let wrapper = shallow(<MyDrag parcel={parcel} woo={123} />, {disableLifecycleMethods: true});
 
     let props = wrapper.props();
     expect(props.woo).toBe(123);
 });
 
-test('Draggable must render elements and pass parcels to them', () => {
+test('Drag must render elements and pass parcels to them', () => {
 
     let value = [1,2,3];
 
@@ -89,11 +89,11 @@ test('Draggable must render elements and pass parcels to them', () => {
 
     let element = jest.fn(() => <div />);
 
-    let MyDraggable = Draggable({
+    let MyDrag = Drag({
         element
     });
 
     // $FlowFixMe
-    let wrapper = mount(<MyDraggable parcel={parcel} />);
+    let wrapper = mount(<MyDrag parcel={parcel} />);
     expect(element.mock.calls.map(call => call[0].value)).toEqual([1,2,3]);
 });

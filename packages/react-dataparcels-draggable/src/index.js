@@ -1,4 +1,4 @@
 // @flow
 
-import Draggable from './Draggable';
-export default Draggable;
+import Drag from './Drag';
+export default Drag;
