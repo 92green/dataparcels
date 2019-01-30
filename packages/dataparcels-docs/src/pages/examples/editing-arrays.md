@@ -77,7 +77,7 @@ const FruitListParcelHoc = ParcelHoc({
 
 const SortableFruitList = ParcelDrag({
     element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
-        {(parcel) => <div className="Box-draggable Typography">
+        {(parcel) => <div className="Box-draggable">
             <input type="text" {...parcel.spreadDOM()} />
             <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
             <button onClick={() => parcel.delete()}>x</button>
