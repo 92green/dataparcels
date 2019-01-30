@@ -30,6 +30,9 @@ export default ({element, container}: Config) => {
     </Container>);
 
     return ({parcel, onSortEnd, ...rest}: Props): Node => {
+        if(!parcel.isIndexed()) {
+            throw new Error(`react-dataparcels-drag's parcel prop must be of type indexed`);
+        }
         return <ConfiguredContainer
             parcel={parcel}
             onSortEnd={(param) => {

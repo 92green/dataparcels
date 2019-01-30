@@ -34,6 +34,22 @@ test('Drag must pass props correctly', () => {
     expect(props3.children.length).toBe(3);
 });
 
+test('Drag should throw if parcel is not indexed', () => {
+
+    let parcel = new Parcel({
+        value: {abc: 123}
+    });
+
+    let MyDrag = Drag({
+        element: () => <div />
+    });
+
+    expect(() => {
+        // $FlowFixMe
+        shallow(<MyDrag parcel={parcel} />, {disableLifecycleMethods: true});
+    }).toThrow(`react-dataparcels-drag's parcel prop must be of type indexed`);
+});
+
 test('Drag must accept onSortEnd and still call internal onSortEnd', () => {
 
     let handleChange = jest.fn();
