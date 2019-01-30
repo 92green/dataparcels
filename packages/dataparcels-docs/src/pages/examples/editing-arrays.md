@@ -56,6 +56,8 @@ For the full list of methods you can use on indexed data types, see <Link to="/a
 
 Drag and drop is easy using [react-dataparcels-drag](https://www.npmjs.com/package/react-dataparcels-drag), which is a slim wrapper around [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc). Drag items up and fown to change their order.
 
+THe `react-dataparcels-drag` HOC attempts to keep a very similar API to `react-sortable-hoc`, and therefore its usage is a little different compared to the other HOCs in `react-dataparcels`.
+
 <EditingArraysDrag />
 
 ```js
