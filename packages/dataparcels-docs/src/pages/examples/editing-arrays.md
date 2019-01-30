@@ -1,7 +1,7 @@
 import Link from 'gatsby-link';
 import EditingArrays from 'examples/EditingArrays';
 import EditingArraysFlipMove from 'examples/EditingArraysFlipMove';
-import EditingArraysSortableHoc from 'examples/EditingArraysSortableHoc';
+import EditingArraysDrag from 'examples/EditingArraysDrag';
 
 Dataparcels has a powerful set of methods for manipulating indexed data types, such as arrays. This example demonstrates an editor that allows the user to edit, append to and sort the elements in an array of strings.
 
@@ -52,17 +52,19 @@ export default FruitListParcelHoc(FruitListEditor);
 
 For the full list of methods you can use on indexed data types, see <Link to="/api/Parcel#indexed_change_methods">Indexed Change Methods</Link> and <Link to="/api/Parcel#element_change_methods">Element Change Methods</Link> in the Parcel API reference.
 
-## Drag and drop with react-sortable-hoc
+## Drag and drop with react-dataparcels-drag
 
-Dataparcels' plays nicely with [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc). Drag items up and fown to change their order.
+Drag and drop is easy using [react-dataparcels-drag](https://www.npmjs.com/package/react-dataparcels-drag), which is a slim wrapper around [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc). Drag items up and fown to change their order.
 
-<EditingArraysSortableHoc />
+THe `react-dataparcels-drag` HOC attempts to keep a very similar API to `react-sortable-hoc`, and therefore its usage is a little different compared to the other HOCs in `react-dataparcels`.
+
+<EditingArraysDrag />
 
 ```js
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import ParcelDrag from 'react-dataparcels-drag';
 
 const FruitListParcelHoc = ParcelHoc({
     name: "fruitListParcel",
@@ -73,35 +75,20 @@ const FruitListParcelHoc = ParcelHoc({
     ]
 });
 
-const SortableFruitItem = SortableElement(({fruitParcel}) => {
-    return <ParcelBoundary parcel={fruitParcel}>
-        {(parcel) => <div>
+const SortableFruitList = ParcelDrag({
+    element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
+        {(parcel) => <div className="Box-draggable">
             <input type="text" {...parcel.spreadDOM()} />
             <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
             <button onClick={() => parcel.delete()}>x</button>
         </div>}
-    </ParcelBoundary>;
-});
-
-const SortableFruitList = SortableContainer(({fruitListParcel}) => {
-    return <div>
-        {fruitListParcel.toArray((fruitParcel, index) => {
-            return <SortableFruitItem
-                key={fruitParcel.key}
-                index={index}
-                fruitParcel={fruitParcel}
-            />;
-        })}
-    </div>;
+    </ParcelBoundary>
 });
 
 const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
     return <div>
-        <SortableFruitList
-            fruitListParcel={fruitListParcel}
-            onSortEnd={({oldIndex, newIndex}) => fruitListParcel.move(oldIndex, newIndex)}
-        />
+        <SortableFruitList parcel={fruitListParcel} />
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
 };
@@ -120,7 +107,6 @@ import React from 'react';
 import FlipMove from 'react-flip-move';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListEditor = (props) => {
     let {fruitListParcel} = props;
@@ -149,6 +135,6 @@ const FruitListParcelHoc = ParcelHoc({
     name: "fruitListParcel"
 });
 
-export default FruitListParcelHoc(ExampleHoc(FruitListEditor));
+export default FruitListParcelHoc(FruitListEditor);
 
 ```

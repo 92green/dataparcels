@@ -1,7 +1,7 @@
 {
-  "name": "react-dataparcels",
+  "name": "react-dataparcels-drag",
   "version": "0.18.0-2",
-  "description": "A library for editing data structures that works really well with React.",
+  "description": "A plugin for react-dataparcels that adds drag and drop re-ordering of elements.",
   "main": "lib/index.js",
   "license": "UNLICENSED",
   "author": "Damien Clarke",
@@ -23,10 +23,10 @@
   },
   "dependencies": {
     "babel-runtime": "6.23.0",
-    "dataparcels": "^0.18.0-2",
-    "unmutable": "^0.39.0"
+    "react-sortable-hoc": "1.4.0"
   },
   "peerDependencies": {
-    "react": "16.4.2"
+    "react": "16.4.2",
+    "react-dataparcels": "^0.18.0-2"
   }
 }
