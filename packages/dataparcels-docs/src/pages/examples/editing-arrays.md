@@ -84,7 +84,7 @@ const SortableParcelList = ({element, container}) => {
 // to create a fruit-specific sortable list component
 
 const SortableFruitList = SortableParcelList({
-    element: ({parcel}) => <ParcelBoundary parcel={parcel}>
+    element: (parcel) => <ParcelBoundary parcel={parcel}>
         {(parcel) => <div className="Box-draggable Typography">
             <input type="text" {...parcel.spreadDOM()} />
             <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>

@@ -1,5 +1,6 @@
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ExampleHoc from 'component/ExampleHoc';
 
 const AgeParcelHoc = ParcelHoc({

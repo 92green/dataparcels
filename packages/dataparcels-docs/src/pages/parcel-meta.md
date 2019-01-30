@@ -73,7 +73,8 @@ This example shows how to uses meta stored against each element in an array to s
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListParcelHoc = ParcelHoc({
@@ -121,7 +122,8 @@ This example shows how `initialMeta` can be used to store information for later 
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 const PersonParcelHoc = ParcelHoc({
     name: "personParcel",

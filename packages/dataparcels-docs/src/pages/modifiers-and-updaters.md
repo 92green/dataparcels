@@ -14,7 +14,8 @@ This example shows how a string can be turned into an array for the editor, and 
 
 ```js
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 const PathParcelHoc = ParcelHoc({
     name: "pathParcel",
