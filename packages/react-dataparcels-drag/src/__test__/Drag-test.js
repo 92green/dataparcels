@@ -78,7 +78,7 @@ test('Drag must accept onSortEnd and still call internal onSortEnd', () => {
 });
 
 
-test('Drag must accept additional params and pass them to react-sortable-hoc', () => {
+test('Drag must accept additional props and pass them to react-sortable-hoc as props', () => {
 
     let parcel = new Parcel({
         value: [1,2,3]
@@ -93,6 +93,42 @@ test('Drag must accept additional params and pass them to react-sortable-hoc', (
 
     let props = wrapper.props();
     expect(props.woo).toBe(123);
+});
+
+test('Drag must accept additional config and pass them to react-sortable-hoc as props', () => {
+
+    let parcel = new Parcel({
+        value: [1,2,3]
+    });
+
+    let MyDrag = Drag({
+        element: () => <div />,
+        woo: 123
+    });
+
+    // $FlowFixMe
+    let wrapper = shallow(<MyDrag parcel={parcel} />, {disableLifecycleMethods: true});
+
+    let props = wrapper.props();
+    expect(props.woo).toBe(123);
+});
+
+test('Drag must prefer props over config', () => {
+
+    let parcel = new Parcel({
+        value: [1,2,3]
+    });
+
+    let MyDrag = Drag({
+        element: () => <div />,
+        woo: 123
+    });
+
+    // $FlowFixMe
+    let wrapper = shallow(<MyDrag parcel={parcel} woo={456} />, {disableLifecycleMethods: true});
+
+    let props = wrapper.props();
+    expect(props.woo).toBe(456);
 });
 
 test('Drag must render elements and pass parcels to them', () => {

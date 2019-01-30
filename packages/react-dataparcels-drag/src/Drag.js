@@ -18,7 +18,7 @@ type Props = {
     onSortEnd?: ({oldIndex: number, newIndex: number}) => void
 };
 
-export default ({element, container}: Config) => {
+export default ({element, container, ...configRest}: Config) => {
     let Container = container || 'div';
     let ConfiguredElement = SortableElement(({parcel, ...rest}) => element(parcel, rest));
     let ConfiguredContainer = SortableContainer(({parcel}) => <Container>
@@ -40,6 +40,7 @@ export default ({element, container}: Config) => {
                 parcel.move(oldIndex, newIndex);
                 onSortEnd && onSortEnd(param);
             }}
+            {...configRest}
             {...rest}
         />;
     };
