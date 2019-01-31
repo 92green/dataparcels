@@ -1,6 +1,8 @@
 ```flow
-spread(): {value: *, onChange: Function}
-spread(notFoundValue: any): {value: *, onChange: Function}
+spread(): {value: *, onChange: OnChangeFunction}
+spread(notFoundValue: any): {value: *, onChange: OnChangeFunction}
+
+type OnChangeFunction = (value: any) => void;
 ```
 
 Returns an object with the Parcel's value and its onChange function.

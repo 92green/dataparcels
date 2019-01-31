@@ -26,9 +26,7 @@ import Markdown_onChangeDOM from 'docs/api/parcel/onChangeDOM.md';
 import Markdown_set from 'docs/api/parcel/set.md';
 import Markdown_setIn from 'docs/api/parcel/setIn.md';
 import Markdown_update from 'docs/api/parcel/update.md';
-import Markdown_updateShape from 'docs/api/parcel/updateShape.md';
 import Markdown_updateIn from 'docs/api/parcel/updateIn.md';
-import Markdown_updateInShape from 'docs/api/parcel/updateInShape.md';
 import Markdown_delete from 'docs/api/parcel/delete.md';
 import Markdown_deleteIn from 'docs/api/parcel/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/parcel/insertAfter.md';
@@ -42,22 +40,15 @@ import Markdown_swapNext from 'docs/api/parcel/swapNext.md';
 import Markdown_swapPrev from 'docs/api/parcel/swapPrev.md';
 import Markdown_unshift from 'docs/api/parcel/unshift.md';
 import Markdown_setMeta from 'docs/api/parcel/setMeta.md';
-import Markdown_setChangeRequestMeta from 'docs/api/parcel/setChangeRequestMeta.md';
 import Markdown_dispatch from 'docs/api/parcel/dispatch.md';
-import Markdown_batch from 'docs/api/parcel/batch.md';
-import Markdown_batchAndReturn from 'docs/api/parcel/batchAndReturn.md';
 import Markdown_modifyDown from 'docs/api/parcel/modifyDown.md';
 import Markdown_modifyUp from 'docs/api/parcel/modifyUp.md';
-import Markdown_modifyShapeDown from 'docs/api/parcel/modifyShapeDown.md';
-import Markdown_modifyShapeUp from 'docs/api/parcel/modifyShapeUp.md';
-import Markdown_modifyChange from 'docs/api/parcel/modifyChange.md';
 import Markdown_initialMeta from 'docs/api/parcel/initialMeta.md';
 import Markdown_isChild from 'docs/api/parcel/isChild.md';
 import Markdown_isElement from 'docs/api/parcel/isElement.md';
 import Markdown_isIndexed from 'docs/api/parcel/isIndexed.md';
 import Markdown_isParent from 'docs/api/parcel/isParent.md';
 import Markdown_isTopLevel from 'docs/api/parcel/isTopLevel.md';
-import Markdown_hasDispatched from 'docs/api/parcel/hasDispatched.md';
 import Markdown_log from 'docs/api/parcel/log.md';
 import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
@@ -89,9 +80,7 @@ const md = {
     set: Markdown_set,
     setIn: Markdown_setIn,
     update: Markdown_update,
-    updateShape: Markdown_updateShape,
     updateIn: Markdown_updateIn,
-    updateInShape: Markdown_updateInShape,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
@@ -105,22 +94,15 @@ const md = {
     swapPrev: Markdown_swapPrev,
     unshift: Markdown_unshift,
     setMeta: Markdown_setMeta,
-    setChangeRequestMeta: Markdown_setChangeRequestMeta,
     dispatch: Markdown_dispatch,
-    batch: Markdown_batch,
-    batchAndReturn: Markdown_batchAndReturn,
     modifyDown: Markdown_modifyDown,
     modifyUp: Markdown_modifyUp,
-    modifyShapeDown: Markdown_modifyShapeDown,
-    modifyShapeUp: Markdown_modifyShapeUp,
-    modifyChange: Markdown_modifyChange,
     initialMeta: Markdown_initialMeta,
     isChild: Markdown_isChild,
     isElement: Markdown_isElement,
     isIndexed: Markdown_isIndexed,
     isParent: Markdown_isParent,
     isTopLevel: Markdown_isTopLevel,
-    hasDispatched: Markdown_hasDispatched,
     log: Markdown_log,
     spy: Markdown_spy,
     spyChange: Markdown_spyChange,
@@ -160,9 +142,9 @@ setIn()
 delete()
 deleteIn()
 update()
-updateShape()
 updateIn()
-updateShapeIn()
+setMeta()
+dispatch()
 
 # Indexed & element change methods
 insertAfter()
@@ -190,18 +172,7 @@ isTopLevel()
 # Modify methods
 modifyDown()
 modifyUp()
-modifyShapeDown()
-modifyShapeUp()
-modifyChange()
 initialMeta()
-
-# Advanced change methods
-setMeta()
-setChangeRequestMeta()
-dispatch()
-batch()
-batchAndReturn()
-hasDispatched()
 
 # Side-effect methods
 spy()
@@ -213,7 +184,6 @@ pipe()
 # Debug methods
 log()
 toConsole()
-
 `;
 
 export default () => <ApiPage

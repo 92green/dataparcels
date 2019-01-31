@@ -1,4 +1,4 @@
 ```flow
-insertAfter(value: *): void // only on ElementParcels, will insert after self
-insertAfter(key: string|number, value: *): void // only on IndexedParcels, will insert after child
+insertAfter(value: *): ParcelShape // only on ElementParcels, will insert after self
+insertAfter(key: string|number, value: *): ParcelShape // only on IndexedParcels, will insert after child
 ```

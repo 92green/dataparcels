@@ -1,3 +1,5 @@
+import IndexedKeys from 'docs/notes/IndexedKeys.md';
+
 ```flow
 getIn(keyPath: Array<string|number>): Parcel // only on ParentParcels
 getIn(keyPath: Array<string|number>, notSetValue: any): Parcel // only on ParentParcels
@@ -15,11 +17,9 @@ let value = {
     }
 };
 let parcel = new Parcel({value});
-parcel.get(['a','b']).value; // returns 123
-parcel.get(['a','z']).value; // returns undefined
-parcel.get(['a','z'], 789).value; // returns 789
+parcel.getIn(['a','b']).value; // returns 123
+parcel.getIn(['a','z']).value; // returns undefined
+parcel.getIn(['a','z'], 789).value; // returns 789
 ```
 
-#### getIn() with indexed values
-
-...
+<IndexedKeys />

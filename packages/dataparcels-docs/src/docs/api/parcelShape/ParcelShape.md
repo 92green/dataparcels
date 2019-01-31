@@ -2,7 +2,7 @@ import Link from 'component/Link';
 import Param from 'component/Param';
 import ApiPageIcon from 'component/ApiPageIcon';
 import ParcelCreateReact from 'docs/notes/ParcelCreateReact.md';
-import IconParcel from 'content/parcel.gif';
+import IconParcel from 'content/parcelshape.gif';
 
 # ParcelShape
 
@@ -10,7 +10,7 @@ import IconParcel from 'content/parcel.gif';
 
 ParcelShape is a data container very similar to a <Link to="/api/Parcel">Parcel</Link> but without the automatic data binding. All it does is contain data, no strings attached, and provide methods for you to alter its data.
 
-These exist to be used with <Link to="/shape-updaters">shape updaters</Link>, to provide a safe way to alter the shape of data in a Parcel.
+These exist to be used with updater methods, such as <Link to="/api/Parcel#modifyDown">Parcel.modifyDown</Link>, to provide a safe way to alter the shape of data in a Parcel.
 ParcelShape's methods are a subset of <Link to="/api/Parcel">Parcel</Link>'s methods.
 
 ```js
