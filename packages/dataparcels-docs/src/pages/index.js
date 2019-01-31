@@ -8,6 +8,7 @@ import PageLayout from 'component/PageLayout';
 import API from 'content/API';
 import IconParcel from 'content/parcelinverted.gif';
 import APIExamples from 'content/APIExamples.md';
+import APINavigation from 'component/APINavigation';
 
 export default () => <Box>
     <Box modifier="invertedCopy invertedBackground">
@@ -35,21 +36,23 @@ export default () => <Box>
                         <IndexMarkdown />
                     </Typography>
                 </Box>}
-                nav={() => <NavigationList>
-                    <NavigationListItem><HtmlLink href={`#What-is-it`}>What is it?</HtmlLink></NavigationListItem>
-                    <NavigationListItem><HtmlLink href={`#Getting-Started`}>Getting Started</HtmlLink></NavigationListItem>
-                    <NavigationListItem><HtmlLink href={`#Examples`}>Examples</HtmlLink></NavigationListItem>
-                    <NavigationListItem><HtmlLink href={`#API`}>API</HtmlLink></NavigationListItem>
-                    <NavigationListItem><HtmlLink href={`#API-Examples`}>API Examples</HtmlLink></NavigationListItem>
-                </NavigationList>}
+                nav={() => <Box>
+                    <NavigationList>
+                        <NavigationListItem><HtmlLink href={`#What-is-it`}>What is it?</HtmlLink></NavigationListItem>
+                        <NavigationListItem><HtmlLink href={`#Getting-Started`}>Getting Started</HtmlLink></NavigationListItem>
+                    </NavigationList>
+                    <NavigationList>
+                        <NavigationListItem><HtmlLink href={`#Features`}>Features</HtmlLink></NavigationListItem>
+                        <NavigationListItem>- <HtmlLink href={`#1.-Data-editing`}>Data editing</HtmlLink></NavigationListItem>
+                        <NavigationListItem>- <HtmlLink href={`#2.-UI-behaviour`}>UI behaviour</HtmlLink></NavigationListItem>
+                        <NavigationListItem>- <HtmlLink href={`#3.-Data-synchronisation`}>Data synchronisation</HtmlLink></NavigationListItem>
+                    </NavigationList>
+                    <APINavigation />
+                </Box>}
             />
             <Wrapper>
                 <Text id="API" element="h2" modifier="sizeMega">API</Text>
                 <API />
-                <Text id="API-Examples" element="h2" modifier="sizeMega">API Examples</Text>
-                <Typography>
-                    <APIExamples />
-                </Typography>
             </Wrapper>
         </Wrapper>
     </Box>
