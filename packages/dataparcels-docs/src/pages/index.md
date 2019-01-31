@@ -43,6 +43,6 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 ### 3. Data synchronisation
 
 <Link to="/data-synchronisation">Data synchronisation</Link> is how dataparcels interacts with related pieces of external data. This includes:
-- Setting up <Link to="/data-synchronisation#parcels-as-a-slave">Parcels as a slave</Link> to higher state, such as the query string
+- Setting up a <Link to="/data-synchronisation#parcel-as-a-slave">Parcel as a slave</Link> to higher state, such as the query string
 - Coping with <Link to="/data-synchronisation#sending-failable-changes">sending failable changes</Link>, such as saving data to a server
 - <Link to="/data-synchronisation#caching-unsaved0-changes">Caching unsaved changes</Link>
