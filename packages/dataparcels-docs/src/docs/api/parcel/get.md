@@ -23,10 +23,6 @@ parcel.get('xyz', 789).value; // returns 789
 
 #### get() with indexed values
 
-When called on a Parcel with an indexed value, such as an array, `get()` can accept an `index` or a `key`.
-- `index` (number) is used to get a value based off its position. It can also be negative, indicating an offset from the end of the sequence.
-- `key` (string) is used to get a specific value by its unique key within the Parcel.
-
 <IndexedKeys />
 
 ```js

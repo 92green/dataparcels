@@ -56,7 +56,7 @@ For the full list of methods you can use on indexed data types, see <Link to="/a
 
 Drag and drop is easy using [react-dataparcels-drag](https://www.npmjs.com/package/react-dataparcels-drag), which is a slim wrapper around [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc). Drag items up and fown to change their order.
 
-THe `react-dataparcels-drag` HOC attempts to keep a very similar API to `react-sortable-hoc`, and therefore its usage is a little different compared to the other HOCs in `react-dataparcels`.
+The `react-dataparcels-drag` HOC attempts to keep a very similar API to `react-sortable-hoc`, and therefore its usage is a little different compared to the other HOCs in `react-dataparcels`.
 
 <EditingArraysDrag />
 
@@ -66,14 +66,21 @@ import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ParcelDrag from 'react-dataparcels-drag';
 
-const FruitListParcelHoc = ParcelHoc({
-    name: "fruitListParcel",
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ]
-});
+// this is a generic react-sortable-hoc + dataparcels list hoc
+// that you can use in your own projects
+
+const SortableParcelList = ({element, container}) => {
+    let Container = container || 'div';
+    let Element = SortableElement(({parcel, ...rest}) => element(parcel, rest));
+
+    return SortableContainer(({parcel}) => <Container>
+        {parcel.toArray((elementParcel, index) => <Element
+            key={elementParcel.key}
+            index={index}
+            parcel={elementParcel}
+        />)}
+    </Container>);
+};
 
 const SortableFruitList = ParcelDrag({
     element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>

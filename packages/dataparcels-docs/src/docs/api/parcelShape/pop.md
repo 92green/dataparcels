@@ -1,3 +1,3 @@
 ```flow
-pop(): void // only on IndexedParcels
+pop(): ParcelShape // only on IndexedParcels
 ```

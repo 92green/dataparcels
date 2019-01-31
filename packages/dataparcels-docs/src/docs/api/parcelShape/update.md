@@ -1,4 +1,4 @@
 ```flow
-update(updater: Function): void
-update(key: string|number, updater: Function): void // only on ParentParcels, will set a child
+update(updater: Function): ParcelShape
+update(key: string|number, updater: Function): ParcelShape // only on ParentParcels, will set a child
 ```

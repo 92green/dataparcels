@@ -1,7 +1,7 @@
 import {Box, Link, Message, Text} from 'dcme-style';
 
 ```flow
-onChangeDOM(event: Event): void
+onChangeDOM(event: HTMLEvent): void
 ```
 
 This is designed for use with HTML inputs.

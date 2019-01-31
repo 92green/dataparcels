@@ -16,24 +16,19 @@ const PersonParcelHoc = ParcelHoc({
 
 const PersonEditor = (props) => {
     let {personParcel} = props;
-
-    let firstname = personParcel.get('firstname');
-    let lastname = personParcel.get('lastname');
-    let postcode = personParcel.getIn(['address', 'postcode']);
-
     return <div>
         <label>firstname</label>
-        <ParcelBoundary parcel={firstname}>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
             {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>lastname</label>
-        <ParcelBoundary parcel={lastname}>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
             {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>postcode</label>
-        <ParcelBoundary parcel={postcode}>
+        <ParcelBoundary parcel={personParcel.getIn(['address', 'postcode'])}>
             {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
         </ParcelBoundary>
     </div>;

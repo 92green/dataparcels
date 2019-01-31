@@ -1,3 +1,3 @@
 ```flow
-shift(): void // only on IndexedParcels
+shift(): ParcelShape // only on IndexedParcels
 ```

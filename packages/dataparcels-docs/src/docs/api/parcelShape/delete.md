@@ -1,4 +1,4 @@
 ```flow
-delete(): void
-delete(key: string|number): void // only on ParentParcels, will delete a child
+delete(): ParcelShape
+delete(key: string|number): ParcelShape // only on ParentParcels, will delete a child
 ```

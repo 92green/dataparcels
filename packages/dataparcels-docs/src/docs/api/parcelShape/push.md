@@ -1,3 +1,3 @@
 ```flow
-push(...values: Array<*>): void // only on IndexedParcels
+push(...values: Array<*>): ParcelShape // only on IndexedParcels
 ```
