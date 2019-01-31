@@ -29,4 +29,4 @@ It does not trigger any changes of its own, but awaits a change from below. Valu
 
 The modify methods are particularly useful when your Parcel contains data you want to be able to make an editor for, but the data isn't stored in a format that allows you to do that easily. The `modifyDown()` and `modifyUp()` methods are often used with one another to make a value editable on the way down, and turn it back on the way up.
 
-<ValueUpdater alt="modifyShapeUp" />
+<ValueUpdater />
