@@ -35,7 +35,10 @@
 @include DcmeBulletList;
 @include DcmeButton;
 @include DcmeCenteredLanding;
-@include DcmeDivider;
+@include DcmeDivider {
+    border-top: 1px solid #CCC;
+    margin: 5rem 0 4rem;
+}
 @include DcmeGrid;
 @include DcmeImage {
     &-logo {

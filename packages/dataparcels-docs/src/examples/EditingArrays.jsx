@@ -23,6 +23,7 @@ const FruitListEditor = (props) => {
                     <button onClick={() => parcel.swapNext()}>v</button>
                     <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
                     <button onClick={() => parcel.delete()}>x</button>
+                    <span className="Text Text-monospace"> key {fruitParcel.key}</span>
                 </div>}
             </ParcelBoundary>;
         })}

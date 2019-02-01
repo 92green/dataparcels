@@ -119,18 +119,18 @@ key
 id
 path
 
-# Spread methods
-spread()
-spreadDOM()
-onChange()
-onChangeDOM()
-
 # Branch methods
 get()
 getIn()
 children()
 toObject()
 toArray()
+
+# Input binding methods
+spread()
+spreadDOM()
+onChange()
+onChangeDOM()
 
 # Child methods
 isFirst()

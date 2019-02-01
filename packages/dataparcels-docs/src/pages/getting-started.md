@@ -1,8 +1,6 @@
 import Link from 'gatsby-link';
-import {Grid, GridItem} from 'dcme-style';
 import EditingObjectsBeginner from 'examples/EditingObjectsBeginner';
 import EditingObjects from 'examples/EditingObjects';
-import Examples from 'content/Examples.md';
 
 # Getting Started
 
@@ -85,7 +83,7 @@ export default PersonParcelHoc(PersonEditor);
 ### What's going on
 
 * `react-dataparcels` is imported.
-* It stores the data in a `ParcelHoc` higher order component, which creates and stores a parcel in state, and passes it down as props. The parcel contains the data.
+* It stores the data in a <Link to="/api/ParcelHoc">ParcelHoc</Link> higher order component, which creates and stores a parcel in state, and passes it down as props. The parcel contains the data.
 * The `.get()` method is used to branch off and create smaller parcels containing just `firstname`, `lastname` and `postcode`.
 * The `value` and the `onChangeDOM` functions aree given to each of the `input` elements to bind them to the parcel.
 
@@ -139,13 +137,10 @@ export default PersonParcelHoc(PersonEditor);
 
 ### What's better about it?
 
-* It's now using the `ParcelBoundary` React component to make sure that inputs are only re-rendered if their values have changed. This isn't *required*, but it is **very** recommended. Without this, all inputs will re-render any time any data changes.
+* It's now using the <Link to="/api/ParcelBoundary">ParcelBoundary</Link> React component to make sure that inputs are only re-rendered if their values have changed. This isn't *required*, but it is **very** recommended. Without this, all inputs will re-render any time any data changes.
 * `.spreadDOM()` is used to provide the `value` and `onChangeDOM` props to the `input` elements more easily.
 
-## Docs
+## More
 
-For more info see the documentation for <Link to="/api/Parcel">Parcel</Link>, <Link to="/api/ParcelHoc">ParcelHoc</Link> and <Link to="/api/ParcelBoundary">ParcelBoundary</Link>.
-
-## More examples
-
-<Examples />
+- <Link to="/api">Browse the API</Link>
+- Continue on to <Link to="/data-editing">data editing</Link>
