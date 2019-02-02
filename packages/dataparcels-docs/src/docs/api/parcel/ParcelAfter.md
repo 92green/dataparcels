@@ -1,5 +1,5 @@
-import Examples from 'content/Examples.md';
+import Link from 'gatsby-link';
 
 ### Examples
 
-<Examples />
+Many examples can be found on the <Link to="/data-editing">data editing</Link> page.

@@ -11,23 +11,28 @@ You can trigger changes to small parts of your data, and those changes will prop
 
 It's designed for use with [React](https://reactjs.org/), and comes with components for easy state management and performant rendering. The heirarchical, componentized nature of React fits perfectly with the heirarchical, componentized nature of dataparcels.
 
-<Text modifier="weightKilo"><Link to="/examples/editing-arrays">See an example of dataparcels code in action</Link></Text>.
+<Text modifier="weightKilo"><Link to="/data-editing">See an example of dataparcels code in action</Link></Text>.
+
+<Divider />
 
 ## Getting Started
 
 <Link to="/getting-started">Get started with dataparcels</Link>, installation instructions and a first example.
+
+<Divider />
 
 ## Features
 
 ### 1. Data editing
 
 <Link to="/data-editing">Data editing</Link> is the ability to manipulate data based on user input, in a way that's expressive to code. This includes:
-- <Link to="/data-editing#data-traversal">Data traversal</Link>
-- <Link to="/data-editing#merging-changes">Merging partial changes</Link> into larger data structures
-- <Link to="/data-editing#binding-inputs">Binding data to inputs</Link>
-- Methods for working with <Link to="/data-editing#indexed-methods">indexed data types</Link> such as arrays
-- <Link to="/data-editing#unique-keying">Automatic unique keying</Link> of array elements
-- Ability to <Link to="/data-editing#modify">modify data</Link> from its original format to make it suitable for the UI
+- <Link to="/data-editing">Data traversal</Link>
+- <Link to="/data-editing">Binding data to inputs</Link>
+- <Link to="/data-editing">Merging partial changes</Link> into larger data structures
+- Methods for working with <Link to="/data-editing#Indexed-data-types">indexed data types</Link> such as arrays
+- <Link to="/data-editing#Indexed-data-types">Automatic unique keying</Link> of array elements
+- Ability to <Link to="/data-editing#Modifying-data-to-fit-the-UI">modify data to fit the UI</Link>
+- <Link to="/data-editing#Managing-your-own-Parcel-state">Managing your own Parcel state</Link>
 
 ### 2. UI behaviour
 
@@ -43,6 +48,8 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 ### 3. Data synchronisation
 
 <Link to="/data-synchronisation">Data synchronisation</Link> is how dataparcels interacts with related pieces of external data. This includes:
-- Setting up <Link to="/data-synchronisation#parcels-as-a-slave">Parcels as a slave</Link> to higher state, such as the query string
+- Setting up a <Link to="/data-synchronisation#parcel-as-a-slave">Parcel as a slave</Link> to higher state, such as the query string
 - Coping with <Link to="/data-synchronisation#sending-failable-changes">sending failable changes</Link>, such as saving data to a server
 - <Link to="/data-synchronisation#caching-unsaved0-changes">Caching unsaved changes</Link>
+
+<Divider />
