@@ -1,7 +1,7 @@
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
-//import shape from 'react-dataparcels/shape';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import cancel from 'react-dataparcels/cancel';
 import ExampleHoc from 'component/ExampleHoc';
 
 const ExampleParcelHoc = ParcelHoc({
@@ -18,16 +18,25 @@ const AlphanumericInput = (props) => {
         .alphanumericParcel
         .modifyUp(string => string.replace(/[^a-zA-Z0-9]/g, "")); // remove non alpha numeric characters on the way up
 
-    return <input type="text" {...alphanumericParcel.spreadDOM()} />;
+    return <ParcelBoundary parcel={alphanumericParcel}>
+        {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
+    </ParcelBoundary>;
 };
 
 const NumberInput = (props) => {
     let numberParcel = props
         .numberParcel
-        .modifyDown(string => `${string}`) // turn value into a string on the way down
-        //.modifyUp(shape(number => Number(number))); // turn value back into a number on the way up
+        .modifyDown(number => `${number}`) // turn value into a string on the way down
+        .modifyUp(string => {
+            let number = Number(string);
+            return isNaN(number) ? cancel() : number;
+        });
+        // turn value back into a number on the way up
+        // but cancel the change if the string could not be turned into a number
 
-    return <input type="text" {...numberParcel.spreadDOM()} />;
+    return <ParcelBoundary parcel={numberParcel} debounce={1}>
+        {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
+    </ParcelBoundary>;
 };
 
 const DelimitedStringInput = (props) => {
@@ -55,20 +64,17 @@ const ExampleEditor = (props) => {
     let {exampleParcel} = props;
     return <div>
         <h4>Alphanumeric input</h4>
-        <ParcelBoundary parcel={exampleParcel.get('alphanumeric')}>
-            {(parcel) => <AlphanumericInput alphanumericParcel={parcel} />}
-        </ParcelBoundary>
+        <AlphanumericInput alphanumericParcel={exampleParcel.get('alphanumeric')} />
 
         <h4>Number > string</h4>
-        <ParcelBoundary parcel={exampleParcel.get('number')}>
-            {(parcel) => <NumberInput numberParcel={parcel} />}
-        </ParcelBoundary>
+        <p>Error: requires debounce, and re-parses valid changes (00000.1 > 0.1 instantly)</p>
+        <NumberInput numberParcel={exampleParcel.get('number')} />
 
         <h4>Delimited string > array of strings</h4>
         <p>Error: "Unmutable update() cannot be called with a value of [object Object]", from prepareChildKeys()</p>
-        <ParcelBoundary parcel={exampleParcel.get('delimitedString')}>
-            {(parcel) => <DelimitedStringInput delimitedStringParcel={parcel} />}
-        </ParcelBoundary>
+        <DelimitedStringInput delimitedStringParcel={exampleParcel.get('delimitedString')} />
+
+        <h4>Missing objects</h4>
     </div>;
 };
 

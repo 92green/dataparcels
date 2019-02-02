@@ -24,7 +24,7 @@ Say we want to allow the user to edit the fields in the following data structure
 
 This example demonstrates a pretty typical React setup to do that.
 
-EditingObjects />
+<EditingObjects />
 
 ```js
 import React from 'react';
@@ -82,7 +82,7 @@ Dataparcels has a powerful set of methods for manipulating indexed data types, s
 
 Notice how items in the array are given **automatic unique keys**, displayed under each input as `#a`, `#b` ..., which can be used by React to identify each element regardless of how the elements move around.
 
-EditingArrays />
+<EditingArrays />
 
 ```js
 import React from 'react';
@@ -142,7 +142,7 @@ If you don't want to use the <Link to="/api/ParcelHoc">ParcelHoc higher order co
 
 This example also serves as an indication on how you might use `dataparcels` with something other than React.
 
-ManagingOwnParcelState />
+<ManagingOwnParcelState />
 
 ```js
 import React from 'react';

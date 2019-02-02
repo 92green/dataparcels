@@ -7,6 +7,7 @@ import ChangeRequest from '../ChangeRequest';
 import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
 import shape from '../shape';
+import cancel from '../cancel';
 
 // react-dataparcels
 import ParcelHoc from '../ParcelHoc';
@@ -20,6 +21,7 @@ import InternalChangeRequest from 'dataparcels/ChangeRequest';
 import InternalDeletedParcelMarker from 'dataparcels/DeletedParcelMarker';
 import InternalParcelShape from 'dataparcels/ParcelShape';
 import InternalShape from 'dataparcels/shape';
+import InternalCancel from 'dataparcels/cancel';
 
 // internal react-dataparcels
 import InternalParcelHoc from '../lib/ParcelHoc';
@@ -48,6 +50,10 @@ test('index should export Parcel', () => {
 
 // test('/shape should export shape', () => {
 //     expect(shape).toBe(InternalShape);
+// });
+
+// test('/cancel should export cancel', () => {
+//     expect(cancel).toBe(InternalCancel);
 // });
 
 test('/ParcelHoc should export ParcelHoc', () => {

@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports = require('./lib/ParcelBoundaryHoc.js').default;
+module.exports = require('./lib/ParcelBoundaryHoc.js');
