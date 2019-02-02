@@ -31,7 +31,7 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 - <Link to="/data-editing">Merging partial changes</Link> into larger data structures
 - Methods for working with <Link to="/data-editing#Indexed-data-types">indexed data types</Link> such as arrays
 - <Link to="/data-editing#Indexed-data-types">Automatic unique keying</Link> of array elements
-- Ability to <Link to="/data-editing#modify">modify data</Link> from its original format to make it suitable for the UI
+- Ability to <Link to="/data-editing#Modifying-data-to-fit-the-UI">modify data to fit the UI</Link>
 - <Link to="/data-editing#Managing-your-own-Parcel-state">Managing your own Parcel state</Link>
 
 ### 2. UI behaviour
