@@ -56,6 +56,10 @@ test('/cancel should export cancel', () => {
     expect(cancel).toBe(InternalCancel);
 });
 
+// test('/cancel should export cancel', () => {
+//     expect(cancel).toBe(InternalCancel);
+// });
+
 test('/ParcelHoc should export ParcelHoc', () => {
     expect(ParcelHoc).toBe(InternalParcelHoc);
 });
