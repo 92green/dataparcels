@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports = require('dataparcels/ParcelShape.js').default;
+module.exports = require('dataparcels/ParcelShape.js');

@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports = require('./lib/ParcelHoc.js').default;
+module.exports = require('./lib/ParcelHoc.js');
