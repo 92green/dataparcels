@@ -12,8 +12,7 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
 
 import {ReducerInvalidActionError} from '../errors/Errors';
-
-import {IsReducerCancelAction} from './ReducerCancelAction';
+import {isCancelledError} from './cancel';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
@@ -100,7 +99,7 @@ export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?Parc
             try {
                 return doDeepAction(action)(parcelData);
             } catch(e) {
-                if(IsReducerCancelAction(e)) {
+                if(isCancelledError(e)) {
                     cancelled++;
                     return parcelData;
                 }

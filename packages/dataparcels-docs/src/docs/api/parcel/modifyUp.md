@@ -29,4 +29,24 @@ It does not trigger any changes of its own, but awaits a change from below. Valu
 
 The modify methods are particularly useful when your Parcel contains data you want to be able to make an editor for, but the data isn't stored in a format that allows you to do that easily. The `modifyDown()` and `modifyUp()` methods are often used with one another to make a value editable on the way down, and turn it back on the way up.
 
+#### Cancelling a change
+
+You can also cancel a change by returning `cancel()` from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
+
+```js
+import cancel from 'dataparcels/cancel';
+// or
+import cancel from 'react-dataparcels/cancel';
+
+let parcel = new Parcel({
+    value: 123
+})
+
+parcel = parcel.modifyUp(value => value === null ? cancel() : value);
+
+parcel.set(456); // this would work, value becomes 123
+parcel.set(null); // this would cause no change
+
+```
+
 <ValueUpdater />

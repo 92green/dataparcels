@@ -4,6 +4,7 @@ import update from 'unmutable/lib/update';
 
 import Parcel from '../Parcel';
 import ParcelShape from '../../parcelShape/ParcelShape';
+import cancel from '../../change/cancel';
 import shape from '../../parcelShape/shape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
@@ -113,18 +114,6 @@ test('Parcel.modifyUp() should allow you to change the payload of a changed parc
     expect(handleChange.mock.calls[0][0].value).toBe(457);
 });
 
-test('Parcel.modifyUp() should allow you to change the payload of a changed parcel to undefined (unlike modifyUp(parcelShapeUpdater))', () => {
-    var handleChange = jest.fn();
-    new Parcel({
-        value: 123,
-        handleChange
-    })
-        .modifyUp(() => {})
-        .onChange(456);
-
-    expect(handleChange.mock.calls[0][0].value).toBe(undefined);
-});
-
 test('Parcel.modifyUp() should validate value updater', () => {
     let handleChange = () => {};
 
@@ -159,6 +148,22 @@ test('Parcel.modifyUp() should allow changes to meta through', () => {
                 abc: 123
             })
         ));
+});
+
+test('Parcel.modifyUp() should cancel a change if cancel() is returned', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(() => cancel());
+
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    });
+
+    let parcelWithModifier = parcel.modifyUp(updater);
+    parcelWithModifier.push(4);
+
+    expect(handleChange).not.toHaveBeenCalled();
 });
 
 test('Parcel.modifyDown(parcelShapeUpdater) should be called with parcelShape and return with no change', () => {
@@ -324,10 +329,10 @@ test('Parcel.modifyUp(parcelShapeUpdater) should work with a returned collection
     expect(handleChange.mock.calls[0][0].data.value).toEqual([4,3,2,1]);
 });
 
-test('Parcel.modifyUp(parcelShapeUpdater) should cancel a change if undefined is returned', () => {
+test('Parcel.modifyUp(parcelShapeUpdater) should cancel a change if cancel() is returned', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(() => {});
+    let updater = jest.fn(() => cancel());
 
     let parcel = new Parcel({
         handleChange,
