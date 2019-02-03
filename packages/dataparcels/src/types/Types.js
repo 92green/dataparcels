@@ -25,6 +25,7 @@ export type ParcelConfig = {
 export type ParcelConfigInternal = {
     onDispatch?: Function,
     child: *,
+    lastOriginId: string,
     meta: ParcelMeta,
     id: ParcelId,
     parent?: ?Parcel,
@@ -33,6 +34,7 @@ export type ParcelConfigInternal = {
 
 export type ParcelCreateConfigType = {
     onDispatch?: Function,
+    lastOriginId: string,
     id?: ParcelId,
     parcelData?: ParcelData,
     parent?: ?Parcel,

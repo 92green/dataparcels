@@ -38,7 +38,8 @@ export default (_this: Parcel): Object => ({
 
             let parcelWithChangedData = _this._create({
                 handleChange: _onHandleChange,
-                parcelData
+                parcelData,
+                lastOriginId: changeRequest.originId
             });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);

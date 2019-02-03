@@ -315,3 +315,46 @@ test('ParcelBoundary should use an internal boundary split to stop parcel bounda
     expect(childParcelA2.value).toEqual({abc: 456, def: 123});
     expect(childParcelB2.value).toEqual({abc: 123, def: 456});
 });
+
+test('ParcelBoundary should ignore updates from props for updates caused by themselves if keepState is true', () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    });
+
+    let withModify = (parcel) => parcel.modifyUp(value => value + 1);
+
+    let wrapper = shallow(<ParcelBoundary parcel={withModify(parcel)} keepState>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(456);
+
+    let newParcel = handleChange.mock.calls[0][0];
+
+    // verify that the current value of the parcel has been updated
+    expect(newParcel.value).toBe(457);
+
+    wrapper.setProps({
+        parcel: withModify(newParcel)
+    });
+
+    // expect that the value in the parcelboundary has not changed
+    // because the last change was triggered by this boundary
+    let childParcel2 = childRenderer.mock.calls[2][0];
+    expect(childParcel2.value).toBe(456);
+
+    // make a change externally and ensure that the value in the boundary does update
+    newParcel.set(789);
+    let newParcel2 = handleChange.mock.calls[1][0];
+    wrapper.setProps({
+        parcel: withModify(newParcel2)
+    });
+
+    let childParcel3 = childRenderer.mock.calls[3][0];
+    expect(childParcel3.value).toBe(789);
+});
