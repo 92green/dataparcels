@@ -165,3 +165,11 @@ test('updateChildKeys() retains deep keys on arrays', () => {
 
     expect(expectedData).toEqual(updateChildKeys()(data));
 });
+
+test('updateChildKeys() should passthrough data that doesnt require keys / data that doesnt have child', () => {
+    let data = {
+        value: 123
+    };
+
+    expect(data).toEqual(updateChildKeys()(data));
+});
