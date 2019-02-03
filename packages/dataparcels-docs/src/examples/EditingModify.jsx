@@ -34,7 +34,7 @@ const NumberInput = (props) => {
         // turn value back into a number on the way up
         // but cancel the change if the string could not be turned into a number
 
-    return <ParcelBoundary parcel={numberParcel} debounce={1}>
+    return <ParcelBoundary parcel={numberParcel}>
         {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
     </ParcelBoundary>;
 };
@@ -67,11 +67,10 @@ const ExampleEditor = (props) => {
         <AlphanumericInput alphanumericParcel={exampleParcel.get('alphanumeric')} />
 
         <h4>Number > string</h4>
-        <p>Error: requires debounce, and re-parses valid changes (00000.1 > 0.1 instantly)</p>
+        <p>re-parses valid changes (00000.1 > 0.1 instantly)</p>
         <NumberInput numberParcel={exampleParcel.get('number')} />
 
         <h4>Delimited string > array of strings</h4>
-        <p>Error: "Unmutable update() cannot be called with a value of [object Object]", from prepareChildKeys()</p>
         <DelimitedStringInput delimitedStringParcel={exampleParcel.get('delimitedString')} />
 
         <h4>Missing objects</h4>
