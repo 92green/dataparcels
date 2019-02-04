@@ -1,6 +1,7 @@
 import Link from 'gatsby-link';
 import EditingObjects from 'examples/EditingObjects';
 import EditingArrays from 'examples/EditingArrays';
+import EditingModify from 'examples/EditingModify';
 import ManagingOwnParcelState from 'examples/ManagingOwnParcelState';
 
 # Data Editing
@@ -23,7 +24,7 @@ Say we want to allow the user to edit the fields in the following data structure
 
 This example demonstrates a pretty typical React setup to do that.
 
-<EditingObjects />
+EditingObjects />
 
 ```js
 import React from 'react';
@@ -81,7 +82,7 @@ Dataparcels has a powerful set of methods for manipulating indexed data types, s
 
 Notice how items in the array are given **automatic unique keys**, displayed under each input as `#a`, `#b` ..., which can be used by React to identify each element regardless of how the elements move around.
 
-<EditingArrays />
+EditingArrays />
 
 ```js
 import React from 'react';
@@ -129,9 +130,11 @@ export default FruitListParcelHoc(FruitListEditor);
 
 For the full list of methods you can use on indexed data types, see <Link to="/api/Parcel#indexed_change_methods">Indexed Change Methods</Link> and <Link to="/api/Parcel#element_change_methods">Element Change Methods</Link> in the Parcel API reference.
 
-## Modifying data
+## Modifying data to fit the UI
 
-Will be added soon.
+Sometimes you may hit a situation where a Parcel contains data you want to be able to make an editor for, but the data isn't stored in a format that allows you to do that easily. Parcel's <Link to="/api/Parcel#modifyDown">modifyDown()</Link> and <Link to="/api/Parcel#modifyUp">modifyUp()</Link> methods let you change data types and shapes between the top level Parcel and the input bindings.
+
+<EditingModify />
 
 ## Managing your own Parcel state
 
@@ -139,7 +142,7 @@ If you don't want to use the <Link to="/api/ParcelHoc">ParcelHoc higher order co
 
 This example also serves as an indication on how you might use `dataparcels` with something other than React.
 
-<ManagingOwnParcelState />
+ManagingOwnParcelState />
 
 ```js
 import React from 'react';

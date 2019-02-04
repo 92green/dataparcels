@@ -11,7 +11,6 @@ import type {ParcelShapeSetMeta} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
-import ReducerCancelAction from '../change/ReducerCancelAction';
 
 import ParcelTypes from '../parcel/ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
@@ -147,19 +146,9 @@ export default class ParcelShape {
     }
 
     static update(updater: ParcelShapeUpdater): ParcelShapeUpdateFunction {
-        let fn = (parcelData: ParcelData, errorOnUndefined: ?boolean): ParcelData => {
-            let parcelShape: ParcelShape = ParcelShape.fromData(parcelData);
-
-            if(errorOnUndefined) {
-                // $FlowFixMe - this is passed a ParcelShape, but flow thinks that is incompatible with the argument of ParcelShapeUpdater
-                let updated: any = updater(parcelShape);
-                if(updated === undefined) {
-                    ReducerCancelAction();
-                }
-                updater = () => updated;
-            }
-
-            return parcelShape
+        let fn = (parcelData: ParcelData): ParcelData => {
+            return ParcelShape
+                .fromData(parcelData)
                 .updateShape(updater)
                 .data;
         };

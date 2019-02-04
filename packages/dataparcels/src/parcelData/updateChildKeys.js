@@ -31,6 +31,10 @@ function toIntKey(str: ?string): ?number {
 export default () => (parcelData: ParcelData): ParcelData => {
     let {value, child} = parcelData;
 
+    if(!child) {
+        return parcelData;
+    }
+
     if(!isIndexed(value)) {
         let updateChild = map((node, key) => set('key', key)(node));
 

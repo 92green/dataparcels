@@ -27,7 +27,8 @@ type Props = {
     hold: boolean,
     forceUpdate: Array<*>,
     parcel: Parcel,
-    pure: boolean
+    pure: boolean,
+    keepState: boolean
 };
 
 type State = {
@@ -46,7 +47,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         debugParcel: false,
         hold: false,
         forceUpdate: [],
-        pure: true
+        pure: true,
+        keepState: false
     };
 
     constructor(props: Props) {
@@ -75,7 +77,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         let parcelDataChanged: boolean = !ParcelBoundaryEquals(this.props.parcel, nextProps.parcel);
 
-        if(!parcelDataChanged && (nextProps.debounce || nextProps.hold)) {
+        if(!parcelDataChanged) {
             parcelDataChanged = !ParcelBoundaryEquals(this.state.parcel, nextState.parcel);
         }
 
@@ -86,13 +88,24 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     }
 
     static getDerivedStateFromProps(props: Props, state: State): * {
-        let {parcel} = props;
+        let {
+            parcel,
+            keepState
+        } = props;
+
         let {
             makeBoundarySplit,
             parcelFromProps
         } = state;
 
-        if(parcel !== parcelFromProps) {
+        let updateState = parcel !== parcelFromProps;
+
+        if(keepState && parcel._lastOriginId.startsWith(parcel.id)) {
+            // if keepState, don't update state if the last change came from within this parcel boundary
+            updateState = false;
+        }
+
+        if(updateState) {
             var newState: any = {
                 parcelFromProps: parcel
             };

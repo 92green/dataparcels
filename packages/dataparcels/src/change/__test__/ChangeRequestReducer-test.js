@@ -12,7 +12,7 @@ const makeReducer = (actions) => pipeWith(
     new ChangeRequest(actions),
     ChangeRequestReducer
 );
-
+/*
 test('ChangeRequestReducer should pass through with no actions', () => {
     var data = {
         value: 123,
@@ -231,4 +231,36 @@ test('ChangeRequestReducer should process aa complicated bunch of pre and post f
     };
 
     expect(makeReducer(actions)(data).value).toEqual(expectedValue);
+});*/
+
+test('ChangeRequestReducer should process pre and post on parentActions like "swapNextSelf"', () => {
+    var data = {
+        value: "abc.def.ghi",
+        key: "^"
+    };
+
+    let pre = update('value', value => value.split("."));
+    let post = update('value', value => value.join("."));
+
+    let actions = [
+        ActionCreators
+            .swapNextSelf()
+            ._unget(0)
+            ._addPre(pre)
+            ._addPost(post)
+    ];
+
+    let expectedData = {
+        key: "^",
+        value: "def.abc.ghi"
+    };
+
+    let {
+        child, // throw away child as this is normally dealt with in updaters
+        // it is the reducers job to execute actions correctly, not to ensure the integrity of the data
+        // or protect against the setting of invalid data shapes
+        ...processed
+    } = makeReducer(actions)(data);
+
+    expect(processed).toEqual(expectedData);
 });

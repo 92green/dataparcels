@@ -40,6 +40,7 @@ import overload from 'unmutable/lib/util/overload';
 const DEFAULT_CONFIG_INTERNAL = () => ({
     onDispatch: undefined,
     child: undefined,
+    lastOriginId: '',
     meta: {},
     id: new ParcelId(),
     parent: undefined,
@@ -60,12 +61,14 @@ export default class Parcel {
         let {
             onDispatch,
             child,
+            lastOriginId,
             meta,
             id,
             parent,
             treeshare
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
+        this._lastOriginId = lastOriginId;
         this._onHandleChange = handleChange;
         this._onDispatch = onDispatch;
 
@@ -131,6 +134,7 @@ export default class Parcel {
 
     // from constructor
     _id: ParcelId;
+    _lastOriginId: string;
     _methods: { [key: string]: * };
     _onHandleChange: ?Function;
     _onDispatch: ?Function;
@@ -150,7 +154,8 @@ export default class Parcel {
             handleChange,
             parent,
             parcelData = this._parcelData,
-            treeshare = this._treeshare
+            treeshare = this._treeshare,
+            lastOriginId = this._lastOriginId
         } = createParcelConfig;
 
         let {
@@ -166,6 +171,7 @@ export default class Parcel {
             },
             {
                 child,
+                lastOriginId,
                 meta,
                 id,
                 onDispatch,

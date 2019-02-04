@@ -7,6 +7,7 @@ import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
 import type {ParcelShapeUpdateFunction} from '../../types/Types';
 
+import {checkCancellation} from '../../change/CancelActionMarker';
 import Types from '../../types/Types';
 import setSelf from '../../parcelData/setSelf';
 import setMetaDefault from '../../parcelData/setMetaDefault';
@@ -16,6 +17,7 @@ import HashString from '../../util/HashString';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
+import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
@@ -30,11 +32,11 @@ export default (_this: Parcel): Object => ({
         return _this._id.pushModifier(`${prefix}-${id}`);
     },
 
-    _getModifierUpdater: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction, errorOnUndefined: ?boolean = false): ParcelDataEvaluator => {
+    _getModifierUpdater: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): ParcelDataEvaluator => {
         // $FlowFixMe - flow just cant make the connection between updater._isParcelUpdater and the choice between ParcelValueUpdater or ParcelShapeUpdateFunction
         return updater._isParcelUpdater
             // $FlowFixMe - this branch should only be hit with ParcelShapeUpdateFunction
-            ? (parcelData: ParcelData): ParcelData => updater(parcelData, errorOnUndefined)
+            ? (parcelData: ParcelData): ParcelData => updater(parcelData)
             : (parcelData: ParcelData): ParcelData => {
                 let {value} = parcelData;
                 let updatedValue = updater(value, _this);
@@ -66,7 +68,11 @@ export default (_this: Parcel): Object => ({
 
     modifyUp: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
         Types(`modifyUp()`, `updater`, `function`)(updater);
-        let parcelDataUpdater: ParcelDataEvaluator = _this._methods._getModifierUpdater(updater, true);
+        let parcelDataUpdater: ParcelDataEvaluator = pipe(
+            _this._methods._getModifierUpdater(updater),
+            checkCancellation
+        );
+
         return _this._create({
             id: _this._methods._pushModifierId('mu', updater),
             onDispatch: (changeRequest: ChangeRequest) => {

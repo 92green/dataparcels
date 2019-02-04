@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports = require('dataparcels/Action.js').default;
+module.exports = require('dataparcels/Action.js');

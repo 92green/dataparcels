@@ -7,6 +7,7 @@ import ChangeRequest from '../ChangeRequest';
 import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
 import shape from '../shape';
+import CancelActionMarker from '../CancelActionMarker';
 
 // internal files
 import InternalParcel from '../src/parcel/Parcel';
@@ -17,6 +18,7 @@ import InternalChangeRequest from '../lib/change/ChangeRequest';
 import InternalDeletedParcelMarker from '../lib/parcelData/DeletedParcelMarker';
 import InternalParcelShape from '../lib/parcelShape/ParcelShape';
 import InternalShape from '../lib/parcelShape/shape';
+import InternalCancelActionMarker from '../lib/change/CancelActionMarker';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
@@ -40,4 +42,8 @@ test('/ParcelShape should export ParcelShape', () => {
 
 test('/shape should export shape', () => {
     expect(shape).toBe(InternalShape);
+});
+
+test('/CancelActionMarker should export CancelActionMarker', () => {
+    expect(CancelActionMarker).toBe(InternalCancelActionMarker);
 });

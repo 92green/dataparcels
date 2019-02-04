@@ -4,16 +4,15 @@ import type Action from './Action';
 import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
-import butLast from 'unmutable/lib/butLast';
 import identity from 'unmutable/lib/identity';
 import last from 'unmutable/lib/last';
+import update from 'unmutable/lib/update';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
 
 import {ReducerInvalidActionError} from '../errors/Errors';
-
-import {IsReducerCancelAction} from './ReducerCancelAction';
+import {isCancelledError} from './CancelActionMarker';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
@@ -29,7 +28,7 @@ import swap from '../parcelData/swap';
 import swapNext from '../parcelData/swapNext';
 import swapPrev from '../parcelData/swapPrev';
 import unshift from '../parcelData/unshift';
-import update from '../parcelData/update';
+import parcelDataUpdate from '../parcelData/update';
 
 const actionMap = {
     delete: ({lastKey}) => del(lastKey),
@@ -71,20 +70,25 @@ const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
 
 const doDeepAction = (action: Action): ParcelDataEvaluator => {
     let {keyPathModifiers, type} = action;
-    let parentActionEmpty: ?Function = parentActionMap[type];
+    let isParentAction: boolean = !!(parentActionMap[type]);
 
-    if(parentActionEmpty) {
+    if(isParentAction) {
         if(action.keyPath.length === 0) {
             return type === "delete" ? deleteSelfWithMarker : identity();
         }
-        keyPathModifiers = butLast()(keyPathModifiers);
+        keyPathModifiers = pipeWith(
+            keyPathModifiers,
+            update(-1, keyPathModifier => keyPathModifier._addKey(null))
+            // ^ if isParentAction set last keyPathModifier to null so that
+            // next() is called instead of parcelDataUpdate(key, next)
+        );
     }
 
     return composeWith(
         ...keyPathModifiers.map(({key, pre, post}) => (next) => pipe(
             ...pre,
-            (key || key === 0) ? update(key, next) : next,
-            ...post
+            (key || key === 0) ? parcelDataUpdate(key, next) : next,
+            ...post,
         )),
         doAction(action)
     );
@@ -100,7 +104,7 @@ export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?Parc
             try {
                 return doDeepAction(action)(parcelData);
             } catch(e) {
-                if(IsReducerCancelAction(e)) {
+                if(isCancelledError(e)) {
                     cancelled++;
                     return parcelData;
                 }

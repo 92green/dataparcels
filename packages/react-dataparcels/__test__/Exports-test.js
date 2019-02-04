@@ -7,6 +7,7 @@ import ChangeRequest from '../ChangeRequest';
 import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
 import shape from '../shape';
+import CancelActionMarker from '../CancelActionMarker';
 
 // react-dataparcels
 import ParcelHoc from '../ParcelHoc';
@@ -20,6 +21,7 @@ import InternalChangeRequest from 'dataparcels/ChangeRequest';
 import InternalDeletedParcelMarker from 'dataparcels/DeletedParcelMarker';
 import InternalParcelShape from 'dataparcels/ParcelShape';
 import InternalShape from 'dataparcels/shape';
+import InternalCancelActionMarker from 'dataparcels/CancelActionMarker';
 
 // internal react-dataparcels
 import InternalParcelHoc from '../lib/ParcelHoc';
@@ -30,25 +32,29 @@ test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
 });
 
-// test('/Action should export Action', () => {
-//     expect(Action).toBe(InternalAction);
-// });
+test('/Action should export Action', () => {
+    expect(Action).toBe(InternalAction);
+});
 
-// test('/ChangeRequest should export ChangeRequest', () => {
-//     expect(ChangeRequest).toBe(InternalChangeRequest);
-// });
+test('/ChangeRequest should export ChangeRequest', () => {
+    expect(ChangeRequest).toBe(InternalChangeRequest);
+});
 
-// test('/DeletedParcelMarker should export DeletedParcelMarker', () => {
-//     expect(DeletedParcelMarker).toBe(InternalDeletedParcelMarker);
-// });
+test('/DeletedParcelMarker should export DeletedParcelMarker', () => {
+    expect(DeletedParcelMarker).toBe(InternalDeletedParcelMarker);
+});
 
-// test('/ParcelShape should export ParcelShape', () => {
-//     expect(ParcelShape).toBe(InternalParcelShape);
-// });
+test('/ParcelShape should export ParcelShape', () => {
+    expect(ParcelShape).toBe(InternalParcelShape);
+});
 
-// test('/shape should export shape', () => {
-//     expect(shape).toBe(InternalShape);
-// });
+test('/shape should export shape', () => {
+    expect(shape).toBe(InternalShape);
+});
+
+test('/CancelActionMarker should export CancelActionMarker', () => {
+    expect(CancelActionMarker).toBe(InternalCancelActionMarker);
+});
 
 test('/ParcelHoc should export ParcelHoc', () => {
     expect(ParcelHoc).toBe(InternalParcelHoc);
