@@ -1,7 +1,6 @@
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import cancel from 'react-dataparcels/cancel';
 import ExampleHoc from 'component/ExampleHoc';
 
 const ExampleParcelHoc = ParcelHoc({
