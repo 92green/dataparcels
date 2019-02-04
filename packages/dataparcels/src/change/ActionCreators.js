@@ -1,6 +1,7 @@
 // @flow
 import type {Key} from '../types/Types';
 import type {Index} from '../types/Types';
+import type {ParcelData} from '../types/Types';
 
 import Action from './Action';
 
@@ -48,17 +49,30 @@ const insertBeforeSelf: Function = (value: *): Action => {
     });
 };
 
-const ping: Function = (): Action => {
+const move: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
     return new Action({
-        type: "ping"
+        type: "move",
+        keyPath: [keyA],
+        payload: {
+            moveKey: keyB
+        }
     });
 };
 
-const push: Function = (value: *): Action => {
+const moveSelf: Function = (keyB: Key|Index): Action => {
+    return new Action({
+        type: "move",
+        payload: {
+            moveKey: keyB
+        }
+    });
+};
+
+const push: Function = (values: Array<*>): Action => {
     return new Action({
         type: "push",
         payload: {
-            value
+            values
         }
     });
 };
@@ -66,6 +80,13 @@ const push: Function = (value: *): Action => {
 const pop: Function = (): Action => {
     return new Action({
         type: "pop"
+    });
+};
+
+const setData: Function = (parcelData: ParcelData): Action => {
+    return new Action({
+        type: "setData",
+        payload: parcelData
     });
 };
 
@@ -138,11 +159,11 @@ const swapSelf: Function = (keyB: Key|Index): Action => {
     });
 };
 
-const unshift: Function = (value: *): Action => {
+const unshift: Function = (values: Array<*>): Action => {
     return new Action({
         type: "unshift",
         payload: {
-            value
+            values
         }
     });
 };
@@ -153,9 +174,11 @@ export default {
     insertAfterSelf,
     insertBefore,
     insertBeforeSelf,
-    ping,
+    move,
+    moveSelf,
     push,
     pop,
+    setData,
     setMeta,
     setSelf,
     shift,

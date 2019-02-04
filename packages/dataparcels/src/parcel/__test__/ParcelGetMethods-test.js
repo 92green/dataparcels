@@ -78,28 +78,6 @@ test('Parcel.spreadDOM(notFoundValue) returns an object with notFoundValue', () 
     expect(parcel3.spreadDOM("???").value).toBe("123");
 });
 
-test('Parcel.hasDispatched() should say if a parcel has dispatched from the current parcels path location', () => {
-    expect.assertions(6);
-
-    let p = new Parcel({
-        value: {
-            abc: 123,
-            def: 456
-        },
-        handleChange: (p2) => {
-            expect(p2.hasDispatched()).toBe(true);
-            expect(p2.get('abc').hasDispatched()).toBe(true);
-            expect(p2.get('def').hasDispatched()).toBe(false);
-        }
-    });
-
-    expect(p.hasDispatched()).toBe(false);
-    expect(p.get('abc').hasDispatched()).toBe(false);
-    expect(p.get('def').hasDispatched()).toBe(false);
-
-    p.get('abc').onChange(789);
-});
-
 test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', () => {
 
     let p = new Parcel({
@@ -174,73 +152,5 @@ test('Parcel.pipe() should pass itself in and return what pipe() returns', () =>
 
     expect(updater1.mock.calls[0][0]).toBe(parcel1);
     expect(updater2.mock.calls[0][0]).toBe(parcel1);
-    expect(result).toBe(parcel2);
-});
-
-test('Parcel.matchPipe() should match self', () => {
-    let updater = jest.fn(_ => _);
-
-    let parcel = new Parcel({value: 123}).matchPipe(".", updater);
-
-    expect(updater.mock.calls.length).toBe(1);
-    expect(updater.mock.calls[0][0].id).toBe("^.~mp");
-});
-
-test('Parcel.matchPipe() should match child', () => {
-    let updater = jest.fn(_ => _);
-
-    let parcel = new Parcel({value: [123]}).matchPipe(".#a", updater).get(0);
-
-    expect(updater.mock.calls.length).toBe(1);
-    expect(updater.mock.calls[0][0].id).toBe("^.~mp.#a");
-});
-
-test('Parcel.matchPipe() should match child with a deep origin', () => {
-    let updater = jest.fn(_ => _);
-
-    let parcel = new Parcel({
-        value: {
-            abc: {
-                def: 123
-            }
-        }
-    })
-        .get("abc")
-        .matchPipe(".def", updater)
-        .get("def");
-
-    expect(updater.mock.calls.length).toBe(1);
-    expect(updater.mock.calls[0][0].id).toBe("^.abc.~mp.def");
-});
-
-test('Parcel.matchPipe() can match child', () => {
-    let updater = jest.fn(_ => _);
-
-    let parcel = new Parcel({
-        value: {
-            abc: 123,
-            def: 456
-        }
-    }).matchPipe(".abc", updater);
-
-    parcel.get("abc");
-    parcel.get("def");
-
-    expect(updater.mock.calls.length).toBe(1);
-    expect(updater.mock.calls[0][0].id).toBe("^.~mp.abc");
-});
-
-
-test('When matching only self, Parcel.matchPipe() should pass a cloned version of itself in and return what matchPipe() returns', () => {
-    var parcel1 = new Parcel();
-    var parcel2 = new Parcel();
-
-    let updater1 = jest.fn(_ => _);
-    let updater2 = jest.fn(_ => parcel2);
-
-    var result = parcel1.matchPipe(".", updater1, updater2);
-
-    expect(updater1.mock.calls[0][0].value).toBe(parcel1.value); // parcel will be a cloned version of itself
-    expect(updater2.mock.calls[0][0]).toBe(updater1.mock.calls[0][0]); // second updater should receive same parcel as first
     expect(result).toBe(parcel2);
 });

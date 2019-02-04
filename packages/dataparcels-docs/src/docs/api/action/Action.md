@@ -3,8 +3,8 @@ import Link from 'component/Link';
 # Action
 
 ```js
-import {Action} from 'dataparcels';
-import {Action} from 'react-dataparcels';
+import Action from 'dataparcels/Action';
+import Action from 'react-dataparcels/Action';
 ```
 
 ```flow

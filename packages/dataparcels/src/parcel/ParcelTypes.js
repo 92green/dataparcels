@@ -23,13 +23,4 @@ export default class ParcelTypes {
     isIndexed: Function = (): boolean => this._isIndexed;
     isParent: Function = (): boolean => this._isParent;
     isTopLevel: Function = (): boolean => this._isTopLevel;
-
-    toTypeCode: Function = (): string => {
-        let c: string = this._isChild ? "C" : "c";
-        let e: string = this._isElement ? "E" : "e";
-        let i: string = this._isIndexed ? "I" : "i";
-        let p: string = this._isParent ? "P" : "p";
-        let t: string = this._isTopLevel ? "T" : "t";
-        return `${c}${e}${i}${p}${t}`;
-    };
 }

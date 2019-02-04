@@ -18,4 +18,4 @@ The `parcel` can be accessed from inside the ParcelBoundary via the first argume
 </ParcelBoundary>
 ```
 
-<Link to="/examples/parcelboundary-example">Example</Link>
+<Link to="/examples/parcelboundary-pure">Example</Link>

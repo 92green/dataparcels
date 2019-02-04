@@ -1,5 +1,6 @@
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ExampleHoc from 'component/ExampleHoc';
 
 const FruitListParcelHoc = ParcelHoc({
@@ -22,6 +23,7 @@ const FruitListEditor = (props) => {
                     <button onClick={() => parcel.swapNext()}>v</button>
                     <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
                     <button onClick={() => parcel.delete()}>x</button>
+                    <span className="Text Text-monospace"> key {fruitParcel.key}</span>
                 </div>}
             </ParcelBoundary>;
         })}

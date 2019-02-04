@@ -6,6 +6,23 @@
 
 @include DcmeBase;
 @include DcmeBox {
+    &-draggable {
+        cursor: move;
+        padding-left: 1rem;
+        position: relative;
+
+        &:after {
+            color: grey(70);
+            content: '.. .. .. ..';
+            display: block;
+            font-size: 1.2rem;
+            left: 0;
+            line-height: 5px;
+            position: absolute;
+            top: 0;
+            width: 1rem;
+        }
+    }
     &-example {
         margin-left: -2rem;
         margin-right: -2rem;
@@ -18,7 +35,10 @@
 @include DcmeBulletList;
 @include DcmeButton;
 @include DcmeCenteredLanding;
-@include DcmeDivider;
+@include DcmeDivider {
+    border-top: 1px solid #CCC;
+    margin: 5rem 0 4rem;
+}
 @include DcmeGrid;
 @include DcmeImage {
     &-logo {
@@ -63,5 +83,31 @@
             -12px 12px 0px lighten(color('primary'), 30)
     }
 }
-@include DcmeTypography;
+@include DcmeTypography {
+    input {
+        background: #FFF;
+    }
+}
 @include DcmeWrapper;
+
+// .DragHandle {
+//   content: '....';
+//   width: 10px;
+//   height: 20px;
+//   display: inline-block;
+//   overflow: hidden;
+//   line-height: 5px;
+//   padding: 3px 4px;
+//   cursor: move;
+//   vertical-align: middle;
+//   margin-top: -.7em;
+//   margin-right: .3em;
+//   font-size: 12px;
+//   font-family: sans-serif;
+//   letter-spacing: 2px;
+//   color: #cccccc;
+//   text-shadow: 1px 0 1px black;
+// }
+// .DragHandle::after {
+//   content: '.. .. .. ..';
+// }

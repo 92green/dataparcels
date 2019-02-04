@@ -1,10 +1,11 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
+import type ParcelShape from '../parcelShape/ParcelShape';
 
 import map from 'unmutable/lib/map';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (parcelType: string, methodCreator: Function) => (parcel: Parcel, ...args: Array<*>): { [key: string]: Function } => {
+export default (parcelType: string, methodCreator: Function) => (parcel: Parcel|ParcelShape, ...args: Array<*>): { [key: string]: Function } => {
     let methods: { [key: string]: Function } = methodCreator(parcel, ...args);
 
     // $FlowFixMe - I want to do this
@@ -15,7 +16,8 @@ export default (parcelType: string, methodCreator: Function) => (parcel: Parcel,
     return pipeWith(
         methods,
         map((value, key) => (...args: Array<*>) => {
-            let suffix = `(keyPath: [${parcel.path.join(', ')}]).`;
+            // $FlowFixMe - why do you pay attention to your types more than preceding conditional logic?
+            let suffix = Array.isArray(parcel.path) ? `(keyPath: [${parcel.path.join(', ')}]).` : ``;
 
             if(key.slice(-4) === "Self") {
                 throw new Error(`.${key.slice(0, -4)}() cannot be called with ${args.length} argument${args.length === 1 ? "" : "s"} on a value of "${parcel.value}". ${suffix}`);

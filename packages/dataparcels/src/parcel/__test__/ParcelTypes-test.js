@@ -11,7 +11,6 @@ test('ParcelTypes should correctly identify primitive values', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
 });
 
 test('ParcelTypes should correctly identify date', () => {
@@ -23,7 +22,6 @@ test('ParcelTypes should correctly identify date', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
 });
 
 test('ParcelTypes should correctly identify object values', () => {
@@ -37,7 +35,6 @@ test('ParcelTypes should correctly identify object values', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
 });
 
 test('ParcelTypes should correctly identify class instance values', () => {
@@ -52,7 +49,6 @@ test('ParcelTypes should correctly identify class instance values', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceipT");
 });
 
 test('ParcelTypes should correctly identify unmutable compatible class instance values', () => {
@@ -68,7 +64,6 @@ test('ParcelTypes should correctly identify unmutable compatible class instance 
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
 });
 
 
@@ -83,7 +78,6 @@ test('ParcelTypes should correctly identify Immutable.js Map values', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceiPT");
 });
 
 
@@ -96,7 +90,6 @@ test('ParcelTypes should correctly identify array values', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceIPT");
 });
 
 test('ParcelTypes should correctly identify Immutable.js List values', () => {
@@ -108,7 +101,6 @@ test('ParcelTypes should correctly identify Immutable.js List values', () => {
     expect(new Parcel(data).isChild()).toBe(false);
     expect(new Parcel(data).isElement()).toBe(false);
     expect(new Parcel(data).isTopLevel()).toBe(true);
-    expect(new Parcel(data)._parcelTypes.toTypeCode()).toBe("ceIPT");
 });
 
 test('ParcelTypes should correctly identify child values', () => {
@@ -122,7 +114,6 @@ test('ParcelTypes should correctly identify child values', () => {
     expect(new Parcel(data).get("a").isChild()).toBe(true);
     expect(new Parcel(data).get("a").isElement()).toBe(false);
     expect(new Parcel(data).get("a").isTopLevel()).toBe(false);
-    expect(new Parcel(data).get("a")._parcelTypes.toTypeCode()).toBe("Ceipt");
 });
 
 test('ParcelTypes should correctly identify element values', () => {
@@ -134,14 +125,13 @@ test('ParcelTypes should correctly identify element values', () => {
     expect(new Parcel(data).get(0).isChild()).toBe(true);
     expect(new Parcel(data).get(0).isElement()).toBe(true);
     expect(new Parcel(data).get(0).isTopLevel()).toBe(false);
-    expect(new Parcel(data).get(0)._parcelTypes.toTypeCode()).toBe("CEipt");
 });
 
 test('ParcelTypes should correctly identify top level values after modifiers', () => {
     var data = {
         value: [1,2,3]
     };
-    expect(new Parcel(data).modifyValue(ii => ii).isTopLevel()).toBe(true);
+    expect(new Parcel(data).modifyDown(ii => ii).isTopLevel()).toBe(true);
 });
 
 // method creators

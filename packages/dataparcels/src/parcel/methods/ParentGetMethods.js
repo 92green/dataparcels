@@ -4,15 +4,18 @@ import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
 import type Parcel from '../Parcel';
 import type {ParcelMapper} from '../../types/Types';
+import type {ParentType} from '../../types/Types';
 import Types from '../../types/Types';
 
 import parcelGet from '../../parcelData/get';
 import parcelHas from '../../parcelData/has';
 import prepareChildKeys from '../../parcelData/prepareChildKeys';
 
+import clone from 'unmutable/lib/clone';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
+import toObject from 'unmutable/lib/toObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel) => ({
@@ -68,21 +71,24 @@ export default (_this: Parcel) => ({
         return parcel;
     },
 
-    toObject: (mapper: ParcelMapper): { [key: string]: * } => {
-        Types(`toObject()`, `mapper`, `function`)(mapper);
+    children: (mapper: ParcelMapper): ParentType<Parcel> => {
+        Types(`children()`, `mapper`, `function`)(mapper);
 
         return pipeWith(
             _this._parcelData.value,
-            map((ii: *, key: string|number): * => {
-                let item = _this.get(key);
-                return mapper(item, key, _this);
-            })
+            clone(),
+            map((value, key) => mapper(_this.get(key), key, _this))
         );
     },
 
-    toArray: (mapper: ParcelMapper): Array<*> => {
+    toObject: (mapper: ParcelMapper): { [key: string]: Parcel } => {
+        Types(`toObject()`, `mapper`, `function`)(mapper);
+        return toObject()(_this.children(mapper));
+    },
+
+    toArray: (mapper: ParcelMapper): Array<Parcel> => {
         Types(`toArray()`, `mapper`, `function`)(mapper);
-        return toArray()(_this.toObject(mapper));
+        return toArray()(_this.children(mapper));
     },
 
     size: (): number => size()(_this.value)

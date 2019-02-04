@@ -1,6 +1,6 @@
 {
   "name": "dataparcels-docs",
-  "version": "0.17.1",
+  "version": "0.18.0-2",
   "description": "Dataparcels Documentation",
   "author": "Damien Clarke",
   "license": "MIT",
@@ -8,7 +8,6 @@
   "scripts": {
     "build-all": "yarn build-docs",
     "build-docs": "gatsby build",
-    "deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "watch": "gatsby develop",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,7 +23,6 @@
     "gatsby-remark-prismjs": "^1.2.21",
     "gatsby-source-filesystem": "^1.5.26",
     "gatsby-transformer-remark": "^1.7.34",
-    "gh-pages": "^1.1.0",
     "immutable": "^3.8.2",
     "mdx-loader": "1.0.0-beta.3",
     "mdxc": "^1.1.1",
@@ -33,6 +31,7 @@
     "react-flip-move": "^3.0.2",
     "react-helmet": "^5.2.0",
     "react-lifecycles-compat": "^3.0.4",
+    "react-sortable-hoc": "^1.4.0",
     "stampy": "^0.41.0",
     "unmutable": "^0.29.2"
   }

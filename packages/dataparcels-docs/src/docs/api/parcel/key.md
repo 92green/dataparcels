@@ -4,9 +4,9 @@ import Link from 'component/Link';
 key: string
 ```
 
-Returns the Parcel's `key`. Parcels automatically gives unique keys to all children of a parent parcel. See <Link to="/parcel-keys">parcel keys</Link> for more info.
+Returns the Parcel's `key`. Dataparcels automatically gives unique keys to all children of a parent parcel. See <Link to="/parcel-keys">parcel keys</Link> for more info.
 
-Because they are unique, the can be used as keys when rendering an array of elements with React. This is demonstrated in the <Link to="/example/editing-arrays">Editing Arrays</Link> example.
+Because they are unique, the can be used as keys when rendering an array of elements with React. This is demonstrated <Link to="/data-editing#Indexed-data-types">here</Link>.
  
 ```js
 let value = {

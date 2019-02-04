@@ -8,7 +8,7 @@ import IconParcel from 'content/parcel.gif';
 
 <ApiPageIcon>{IconParcel}</ApiPageIcon>
 
-Parcel is a data container. It's job is to hold your data, split it into smaller parts, and merge changes back together.
+Parcel is a data container. Its job is to hold your data, split it into smaller parts, and merge changes back together.
 
 If you're using React, you probably won't be instanciating parcels directly. Please see the <Link to="/getting-started">getting started</Link> page to see how to best use Parcels in a React app.
 
@@ -20,9 +20,7 @@ import Parcel from 'react-dataparcels';
 ```flow
 new Parcel({
     value?: any,
-    handleChange?: Function,
-    // debugging options
-    debugRender?: boolean
+    handleChange?: Function
 });
 ```
 
@@ -32,8 +30,6 @@ new Parcel({
   The `handleChange` function will be called whenever the Parcel's value has been triggered to change. It is passed `newParcel`, a replacement Parcel containing the changes; and `changeRequest`, a <Link to="/api/ChangeRequest">ChangeRequest</Link> that contains details about the change itself.
   
   In `handleChange` you would typically implement logic to replace your current parcel with `newParcel`, but if you're using React you should read <Link to="/getting-started">getting started</Link> to save you the trouble of implementing this yourself.
-* <Param name="debugRender" optional type="boolean" default="false" />
-  For debugging purposes. When set to `true` this causes all downstream <Link to="/api/ParcelBoundary">ParcelBoundary</Link>s to display when they are being rendered and re-rendered.
 
 ```js
 // creates a Parcel that contains a value of 123

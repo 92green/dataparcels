@@ -99,25 +99,12 @@ test('ParcelHoc config should accept a pipe function', () => {
             pipe: (props) => (parcel) => {
                 expect(456).toBe(parcel.value);
                 expect({}).toEqual(props);
-                return parcel.modifyValue(ii => ii + 1);
+                return parcel.modifyDown(ii => ii + 1);
             }
         })
     ).props();
 
     expect(457).toBe(childProps.proppy.value);
-});
-
-test('ParcelHoc config should accept a debugRender boolean', () => {
-    let childProps = shallowRenderHoc(
-        {},
-        ParcelHoc({
-            valueFromProps: () => 456,
-            name: "proppy",
-            debugRender: true
-        })
-    ).props();
-
-    expect(childProps.proppy._treeshare.debugRender).toBe(true);
 });
 
 test('ParcelHoc config should accept a debugParcel boolean', () => {

@@ -13,19 +13,16 @@ export const stringifyPath = (path: string[]): string => path.map(escapeKey).joi
 
 const DEFAULT_PARCELID_DATA = {
     id: ["^"],
-    path: ["^"],
-    typedPath: ["^"]
+    path: ["^"]
 };
 
 export default class ParcelId {
     _id: string[];
     _path: string[];
-    _typedPath: string[];
 
     constructor(parcelIdData: ParcelIdData = DEFAULT_PARCELID_DATA) {
         this._id = parcelIdData.id;
         this._path = parcelIdData.path;
-        this._typedPath = parcelIdData.typedPath;
     }
 
     _create: Function = (data: Object): ParcelId => {
@@ -44,10 +41,6 @@ export default class ParcelId {
         return rest()(this._path);
     };
 
-    typedPathString: Function = (): string => {
-        return this._typedPath.join(".");
-    };
-
     push: Function = (key: Key, isElement: boolean): ParcelId => {
         let escapedKey = escapeKey(key);
         let escapeAndPush: Function = isElement
@@ -58,7 +51,6 @@ export default class ParcelId {
             this.toJS(),
             update('id', escapeAndPush),
             update('path', push(key)),
-            update('typedPath', escapeAndPush),
             this._create
         );
     };
@@ -73,11 +65,6 @@ export default class ParcelId {
 
     toJS: Function = (): Object => ({
         id: this._id,
-        path: this._path,
-        typedPath: this._typedPath
+        path: this._path
     });
-
-    setTypeCode: Function = (typeCode: string) => {
-        this._typedPath = update(-1, ii =>`${ii}:${typeCode}`)(this._typedPath);
-    };
 }

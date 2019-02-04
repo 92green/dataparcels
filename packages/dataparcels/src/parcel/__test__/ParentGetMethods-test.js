@@ -1,6 +1,9 @@
 // @flow
 import Parcel from '../Parcel';
 import TestTimeExecution from '../../util/__test__/TestTimeExecution-testUtil';
+import GetAction from '../../util/__test__/GetAction-testUtil';
+
+import every from 'unmutable/lib/every';
 import map from 'unmutable/lib/map';
 import range from 'unmutable/lib/util/range';
 
@@ -37,7 +40,7 @@ test('ParentParcel.get(key) should return a new child Parcel', () => {
             b: 4
         },
         handleChange: (parcel, changeRequest) => {
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
             expect(expectedValue).toEqual(parcel.value);
         }
     };
@@ -125,7 +128,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
         },
         handleChange: (parcel, changeRequest) => {
             expect(parcel.value).toEqual(expectedValue);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     };
 
@@ -214,7 +217,7 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => 
         },
         handleChange: (parcel, changeRequest) => {
             expect(parcel.value).toEqual(expectedValue);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     };
 
@@ -261,6 +264,37 @@ test('ParentParcel.getIn(keyPath) should cope with non existent keypaths', () =>
     expect(descendantParcel2.value).toEqual("!!!");
 });
 
+test('ParentParcel.children() should get child parcels in original collection', () => {
+    let children = new Parcel({
+        value: {a:1,b:2,c:3}
+    }).children();
+
+    // test if child parcels are made
+    expect(every(parcel => parcel instanceof Parcel)(children)).toBe(true);
+
+    // test if child parcel contents are good
+    expect(map(parcel => parcel.value)(children)).toEqual({
+        a: 1,
+        b: 2,
+        c: 3
+    });
+});
+
+test('ParentParcel.children() should get child parcels in original collection with a mapper', () => {
+    let mapper = jest.fn(parcel => parcel.value);
+    let children = new Parcel({
+        value: {a:1,b:2,c:3}
+    }).children(mapper);
+
+    // test if child parcel contents are good
+    expect(children).toEqual({
+        a: 1,
+        b: 2,
+        c: 3
+    });
+});
+
+
 test('ParentParcel.toObject() should make an object', () => {
     var data = {
         value: {a:1,b:2,c:3},
@@ -274,8 +308,24 @@ test('ParentParcel.toObject() should make an object', () => {
     var obj = map(ii => ii.value)(parcel.toObject());
 
     expect(expectedObject).toEqual(obj);
+});
+
+test('ParentParcel.toObject() should make an object from an array', () => {
+    var data = {
+        value: [1,2,3],
+        meta: {
+            a: {a:4,b:5,c:6}
+        }
+    };
+
+    var expectedObject = {"0":1,"1":2,"2":3};
+    var parcel = new Parcel(data);
+    var obj = map(ii => ii.value)(parcel.toObject());
+
+    expect(obj).toEqual(expectedObject);
 
 });
+
 
 test('ParentParcel.toObject() should make an object with a mapper', () => {
     var data = {

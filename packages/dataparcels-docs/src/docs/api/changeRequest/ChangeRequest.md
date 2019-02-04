@@ -3,8 +3,8 @@ import Link from 'component/Link';
 # ChangeRequest
 
 ```js
-import {ChangeRequest} from 'dataparcels';
-import {ChangeRequest} from 'react-dataparcels';
+import ChangeRequest from 'dataparcels/ChangeRequest';
+import ChangeRequest from 'react-dataparcels/ChangeRequest';
 ```
 
 ```flow
@@ -17,4 +17,4 @@ When a change occurs, ChangeRequests are used by Parcels to describe what to cha
 
 ChangeRequests contain an array of <Link to="/api/Action">Actions</Link> to perform.
 
-ChangeRequests can most often be accessed in `handleChange` and `modifyChange` functions. Most of the time these operate invisibly, and it's extremely rare that you'll create these yourself.
+ChangeRequests can most often be accessed in `handleChange` and `modifyUp` functions. Most of the time these operate invisibly, and it's extremely rare that you'll create these yourself.

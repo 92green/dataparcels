@@ -8,5 +8,13 @@ module.exports = {
         "!packages/dataparcels-docs/**"
     ],
     testMatch: ["**/__test__/**/*-test.js?(x)"],
-    testURL: 'http://localhost'
+    testURL: 'http://localhost',
+    coverageThreshold: {
+        global: {
+            branches: 90,
+            functions: 90,
+            lines: 90,
+            statements: 90
+        }
+    }
 };

@@ -1,5 +1,6 @@
 import React from 'react';
-import {ParcelHoc, ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ExampleHoc from 'component/ExampleHoc';
 
 const NameParcelHoc = ParcelHoc({
@@ -7,7 +8,7 @@ const NameParcelHoc = ParcelHoc({
     valueFromProps: (/* props */) => "Gregor"
 });
 
-const FoodEditor = (props) => {
+const NameEditor = (props) => {
     let {nameParcel} = props;
     return <div>
         <label>name</label>
@@ -21,4 +22,4 @@ const FoodEditor = (props) => {
     </div>;
 };
 
-export default NameParcelHoc(ExampleHoc(FoodEditor));
+export default NameParcelHoc(ExampleHoc(NameEditor));

@@ -1,6 +1,8 @@
 // @flow
 import Parcel from '../Parcel';
 
+import GetAction from '../../util/__test__/GetAction-testUtil';
+
 test('ElementParcel.insertBefore() should insert', () => {
     expect.assertions(4);
 
@@ -37,7 +39,7 @@ test('ElementParcel.insertBefore() should insert', () => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     })
         .get(1)
@@ -47,7 +49,7 @@ test('ElementParcel.insertBefore() should insert', () => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     })
         .get("#b")
@@ -90,7 +92,7 @@ test('ElementParcel.insertAfter() should insert', () => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     })
         .get(1)
@@ -100,11 +102,53 @@ test('ElementParcel.insertAfter() should insert', () => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     })
         .get("#b")
         .insertAfter(4);
+});
+
+test('ElementParcel.move() should move', () => {
+    expect.assertions(2);
+
+    var data = {
+        value: [1,2,3],
+        child: [
+            {key: "#a"},
+            {key: "#b"},
+            {key: "#c"}
+        ]
+    };
+
+    var expectedData = {
+        meta: {},
+        value: [3,1,2],
+        key: '^',
+        child: [
+            {key: "#c"},
+            {key: "#a"},
+            {key: "#b"}
+        ]
+    };
+
+    var expectedAction = {
+        type: "move",
+        keyPath: ["#c"],
+        payload: {
+            moveKey: 0
+        }
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel, changeRequest) => {
+            expect(expectedData).toEqual(parcel.data);
+            expect(expectedAction).toEqual(GetAction(changeRequest));
+        }
+    })
+        .get(2)
+        .move(0);
 });
 
 test('ElementParcel.swap() should swap', () => {
@@ -142,7 +186,7 @@ test('ElementParcel.swap() should swap', () => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     })
         .get(0)
@@ -182,7 +226,7 @@ test('ElementParcel.swapNext() should swapNext', () => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     })
         .get(0)
@@ -198,7 +242,7 @@ test('ElementParcel.swapNext() should swapNext', () => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     }).swapNext("#a");
 });
@@ -237,7 +281,7 @@ test('ElementParcel.swapPrev() should swapPrev', () => {
         ...data,
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(changeRequest.actions()[0].toJS());
+            expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     })
         .get("#b")

@@ -1,7 +1,7 @@
 // @flow
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
-import type {ChangeRequest} from 'dataparcels';
+import type ChangeRequest from 'dataparcels/ChangeRequest';
 
 import React from 'react';
 import Parcel from 'dataparcels';
@@ -34,8 +34,7 @@ type ParcelHocConfig = {
     onChange?: (props: AnyProps) => OnChange,
     delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
-    debugParcel?: boolean,
-    debugRender?: boolean
+    debugParcel?: boolean
 };
 
 const PARCEL_HOC_NAME = `ParcelHoc()`;
@@ -51,8 +50,7 @@ export default (config: ParcelHocConfig): Function => {
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
-        debugParcel = false,
-        debugRender = false
+        debugParcel = false
     } = config;
 
     Types(PARCEL_HOC_NAME, "config.name", "string")(name);
@@ -63,7 +61,6 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
     Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
-    Types(PARCEL_HOC_NAME, "config.debugRender", "boolean")(debugRender);
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
         constructor(props: Props) {
@@ -71,8 +68,7 @@ export default (config: ParcelHocConfig): Function => {
 
             let initialize = (value: *) => new Parcel({
                 value,
-                handleChange: this.handleChange,
-                debugRender
+                handleChange: this.handleChange
             });
 
             this.state = {
@@ -98,10 +94,7 @@ export default (config: ParcelHocConfig): Function => {
 
             if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps)) {
                 // $FlowFixMe - parcel cant possibly be undefined here
-                newState.parcel = parcel.batchAndReturn((parcel: Parcel) => {
-                    // $FlowFixMe - newValueFromProps cant possibly be undefined here
-                    parcel.set(valueFromProps(props));
-                });
+                newState.parcel = parcel._setAndReturn(valueFromProps(props));
 
                 if(debugParcel) {
                     log(`Parcel updated from props:`);

@@ -28,7 +28,7 @@ When you type in the second input, the ParcelHoc changes and notifies the higher
 
 ```js
 import React from 'react';
-import {ParcelHoc} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
 
 const NameParcelHoc = ParcelHoc({
     name: "nameParcel",
@@ -86,8 +86,8 @@ The same method can be used to allow a ParcelHoc to be controlled by another oth
 
 ```js
 import React from 'react';
-import {ParcelHoc} from 'react-dataparcels';
-import {ParcelBoundary} from 'react-dataparcels';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ReactRouterQueryStringHoc from 'react-cool-storage/lib/ReactRouterQueryStringHoc';
 
 import composeWith from 'unmutable/lib/util/composeWith';

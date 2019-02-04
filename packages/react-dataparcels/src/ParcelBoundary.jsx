@@ -1,8 +1,9 @@
 // @flow
-import React from 'react';
 import type {Node} from 'react';
+import type ChangeRequest from 'dataparcels/ChangeRequest';
+
+import React from 'react';
 import Parcel from 'dataparcels';
-import type {ChangeRequest} from 'dataparcels';
 
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 import shallowEquals from 'unmutable/lib/shallowEquals';
@@ -26,7 +27,8 @@ type Props = {
     hold: boolean,
     forceUpdate: Array<*>,
     parcel: Parcel,
-    pure: boolean
+    pure: boolean,
+    keepState: boolean
 };
 
 type State = {
@@ -45,7 +47,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         debugParcel: false,
         hold: false,
         forceUpdate: [],
-        pure: true
+        pure: true,
+        keepState: false
     };
 
     constructor(props: Props) {
@@ -74,7 +77,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         let parcelDataChanged: boolean = !ParcelBoundaryEquals(this.props.parcel, nextProps.parcel);
 
-        if(!parcelDataChanged && (nextProps.debounce || nextProps.hold)) {
+        if(!parcelDataChanged) {
             parcelDataChanged = !ParcelBoundaryEquals(this.state.parcel, nextState.parcel);
         }
 
@@ -85,13 +88,24 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     }
 
     static getDerivedStateFromProps(props: Props, state: State): * {
-        let {parcel} = props;
+        let {
+            parcel,
+            keepState
+        } = props;
+
         let {
             makeBoundarySplit,
             parcelFromProps
         } = state;
 
-        if(parcel !== parcelFromProps) {
+        let updateState = parcel !== parcelFromProps;
+
+        if(keepState && parcel._lastOriginId.startsWith(parcel.id)) {
+            // if keepState, don't update state if the last change came from within this parcel boundary
+            updateState = false;
+        }
+
+        if(updateState) {
             var newState: any = {
                 parcelFromProps: parcel
             };
@@ -112,15 +126,6 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         return null;
     }
-
-    debugRenderStyle: Function = (): Object => {
-        let rand = () => Math.floor((Math.random() * 0.75 + 0.25) * 256);
-        return {
-            backgroundColor: `rgb(${rand()},${rand()},${rand()})`,
-            padding: "1rem",
-            marginBottom: "1rem"
-        };
-    };
 
     addToBuffer: Function = (changeRequest: ChangeRequest) => (state: State): State => {
         let {debugBuffer} = this.props;
@@ -212,13 +217,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                     newParcel.toConsole();
                 }
 
-                let shouldBeSynchronous = () => changeRequest.shouldBeSynchronous();
-
                 let updateParcel = set('parcel', newParcel);
                 let addToBuffer = this.addToBuffer(changeRequest);
                 let releaseBuffer = this.releaseBuffer();
 
-                if((!debounce && !hold) || shouldBeSynchronous()) {
+                if(!debounce && !hold) {
                     this.setState(pipe(
                         updateParcel,
                         addToBuffer,
@@ -262,13 +265,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             cancel: () => this.setState(this.cancelBuffer()),
             release: () => this.setState(this.releaseBuffer())
         };
+
         let buffered = changeCount > 0;
-
-        let element = children(parcel, actions, buffered);
-
-        if(parcel._treeshare.debugRender) {
-            return <div style={this.debugRenderStyle()}>{element}</div>;
-        }
-        return element;
+        return children(parcel, actions, buffered);
     }
 }

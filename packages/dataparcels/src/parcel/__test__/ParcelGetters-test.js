@@ -73,12 +73,12 @@ test('Parcel.id should return the Parcels id', () => {
             ['something.:@']: 123
         }
     };
-    expect("^").toBe(new Parcel(data).id);
-    expect("^.a").toBe(new Parcel(data).get("a").id);
-    expect("^.~mv-364997092.a").toBe(new Parcel(data).modifyValue(ii => ii).get("a").id);
-    expect("^.a.#a").toBe(new Parcel(data).getIn(["a",0]).id);
-    expect("^.something%.%:%@").toBe(new Parcel(data).get("something.:@").id);
-    expect("^.b").toBe(new Parcel(data).get("b").id);
+    expect(new Parcel(data).id).toBe("^");
+    expect(new Parcel(data).get("a").id).toBe("^.a");
+    expect(new Parcel(data).modifyDown(ii => ii).get("a").id).toBe("^.~md-364997092.a");
+    expect(new Parcel(data).getIn(["a",0]).id).toBe("^.a.#a");
+    expect(new Parcel(data).get("something.:@").id).toBe("^.something%.%:%@");
+    expect(new Parcel(data).get("b").id).toBe("^.b");
     // t.is("#a", new Parcel(data).getIn(["a",?????]).id); TODO
 });
 
@@ -89,28 +89,42 @@ test('Parcel.path should return the Parcels path', () => {
             ['something.:@']: 123
         }
     };
-    expect([]).toEqual(new Parcel(data).path);
-    expect(["a"]).toEqual(new Parcel(data).get("a").path);
-    expect(["a"]).toEqual(new Parcel(data).modifyValue(ii => ii).get("a").path);
-    expect(["a","#a"]).toEqual(new Parcel(data).getIn(["a",0]).path);
-    expect(["something.:@"]).toEqual(new Parcel(data).get("something.:@").path);
-    expect(["b"]).toEqual(new Parcel(data).get("b").path);
+    expect(new Parcel(data).path).toEqual([]);
+    expect(new Parcel(data).get("a").path).toEqual(["a"]);
+    expect(new Parcel(data).modifyDown(ii => ii).get("a").path).toEqual(["a"]);
+    expect(new Parcel(data).getIn(["a",0]).path).toEqual(["a","#a"]);
+    expect(new Parcel(data).get("something.:@").path).toEqual(["something.:@"]);
+    expect(new Parcel(data).get("b").path).toEqual(["b"]);
     // t.is("#a", new Parcel(data).getIn(["a",?????]).path); TODO
 });
 
-test('Parcel._id.typedPathString() should return the Parcels typed path', () => {
-    var data = {
-        value: {
-            a: [1,2,3],
-            ['something.:@']: 123
-        }
-    };
-    expect("^:ceiPT").toEqual(new Parcel(data)._id.typedPathString());
-    expect("^:ceiPT").toEqual(new Parcel(data).modifyValue(ii => ii)._id.typedPathString());
-    expect("^:ceiPT.a:CeIPt").toEqual(new Parcel(data).get("a")._id.typedPathString());
-    expect("^:ceiPT.a:CeIPt").toEqual(new Parcel(data).modifyValue(ii => ii).get("a")._id.typedPathString());
-    expect("^:ceiPT.a:CeIPt.#a:CEipt").toEqual(new Parcel(data).getIn(["a",0])._id.typedPathString());
-    expect("^:ceiPT.something%.%:%@:Ceipt").toEqual(new Parcel(data).get("something.:@")._id.typedPathString());
-    expect("^:ceiPT.b:Ceipt").toEqual(new Parcel(data).get("b")._id.typedPathString());
-    // t.is("#a", new Parcel(data).getIn(["a",?????])._id.typedPathString()); TODO
+
+test('Parcel should throw errors when attempted to set getters', () => {
+    let readOnly = 'This property is read-only';
+
+    let parcel = new Parcel();
+
+    expect(() => {
+        parcel.data = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        parcel.value = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        parcel.meta = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        parcel.key = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        parcel.id = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        parcel.path = 123;
+    }).toThrow(readOnly);
 });

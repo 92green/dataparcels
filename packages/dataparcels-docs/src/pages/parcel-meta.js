@@ -1,10 +1,11 @@
 // @flow
+import type {Node} from 'react';
 import React from 'react';
-import {Box, CenteredLanding, Text} from 'dcme-style';
+import {Wrapper, Text, Typography} from 'dcme-style';
+import Markdown from 'pages/parcel-meta.md';
+import PageLayout from 'component/PageLayout';
 
-export default () => <Box>
-    <CenteredLanding
-        top={() => <Text element="h1" modifier="sizeTera center">Parcel Meta</Text>}
-        bottom={() => <Text element="p" modifier="monospace center margin">This doesn't exist yet. These docs are still very much under construction.</Text>}
-    />
-</Box>;
+export default () => <PageLayout
+    modifier="marginBottom"
+    content={() => <Typography><Markdown /></Typography>}
+/>;

@@ -282,29 +282,6 @@ test('ParcelBoundary should cancel unreleased changes when receiving a new parce
     expect(handleChange).toHaveBeenCalledTimes(0);
 });
 
-test('ParcelBoundary should ignore debounce when sending a ping', () => {
-    let childRenderer = jest.fn();
-    let handleChange = jest.fn();
-
-    let parcel = new Parcel({
-        value: 123,
-        handleChange
-    });
-
-    let wrapper = shallow(<ParcelBoundary parcel={parcel} debounce={100}>
-        {childRenderer}
-    </ParcelBoundary>);
-
-    let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.ping();
-
-    // even with debounce applied, handleChange should have been called immediately
-    expect(handleChange).toHaveBeenCalledTimes(1);
-
-    // handleChange should have the same value as before
-    expect(handleChange.mock.calls[0][0].value).toBe(123);
-});
-
 test('ParcelBoundary should use an internal boundary split to stop parcel boundaries using the same parcel from sharing their parcel registries', () => {
     let parcel = new Parcel({
         value: {
@@ -339,19 +316,45 @@ test('ParcelBoundary should use an internal boundary split to stop parcel bounda
     expect(childParcelB2.value).toEqual({abc: 123, def: 456});
 });
 
-test('ParcelBoundary should render colours when debugRender is true', () => {
-    let hasChanged = false;
+test('ParcelBoundary should ignore updates from props for updates caused by themselves if keepState is true', () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
     let parcel = new Parcel({
         value: 123,
-        debugRender: true
+        handleChange
     });
 
-    expect(
-        shallow(<ParcelBoundary parcel={parcel} debounce={100}>{(pp) => "???"}</ParcelBoundary>)
-        .render()
-        .get(0)
-        .attribs
-        .style
-        .indexOf('background-color') !== -1
-    ).toBe(true);
+    let withModify = (parcel) => parcel.modifyUp(value => value + 1);
+
+    let wrapper = shallow(<ParcelBoundary parcel={withModify(parcel)} keepState>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(456);
+
+    let newParcel = handleChange.mock.calls[0][0];
+
+    // verify that the current value of the parcel has been updated
+    expect(newParcel.value).toBe(457);
+
+    wrapper.setProps({
+        parcel: withModify(newParcel)
+    });
+
+    // expect that the value in the parcelboundary has not changed
+    // because the last change was triggered by this boundary
+    let childParcel2 = childRenderer.mock.calls[2][0];
+    expect(childParcel2.value).toBe(456);
+
+    // make a change externally and ensure that the value in the boundary does update
+    newParcel.set(789);
+    let newParcel2 = handleChange.mock.calls[1][0];
+    wrapper.setProps({
+        parcel: withModify(newParcel2)
+    });
+
+    let childParcel3 = childRenderer.mock.calls[3][0];
+    expect(childParcel3.value).toBe(789);
 });
