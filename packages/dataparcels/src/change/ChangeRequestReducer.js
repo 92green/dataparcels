@@ -12,7 +12,7 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
 
 import {ReducerInvalidActionError} from '../errors/Errors';
-import {isCancelledError} from './cancel';
+import {isCancelledError} from './CancelActionMarker';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';

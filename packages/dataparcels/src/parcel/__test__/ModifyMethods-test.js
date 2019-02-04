@@ -4,7 +4,7 @@ import update from 'unmutable/lib/update';
 
 import Parcel from '../Parcel';
 import ParcelShape from '../../parcelShape/ParcelShape';
-import cancel from '../../change/cancel';
+import CancelActionMarker from '../../change/CancelActionMarker';
 import shape from '../../parcelShape/shape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
@@ -150,10 +150,10 @@ test('Parcel.modifyUp() should allow changes to meta through', () => {
         ));
 });
 
-test('Parcel.modifyUp() should cancel a change if cancel() is returned', () => {
+test('Parcel.modifyUp() should cancel a change if CancelActionMarker is returned', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(() => cancel());
+    let updater = jest.fn(() => CancelActionMarker);
 
     let parcel = new Parcel({
         handleChange,
@@ -329,10 +329,10 @@ test('Parcel.modifyUp(parcelShapeUpdater) should work with a returned collection
     expect(handleChange.mock.calls[0][0].data.value).toEqual([4,3,2,1]);
 });
 
-test('Parcel.modifyUp(parcelShapeUpdater) should cancel a change if cancel() is returned', () => {
+test('Parcel.modifyUp(parcelShapeUpdater) should cancel a change if CancelActionMarker is returned', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(() => cancel());
+    let updater = jest.fn(() => CancelActionMarker);
 
     let parcel = new Parcel({
         handleChange,

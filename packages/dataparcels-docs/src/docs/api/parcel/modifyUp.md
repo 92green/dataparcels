@@ -31,18 +31,18 @@ The modify methods are particularly useful when your Parcel contains data you wa
 
 #### Cancelling a change
 
-You can also cancel a change by returning `cancel()` from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
+You can also cancel a change by returning `CancelActionMarker` from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
 
 ```js
-import cancel from 'dataparcels/cancel';
+import CancelActionMarker from 'dataparcels/CancelActionMarker';
 // or
-import cancel from 'react-dataparcels/cancel';
+import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
 
 let parcel = new Parcel({
     value: 123
 })
 
-parcel = parcel.modifyUp(value => value === null ? cancel() : value);
+parcel = parcel.modifyUp(value => value === null ? CancelActionMarker : value);
 
 parcel.set(456); // this would work, value becomes 123
 parcel.set(null); // this would cause no change

@@ -7,7 +7,7 @@ import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
 import type {ParcelShapeUpdateFunction} from '../../types/Types';
 
-import {checkCancellation} from '../../change/cancel';
+import {checkCancellation} from '../../change/CancelActionMarker';
 import Types from '../../types/Types';
 import setSelf from '../../parcelData/setSelf';
 import setMetaDefault from '../../parcelData/setMetaDefault';

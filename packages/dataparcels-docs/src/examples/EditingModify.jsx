@@ -1,7 +1,7 @@
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import cancel from 'react-dataparcels/cancel';
+import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
 import ExampleHoc from 'component/ExampleHoc';
 
 const ExampleParcelHoc = ParcelHoc({
@@ -32,7 +32,7 @@ const NumberInput = (props) => {
         // ^ turn value into a string on the way down
         .modifyUp(string => {
             let number = Number(string);
-            return isNaN(number) ? cancel() : number;
+            return isNaN(number) ? CancelActionMarker : number;
         });
         // ^ turn value back into a number on the way up
         //   but cancel the change if the string
