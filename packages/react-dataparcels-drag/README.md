@@ -7,7 +7,7 @@ A plugin for [`react-dataparcels`](https://www.npmjs.com/package/react-dataparce
 
 ## Example
 
-**[See the example](https://dataparcels.blueflag.codes/examples/editing-arrays)**
+**[See the example](https://dataparcels.blueflag.codes/ui-behaviour#Drag-and-drop-sorting)**
 
 ## Packages
 

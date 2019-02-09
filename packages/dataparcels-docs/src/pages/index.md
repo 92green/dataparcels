@@ -37,19 +37,25 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 ### 2. UI behaviour
 
 <Link to="/ui-behaviour">UI behaviour</Link> covers features that help the user interact with the data. This includes:
-- <Link to="/ui-behaviour#submit-buttons">Submit buttons</Link> for forms
-- <Link to="/ui-behaviour#validation">Validation</Link> on user input
-- <Link to="/ui-behaviour#confirmation">Confirmation</Link> on important actions such as deleting
-- <Link to="/ui-behaviour#selections">Selections</Link> of one or more items
+- <Link to="/ui-behaviour#submit-buttons">Submit buttons</Link> for forms 🚧
+- <Link to="/ui-behaviour#validation">Validation</Link> on user input 🚀 🚧
+- <Link to="/ui-behaviour#confirmation">Confirmation</Link> on important actions such as deleting 🚧
+- <Link to="/ui-behaviour#selections">Selections</Link> of one or more items 🚧
 - <Link to="/ui-behaviour#drag-and-drop">Drag and drop sorting</Link> of arrays of items
 - <Link to="/ui-behaviour#debouncing-changes">Debouncing changes</Link> for good application performace
 - <Link to="/ui-behaviour#pure-rendering">Pure rendering</Link> for good rendering performace
 
 ### 3. Data synchronisation
 
-<Link to="/data-synchronisation">Data synchronisation</Link> is how dataparcels interacts with related pieces of external data. This includes:
-- Setting up a <Link to="/data-synchronisation#parcel-as-a-slave">Parcel as a slave</Link> to higher state, such as the query string
-- Coping with <Link to="/data-synchronisation#sending-failable-changes">sending failable changes</Link>, such as saving data to a server
-- <Link to="/data-synchronisation#caching-unsaved0-changes">Caching unsaved changes</Link>
+<Link to="/data-synchronisation">Data synchronisation</Link> encompasses how dataparcels interacts with related pieces of external data. This includes:
+- Setting up a <Link to="/data-synchronisation#ParcelHoc-as-a-slave">ParcelHoc as a slave</Link> to higher state, such as the query string 🚧
+- Coping with <Link to="/data-synchronisation#Sending-failable-requests">sending failable requests</Link>, such as saving data to a server 🚧
+- <Link to="/data-synchronisation#Sending-partial-requests">Sending partial requests</Link>, such as making requests to save individual items in a list 🚧
+- <Link to="/data-synchronisation#Caching-unsaved-changes">Caching unsaved changes</Link> so data is not lost if it is not yet saved and the page unloads 🚧
+- How to <Link to="/data-synchronisation#Retaining-Parcel-keys">retain Parcel keys</Link>, so a ParcelHoc can change its value via props, and unsaved changes will still be able to apply to the right pieces of data 🚧
+
+
+<p className="Text Text-small Text-emphasis">🚧 indicates that either the feature or example is still in development</p>
+<p className="Text Text-small Text-emphasis">🚀 indicates a priority feature</p>
 
 <Divider />

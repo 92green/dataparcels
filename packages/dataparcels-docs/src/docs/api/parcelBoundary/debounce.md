@@ -23,4 +23,4 @@ Debouncing can be good for rendering performance because parcels outside the Par
 </ParcelBoundary>
 ```
 
-<Link to="/examples/parcelboundary-debounce">Example</Link>
+**<Link to="/ui-behaviour#Debouncing-changes">See an example of ParcelBoundary debounce</Link>**

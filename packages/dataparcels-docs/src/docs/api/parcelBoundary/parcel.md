@@ -1,5 +1,3 @@
-import Link from 'component/Link';
-
 ```flow
 parcel: Parcel
 ```
@@ -17,5 +15,3 @@ The `parcel` can be accessed from inside the ParcelBoundary via the first argume
     }}
 </ParcelBoundary>
 ```
-
-<Link to="/examples/parcelboundary-pure">Example</Link>

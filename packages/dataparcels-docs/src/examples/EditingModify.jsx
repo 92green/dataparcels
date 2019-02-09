@@ -1,6 +1,7 @@
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import shape from 'react-dataparcels/shape';
 import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
 import ExampleHoc from 'component/ExampleHoc';
 
@@ -10,7 +11,11 @@ const ExampleParcelHoc = ParcelHoc({
         alphanumeric: "Abc123",
         number: 123,
         delimitedString: "abc.def",
-        missingValue: undefined
+        missingValue: undefined,
+        edges: [
+            {node: "A"},
+            {node: "B"}
+        ]
     })
 });
 
@@ -45,7 +50,10 @@ const NumberInput = (props) => {
     // which would make typing very frustrating
 
     return <ParcelBoundary parcel={numberParcel} keepState>
-        {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
+        {(parcel) => <div>
+            <input type="text" {...parcel.spreadDOM()} />
+            {isNaN(Number(parcel.value)) && "Invalid number"}
+        </div>}
     </ParcelBoundary>;
 };
 
@@ -89,20 +97,54 @@ const MissingValueInput = (props) => {
     </div>;
 };
 
+// const EdgesNodesInput = (props) => {
+//     let arrayParcel = props
+//         .edgesParcel
+//         .modifyDown(shape((edges) => {
+//             return edges
+//                 .toArray()
+//                 .map(node => node.get('node'));
+//         }))
+//         .modifyUp(shape((items) => {
+//             return items
+//                 .toArray()
+//                 .map(node => new ParcelShape({}).set('node', node));
+//         }));
+
+//     console.log(props.edgesParcel.value);
+//     console.log(arrayParcel.value);
+
+//     return <div>
+//         {arrayParcel.toArray((item) => {
+//             return <ParcelBoundary parcel={item} key={item.key}>
+//                 {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
+//             </ParcelBoundary>;
+//         })}
+//         <button onClick={() => arrayParcel.push("")}>Add new element</button>
+//     </div>;
+// };
+
 const ExampleEditor = (props) => {
     let {exampleParcel} = props;
     return <div>
         <h4>Alphanumeric input</h4>
+        <p>Disallows all non-alphanumeric characters.</p>
         <AlphanumericInput alphanumericParcel={exampleParcel.get('alphanumeric')} />
 
         <h4>Number > string</h4>
+        <p>Turns a stored number into a string for editing, and only allows changes that are valid numbers.</p>
         <NumberInput numberParcel={exampleParcel.get('number')} />
 
         <h4>Delimited string > array of strings</h4>
+        <p>Turns a stored string into an array so array editing controls can be rendered.</p>
         <DelimitedStringInput delimitedStringParcel={exampleParcel.get('delimitedString')} />
 
-        <h4>Coping with missing values</h4>
+        <h4>Compensating for missing values</h4>
+        <p>Prepares values so that editors can remain simple.</p>
         <MissingValueInput missingValueParcel={exampleParcel.get('missingValue')} />
+
+        {/*<h4>Modifying the data shape with a shape updater</h4>
+        <EdgesNodesInput edgesParcel={exampleParcel.get('edges')} />*/}
     </div>;
 };
 

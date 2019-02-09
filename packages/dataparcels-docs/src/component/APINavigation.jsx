@@ -11,5 +11,4 @@ export default () => <NavigationList>
     <NavigationListItem>- <Link to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link></NavigationListItem>
     <NavigationListItem>- <Link to="/api/ParcelShape">ParcelShape</Link></NavigationListItem>
     <NavigationListItem>- <Link to="/api/ChangeRequest">ChangeRequest</Link></NavigationListItem>
-    <NavigationListItem>- <Link to="/api/Action">Action</Link></NavigationListItem>
 </NavigationList>;

@@ -4,10 +4,10 @@ import type {Node} from 'react';
 import React from 'react';
 import {Box, CenteredLanding, Grid, GridItem, Image, Link as HtmlLink, NavigationList,NavigationListItem, Text, Typography, Wrapper} from 'dcme-style';
 import IndexMarkdown from 'pages/index.md';
+import IndexAfterMarkdown from 'pages/indexAfter.md';
 import PageLayout from 'component/PageLayout';
 import API from 'content/API';
 import IconParcel from 'content/parcelinverted.gif';
-import APIExamples from 'content/APIExamples.md';
 import APINavigation from 'component/APINavigation';
 
 export default () => <Box>
@@ -48,11 +48,22 @@ export default () => <Box>
                         <NavigationListItem>- <HtmlLink href={`#3.-Data-synchronisation`}>Data synchronisation</HtmlLink></NavigationListItem>
                     </NavigationList>
                     <APINavigation />
+                    <NavigationList>
+                        <NavigationListItem><HtmlLink href={`#Development`}>Development</HtmlLink></NavigationListItem>
+                    </NavigationList>
                 </Box>}
             />
             <Wrapper>
                 <Text id="API" element="h2" modifier="sizeMega">API</Text>
                 <API />
+                <Grid>
+                    <GridItem modifier="9 padding">
+                        <Typography>
+                            <IndexAfterMarkdown />
+                        </Typography>
+                    </GridItem>
+                    <GridItem />
+                </Grid>
             </Wrapper>
         </Wrapper>
     </Box>
