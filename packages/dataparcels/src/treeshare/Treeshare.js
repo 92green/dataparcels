@@ -1,5 +1,4 @@
 // @flow
-import {stringifyPath} from '../parcelId/ParcelId';
 
 class ParcelRegistry {
     _registry: Object = {};
@@ -12,44 +11,18 @@ class ParcelRegistry {
     };
 }
 
-class LocationShareRegistry {
-    _locationShareData: Object = {};
-
-    get = (path: string[]): * => {
-        return this._locationShareData[stringifyPath(path)] || {};
-    };
-
-    set = (path: string[], partialData: Object) => {
-        this._locationShareData[stringifyPath(path)] = {
-            ...this.get(path),
-            ...partialData
-        };
-    };
-}
-
 type Config = {
-    registry?: ParcelRegistry,
-    locationShare?: LocationShareRegistry
+    registry?: ParcelRegistry
 };
 
 export default class Treeshare {
     registry: ParcelRegistry;
-    locationShare: LocationShareRegistry;
 
     constructor(config: Config = {}) {
-        let {
-            registry,
-            locationShare
-        } = config;
-
-        this.registry = registry || new ParcelRegistry();
-        this.locationShare = locationShare || new LocationShareRegistry();
+        this.registry = config.registry || new ParcelRegistry();
     }
 
     boundarySplit: Function = (): Treeshare => {
-        return new Treeshare({
-            // do not pass in registry
-            locationShare: this.locationShare
-        });
+        return new Treeshare({});
     }
 }

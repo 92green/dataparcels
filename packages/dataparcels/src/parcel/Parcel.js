@@ -27,7 +27,6 @@ import IndexedChangeMethods from './methods/IndexedChangeMethods';
 import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
-import AdvancedMethods from './methods/AdvancedMethods';
 
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
@@ -122,9 +121,7 @@ export default class Parcel {
             // $FlowFixMe
             ...FilterMethods("Element", ElementChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...ModifyMethods(this),
-            // $FlowFixMe
-            ...AdvancedMethods(this)
+            ...ModifyMethods(this)
         };
     }
 
@@ -350,10 +347,6 @@ export default class Parcel {
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
-
-    // Advanced methods
-    getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
-    setInternalLocationShareData = (partialData: Object): * => this._methods.setInternalLocationShareData(partialData);
 
     // Debug methods
     toConsole = () => this._methods.toConsole();
