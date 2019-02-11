@@ -73,9 +73,7 @@ export default class ChangeRequest {
 
         let parcelDataFromRegistry = this
             ._baseParcel
-            ._treeshare
-            .registry
-            .get(this._baseParcel._id.id())
+            ._registry[this._baseParcel._id.id()]
             .data;
 
         let data = ChangeRequestReducer(this)(parcelDataFromRegistry);

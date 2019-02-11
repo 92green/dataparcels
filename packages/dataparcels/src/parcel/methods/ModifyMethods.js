@@ -45,15 +45,6 @@ export default (_this: Parcel): Object => ({
             };
     },
 
-    _boundarySplit: ({handleChange}: *): Parcel => {
-        return _this._create({
-            id: _this._id.pushModifier('bs'),
-            parent: _this._parent,
-            handleChange,
-            treeshare: _this._treeshare.boundarySplit()
-        });
-    },
-
     modifyDown: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
         Types(`modifyDown()`, `updater`, `function`)(updater);
         let parcelDataUpdater: ParcelDataEvaluator = _this._methods._getModifierUpdater(updater);
