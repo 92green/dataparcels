@@ -32,7 +32,6 @@ import ModifyMethods from './methods/ModifyMethods';
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
-import setSelf from '../parcelData/setSelf';
 
 import overload from 'unmutable/lib/util/overload';
 
@@ -178,12 +177,19 @@ export default class Parcel {
         );
     };
 
-    _setAndReturn = (value: any): Parcel => {
-        // $FlowFixMe
-        return this._create({
-            handleChange: this._onHandleChange,
-            parcelData: setSelf(value)(this._parcelData)
-        });
+    _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): Parcel => {
+        let changedParcel = this;
+        let {_onHandleChange} = this;
+
+        // swap out the parcels real _onHandleChange with a spy
+        this._onHandleChange = (parcel) => {
+            changedParcel = parcel;
+            changedParcel._onHandleChange = _onHandleChange;
+        };
+
+        changeCatcher(this);
+        this._onHandleChange = _onHandleChange;
+        return changedParcel;
     };
 
     _boundarySplit = ({handleChange}: *): Parcel => {
