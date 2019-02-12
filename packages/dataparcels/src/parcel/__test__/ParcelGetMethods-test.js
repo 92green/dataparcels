@@ -78,30 +78,6 @@ test('Parcel.spreadDOM(notFoundValue) returns an object with notFoundValue', () 
     expect(parcel3.spreadDOM("???").value).toBe("123");
 });
 
-test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', () => {
-
-    let p = new Parcel({
-        value: {
-            abc: 123,
-            def: 456
-        }
-    });
-
-    expect({}).toEqual(p.getInternalLocationShareData());
-
-    p.get('abc').setInternalLocationShareData({x:1});
-    expect({x:1}).toEqual(p.get('abc').getInternalLocationShareData());
-
-    p.get('abc').setInternalLocationShareData({y:2});
-    expect({x:1, y:2}).toEqual(p.get('abc').getInternalLocationShareData());
-
-    expect({}).toEqual(p.get('def').getInternalLocationShareData());
-
-    p.get('def').setInternalLocationShareData({x:1});
-    expect({x:1}).toEqual(p.get('def').getInternalLocationShareData());
-
-});
-
 test('Parcel.spy() should be called with parcel', () => {
 
     let spy = jest.fn();

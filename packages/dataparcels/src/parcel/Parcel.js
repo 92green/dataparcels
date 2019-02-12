@@ -13,6 +13,7 @@ import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
 import type {ParcelShapeUpdateFunction} from '../types/Types';
+import type {ParcelRegistry} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
@@ -27,12 +28,10 @@ import IndexedChangeMethods from './methods/IndexedChangeMethods';
 import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
-import AdvancedMethods from './methods/AdvancedMethods';
 
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
-import Treeshare from '../treeshare/Treeshare';
 import setSelf from '../parcelData/setSelf';
 
 import overload from 'unmutable/lib/util/overload';
@@ -44,7 +43,7 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
     meta: {},
     id: new ParcelId(),
     parent: undefined,
-    treeshare: undefined
+    registry: {}
 });
 
 export default class Parcel {
@@ -65,7 +64,7 @@ export default class Parcel {
             meta,
             id,
             parent,
-            treeshare
+            registry
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
         this._lastOriginId = lastOriginId;
@@ -95,9 +94,9 @@ export default class Parcel {
         // id
         this._id = id;
 
-        // treeshare
-        this._treeshare = treeshare || new Treeshare();
-        this._treeshare.registry.set(id.id(), this);
+        // registry
+        this._registry = registry;
+        this._registry[id.id()] = this;
 
         let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
 
@@ -122,9 +121,7 @@ export default class Parcel {
             // $FlowFixMe
             ...FilterMethods("Element", ElementChangeMethods)(this, dispatch),
             // $FlowFixMe
-            ...ModifyMethods(this),
-            // $FlowFixMe
-            ...AdvancedMethods(this)
+            ...ModifyMethods(this)
         };
     }
 
@@ -141,7 +138,7 @@ export default class Parcel {
     _parcelData: ParcelData;
     _parcelTypes: ParcelTypes;
     _parent: ?Parcel;
-    _treeshare: Treeshare;
+    _registry: ParcelRegistry;
 
     // from methods
     _log: boolean = false; // used by log()
@@ -149,13 +146,13 @@ export default class Parcel {
 
     _create = (createParcelConfig: ParcelCreateConfigType): Parcel => {
         let {
-            id = this._id,
-            onDispatch = this.dispatch,
             handleChange,
+            id = this._id,
+            lastOriginId = this._lastOriginId,
+            onDispatch = this.dispatch,
             parent,
             parcelData = this._parcelData,
-            treeshare = this._treeshare,
-            lastOriginId = this._lastOriginId
+            registry = this._registry
         } = createParcelConfig;
 
         let {
@@ -176,7 +173,7 @@ export default class Parcel {
                 id,
                 onDispatch,
                 parent,
-                treeshare
+                registry
             }
         );
     };
@@ -186,6 +183,15 @@ export default class Parcel {
         return this._create({
             handleChange: this._onHandleChange,
             parcelData: setSelf(value)(this._parcelData)
+        });
+    };
+
+    _boundarySplit = ({handleChange}: *): Parcel => {
+        return this._create({
+            id: this._id.pushModifier('bs'),
+            parent: this._parent,
+            handleChange,
+            registry: {}
         });
     };
 
@@ -339,7 +345,6 @@ export default class Parcel {
     modifyDown = (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => this._methods.modifyDown(updater);
     modifyUp = (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => this._methods.modifyUp(updater);
     initialMeta = (initialMeta: ParcelMeta): Parcel => this._methods.initialMeta(initialMeta);
-    _boundarySplit = (config: *): Parcel => this._methods._boundarySplit(config);
 
     // Type methods
     isChild = (): boolean => this._parcelTypes.isChild();
@@ -350,10 +355,6 @@ export default class Parcel {
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
-
-    // Advanced methods
-    getInternalLocationShareData = (): * => this._methods.getInternalLocationShareData();
-    setInternalLocationShareData = (partialData: Object): * => this._methods.setInternalLocationShareData(partialData);
 
     // Debug methods
     toConsole = () => this._methods.toConsole();

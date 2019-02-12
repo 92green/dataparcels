@@ -1,6 +1,5 @@
 // @flow
 import type ParcelId from '../parcelId/ParcelId';
-import type Treeshare from '../treeshare/Treeshare';
 
 import Parcel from '../parcel/Parcel';
 import Action from '../change/Action';
@@ -29,17 +28,17 @@ export type ParcelConfigInternal = {
     meta: ParcelMeta,
     id: ParcelId,
     parent?: ?Parcel,
-    treeshare: Treeshare
+    registry: ParcelRegistry
 };
 
 export type ParcelCreateConfigType = {
     onDispatch?: Function,
-    lastOriginId: string,
+    lastOriginId?: string,
     id?: ParcelId,
     parcelData?: ParcelData,
     parent?: ?Parcel,
     handleChange?: Function,
-    treeshare?: Treeshare
+    registry?: ParcelRegistry
 };
 
 export type ParcelMeta = {[key: string]: *};
@@ -55,6 +54,8 @@ export type ParcelShapeValueUpdater = (value: *, parcel: ParcelShape) => any;
 export type ParcelShapeConfigInternal = {
     parent?: ?ParcelShape
 };
+
+export type ParcelRegistry = {[id: string]: Parcel};
 
 export type Key = string;
 export type Index = number;
