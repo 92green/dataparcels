@@ -33,12 +33,12 @@ export type ParcelConfigInternal = {
 
 export type ParcelCreateConfigType = {
     onDispatch?: Function,
-    lastOriginId: string,
+    lastOriginId?: string,
     id?: ParcelId,
     parcelData?: ParcelData,
     parent?: ?Parcel,
     handleChange?: Function,
-    registry?: ?ParcelRegistry
+    registry?: ParcelRegistry
 };
 
 export type ParcelMeta = {[key: string]: *};
