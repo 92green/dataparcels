@@ -63,7 +63,8 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     get nextData(): ?ParcelData {
-        if(!this._baseParcel) {
+        let {_baseParcel} = this;
+        if(!_baseParcel) {
             throw ChangeRequestUnbasedError();
         }
 
@@ -71,11 +72,8 @@ export default class ChangeRequest {
             return this._cachedData;
         }
 
-        let parcelDataFromRegistry = this
-            ._baseParcel
-            ._treeshare
-            .registry
-            .get(this._baseParcel._id.id())
+        let parcelDataFromRegistry = _baseParcel
+            ._registry[_baseParcel._id.id()]
             .data;
 
         let data = ChangeRequestReducer(this)(parcelDataFromRegistry);
