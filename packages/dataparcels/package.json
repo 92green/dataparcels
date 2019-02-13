@@ -10,7 +10,13 @@
     "url": "git+https://github.com/blueflag/dataparcels.git"
   },
   "files": [
-    "lib"
+    "lib",
+    "Action",
+    "CancelActionMarker",
+    "ChangeRequest",
+    "DeletedParcelMarker",
+    "ParcelShape",
+    "shape"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
