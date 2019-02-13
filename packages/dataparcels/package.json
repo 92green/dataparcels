@@ -11,12 +11,12 @@
   },
   "files": [
     "lib",
-    "Action",
-    "CancelActionMarker",
-    "ChangeRequest",
-    "DeletedParcelMarker",
-    "ParcelShape",
-    "shape"
+    "Action.js",
+    "CancelActionMarker.js",
+    "ChangeRequest.js",
+    "DeletedParcelMarker.js",
+    "ParcelShape.js",
+    "shape.js"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
