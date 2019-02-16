@@ -39,7 +39,7 @@ export default (_this: Parcel): Object => ({
             ? (parcelData: ParcelData): ParcelData => updater(parcelData)
             : (parcelData: ParcelData): ParcelData => {
                 let {value} = parcelData;
-                let updatedValue = updater(value, _this);
+                let updatedValue = updater(value);
                 ValidateValueUpdater(value, updatedValue);
                 return setSelf(updatedValue)(parcelData);
             };

@@ -9,16 +9,12 @@ import shape from '../../parcelShape/shape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.modifyDown() should return a new parcel with updated parcelData', () => {
-    expect.assertions(2);
     var data = {
         value: [123]
     };
     var parcel = new Parcel(data).get(0);
     var updated = parcel
-        .modifyDown((value: *, parcelData: Parcel) => {
-            expect(parcelData).toBe(parcel);
-            return value + 1;
-        })
+        .modifyDown(value => value + 1)
         .data;
 
     var expectedData = {
