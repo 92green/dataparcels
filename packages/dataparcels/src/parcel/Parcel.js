@@ -13,7 +13,6 @@ import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
 import type {ParcelShapeUpdateFunction} from '../types/Types';
-import type {ParcelRegistry} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
@@ -42,8 +41,7 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
     lastOriginId: '',
     meta: {},
     id: new ParcelId(),
-    parent: undefined,
-    registry: {}
+    parent: undefined
 });
 
 export default class Parcel {
@@ -63,8 +61,7 @@ export default class Parcel {
             lastOriginId,
             meta,
             id,
-            parent,
-            registry
+            parent
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
         this._lastOriginId = lastOriginId;
@@ -93,10 +90,6 @@ export default class Parcel {
 
         // id
         this._id = id;
-
-        // registry
-        this._registry = registry;
-        this._registry[id.id()] = this;
 
         let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
 
@@ -138,7 +131,6 @@ export default class Parcel {
     _parcelData: ParcelData;
     _parcelTypes: ParcelTypes;
     _parent: ?Parcel;
-    _registry: ParcelRegistry;
 
     // from methods
     _log: boolean = false; // used by log()
@@ -151,8 +143,7 @@ export default class Parcel {
             lastOriginId = this._lastOriginId,
             onDispatch = this.dispatch,
             parent,
-            parcelData = this._parcelData,
-            registry = this._registry
+            parcelData = this._parcelData
         } = createParcelConfig;
 
         let {
@@ -172,8 +163,7 @@ export default class Parcel {
                 meta,
                 id,
                 onDispatch,
-                parent,
-                registry
+                parent
             }
         );
     };
@@ -190,8 +180,7 @@ export default class Parcel {
         return this._create({
             id: this._id.pushModifier('bs'),
             parent: this._parent,
-            handleChange,
-            registry: {}
+            handleChange
         });
     };
 

@@ -27,8 +27,7 @@ export type ParcelConfigInternal = {
     lastOriginId: string,
     meta: ParcelMeta,
     id: ParcelId,
-    parent?: ?Parcel,
-    registry: ParcelRegistry
+    parent?: ?Parcel
 };
 
 export type ParcelCreateConfigType = {
@@ -37,8 +36,7 @@ export type ParcelCreateConfigType = {
     id?: ParcelId,
     parcelData?: ParcelData,
     parent?: ?Parcel,
-    handleChange?: Function,
-    registry?: ParcelRegistry
+    handleChange?: Function
 };
 
 export type ParcelMeta = {[key: string]: *};
@@ -54,8 +52,6 @@ export type ParcelShapeValueUpdater = (value: *) => any;
 export type ParcelShapeConfigInternal = {
     parent?: ?ParcelShape
 };
-
-export type ParcelRegistry = {[id: string]: Parcel};
 
 export type Key = string;
 export type Index = number;
