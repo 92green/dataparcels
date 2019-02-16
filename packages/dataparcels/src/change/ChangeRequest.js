@@ -1,5 +1,4 @@
 // @flow
-import type Parcel from '../parcel/Parcel';
 import type {Key} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {ParcelData} from '../types/Types';
@@ -17,7 +16,7 @@ type ActionUpdater = (actions: Action[]) => Action[];
 export default class ChangeRequest {
 
     _actions: Action[] = [];
-    _baseParcel: ?Parcel;
+    _baseParcelData: ?ParcelData;
     _meta: * = {};
     _originId: ?string = null;
     _originPath: ?string[] = null;
@@ -27,10 +26,10 @@ export default class ChangeRequest {
         this._actions = this._actions.concat(action);
     }
 
-    _create = ({actions, baseParcel, meta, originId, originPath}: Object): ChangeRequest => {
+    _create = ({actions, baseParcelData, meta, originId, originPath}: Object): ChangeRequest => {
         let changeRequest = new ChangeRequest();
         changeRequest._actions = actions || this._actions;
-        changeRequest._baseParcel = baseParcel || this._baseParcel;
+        changeRequest._baseParcelData = baseParcelData || this._baseParcelData;
         changeRequest._meta = meta || this._meta;
         changeRequest._originId = originId || this._originId;
         changeRequest._originPath = originPath || this._originPath;
@@ -55,16 +54,16 @@ export default class ChangeRequest {
         return this._createMapActions(ii => ii._addPost(post));
     };
 
-    _setBaseParcel = (baseParcel: Parcel): ChangeRequest => {
+    _setBaseParcelData = (baseParcelData: ParcelData): ChangeRequest => {
         return this._create({
-            baseParcel
+            baseParcelData
         });
     };
 
     // $FlowFixMe - this doesn't have side effects
     get nextData(): ?ParcelData {
-        let {_baseParcel} = this;
-        if(!_baseParcel) {
+        let {_baseParcelData} = this;
+        if(!_baseParcelData) {
             throw ChangeRequestUnbasedError();
         }
 
@@ -72,11 +71,7 @@ export default class ChangeRequest {
             return this._cachedData;
         }
 
-        let parcelDataFromRegistry = _baseParcel
-            ._registry[_baseParcel._id.id()]
-            .data;
-
-        let data = ChangeRequestReducer(this)(parcelDataFromRegistry);
+        let data = ChangeRequestReducer(this)(_baseParcelData);
         this._cachedData = data;
         return data;
     }
@@ -88,10 +83,10 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     get prevData(): ParcelData {
-        if(!this._baseParcel) {
+        if(!this._baseParcelData) {
             throw ChangeRequestUnbasedError();
         }
-        return this._baseParcel.data;
+        return this._baseParcelData;
     }
 
     // $FlowFixMe - this doesn't have side effects
