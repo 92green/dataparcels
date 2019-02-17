@@ -366,3 +366,29 @@ test('ChangeRequest hasValueChanged should indicate if value changed in array, i
     expect(basedChangeRequest.hasValueChanged(['#e'])).toBe(true);
     expect(basedChangeRequest.hasValueChanged()).toBe(true);
 });
+
+test('ChangeRequest should throw errors when attempted to set getters', () => {
+    let readOnly = 'This property is read-only';
+
+    let changeRequest = new ChangeRequest();
+
+    expect(() => {
+        changeRequest.nextData = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        changeRequest.prevData = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        changeRequest.changeRequestMeta = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        changeRequest.originId = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        changeRequest.originPath = 123;
+    }).toThrow(readOnly);
+});
