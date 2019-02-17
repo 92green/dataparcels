@@ -190,6 +190,8 @@ test('Parcel.modifyDown(parcelShapeUpdater) should be called with parcelShape an
     expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
     expect(updater.mock.calls[0][0].data.value).toEqual([1,2,3]);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
+
+    expect(updater.mock.calls[0][1]).toBe(undefined);
 });
 
 test('Parcel.modifyDown(parcelShapeUpdater) should modify value', () => {
@@ -283,8 +285,14 @@ test('Parcel.modifyUp(parcelShapeUpdater) should be called with parcelShape and 
 
     parcelWithModifier.set(456);
 
-    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
-    expect(updater.mock.calls[0][0].data.value).toEqual(456);
+    let [parcelShape, changeRequest] = updater.mock.calls[0];
+
+    expect(parcelShape instanceof ParcelShape).toBe(true);
+    expect(parcelShape.data.value).toEqual(456);
+    expect(changeRequest instanceof ChangeRequest).toBe(true);
+    expect(changeRequest.prevData.value).toBe(123);
+    expect(changeRequest.nextData.value).toBe(456);
+
     expect(handleChange.mock.calls[0][0].data.value).toEqual(456);
 });
 

@@ -32,10 +32,8 @@ export default (_this: Parcel): Object => ({
     },
 
     _getModifierUpdater: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Function => {
-        // $FlowFixMe - flow just cant make the connection between updater._isParcelUpdater and the choice between ParcelValueUpdater or ParcelShapeUpdateFunction
         return updater._isParcelUpdater
-            // $FlowFixMe - this branch should only be hit with ParcelShapeUpdateFunction
-            ? (parcelData: ParcelData): ParcelData => updater(parcelData)
+            ? updater
             : (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
                 let {value} = parcelData;
                 let updatedValue = updater(value, changeRequest);

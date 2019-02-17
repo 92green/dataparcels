@@ -44,7 +44,7 @@ export type ParcelMapper = (item: Parcel, property: string|number, parent: Parce
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = (value: *, changeRequest?: ChangeRequest) => any;
 export type ParcelShapeUpdateFunction = Function;
-export type ParcelShapeUpdater = (item: ParcelShape) => any;
+export type ParcelShapeUpdater = (item: ParcelShape, changeRequest?: ChangeRequest) => any;
 
 export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
 export type ParcelShapeValueUpdater = (value: *) => any;

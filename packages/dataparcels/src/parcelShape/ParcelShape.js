@@ -146,10 +146,10 @@ export default class ParcelShape {
     }
 
     static update(updater: ParcelShapeUpdater): ParcelShapeUpdateFunction {
-        let fn = (parcelData: ParcelData): ParcelData => {
+        let fn = (parcelData: ParcelData, changeRequest: *): ParcelData => {
             return ParcelShape
                 .fromData(parcelData)
-                .updateShape(updater)
+                .updateShape((parcelShape) => updater(parcelShape, changeRequest))
                 .data;
         };
 
