@@ -4,14 +4,16 @@ import type Action from './Action';
 import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
+import findLastIndex from 'unmutable/lib/findLastIndex';
 import identity from 'unmutable/lib/identity';
 import last from 'unmutable/lib/last';
-import update from 'unmutable/lib/update';
+import take from 'unmutable/lib/take';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
 
 import {ReducerInvalidActionError} from '../errors/Errors';
+import {ReducerInvalidStepError} from '../errors/Errors';
 import {isCancelledError} from './CancelActionMarker';
 
 import del from '../parcelData/delete';
@@ -69,27 +71,37 @@ const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
 };
 
 const doDeepAction = (action: Action): ParcelDataEvaluator => {
-    let {keyPathModifiers, type} = action;
+    let {steps, type} = action;
     let isParentAction: boolean = !!(parentActionMap[type]);
 
     if(isParentAction) {
         if(action.keyPath.length === 0) {
             return type === "delete" ? deleteSelfWithMarker : identity();
         }
-        keyPathModifiers = pipeWith(
-            keyPathModifiers,
-            update(-1, keyPathModifier => keyPathModifier._addKey(null))
-            // ^ if isParentAction set last keyPathModifier to null so that
-            // next() is called instead of parcelDataUpdate(key, next)
-        );
+        let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
+        steps = take(lastGetIndex)(steps);
     }
 
     return composeWith(
-        ...keyPathModifiers.map(({key, pre, post}) => (next) => pipe(
-            ...pre,
-            (key || key === 0) ? parcelDataUpdate(key, next) : next,
-            ...post,
-        )),
+        ...steps.map((step) => (next): ParcelDataEvaluator => {
+            if(step.type === 'get') {
+                // $FlowFixMe - I promise that step.key will exist
+                return parcelDataUpdate(step.key, next);
+            }
+            if(step.type === 'md') {
+                return pipe(
+                    step.updater,
+                    next
+                );
+            }
+            if(step.type === 'mu') {
+                return pipe(
+                    next,
+                    step.updater
+                );
+            }
+            throw ReducerInvalidStepError(step.type);
+        }),
         doAction(action)
     );
 };

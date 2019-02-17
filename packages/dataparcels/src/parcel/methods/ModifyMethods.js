@@ -52,7 +52,10 @@ export default (_this: Parcel): Object => ({
             id: _this._methods._pushModifierId('md', updater),
             parcelData: parcelDataUpdater(_this._parcelData),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPre(parcelDataUpdater));
+                _this.dispatch(changeRequest._addStep({
+                    type: 'md',
+                    updater: parcelDataUpdater
+                }));
             }
         });
     },
@@ -67,7 +70,10 @@ export default (_this: Parcel): Object => ({
         return _this._create({
             id: _this._methods._pushModifierId('mu', updater),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(parcelDataUpdater));
+                _this.dispatch(changeRequest._addStep({
+                    type: 'mu',
+                    updater: parcelDataUpdater
+                }));
             }
         });
     },
@@ -86,7 +92,10 @@ export default (_this: Parcel): Object => ({
             id: _this._id.pushModifier('im'),
             parcelData: parcelDataUpdater(_this._parcelData),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(parcelDataUpdater));
+                _this.dispatch(changeRequest._addStep({
+                    type: 'mu',
+                    updater: parcelDataUpdater
+                }));
             }
         });
     }
