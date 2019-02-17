@@ -59,6 +59,12 @@ const parentActionMap = {
     swapPrev: true
 };
 
+const stepMap = {
+    get: ({key}, next) => parcelDataUpdate(key, next),
+    md: ({updater}, next) => pipe(updater, next),
+    mu: ({updater}, next) => pipe(next, updater)
+};
+
 const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
     let fn = actionMap[type];
     if(!fn) {
@@ -84,23 +90,11 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
 
     return composeWith(
         ...steps.map((step) => (next): ParcelDataEvaluator => {
-            if(step.type === 'get') {
-                // $FlowFixMe - I promise that step.key will exist
-                return parcelDataUpdate(step.key, next);
+            let fn = stepMap[step.type];
+            if(!fn) {
+                throw ReducerInvalidStepError(step.type);
             }
-            if(step.type === 'md') {
-                return pipe(
-                    step.updater,
-                    next
-                );
-            }
-            if(step.type === 'mu') {
-                return pipe(
-                    next,
-                    step.updater
-                );
-            }
-            throw ReducerInvalidStepError(step.type);
+            return fn(step, next);
         }),
         doAction(action)
     );
