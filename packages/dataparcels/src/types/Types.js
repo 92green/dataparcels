@@ -57,6 +57,12 @@ export type Key = string;
 export type Index = number;
 export type Property = number|string;
 
+export type ActionStep = {
+    type: string,
+    key?: Key|Index,
+    updater?: ParcelDataEvaluator
+};
+
 export type ParentType = any; // should be any parent data type
 
 export type ParcelIdData = {

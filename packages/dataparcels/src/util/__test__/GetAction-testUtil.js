@@ -9,5 +9,6 @@ export default pipe(
     method('actions')(),
     first(),
     method('toJS')(),
-    del('keyPathModifiers')
+    del('keyPathModifiers'),
+    del('steps')
 );

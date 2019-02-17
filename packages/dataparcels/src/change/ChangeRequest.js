@@ -1,4 +1,5 @@
 // @flow
+import type {ActionStep} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {ParcelData} from '../types/Types';
@@ -36,22 +37,10 @@ export default class ChangeRequest {
         return changeRequest;
     };
 
-    _createMapActions = (updater: Function): ChangeRequest => {
+    _addStep = (step: ActionStep): ChangeRequest => {
         return this._create({
-            actions: this._actions.map(updater)
+            actions: this._actions.map(ii => ii._addStep(step))
         });
-    };
-
-    _unget = (key: Key): ChangeRequest => {
-        return this._createMapActions(ii => ii._unget(key));
-    };
-
-    _addPre = (pre: Function): ChangeRequest => {
-        return this._createMapActions(ii => ii._addPre(pre));
-    };
-
-    _addPost = (post: Function): ChangeRequest => {
-        return this._createMapActions(ii => ii._addPost(post));
     };
 
     _setBaseParcelData = (baseParcelData: ParcelData): ChangeRequest => {

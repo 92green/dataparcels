@@ -67,23 +67,6 @@ test('ChangeRequest setChangeRequestMeta() and changeRequestMeta should work', (
         .changeRequestMeta);
 });
 
-test('ChangeRequest _unget() should prepend key', () => {
-    let actions = [
-        new Action({type: "???", keyPath: ['a']}),
-        new Action({type: "!!!", keyPath: ['a']})
-    ];
-
-    let expectedKeyPaths = [
-        ['b', 'a'],
-        ['b', 'a']
-    ];
-
-    expect(expectedKeyPaths).toEqual(new ChangeRequest(actions)
-        ._unget('b')
-        .actions()
-        .map(aa => aa.keyPath));
-});
-
 test('ChangeRequest _setBaseParcelData() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
