@@ -1,7 +1,7 @@
 // @flow
-import type ChangeRequest from '../../change/ChangeRequest';
 import update from 'unmutable/lib/update';
 
+import ChangeRequest from '../../change/ChangeRequest';
 import Parcel from '../Parcel';
 import ParcelShape from '../../parcelShape/ParcelShape';
 import CancelActionMarker from '../../change/CancelActionMarker';
@@ -9,12 +9,13 @@ import shape from '../../parcelShape/shape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.modifyDown() should return a new parcel with updated parcelData', () => {
+    let updater = jest.fn(value => value + 1);
     var data = {
         value: [123]
     };
     var parcel = new Parcel(data).get(0);
     var updated = parcel
-        .modifyDown(value => value + 1)
+        .modifyDown(updater)
         .data;
 
     var expectedData = {
@@ -24,6 +25,8 @@ test('Parcel.modifyDown() should return a new parcel with updated parcelData', (
         key: "#a"
     };
     expect(expectedData).toEqual(updated);
+    expect(updater.mock.calls[0][0]).toBe(123);
+    expect(updater.mock.calls[0][1]).toBe(undefined);
 });
 
 test('Parcel.modifyDown() should allow non-parent types to be returned', () => {
@@ -99,15 +102,23 @@ test('Parcel.modifyUp() should have id which is unique to updater', () => {
 });
 
 test('Parcel.modifyUp() should allow you to change the payload of a changed parcel with an updater (and should allow non-parent types to be returned)', () => {
-    var handleChange = jest.fn();
+    let handleChange = jest.fn();
+    let updater = jest.fn(value => value + 1);
+
     new Parcel({
         value: 123,
         handleChange
     })
-        .modifyUp(value => value + 1)
+        .modifyUp(updater)
         .onChange(456);
 
     expect(handleChange.mock.calls[0][0].value).toBe(457);
+
+    let [value, changeRequest] = updater.mock.calls[0];
+    expect(value).toBe(456);
+    expect(changeRequest instanceof ChangeRequest).toBe(true);
+    expect(changeRequest.prevData.value).toBe(123);
+    expect(changeRequest.nextData.value).toBe(456);
 });
 
 test('Parcel.modifyUp() should validate value updater', () => {

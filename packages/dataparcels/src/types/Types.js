@@ -42,7 +42,7 @@ export type ParcelCreateConfigType = {
 export type ParcelMeta = {[key: string]: *};
 export type ParcelMapper = (item: Parcel, property: string|number, parent: Parcel) => *;
 export type ParcelUpdater = (item: Parcel) => Parcel;
-export type ParcelValueUpdater = (value: *) => any;
+export type ParcelValueUpdater = (value: *, changeRequest?: ChangeRequest) => any;
 export type ParcelShapeUpdateFunction = Function;
 export type ParcelShapeUpdater = (item: ParcelShape) => any;
 
@@ -60,7 +60,8 @@ export type Property = number|string;
 export type ActionStep = {
     type: string,
     key?: Key|Index,
-    updater?: ParcelDataEvaluator
+    updater?: ParcelDataEvaluator,
+    changeRequest?: ChangeRequest
 };
 
 export type ParentType = any; // should be any parent data type

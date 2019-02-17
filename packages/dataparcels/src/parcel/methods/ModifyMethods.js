@@ -17,7 +17,6 @@ import HashString from '../../util/HashString';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
-import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
@@ -32,14 +31,14 @@ export default (_this: Parcel): Object => ({
         return _this._id.pushModifier(`${prefix}-${id}`);
     },
 
-    _getModifierUpdater: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): ParcelDataEvaluator => {
+    _getModifierUpdater: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Function => {
         // $FlowFixMe - flow just cant make the connection between updater._isParcelUpdater and the choice between ParcelValueUpdater or ParcelShapeUpdateFunction
         return updater._isParcelUpdater
             // $FlowFixMe - this branch should only be hit with ParcelShapeUpdateFunction
             ? (parcelData: ParcelData): ParcelData => updater(parcelData)
-            : (parcelData: ParcelData): ParcelData => {
+            : (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
                 let {value} = parcelData;
-                let updatedValue = updater(value);
+                let updatedValue = updater(value, changeRequest);
                 ValidateValueUpdater(value, updatedValue);
                 return setSelf(updatedValue)(parcelData);
             };
@@ -62,17 +61,18 @@ export default (_this: Parcel): Object => ({
 
     modifyUp: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
         Types(`modifyUp()`, `updater`, `function`)(updater);
-        let parcelDataUpdater: ParcelDataEvaluator = pipe(
-            _this._methods._getModifierUpdater(updater),
-            checkCancellation
-        );
+        let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
+            let nextData = _this._methods._getModifierUpdater(updater)(parcelData, changeRequest);
+            return checkCancellation(nextData);
+        };
 
         return _this._create({
             id: _this._methods._pushModifierId('mu', updater),
             onDispatch: (changeRequest: ChangeRequest) => {
                 _this.dispatch(changeRequest._addStep({
                     type: 'mu',
-                    updater: parcelDataUpdater
+                    updater: parcelDataUpdater,
+                    changeRequest
                 }));
             }
         });
@@ -94,7 +94,8 @@ export default (_this: Parcel): Object => ({
             onDispatch: (changeRequest: ChangeRequest) => {
                 _this.dispatch(changeRequest._addStep({
                     type: 'mu',
-                    updater: parcelDataUpdater
+                    updater: parcelDataUpdater,
+                    changeRequest
                 }));
             }
         });

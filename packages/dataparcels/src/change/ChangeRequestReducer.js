@@ -62,7 +62,16 @@ const parentActionMap = {
 const stepMap = {
     get: ({key}, next) => parcelDataUpdate(key, next),
     md: ({updater}, next) => pipe(updater, next),
-    mu: ({updater}, next) => pipe(next, updater)
+    mu: ({updater, changeRequest}, next) => (prevData) => {
+        let nextData = next(prevData);
+        return updater(
+            nextData,
+            changeRequest && changeRequest._create({
+                prevData,
+                nextData
+            })
+        );
+    }
 };
 
 const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
