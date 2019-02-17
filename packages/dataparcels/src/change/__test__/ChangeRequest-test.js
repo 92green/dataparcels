@@ -123,41 +123,6 @@ test('ChangeRequest prevData should return previous data', () => {
     expect(expectedValue).toEqual(value);
 });
 
-// test('ChangeRequest data should get latest parcel data from treeshare when called to prevent basing onto stale data', () => {
-//     expect.assertions(1);
-
-//     var action = new Action({
-//         type: "set",
-//         keyPath: ["b"],
-//         payload: {
-//             value: 3
-//         }
-//     });
-
-//     var ref = {};
-
-//     var parcel = new Parcel({
-//         value: {
-//             a: 1,
-//             b: 2
-//         },
-//         handleChange: (parcel) => {
-//             let {value} = ref.changeRequest.nextData;
-
-//             var expectedValue = {
-//                 a: 4,
-//                 b: 3
-//             };
-
-//             expect(expectedValue).toEqual(value);
-//         }
-//     });
-
-//     ref.changeRequest = new ChangeRequest(action)._setBaseParcelData(parcel.data);
-//     parcel.get('a').onChange(4);
-// });
-
-
 test('ChangeRequest should throw error if data is accessed before _setBaseParcelData()', () => {
     expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcelData()`);
     expect(() => new ChangeRequest().prevData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcelData()`);
