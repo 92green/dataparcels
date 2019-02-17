@@ -67,7 +67,7 @@ test('ChangeRequest setChangeRequestMeta() and changeRequestMeta should work', (
         .changeRequestMeta);
 });
 
-test('ChangeRequest _setBaseParcelData() and data should use Reducer', () => {
+test('ChangeRequest nextData() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
         keyPath: ["b"],
@@ -84,7 +84,9 @@ test('ChangeRequest _setBaseParcelData() and data should use Reducer', () => {
     });
 
     let {value} = new ChangeRequest(action)
-        ._setBaseParcelData(parcel.data)
+        ._create({
+            prevData: parcel.data
+        })
         .nextData;
 
     var expectedValue = {
@@ -112,7 +114,9 @@ test('ChangeRequest prevData should return previous data', () => {
     });
 
     let {value} = new ChangeRequest(action)
-        ._setBaseParcelData(parcel.data)
+        ._create({
+            prevData: parcel.data
+        })
         .prevData;
 
     var expectedValue = {
@@ -123,9 +127,9 @@ test('ChangeRequest prevData should return previous data', () => {
     expect(expectedValue).toEqual(value);
 });
 
-test('ChangeRequest should throw error if data is accessed before _setBaseParcelData()', () => {
-    expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcelData()`);
-    expect(() => new ChangeRequest().prevData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcelData()`);
+test('ChangeRequest should throw error if data is accessed before setting prevData()', () => {
+    expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before settig changeRequest.prevData`);
+    expect(() => new ChangeRequest().prevData).toThrowError(`ChangeRequest data cannot be accessed before settig changeRequest.prevData`);
 });
 
 test('ChangeRequest should keep originId and originPath', () => {
@@ -172,7 +176,9 @@ test('ChangeRequest should cache its data after its calculated, so subsequent ca
         }
     });
 
-    let changeRequest = new ChangeRequest(actions)._setBaseParcelData(parcel.data);
+    let changeRequest = new ChangeRequest(actions)._create({
+        prevData: parcel.data
+    });
     let data;
 
     let ms = TestTimeExecution(() => {
@@ -250,7 +256,9 @@ test('ChangeRequest getDataIn should return previous and next value at keyPath',
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._setBaseParcelData(parcel.data);
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
     let {next, prev} = basedChangeRequest.getDataIn(['a', 'c', '#a']);
 
     expect(next.value).toBe(100);
@@ -276,7 +284,9 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path', (
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._setBaseParcelData(parcel.data);
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
 
     expect(basedChangeRequest.hasValueChanged(['a', 'c', '#a'])).toBe(true);
     expect(basedChangeRequest.hasValueChanged(['a', 'c', '#b'])).toBe(false);
@@ -302,7 +312,9 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path due
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._setBaseParcelData(parcel.data);
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
 
     expect(basedChangeRequest.hasValueChanged(['a'])).toBe(true);
     expect(basedChangeRequest.hasValueChanged(['a', 'b'])).toBe(true);
@@ -322,7 +334,9 @@ test('ChangeRequest hasValueChanged should indicate if value changed in array, i
         value: [0,1,2,3]
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._setBaseParcelData(parcel.data);
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
 
     expect(basedChangeRequest.hasValueChanged(['#a'])).toBe(false);
     expect(basedChangeRequest.hasValueChanged(['#b'])).toBe(false);

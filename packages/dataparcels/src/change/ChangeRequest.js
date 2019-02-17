@@ -6,7 +6,7 @@ import type {ParcelData} from '../types/Types';
 import type Action from './Action';
 
 import {ReadOnlyError} from '../errors/Errors';
-import {ChangeRequestUnbasedError} from '../errors/Errors';
+import {ChangeRequestNoPrevDataError} from '../errors/Errors';
 import ChangeRequestReducer from '../change/ChangeRequestReducer';
 import parcelGet from '../parcelData/get';
 
@@ -17,52 +17,55 @@ type ActionUpdater = (actions: Action[]) => Action[];
 export default class ChangeRequest {
 
     _actions: Action[] = [];
-    _baseParcelData: ?ParcelData;
+    _prevData: ?ParcelData;
+    _nextData: ?ParcelData;
     _meta: * = {};
     _originId: ?string = null;
     _originPath: ?string[] = null;
-    _cachedData: ?ParcelData;
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
     }
 
-    _create = ({actions, baseParcelData, meta, originId, originPath}: Object): ChangeRequest => {
+    _create = (changeRequestData: Object): ChangeRequest => {
+
+        changeRequestData = {
+            actions: this._actions,
+            prevData: this._prevData,
+            nextData: this._nextData,
+            meta: this._meta,
+            originId: this._originId,
+            originPath: this._originPath,
+            ...changeRequestData
+        };
+
         let changeRequest = new ChangeRequest();
-        changeRequest._actions = actions || this._actions;
-        changeRequest._baseParcelData = baseParcelData || this._baseParcelData;
-        changeRequest._meta = meta || this._meta;
-        changeRequest._originId = originId || this._originId;
-        changeRequest._originPath = originPath || this._originPath;
+        changeRequest._actions = changeRequestData.actions;
+        changeRequest._prevData = changeRequestData.prevData;
+        changeRequest._nextData = changeRequestData.nextData;
+        changeRequest._meta = changeRequestData.meta;
+        changeRequest._originId = changeRequestData.originId;
+        changeRequest._originPath = changeRequestData.originPath;
         return changeRequest;
     };
 
     _addStep = (step: ActionStep): ChangeRequest => {
         return this._create({
-            actions: this._actions.map(ii => ii._addStep(step))
-        });
-    };
-
-    _setBaseParcelData = (baseParcelData: ParcelData): ChangeRequest => {
-        return this._create({
-            baseParcelData
+            actions: this._actions.map(ii => ii._addStep(step)),
+            nextData: undefined,
+            prevData: undefined
         });
     };
 
     // $FlowFixMe - this doesn't have side effects
     get nextData(): ?ParcelData {
-        let {_baseParcelData} = this;
-        if(!_baseParcelData) {
-            throw ChangeRequestUnbasedError();
+        let {_nextData} = this;
+        if(_nextData) {
+            return _nextData;
         }
 
-        if(this._cachedData) {
-            return this._cachedData;
-        }
-
-        let data = ChangeRequestReducer(this)(_baseParcelData);
-        this._cachedData = data;
-        return data;
+        this._nextData = ChangeRequestReducer(this)(this.prevData);
+        return this._nextData;
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -72,10 +75,10 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     get prevData(): ParcelData {
-        if(!this._baseParcelData) {
-            throw ChangeRequestUnbasedError();
+        if(!this._prevData) {
+            throw ChangeRequestNoPrevDataError();
         }
-        return this._baseParcelData;
+        return this._prevData;
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -89,7 +92,9 @@ export default class ChangeRequest {
 
     updateActions = (updater: ActionUpdater): ChangeRequest => {
         return this._create({
-            actions: updater(this._actions)
+            actions: updater(this._actions),
+            nextData: undefined,
+            prevData: undefined
         });
     };
 
