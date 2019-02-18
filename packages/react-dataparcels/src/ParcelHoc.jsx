@@ -10,11 +10,13 @@ import Types from 'dataparcels/lib/types/Types';
 const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
 
 type Props = {};
+
 type State = {
     parcel: ?Parcel,
-    initialize: (value: *) => Parcel,
-    prevProps: {[key: string]: any}
+    prevProps: {[key: string]: any},
+    initialize: (props: Props) => Parcel
 };
+
 type ChildProps = {
     // ${name}: Parcel
 };
@@ -66,25 +68,39 @@ export default (config: ParcelHocConfig): Function => {
         constructor(props: Props) {
             super(props);
 
-            let initialize = (value: *) => new Parcel({
-                value,
-                handleChange: this.handleChange
-            });
+            let initialize = (props: Props) => ParcelHoc.updateParcelValueFromProps(
+                new Parcel({
+                    value: valueFromProps(props),
+                    handleChange: this.handleChange
+                }),
+                props
+            );
 
             this.state = {
                 parcel: undefined,
-                initialize,
-                prevProps: {}
+                prevProps: {},
+                initialize
             };
         }
 
+        static updateParcelValueFromProps(parcel: Parcel, props: Props): Parcel {
+            return parcel._changeAndReturn((parcel: Parcel) => {
+                let value: any = valueFromProps(props);
+                return parcel.set(value);
+            });
+        }
+
         static getDerivedStateFromProps(props: Props, state: State): * {
-            let {parcel} = state;
+            let {
+                initialize,
+                parcel,
+                prevProps
+            } = state;
+
             let newState = {};
 
             if(!parcel && delayUntil(props)) {
-                let value = valueFromProps(props);
-                newState.parcel = state.initialize(value);
+                newState.parcel = initialize(props);
 
                 if(debugParcel) {
                     log(`Received initial value:`);
@@ -92,9 +108,8 @@ export default (config: ParcelHocConfig): Function => {
                 }
             }
 
-            if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps)) {
-                // $FlowFixMe - parcel cant possibly be undefined here
-                newState.parcel = parcel._setAndReturn(valueFromProps(props));
+            if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(prevProps, props, valueFromProps) && parcel) {
+                newState.parcel = ParcelHoc.updateParcelValueFromProps(parcel, props);
 
                 if(debugParcel) {
                     log(`Parcel updated from props:`);
