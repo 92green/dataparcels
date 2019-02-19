@@ -196,3 +196,93 @@ test('ParcelHoc shouldParcelUpdateFromProps should update value from props when 
     // child parcel should now contain new result of valueFromProps
     expect(childProps3.proppy.value).toBe("!!!");
 });
+
+test('ParcelHoc modifyBeforeUpdate should be called when value is set', () => {
+    let modifyBeforeUpdate = jest.fn(value => value + 1);
+
+    let wrapper = shallowRenderHoc(
+        {},
+        ParcelHoc({
+            valueFromProps: () => 123,
+            name: "proppy",
+            modifyBeforeUpdate: [
+                modifyBeforeUpdate
+            ]
+        })
+    );
+
+    let childProps = wrapper.props();
+
+    // child parcel should contain value after having been passed through modifyBeforeUpdate
+    expect(childProps.proppy.value).toBe(124);
+});
+
+test('ParcelHoc modifyBeforeUpdate should be called when change occurs', () => {
+
+    let wrapper = shallowRenderHoc(
+        {},
+        ParcelHoc({
+            valueFromProps: () => 123,
+            name: "proppy",
+            modifyBeforeUpdate: [
+                value => value + 1,
+                value => value + 1
+            ]
+        })
+    );
+
+    let childProps = wrapper.props();
+    childProps.proppy.onChange(456);
+
+    // child parcel should contain value after having been passed through modifyBeforeUpdate
+    expect(wrapper.update().props().proppy.value).toBe(458);
+});
+
+test('ParcelHoc modifyBeforeUpdate should be called when relevant prop change occurs', () => {
+    let wrapper = shallowRenderHoc(
+        {},
+        ParcelHoc({
+            valueFromProps: () => 123,
+            name: "proppy",
+            modifyBeforeUpdate: [
+                value => value + 1,
+                value => value + 1
+            ]
+        })
+    );
+
+    let childProps = wrapper.props();
+    childProps.proppy.onChange(456);
+
+    // child parcel should contain value after having been passed through modifyBeforeUpdate
+    expect(wrapper.update().props().proppy.value).toBe(458);
+});
+
+test('ParcelHoc modifyBeforeUpdate should be called when relevant prop change occurs', () => {
+
+    let wrapper = shallowRenderHoc(
+        {
+            abc: 123
+        },
+        ParcelHoc({
+            valueFromProps: (props) => props.abc,
+            name: "proppy",
+            shouldParcelUpdateFromProps: (prevProps, nextProps, valueFromProps) => valueFromProps(prevProps) !== valueFromProps(nextProps),
+            modifyBeforeUpdate: [
+                value => value + 1,
+                value => value + 1
+            ]
+        })
+    );
+
+    let childProps = wrapper.props();
+
+    // set prop that should cause a controlled update
+    wrapper.setProps({
+        abc: 456
+    });
+
+    let childProps2 = wrapper.props();
+    // child parcel should contain value after having been passed through modifyBeforeUpdate
+    expect(childProps2.proppy.value).toBe(458);
+});

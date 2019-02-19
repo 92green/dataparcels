@@ -2,6 +2,7 @@
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
 import type ChangeRequest from 'dataparcels/ChangeRequest';
+import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
 import Parcel from 'dataparcels';
@@ -34,6 +35,7 @@ type ParcelHocConfig = {
     valueFromProps: ValueFromProps,
     shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
     onChange?: (props: AnyProps) => OnChange,
+    modifyBeforeUpdate?: Array<ParcelValueUpdater>,
     delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean
@@ -49,6 +51,7 @@ export default (config: ParcelHocConfig): Function => {
         valueFromProps,
         shouldParcelUpdateFromProps,
         onChange,
+        modifyBeforeUpdate = [],
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
@@ -86,8 +89,16 @@ export default (config: ParcelHocConfig): Function => {
         static updateParcelValueFromProps(parcel: Parcel, props: Props): Parcel {
             return parcel._changeAndReturn((parcel: Parcel) => {
                 let value: any = valueFromProps(props);
-                return parcel.set(value);
+                return parcel
+                    .pipe(ParcelHoc.applyModifyBeforeUpdate)
+                    .set(value);
             });
+        }
+
+        static applyModifyBeforeUpdate(parcel: Parcel): Parcel {
+            return parcel.pipe(
+                ...modifyBeforeUpdate.map((fn) => parcel => parcel.modifyUp(fn))
+            );
         }
 
         static getDerivedStateFromProps(props: Props, state: State): * {
@@ -145,19 +156,26 @@ export default (config: ParcelHocConfig): Function => {
         render(): Node {
             let {parcel} = this.state;
 
-            if(pipe && parcel) {
-                let pipeWithProps = pipe(this.props);
-                Types(`pipe()`, `return value of pipe`, `function`)(pipeWithProps);
-                parcel = pipeWithProps(parcel);
-                Types(`pipe()`, "return value of pipe(props)", `parcel`)(parcel);
+            let renderWithProps = (extraProps = {}) => <Component
+                {...this.props}
+                {...extraProps}
+            />;
+
+            if(!parcel) {
+                return renderWithProps();
             }
 
-            let props = {
-                ...this.props,
-                [name]: parcel
-            };
+            let pipeWithProps = pipe(this.props);
+            Types(`pipe()`, `return value of pipe`, `function`)(pipeWithProps);
 
-            return <Component {...props} />;
+            let pipeFunctions = [
+                ParcelHoc.applyModifyBeforeUpdate,
+                pipeWithProps
+            ];
+
+            return renderWithProps({
+                [name]: parcel.pipe(...pipeFunctions)
+            });
         }
     };
 };
