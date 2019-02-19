@@ -3,7 +3,7 @@ import {Divider} from 'dcme-style';
 
 # Data Synchronisation
 
-Data synchronisation encompasses how dataparcels interacts with related pieces of external data.
+Data synchronisation encompasses how dataparcels interacts with pieces of data stored externally.
 
 ## Parcel as a slave
 
