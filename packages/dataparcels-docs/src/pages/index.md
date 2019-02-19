@@ -47,7 +47,7 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 
 ### 3. Data synchronisation
 
-<Link to="/data-synchronisation">Data synchronisation</Link> encompasses how dataparcels interacts with related pieces of external data. This includes:
+<Link to="/data-synchronisation">Data synchronisation</Link> encompasses how dataparcels interacts with pieces of externally held data. This includes:
 - Setting up a <Link to="/data-synchronisation#ParcelHoc-as-a-slave">ParcelHoc as a slave</Link> to higher state, such as the query string 🚧
 - Coping with <Link to="/data-synchronisation#Sending-failable-requests">sending failable requests</Link>, such as saving data to a server 🚧
 - <Link to="/data-synchronisation#Sending-partial-requests">Sending partial requests</Link>, such as making requests to save individual items in a list 🚧
