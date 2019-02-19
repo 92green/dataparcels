@@ -10,7 +10,7 @@ export default class ParcelTypes {
     _isParent: boolean = false;
     _isTopLevel: boolean = false;
 
-    constructor(value: *, parentParcelTypes: ?ParcelTypes, isTopLevel: boolean = false) {
+    constructor(value: *, parentParcelTypes: ?ParcelTypes, isTopLevel: boolean) {
         this._isChild = !!parentParcelTypes;
         this._isElement = !!(parentParcelTypes && parentParcelTypes.isIndexed());
         this._isIndexed = isIndexedValue(value);

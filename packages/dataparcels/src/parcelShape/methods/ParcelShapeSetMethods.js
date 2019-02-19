@@ -39,7 +39,7 @@ export default (_this: ParcelShape) => ({
 
     update: (updater: ParcelShapeValueUpdater): ParcelShape => {
         let {value} = _this;
-        let updatedValue = updater(value, _this);
+        let updatedValue = updater(value);
         ValidateValueUpdater(value, updatedValue);
         return _this.set(updatedValue);
     },

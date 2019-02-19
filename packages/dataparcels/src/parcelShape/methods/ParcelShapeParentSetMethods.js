@@ -39,7 +39,7 @@ export default (_this: ParcelShape) => ({
                 keyPath,
                 (parcelData) => {
                     let {value} = parcelData;
-                    let updatedValue = updater(value, _this);
+                    let updatedValue = updater(value);
                     ValidateValueUpdater(value, updatedValue);
                     return parcelSetSelf(updatedValue)(parcelData);
                 }

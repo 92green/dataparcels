@@ -29,7 +29,9 @@ export default (_this: Parcel): Object => ({
         }
 
         if(_onHandleChange) {
-            let changeRequestWithBase = changeRequest._setBaseParcel(_this);
+            let changeRequestWithBase = changeRequest._create({
+                prevData: _this.data
+            });
             let parcelData = changeRequestWithBase.nextData;
 
             if(!parcelData) {

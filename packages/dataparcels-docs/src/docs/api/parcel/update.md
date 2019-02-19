@@ -4,7 +4,7 @@ import ValueUpdater from 'docs/notes/ValueUpdater.md';
 update(updater: ValueUpdater): void
 update(key: string|number, updater: ValueUpdater): void // only on ParentParcels, will update a child
 
-type ValueUpdater = (value: any, self: Parcel) => any;
+type ValueUpdater = (value: any) => any;
 ```
 
 Calling `update()` with one argument will trigger a change that replaces the current value in the Parcel with the result of the value updater provided to it. The value updater is passed the current value of the Parcel, from which you can return the intended replacement value.

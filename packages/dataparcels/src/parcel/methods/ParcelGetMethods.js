@@ -68,7 +68,10 @@ export default (_this: Parcel) => ({
         return _this._create({
             id: _this._id.pushModifier('sc'),
             onDispatch: (changeRequest: ChangeRequest) => {
-                sideEffect(changeRequest._setBaseParcel(_this));
+                let basedChangeRequest = changeRequest._create({
+                    prevData: _this.data
+                });
+                sideEffect(basedChangeRequest);
                 _this.dispatch(changeRequest);
             }
         });

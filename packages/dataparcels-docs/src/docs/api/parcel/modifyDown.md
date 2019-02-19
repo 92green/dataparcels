@@ -3,7 +3,7 @@ import ValueUpdater from 'docs/notes/ValueUpdater.md';
 ```flow
 modifyDown(updater: ValueUpdater): Parcel
 
-type ValueUpdater = (value: any, self: Parcel) => any;
+type ValueUpdater = (value: any) => any;
 ```
 
 `modifyDown` lets you modify a Parcel's value so that lower Parcels receive and make changes against the modified value.
