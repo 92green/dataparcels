@@ -42,8 +42,8 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 - <Link to="/ui-behaviour#confirmation">Confirmation</Link> on important actions such as deleting 🚧
 - <Link to="/ui-behaviour#selections">Selections</Link> of one or more items 🚧
 - <Link to="/ui-behaviour#drag-and-drop">Drag and drop sorting</Link> of arrays of items
-- <Link to="/ui-behaviour#debouncing-changes">Debouncing changes</Link> for good application performace
-- <Link to="/ui-behaviour#pure-rendering">Pure rendering</Link> for good rendering performace
+- <Link to="/ui-behaviour#debouncing-changes">Debouncing changes</Link> for improved rendering performance
+- <Link to="/ui-behaviour#pure-rendering">Pure rendering</Link> for improved rendering performance
 
 ### 3. Data synchronisation
 
