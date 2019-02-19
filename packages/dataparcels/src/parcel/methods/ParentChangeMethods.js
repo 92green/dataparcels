@@ -3,7 +3,6 @@ import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
 import type Parcel from '../Parcel';
 import type {ParcelValueUpdater} from '../../types/Types';
-import type {ParcelShapeUpdateFunction} from '../../types/Types';
 
 import Types from '../../types/Types';
 
@@ -28,13 +27,13 @@ export default (_this: Parcel /*, dispatch: Function*/): Object => ({
         _this.getIn(keyPath).delete();
     },
 
-    update: (key: Key|Index, updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => {
+    update: (key: Key|Index, updater: ParcelValueUpdater) => {
         Types(`update()`, `key`, `keyIndex`)(key);
         Types(`update()`, `updater`, `function`)(updater);
         _this.get(key).update(updater);
     },
 
-    updateIn: (keyPath: Array<Key|Index>, updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => {
+    updateIn: (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => {
         Types(`updateIn()`, `keyPath`, `keyIndexPath`)(keyPath);
         Types(`updateIn()`, `updater`, `function`)(updater);
         _this.getIn(keyPath).update(updater);

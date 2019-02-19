@@ -21,7 +21,6 @@ export type {ParcelMapper} from 'dataparcels';
 export type {ParcelUpdater} from 'dataparcels';
 export type {ParcelValueUpdater} from 'dataparcels';
 export type {ParcelShapeUpdater} from 'dataparcels';
-export type {ParcelShapeUpdateFunction} from 'dataparcels';
 
 export type {ParcelShapeSetMeta} from 'dataparcels';
 export type {ParcelShapeValueUpdater} from 'dataparcels';

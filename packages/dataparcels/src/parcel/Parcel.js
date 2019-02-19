@@ -12,7 +12,6 @@ import type {ParcelMeta} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
-import type {ParcelShapeUpdateFunction} from '../types/Types';
 import type {ParcelRegistry} from '../types/Types';
 
 import Types from '../types/Types';
@@ -302,8 +301,8 @@ export default class Parcel {
         ["2"]: (key: Key|Index, value: any) => this._methods.set(key, value)
     });
     update = overload({
-        ["1"]: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => this._methods.updateSelf(updater),
-        ["2"]: (key: Key|Index, updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => this._methods.update(key, updater)
+        ["1"]: (updater: ParcelValueUpdater) => this._methods.updateSelf(updater),
+        ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
     });
     setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
@@ -348,8 +347,8 @@ export default class Parcel {
     unshift = (...values: Array<any>) => this._methods.unshift(...values);
 
     // Modify methods
-    modifyDown = (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => this._methods.modifyDown(updater);
-    modifyUp = (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => this._methods.modifyUp(updater);
+    modifyDown = (updater: ParcelValueUpdater): Parcel => this._methods.modifyDown(updater);
+    modifyUp = (updater: ParcelValueUpdater): Parcel => this._methods.modifyUp(updater);
     initialMeta = (initialMeta: ParcelMeta): Parcel => this._methods.initialMeta(initialMeta);
 
     // Type methods

@@ -44,8 +44,7 @@ export type ParcelCreateConfigType = {
 export type ParcelMeta = {[key: string]: *};
 export type ParcelMapper = (item: Parcel, property: string|number, parent: Parcel) => *;
 export type ParcelUpdater = (item: Parcel) => Parcel;
-export type ParcelValueUpdater = (value: *, parcel: Parcel) => any;
-export type ParcelShapeUpdateFunction = Function;
+export type ParcelValueUpdater = Function;
 export type ParcelShapeUpdater = (item: ParcelShape) => any;
 
 export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;

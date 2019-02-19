@@ -5,7 +5,6 @@ import type {ParcelData} from '../../types/Types';
 import type {ParcelDataEvaluator} from '../../types/Types';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
-import type {ParcelShapeUpdateFunction} from '../../types/Types';
 
 import {checkCancellation} from '../../change/CancelActionMarker';
 import Types from '../../types/Types';
@@ -32,10 +31,8 @@ export default (_this: Parcel): Object => ({
         return _this._id.pushModifier(`${prefix}-${id}`);
     },
 
-    _getModifierUpdater: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): ParcelDataEvaluator => {
-        // $FlowFixMe - flow just cant make the connection between updater._isParcelUpdater and the choice between ParcelValueUpdater or ParcelShapeUpdateFunction
+    _getModifierUpdater: (updater: ParcelValueUpdater): ParcelDataEvaluator => {
         return updater._isParcelUpdater
-            // $FlowFixMe - this branch should only be hit with ParcelShapeUpdateFunction
             ? (parcelData: ParcelData): ParcelData => updater(parcelData)
             : (parcelData: ParcelData): ParcelData => {
                 let {value} = parcelData;
@@ -45,7 +42,7 @@ export default (_this: Parcel): Object => ({
             };
     },
 
-    modifyDown: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
+    modifyDown: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyDown()`, `updater`, `function`)(updater);
         let parcelDataUpdater: ParcelDataEvaluator = _this._methods._getModifierUpdater(updater);
         return _this._create({
@@ -57,7 +54,7 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyUp: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
+    modifyUp: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyUp()`, `updater`, `function`)(updater);
         let parcelDataUpdater: ParcelDataEvaluator = pipe(
             _this._methods._getModifierUpdater(updater),

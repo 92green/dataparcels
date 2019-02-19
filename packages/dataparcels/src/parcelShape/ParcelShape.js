@@ -6,7 +6,7 @@ import type {ParentType} from '../types/Types';
 import type {ParcelShapeValueUpdater} from '../types/Types';
 import type {ParcelShapeConfigInternal} from '../types/Types';
 import type {ParcelShapeUpdater} from '../types/Types';
-import type {ParcelShapeUpdateFunction} from '../types/Types';
+import type {ParcelValueUpdater} from '../types/Types';
 import type {ParcelShapeSetMeta} from '../types/Types';
 
 import Types from '../types/Types';
@@ -145,7 +145,7 @@ export default class ParcelShape {
         return parcelShape;
     }
 
-    static update(updater: ParcelShapeUpdater): ParcelShapeUpdateFunction {
+    static update(updater: ParcelShapeUpdater): ParcelValueUpdater {
         let fn = (parcelData: ParcelData): ParcelData => {
             return ParcelShape
                 .fromData(parcelData)
