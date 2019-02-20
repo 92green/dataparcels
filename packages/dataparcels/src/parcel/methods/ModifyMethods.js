@@ -30,7 +30,7 @@ export default (_this: Parcel): Object => ({
         return _this._id.pushModifier(`${prefix}-${id}`);
     },
 
-    _getModifierUpdater: (updater: ParcelValueUpdater): ParcelDataEvaluator => {
+    _getModifierUpdater: (updater: ParcelValueUpdater): Function => {
         return updater._isParcelUpdater
             ? updater
             : (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
