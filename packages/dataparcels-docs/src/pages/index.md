@@ -44,12 +44,12 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 - <Link to="/ui-behaviour#Confirmation">Confirmation</Link> on important actions such as deleting 🚧
 - <Link to="/ui-behaviour#Selections">Selections</Link> of one or more items 🚧
 - <Link to="/ui-behaviour#Drag-and-drop">Drag and drop sorting</Link> of arrays of items
-- <Link to="/ui-behaviour#Debouncing-changes">Debouncing changes</Link> for good application performace
-- <Link to="/ui-behaviour#Pure-rendering">Pure rendering</Link> for good rendering performace
+- <Link to="/ui-behaviour#Debouncing-changes">Debouncing changes</Link> for improved performance
+- <Link to="/ui-behaviour#Pure-rendering">Pure rendering</Link> for improved rendering performance
 
 ### 3. Data synchronisation
 
-<Link to="/data-synchronisation">Data synchronisation</Link> encompasses how dataparcels interacts with related pieces of external data. This includes:
+<Link to="/data-synchronisation">Data synchronisation</Link> encompasses how dataparcels interacts with pieces of data stored externally. This includes:
 - Setting up a <Link to="/data-synchronisation#ParcelHoc-as-a-slave">ParcelHoc as a slave</Link> to higher state, such as the query string 🚧
 - Coping with <Link to="/data-synchronisation#Sending-failable-requests">sending failable requests</Link>, such as saving data to a server 🚧
 - <Link to="/data-synchronisation#Sending-partial-requests">Sending partial requests</Link>, such as making requests to save individual items in a list 🚧
