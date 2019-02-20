@@ -22,9 +22,7 @@ const WordEditor = (props) => {
     return <div>
         <label>word</label>
         <ParcelBoundary parcel={wordParcel.get('word')}>
-            {(parcel) => <div>
-                <input type="text" {...parcel.spreadDOM()} />
-            </div>}
+            {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
         <p>Uppercase word is {wordParcel.get('uppercase').value}</p>
     </div>;

@@ -33,6 +33,7 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 - <Link to="/data-editing#Indexed-data-types">Automatic unique keying</Link> of array elements
 - Ability to <Link to="/data-editing#Modifying-data-to-fit-the-UI">modify data to fit the UI</Link>
 - Setting <Link to="/data-editing#Derived-data">derived data</Link> based on other data
+- <Link to="/data-editing#Fields-that-interact-with-each-other">Fields that interact with each other</Link>
 - <Link to="/data-editing#Managing-your-own-Parcel-state">Managing your own Parcel state</Link>
 
 ### 2. UI behaviour
