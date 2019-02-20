@@ -7,6 +7,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
+import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 
 const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
 
@@ -89,9 +90,7 @@ export default (config: ParcelHocConfig): Function => {
         static updateParcelValueFromProps(parcel: Parcel, props: Props): Parcel {
             return parcel._changeAndReturn((parcel: Parcel) => {
                 let value: any = valueFromProps(props);
-                return parcel
-                    .pipe(ParcelHoc.applyModifyBeforeUpdate)
-                    .set(value);
+                return ApplyModifyBeforeUpdate(modifyBeforeUpdate)(parcel).set(value);
             });
         }
 
