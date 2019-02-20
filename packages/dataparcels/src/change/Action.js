@@ -1,45 +1,45 @@
 // @flow
+import type {ActionStep} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 
 import unshift from 'unmutable/lib/unshift';
-import update from 'unmutable/lib/update';
-
-import ActionKeyPathModifier from './ActionKeyPathModifier';
 
 type ActionData = {
     type?: string,
     payload?: Object,
     keyPath?: Array<Key|Index>,
-    keyPathModifiers?: Array<ActionKeyPathModifier>
+    steps?: Array<ActionStep>
 };
 
 type CreateActionData = {
     type?: string,
     payload?: Object,
     keyPath?: Array<Key|Index>,
-    keyPathModifiers?: Array<ActionKeyPathModifier>
+    steps?: Array<ActionStep>
 };
 
 export default class Action {
     type: string = "";
     payload: Object = {};
     keyPath: Array<Key|Index> = [];
-    keyPathModifiers: Array<ActionKeyPathModifier>;
+    steps: Array<ActionStep> = [];
 
-    constructor({type, payload, keyPath, keyPathModifiers}: ActionData = {}) {
-
-        if(keyPathModifiers) {
-            this.keyPathModifiers = keyPathModifiers;
-        } else if(!this.keyPathModifiers && keyPath) {
-            this.keyPathModifiers = keyPath.map(key => new ActionKeyPathModifier({key}));
-        } else {
-            this.keyPathModifiers = [];
-        }
-
+    constructor({type, payload, keyPath, steps}: ActionData = {}) {
         this.type = type || this.type;
         this.payload = payload || this.payload;
         this.keyPath = keyPath || this.keyPath;
+
+        if(!steps) {
+            steps = keyPath
+                ? keyPath.map(key => ({
+                    type: 'get',
+                    key
+                }))
+                : this.steps;
+        }
+
+        this.steps = steps;
     }
 
     _create = (create: CreateActionData): Action => {
@@ -49,29 +49,13 @@ export default class Action {
         });
     };
 
-    _add = (updater: Function): Action => {
-        let fn = this.keyPathModifiers.length === 0
-            ? unshift(updater(new ActionKeyPathModifier()))
-            : update(0, updater);
-
+    _addStep = (step: ActionStep): Action => {
         return this._create({
-            keyPathModifiers: fn(this.keyPathModifiers)
+            steps: unshift(step)(this.steps),
+            keyPath: step.type === 'get'
+                ? unshift(step.key)(this.keyPath)
+                : this.keyPath
         });
-    };
-
-    _unget = (key: Key): Action => {
-        return this._create({
-            keyPathModifiers: unshift(new ActionKeyPathModifier()._addKey(key))(this.keyPathModifiers),
-            keyPath: unshift(key)(this.keyPath)
-        });
-    };
-
-    _addPre = (pre: Function): Action => {
-        return this._add(_ => _._addPre(pre));
-    };
-
-    _addPost = (post: Function): Action => {
-        return this._add(_ => _._addPost(post));
     };
 
     isValueAction = (): boolean => {
@@ -83,7 +67,7 @@ export default class Action {
     };
 
     toJS = (): ActionData => {
-        let {type, payload, keyPath, keyPathModifiers} = this;
-        return {type, payload, keyPath, keyPathModifiers};
+        let {type, payload, keyPath, steps} = this;
+        return {type, payload, keyPath, steps};
     };
 }

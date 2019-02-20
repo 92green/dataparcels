@@ -3,7 +3,7 @@ import ValueUpdater from 'docs/notes/ValueUpdater.md';
 ```flow
 modifyUp(updater: ValueUpdater): Parcel
 
-type ValueUpdater = (value: any, self: Parcel) => any;
+type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 ```
 
 `modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward.

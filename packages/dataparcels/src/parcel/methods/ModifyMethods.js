@@ -16,7 +16,6 @@ import HashString from '../../util/HashString';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
-import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
@@ -33,10 +32,10 @@ export default (_this: Parcel): Object => ({
 
     _getModifierUpdater: (updater: ParcelValueUpdater): ParcelDataEvaluator => {
         return updater._isParcelUpdater
-            ? (parcelData: ParcelData): ParcelData => updater(parcelData)
-            : (parcelData: ParcelData): ParcelData => {
+            ? updater
+            : (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
                 let {value} = parcelData;
-                let updatedValue = updater(value, _this);
+                let updatedValue = updater(value, changeRequest);
                 ValidateValueUpdater(value, updatedValue);
                 return setSelf(updatedValue)(parcelData);
             };
@@ -49,22 +48,29 @@ export default (_this: Parcel): Object => ({
             id: _this._methods._pushModifierId('md', updater),
             parcelData: parcelDataUpdater(_this._parcelData),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPre(parcelDataUpdater));
+                _this.dispatch(changeRequest._addStep({
+                    type: 'md',
+                    updater: parcelDataUpdater
+                }));
             }
         });
     },
 
     modifyUp: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyUp()`, `updater`, `function`)(updater);
-        let parcelDataUpdater: ParcelDataEvaluator = pipe(
-            _this._methods._getModifierUpdater(updater),
-            checkCancellation
-        );
+        let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
+            let nextData = _this._methods._getModifierUpdater(updater)(parcelData, changeRequest);
+            return checkCancellation(nextData);
+        };
 
         return _this._create({
             id: _this._methods._pushModifierId('mu', updater),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(parcelDataUpdater));
+                _this.dispatch(changeRequest._addStep({
+                    type: 'mu',
+                    updater: parcelDataUpdater,
+                    changeRequest
+                }));
             }
         });
     },
@@ -83,7 +89,11 @@ export default (_this: Parcel): Object => ({
             id: _this._id.pushModifier('im'),
             parcelData: parcelDataUpdater(_this._parcelData),
             onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(parcelDataUpdater));
+                _this.dispatch(changeRequest._addStep({
+                    type: 'mu',
+                    updater: parcelDataUpdater,
+                    changeRequest
+                }));
             }
         });
     }

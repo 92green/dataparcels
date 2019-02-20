@@ -22,7 +22,7 @@ export default (_this: Parcel, dispatch: Function) => ({
         }
 
         let {value} = _this;
-        let updatedValue = updater(value, _this);
+        let updatedValue = updater(value);
         ValidateValueUpdater(value, updatedValue);
         _this.set(updatedValue);
     },

@@ -27,8 +27,7 @@ export type ParcelConfigInternal = {
     lastOriginId: string,
     meta: ParcelMeta,
     id: ParcelId,
-    parent?: ?Parcel,
-    registry: ParcelRegistry
+    parent?: ?Parcel
 };
 
 export type ParcelCreateConfigType = {
@@ -37,8 +36,7 @@ export type ParcelCreateConfigType = {
     id?: ParcelId,
     parcelData?: ParcelData,
     parent?: ?Parcel,
-    handleChange?: Function,
-    registry?: ParcelRegistry
+    handleChange?: Function
 };
 
 export type ParcelMeta = {[key: string]: *};
@@ -48,17 +46,22 @@ export type ParcelValueUpdater = Function;
 export type ParcelShapeUpdater = (item: ParcelShape) => any;
 
 export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
-export type ParcelShapeValueUpdater = (value: *, parcel: ParcelShape) => any;
+export type ParcelShapeValueUpdater = (value: *) => any;
 
 export type ParcelShapeConfigInternal = {
     parent?: ?ParcelShape
 };
 
-export type ParcelRegistry = {[id: string]: Parcel};
-
 export type Key = string;
 export type Index = number;
 export type Property = number|string;
+
+export type ActionStep = {
+    type: string,
+    key?: Key|Index,
+    updater?: ParcelDataEvaluator,
+    changeRequest?: ChangeRequest
+};
 
 export type ParentType = any; // should be any parent data type
 

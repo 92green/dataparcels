@@ -51,7 +51,10 @@ export default (_this: Parcel) => ({
         let childKey: Key = childParcelData.key;
 
         let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
-            _this.dispatch(changeRequest._unget(childKey));
+            _this.dispatch(changeRequest._addStep({
+                type: 'get',
+                key: childKey
+            }));
         };
 
         return _this._create({
