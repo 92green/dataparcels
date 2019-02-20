@@ -1,6 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import type ChangeRequest from 'dataparcels/ChangeRequest';
+import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
 import Parcel from 'dataparcels';
@@ -26,6 +27,7 @@ type Props = {
     debugParcel: boolean,
     hold: boolean,
     forceUpdate: Array<*>,
+    modifyBeforeUpdate: Array<ParcelValueUpdater>,
     parcel: Parcel,
     pure: boolean,
     keepState: boolean
@@ -47,6 +49,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         debugParcel: false,
         hold: false,
         forceUpdate: [],
+        modifyBeforeUpdate: [],
         pure: true,
         keepState: false
     };
@@ -255,7 +258,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     };
 
     render(): Node {
-        let {children} = this.props;
+        let {
+            children,
+            modifyBeforeUpdate
+        } = this.props;
+
         let {
             changeCount,
             parcel
@@ -267,6 +274,12 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         };
 
         let buffered = changeCount > 0;
-        return children(parcel, actions, buffered);
+        return children(
+            parcel.pipe(
+                ...modifyBeforeUpdate.map((fn) => parcel => parcel.modifyUp(fn))
+            ),
+            actions,
+            buffered
+        );
     }
 }

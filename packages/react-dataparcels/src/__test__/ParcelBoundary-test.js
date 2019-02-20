@@ -358,3 +358,28 @@ test('ParcelBoundary should ignore updates from props for updates caused by them
     let childParcel3 = childRenderer.mock.calls[3][0];
     expect(childParcel3.value).toBe(789);
 });
+
+test('ParcelBoundary should pass changes through modifyBeforeUpdate', () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: 456,
+        handleChange
+    });
+
+    let modifyBeforeUpdate = [
+        value => value + 1,
+        value => value + 1
+    ];
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} modifyBeforeUpdate={modifyBeforeUpdate}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    let newParcel = handleChange.mock.calls[0][0];
+    expect(newParcel.value).toBe(125);
+});
