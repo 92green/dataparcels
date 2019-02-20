@@ -6,11 +6,12 @@ import type {ParcelValueUpdater} from 'dataparcels';
 import React from 'react';
 import Parcel from 'dataparcels';
 
+import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
-import shallowEquals from 'unmutable/lib/shallowEquals';
 
 import set from 'unmutable/lib/set';
 import pipe from 'unmutable/lib/util/pipe';
+import shallowEquals from 'unmutable/lib/shallowEquals';
 
 const log = (...args) => console.log(`ParcelBoundary:`, ...args); // eslint-disable-line
 
@@ -93,12 +94,14 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     static getDerivedStateFromProps(props: Props, state: State): * {
         let {
             parcel,
-            keepState
+            keepState,
+            modifyBeforeUpdate
         } = props;
 
         let {
             makeBoundarySplit,
-            parcelFromProps
+            parcelFromProps,
+            parcel: parcelFromState
         } = state;
 
         let updateState = parcel !== parcelFromProps;
@@ -121,7 +124,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
                 newState.cachedChangeRequest = undefined;
                 newState.changeCount = 0;
-                newState.parcel = makeBoundarySplit(parcel);
+                newState.parcel = makeBoundarySplit(parcel)
+                    ._changeAndReturn((parcel: Parcel) => parcelFromState
+                        .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
+                        ._setData(parcel.data)
+                    );
             }
 
             return newState;
@@ -275,9 +282,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         let buffered = changeCount > 0;
         return children(
-            parcel.pipe(
-                ...modifyBeforeUpdate.map((fn) => parcel => parcel.modifyUp(fn))
-            ),
+            ApplyModifyBeforeUpdate(modifyBeforeUpdate)(parcel),
             actions,
             buffered
         );

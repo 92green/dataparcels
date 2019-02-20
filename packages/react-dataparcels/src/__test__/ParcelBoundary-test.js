@@ -383,3 +383,36 @@ test('ParcelBoundary should pass changes through modifyBeforeUpdate', () => {
     let newParcel = handleChange.mock.calls[0][0];
     expect(newParcel.value).toBe(125);
 });
+
+test('ParcelBoundary should pass new parcel from props change through modifyBeforeUpdate', () => {
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({value: 123});
+    let parcel2 = new Parcel({value: 456});
+
+    let modifyBeforeUpdate = [
+        jest.fn(value => value + 1),
+        jest.fn(value => value + 1)
+    ];
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} modifyBeforeUpdate={modifyBeforeUpdate}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    wrapper.setProps({
+        parcel: parcel2
+    });
+
+    wrapper.update();
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    let childParcel2 = childRenderer.mock.calls[1][0];
+
+    expect(modifyBeforeUpdate[0].mock.calls[0][0]).toBe(456);
+    expect(modifyBeforeUpdate[0].mock.calls[0][1].prevData.value).toBe(123);
+    expect(modifyBeforeUpdate[0].mock.calls[0][1].nextData.value).toBe(456);
+
+    expect(modifyBeforeUpdate[1].mock.calls[0][0]).toBe(457);
+    expect(modifyBeforeUpdate[1].mock.calls[0][1].prevData.value).toBe(123);
+    expect(modifyBeforeUpdate[1].mock.calls[0][1].nextData.value).toBe(457);
+});
