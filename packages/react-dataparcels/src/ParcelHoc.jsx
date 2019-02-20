@@ -63,6 +63,7 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
     onChange && Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
     shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
+    modifyBeforeUpdate.forEach((fn, index) => Types(PARCEL_HOC_NAME, `config.modifyBeforeUpdate[${index}]`, "function")(fn));
 
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
