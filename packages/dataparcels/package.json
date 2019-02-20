@@ -1,6 +1,6 @@
 {
   "name": "dataparcels",
-  "version": "0.18.0",
+  "version": "0.18.2",
   "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "UNLICENSED",
@@ -10,7 +10,13 @@
     "url": "git+https://github.com/blueflag/dataparcels.git"
   },
   "files": [
-    "lib"
+    "lib",
+    "Action.js",
+    "CancelActionMarker.js",
+    "ChangeRequest.js",
+    "DeletedParcelMarker.js",
+    "ParcelShape.js",
+    "shape.js"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
