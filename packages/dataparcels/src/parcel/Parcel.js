@@ -27,6 +27,7 @@ import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
 
+import ActionCreators from '../change/ActionCreators';
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
@@ -187,6 +188,10 @@ export default class Parcel {
             parent: this._parent,
             handleChange
         });
+    };
+
+    _setData = (parcelData: ParcelData) => {
+        this._methods.dispatch(ActionCreators.setData(parcelData));
     };
 
     //
