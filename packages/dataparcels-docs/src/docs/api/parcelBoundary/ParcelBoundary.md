@@ -28,11 +28,14 @@ import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
     pure={?boolean}
     forceUpdate={?Array<*>}
     hold={?boolean}
+    modifyBeforeUpdate={?Array<ValueUpdater>}
     debugBuffer={?boolean}
     debugParcel={?boolean}
 >
     {(parcel, actions, buffered) => Node}
 </ParcelBoundary>
+
+type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 ```
 
 <Box modifier="margin">

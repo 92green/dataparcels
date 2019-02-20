@@ -5,7 +5,7 @@ import ValueUpdater from 'docs/notes/ValueUpdater.md';
 ```flow
 modifyBeforeUpdate?: Array<ValueUpdater>
 
-type ValueUpdater = (value: any, self: Parcel) => any;
+type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 ```
 
 The `modifyBeforeUpdate` config option allows derived data to be set on a Parcel.

@@ -24,11 +24,13 @@ ParcelHoc({
     valueFromProps: Function,
     shouldParcelUpdateFromProps?: Function,
     onChange?: Function,
-    modifyBeforeUpdate: Array<Function>,
+    modifyBeforeUpdate: Array<ValueUpdater>,
     delayUntil?: Function,
     pipe?: Function
     // debugging options
     debugParcel?: boolean
 });
+
+type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 ```
 
