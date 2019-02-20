@@ -24,6 +24,7 @@ export default () => <PageLayout
             <NavigationListItem>- <Link to="/data-editing#">Data editing</Link></NavigationListItem>
             <NavigationListItem>- <Link to="/data-editing#Indexed-data-types">Indexed data types</Link></NavigationListItem>
             <NavigationListItem>- <Link to="/data-editing#Modifying-data-to-fit-the-UI">Modifying data to fit the UI</Link></NavigationListItem>
+            <NavigationListItem>- <Link to="/data-editing#Derived-data">Derived data</Link></NavigationListItem>
             <NavigationListItem>- <Link to="/data-editing#Managing-your-own-Parcel-state">Managing your own Parcel state</Link></NavigationListItem>
         </NavigationList>
     </Fragment>}

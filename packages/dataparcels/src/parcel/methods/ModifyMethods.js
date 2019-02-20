@@ -24,7 +24,7 @@ export default (_this: Parcel): Object => ({
 
     _pushModifierId: (prefix: string, updater: Function): string => {
         let id = updater._isParcelUpdater
-            ? `s${HashFunction(updater._updater)}`
+            ? `s${HashFunction(updater._updater || updater)}`
             : HashFunction(updater);
 
         return _this._id.pushModifier(`${prefix}-${id}`);

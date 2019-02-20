@@ -2,6 +2,8 @@ import Link from 'gatsby-link';
 import EditingObjects from 'examples/EditingObjects';
 import EditingArrays from 'examples/EditingArrays';
 import EditingModify from 'examples/EditingModify';
+import DerivedValue from 'examples/DerivedValue';
+import DerivedMeta from 'examples/DerivedMeta';
 import ManagingOwnParcelState from 'examples/ManagingOwnParcelState';
 import {Divider} from 'dcme-style';
 import {Message} from 'dcme-style';
@@ -156,11 +158,7 @@ const ExampleParcelHoc = ParcelHoc({
         alphanumeric: "Abc123",
         number: 123,
         delimitedString: "abc.def",
-        missingValue: undefined,
-        edges: [
-            {node: "A"},
-            {node: "B"}
-        ]
+        missingValue: undefined
     })
 });
 
@@ -264,6 +262,99 @@ const ExampleEditor = (props) => {
 };
 
 export default ExampleParcelHoc(ExampleEditor);
+
+```
+
+<Divider />
+
+## Derived data
+
+It's easy to update Parcel data based on other Parcel data using `modifyBeforeUpdate` available on <Link to="/api/ParcelHoc#modifyBeforeUpdate">ParcelHoc</Link>, <Link to="/api/ParcelBoundary#modifyBeforeUpdate">ParcelBoundary</Link> and <Link to="/api/ParcelBoundaryHoc#modifyBeforeUpdate">ParcelBoundaryHoc</Link>.
+
+It works quite like <Link to="/api/Parcel#modifyUp">modifyUp()</Link> as shown in <Link to="/data-editing#Modifying-data-to-fit-the-UI">Modifying data to fit the UI</Link>, but `modifyBeforeUpdate` is also applied to the initial value *and* any updates that occur because of prop changes.
+
+This example derives an uppercase version of the word.
+
+<DerivedValue />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const WordParcelHoc = ParcelHoc({
+    name: "wordParcel",
+    valueFromProps: (/* props */) => ({
+        word: "blueberries",
+        uppercase: undefined
+    }),
+    modifyBeforeUpdate: [
+        (value) => ({
+            word: value.word,
+            uppercase: value.word.toUpperCase()
+        })
+    ]
+});
+
+const WordEditor = (props) => {
+    let {wordParcel} = props;
+    return <div>
+        <label>word</label>
+        <ParcelBoundary parcel={wordParcel.get('word')}>
+            {(parcel) => <div>
+                <input type="text" {...parcel.spreadDOM()} />
+            </div>}
+        </ParcelBoundary>
+        <p>Uppercase word is {wordParcel.get('uppercase').value}</p>
+    </div>;
+};
+
+export default WordParcelHoc(WordEditor);
+
+```
+
+Setting derived data is particularly useful with <Link to="/parcel-meta">Parcel meta</Link>, which provides the ability to store extra data that pertains to parts of a data shape.
+
+This example derives the length of the word, storing it in meta. It also uses a <Link to="/api/ParcelShape">shape updater</Link>.
+
+<DerivedMeta />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import shape from 'react-dataparcels/shape';
+
+// this example uses a shape updater to set meta data
+const setWordLengthMeta = shape(parcelShape => {
+    let word = parcelShape.value;
+    return parcelShape.setMeta({
+        wordLength: word.length
+    });
+});
+
+const WordParcelHoc = ParcelHoc({
+    name: "wordParcel",
+    valueFromProps: (/* props */) => "blueberries",
+    modifyBeforeUpdate: [
+        setWordLengthMeta
+    ]
+});
+
+const WordEditor = (props) => {
+    let {wordParcel} = props;
+    return <div>
+        <label>word</label>
+        <ParcelBoundary parcel={wordParcel}>
+            {(parcel) => <div>
+                <input type="text" {...parcel.spreadDOM()} />
+                <p>length is {parcel.meta.wordLength}</p>
+            </div>}
+        </ParcelBoundary>
+    </div>;
+};
+
+export default WordParcelHoc(WordEditor);
 
 ```
 

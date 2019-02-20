@@ -11,11 +11,7 @@ const ExampleParcelHoc = ParcelHoc({
         alphanumeric: "Abc123",
         number: 123,
         delimitedString: "abc.def",
-        missingValue: undefined,
-        edges: [
-            {node: "A"},
-            {node: "B"}
-        ]
+        missingValue: undefined
     })
 });
 

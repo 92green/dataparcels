@@ -175,7 +175,3 @@ export default PersonParcelHoc(PersonEditor);
 * The `firstname` and `lastname` parcels use the [pipe()](/api/Parcel#pipe) method, which simply passes each parcel through the `withOriginalMeta` function and calls the [initialMeta()](/api/Parcel#initialMeta) function on each of them.
 * `initialMeta()` gets the initial value of the parcel and stores it in `meta.original`
 * When rendering, `meta.original` is compared against the current `value` to detect changes of the value since the initial render.
-
-## Validation messages on forms
-
-...
