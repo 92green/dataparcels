@@ -2,6 +2,7 @@
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
 import type Parcel from 'dataparcels';
+import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
 import ParcelBoundary from './ParcelBoundary';
@@ -26,6 +27,7 @@ type ParcelBoundaryHocConfig = {
     name: string|((props: AnyProps) => string),
     debounce?: number|(props: AnyProps) => number,
     hold?: boolean|(props: AnyProps) => boolean,
+    modifyBeforeUpdate?: Array<ParcelValueUpdater>,
     originalParcelProp?: string|(props: AnyProps) => string,
     debugBuffer?: boolean,
     debugParcel?: boolean
@@ -49,6 +51,7 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             let hold: boolean = fromProps(config.hold) || false;
             // $FlowFixMe
             let originalParcelProp: ?string = fromProps(config.originalParcelProp);
+            let modifyBeforeUpdate: Array<ParcelValueUpdater> = config.modifyBeforeUpdate || [];
             let debugBuffer: boolean = config.debugBuffer || false;
             let debugParcel: boolean = config.debugParcel || false;
 
@@ -58,6 +61,7 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugBuffer", "boolean")(debugBuffer);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
             originalParcelProp && Types(PARCEL_BOUNDARY_HOC_NAME, "config.originalParcelProp", "string")(originalParcelProp);
+            modifyBeforeUpdate.forEach((fn, index) => Types(PARCEL_BOUNDARY_HOC_NAME, `config.modifyBeforeUpdate[${index}]`, "function")(fn));
 
             let parcel = this.props[name];
             if(!parcel) {
@@ -72,6 +76,7 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                 hold={hold}
                 debugBuffer={debugBuffer}
                 debugParcel={debugParcel}
+                modifyBeforeUpdate={modifyBeforeUpdate}
                 pure={false}
             >
                 {(innerParcel: Parcel, actions: *, buffered: boolean): Node => {
