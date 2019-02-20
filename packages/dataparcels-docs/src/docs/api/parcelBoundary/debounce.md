@@ -19,7 +19,7 @@ Debouncing can be good for rendering performance because parcels outside the Par
 ```js
 // personParcel is a Parcel
 <ParcelBoundary parcel={personParcel} debounce={100}>
-    {(personParcel) => <input type="text" {...personParcel.spreadDOM} />}
+    {(personParcel) => <input type="text" {...personParcel.spreadDOM()} />}
 </ParcelBoundary>
 ```
 

@@ -12,7 +12,7 @@ When `hold` is true, all changes made to the parcel inside the ParcelBoundary ar
     {(personParcel, {release, cancel}) => {
         // personParcel is now inside the ParcelBoundary
         return <div>
-            <input type="text" {...personParcel.spreadDOM} />
+            <input type="text" {...personParcel.spreadDOM()} />
             <button onClick={() => release()}>Submit</button>
             <button onClick={() => cancel()}>Cancel</button>
         </div>;
