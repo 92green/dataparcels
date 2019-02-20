@@ -122,10 +122,14 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                     parcel.toConsole();
                 }
 
+                let injectPreviousData = () => parcelFromState.data;
+                injectPreviousData._isParcelUpdater = true;
+
                 newState.cachedChangeRequest = undefined;
                 newState.changeCount = 0;
                 newState.parcel = makeBoundarySplit(parcel)
-                    ._changeAndReturn((parcel: Parcel) => parcelFromState
+                    ._changeAndReturn((parcel: Parcel) => parcel
+                        .modifyDown(injectPreviousData)
                         .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
                         ._setData(parcel.data)
                     );
