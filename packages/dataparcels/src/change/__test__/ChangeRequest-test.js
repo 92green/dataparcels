@@ -14,13 +14,13 @@ test('ChangeRequest should build an action', () => {
     expect(expectedDefaultData).toEqual(new ChangeRequest().toJS());
 });
 
-test('ChangeRequest actions() should get actions', () => {
+test('ChangeRequest actions should get actions', () => {
     let actions = [
         new Action({type: "???", keyPath: ['a']}),
         new Action({type: "!!!", keyPath: ['a']})
     ];
 
-    expect(actions).toEqual(new ChangeRequest(actions).actions());
+    expect(actions).toEqual(new ChangeRequest(actions).actions);
 });
 
 test('ChangeRequest merge() should merge other change requests actions', () => {
@@ -39,7 +39,7 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
 
     let merged = a.merge(b);
 
-    expect([...actionsA, ...actionsB]).toEqual(merged.actions());
+    expect([...actionsA, ...actionsB]).toEqual(merged.actions);
 });
 
 test('ChangeRequest nextData() and data should use Reducer', () => {

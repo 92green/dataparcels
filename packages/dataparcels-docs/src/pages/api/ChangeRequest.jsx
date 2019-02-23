@@ -14,9 +14,9 @@ prevData
 nextData
 originId
 originPath
+actions
 
 # Methods
-actions()
 merge()
 getDataIn()
 hasValueChanged()

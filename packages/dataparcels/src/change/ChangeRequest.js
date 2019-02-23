@@ -81,13 +81,19 @@ export default class ChangeRequest {
         throw ReadOnlyError();
     }
 
-    actions = (): Action[] => {
+    // $FlowFixMe - this doesn't have side effects
+    get actions(): ParcelData {
         return this._actions;
-    };
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    set actions(value: *) {
+        throw ReadOnlyError();
+    }
 
     merge = (other: ChangeRequest): ChangeRequest => {
         return this._create({
-            actions: this._actions.concat(other.actions()),
+            actions: this._actions.concat(other.actions),
             nextData: undefined,
             prevData: undefined
         });
