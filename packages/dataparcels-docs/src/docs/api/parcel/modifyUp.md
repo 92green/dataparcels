@@ -1,9 +1,13 @@
 import ValueUpdater from 'docs/notes/ValueUpdater.md';
 
 ```flow
-modifyUp(updater: ValueUpdater): Parcel
+// updates value - only to be used if shape doesn't change
+modifyUp(updater: ParcelValueUpdater): Parcel
+type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 
-type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
+// updates shape, including meta
+modifyUp(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
+type ParcelShapeUpdater = (parcelShape: ParcelShape, changeRequest: ChangeRequest) => any;
 ```
 
 `modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward.

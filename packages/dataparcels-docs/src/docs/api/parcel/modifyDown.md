@@ -1,9 +1,13 @@
 import ValueUpdater from 'docs/notes/ValueUpdater.md';
 
 ```flow
-modifyDown(updater: ValueUpdater): Parcel
+// updates value - only to be used if shape doesn't change
+modifyDown(updater: ParcelValueUpdater): Parcel
+type ParcelValueUpdater = (value: any) => any;
 
-type ValueUpdater = (value: any) => any;
+// updates shape, including meta
+modifyDown(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
+type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
 `modifyDown` lets you modify a Parcel's value so that lower Parcels receive and make changes against the modified value.

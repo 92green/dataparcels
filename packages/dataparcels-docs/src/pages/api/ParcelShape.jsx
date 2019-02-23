@@ -17,9 +17,7 @@ import Markdown_size from 'docs/api/parcelShape/size.md';
 import Markdown_set from 'docs/api/parcelShape/set.md';
 import Markdown_setIn from 'docs/api/parcelShape/setIn.md';
 import Markdown_update from 'docs/api/parcelShape/update.md';
-import Markdown_updateShape from 'docs/api/parcelShape/updateShape.md';
 import Markdown_updateIn from 'docs/api/parcelShape/updateIn.md';
-import Markdown_updateShapeIn from 'docs/api/parcelShape/updateShapeIn.md';
 import Markdown_delete from 'docs/api/parcelShape/delete.md';
 import Markdown_deleteIn from 'docs/api/parcelShape/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/parcelShape/insertAfter.md';
@@ -56,9 +54,7 @@ const md = {
     set: Markdown_set,
     setIn: Markdown_setIn,
     update: Markdown_update,
-    updateShape: Markdown_updateShape,
     updateIn: Markdown_updateIn,
-    updateShapeIn: Markdown_updateShapeIn,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
@@ -102,9 +98,7 @@ setIn()
 delete()
 deleteIn()
 update()
-updateShape()
 updateIn()
-updateShapeIn()
 
 # Indexed & element change methods
 insertAfter()
