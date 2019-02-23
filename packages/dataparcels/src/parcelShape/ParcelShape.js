@@ -8,9 +8,11 @@ import type {ParcelShapeConfigInternal} from '../types/Types';
 import type {ParcelShapeUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParcelShapeSetMeta} from '../types/Types';
+import type {ParcelDataEvaluator} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
+import {ShapeUpdaterNonShapeChildError} from '../errors/Errors';
 
 import ParcelTypes from '../parcel/ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
@@ -22,10 +24,17 @@ import ParcelShapeIndexedSetMethods from './methods/ParcelShapeIndexedSetMethods
 
 import FilterMethods from '../util/FilterMethods';
 
+import clear from 'unmutable/lib/clear';
+import del from 'unmutable/lib/delete';
+import map from 'unmutable/lib/map';
+import set from 'unmutable/lib/set';
 import overload from 'unmutable/lib/util/overload';
+import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 import prepareChildKeys from '../parcelData/prepareChildKeys';
+import isParentValue from '../parcelData/isParentValue';
+import parcelUpdate from '../parcelData/update';
 
 export default class ParcelShape {
     constructor(value: any, _configInternal: ?ParcelShapeConfigInternal) {
@@ -89,6 +98,31 @@ export default class ParcelShape {
         }
     }
 
+    _updateShape = (updater: ParcelShapeUpdater): ParcelShape => {
+        let updated: any = updater(this);
+        if(this._isParcelShape(updated)) {
+            return updated;
+        }
+
+        if(!isParentValue(updated)) {
+            return this.set(updated);
+        }
+
+        return this._pipeSelf(pipe(
+            set('value', clear()(updated)),
+            del('child'),
+            ...pipeWith(
+                updated,
+                map((childParcelShape: ParcelShape, key: string|number): ParcelDataEvaluator => {
+                    if(!this._isParcelShape(childParcelShape)) {
+                        throw ShapeUpdaterNonShapeChildError();
+                    }
+                    return parcelUpdate(key, () => childParcelShape.data);
+                })
+            )
+        ));
+    }
+
     //
     // getters
     //
@@ -149,7 +183,7 @@ export default class ParcelShape {
         let fn = (parcelData: ParcelData, changeRequest: *): ParcelData => {
             return ParcelShape
                 .fromData(parcelData)
-                .updateShape((parcelShape) => updater(parcelShape, changeRequest))
+                ._updateShape((parcelShape) => updater(parcelShape, changeRequest))
                 .data;
         };
 
@@ -184,12 +218,7 @@ export default class ParcelShape {
         ["1"]: (updater: ParcelShapeValueUpdater): ParcelShape => this._methods.update(updater),
         ["2"]: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => this.updateIn([key], updater)
     });
-    updateShape = overload({
-        ["1"]: (updater: ParcelShapeUpdater): ParcelShape => this._methods.updateShape(updater),
-        ["2"]: (key: Key|Index, updater: ParcelShapeUpdater): ParcelShape => this.updateShapeIn([key], updater)
-    });
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateIn(keyPath, updater);
-    updateShapeIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateShapeIn(keyPath, updater);
 
     // Indexed methods
     insertAfter = (key: Key|Index, value: any) => this._methods.insertAfter(key, value);
