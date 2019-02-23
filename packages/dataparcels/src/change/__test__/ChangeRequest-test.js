@@ -335,6 +335,10 @@ test('ChangeRequest should throw errors when attempted to set getters', () => {
     }).toThrow(readOnly);
 
     expect(() => {
+        changeRequest.actions = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
         changeRequest.originId = 123;
     }).toThrow(readOnly);
 
