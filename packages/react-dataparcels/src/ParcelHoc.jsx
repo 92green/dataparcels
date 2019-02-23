@@ -112,8 +112,8 @@ export default (config: ParcelHocConfig): Function => {
                 newState.parcel = initialize(props);
 
                 if(process.env.NODE_ENV !== 'production' && debugParcel) {
-                    console.log(`ParcelHoc: Received initial value:`);
-                    console.log(newState.parcel.data);
+                    console.log(`ParcelHoc: Received initial value:`); // eslint-disable-line
+                    console.log(newState.parcel.data); // eslint-disable-line
                 }
             }
 
@@ -121,8 +121,8 @@ export default (config: ParcelHocConfig): Function => {
                 newState.parcel = ParcelHoc.updateParcelValueFromProps(parcel, props);
 
                 if(process.env.NODE_ENV !== 'production' && debugParcel) {
-                    console.log(`ParcelHoc: Parcel updated from props:`);
-                    console.log(newState.parcel.data);
+                    console.log(`ParcelHoc: Parcel updated from props:`); // eslint-disable-line
+                    console.log(newState.parcel.data); // eslint-disable-line
                 }
             }
 
@@ -133,8 +133,8 @@ export default (config: ParcelHocConfig): Function => {
         handleChange = (parcel: Parcel, changeRequest: ChangeRequest) => {
             this.setState({parcel});
             if(process.env.NODE_ENV !== 'production' && debugParcel) {
-                console.log(`ParcelHoc: Parcel changed:`);
-                console.log(parcel.data);
+                console.log(`ParcelHoc: Parcel changed:`); // eslint-disable-line
+                console.log(parcel.data); // eslint-disable-line
             }
 
             let callOnChange = (onChange: ?Function, value: *) => {
