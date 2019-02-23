@@ -6,6 +6,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 import React from 'react';
 import Parcel from 'dataparcels';
 
+import ParcelBoundaryControl from './ParcelBoundaryControl';
 import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 
@@ -13,11 +14,7 @@ import set from 'unmutable/lib/set';
 import pipe from 'unmutable/lib/util/pipe';
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
-type Actions = {
-    release: Function
-};
-
-type RenderFunction = (parcel: Parcel, actions: Actions, buffered: boolean) => Node;
+type RenderFunction = (parcel: Parcel, control: ParcelBoundaryControl) => Node;
 
 type Props = {
     children: RenderFunction,
@@ -273,20 +270,22 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         } = this.props;
 
         let {
-            changeCount,
+            cachedChangeRequest,
             parcel
         } = this.state;
 
-        let actions = {
-            cancel: () => this.setState(this.cancelBuffer()),
-            release: () => this.setState(this.releaseBuffer())
-        };
+        let actions = cachedChangeRequest
+            ? cachedChangeRequest.actions
+            : [];
 
-        let buffered = changeCount > 0;
         return children(
             ApplyModifyBeforeUpdate(modifyBeforeUpdate)(parcel),
-            actions,
-            buffered
+            new ParcelBoundaryControl({
+                release: () => this.setState(this.releaseBuffer()),
+                cancel: () => this.setState(this.cancelBuffer()),
+                buffered: actions.length > 0,
+                buffer: actions
+            })
         );
     }
 }

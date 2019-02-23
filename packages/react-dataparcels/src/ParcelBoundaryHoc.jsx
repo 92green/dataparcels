@@ -3,6 +3,7 @@ import type {ComponentType} from 'react';
 import type {Node} from 'react';
 import type Parcel from 'dataparcels';
 import type {ParcelValueUpdater} from 'dataparcels';
+import type ParcelBoundaryControl from './ParcelBoundaryControl';
 
 import React from 'react';
 import ParcelBoundary from './ParcelBoundary';
@@ -13,8 +14,7 @@ type Props = {
 };
 type ChildProps = {
     // [config.name]?: Parcel,
-    // [config.name + "Actions"]?: Parcel,
-    // [config.name + "Buffered"]?: Parcel,
+    // [config.name + "Control"]?: ParcelBoundaryControl,
     // [config.originalParcelProp]?: Parcel
     // ...
 };
@@ -79,15 +79,13 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                 modifyBeforeUpdate={modifyBeforeUpdate}
                 pure={false}
             >
-                {(innerParcel: Parcel, actions: *, buffered: boolean): Node => {
+                {(innerParcel: Parcel, control: ParcelBoundaryControl): Node => {
                     let childProps = {
                         ...this.props,
                         // $FlowFixMe - I want to use a computed property, flow
                         [name]: innerParcel,
                         // $FlowFixMe - I want to use a computed property, flow
-                        [name + "Actions"]: actions,
-                        // $FlowFixMe - I want to use a computed property, flow
-                        [name + "Buffered"]: buffered
+                        [name + "Control"]: control
                     };
 
                     if(originalParcelProp) {

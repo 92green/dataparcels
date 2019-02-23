@@ -3,6 +3,7 @@ import React from 'react';
 import ParcelBoundary from '../ParcelBoundary';
 import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
 import Parcel from 'dataparcels';
+import Action from 'dataparcels/Action';
 
 jest.useFakeTimers();
 
@@ -144,11 +145,11 @@ test('ParcelBoundary should release changes when called', async () => {
 
     wrapper.update();
 
-    let [childParcel2, actions] = childRenderer.mock.calls[1];
+    let [childParcel2, control] = childRenderer.mock.calls[1];
     // inside the parcel boundary, the last change should be applied to the parcel
     expect(childParcel2.value).toBe(123);
 
-    actions.release();
+    control.release();
 
     // handleChange should be called now because release() was called
     expect(handleChange).toHaveBeenCalledTimes(1);
@@ -178,11 +179,11 @@ test('ParcelBoundary should cancel changes when called', async () => {
 
     wrapper.update();
 
-    let [childParcel2, actions] = childRenderer.mock.calls[1];
+    let [childParcel2, control] = childRenderer.mock.calls[1];
     // inside the parcel boundary, the last change should be applied to the parcel
     expect(childParcel2.value).toBe(123);
 
-    actions.cancel();
+    control.cancel();
 
     // handleChange should still not have been called
     expect(handleChange).toHaveBeenCalledTimes(0);
@@ -218,7 +219,7 @@ test('ParcelBoundary cancel should do nothing if no changes have occurred', asyn
 });
 
 
-test('ParcelBoundary should pass buffered status to childRenderer', async () => {
+test('ParcelBoundary should pass buffer info to childRenderer', async () => {
     let childRenderer = jest.fn();
 
     let parcel = new Parcel();
@@ -227,18 +228,22 @@ test('ParcelBoundary should pass buffered status to childRenderer', async () => 
         {childRenderer}
     </ParcelBoundary>);
 
-    let [childParcel, actions, buffered] = childRenderer.mock.calls[0];
+    let [childParcel, control] = childRenderer.mock.calls[0];
     childParcel.onChange(123);
     // handleChange shouldn't be called yet because hold is true
-    expect(buffered).toBe(false);
+    expect(control.buffered).toBe(false);
+    expect(control.buffer.length).toBe(0);
 
-    let [childParcel2, actions2, buffered2] = childRenderer.mock.calls[1];
-    expect(buffered2).toBe(true);
+    let [childParcel2, control2] = childRenderer.mock.calls[1];
+    expect(control2.buffered).toBe(true);
+    expect(control2.buffer.length).toBe(1);
+    expect(control2.buffer[0] instanceof Action).toBe(true);
 
-    actions.release();
+    control.release();
 
-    let [childParcel3, actions3, buffered3] = childRenderer.mock.calls[2];
-    expect(buffered3).toBe(false);
+    let [childParcel3, control3] = childRenderer.mock.calls[2];
+    expect(control3.buffered).toBe(false);
+    expect(control3.buffer.length).toBe(0);
 });
 
 test('ParcelBoundary should debounce', async () => {
@@ -335,8 +340,8 @@ test('ParcelBoundary should cancel unreleased changes when receiving a new parce
     // the new value received via props should be passed down WITHOUT the previous 789 change applied
     expect(childParcel3.value).toBe(456);
 
-    let actions = childRenderer.mock.calls[2][1];
-    actions.release();
+    let control = childRenderer.mock.calls[2][1];
+    control.release();
 
     // after release()ing the buffer, handleChange should not be called, because there should not be anything in the buffer
     expect(handleChange).toHaveBeenCalledTimes(0);

@@ -32,7 +32,7 @@ import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
     debugBuffer={?boolean}
     debugParcel={?boolean}
 >
-    {(parcel, actions, buffered) => Node}
+    {(parcel, control) => Node}
 </ParcelBoundary>
 
 type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
