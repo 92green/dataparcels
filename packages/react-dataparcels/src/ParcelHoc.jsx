@@ -9,8 +9,6 @@ import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 
-const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
-
 type Props = {};
 
 type State = {
@@ -113,18 +111,18 @@ export default (config: ParcelHocConfig): Function => {
             if(!parcel && delayUntil(props)) {
                 newState.parcel = initialize(props);
 
-                if(debugParcel) {
-                    log(`Received initial value:`);
-                    log(newState.parcel.data);
+                if(process.env.NODE_ENV !== 'production' && debugParcel) {
+                    console.log(`ParcelHoc: Received initial value:`);
+                    console.log(newState.parcel.data);
                 }
             }
 
             if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(prevProps, props, valueFromProps) && parcel) {
                 newState.parcel = ParcelHoc.updateParcelValueFromProps(parcel, props);
 
-                if(debugParcel) {
-                    log(`Parcel updated from props:`);
-                    log(newState.parcel.data);
+                if(process.env.NODE_ENV !== 'production' && debugParcel) {
+                    console.log(`ParcelHoc: Parcel updated from props:`);
+                    console.log(newState.parcel.data);
                 }
             }
 
@@ -134,9 +132,9 @@ export default (config: ParcelHocConfig): Function => {
 
         handleChange = (parcel: Parcel, changeRequest: ChangeRequest) => {
             this.setState({parcel});
-            if(debugParcel) {
-                log(`Parcel changed:`);
-                log(parcel.data);
+            if(process.env.NODE_ENV !== 'production' && debugParcel) {
+                console.log(`ParcelHoc: Parcel changed:`);
+                console.log(parcel.data);
             }
 
             let callOnChange = (onChange: ?Function, value: *) => {
