@@ -50,10 +50,12 @@ export default (_this: Parcel) => ({
     // Side-effect methods
 
     log: (name: string): Parcel => {
-        _this._log = true;
-        _this._logName = name;
-        console.log(`Parcel data: ${name} `); // eslint-disable-line
-        console.log(_this.data); // eslint-disable-line
+        if(process.env.NODE_ENV !== 'production') {
+            _this._log = true;
+            _this._logName = name;
+            console.log(`Parcel: "${name}" data down:`); // eslint-disable-line
+            console.log(_this.data); // eslint-disable-line
+        }
         return _this;
     },
 

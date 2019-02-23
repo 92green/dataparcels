@@ -23,8 +23,8 @@ export default (_this: Parcel): Object => ({
             changeRequest._originPath = _this.path;
         }
 
-        if(_this._log) {
-            console.log(`Parcel change: ${_this._logName}`); // eslint-disable-line
+        if(process.env.NODE_ENV !== 'production' && _this._log) {
+            console.log(`Parcel: "${_this._logName}" data up:`); // eslint-disable-line
             console.log(changeRequest.toJS()); // eslint-disable-line
         }
 
