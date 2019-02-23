@@ -1,10 +1,10 @@
 // @flow
 import type ParcelId from '../parcelId/ParcelId';
+import type ParcelShape from '../parcelShape/ParcelShape';
 
 import Parcel from '../parcel/Parcel';
 import Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
-import ParcelShape from '../parcelShape/ParcelShape';
 import isPlainObject from 'unmutable/lib/util/isPlainObject';
 
 export type ParcelData = {
@@ -71,10 +71,6 @@ export type ParcelIdData = {
 };
 
 const RUNTIME_TYPES = {
-    ['array']: {
-        name: "an array",
-        check: ii => Array.isArray(ii)
-    },
     ['boolean']: {
         name: "a boolean",
         check: ii => typeof ii === "boolean"
@@ -119,10 +115,6 @@ const RUNTIME_TYPES = {
     ['parcelData']: {
         name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
         check: ii => isPlainObject(ii) && ii.hasOwnProperty('value')
-    },
-    ['parcelShape']: {
-        name: "a ParcelShape",
-        check: ii => ii instanceof ParcelShape
     },
     ['string']: {
         name: "a string",
