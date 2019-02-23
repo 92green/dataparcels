@@ -158,6 +158,66 @@ test('ParcelBoundary should release changes when called', async () => {
     expect(newParcel.value).toBe(123);
 });
 
+test('ParcelBoundary should cancel changes when called', async () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        handleChange,
+        value: 456
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    // handleChange shouldn't be called yet because hold is true
+    expect(handleChange).toHaveBeenCalledTimes(0);
+
+    wrapper.update();
+
+    let [childParcel2, actions] = childRenderer.mock.calls[1];
+    // inside the parcel boundary, the last change should be applied to the parcel
+    expect(childParcel2.value).toBe(123);
+
+    actions.cancel();
+
+    // handleChange should still not have been called
+    expect(handleChange).toHaveBeenCalledTimes(0);
+
+    wrapper.update();
+
+
+    let [childParcel3] = childRenderer.mock.calls[2];
+    // inside the parcel boundary, the original value should be reinstated
+    expect(childParcel3.value).toBe(456);
+});
+
+test('ParcelBoundary cancel should do nothing if no changes have occurred', async () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        handleChange,
+        value: 456
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    childRenderer.mock.calls[0][1].cancel();
+
+    wrapper.update();
+
+    // childRenderer should still only have been called once
+    // because no change of state should have occurred whatsoever
+    expect(childRenderer).toHaveBeenCalledTimes(1);
+});
+
+
 test('ParcelBoundary should pass buffered status to childRenderer', async () => {
     let childRenderer = jest.fn();
 
