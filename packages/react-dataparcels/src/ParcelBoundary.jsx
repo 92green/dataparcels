@@ -150,7 +150,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         if(debugBuffer) {
             log("Add to buffer:");
-            changeRequest.toConsole();
+            log(changeRequest.toJS());
         }
 
         let newCachedChangeRequest = cachedChangeRequest
@@ -175,7 +175,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         if(debugBuffer) {
             log("Clear buffer:");
-            cachedChangeRequest && cachedChangeRequest.toConsole();
+            cachedChangeRequest && log(cachedChangeRequest.toJS());
         }
         if(!cachedChangeRequest) {
             return state;
@@ -200,7 +200,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         if(debugBuffer) {
             log("Release buffer:");
-            cachedChangeRequest && cachedChangeRequest.toConsole();
+            cachedChangeRequest && log(cachedChangeRequest.toJS());
         }
 
         if(!cachedChangeRequest) {

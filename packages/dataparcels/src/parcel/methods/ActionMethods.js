@@ -25,7 +25,7 @@ export default (_this: Parcel): Object => ({
 
         if(_this._log) {
             console.log(`Parcel change: ${_this._logName}`); // eslint-disable-line
-            changeRequest.toConsole();
+            console.log(changeRequest.toJS()); // eslint-disable-line
         }
 
         if(_onHandleChange) {

@@ -134,8 +134,4 @@ export default class ChangeRequest {
         originId: this._originId,
         originPath: this._originPath
     });
-
-    toConsole = () => {
-        console.log(this.toJS()); // eslint-disable-line
-    };
 }
