@@ -12,12 +12,10 @@ const api = `
 # Properties
 prevData
 nextData
-changeRequestMeta
 originId
 originPath
 
 # Methods
-setChangeRequestMeta()
 actions()
 merge()
 getDataIn()

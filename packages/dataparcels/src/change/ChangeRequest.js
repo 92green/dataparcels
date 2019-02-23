@@ -17,7 +17,6 @@ export default class ChangeRequest {
     _actions: Action[] = [];
     _prevData: ?ParcelData;
     _nextData: ?ParcelData;
-    _meta: * = {};
     _originId: ?string = null;
     _originPath: ?string[] = null;
 
@@ -31,7 +30,6 @@ export default class ChangeRequest {
             actions: this._actions,
             prevData: this._prevData,
             nextData: this._nextData,
-            meta: this._meta,
             originId: this._originId,
             originPath: this._originPath,
             ...changeRequestData
@@ -41,7 +39,6 @@ export default class ChangeRequest {
         changeRequest._actions = changeRequestData.actions;
         changeRequest._prevData = changeRequestData.prevData;
         changeRequest._nextData = changeRequestData.nextData;
-        changeRequest._meta = changeRequestData.meta;
         changeRequest._originId = changeRequestData.originId;
         changeRequest._originPath = changeRequestData.originPath;
         return changeRequest;
@@ -89,31 +86,10 @@ export default class ChangeRequest {
     };
 
     merge = (other: ChangeRequest): ChangeRequest => {
-        return this
-            ._create({
-                actions: this._actions.concat(other.actions()),
-                nextData: undefined,
-                prevData: undefined
-            })
-            .setChangeRequestMeta(other.changeRequestMeta);
-    };
-
-    // $FlowFixMe - this doesn't have side effects
-    get changeRequestMeta(): * {
-        return this._meta;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set changeRequestMeta(value: *) {
-        throw ReadOnlyError();
-    }
-
-    setChangeRequestMeta = (partialMeta: *): ChangeRequest => {
         return this._create({
-            meta: {
-                ...this._meta,
-                ...partialMeta
-            }
+            actions: this._actions.concat(other.actions()),
+            nextData: undefined,
+            prevData: undefined
         });
     };
 
@@ -153,14 +129,11 @@ export default class ChangeRequest {
         return next.value !== prev.value;
     };
 
-    toJS = (): Object => {
-        return {
-            actions: this._actions.map(action => action.toJS()),
-            meta: this._meta,
-            originId: this._originId,
-            originPath: this._originPath
-        };
-    };
+    toJS = (): Object => ({
+        actions: this._actions.map(action => action.toJS()),
+        originId: this._originId,
+        originPath: this._originPath
+    });
 
     toConsole = () => {
         console.log(this.toJS()); // eslint-disable-line

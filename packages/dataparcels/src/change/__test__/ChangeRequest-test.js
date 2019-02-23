@@ -8,7 +8,6 @@ import range from 'unmutable/lib/util/range';
 test('ChangeRequest should build an action', () => {
     let expectedDefaultData = {
         actions: [],
-        meta: {},
         originId: null,
         originPath: null,
     };
@@ -41,19 +40,6 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
     let merged = a.merge(b);
 
     expect([...actionsA, ...actionsB]).toEqual(merged.actions());
-});
-
-
-test('ChangeRequest setChangeRequestMeta() and changeRequestMeta should work', () => {
-    let expectedMeta = {
-        a: 3,
-        b: 2
-    };
-    expect(expectedMeta).toEqual(new ChangeRequest()
-        .setChangeRequestMeta({a: 1})
-        .setChangeRequestMeta({b: 2})
-        .setChangeRequestMeta({a: 3})
-        .changeRequestMeta);
 });
 
 test('ChangeRequest nextData() and data should use Reducer', () => {
@@ -346,10 +332,6 @@ test('ChangeRequest should throw errors when attempted to set getters', () => {
 
     expect(() => {
         changeRequest.prevData = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.changeRequestMeta = 123;
     }).toThrow(readOnly);
 
     expect(() => {
