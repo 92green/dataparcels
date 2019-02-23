@@ -58,14 +58,6 @@ export default class Action {
         });
     };
 
-    isValueAction = (): boolean => {
-        return this.type !== "setMeta";
-    };
-
-    isMetaAction = (): boolean => {
-        return this.type === "setMeta";
-    };
-
     toJS = (): ActionData => {
         let {type, payload, keyPath, steps} = this;
         return {type, payload, keyPath, steps};
