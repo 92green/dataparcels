@@ -24,17 +24,6 @@ test('ChangeRequest actions() should get actions', () => {
     expect(actions).toEqual(new ChangeRequest(actions).actions());
 });
 
-test('ChangeRequest updateActions() should update actions', () => {
-    let actions = [
-        new Action({type: "???", keyPath: ['a']}),
-        new Action({type: "!!!", keyPath: ['a']})
-    ];
-
-    expect([actions[0]]).toEqual(new ChangeRequest(actions)
-        .updateActions(actions => actions.filter(aa => aa.type === "???"))
-        .actions());
-});
-
 test('ChangeRequest merge() should merge other change requests actions', () => {
     let actionsA = [
         new Action({type: "???", keyPath: ['a']}),

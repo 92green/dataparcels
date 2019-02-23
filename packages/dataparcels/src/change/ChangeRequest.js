@@ -12,8 +12,6 @@ import parcelGet from '../parcelData/get';
 
 import pipe from 'unmutable/lib/util/pipe';
 
-type ActionUpdater = (actions: Action[]) => Action[];
-
 export default class ChangeRequest {
 
     _actions: Action[] = [];
@@ -90,17 +88,13 @@ export default class ChangeRequest {
         return this._actions;
     };
 
-    updateActions = (updater: ActionUpdater): ChangeRequest => {
-        return this._create({
-            actions: updater(this._actions),
-            nextData: undefined,
-            prevData: undefined
-        });
-    };
-
     merge = (other: ChangeRequest): ChangeRequest => {
         return this
-            .updateActions(ii => ii.concat(other.actions()))
+            ._create({
+                actions: this._actions.concat(other.actions()),
+                nextData: undefined,
+                prevData: undefined
+            })
             .setChangeRequestMeta(other.changeRequestMeta);
     };
 

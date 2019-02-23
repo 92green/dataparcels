@@ -19,7 +19,6 @@ originPath
 # Methods
 setChangeRequestMeta()
 actions()
-updateActions()
 merge()
 getDataIn()
 hasValueChanged()
