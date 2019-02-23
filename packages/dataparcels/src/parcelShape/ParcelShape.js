@@ -192,10 +192,6 @@ export default class ParcelShape {
         return fn;
     }
 
-    // only need this to reference static methods on ParcelShape
-    // without creating circular dependencies
-    _parcelShapeUpdate = ParcelShape.update;
-
     // Parent methods
     has = (key: Key|Index): boolean => this._methods.has(key);
     size = (): number => this._methods.size();
