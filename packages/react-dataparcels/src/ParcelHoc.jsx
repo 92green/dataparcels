@@ -115,7 +115,7 @@ export default (config: ParcelHocConfig): Function => {
 
                 if(debugParcel) {
                     log(`Received initial value:`);
-                    newState.parcel.toConsole();
+                    log(newState.parcel.data);
                 }
             }
 
@@ -124,7 +124,7 @@ export default (config: ParcelHocConfig): Function => {
 
                 if(debugParcel) {
                     log(`Parcel updated from props:`);
-                    newState.parcel.toConsole();
+                    log(newState.parcel.data);
                 }
             }
 
@@ -136,7 +136,7 @@ export default (config: ParcelHocConfig): Function => {
             this.setState({parcel});
             if(debugParcel) {
                 log(`Parcel changed:`);
-                parcel.toConsole();
+                log(parcel.data);
             }
 
             let callOnChange = (onChange: ?Function, value: *) => {

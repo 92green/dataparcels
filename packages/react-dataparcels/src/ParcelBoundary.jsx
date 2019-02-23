@@ -70,7 +70,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         if(props.debugParcel) {
             log(`Received initial value`);
-            props.parcel.toConsole();
+            log(props.parcel.data);
         }
     }
 
@@ -119,7 +119,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             if(!ParcelBoundaryEquals(parcelFromProps, parcel)) {
                 if(props.debugParcel) {
                     log(`Parcel replaced from props:`);
-                    parcel.toConsole();
+                    log(parcel.data);
                 }
 
                 let injectPreviousData = () => parcelFromState.data;
@@ -183,7 +183,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         if(debugParcel) {
             log(`Buffer cancelled. Parcel reverted:`);
-            parcel.toConsole();
+            log(parcel.data);
         }
 
         return {
@@ -228,7 +228,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
                 if(debugParcel) {
                     log(`Parcel changed:`);
-                    newParcel.toConsole();
+                    log(newParcel.data);
                 }
 
                 let updateParcel = set('parcel', newParcel);

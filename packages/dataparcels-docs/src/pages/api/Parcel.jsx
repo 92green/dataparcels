@@ -53,7 +53,6 @@ import Markdown_log from 'docs/api/parcel/log.md';
 import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
-import Markdown_toConsole from 'docs/api/parcel/toConsole.md';
 
 const md = {
     _desc: Markdown_Parcel,
@@ -106,8 +105,7 @@ const md = {
     log: Markdown_log,
     spy: Markdown_spy,
     spyChange: Markdown_spyChange,
-    pipe: Markdown_pipe,
-    toConsole: Markdown_toConsole
+    pipe: Markdown_pipe
 }
 
 const api = `
@@ -183,7 +181,6 @@ pipe()
 
 # Debug methods
 log()
-toConsole()
 `;
 
 export default () => <ApiPage

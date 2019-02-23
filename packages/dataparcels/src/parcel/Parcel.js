@@ -354,7 +354,4 @@ export default class Parcel {
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
-
-    // Debug methods
-    toConsole = () => this._methods.toConsole();
 }

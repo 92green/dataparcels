@@ -21,7 +21,6 @@ merge()
 getDataIn()
 hasValueChanged()
 toJS()
-toConsole()
 `;
 
 export default () => <ApiPage

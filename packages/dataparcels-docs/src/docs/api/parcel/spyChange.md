@@ -12,8 +12,8 @@ let value = {
 };
 let parcel = new Parcel({value});
 parcel
-    .spyChange(changeRequest => changeRequest.toConsole()) // 3. logs the change request to the console (containing {abc: 456})
+    .spyChange(changeRequest => console.log(changeRequest.nextData)) // 3. logs the change request to the console (containing {abc: 456})
     .get('abc')
-    .spyChange(changeRequest => changeRequest.toConsole()) // 2. logs the change request to the console (containing 456)
-    .onCHange(456); // 1. a change is made
+    .spyChange(changeRequest => console.log(changeRequest.nextData)) // 2. logs the change request to the console (containing 456)
+    .onChange(456); // 1. a change is made
 ```

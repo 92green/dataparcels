@@ -53,7 +53,7 @@ export default (_this: Parcel) => ({
         _this._log = true;
         _this._logName = name;
         console.log(`Parcel data: ${name} `); // eslint-disable-line
-        _this.toConsole();
+        console.log(_this.data); // eslint-disable-line
         return _this;
     },
 
@@ -75,11 +75,5 @@ export default (_this: Parcel) => ({
                 _this.dispatch(changeRequest);
             }
         });
-    },
-
-    // Debug methods
-
-    toConsole: () => {
-        console.log(_this.data); // eslint-disable-line
     }
 });
