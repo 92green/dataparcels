@@ -36,7 +36,6 @@ import Markdown_isElement from 'docs/api/parcelShape/isElement.md';
 import Markdown_isIndexed from 'docs/api/parcelShape/isIndexed.md';
 import Markdown_isParent from 'docs/api/parcelShape/isParent.md';
 import Markdown_isTopLevel from 'docs/api/parcelShape/isTopLevel.md';
-import Markdown_toConsole from 'docs/api/parcelShape/toConsole.md';
 
 const md = {
     _desc: Markdown_ParcelShape,
@@ -72,8 +71,7 @@ const md = {
     isElement: Markdown_isElement,
     isIndexed: Markdown_isIndexed,
     isParent: Markdown_isParent,
-    isTopLevel: Markdown_isTopLevel,
-    toConsole: Markdown_toConsole
+    isTopLevel: Markdown_isTopLevel
 }
 
 const api = `
@@ -118,9 +116,6 @@ isElement()
 isIndexed()
 isParent()
 isTopLevel()
-
-# Debug methods
-toConsole()
 
 `;
 
