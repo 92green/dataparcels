@@ -4,8 +4,10 @@ import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ParcelBoundaryHoc from 'react-dataparcels/ParcelBoundaryHoc';
 import ExampleWrapperHoc from 'component/ExampleWrapperHoc';
+import FakeServerHoc from 'component/FakeServerHoc';
 import ParcelHocInspector from 'component/ParcelHocInspector';
 import ParcelBoundaryHocInspector from 'component/ParcelBoundaryHocInspector';
+import {Typography} from 'dcme-style';
 
 const PersonEditor = (props) => {
     let {personParcel} = props;
@@ -32,15 +34,28 @@ const PersonEditor = (props) => {
 };
 
 export default composeWith(
-    ParcelHoc({
-        name: "personParcel",
-        valueFromProps: () => ({
+    FakeServerHoc({
+        initialValue: {
             firstname: "Robert",
             lastname: "Clamps",
             address: {
                 postcode: "1234"
             }
-        })
+        },
+        editor: ({serverParcel, serverParcelControl}) => <Typography>
+            <PersonEditor
+                personParcel={serverParcel}
+                personParcelControl={serverParcelControl}
+            />
+        </Typography>
+    }),
+    ParcelHoc({
+        name: "personParcel",
+        valueFromProps: (props) => props.dataFromServer,
+        onChange: (props) => (value) => props.saveToServer(value),
+        shouldParcelUpdateFromProps: (prevProps, nextProps, valueFromProps) => {
+            return valueFromProps(prevProps) !== valueFromProps(nextProps);
+        }
     }),
     ParcelHocInspector({
         name: "personParcel"

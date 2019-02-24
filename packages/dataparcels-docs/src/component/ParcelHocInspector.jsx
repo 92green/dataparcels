@@ -4,13 +4,9 @@ import type {ComponentType} from 'react';
 import type {LayoutElement} from 'dcme-style';
 import type {Node} from 'react';
 
-import filter from 'unmutable/lib/filter';
-import map from 'unmutable/lib/map';
-import toArray from 'unmutable/lib/toArray';
-import pipeWith from 'unmutable/lib/util/pipeWith';
-
 import React from 'react';
 import {Box, Grid, GridItem, Layout, Terminal, Text} from 'dcme-style';
+import DataInspector from './DataInspector';
 
 type Config = {
     name: string
@@ -44,7 +40,7 @@ export default ({name}: Config) => (Component: ComponentType<*>) => class Parcel
     state = (): Node => {
         return <Box>
             <Text element="div" modifier="monospace"><Text modifier="weightKilo">ParcelHoc</Text> - parcel state</Text>
-            <Terminal><pre>{JSON.stringify(this.props[name].value, null, 4)}</pre></Terminal>
+            <DataInspector data={this.props[name].value} />
         </Box>;
     };
 
