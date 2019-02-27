@@ -5,7 +5,6 @@ import type {ParcelData} from '../../types/Types';
 import type {ParcelDataEvaluator} from '../../types/Types';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
-import type {ParcelShapeUpdateFunction} from '../../types/Types';
 
 import {checkCancellation} from '../../change/CancelActionMarker';
 import Types from '../../types/Types';
@@ -25,13 +24,13 @@ export default (_this: Parcel): Object => ({
 
     _pushModifierId: (prefix: string, updater: Function): string => {
         let id = updater._isParcelUpdater
-            ? `s${HashFunction(updater._updater)}`
+            ? `s${HashFunction(updater._updater || updater)}`
             : HashFunction(updater);
 
         return _this._id.pushModifier(`${prefix}-${id}`);
     },
 
-    _getModifierUpdater: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Function => {
+    _getModifierUpdater: (updater: ParcelValueUpdater): Function => {
         return updater._isParcelUpdater
             ? updater
             : (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
@@ -42,7 +41,7 @@ export default (_this: Parcel): Object => ({
             };
     },
 
-    modifyDown: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
+    modifyDown: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyDown()`, `updater`, `function`)(updater);
         let parcelDataUpdater: ParcelDataEvaluator = _this._methods._getModifierUpdater(updater);
         return _this._create({
@@ -57,7 +56,7 @@ export default (_this: Parcel): Object => ({
         });
     },
 
-    modifyUp: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
+    modifyUp: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyUp()`, `updater`, `function`)(updater);
         let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
             let nextData = _this._methods._getModifierUpdater(updater)(parcelData, changeRequest);

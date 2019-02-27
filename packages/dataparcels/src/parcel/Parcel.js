@@ -12,7 +12,6 @@ import type {ParcelMeta} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
-import type {ParcelShapeUpdateFunction} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
@@ -28,10 +27,10 @@ import ChildChangeMethods from './methods/ChildChangeMethods';
 import ElementChangeMethods from './methods/ElementChangeMethods';
 import ModifyMethods from './methods/ModifyMethods';
 
+import ActionCreators from '../change/ActionCreators';
 import FilterMethods from '../util/FilterMethods';
 import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
-import setSelf from '../parcelData/setSelf';
 
 import overload from 'unmutable/lib/util/overload';
 
@@ -168,12 +167,19 @@ export default class Parcel {
         );
     };
 
-    _setAndReturn = (value: any): Parcel => {
-        // $FlowFixMe
-        return this._create({
-            handleChange: this._onHandleChange,
-            parcelData: setSelf(value)(this._parcelData)
-        });
+    _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): Parcel => {
+        let changedParcel = this;
+        let {_onHandleChange} = this;
+
+        // swap out the parcels real _onHandleChange with a spy
+        this._onHandleChange = (parcel) => {
+            changedParcel = parcel;
+            changedParcel._onHandleChange = _onHandleChange;
+        };
+
+        changeCatcher(this);
+        this._onHandleChange = _onHandleChange;
+        return changedParcel;
     };
 
     _boundarySplit = ({handleChange}: *): Parcel => {
@@ -182,6 +188,10 @@ export default class Parcel {
             parent: this._parent,
             handleChange
         });
+    };
+
+    _setData = (parcelData: ParcelData) => {
+        this._methods.dispatch(ActionCreators.setData(parcelData));
     };
 
     //
@@ -285,8 +295,8 @@ export default class Parcel {
         ["2"]: (key: Key|Index, value: any) => this._methods.set(key, value)
     });
     update = overload({
-        ["1"]: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => this._methods.updateSelf(updater),
-        ["2"]: (key: Key|Index, updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => this._methods.update(key, updater)
+        ["1"]: (updater: ParcelValueUpdater) => this._methods.updateSelf(updater),
+        ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
     });
     setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
@@ -331,8 +341,8 @@ export default class Parcel {
     unshift = (...values: Array<any>) => this._methods.unshift(...values);
 
     // Modify methods
-    modifyDown = (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => this._methods.modifyDown(updater);
-    modifyUp = (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => this._methods.modifyUp(updater);
+    modifyDown = (updater: ParcelValueUpdater): Parcel => this._methods.modifyDown(updater);
+    modifyUp = (updater: ParcelValueUpdater): Parcel => this._methods.modifyUp(updater);
     initialMeta = (initialMeta: ParcelMeta): Parcel => this._methods.initialMeta(initialMeta);
 
     // Type methods

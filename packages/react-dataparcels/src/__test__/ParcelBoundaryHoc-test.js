@@ -216,3 +216,21 @@ test('ParcelBoundaryHoc config should optionally allow originalParcelProp to pas
 
     expect(propsGivenToInnerComponent.originalParcel).toBe(testParcel);
 });
+
+test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {
+    let modifyBeforeUpdate = [
+        value => value + 1
+    ];
+
+    let propsGivenToParcelBoundary = shallowRenderHoc(
+        {
+            testParcel: new Parcel()
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel',
+            modifyBeforeUpdate
+        })
+    ).props();
+
+    expect(propsGivenToParcelBoundary.modifyBeforeUpdate).toBe(modifyBeforeUpdate);
+});

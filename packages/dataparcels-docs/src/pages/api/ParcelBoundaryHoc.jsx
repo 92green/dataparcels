@@ -7,6 +7,7 @@ import Markdown_name from 'docs/api/parcelBoundaryHoc/name.md';
 import Markdown_originalParcelProp from 'docs/api/parcelBoundaryHoc/originalParcelProp.md';
 import Markdown_debounce from 'docs/api/parcelBoundaryHoc/debounce.md';
 import Markdown_hold from 'docs/api/parcelBoundaryHoc/hold.md';
+import Markdown_modifyBeforeUpdate from 'docs/api/parcelBoundaryHoc/modifyBeforeUpdate.md';
 import Markdown_debugBuffer from 'docs/api/parcelBoundaryHoc/debugBuffer.md';
 import Markdown_debugParcel from 'docs/api/parcelBoundaryHoc/debugParcel.md';
 import Markdown_childName from 'docs/api/parcelBoundaryHoc/childName.md';
@@ -20,6 +21,7 @@ const md = {
     originalParcelProp: Markdown_originalParcelProp,
     debounce: Markdown_debounce,
     hold: Markdown_hold,
+    modifyBeforeUpdate: Markdown_modifyBeforeUpdate,
     debugBuffer: Markdown_debugBuffer,
     debugParcel: Markdown_debugParcel,
     ['${name}']: Markdown_childName,
@@ -34,6 +36,7 @@ name
 originalParcelProp
 debounce
 hold
+modifyBeforeUpdate
 debugBuffer
 debugParcel
 

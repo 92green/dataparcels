@@ -2,19 +2,23 @@
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
 import type ChangeRequest from 'dataparcels/ChangeRequest';
+import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
+import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 
 const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
 
 type Props = {};
+
 type State = {
     parcel: ?Parcel,
-    initialize: (value: *) => Parcel,
-    prevProps: {[key: string]: any}
+    prevProps: {[key: string]: any},
+    initialize: (props: Props) => Parcel
 };
+
 type ChildProps = {
     // ${name}: Parcel
 };
@@ -32,6 +36,7 @@ type ParcelHocConfig = {
     valueFromProps: ValueFromProps,
     shouldParcelUpdateFromProps?: ShouldParcelUpdateFromProps,
     onChange?: (props: AnyProps) => OnChange,
+    modifyBeforeUpdate?: Array<ParcelValueUpdater>,
     delayUntil?: (props: AnyProps) => boolean,
     pipe?: (props: *) => (parcel: Parcel) => Parcel,
     debugParcel?: boolean
@@ -47,6 +52,7 @@ export default (config: ParcelHocConfig): Function => {
         valueFromProps,
         shouldParcelUpdateFromProps,
         onChange,
+        modifyBeforeUpdate = [],
         delayUntil = (props) => true, /* eslint-disable-line no-unused-vars */
         pipe = props => ii => ii, /* eslint-disable-line no-unused-vars */
         // debug options
@@ -57,6 +63,7 @@ export default (config: ParcelHocConfig): Function => {
     Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
     onChange && Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
     shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
+    modifyBeforeUpdate.forEach((fn, index) => Types(PARCEL_HOC_NAME, `config.modifyBeforeUpdate[${index}]`, "function")(fn));
 
     Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
     Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
@@ -66,25 +73,45 @@ export default (config: ParcelHocConfig): Function => {
         constructor(props: Props) {
             super(props);
 
-            let initialize = (value: *) => new Parcel({
-                value,
-                handleChange: this.handleChange
-            });
+            let initialize = (props: Props) => ParcelHoc.updateParcelValueFromProps(
+                new Parcel({
+                    value: valueFromProps(props),
+                    handleChange: this.handleChange
+                }),
+                props
+            );
 
             this.state = {
                 parcel: undefined,
-                initialize,
-                prevProps: {}
+                prevProps: {},
+                initialize
             };
         }
 
+        static updateParcelValueFromProps(parcel: Parcel, props: Props): Parcel {
+            return parcel._changeAndReturn((parcel: Parcel) => {
+                let value: any = valueFromProps(props);
+                return ApplyModifyBeforeUpdate(modifyBeforeUpdate)(parcel).set(value);
+            });
+        }
+
+        static applyModifyBeforeUpdate(parcel: Parcel): Parcel {
+            return parcel.pipe(
+                ...modifyBeforeUpdate.map((fn) => parcel => parcel.modifyUp(fn))
+            );
+        }
+
         static getDerivedStateFromProps(props: Props, state: State): * {
-            let {parcel} = state;
+            let {
+                initialize,
+                parcel,
+                prevProps
+            } = state;
+
             let newState = {};
 
             if(!parcel && delayUntil(props)) {
-                let value = valueFromProps(props);
-                newState.parcel = state.initialize(value);
+                newState.parcel = initialize(props);
 
                 if(debugParcel) {
                     log(`Received initial value:`);
@@ -92,9 +119,8 @@ export default (config: ParcelHocConfig): Function => {
                 }
             }
 
-            if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(state.prevProps, props, valueFromProps)) {
-                // $FlowFixMe - parcel cant possibly be undefined here
-                newState.parcel = parcel._setAndReturn(valueFromProps(props));
+            if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(prevProps, props, valueFromProps) && parcel) {
+                newState.parcel = ParcelHoc.updateParcelValueFromProps(parcel, props);
 
                 if(debugParcel) {
                     log(`Parcel updated from props:`);
@@ -130,19 +156,26 @@ export default (config: ParcelHocConfig): Function => {
         render(): Node {
             let {parcel} = this.state;
 
-            if(pipe && parcel) {
-                let pipeWithProps = pipe(this.props);
-                Types(`pipe()`, `return value of pipe`, `function`)(pipeWithProps);
-                parcel = pipeWithProps(parcel);
-                Types(`pipe()`, "return value of pipe(props)", `parcel`)(parcel);
+            let renderWithProps = (extraProps = {}) => <Component
+                {...this.props}
+                {...extraProps}
+            />;
+
+            if(!parcel) {
+                return renderWithProps();
             }
 
-            let props = {
-                ...this.props,
-                [name]: parcel
-            };
+            let pipeWithProps = pipe(this.props);
+            Types(`pipe()`, `return value of pipe`, `function`)(pipeWithProps);
 
-            return <Component {...props} />;
+            let pipeFunctions = [
+                ParcelHoc.applyModifyBeforeUpdate,
+                pipeWithProps
+            ];
+
+            return renderWithProps({
+                [name]: parcel.pipe(...pipeFunctions)
+            });
         }
     };
 };

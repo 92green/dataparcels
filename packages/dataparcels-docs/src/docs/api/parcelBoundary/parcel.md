@@ -11,7 +11,7 @@ The `parcel` can be accessed from inside the ParcelBoundary via the first argume
 <ParcelBoundary parcel={personParcel}>
     {(personParcel) => {
         // personParcel is now inside the ParcelBoundary
-        return <input type="text" {...personParcel.spreadDOM} />;
+        return <input type="text" {...personParcel.spreadDOM()} />;
     }}
 </ParcelBoundary>
 ```

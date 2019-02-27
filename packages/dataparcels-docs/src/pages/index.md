@@ -32,18 +32,20 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 - Methods for working with <Link to="/data-editing#Indexed-data-types">indexed data types</Link> such as arrays
 - <Link to="/data-editing#Indexed-data-types">Automatic unique keying</Link> of array elements
 - Ability to <Link to="/data-editing#Modifying-data-to-fit-the-UI">modify data to fit the UI</Link>
+- Setting <Link to="/data-editing#Derived-data">derived data</Link> based on other data
+- <Link to="/data-editing#Fields-that-interact-with-each-other">Fields that interact with each other</Link>
 - <Link to="/data-editing#Managing-your-own-Parcel-state">Managing your own Parcel state</Link>
 
 ### 2. UI behaviour
 
 <Link to="/ui-behaviour">UI behaviour</Link> covers features that help the user interact with the data. This includes:
-- <Link to="/ui-behaviour#submit-buttons">Submit buttons</Link> for forms 🚧
-- <Link to="/ui-behaviour#validation">Validation</Link> on user input 🚀 🚧
-- <Link to="/ui-behaviour#confirmation">Confirmation</Link> on important actions such as deleting 🚧
-- <Link to="/ui-behaviour#selections">Selections</Link> of one or more items 🚧
-- <Link to="/ui-behaviour#drag-and-drop">Drag and drop sorting</Link> of arrays of items
-- <Link to="/ui-behaviour#debouncing-changes">Debouncing changes</Link> for improved rendering performance
-- <Link to="/ui-behaviour#pure-rendering">Pure rendering</Link> for improved rendering performance
+- <Link to="/ui-behaviour#Submit-buttons">Submit buttons</Link> for forms 🚧
+- <Link to="/ui-behaviour#Validation">Validation</Link> on user input 🚀 🚧
+- <Link to="/ui-behaviour#Confirmation">Confirmation</Link> on important actions such as deleting 🚧
+- <Link to="/ui-behaviour#Selections">Selections</Link> of one or more items 🚧
+- <Link to="/ui-behaviour#Drag-and-drop">Drag and drop sorting</Link> of arrays of items
+- <Link to="/ui-behaviour#Debouncing-changes">Debouncing changes</Link> for improved performance
+- <Link to="/ui-behaviour#Pure-rendering">Pure rendering</Link> for improved rendering performance
 
 ### 3. Data synchronisation
 

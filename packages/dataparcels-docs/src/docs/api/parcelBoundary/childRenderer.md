@@ -24,7 +24,7 @@ The return value of `childRenderer` will be rendered.
 // personParcel is a Parcel
 <ParcelBoundary parcel={personParcel}>
     {(parcel, actions) => {
-        return <input type="text" {...parcel.spreadDOM} />;
+        return <input type="text" {...parcel.spreadDOM()} />;
     }}
 </ParcelBoundary>
 ```

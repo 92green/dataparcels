@@ -2,7 +2,6 @@
 import type Parcel from '../Parcel';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
-import type {ParcelShapeUpdateFunction} from '../../types/Types';
 import Types from '../../types/Types';
 
 import ActionCreators from '../../change/ActionCreators';
@@ -14,10 +13,9 @@ export default (_this: Parcel, dispatch: Function) => ({
         dispatch(ActionCreators.setSelf(value));
     },
 
-    updateSelf: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction) => {
+    updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf()`, `updater`, `function`)(updater);
         if(updater._isParcelUpdater) {
-            // $FlowFixMe - this branch should only be hit with ParcelShapeUpdateFunction
             let updated = updater(_this._parcelData);
             dispatch(ActionCreators.setData(updated));
             return;

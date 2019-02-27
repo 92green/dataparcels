@@ -11,7 +11,7 @@ While a ParcelBoundary is using pure rendering, `forceUpdate` will force the Par
 // options is an array of options that are loaded after mount
 
 <ParcelBoundary parcel={personParcel} forceUpdate={[options]}>
-    {(personParcel) => <Select {...personParcel.spreadDOM} options={options} />}
+    {(personParcel) => <Select {...personParcel.spreadDOM()} options={options} />}
 </ParcelBoundary>
 ```
 
