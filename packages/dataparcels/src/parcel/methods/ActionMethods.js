@@ -10,7 +10,7 @@ export default (_this: Parcel): Object => ({
         Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
 
         let {
-            _onDispatch,
+            _updateChangeRequestOnDispatch,
             _onHandleChange
         } = _this;
 
@@ -47,6 +47,7 @@ export default (_this: Parcel): Object => ({
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
             return;
         }
-        _onDispatch && _onDispatch(changeRequest);
+
+        _this._dispatchToParent(_updateChangeRequestOnDispatch(changeRequest));
     }
 });

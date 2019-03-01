@@ -1,5 +1,4 @@
 // @flow
-import type ChangeRequest from '../../change/ChangeRequest';
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
 import type Parcel from '../Parcel';
@@ -12,6 +11,8 @@ import parcelHas from '../../parcelData/has';
 import prepareChildKeys from '../../parcelData/prepareChildKeys';
 
 import clone from 'unmutable/lib/clone';
+import first from 'unmutable/lib/first';
+import last from 'unmutable/lib/last';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
@@ -50,18 +51,26 @@ export default (_this: Parcel) => ({
 
         let childKey: Key = childParcelData.key;
 
-        let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
-            _this.dispatch(changeRequest._addStep({
-                type: 'get',
-                key: childKey
-            }));
-        };
+        let childOnDispatch = (changeRequest) => changeRequest._addStep({
+            type: 'get',
+            key: childKey
+        });
+
+        let {child} = _this._parcelData;
+        let childIsNotEmpty = size()(child) > 0;
+        let isIndexed = _this._isIndexed;
+        let isChildFirst = childIsNotEmpty && first()(child).key === childKey;
+        let isChildLast = childIsNotEmpty && last()(child).key === childKey;
 
         return _this._create({
             parcelData: childParcelData,
-            onDispatch: childOnDispatch,
-            id: _this._id.push(childKey, _this.isIndexed()),
-            parent: _this
+            updateChangeRequestOnDispatch: childOnDispatch,
+            id: _this._id.push(childKey, isIndexed),
+            parent: {
+                isIndexed,
+                isChildFirst,
+                isChildLast
+            }
         });
     },
 

@@ -69,12 +69,12 @@ export default (_this: Parcel) => ({
         Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
         return _this._create({
             id: _this._id.pushModifier('sc'),
-            onDispatch: (changeRequest: ChangeRequest) => {
+            updateChangeRequestOnDispatch: (changeRequest: ChangeRequest): ChangeRequest => {
                 let basedChangeRequest = changeRequest._create({
                     prevData: _this.data
                 });
                 sideEffect(basedChangeRequest);
-                _this.dispatch(changeRequest);
+                return changeRequest;
             }
         });
     }

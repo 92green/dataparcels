@@ -21,36 +21,43 @@ export type ParcelConfig = {
     value?: *
 };
 
+export type ParcelParent = {
+    isIndexed: boolean,
+    isChildFirst: boolean,
+    isChildLast: boolean
+};
+
 export type ParcelConfigInternal = {
-    onDispatch?: Function,
     child: *,
+    dispatchId: string,
+    id: ParcelId,
     lastOriginId: string,
     meta: ParcelMeta,
-    id: ParcelId,
-    parent?: ?Parcel
+    parent: ParcelParent,
+    registry: ParcelRegistry,
+    updateChangeRequestOnDispatch: (changeRequest: ChangeRequest) => ChangeRequest
 };
 
 export type ParcelCreateConfigType = {
-    onDispatch?: Function,
+    dispatchId?: string,
     lastOriginId?: string,
     id?: ParcelId,
+    handleChange?: Function,
     parcelData?: ParcelData,
-    parent?: ?Parcel,
-    handleChange?: Function
+    parent?: ParcelParent,
+    registry?: ParcelRegistry,
+    updateChangeRequestOnDispatch?: (changeRequest: ChangeRequest) => ChangeRequest
 };
 
 export type ParcelMeta = {[key: string]: *};
 export type ParcelMapper = (item: Parcel, property: string|number, parent: Parcel) => *;
+export type ParcelRegistry = {[id: string]: Parcel};
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = Function;
 
 export type ParcelShapeUpdater = (parcelShape: ParcelShape, changeRequest?: ChangeRequest) => any;
 export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
 export type ParcelShapeValueUpdater = (value: *) => any;
-
-export type ParcelShapeConfigInternal = {
-    parent?: ?ParcelShape
-};
 
 export type Key = string;
 export type Index = number;
