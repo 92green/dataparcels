@@ -65,6 +65,23 @@ test('ParcelBoundary should pass a NEW *value equivalent* parcel to children whe
     expect(ParcelBoundaryEquals(childParcel2, parcel2)).toBe(true);
 });
 
+test('ParcelBoundary should lock state to props if debounce, hold and keepState are all false', () => {
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({value: 123});
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.set(456);
+
+    wrapper.update();
+
+    expect(childRenderer).toHaveBeenCalledTimes(1);
+});
+
 test('ParcelBoundary should not rerender if parcel has not changed value and pure = true', () => {
     let childRenderer = jest.fn();
 
