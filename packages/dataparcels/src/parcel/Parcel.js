@@ -74,21 +74,15 @@ export default class Parcel {
             meta
         };
 
-        // parent
-        if(parent) {
-            // $FlowFixMe
-            this._parent = parent;
-        }
-
-        // types
-        this._parcelTypes = new ParcelTypes(
-            value,
-            parent && parent._parcelTypes,
-            !!(id && id.path().length === 0)
-        );
-
-        // id
+        this._dispatchId = dispatchId;
         this._id = id;
+        this._isChild = !(id && id.path().length === 0);
+        this._isElement = parent.isIndexed;
+        this._isIndexed = isIndexedValue(value);
+        this._isParent = isParentValue(value);
+        this._parent = parent;
+        this._registry = registry;
+        this._registry[id.id()] = this;
 
         let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
 
@@ -346,11 +340,11 @@ export default class Parcel {
     initialMeta = (initialMeta: ParcelMeta): Parcel => this._methods.initialMeta(initialMeta);
 
     // Type methods
-    isChild = (): boolean => this._parcelTypes.isChild();
-    isElement = (): boolean => this._parcelTypes.isElement();
-    isIndexed = (): boolean => this._parcelTypes.isIndexed();
-    isParent = (): boolean => this._parcelTypes.isParent();
-    isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
+    isChild = (): boolean => this._isChild;
+    isElement = (): boolean => this._isElement;
+    isIndexed = (): boolean => this._isIndexed;
+    isParent = (): boolean => this._isParent;
+    isTopLevel = (): boolean => !this._isChild;
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
