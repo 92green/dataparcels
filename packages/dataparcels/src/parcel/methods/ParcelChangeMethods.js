@@ -7,17 +7,17 @@ import Types from '../../types/Types';
 import ActionCreators from '../../change/ActionCreators';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
-export default (_this: Parcel, dispatch: Function) => ({
+export default (_this: Parcel) => ({
 
     setSelf: (value: *) => {
-        dispatch(ActionCreators.setSelf(value));
+        _this.dispatch(ActionCreators.setSelf(value));
     },
 
     updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf()`, `updater`, `function`)(updater);
         if(updater._isParcelUpdater) {
             let updated = updater(_this._parcelData);
-            dispatch(ActionCreators.setData(updated));
+            _this.dispatch(ActionCreators.setData(updated));
             return;
         }
 
@@ -36,6 +36,6 @@ export default (_this: Parcel, dispatch: Function) => ({
 
     setMeta: (partialMeta: ParcelMeta) => {
         Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
-        dispatch(ActionCreators.setMeta(partialMeta));
+        _this.dispatch(ActionCreators.setMeta(partialMeta));
     }
 });

@@ -6,7 +6,7 @@ import type {ParcelValueUpdater} from '../../types/Types';
 
 import Types from '../../types/Types';
 
-export default (_this: Parcel /*, dispatch: Function*/): Object => ({
+export default (_this: Parcel): Object => ({
     set: (key: Key|Index, value: *) => {
         Types(`set()`, `key`, `keyIndex`)(key);
         _this.get(key).set(value);

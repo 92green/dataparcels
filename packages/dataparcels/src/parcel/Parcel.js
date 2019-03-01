@@ -96,8 +96,6 @@ export default class Parcel {
         this._registry = registry;
         this._registry[id.id()] = this;
 
-        let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
-
         // methods
         this._methods = {
             // $FlowFixMe
@@ -109,15 +107,15 @@ export default class Parcel {
             // $FlowFixMe
             ...FilterMethods("Child", ChildGetMethods)(this),
             // $FlowFixMe
-            ...ParcelChangeMethods(this, dispatch),
+            ...ParcelChangeMethods(this),
             // $FlowFixMe
-            ...FilterMethods("Parent", ParentChangeMethods)(this, dispatch),
+            ...FilterMethods("Parent", ParentChangeMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Indexed", IndexedChangeMethods)(this, dispatch),
+            ...FilterMethods("Indexed", IndexedChangeMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Child", ChildChangeMethods)(this, dispatch),
+            ...FilterMethods("Child", ChildChangeMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Element", ElementChangeMethods)(this, dispatch),
+            ...FilterMethods("Element", ElementChangeMethods)(this),
             // $FlowFixMe
             ...ModifyMethods(this)
         };
