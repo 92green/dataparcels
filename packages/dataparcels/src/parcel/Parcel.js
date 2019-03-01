@@ -20,7 +20,6 @@ import {ReadOnlyError} from '../errors/Errors';
 
 import ParcelGetMethods from './methods/ParcelGetMethods';
 import ParcelChangeMethods from './methods/ParcelChangeMethods';
-import ActionMethods from './methods/ActionMethods';
 import ParentGetMethods from './methods/ParentGetMethods';
 import ParentChangeMethods from './methods/ParentChangeMethods';
 import ChildGetMethods from './methods/ChildGetMethods';
@@ -101,23 +100,21 @@ export default class Parcel {
             // $FlowFixMe
             ...ParcelGetMethods(this),
             // $FlowFixMe
-            ...ActionMethods(this),
+            ...ParcelChangeMethods(this),
+            // $FlowFixMe
+            ...ModifyMethods(this),
             // $FlowFixMe
             ...FilterMethods("Parent", ParentGetMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Child", ChildGetMethods)(this),
-            // $FlowFixMe
-            ...ParcelChangeMethods(this),
-            // $FlowFixMe
             ...FilterMethods("Parent", ParentChangeMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Indexed", IndexedChangeMethods)(this),
+            ...FilterMethods("Child", ChildGetMethods)(this),
             // $FlowFixMe
             ...FilterMethods("Child", ChildChangeMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Element", ElementChangeMethods)(this),
+            ...FilterMethods("Indexed", IndexedChangeMethods)(this),
             // $FlowFixMe
-            ...ModifyMethods(this)
+            ...FilterMethods("Element", ElementChangeMethods)(this)
         };
     }
 
