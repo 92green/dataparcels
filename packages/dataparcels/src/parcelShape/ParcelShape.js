@@ -2,9 +2,9 @@
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {ParcelData} from '../types/Types';
+import type {ParcelParent} from '../types/Types';
 import type {ParentType} from '../types/Types';
 import type {ParcelShapeValueUpdater} from '../types/Types';
-import type {ParcelShapeConfigInternal} from '../types/Types';
 import type {ParcelShapeUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParcelShapeSetMeta} from '../types/Types';
@@ -14,7 +14,6 @@ import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
 import {ShapeUpdaterNonShapeChildError} from '../errors/Errors';
 
-import ParcelTypes from '../parcel/ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
 
 import ParcelShapeParentGetMethods from './methods/ParcelShapeParentGetMethods';
@@ -33,29 +32,21 @@ import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 import prepareChildKeys from '../parcelData/prepareChildKeys';
+import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 import parcelUpdate from '../parcelData/update';
 
 export default class ParcelShape {
-    constructor(value: any, _configInternal: ?ParcelShapeConfigInternal) {
+    constructor(value: any, _parent: ?ParcelParent) {
         this._parcelData = {
             value
         };
 
-        let {parent} = _configInternal || {};
-
-        // parent
-        if(parent) {
-            // $FlowFixMe
-            this._parent = parent;
-        }
-
         // types
-        this._parcelTypes = new ParcelTypes(
-            value,
-            parent && parent._parcelTypes,
-            !parent
-        );
+        this._isChild = !!(_parent);
+        this._isElement = !!(_parent && _parent.isIndexed);
+        this._isIndexed = isIndexedValue(value);
+        this._isParent = isParentValue(value);
 
         // methods
         this._methods = {
@@ -76,15 +67,17 @@ export default class ParcelShape {
 
     // from constructor
     _id: ParcelId;
+    _isChild: boolean;
+    _isElement: boolean;
+    _isIndexed: boolean;
+    _isParent: boolean;
     _methods: { [key: string]: any };
-    _parent: ?ParcelShape;
     _parcelData: ParcelData;
-    _parcelTypes: ParcelTypes;
 
-    _pipeSelf = (fn: Function, _configInternal: ?ParcelShapeConfigInternal): ParcelShape => pipeWith(
+    _pipeSelf = (fn: Function, _parent: ?ParcelParent): ParcelShape => pipeWith(
         this._parcelData,
         fn,
-        data => ParcelShape.fromData(data, _configInternal)
+        data => ParcelShape.fromData(data, _parent)
     );
 
     _isParcelShape = (maybe: any): boolean => maybe instanceof ParcelShape;
@@ -172,9 +165,9 @@ export default class ParcelShape {
     // public methods
     //
 
-    static fromData(parcelData: ParcelData, _configInternal: ?ParcelShapeConfigInternal): ParcelShape {
+    static fromData(parcelData: ParcelData, _parent: ?ParcelParent): ParcelShape {
         Types(`ParcelShape()`, `fromData`, `parcelData`)(parcelData);
-        let parcelShape = new ParcelShape(parcelData.value, _configInternal);
+        let parcelShape = new ParcelShape(parcelData.value, _parent);
         parcelShape._parcelData = parcelData;
         return parcelShape;
     }
@@ -229,9 +222,9 @@ export default class ParcelShape {
     unshift = (...values: Array<any>) => this._methods.unshift(...values);
 
     // Type methods
-    isChild = (): boolean => this._parcelTypes.isChild();
-    isElement = (): boolean => this._parcelTypes.isElement();
-    isIndexed = (): boolean => this._parcelTypes.isIndexed();
-    isParent = (): boolean => this._parcelTypes.isParent();
-    isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
+    isChild = (): boolean => this._isChild;
+    isElement = (): boolean => this._isElement;
+    isIndexed = (): boolean => this._isIndexed;
+    isParent = (): boolean => this._isParent;
+    isTopLevel = (): boolean => !this._isChild;
 }
