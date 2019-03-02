@@ -19,7 +19,6 @@ export type {ParcelShapeUpdater} from './types/Types';
 
 export type {ParcelShapeSetMeta} from './types/Types';
 export type {ParcelShapeValueUpdater} from './types/Types';
-export type {ParcelShapeConfigInternal} from './types/Types';
 
 export type {Key} from './types/Types';
 export type {Index} from './types/Types';

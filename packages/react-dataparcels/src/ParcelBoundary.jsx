@@ -216,7 +216,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                 let {
                     debounce,
                     debugParcel,
-                    hold
+                    hold,
+                    keepState
                 } = this.props;
 
                 let {changeCount} = this.state;
@@ -232,7 +233,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
                 if(!debounce && !hold) {
                     this.setState(pipe(
-                        updateParcel,
+                        keepState ? updateParcel : ii => ii,
                         addToBuffer,
                         releaseBuffer
                     ));

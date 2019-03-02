@@ -9,7 +9,6 @@ import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
-export const stringifyPath = (path: string[]): string => path.map(escapeKey).join(".");
 
 const DEFAULT_PARCELID_DATA = {
     id: ["^"],

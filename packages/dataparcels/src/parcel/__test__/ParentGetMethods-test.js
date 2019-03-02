@@ -180,6 +180,15 @@ test('ParentParcel.get(keyDoesntExist, "notset") should return a parcel with val
     expect(new Parcel(data).get("z", "notset").value).toBe("notset");
 });
 
+test('ParentParcel.get() should be memoized per key', () => {
+    let parcel = new Parcel({
+        value: [123,456]
+    });
+
+    expect(parcel.get(0)).toBe(parcel.get(0));
+    expect(parcel.get(1).value).toBe(456);
+});
+
 test('ParentParcel.get() should cache its parcelData.child after its calculated, so subsequent calls are faster', () => {
     let count = 10000;
     let parcel = new Parcel({
