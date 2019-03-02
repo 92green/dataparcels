@@ -6,6 +6,7 @@ import type {ParcelMapper} from '../../types/Types';
 import type {ParentType} from '../../types/Types';
 import Types from '../../types/Types';
 
+import keyOrIndexToKey from '../../parcelData/keyOrIndexToKey';
 import parcelGet from '../../parcelData/get';
 import parcelHas from '../../parcelData/has';
 import prepareChildKeys from '../../parcelData/prepareChildKeys';
@@ -40,6 +41,12 @@ export default (_this: Parcel) => ({
     get: (key: Key|Index, notFoundValue: any): Parcel => {
         Types(`get()`, `key`, `keyIndex`)(key);
 
+        let stringKey: Key = keyOrIndexToKey(key)(_this._parcelData);
+        let cachedChildParcel: ?Parcel = _this._childParcelCache[stringKey];
+        if(cachedChildParcel) {
+            return cachedChildParcel;
+        }
+
         _this._methods._prepareChildKeys();
         let childParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
 
@@ -62,7 +69,7 @@ export default (_this: Parcel) => ({
         let isChildFirst = childIsNotEmpty && first()(child).key === childKey;
         let isChildLast = childIsNotEmpty && last()(child).key === childKey;
 
-        return _this._create({
+        let childParcel: Parcel = _this._create({
             parcelData: childParcelData,
             updateChangeRequestOnDispatch: childOnDispatch,
             id: _this._id.push(childKey, isIndexed),
@@ -72,6 +79,9 @@ export default (_this: Parcel) => ({
                 isChildLast
             }
         });
+
+        _this._childParcelCache[stringKey] = childParcel;
+        return childParcel;
     },
 
     getIn: (keyPath: Array<Key|Index>, notFoundValue: any): Parcel => {

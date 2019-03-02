@@ -123,6 +123,7 @@ export default class Parcel {
     //
 
     // from constructor
+    _childParcelCache: { [key: string]: Parcel } = {};
     _dispatchId: string;
     _id: ParcelId;
     _isChild: boolean;
