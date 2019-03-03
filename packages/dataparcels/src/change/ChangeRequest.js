@@ -10,7 +10,13 @@ import {ChangeRequestNoPrevDataError} from '../errors/Errors';
 import ChangeRequestReducer from '../change/ChangeRequestReducer';
 import parcelGet from '../parcelData/get';
 
-import pipe from 'unmutable/lib/util/pipe';
+import butLast from 'unmutable/butLast';
+import equals from 'unmutable/equals';
+import identity from 'unmutable/identity';
+import last from 'unmutable/last';
+import pipe from 'unmutable/pipe';
+import pipeWith from 'unmutable/pipeWith';
+import push from 'unmutable/push';
 
 export default class ChangeRequest {
 
@@ -92,8 +98,26 @@ export default class ChangeRequest {
     }
 
     merge = (other: ChangeRequest): ChangeRequest => {
+
+        let actions = other._actions.reduce((actions, thisAction) => {
+            let lastAction = last()(actions);
+
+            let keyPathEquals = () => equals(thisAction.keyPath)(lastAction.keyPath);
+
+            let shouldReplace: boolean = lastAction
+                && thisAction.type === "set"
+                && lastAction.type === "set"
+                && keyPathEquals();
+
+            return pipeWith(
+                actions,
+                shouldReplace ? butLast() : identity(),
+                push(thisAction)
+            );
+        }, this._actions);
+
         return this._create({
-            actions: this._actions.concat(other.actions),
+            actions,
             nextData: undefined,
             prevData: undefined
         });

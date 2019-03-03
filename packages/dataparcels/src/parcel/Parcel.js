@@ -20,7 +20,6 @@ import {ReadOnlyError} from '../errors/Errors';
 
 import ParcelGetMethods from './methods/ParcelGetMethods';
 import ParcelChangeMethods from './methods/ParcelChangeMethods';
-import ActionMethods from './methods/ActionMethods';
 import ParentGetMethods from './methods/ParentGetMethods';
 import ParentChangeMethods from './methods/ParentChangeMethods';
 import ChildGetMethods from './methods/ChildGetMethods';
@@ -96,30 +95,26 @@ export default class Parcel {
         this._registry = registry;
         this._registry[id.id()] = this;
 
-        let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
-
         // methods
         this._methods = {
             // $FlowFixMe
             ...ParcelGetMethods(this),
             // $FlowFixMe
-            ...ActionMethods(this),
+            ...ParcelChangeMethods(this),
+            // $FlowFixMe
+            ...ModifyMethods(this),
             // $FlowFixMe
             ...FilterMethods("Parent", ParentGetMethods)(this),
             // $FlowFixMe
+            ...FilterMethods("Parent", ParentChangeMethods)(this),
+            // $FlowFixMe
             ...FilterMethods("Child", ChildGetMethods)(this),
             // $FlowFixMe
-            ...ParcelChangeMethods(this, dispatch),
+            ...FilterMethods("Child", ChildChangeMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Parent", ParentChangeMethods)(this, dispatch),
+            ...FilterMethods("Indexed", IndexedChangeMethods)(this),
             // $FlowFixMe
-            ...FilterMethods("Indexed", IndexedChangeMethods)(this, dispatch),
-            // $FlowFixMe
-            ...FilterMethods("Child", ChildChangeMethods)(this, dispatch),
-            // $FlowFixMe
-            ...FilterMethods("Element", ElementChangeMethods)(this, dispatch),
-            // $FlowFixMe
-            ...ModifyMethods(this)
+            ...FilterMethods("Element", ElementChangeMethods)(this)
         };
     }
 
@@ -128,6 +123,7 @@ export default class Parcel {
     //
 
     // from constructor
+    _childParcelCache: { [key: string]: Parcel } = {};
     _dispatchId: string;
     _id: ParcelId;
     _isChild: boolean;

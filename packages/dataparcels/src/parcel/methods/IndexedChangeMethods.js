@@ -6,53 +6,53 @@ import Types from '../../types/Types';
 
 import ActionCreators from '../../change/ActionCreators';
 
-export default (_this: Parcel, dispatch: Function): Object => ({
+export default (_this: Parcel): Object => ({
 
     insertAfter: (key: Key|Index, value: *) => {
         Types(`insertAfter()`, `key`, `keyIndex`)(key);
-        dispatch(ActionCreators.insertAfter(key, value));
+        _this.dispatch(ActionCreators.insertAfter(key, value));
     },
 
     insertBefore: (key: Key|Index, value: *) => {
         Types(`insertBefore()`, `key`, `keyIndex`)(key);
-        dispatch(ActionCreators.insertBefore(key, value));
+        _this.dispatch(ActionCreators.insertBefore(key, value));
     },
 
     move: (keyA: Key|Index, keyB: Key|Index) => {
         Types(`move()`, `keyA`, `keyIndex`)(keyA);
         Types(`move()`, `keyB`, `keyIndex`)(keyB);
-        dispatch(ActionCreators.move(keyA, keyB));
+        _this.dispatch(ActionCreators.move(keyA, keyB));
     },
 
     push: (...values: Array<*>) => {
-        dispatch(ActionCreators.push(values));
+        _this.dispatch(ActionCreators.push(values));
     },
 
     pop: () => {
-        dispatch(ActionCreators.pop());
+        _this.dispatch(ActionCreators.pop());
     },
 
     shift: () => {
-        dispatch(ActionCreators.shift());
+        _this.dispatch(ActionCreators.shift());
     },
 
     swap: (keyA: Key|Index, keyB: Key|Index) => {
         Types(`swap()`, `keyA`, `keyIndex`)(keyA);
         Types(`swap()`, `keyB`, `keyIndex`)(keyB);
-        dispatch(ActionCreators.swap(keyA, keyB));
+        _this.dispatch(ActionCreators.swap(keyA, keyB));
     },
 
     swapNext: (key: Key|Index) => {
         Types(`swapNext()`, `key`, `keyIndex`)(key);
-        dispatch(ActionCreators.swapNext(key));
+        _this.dispatch(ActionCreators.swapNext(key));
     },
 
     swapPrev: (key: Key|Index) => {
         Types(`swapPrev()`, `key`, `keyIndex`)(key);
-        dispatch(ActionCreators.swapPrev(key));
+        _this.dispatch(ActionCreators.swapPrev(key));
     },
 
     unshift: (...values: Array<*>) => {
-        dispatch(ActionCreators.unshift(values));
+        _this.dispatch(ActionCreators.unshift(values));
     }
 });
