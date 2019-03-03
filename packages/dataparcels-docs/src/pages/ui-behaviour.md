@@ -1,4 +1,6 @@
 import Link from 'gatsby-link';
+import SubmitButton from 'examples/SubmitButton';
+import Autosave from 'examples/Autosave';
 import EditingArraysDrag from 'examples/EditingArraysDrag';
 import EditingArraysFlipMove from 'examples/EditingArraysFlipMove';
 import ParcelBoundaryDebounce from 'examples/ParcelBoundaryDebounce';
@@ -9,10 +11,119 @@ import {Divider} from 'dcme-style';
 
 UI behaviour covers features that help the user interact with the data.
 
-## Submit buttons
+## Submit buttons and autosave
 
-* 👍 Necessary features complete
-* 🚧 Example under construction
+Dataparcels is very often used with data that's fetched from a server, and saved back to a server. When dataparcels is used like this, it's useful to prevent the user's changes from being immediately sent back to the server and instead hold onto them momentarily. We can either wait for the user to choose to send their changes, or wait until an amount of time has passed since the user has made a change, and *then* save the changes to the server.
+
+There is a common pattern to do this using React and Dataparcels, by using multiple higher order components:
+
+```js
+ParcelHoc         // holds the data fetched from the server
+  |               // and sends changes to the server
+  V
+ParcelBoundaryHoc // holds the changes that the user has made
+  |               // and momentarily prevents those changes
+  |               // from being propagated back up to the ParcelHoc
+  V
+Editor            // allows the user to make changes to the data
+```
+
+Using this pattern, the "submit" button is really an action that instructs a ParcelBoundaryHoc to release all of its buffered changes, allowing them to propagate back up to the ParcelHoc.
+
+The examples below show this in action, however in an actual app you would still need to configure the ParcelHoc to send the changes to the server. [Data Synchronisation](/data-synchronisation) describes how that can be done.
+
+### Submit button example
+
+<SubmitButton />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import ParcelBoundaryHoc from 'react-dataparcels/ParcelBoundaryHoc';
+import composeWith from 'unmutable/composeWith';
+
+const PersonEditor = (props) => {
+    let {personParcel, personParcelControl} = props;
+    return <div>
+        <label>firstname</label>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+        </ParcelBoundary>
+
+        <label>lastname</label>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </ParcelBoundary>
+
+        <button onClick={() => personParcelControl.release()}>Submit</button>
+        <button onClick={() => personParcelControl.cancel()}>Cancel</button>
+    </div>;
+};
+
+// unmutable's composeWith(a,b,c) is equivalent to a(b(c))
+
+export default composeWith(
+    ParcelHoc({
+        name: "personParcel",
+        valueFromProps: (/* props */) => ({
+            firstname: "Robert",
+            lastname: "Clamps"
+        })
+    }),
+    ParcelBoundaryHoc({
+        name: "personParcel",
+        hold: true
+        // ^ hold onto changes until the user releases them
+    }),
+    PersonEditor
+);
+```
+
+### Autosave example
+
+<Autosave />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import ParcelBoundaryHoc from 'react-dataparcels/ParcelBoundaryHoc';
+import composeWith from 'unmutable/composeWith';
+
+const PersonEditor = (props) => {
+    let {personParcel, personParcelControl} = props;
+    return <div>
+        <label>firstname</label>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+        </ParcelBoundary>
+
+        <label>lastname</label>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </ParcelBoundary>
+    </div>;
+};
+
+// unmutable's composeWith(a,b,c) is equivalent to a(b(c))
+
+export default composeWith(
+    ParcelHoc({
+        name: "personParcel",
+        valueFromProps: (/* props */) => ({
+            firstname: "Robert",
+            lastname: "Clamps"
+        })
+    }),
+    ParcelBoundaryHoc({
+        name: "personParcel",
+        debounce: 500
+        // ^ hold onto changes until 500ms have elapsed since last change
+    }),
+    PersonEditor
+);
+```
 
 <Divider />
 

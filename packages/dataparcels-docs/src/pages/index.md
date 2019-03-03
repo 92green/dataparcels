@@ -25,7 +25,7 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 
 ### 1. Data editing
 
-<Link to="/data-editing">Data editing</Link> is the ability to manipulate data based on user input, in a way that's expressive to code. This includes:
+<Link to="/data-editing">Data editing</Link> is the ability to manipulate data based on user input. This includes:
 - <Link to="/data-editing">Data traversal</Link>
 - <Link to="/data-editing">Binding data to inputs</Link>
 - <Link to="/data-editing">Merging partial changes</Link> into larger data structures
@@ -39,11 +39,11 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 ### 2. UI behaviour
 
 <Link to="/ui-behaviour">UI behaviour</Link> covers features that help the user interact with the data. This includes:
-- <Link to="/ui-behaviour#Submit-buttons">Submit buttons</Link> for forms 🚧
+- Creating forms with <Link to="/ui-behaviour#Submit-buttons-and-autosave">submit buttons or autosave</Link>
 - <Link to="/ui-behaviour#Validation">Validation</Link> on user input 🚀 🚧
 - <Link to="/ui-behaviour#Confirmation">Confirmation</Link> on important actions such as deleting 🚧
 - <Link to="/ui-behaviour#Selections">Selections</Link> of one or more items 🚧
-- <Link to="/ui-behaviour#Drag-and-drop">Drag and drop sorting</Link> of arrays of items
+- <Link to="/ui-behaviour#Drag-and-drop-sorting">Drag and drop sorting</Link> of arrays of items
 - <Link to="/ui-behaviour#Debouncing-changes">Debouncing changes</Link> for improved performance
 - <Link to="/ui-behaviour#Pure-rendering">Pure rendering</Link> for improved rendering performance
 

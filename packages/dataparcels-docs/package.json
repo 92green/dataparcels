@@ -33,6 +33,6 @@
     "react-lifecycles-compat": "^3.0.4",
     "react-sortable-hoc": "^1.4.0",
     "stampy": "^0.41.0",
-    "unmutable": "^0.29.2"
+    "unmutable": "^0.43.1"
   }
 }
