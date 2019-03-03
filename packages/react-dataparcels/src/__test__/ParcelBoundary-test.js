@@ -3,6 +3,7 @@ import React from 'react';
 import ParcelBoundary from '../ParcelBoundary';
 import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
 import Parcel from 'dataparcels';
+import Action from 'dataparcels/Action';
 
 jest.useFakeTimers();
 
@@ -62,6 +63,23 @@ test('ParcelBoundary should pass a NEW *value equivalent* parcel to children whe
 
     expect(ParcelBoundaryEquals(childParcel, parcel)).toBe(true);
     expect(ParcelBoundaryEquals(childParcel2, parcel2)).toBe(true);
+});
+
+test('ParcelBoundary should lock state to props if debounce, hold and keepState are all false', () => {
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({value: 123});
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.set(456);
+
+    wrapper.update();
+
+    expect(childRenderer).toHaveBeenCalledTimes(1);
 });
 
 test('ParcelBoundary should not rerender if parcel has not changed value and pure = true', () => {
@@ -144,11 +162,11 @@ test('ParcelBoundary should release changes when called', async () => {
 
     wrapper.update();
 
-    let [childParcel2, actions] = childRenderer.mock.calls[1];
+    let [childParcel2, control] = childRenderer.mock.calls[1];
     // inside the parcel boundary, the last change should be applied to the parcel
     expect(childParcel2.value).toBe(123);
 
-    actions.release();
+    control.release();
 
     // handleChange should be called now because release() was called
     expect(handleChange).toHaveBeenCalledTimes(1);
@@ -158,7 +176,67 @@ test('ParcelBoundary should release changes when called', async () => {
     expect(newParcel.value).toBe(123);
 });
 
-test('ParcelBoundary should pass buffered status to childRenderer', async () => {
+test('ParcelBoundary should cancel changes when called', async () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        handleChange,
+        value: 456
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    // handleChange shouldn't be called yet because hold is true
+    expect(handleChange).toHaveBeenCalledTimes(0);
+
+    wrapper.update();
+
+    let [childParcel2, control] = childRenderer.mock.calls[1];
+    // inside the parcel boundary, the last change should be applied to the parcel
+    expect(childParcel2.value).toBe(123);
+
+    control.cancel();
+
+    // handleChange should still not have been called
+    expect(handleChange).toHaveBeenCalledTimes(0);
+
+    wrapper.update();
+
+
+    let [childParcel3] = childRenderer.mock.calls[2];
+    // inside the parcel boundary, the original value should be reinstated
+    expect(childParcel3.value).toBe(456);
+});
+
+test('ParcelBoundary cancel should do nothing if no changes have occurred', async () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        handleChange,
+        value: 456
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    childRenderer.mock.calls[0][1].cancel();
+
+    wrapper.update();
+
+    // childRenderer should still only have been called once
+    // because no change of state should have occurred whatsoever
+    expect(childRenderer).toHaveBeenCalledTimes(1);
+});
+
+
+test('ParcelBoundary should pass buffer info to childRenderer', async () => {
     let childRenderer = jest.fn();
 
     let parcel = new Parcel();
@@ -167,18 +245,22 @@ test('ParcelBoundary should pass buffered status to childRenderer', async () => 
         {childRenderer}
     </ParcelBoundary>);
 
-    let [childParcel, actions, buffered] = childRenderer.mock.calls[0];
+    let [childParcel, control] = childRenderer.mock.calls[0];
     childParcel.onChange(123);
     // handleChange shouldn't be called yet because hold is true
-    expect(buffered).toBe(false);
+    expect(control.buffered).toBe(false);
+    expect(control.buffer.length).toBe(0);
 
-    let [childParcel2, actions2, buffered2] = childRenderer.mock.calls[1];
-    expect(buffered2).toBe(true);
+    let [childParcel2, control2] = childRenderer.mock.calls[1];
+    expect(control2.buffered).toBe(true);
+    expect(control2.buffer.length).toBe(1);
+    expect(control2.buffer[0] instanceof Action).toBe(true);
 
-    actions.release();
+    control.release();
 
-    let [childParcel3, actions3, buffered3] = childRenderer.mock.calls[2];
-    expect(buffered3).toBe(false);
+    let [childParcel3, control3] = childRenderer.mock.calls[2];
+    expect(control3.buffered).toBe(false);
+    expect(control3.buffer.length).toBe(0);
 });
 
 test('ParcelBoundary should debounce', async () => {
@@ -275,8 +357,8 @@ test('ParcelBoundary should cancel unreleased changes when receiving a new parce
     // the new value received via props should be passed down WITHOUT the previous 789 change applied
     expect(childParcel3.value).toBe(456);
 
-    let actions = childRenderer.mock.calls[2][1];
-    actions.release();
+    let control = childRenderer.mock.calls[2][1];
+    control.release();
 
     // after release()ing the buffer, handleChange should not be called, because there should not be anything in the buffer
     expect(handleChange).toHaveBeenCalledTimes(0);
@@ -415,4 +497,173 @@ test('ParcelBoundary should pass new parcel from props change through modifyBefo
     expect(modifyBeforeUpdate[1].mock.calls[0][0]).toBe(457);
     expect(modifyBeforeUpdate[1].mock.calls[0][1].prevData.value).toBe(123);
     expect(modifyBeforeUpdate[1].mock.calls[0][1].nextData.value).toBe(457);
+});
+
+test('ParcelBoundary should accept a debugParcel boolean and log about receiving initial value', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debugParcel>
+        {() => <div />}
+    </ParcelBoundary>);
+
+    expect(console.log.mock.calls[0][0]).toBe("ParcelBoundary: Received initial value:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
+test('ParcelBoundary should accept a debugParcel boolean and log about parcel changing', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debugParcel>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+
+    expect(console.log.mock.calls[2][0]).toBe("ParcelBoundary: Parcel changed:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
+test('ParcelBoundary should accept a debugParcel boolean and log about replacing parcel from props', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    let parcel2 = new Parcel({
+        value: 456
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debugParcel>
+        {() => <div />}
+    </ParcelBoundary>);
+
+    wrapper.setProps({
+        parcel: parcel2
+    });
+
+    wrapper.update();
+
+    expect(console.log.mock.calls[2][0]).toBe("ParcelBoundary: Parcel replaced from props:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
+test('ParcelBoundary should accept a debugParcel boolean and log about cancelling and reverting parcel', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debugParcel hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+
+    wrapper.update();
+
+    childRenderer.mock.calls[1][1].cancel();
+
+    expect(console.log.mock.calls[4][0]).toBe("ParcelBoundary: Buffer cancelled. Parcel reverted:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
+test('ParcelBoundary should accept a debugBuffer boolean and log about adding to buffer', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debugBuffer hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+
+    expect(console.log.mock.calls[0][0]).toBe("ParcelBoundary: Add to buffer:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
+test('ParcelBoundary should accept a debugBuffer boolean and log about releasing buffer', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debugBuffer hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+
+    wrapper.update();
+
+    childRenderer.mock.calls[1][1].release();
+
+    expect(console.log.mock.calls[2][0]).toBe("ParcelBoundary: Release buffer:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
+
+test('ParcelBoundary should accept a debugBuffer boolean and log about cancelling buffer', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} debugBuffer hold>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+
+    wrapper.update();
+
+    childRenderer.mock.calls[1][1].cancel();
+
+    expect(console.log.mock.calls[2][0]).toBe("ParcelBoundary: Clear buffer:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
 });

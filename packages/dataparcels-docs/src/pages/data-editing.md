@@ -1,7 +1,10 @@
 import Link from 'gatsby-link';
 import EditingObjects from 'examples/EditingObjects';
 import EditingArrays from 'examples/EditingArrays';
-import EditingModify from 'examples/EditingModify';
+import EditingModifyAlphanumeric from 'examples/EditingModifyAlphanumeric';
+import EditingModifyNumber from 'examples/EditingModifyNumber';
+import EditingModifyDelimited from 'examples/EditingModifyDelimited';
+import EditingModifyMissing from 'examples/EditingModifyMissing';
 import DerivedValue from 'examples/DerivedValue';
 import DerivedMeta from 'examples/DerivedMeta';
 import InteractingFields from 'examples/InteractingFields';
@@ -145,7 +148,42 @@ For the full list of methods you can use on indexed data types, see <Link to="/a
 
 Sometimes you may hit a situation where a Parcel contains data you want to be able to make an editor for, but the data isn't stored in a format that allows you to do that easily. Parcel's <Link to="/api/Parcel#modifyDown">modifyDown()</Link> and <Link to="/api/Parcel#modifyUp">modifyUp()</Link> methods let you change data types and shapes between the top level Parcel and the input bindings.
 
-<EditingModify />
+<EditingModifyAlphanumeric />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const AlphanumericParcelHoc = ParcelHoc({
+    name: "alphanumericParcel",
+    valueFromProps: (/* props */) => "Abc123"
+});
+
+const AlphanumericInput = (props) => {
+    return <ParcelBoundary parcel={props.alphanumericParcel}>
+        {(alphanumericParcel) => {
+            let parcel = alphanumericParcel.modifyUp(string => string.replace(/[^a-zA-Z0-9]/g, ""));
+            // ^ remove non alpha numeric characters on the way up
+            return <input type="text" {...parcel.spreadDOM()} />;
+        }}
+    </ParcelBoundary>;
+};
+
+const AlphanumericEditor = (props) => {
+    let {alphanumericParcel} = props;
+    return <div>
+        <h4>Alphanumeric input</h4>
+        <p>Disallows all non-alphanumeric characters. Try typing some punctuation.</p>
+        <AlphanumericInput alphanumericParcel={alphanumericParcel} />
+    </div>;
+};
+
+export default AlphanumericParcelHoc(AlphanumericEditor);
+
+```
+
+<EditingModifyNumber />
 
 ```js
 import React from 'react';
@@ -153,26 +191,10 @@ import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
 
-const ExampleParcelHoc = ParcelHoc({
-    name: "exampleParcel",
-    valueFromProps: (/* props */) => ({
-        alphanumeric: "Abc123",
-        number: 123,
-        delimitedString: "abc.def",
-        missingValue: undefined
-    })
+const NumberParcelHoc = ParcelHoc({
+    name: "numberParcel",
+    valueFromProps: (/* props */) => 123
 });
-
-const AlphanumericInput = (props) => {
-    let alphanumericParcel = props
-        .alphanumericParcel
-        .modifyUp(string => string.replace(/[^a-zA-Z0-9]/g, ""));
-        // ^ remove non alpha numeric characters on the way up
-
-    return <ParcelBoundary parcel={alphanumericParcel}>
-        {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
-    </ParcelBoundary>;
-};
 
 const NumberInput = (props) => {
     let numberParcel = props
@@ -201,6 +223,30 @@ const NumberInput = (props) => {
     </ParcelBoundary>;
 };
 
+const NumberEditor = (props) => {
+    let {numberParcel} = props;
+    return <div>
+        <h4>Number > string</h4>
+        <p>Turns a stored number into a string for editing, and only allows changes that are valid numbers.</p>
+        <NumberInput numberParcel={numberParcel} />
+    </div>;
+};
+
+export default NumberParcelHoc(NumberEditor);
+```
+
+<EditingModifyDelimited />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const DelimitedStringParcelHoc = ParcelHoc({
+    name: "delimitedParcel",
+    valueFromProps: (/* props */) => "abc.def"
+});
+
 const DelimitedStringInput = (props) => {
     let delimitedStringParcel = props
         .delimitedStringParcel
@@ -224,46 +270,57 @@ const DelimitedStringInput = (props) => {
     </div>;
 };
 
-const MissingValueInput = (props) => {
-    let missingValueParcel = props
-        .missingValueParcel
+const DelimitedStringEditor = (props) => {
+    let {delimitedParcel} = props;
+    return <div>
+        <h4>Delimited string > array of strings</h4>
+        <p>Turns a stored string into an array so array editing controls can be rendered.</p>
+        <DelimitedStringInput delimitedStringParcel={delimitedParcel} />
+    </div>;
+};
+
+export default DelimitedStringParcelHoc(DelimitedStringEditor);
+```
+
+<EditingModifyMissing />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const MaybeArrayParcelHoc = ParcelHoc({
+    name: "maybeArrayParcel",
+    valueFromProps: (/* props */) => undefined
+});
+
+const MaybeArrayInput = (props) => {
+    let maybeArrayParcel = props
+        .maybeArrayParcel
         .modifyDown(value => value || [])
         // ^ turn value into an array if its missing
         //   so we can always render against an array
 
     return <div>
-        {missingValueParcel.toArray((segmentParcel) => {
+        {maybeArrayParcel.toArray((segmentParcel) => {
             return <ParcelBoundary parcel={segmentParcel} key={segmentParcel.key}>
                 {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
             </ParcelBoundary>;
         })}
-        <button onClick={() => missingValueParcel.push("")}>Add new element</button>
+        <button onClick={() => maybeArrayParcel.push("")}>Add new element</button>
     </div>;
 };
 
-const ExampleEditor = (props) => {
-    let {exampleParcel} = props;
+const MaybeArrayEditor = (props) => {
+    let {maybeArrayParcel} = props;
     return <div>
-        <h4>Alphanumeric input</h4>
-        <p>Disallows all non-alphanumeric characters.</p>
-        <AlphanumericInput alphanumericParcel={exampleParcel.get('alphanumeric')} />
-
-        <h4>Number > string</h4>
-        <p>Turns a stored number into a string for editing, and only allows changes that are valid numbers.</p>
-        <NumberInput numberParcel={exampleParcel.get('number')} />
-
-        <h4>Delimited string > array of strings</h4>
-        <p>Turns a stored string into an array so array editing controls can be rendered.</p>
-        <DelimitedStringInput delimitedStringParcel={exampleParcel.get('delimitedString')} />
-
-        <h4>Coping with missing values</h4>
+        <h4>Compensating for missing values</h4>
         <p>Prepares values so that editors can remain simple.</p>
-        <MissingValueInput missingValueParcel={exampleParcel.get('missingValue')} />
+        <MaybeArrayInput maybeArrayParcel={maybeArrayParcel} />
     </div>;
 };
 
-export default ExampleParcelHoc(ExampleEditor);
-
+export default MaybeArrayParcelHoc(MaybeArrayEditor);
 ```
 
 <Divider />

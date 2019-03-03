@@ -8,31 +8,19 @@ import range from 'unmutable/lib/util/range';
 test('ChangeRequest should build an action', () => {
     let expectedDefaultData = {
         actions: [],
-        meta: {},
         originId: null,
         originPath: null,
     };
     expect(expectedDefaultData).toEqual(new ChangeRequest().toJS());
 });
 
-test('ChangeRequest actions() should get actions', () => {
+test('ChangeRequest actions should get actions', () => {
     let actions = [
         new Action({type: "???", keyPath: ['a']}),
         new Action({type: "!!!", keyPath: ['a']})
     ];
 
-    expect(actions).toEqual(new ChangeRequest(actions).actions());
-});
-
-test('ChangeRequest updateActions() should update actions', () => {
-    let actions = [
-        new Action({type: "???", keyPath: ['a']}),
-        new Action({type: "!!!", keyPath: ['a']})
-    ];
-
-    expect([actions[0]]).toEqual(new ChangeRequest(actions)
-        .updateActions(actions => actions.filter(aa => aa.type === "???"))
-        .actions());
+    expect(actions).toEqual(new ChangeRequest(actions).actions);
 });
 
 test('ChangeRequest merge() should merge other change requests actions', () => {
@@ -51,20 +39,7 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
 
     let merged = a.merge(b);
 
-    expect([...actionsA, ...actionsB]).toEqual(merged.actions());
-});
-
-
-test('ChangeRequest setChangeRequestMeta() and changeRequestMeta should work', () => {
-    let expectedMeta = {
-        a: 3,
-        b: 2
-    };
-    expect(expectedMeta).toEqual(new ChangeRequest()
-        .setChangeRequestMeta({a: 1})
-        .setChangeRequestMeta({b: 2})
-        .setChangeRequestMeta({a: 3})
-        .changeRequestMeta);
+    expect([...actionsA, ...actionsB]).toEqual(merged.actions);
 });
 
 test('ChangeRequest nextData() and data should use Reducer', () => {
@@ -360,7 +335,7 @@ test('ChangeRequest should throw errors when attempted to set getters', () => {
     }).toThrow(readOnly);
 
     expect(() => {
-        changeRequest.changeRequestMeta = 123;
+        changeRequest.actions = 123;
     }).toThrow(readOnly);
 
     expect(() => {

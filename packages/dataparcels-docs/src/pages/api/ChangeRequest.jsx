@@ -12,19 +12,15 @@ const api = `
 # Properties
 prevData
 nextData
-changeRequestMeta
 originId
 originPath
+actions
 
 # Methods
-setChangeRequestMeta()
-actions()
-updateActions()
 merge()
 getDataIn()
 hasValueChanged()
 toJS()
-toConsole()
 `;
 
 export default () => <ApiPage

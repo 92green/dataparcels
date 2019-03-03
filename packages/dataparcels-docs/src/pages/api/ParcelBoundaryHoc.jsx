@@ -11,8 +11,7 @@ import Markdown_modifyBeforeUpdate from 'docs/api/parcelBoundaryHoc/modifyBefore
 import Markdown_debugBuffer from 'docs/api/parcelBoundaryHoc/debugBuffer.md';
 import Markdown_debugParcel from 'docs/api/parcelBoundaryHoc/debugParcel.md';
 import Markdown_childName from 'docs/api/parcelBoundaryHoc/childName.md';
-import Markdown_childNameActions from 'docs/api/parcelBoundaryHoc/childNameActions.md';
-import Markdown_childNameBuffered from 'docs/api/parcelBoundaryHoc/childNameBuffered.md';
+import Markdown_childNameControl from 'docs/api/parcelBoundaryHoc/childNameControl.md';
 import Markdown_childOriginalParcelProp from 'docs/api/parcelBoundaryHoc/childOriginalParcelProp.md';
 
 const md = {
@@ -25,8 +24,7 @@ const md = {
     debugBuffer: Markdown_debugBuffer,
     debugParcel: Markdown_debugParcel,
     ['${name}']: Markdown_childName,
-    ['${name}Actions']: Markdown_childNameActions,
-    ['${name}Buffered']: Markdown_childNameBuffered,
+    ['${name}Control']: Markdown_childNameControl,
     ['${originalParcelProp}']: Markdown_childOriginalParcelProp
 }
 
@@ -42,8 +40,7 @@ debugParcel
 
 # Child props
 $\{name\}
-$\{name\}Actions
-$\{name\}Buffered
+$\{name\}Control
 $\{originalParcelProp\}
 `;
 

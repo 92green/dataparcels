@@ -111,7 +111,7 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
 
 export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?ParcelData => {
     let cancelled = 0;
-    let actions = changeRequest.actions();
+    let {actions} = changeRequest;
 
     let newParcelData = pipeWith(
         parcelData,

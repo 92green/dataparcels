@@ -1,7 +1,6 @@
 // @flow
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
-import type {ParcelShapeUpdater} from '../../types/Types';
 import type {ParcelShapeValueUpdater} from '../../types/Types';
 import type ParcelShape from '../ParcelShape';
 
@@ -38,21 +37,14 @@ export default (_this: ParcelShape) => ({
             parcelUpdateIn(
                 keyPath,
                 (parcelData) => {
+                    if(updater._isParcelUpdater) {
+                        return updater(parcelData);
+                    }
                     let {value} = parcelData;
                     let updatedValue = updater(value);
                     ValidateValueUpdater(value, updatedValue);
                     return parcelSetSelf(updatedValue)(parcelData);
                 }
-            )
-        );
-    },
-
-    updateShapeIn: (keyPath: Array<Key|Index>, updater: ParcelShapeUpdater): ParcelShape => {
-        _this._prepareChildKeys();
-        return _this._pipeSelf(
-            parcelUpdateIn(
-                keyPath,
-                (parcelData) => _this._parcelShapeUpdate(updater)(parcelData)
             )
         );
     }

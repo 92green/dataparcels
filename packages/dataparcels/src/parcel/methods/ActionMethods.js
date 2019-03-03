@@ -10,7 +10,7 @@ export default (_this: Parcel): Object => ({
         Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
 
         let {
-            _onDispatch,
+            _updateChangeRequestOnDispatch,
             _onHandleChange
         } = _this;
 
@@ -23,9 +23,9 @@ export default (_this: Parcel): Object => ({
             changeRequest._originPath = _this.path;
         }
 
-        if(_this._log) {
-            console.log(`Parcel change: ${_this._logName}`); // eslint-disable-line
-            changeRequest.toConsole();
+        if(process.env.NODE_ENV !== 'production' && _this._log) {
+            console.log(`Parcel: "${_this._logName}" data up:`); // eslint-disable-line
+            console.log(changeRequest.toJS()); // eslint-disable-line
         }
 
         if(_onHandleChange) {
@@ -47,6 +47,7 @@ export default (_this: Parcel): Object => ({
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
             return;
         }
-        _onDispatch && _onDispatch(changeRequest);
+
+        _this._dispatchToParent(_updateChangeRequestOnDispatch(changeRequest));
     }
 });

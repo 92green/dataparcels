@@ -9,6 +9,8 @@ import type {ParcelConfig} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type {ParcelMapper} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
+import type {ParcelParent} from '../types/Types';
+import type {ParcelRegistry} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
@@ -29,18 +31,26 @@ import ModifyMethods from './methods/ModifyMethods';
 
 import ActionCreators from '../change/ActionCreators';
 import FilterMethods from '../util/FilterMethods';
-import ParcelTypes from './ParcelTypes';
 import ParcelId from '../parcelId/ParcelId';
+import isIndexedValue from '../parcelData/isIndexedValue';
+import isParentValue from '../parcelData/isParentValue';
 
+import identity from 'unmutable/lib/identity';
 import overload from 'unmutable/lib/util/overload';
 
 const DEFAULT_CONFIG_INTERNAL = () => ({
-    onDispatch: undefined,
     child: undefined,
+    dispatchId: '',
     lastOriginId: '',
     meta: {},
     id: new ParcelId(),
-    parent: undefined
+    parent: {
+        isIndexed: false,
+        isChildFirst: false,
+        isChildLast: false
+    },
+    registry: {},
+    updateChangeRequestOnDispatch: identity()
 });
 
 export default class Parcel {
@@ -55,17 +65,19 @@ export default class Parcel {
         handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
 
         let {
-            onDispatch,
             child,
+            dispatchId,
             lastOriginId,
             meta,
             id,
-            parent
+            parent,
+            registry,
+            updateChangeRequestOnDispatch
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
         this._lastOriginId = lastOriginId;
         this._onHandleChange = handleChange;
-        this._onDispatch = onDispatch;
+        this._updateChangeRequestOnDispatch = updateChangeRequestOnDispatch;
 
         this._parcelData = {
             value,
@@ -74,21 +86,15 @@ export default class Parcel {
             meta
         };
 
-        // parent
-        if(parent) {
-            // $FlowFixMe
-            this._parent = parent;
-        }
-
-        // types
-        this._parcelTypes = new ParcelTypes(
-            value,
-            parent && parent._parcelTypes,
-            !!(id && id.path().length === 0)
-        );
-
-        // id
+        this._dispatchId = dispatchId;
         this._id = id;
+        this._isChild = !(id && id.path().length === 0);
+        this._isElement = parent.isIndexed;
+        this._isIndexed = isIndexedValue(value);
+        this._isParent = isParentValue(value);
+        this._parent = parent;
+        this._registry = registry;
+        this._registry[id.id()] = this;
 
         let dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
 
@@ -122,14 +128,19 @@ export default class Parcel {
     //
 
     // from constructor
+    _dispatchId: string;
     _id: ParcelId;
+    _isChild: boolean;
+    _isElement: boolean;
+    _isIndexed: boolean;
+    _isParent: boolean;
     _lastOriginId: string;
     _methods: { [key: string]: * };
     _onHandleChange: ?Function;
-    _onDispatch: ?Function;
     _parcelData: ParcelData;
-    _parcelTypes: ParcelTypes;
-    _parent: ?Parcel;
+    _parent: ParcelParent;
+    _registry: ParcelRegistry;
+    _updateChangeRequestOnDispatch: Function;
 
     // from methods
     _log: boolean = false; // used by log()
@@ -137,12 +148,14 @@ export default class Parcel {
 
     _create = (createParcelConfig: ParcelCreateConfigType): Parcel => {
         let {
+            dispatchId = this._id.id(),
             handleChange,
             id = this._id,
             lastOriginId = this._lastOriginId,
-            onDispatch = this.dispatch,
-            parent,
-            parcelData = this._parcelData
+            parcelData = this._parcelData,
+            parent = this._parent,
+            registry = this._registry,
+            updateChangeRequestOnDispatch = identity()
         } = createParcelConfig;
 
         let {
@@ -158,13 +171,22 @@ export default class Parcel {
             },
             {
                 child,
+                dispatchId,
                 lastOriginId,
                 meta,
                 id,
-                onDispatch,
-                parent
+                parent,
+                registry,
+                updateChangeRequestOnDispatch
             }
         );
+    };
+
+    _dispatchToParent = (changeRequest: ChangeRequest) => {
+        let parcel = this._registry[this._dispatchId];
+        if(parcel) {
+            parcel.dispatch(changeRequest);
+        }
     };
 
     _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): Parcel => {
@@ -185,8 +207,11 @@ export default class Parcel {
     _boundarySplit = ({handleChange}: *): Parcel => {
         return this._create({
             id: this._id.pushModifier('bs'),
-            parent: this._parent,
-            handleChange
+            handleChange,
+            dispatchId: '%',
+            registry: {
+                '%': this
+            }
         });
     };
 
@@ -346,15 +371,12 @@ export default class Parcel {
     initialMeta = (initialMeta: ParcelMeta): Parcel => this._methods.initialMeta(initialMeta);
 
     // Type methods
-    isChild = (): boolean => this._parcelTypes.isChild();
-    isElement = (): boolean => this._parcelTypes.isElement();
-    isIndexed = (): boolean => this._parcelTypes.isIndexed();
-    isParent = (): boolean => this._parcelTypes.isParent();
-    isTopLevel = (): boolean => this._parcelTypes.isTopLevel();
+    isChild = (): boolean => this._isChild;
+    isElement = (): boolean => this._isElement;
+    isIndexed = (): boolean => this._isIndexed;
+    isParent = (): boolean => this._isParent;
+    isTopLevel = (): boolean => !this._isChild;
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
-
-    // Debug methods
-    toConsole = () => this._methods.toConsole();
 }

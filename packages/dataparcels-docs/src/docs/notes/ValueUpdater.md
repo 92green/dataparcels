@@ -4,7 +4,7 @@ import {Box, Link as HtmlLink, Message} from 'dcme-style';
 ### Please be careful
 
 
-This method is safe to use in most cases, but in some cases it should not be used:
+This method is safe to use without `shape()` in most cases, but in some cases it should not be used:
 
 - If the updater gives you a primitive value or childless value, you can return anything.
 - If the updater gives you a value that has children, you can always return a primitive value or childless value.

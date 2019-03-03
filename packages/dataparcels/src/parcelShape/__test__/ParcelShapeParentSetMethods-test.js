@@ -1,5 +1,6 @@
 // @flow
 import ParcelShape from '../ParcelShape';
+import shape from '../shape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('ParcelShapes set(key) should work', () => {
@@ -161,6 +162,34 @@ test('ParcelShapes update(key) should validate value updater', () => {
     );
 });
 
+test('ParcelShapes update(key, shape()) should work', () => {
+    let parcelShape = ParcelShape.fromData({
+        value: {
+            a: 1,
+            b: 4
+        }
+    });
+
+    let expectedData = {
+        value: {
+            a: 2,
+            b: 4
+        },
+        child: {
+            a: {
+                child: undefined,
+                key: "a"
+            },
+            b: {
+                child: undefined,
+                key: "b"
+            }
+        }
+    };
+
+    expect(parcelShape.update('a', shape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
+});
+
 test('ParcelShapes updateIn(keyPath) should work', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
@@ -203,34 +232,33 @@ test('ParcelShapes updateIn(keyPath) should validate value updater', () => {
     );
 });
 
-test('ParcelShapes updateShape(key) should work', () => {
+test('ParcelShapes updateIn(keyPath, shape()) should work', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
-            abc: [1,2,3]
-        }
-    });
-
-    let expectedValue = {
-        abc: [1,2,3,4]
-    };
-
-    expect(parcelShape.updateShape('abc', parcelShape => parcelShape.push(4)).value).toEqual(expectedValue);
-});
-
-test('ParcelShapes updateShapeIn(keyPath) should work', () => {
-    let parcelShape = ParcelShape.fromData({
-        value: {
-            abc: {
-                def: [1,2,3]
+            a: {
+                b: 123
             }
         }
     });
 
-    let expectedValue = {
-        abc: {
-            def: [1,2,3,4]
+    let expectedData = {
+        value: {
+            a: {
+                b: 124
+            }
+        },
+        child: {
+            a: {
+                child: {
+                    b: {
+                        child: undefined,
+                        key: "b"
+                    }
+                },
+                key: "a"
+            }
         }
     };
 
-    expect(parcelShape.updateShapeIn(['abc', 'def'], parcelShape => parcelShape.push(4)).value).toEqual(expectedValue);
+    expect(parcelShape.updateIn(['a', 'b'], shape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
 });

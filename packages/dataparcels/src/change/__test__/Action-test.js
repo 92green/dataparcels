@@ -30,13 +30,3 @@ test('Action should build an action with a keyPath', () => {
 test('Action should build an action with a default keyPath', () => {
     expect(new Action({type: "???"}).keyPath).toEqual([]);
 });
-
-test('Action should be value action if it isnt setMeta', () => {
-    expect(new Action({type: "set"}).isValueAction()).toBe(true);
-    expect(new Action({type: "setMeta"}).isValueAction()).toBe(false);
-});
-
-test('Action should be meta action if it is setMeta', () => {
-    expect(new Action({type: "set"}).isMetaAction()).toBe(false);
-    expect(new Action({type: "setMeta"}).isMetaAction()).toBe(true);
-});

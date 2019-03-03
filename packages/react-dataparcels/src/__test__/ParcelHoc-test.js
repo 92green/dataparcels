@@ -107,24 +107,6 @@ test('ParcelHoc config should accept a pipe function', () => {
     expect(457).toBe(childProps.proppy.value);
 });
 
-test('ParcelHoc config should accept a debugParcel boolean', () => {
-    let {log} = console;
-    // $FlowFixMe
-    console.log = jest.fn(); // eslint-disable-line
-    let childProps = shallowRenderHoc(
-        {},
-        ParcelHoc({
-            valueFromProps: () => 456,
-            name: "proppy",
-            debugParcel: true
-        })
-    ).props();
-
-    expect(console.log).toHaveBeenCalled();
-    // $FlowFixMe
-    console.log = log; // eslint-disable-line
-});
-
 test('ParcelHoc shouldParcelUpdateFromProps should update value from props when it is returned true', () => {
     let valueFromProps = jest.fn((props) => props.abc);
 
@@ -285,4 +267,71 @@ test('ParcelHoc modifyBeforeUpdate should be called when relevant prop change oc
     let childProps2 = wrapper.props();
     // child parcel should contain value after having been passed through modifyBeforeUpdate
     expect(childProps2.proppy.value).toBe(458);
+});
+
+
+test('ParcelHoc config should accept a debugParcel boolean and log about receiving initial value', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let childProps = shallowRenderHoc(
+        {},
+        ParcelHoc({
+            valueFromProps: () => 456,
+            name: "proppy",
+            debugParcel: true
+        })
+    ).props();
+
+    expect(console.log).toHaveBeenCalled();
+    expect(console.log.mock.calls[0][0]).toBe("ParcelHoc: Received initial value:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
+test('ParcelHoc config should accept a debugParcel boolean and log about changing value', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let childProps = shallowRenderHoc(
+        {},
+        ParcelHoc({
+            valueFromProps: () => 456,
+            name: "proppy",
+            debugParcel: true
+        })
+    ).props();
+
+    childProps.proppy.set("!");
+
+    expect(console.log.mock.calls[2][0]).toBe("ParcelHoc: Parcel changed:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
+});
+
+
+
+test('ParcelHoc config should accept a debugParcel boolean and log about updatgin from props', () => {
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
+    let wrapper = shallowRenderHoc(
+        {},
+        ParcelHoc({
+            valueFromProps: () => 456,
+            name: "proppy",
+            debugParcel: true,
+            shouldParcelUpdateFromProps: () => true
+        })
+    );
+
+    wrapper.setProps({
+        def: 789
+    });
+
+    wrapper.props();
+
+    expect(console.log.mock.calls[2][0]).toBe("ParcelHoc: Parcel updated from props:");
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
 });

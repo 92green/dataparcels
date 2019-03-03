@@ -50,10 +50,12 @@ export default (_this: Parcel) => ({
     // Side-effect methods
 
     log: (name: string): Parcel => {
-        _this._log = true;
-        _this._logName = name;
-        console.log(`Parcel data: ${name} `); // eslint-disable-line
-        _this.toConsole();
+        if(process.env.NODE_ENV !== 'production') {
+            _this._log = true;
+            _this._logName = name;
+            console.log(`Parcel: "${name}" data down:`); // eslint-disable-line
+            console.log(_this.data); // eslint-disable-line
+        }
         return _this;
     },
 
@@ -67,19 +69,13 @@ export default (_this: Parcel) => ({
         Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
         return _this._create({
             id: _this._id.pushModifier('sc'),
-            onDispatch: (changeRequest: ChangeRequest) => {
+            updateChangeRequestOnDispatch: (changeRequest: ChangeRequest): ChangeRequest => {
                 let basedChangeRequest = changeRequest._create({
                     prevData: _this.data
                 });
                 sideEffect(basedChangeRequest);
-                _this.dispatch(changeRequest);
+                return changeRequest;
             }
         });
-    },
-
-    // Debug methods
-
-    toConsole: () => {
-        console.log(_this.data); // eslint-disable-line
     }
 });

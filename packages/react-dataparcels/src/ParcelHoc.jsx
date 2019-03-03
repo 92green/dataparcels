@@ -9,8 +9,6 @@ import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
 import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 
-const log = (...args) => console.log(`ParcelHoc:`, ...args); // eslint-disable-line
-
 type Props = {};
 
 type State = {
@@ -113,18 +111,18 @@ export default (config: ParcelHocConfig): Function => {
             if(!parcel && delayUntil(props)) {
                 newState.parcel = initialize(props);
 
-                if(debugParcel) {
-                    log(`Received initial value:`);
-                    newState.parcel.toConsole();
+                if(process.env.NODE_ENV !== 'production' && debugParcel) {
+                    console.log(`ParcelHoc: Received initial value:`); // eslint-disable-line
+                    console.log(newState.parcel.data); // eslint-disable-line
                 }
             }
 
             if(parcel && shouldParcelUpdateFromProps && shouldParcelUpdateFromProps(prevProps, props, valueFromProps) && parcel) {
                 newState.parcel = ParcelHoc.updateParcelValueFromProps(parcel, props);
 
-                if(debugParcel) {
-                    log(`Parcel updated from props:`);
-                    newState.parcel.toConsole();
+                if(process.env.NODE_ENV !== 'production' && debugParcel) {
+                    console.log(`ParcelHoc: Parcel updated from props:`); // eslint-disable-line
+                    console.log(newState.parcel.data); // eslint-disable-line
                 }
             }
 
@@ -134,9 +132,9 @@ export default (config: ParcelHocConfig): Function => {
 
         handleChange = (parcel: Parcel, changeRequest: ChangeRequest) => {
             this.setState({parcel});
-            if(debugParcel) {
-                log(`Parcel changed:`);
-                parcel.toConsole();
+            if(process.env.NODE_ENV !== 'production' && debugParcel) {
+                console.log(`ParcelHoc: Parcel changed:`); // eslint-disable-line
+                console.log(parcel.data); // eslint-disable-line
             }
 
             let callOnChange = (onChange: ?Function, value: *) => {

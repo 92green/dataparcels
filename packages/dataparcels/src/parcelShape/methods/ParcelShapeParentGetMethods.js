@@ -30,7 +30,9 @@ export default (_this: ParcelShape) => ({
         return _this._pipeSelf(
             parcelGet(key, notFoundValue),
             {
-                parent: _this
+                isIndexed: _this._isIndexed,
+                isChildFirst: false,
+                isChildLast: false
             }
         );
     },
@@ -46,7 +48,9 @@ export default (_this: ParcelShape) => ({
                         key: parcelKeyOrIndexToKey(key)(parcelShape.data)
                     }),
                     {
-                        parent: _this
+                        isIndexed: _this._isIndexed,
+                        isChildFirst: false,
+                        isChildLast: false
                     }
                 );
             }

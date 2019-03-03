@@ -12,14 +12,11 @@ import parcelGet from '../parcelData/get';
 
 import pipe from 'unmutable/lib/util/pipe';
 
-type ActionUpdater = (actions: Action[]) => Action[];
-
 export default class ChangeRequest {
 
     _actions: Action[] = [];
     _prevData: ?ParcelData;
     _nextData: ?ParcelData;
-    _meta: * = {};
     _originId: ?string = null;
     _originPath: ?string[] = null;
 
@@ -33,7 +30,6 @@ export default class ChangeRequest {
             actions: this._actions,
             prevData: this._prevData,
             nextData: this._nextData,
-            meta: this._meta,
             originId: this._originId,
             originPath: this._originPath,
             ...changeRequestData
@@ -43,7 +39,6 @@ export default class ChangeRequest {
         changeRequest._actions = changeRequestData.actions;
         changeRequest._prevData = changeRequestData.prevData;
         changeRequest._nextData = changeRequestData.nextData;
-        changeRequest._meta = changeRequestData.meta;
         changeRequest._originId = changeRequestData.originId;
         changeRequest._originPath = changeRequestData.originPath;
         return changeRequest;
@@ -86,40 +81,21 @@ export default class ChangeRequest {
         throw ReadOnlyError();
     }
 
-    actions = (): Action[] => {
-        return this._actions;
-    };
-
-    updateActions = (updater: ActionUpdater): ChangeRequest => {
-        return this._create({
-            actions: updater(this._actions),
-            nextData: undefined,
-            prevData: undefined
-        });
-    };
-
-    merge = (other: ChangeRequest): ChangeRequest => {
-        return this
-            .updateActions(ii => ii.concat(other.actions()))
-            .setChangeRequestMeta(other.changeRequestMeta);
-    };
-
     // $FlowFixMe - this doesn't have side effects
-    get changeRequestMeta(): * {
-        return this._meta;
+    get actions(): ParcelData {
+        return this._actions;
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set changeRequestMeta(value: *) {
+    set actions(value: *) {
         throw ReadOnlyError();
     }
 
-    setChangeRequestMeta = (partialMeta: *): ChangeRequest => {
+    merge = (other: ChangeRequest): ChangeRequest => {
         return this._create({
-            meta: {
-                ...this._meta,
-                ...partialMeta
-            }
+            actions: this._actions.concat(other.actions),
+            nextData: undefined,
+            prevData: undefined
         });
     };
 
@@ -159,16 +135,9 @@ export default class ChangeRequest {
         return next.value !== prev.value;
     };
 
-    toJS = (): Object => {
-        return {
-            actions: this._actions.map(action => action.toJS()),
-            meta: this._meta,
-            originId: this._originId,
-            originPath: this._originPath
-        };
-    };
-
-    toConsole = () => {
-        console.log(this.toJS()); // eslint-disable-line
-    };
+    toJS = (): Object => ({
+        actions: this._actions.map(action => action.toJS()),
+        originId: this._originId,
+        originPath: this._originPath
+    });
 }
