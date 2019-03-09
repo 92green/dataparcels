@@ -176,6 +176,34 @@ test('ParcelBoundary should release changes when called', async () => {
     expect(newParcel.value).toBe(123);
 });
 
+test('ParcelBoundary should use onRelease', async () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+    let onRelease = jest.fn();
+
+    let parcel = new Parcel({
+        handleChange
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold onRelease={onRelease}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    wrapper.update();
+    childRenderer.mock.calls[1][1].release();
+
+    // onRelease should be called now because release() was called
+    expect(onRelease).toHaveBeenCalledTimes(1);
+    expect(handleChange).not.toHaveBeenCalled();
+    let release = onRelease.mock.calls[0][0];
+
+    // call release and then handleChange should have been called with the correct value
+    release();
+    expect(handleChange).toHaveBeenCalledTimes(1);
+});
+
 test('ParcelBoundary should cancel changes when called', async () => {
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
@@ -212,6 +240,43 @@ test('ParcelBoundary should cancel changes when called', async () => {
     // inside the parcel boundary, the original value should be reinstated
     expect(childParcel3.value).toBe(456);
 });
+
+test('ParcelBoundary should onCancel', async () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+    let onCancel = jest.fn();
+
+    let parcel = new Parcel({
+        handleChange,
+        value: 456
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold onCancel={onCancel}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    wrapper.update();
+    childRenderer.mock.calls[1][1].cancel();
+
+    let childRendererCalls = childRenderer.mock.calls.length;
+
+    // onCancel should be called now because cancel() was called
+    expect(onCancel).toHaveBeenCalledTimes(1);
+
+    // there should have been no re-render as the cancellation shouldn't have happened yet
+    expect(childRenderer).toHaveBeenCalledTimes(childRendererCalls);
+    let cancel = onCancel.mock.calls[0][0];
+
+    // call cancel and then inside the parcel boundary, the original value should be reinstated
+    cancel();
+    wrapper.update();
+    let [childParcel2] = childRenderer.mock.calls[2];
+    // inside the parcel boundary, the original value should be reinstated
+    expect(childParcel2.value).toBe(456);
+});
+
 
 test('ParcelBoundary cancel should do nothing if no changes have occurred', async () => {
     let childRenderer = jest.fn();

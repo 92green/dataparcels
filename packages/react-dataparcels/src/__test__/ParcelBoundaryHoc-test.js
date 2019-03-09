@@ -218,3 +218,35 @@ test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {
 
     expect(propsGivenToParcelBoundary.modifyBeforeUpdate).toBe(modifyBeforeUpdate);
 });
+
+test('ParcelBoundaryHoc config.onCancel should accept function', () => {
+    let onCancel = cancel => cancel();
+
+    let propsGivenToParcelBoundary = shallowRenderHoc(
+        {
+            testParcel: new Parcel()
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel',
+            onCancel
+        })
+    ).props();
+
+    expect(propsGivenToParcelBoundary.onCancel).toBe(onCancel);
+});
+
+test('ParcelBoundaryHoc config.onRelease should accept function', () => {
+    let onRelease = release => release();
+
+    let propsGivenToParcelBoundary = shallowRenderHoc(
+        {
+            testParcel: new Parcel()
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel',
+            onRelease
+        })
+    ).props();
+
+    expect(propsGivenToParcelBoundary.onRelease).toBe(onRelease);
+});

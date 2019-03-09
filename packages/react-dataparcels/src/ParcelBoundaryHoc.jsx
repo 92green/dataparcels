@@ -28,6 +28,8 @@ type ParcelBoundaryHocConfig = {
     debounce?: number|(props: AnyProps) => number,
     hold?: boolean|(props: AnyProps) => boolean,
     modifyBeforeUpdate?: Array<ParcelValueUpdater>,
+    onCancel?: (cancel: Function) => void,
+    onRelease?: (release: Function) => void,
     originalParcelProp?: string|(props: AnyProps) => string,
     debugBuffer?: boolean,
     debugParcel?: boolean
@@ -54,6 +56,8 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             let modifyBeforeUpdate: Array<ParcelValueUpdater> = config.modifyBeforeUpdate || [];
             let debugBuffer: boolean = config.debugBuffer || false;
             let debugParcel: boolean = config.debugParcel || false;
+            let onCancel: ?Function = config.onCancel || undefined;
+            let onRelease: ?Function = config.onRelease || undefined;
 
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.name", "string")(name);
             debounce && Types(PARCEL_BOUNDARY_HOC_NAME, "config.debounce", "number")(debounce);
@@ -62,6 +66,8 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
             originalParcelProp && Types(PARCEL_BOUNDARY_HOC_NAME, "config.originalParcelProp", "string")(originalParcelProp);
             modifyBeforeUpdate.forEach((fn, index) => Types(PARCEL_BOUNDARY_HOC_NAME, `config.modifyBeforeUpdate[${index}]`, "function")(fn));
+            onCancel && Types(PARCEL_BOUNDARY_HOC_NAME, "config.onCancel", "function")(onCancel);
+            onRelease && Types(PARCEL_BOUNDARY_HOC_NAME, "config.onRelease", "function")(onRelease);
 
             let parcel = this.props[name];
             if(!parcel) {
@@ -77,6 +83,8 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                 debugBuffer={debugBuffer}
                 debugParcel={debugParcel}
                 modifyBeforeUpdate={modifyBeforeUpdate}
+                onCancel={onCancel}
+                onRelease={onRelease}
                 pure={false}
             >
                 {(innerParcel: Parcel, control: ParcelBoundaryControl): Node => {

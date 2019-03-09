@@ -29,6 +29,8 @@ import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
     forceUpdate={?Array<*>}
     hold={?boolean}
     modifyBeforeUpdate={?Array<ValueUpdater>}
+    onCancel={onCancel}
+    onRelease={onRelease}
     debugBuffer={?boolean}
     debugParcel={?boolean}
 >
