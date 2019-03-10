@@ -299,7 +299,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                 cancel: chain(onCancel, handleCancel),
                 release: chain(onRelease, handleRelease),
                 buffered: actions.length > 0,
-                buffer: actions
+                buffer: actions,
+                originalParcel: this.props.parcel
             })
         );
     }

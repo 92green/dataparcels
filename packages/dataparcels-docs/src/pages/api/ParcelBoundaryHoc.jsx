@@ -4,7 +4,6 @@ import React from 'react';
 import ApiPage from 'component/ApiPage';
 import Markdown_ParcelBoundaryHoc from 'docs/api/parcelBoundaryHoc/ParcelBoundaryHoc.md';
 import Markdown_name from 'docs/api/parcelBoundaryHoc/name.md';
-import Markdown_originalParcelProp from 'docs/api/parcelBoundaryHoc/originalParcelProp.md';
 import Markdown_debounce from 'docs/api/parcelBoundaryHoc/debounce.md';
 import Markdown_hold from 'docs/api/parcelBoundaryHoc/hold.md';
 import Markdown_modifyBeforeUpdate from 'docs/api/parcelBoundaryHoc/modifyBeforeUpdate.md';
@@ -14,12 +13,10 @@ import Markdown_onCancel from 'docs/api/parcelBoundaryHoc/onCancel.md';
 import Markdown_onRelease from 'docs/api/parcelBoundaryHoc/onRelease.md';
 import Markdown_childName from 'docs/api/parcelBoundaryHoc/childName.md';
 import Markdown_childNameControl from 'docs/api/parcelBoundaryHoc/childNameControl.md';
-import Markdown_childOriginalParcelProp from 'docs/api/parcelBoundaryHoc/childOriginalParcelProp.md';
 
 const md = {
     _desc: Markdown_ParcelBoundaryHoc,
     name: Markdown_name,
-    originalParcelProp: Markdown_originalParcelProp,
     debounce: Markdown_debounce,
     hold: Markdown_hold,
     modifyBeforeUpdate: Markdown_modifyBeforeUpdate,
@@ -28,14 +25,12 @@ const md = {
     onCancel: Markdown_onCancel,
     onRelease: Markdown_onRelease,
     ['${name}']: Markdown_childName,
-    ['${name}Control']: Markdown_childNameControl,
-    ['${originalParcelProp}']: Markdown_childOriginalParcelProp
+    ['${name}Control']: Markdown_childNameControl
 }
 
 const api = `
 # Config
 name
-originalParcelProp
 debounce
 hold
 modifyBeforeUpdate
@@ -47,7 +42,6 @@ debugParcel
 # Child props
 $\{name\}
 $\{name\}Control
-$\{originalParcelProp\}
 `;
 
 export default () => <ApiPage

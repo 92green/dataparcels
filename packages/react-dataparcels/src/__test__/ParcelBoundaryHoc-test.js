@@ -183,7 +183,7 @@ test('ParcelBoundaryHoc should be not use pure rendering', () => {
     expect(propsGivenToParcelBoundary.pure).toBe(false);
 });
 
-test('ParcelBoundaryHoc config should optionally allow originalParcelProp to pass down original parcel', () => {
+test('ParcelBoundaryHoc should pass down originalParcel in ParcelBoundaryControl', () => {
     let testParcel = new Parcel({
         value: 789
     });
@@ -193,12 +193,11 @@ test('ParcelBoundaryHoc config should optionally allow originalParcelProp to pas
             testParcel
         },
         ParcelBoundaryHoc({
-            name: 'testParcel',
-            originalParcelProp: 'originalParcel'
+            name: 'testParcel'
         })
     ).dive().props();
 
-    expect(propsGivenToInnerComponent.originalParcel).toBe(testParcel);
+    expect(propsGivenToInnerComponent.testParcelControl.originalParcel).toBe(testParcel);
 });
 
 test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {

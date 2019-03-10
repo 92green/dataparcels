@@ -28,7 +28,6 @@ ParcelBoundaryHoc({
     name: string | (props: *) => string,
     debounce?: number | (props: *) => number,
     hold?: boolean | (props: *) => boolean,
-    originalParcelProp?: string | (props: *) => string,
     modifyBeforeUpdate: Array<ValueUpdater>,
     onCancel?: Array<(continueCancel: Function) => void>,
     onRelease?: Array<(continueRelease: Function) => void>,

@@ -23,6 +23,7 @@ It is passed a `parcel` and a ParcelBoundaryControl instance.
 - The `cancel()` function will cancel any changes in the buffer.
 - The `buffered` boolean indicates if the ParcelBoundary currently contains changes that it hasn't yet released.
 - The `buffer` array contains the actions that are currently held in the buffer.
+- `originalParcel` contains the Parcel that was passed into the ParcelBoundary, unaffected by any buffering or ParcelBoundary state.
 
 The return value of `childRenderer` will be rendered.
 
