@@ -219,8 +219,8 @@ test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {
     expect(propsGivenToParcelBoundary.modifyBeforeUpdate).toBe(modifyBeforeUpdate);
 });
 
-test('ParcelBoundaryHoc config.onCancel should accept function', () => {
-    let onCancel = cancel => cancel();
+test('ParcelBoundaryHoc config.onCancel should accept function array', () => {
+    let onCancel = [continueCancel => continueCancel()];
 
     let propsGivenToParcelBoundary = shallowRenderHoc(
         {
@@ -235,8 +235,8 @@ test('ParcelBoundaryHoc config.onCancel should accept function', () => {
     expect(propsGivenToParcelBoundary.onCancel).toBe(onCancel);
 });
 
-test('ParcelBoundaryHoc config.onRelease should accept function', () => {
-    let onRelease = release => release();
+test('ParcelBoundaryHoc config.onRelease should accept function array', () => {
+    let onRelease = [continueRelease => continueRelease()];
 
     let propsGivenToParcelBoundary = shallowRenderHoc(
         {

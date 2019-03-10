@@ -23,13 +23,15 @@ type AnyProps = {
     [key: string]: any
 };
 
+type ContinueChainFunction = (continueChain: () => void) => void;
+
 type ParcelBoundaryHocConfig = {
     name: string|((props: AnyProps) => string),
     debounce?: number|(props: AnyProps) => number,
     hold?: boolean|(props: AnyProps) => boolean,
     modifyBeforeUpdate?: Array<ParcelValueUpdater>,
-    onCancel?: (cancel: Function) => void,
-    onRelease?: (release: Function) => void,
+    onCancel?: Array<ContinueChainFunction>,
+    onRelease?: Array<ContinueChainFunction>,
     originalParcelProp?: string|(props: AnyProps) => string,
     debugBuffer?: boolean,
     debugParcel?: boolean
@@ -53,21 +55,29 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             let hold: boolean = fromProps(config.hold) || false;
             // $FlowFixMe
             let originalParcelProp: ?string = fromProps(config.originalParcelProp);
+
+            // function array config options
             let modifyBeforeUpdate: Array<ParcelValueUpdater> = config.modifyBeforeUpdate || [];
+            let onCancel: Array<ContinueChainFunction> = config.onCancel || [];
+            let onRelease: Array<ContinueChainFunction> = config.onRelease || [];
+
+            // debug config options
             let debugBuffer: boolean = config.debugBuffer || false;
             let debugParcel: boolean = config.debugParcel || false;
-            let onCancel: ?Function = config.onCancel || undefined;
-            let onRelease: ?Function = config.onRelease || undefined;
 
+            // type check normal config options
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.name", "string")(name);
             debounce && Types(PARCEL_BOUNDARY_HOC_NAME, "config.debounce", "number")(debounce);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.hold", "boolean")(hold);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugBuffer", "boolean")(debugBuffer);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
             originalParcelProp && Types(PARCEL_BOUNDARY_HOC_NAME, "config.originalParcelProp", "string")(originalParcelProp);
-            modifyBeforeUpdate.forEach((fn, index) => Types(PARCEL_BOUNDARY_HOC_NAME, `config.modifyBeforeUpdate[${index}]`, "function")(fn));
-            onCancel && Types(PARCEL_BOUNDARY_HOC_NAME, "config.onCancel", "function")(onCancel);
-            onRelease && Types(PARCEL_BOUNDARY_HOC_NAME, "config.onRelease", "function")(onRelease);
+
+            // type check function array config options
+            let checkFunctionArray = (name: string, array: Array<*>) => array.forEach((fn, index) => Types(PARCEL_BOUNDARY_HOC_NAME, `config.${name}[${index}]`, "function")(fn));
+            checkFunctionArray("modifyBeforeUpdate", modifyBeforeUpdate);
+            checkFunctionArray("onCancel", onCancel);
+            checkFunctionArray("onRelease", onRelease);
 
             let parcel = this.props[name];
             if(!parcel) {

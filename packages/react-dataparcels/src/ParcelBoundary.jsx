@@ -24,8 +24,8 @@ type Props = {
     hold: boolean,
     forceUpdate: Array<*>,
     modifyBeforeUpdate: Array<ParcelValueUpdater>,
-    onCancel: (cancel: Function) => void,
-    onRelease: (release: Function) => void,
+    onCancel: Array<(continueCancel: Function) => void>,
+    onRelease: Array<(continueRelease: Function) => void>,
     parcel: Parcel,
     pure: boolean,
     keepState: boolean
@@ -48,8 +48,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         hold: false,
         forceUpdate: [],
         modifyBeforeUpdate: [],
-        onCancel: cancel => cancel(),
-        onRelease: release => release(),
+        onCancel: [],
+        onRelease: [],
         pure: true,
         keepState: false
     };
@@ -288,11 +288,16 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         let handleCancel = () => this.setState(this.cancelBuffer());
         let handleRelease = () => this.setState(this.releaseBuffer());
 
+        let chain = (callbackArray, finalCallback) => callbackArray.reduceRight(
+            (continueChain, callback) => () => callback(continueChain),
+            finalCallback
+        );
+
         return children(
             ApplyModifyBeforeUpdate(modifyBeforeUpdate)(parcel),
             new ParcelBoundaryControl({
-                release: () => onRelease(handleRelease),
-                cancel: () => onCancel(handleCancel),
+                cancel: chain(onCancel, handleCancel),
+                release: chain(onRelease, handleRelease),
                 buffered: actions.length > 0,
                 buffer: actions
             })

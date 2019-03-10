@@ -30,8 +30,8 @@ ParcelBoundaryHoc({
     hold?: boolean | (props: *) => boolean,
     originalParcelProp?: string | (props: *) => string,
     modifyBeforeUpdate: Array<ValueUpdater>,
-    onCancel?: (cancel: Function) => void,
-    onRelease?: (release: Function) => void,
+    onCancel?: Array<(continueCancel: Function) => void>,
+    onRelease?: Array<(continueRelease: Function) => void>,
     // debugging options
     debugBuffer?: boolean,
     debugParcel?: boolean

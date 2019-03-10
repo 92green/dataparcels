@@ -179,28 +179,39 @@ test('ParcelBoundary should release changes when called', async () => {
 test('ParcelBoundary should use onRelease', async () => {
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
-    let onRelease = jest.fn();
+    let onRelease1 = jest.fn();
+    let onRelease2 = jest.fn();
 
     let parcel = new Parcel({
         handleChange
     });
 
-    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold onRelease={onRelease}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold onRelease={[onRelease1, onRelease2]}>
         {childRenderer}
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
     childParcel.onChange(123);
     wrapper.update();
+
+    // call release, then onRelease1 should have been called but no others
     childRenderer.mock.calls[1][1].release();
-
-    // onRelease should be called now because release() was called
-    expect(onRelease).toHaveBeenCalledTimes(1);
+    expect(onRelease1).toHaveBeenCalledTimes(1);
+    expect(onRelease2).not.toHaveBeenCalled();
     expect(handleChange).not.toHaveBeenCalled();
-    let release = onRelease.mock.calls[0][0];
 
-    // call release and then handleChange should have been called with the correct value
-    release();
+    // call release1, then onRelease2 should have been called
+    let release1 = onRelease1.mock.calls[0][0];
+    release1();
+    expect(onRelease1).toHaveBeenCalledTimes(1);
+    expect(onRelease2).toHaveBeenCalledTimes(1);
+    expect(handleChange).not.toHaveBeenCalled();
+
+    // call release2 and then handleChange should have been called
+    let release2 = onRelease2.mock.calls[0][0];
+    release2();
+    expect(onRelease1).toHaveBeenCalledTimes(1);
+    expect(onRelease2).toHaveBeenCalledTimes(1);
     expect(handleChange).toHaveBeenCalledTimes(1);
 });
 
@@ -244,33 +255,41 @@ test('ParcelBoundary should cancel changes when called', async () => {
 test('ParcelBoundary should onCancel', async () => {
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
-    let onCancel = jest.fn();
+    let onCancel1 = jest.fn();
+    let onCancel2 = jest.fn();
 
     let parcel = new Parcel({
         handleChange,
         value: 456
     });
 
-    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold onCancel={onCancel}>
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold onCancel={[onCancel1, onCancel2]}>
         {childRenderer}
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
     childParcel.onChange(123);
     wrapper.update();
-    childRenderer.mock.calls[1][1].cancel();
-
     let childRendererCalls = childRenderer.mock.calls.length;
 
-    // onCancel should be called now because cancel() was called
-    expect(onCancel).toHaveBeenCalledTimes(1);
-
+    // call cancel, then onCancel1 should have been called but no others
+    childRenderer.mock.calls[1][1].cancel();
+    expect(onCancel1).toHaveBeenCalledTimes(1);
+    expect(onCancel2).not.toHaveBeenCalled();
     // there should have been no re-render as the cancellation shouldn't have happened yet
     expect(childRenderer).toHaveBeenCalledTimes(childRendererCalls);
-    let cancel = onCancel.mock.calls[0][0];
+
+    // call cancel1, then onCancel2 should have been called
+    let cancel1 = onCancel1.mock.calls[0][0];
+    cancel1();
+    expect(onCancel1).toHaveBeenCalledTimes(1);
+    expect(onCancel2).toHaveBeenCalledTimes(1);
+    // there should have been no re-render as the cancellation shouldn't have happened yet
+    expect(childRenderer).toHaveBeenCalledTimes(childRendererCalls);
 
     // call cancel and then inside the parcel boundary, the original value should be reinstated
-    cancel();
+    let cancel2 = onCancel2.mock.calls[0][0];
+    cancel2();
     wrapper.update();
     let [childParcel2] = childRenderer.mock.calls[2];
     // inside the parcel boundary, the original value should be reinstated
