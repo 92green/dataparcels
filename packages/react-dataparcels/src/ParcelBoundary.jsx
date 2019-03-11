@@ -1,6 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import type ChangeRequest from 'dataparcels/ChangeRequest';
+import type {ContinueChainFunction} from 'dataparcels';
 import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
@@ -24,8 +25,8 @@ type Props = {
     hold: boolean,
     forceUpdate: Array<*>,
     modifyBeforeUpdate: Array<ParcelValueUpdater>,
-    onCancel: Array<(continueCancel: Function) => void>,
-    onRelease: Array<(continueRelease: Function) => void>,
+    onCancel: Array<ContinueChainFunction>,
+    onRelease: Array<ContinueChainFunction>,
     parcel: Parcel,
     pure: boolean,
     keepState: boolean
@@ -289,7 +290,15 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         let handleRelease = () => this.setState(this.releaseBuffer());
 
         let chain = (callbackArray, finalCallback) => callbackArray.reduceRight(
-            (continueChain, callback) => () => callback(continueChain),
+            (continueChain, callback) => () => {
+                let {cachedChangeRequest, parcel} = this.state;
+                return callback(
+                    continueChain,
+                    cachedChangeRequest && cachedChangeRequest._create({
+                        prevData: parcel.data
+                    })
+                );
+            },
             finalCallback
         );
 
