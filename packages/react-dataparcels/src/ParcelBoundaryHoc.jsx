@@ -2,6 +2,7 @@
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
 import type Parcel from 'dataparcels';
+import type {ContinueChainFunction} from 'dataparcels';
 import type {ParcelValueUpdater} from 'dataparcels';
 import type ParcelBoundaryControl from './ParcelBoundaryControl';
 
@@ -21,8 +22,6 @@ type ChildProps = {
 type AnyProps = {
     [key: string]: any
 };
-
-type ContinueChainFunction = (continueChain: () => void) => void;
 
 type ParcelBoundaryHocConfig = {
     name: string|((props: AnyProps) => string),
