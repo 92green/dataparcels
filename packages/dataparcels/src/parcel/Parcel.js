@@ -197,6 +197,10 @@ export default class Parcel {
 
         changeCatcher(this);
         this._onHandleChange = _onHandleChange;
+        // _changeAndReturn should not alter _lastOriginId
+        // as it's never triggered by a user action
+        // so revert to the current parcel's _lastOriginId
+        changedParcel._lastOriginId = this._lastOriginId;
         return changedParcel;
     };
 

@@ -36,6 +36,7 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
         },
         handleChange
     });
+    parcel._lastOriginId = "foo";
 
     let newParcel = parcel._changeAndReturn((parcel) => {
         parcel.get('abc').onChange(789);
@@ -57,6 +58,10 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     // also if new parcel's change methods are called, handleChange should be called as usual
     newParcel.get('abc').onChange(100);
     expect(handleChange).toHaveBeenCalledTimes(2);
+
+    // _changeAndReturn should not affect parcel._lastOriginId as it is an internal function
+    // that never corresponds to actions triggered by user input
+    expect(newParcel._lastOriginId).toBe("foo");
 });
 
 test('Parcel types should correctly identify primitive values', () => {
