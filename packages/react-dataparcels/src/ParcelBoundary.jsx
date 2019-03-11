@@ -59,7 +59,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     constructor(props: Props) {
         super(props);
 
-        let parcel = this.makeBoundarySplit(props.parcel);
+        let parcel = this.makeBoundarySplit(props.parcel)
+            ._changeAndReturn((parcel) => parcel
+                .pipe(ApplyModifyBeforeUpdate(props.modifyBeforeUpdate))
+                ._setData(parcel.data)
+            );
 
         this.state = {
             cachedChangeRequest: undefined,
