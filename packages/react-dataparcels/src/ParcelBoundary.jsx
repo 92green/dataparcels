@@ -11,9 +11,10 @@ import ParcelBoundaryControl from './ParcelBoundaryControl';
 import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 
-import set from 'unmutable/lib/set';
-import pipe from 'unmutable/lib/util/pipe';
-import shallowEquals from 'unmutable/lib/shallowEquals';
+import isNotEmpty from 'unmutable/isNotEmpty';
+import pipe from 'unmutable/pipe';
+import set from 'unmutable/set';
+import shallowEquals from 'unmutable/shallowEquals';
 
 type RenderFunction = (parcel: Parcel, control: ParcelBoundaryControl) => Node;
 
@@ -104,18 +105,20 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             parcel: parcelFromState
         } = state;
 
-        let updateState = parcel !== parcelFromProps;
+        let newState = {};
 
+        let newParcelFromProps = parcel !== parcelFromProps;
+        if(newParcelFromProps) {
+            newState.parcelFromProps = parcel;
+        }
+
+        let updateState = newParcelFromProps;
         if(keepState && parcel._lastOriginId.startsWith(parcel.id)) {
             // if keepState, don't update state if the last change came from within this parcel boundary
             updateState = false;
         }
 
         if(updateState) {
-            var newState: any = {
-                parcelFromProps: parcel
-            };
-
             if(!ParcelBoundaryEquals(parcelFromProps, parcel)) {
                 if(process.env.NODE_ENV !== 'production' && props.debugParcel) {
                     console.log(`ParcelBoundary: Parcel replaced from props:`); // eslint-disable-line
@@ -128,17 +131,15 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                 newState.cachedChangeRequest = undefined;
                 newState.changeCount = 0;
                 newState.parcel = makeBoundarySplit(parcel)
-                    ._changeAndReturn((parcel: Parcel) => parcel
+                    ._changeAndReturn((parcel) => parcel
                         .modifyDown(injectPreviousData)
                         .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
                         ._setData(parcel.data)
                     );
             }
-
-            return newState;
         }
 
-        return null;
+        return isNotEmpty()(newState) ? newState : null;
     }
 
     addToBuffer: Function = (changeRequest: ChangeRequest) => (state: State): State => {
