@@ -6,6 +6,7 @@ import type ParcelShape from '../ParcelShape';
 
 import parcelDelete from '../../parcelData/delete';
 import parcelSetSelf from '../../parcelData/setSelf';
+import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 import parcelUpdateIn from '../../parcelData/updateIn';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
@@ -37,7 +38,7 @@ export default (_this: ParcelShape) => ({
             parcelUpdateIn(
                 keyPath,
                 (parcelData) => {
-                    if(updater._isParcelUpdater) {
+                    if(shouldDangerouslyUpdateParcelData(updater)) {
                         return updater(parcelData);
                     }
                     let {value} = parcelData;

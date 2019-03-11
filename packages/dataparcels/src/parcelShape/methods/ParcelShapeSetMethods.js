@@ -5,6 +5,7 @@ import type {ParcelShapeSetMeta} from '../../types/Types';
 
 import parcelSetMeta from '../../parcelData/setMeta';
 import parcelSetSelf from '../../parcelData/setSelf';
+import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 export default (_this: ParcelShape) => ({
@@ -26,7 +27,7 @@ export default (_this: ParcelShape) => ({
     },
 
     update: (updater: ParcelShapeValueUpdater): ParcelShape => {
-        if(updater._isParcelUpdater) {
+        if(shouldDangerouslyUpdateParcelData(updater)) {
             return _this._pipeSelf(updater);
         }
 

@@ -6,6 +6,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
 import Parcel from 'dataparcels';
+import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
 
 import ParcelBoundaryControl from './ParcelBoundaryControl';
 import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
@@ -129,14 +130,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                     console.log(parcel.data); // eslint-disable-line
                 }
 
-                let injectPreviousData = () => parcelFromState.data;
-                injectPreviousData._isParcelUpdater = true;
-
                 newState.cachedChangeRequest = undefined;
                 newState.changeCount = 0;
                 newState.parcel = makeBoundarySplit(parcel)
                     ._changeAndReturn((parcel) => parcel
-                        .modifyDown(injectPreviousData)
+                        .modifyDown(dangerouslyUpdateParcelData(() => parcelFromState.data))
                         .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
                         ._setData(parcel.data)
                     );

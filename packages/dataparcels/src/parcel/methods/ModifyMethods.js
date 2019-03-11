@@ -10,6 +10,7 @@ import {checkCancellation} from '../../change/CancelActionMarker';
 import Types from '../../types/Types';
 import setSelf from '../../parcelData/setSelf';
 import setMetaDefault from '../../parcelData/setMetaDefault';
+import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 import HashString from '../../util/HashString';
@@ -21,7 +22,7 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
 let getModifierUpdater = (updater: ParcelValueUpdater): Function => {
-    return updater._isParcelUpdater
+    return shouldDangerouslyUpdateParcelData(updater)
         ? updater
         : (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
             let {value} = parcelData;
@@ -34,7 +35,7 @@ let getModifierUpdater = (updater: ParcelValueUpdater): Function => {
 export default (_this: Parcel): Object => ({
 
     _pushModifierId: (prefix: string, updater: Function): string => {
-        let id = updater._isParcelUpdater
+        let id = shouldDangerouslyUpdateParcelData(updater)
             ? `s${HashFunction(updater._updater || updater)}`
             : HashFunction(updater);
 
