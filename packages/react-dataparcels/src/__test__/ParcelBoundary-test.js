@@ -65,7 +65,7 @@ test('ParcelBoundary should pass a NEW *value equivalent* parcel to children whe
     expect(ParcelBoundaryEquals(childParcel2, parcel2)).toBe(true);
 });
 
-test('ParcelBoundary should lock state to props if debounce, hold and keepState are all false', () => {
+test('ParcelBoundary should lock state to props if debounce, hold and keepValue are all false', () => {
     let childRenderer = jest.fn();
 
     let parcel = new Parcel({value: 123});
@@ -482,7 +482,7 @@ test('ParcelBoundary should use an internal boundary split to stop parcel bounda
     expect(childParcelB2.value).toEqual({abc: 123, def: 456});
 });
 
-test('ParcelBoundary should ignore updates from props for updates caused by themselves if keepState is true', () => {
+test('ParcelBoundary should ignore updates from props for updates caused by themselves if keepValue is true', () => {
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
 
@@ -493,7 +493,7 @@ test('ParcelBoundary should ignore updates from props for updates caused by them
 
     let withModify = (parcel) => parcel.modifyUp(value => value + 1);
 
-    let wrapper = shallow(<ParcelBoundary parcel={withModify(parcel)} keepState>
+    let wrapper = shallow(<ParcelBoundary parcel={withModify(parcel)} keepValue>
         {childRenderer}
     </ParcelBoundary>);
 

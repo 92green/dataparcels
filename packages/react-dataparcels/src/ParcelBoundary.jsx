@@ -31,7 +31,7 @@ type Props = {
     onRelease: Array<ContinueChainFunction>,
     parcel: Parcel,
     pure: boolean,
-    keepState: boolean
+    keepValue: boolean
 };
 
 type State = {
@@ -54,7 +54,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         onCancel: [],
         onRelease: [],
         pure: true,
-        keepState: false
+        keepValue: false
     };
 
     constructor(props: Props) {
@@ -100,7 +100,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     static getDerivedStateFromProps(props: Props, state: State): * {
         let {
             parcel,
-            keepState,
+            keepValue,
             modifyBeforeUpdate
         } = props;
 
@@ -118,8 +118,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         }
 
         let updateState = newParcelFromProps;
-        if(keepState && parcel._lastOriginId.startsWith(parcel.id)) {
-            // if keepState, don't update state if the last change came from within this parcel boundary
+        if(keepValue && parcel._lastOriginId.startsWith(parcel.id)) {
+            // if keepValue, don't update state if the last change came from within this parcel boundary
             updateState = false;
         }
 
@@ -225,7 +225,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                     debounce,
                     debugParcel,
                     hold,
-                    keepState
+                    keepValue
                 } = this.props;
 
                 let {changeCount} = this.state;
@@ -241,7 +241,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
                 if(!debounce && !hold) {
                     this.setState(pipe(
-                        keepState ? updateParcel : ii => ii,
+                        keepValue ? updateParcel : ii => ii,
                         addToBuffer,
                         releaseBuffer
                     ));

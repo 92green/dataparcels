@@ -11,7 +11,7 @@ import Markdown_debounce from 'docs/api/parcelBoundary/debounce.md';
 import Markdown_hold from 'docs/api/parcelBoundary/hold.md';
 import Markdown_pure from 'docs/api/parcelBoundary/pure.md';
 import Markdown_modifyBeforeUpdate from 'docs/api/parcelBoundary/modifyBeforeUpdate.md';
-import Markdown_keepState from 'docs/api/parcelBoundary/keepState.md';
+import Markdown_keepValue from 'docs/api/parcelBoundary/keepValue.md';
 import Markdown_onCancel from 'docs/api/parcelBoundary/onCancel.md';
 import Markdown_onRelease from 'docs/api/parcelBoundary/onRelease.md';
 import Markdown_debugBuffer from 'docs/api/parcelBoundary/debugBuffer.md';
@@ -27,7 +27,7 @@ const md = {
     hold: Markdown_hold,
     modifyBeforeUpdate: Markdown_modifyBeforeUpdate,
     pure: Markdown_pure,
-    keepState: Markdown_keepState,
+    keepValue: Markdown_keepValue,
     onCancel: Markdown_onCancel,
     onRelease: Markdown_onRelease,
     debugBuffer: Markdown_debugBuffer,
@@ -45,7 +45,7 @@ pure
 forceUpdate
 hold
 modifyBeforeUpdate
-keepState
+keepValue
 onCancel
 onRelease
 debugBuffer

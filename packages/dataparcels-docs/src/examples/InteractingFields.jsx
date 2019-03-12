@@ -55,17 +55,17 @@ const AreaEditor = (props) => {
     let {sumParcel} = props;
     return <div>
         <label>a</label>
-        <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>b</label>
-        <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>sum</label>
-        <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
     </div>;

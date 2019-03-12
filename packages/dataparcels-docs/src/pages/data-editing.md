@@ -209,13 +209,13 @@ const NumberInput = (props) => {
         //   but cancel the change if the string
         //   could not be turned into a number
 
-    // without the keepState prop, typing "0.10"
+    // without the keepValue prop, typing "0.10"
     // would immediately be replaced with "0.1"
     // as the new value is turned into a number on the way up,
     // and into a string on the way down
     // which would make typing very frustrating
 
-    return <ParcelBoundary parcel={numberParcel} keepState>
+    return <ParcelBoundary parcel={numberParcel} keepValue>
         {(parcel) => <div>
             <input type="text" {...parcel.spreadDOM()} />
             {isNaN(Number(parcel.value)) && "Invalid number"}
@@ -486,17 +486,17 @@ const AreaEditor = (props) => {
     let {sumParcel} = props;
     return <div>
         <label>a</label>
-        <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>b</label>
-        <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>sum</label>
-        <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
     </div>;
