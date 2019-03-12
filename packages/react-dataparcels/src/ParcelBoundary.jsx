@@ -37,10 +37,13 @@ type Props = {
 type State = {
     cachedChangeRequest: ?ChangeRequest,
     changeCount: number,
+    lastValueFromSelf: any,
     makeBoundarySplit: Function,
     parcel: Parcel,
     parcelFromProps: Parcel
 };
+
+const valueEquals = (a, b): boolean => a === b || (isNaN(a) && isNaN(b));
 
 export default class ParcelBoundary extends React.Component<Props, State> { /* eslint-disable-line react/no-deprecated */
 
@@ -69,6 +72,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         this.state = {
             cachedChangeRequest: undefined,
             changeCount: 0,
+            lastValueFromSelf: parcel.value,
             makeBoundarySplit: this.makeBoundarySplit,
             parcel,
             parcelFromProps: parcel
@@ -105,6 +109,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         } = props;
 
         let {
+            lastValueFromSelf,
             makeBoundarySplit,
             parcelFromProps,
             parcel: parcelFromState
@@ -117,28 +122,37 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             newState.parcelFromProps = parcel;
         }
 
-        let updateState = newParcelFromProps;
-        if(keepValue && parcel._lastOriginId.startsWith(parcel.id)) {
-            // if keepValue, don't update state if the last change came from within this parcel boundary
-            updateState = false;
-        }
+        if(newParcelFromProps && !ParcelBoundaryEquals(parcelFromProps, parcel)) {
+            let newData = parcel.data;
 
-        if(updateState) {
-            if(!ParcelBoundaryEquals(parcelFromProps, parcel)) {
-                if(process.env.NODE_ENV !== 'production' && props.debugParcel) {
-                    console.log(`ParcelBoundary: Parcel replaced from props:`); // eslint-disable-line
-                    console.log(parcel.data); // eslint-disable-line
+            if(keepValue) {
+                let changedBySelf = parcel._lastOriginId.startsWith(parcel.id);
+                if(changedBySelf) {
+                    newState.lastValueFromSelf = parcel.value;
                 }
 
-                newState.cachedChangeRequest = undefined;
-                newState.changeCount = 0;
-                newState.parcel = makeBoundarySplit(parcel)
-                    ._changeAndReturn((parcel) => parcel
-                        .modifyDown(dangerouslyUpdateParcelData(() => parcelFromState.data))
-                        .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
-                        ._setData(parcel.data)
-                    );
+                if(changedBySelf || valueEquals(newData.value, lastValueFromSelf)) {
+                    newData = {
+                        ...parcelFromState.data,
+                        key: newData.key,
+                        meta: newData.meta
+                    };
+                }
             }
+
+            if(process.env.NODE_ENV !== 'production' && props.debugParcel) {
+                console.log(`ParcelBoundary: Parcel replaced from props:`); // eslint-disable-line
+                console.log(newData); // eslint-disable-line
+            }
+
+            newState.cachedChangeRequest = undefined;
+            newState.changeCount = 0;
+            newState.parcel = makeBoundarySplit(parcel)
+                ._changeAndReturn((parcel) => parcel
+                    .modifyDown(dangerouslyUpdateParcelData(() => parcelFromState.data))
+                    .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
+                    ._setData(newData)
+                );
         }
 
         return isNotEmpty()(newState) ? newState : null;
