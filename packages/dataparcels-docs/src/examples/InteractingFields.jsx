@@ -41,14 +41,18 @@ const SumParcelHoc = ParcelHoc({
     ]
 });
 
-// use the function from the "Modifying data to fit the UI" example
-// to turn numbers into strings on the way down
+// turn numbers into strings on the way down
 // and back into numbers on the way up
+// but stop any changes that result in NaN
+
+// numberToString is used in the Parcel.pipe() functions below
+// parcel.pipe(fn) is equivalent to fn(parcel)
+
 const numberToString = (parcel) => parcel
     .modifyDown(number => `${number}`)
     .modifyUp(string => {
         let number = Number(string);
-        return isNaN(number) ? CancelActionMarker : number;
+        return (string === "" || isNaN(number)) ? CancelActionMarker : number;
     });
 
 const AreaEditor = (props) => {

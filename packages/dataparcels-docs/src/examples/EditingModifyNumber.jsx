@@ -1,7 +1,6 @@
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
 import ExampleHoc from 'component/ExampleHoc';
 
 const NumberParcelHoc = ParcelHoc({
@@ -12,15 +11,11 @@ const NumberParcelHoc = ParcelHoc({
 const NumberInput = (props) => {
     let numberParcel = props
         .numberParcel
+        .modifyUp(string => Number(string))
         .modifyDown(number => `${number}`)
-        // ^ turn value into a string on the way down
-        .modifyUp(string => {
-            let number = Number(string);
-            return isNaN(number) ? CancelActionMarker : number;
-        });
-        // ^ turn value back into a number on the way up
-        //   but cancel the change if the string
-        //   could not be turned into a number
+
+    // ^ turn value into a string on the way down
+    // and turn value back into a number on the way up
 
     // without the keepValue prop, typing "0.10"
     // would immediately be replaced with "0.1"
@@ -29,10 +24,7 @@ const NumberInput = (props) => {
     // which would make typing very frustrating
 
     return <ParcelBoundary parcel={numberParcel} keepValue>
-        {(parcel) => <div>
-            <input type="text" {...parcel.spreadDOM()} />
-            {isNaN(Number(parcel.value)) && "Invalid number"}
-        </div>}
+        {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
     </ParcelBoundary>;
 };
 
@@ -40,7 +32,7 @@ const NumberEditor = (props) => {
     let {numberParcel} = props;
     return <div>
         <h4>Number > string</h4>
-        <p>Turns a stored number into a string for editing, and only allows changes that are valid numbers.</p>
+        <p>Turns a stored number into a string for editing.</p>
         <NumberInput numberParcel={numberParcel} />
     </div>;
 };
