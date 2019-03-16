@@ -59,5 +59,5 @@ export default () => <Box>
         </Box>}
         image={IconParcelBoundaryHoc}
     />
-    <Text element="p" modifier="margin">See also: <Link className="Link" to="/api/ParcelShape">ParcelShape</Link>, <Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link>, <Link className="Link" to="/api/CancelActionMarker">CancelActionMarker</Link>.</Text>
+    <Text element="p" modifier="margin">See also: <Link className="Link" to="/api/ParcelShape">ParcelShape</Link>, <Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link>, <Link className="Link" to="/api/CancelActionMarker">CancelActionMarker</Link>, <Link className="Link" to="/api/shape">shape</Link>.</Text>
 </Box>;
