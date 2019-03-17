@@ -1,9 +1,9 @@
 import Link from 'component/Link';
 
 ```flow
-onCancel?: Array<CancelFunction> // optional
+onCancel?: Array<ContinueChainFunction> // optional
 
-type CancelFunction = (continueCancel: Function) => void
+type ContinueChainFunction = (continueCancel: Function) => void
 ```
 
 The `onCancel` function array can be used to add behaviour before or after a ParcelBoundaryHoc cancels the changes in its buffer.

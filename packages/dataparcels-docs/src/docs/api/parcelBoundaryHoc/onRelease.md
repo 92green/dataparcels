@@ -1,9 +1,9 @@
 import Link from 'component/Link';
 
 ```flow
-onRelease?: Array<ReleaseFunction> // optional
+onRelease?: Array<ContinueChainFunction> // optional
 
-type ReleaseFunction = (continueRelease: Function) => void
+type ContinueChainFunction = (continueRelease: Function) => void
 ```
 
 The `onRelease` function array can be used to add behaviour before or after a ParcelBoundaryHoc releases the changes in its buffer.
