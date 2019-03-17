@@ -45,7 +45,7 @@ type State = {
     parcelFromProps: Parcel
 };
 
-const valueEquals = (a, b): boolean => a === b || (isNaN(a) && isNaN(b));
+const valueEquals = (a, b): boolean => a === b || (a !== a && b !== b);
 
 export default class ParcelBoundary extends React.Component<Props, State> { /* eslint-disable-line react/no-deprecated */
 
