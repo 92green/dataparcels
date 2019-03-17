@@ -40,9 +40,9 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 
 <Link to="/ui-behaviour">UI behaviour</Link> covers features that help the user interact with the data. This includes:
 - Creating forms with <Link to="/ui-behaviour#Submit-buttons-and-autosave">submit buttons or autosave</Link>
-- <Link to="/ui-behaviour#Validation">Validation</Link> on user input 🚀 🚧
-- <Link to="/ui-behaviour#Confirmation">Confirmation</Link> on important actions such as deleting 🚧
-- <Link to="/ui-behaviour#Selections">Selections</Link> of one or more items 🚧
+- <Link to="/ui-behaviour#Validation-on-user-input">Validation on user input</Link>
+- <Link to="/ui-behaviour#Confirmation">Confirmation</Link> on important actions such as deleting
+- <Link to="/ui-behaviour#Selections">Selections</Link> of one or more items
 - <Link to="/ui-behaviour#Drag-and-drop-sorting">Drag and drop sorting</Link> of arrays of items
 - <Link to="/ui-behaviour#Debouncing-changes">Debouncing changes</Link> for improved performance
 - <Link to="/ui-behaviour#Pure-rendering">Pure rendering</Link> for improved rendering performance
@@ -54,7 +54,7 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 - Coping with <Link to="/data-synchronisation#Sending-failable-requests">sending failable requests</Link>, such as saving data to a server 🚧
 - <Link to="/data-synchronisation#Sending-partial-requests">Sending partial requests</Link>, such as making requests to save individual items in a list 🚧
 - <Link to="/data-synchronisation#Caching-unsaved-changes">Caching unsaved changes</Link> so data is not lost if it is not yet saved and the page unloads 🚧
-- How to <Link to="/data-synchronisation#Retaining-Parcel-keys">retain Parcel keys</Link>, so a ParcelHoc can change its value via props, and unsaved changes will still be able to apply to the right pieces of data 🚧
+- How to <Link to="/data-synchronisation#Retaining-Parcel-keys">retain Parcel keys</Link>, so a ParcelHoc can change its value via props, and unsaved changes will still be able to apply to the right pieces of data  🚀 🚧
 
 
 <p className="Text Text-small Text-emphasis">🚧 indicates that either the feature or example is still in development</p>

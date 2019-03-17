@@ -1,10 +1,13 @@
 import Link from 'gatsby-link';
 import SubmitButton from 'examples/SubmitButton';
+import ValidationExample from 'examples/ValidationExample';
 import Autosave from 'examples/Autosave';
 import EditingArraysDrag from 'examples/EditingArraysDrag';
 import EditingArraysFlipMove from 'examples/EditingArraysFlipMove';
 import ParcelBoundaryDebounce from 'examples/ParcelBoundaryDebounce';
 import ParcelBoundaryPure from 'examples/ParcelBoundaryPure';
+import ParcelMetaConfirmingDeletions from 'examples/ParcelMetaConfirmingDeletions';
+import ParcelMetaSelections from 'examples/ParcelMetaSelections';
 import {Divider} from 'dcme-style';
 
 # UI Behaviour
@@ -129,21 +132,225 @@ export default composeWith(
 
 ## Validation on user input
 
-* 📐 Feature in design phase
+Dataparcels' [Validation plugin](/api/Validation) provides an easy way to test whether data conforms to a set of validation rules, show errors to the user, and prevent changes from being released until the data is valid.
+
+Try removing the value of the `name` field, or choosing a non-numeric or negative value for the amount of animals.
+
+<ValidationExample />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import ParcelBoundaryHoc from 'react-dataparcels/ParcelBoundaryHoc';
+import Validation from 'react-dataparcels/Validation';
+import composeWith from 'unmutable/composeWith';
+
+const numberToString = (parcel) => parcel
+    .modifyDown(number => `${number}`)
+    .modifyUp(string => Number(string));
+
+const InputWithError = (parcel) => <div>
+    <input type="text" {...parcel.spreadDOM()} />
+    {parcel.meta.invalid && `Error: ${parcel.meta.invalid}`}
+</div>;
+
+const AnimalEditor = (props) => {
+    let {animalParcel, animalParcelControl} = props;
+    let {valid} = animalParcel.meta;
+
+    return <div>
+        <label>name</label>
+        <ParcelBoundary parcel={animalParcel.get('name')}>
+            {InputWithError}
+        </ParcelBoundary>
+
+        <div className="Box Box-paddingLeft">
+            {animalParcel.get('animals').toArray((animalParcel) => {
+                return <ParcelBoundary parcel={animalParcel} key={animalParcel.key}>
+                    {(animalParcel) => <div>
+                        <label>type</label>
+                        <ParcelBoundary parcel={animalParcel.get('type')}>
+                            {InputWithError}
+                        </ParcelBoundary>
+
+                        <label>amount</label>
+                        <ParcelBoundary parcel={animalParcel.get('amount').pipe(numberToString)} keepValue>
+                            {InputWithError}
+                        </ParcelBoundary>
+
+                        <button onClick={() => animalParcel.swapPrev()}>^</button>
+                        <button onClick={() => animalParcel.swapNext()}>v</button>
+                        <button onClick={() => animalParcel.delete()}>x</button>
+                    </div>}
+                </ParcelBoundary>;
+            })}
+            <button onClick={() => animalParcel.get('animals').push({type: "?", amount: 0})}>Add new animal</button>
+        </div>
+
+        <button onClick={() => valid && animalParcelControl.release()}>{valid ? "Submit" : "Can't submit"}</button>
+        <button onClick={() => animalParcelControl.cancel()}>Cancel</button>
+    </div>;
+};
+
+const validateStringNotBlank = (name) => (value) => {
+    return (!value || value.trim().length === 0) && `${name} must not be blank`;
+};
+
+const validateInteger = (name) => (value) => {
+    return !Number.isInteger(value) && `${name} must be a whole number`;
+};
+
+const validatePositiveNumber = (name) => (value) => {
+    return value < 0 && `${name} must not be negative`;
+};
+
+const validation = Validation({
+    'name': validateStringNotBlank("Name"),
+    'animals.*.type': validateStringNotBlank("Animal type"),
+    'animals.*.amount': [
+        validateInteger("Animal amount"),
+        validatePositiveNumber("Animal amount")
+    ]
+});
+
+// unmutable's composeWith(a,b,c) is equivalent to a(b(c))
+
+export default composeWith(
+    ParcelHoc({
+        name: "animalParcel",
+        valueFromProps: (/* props */) => ({
+            name: "Robert Clamps",
+            animals: [
+                {type: "Sheep", amount: 6}
+            ]
+        })
+    }),
+    ParcelBoundaryHoc({
+        name: "animalParcel",
+        hold: true,
+        modifyBeforeUpdate: [validation.modifyBeforeUpdate]
+    }),
+    AnimalEditor
+);
+
+```
 
 <Divider />
 
 ## Confirmation
 
-* 👍 Necessary features complete
-* 🚧 Example under construction
+This example shows how to display a confirmation message with options. Try deleting an item in the demo below.
+
+This uses [parcel meta](/parcel-meta), a generic way of storing extra data that pertains to parts of a data shape. In this case, `confirming` is being stored against each element in the array.
+
+<ParcelMetaConfirmingDeletions />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import ExampleHoc from 'component/ExampleHoc';
+
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
+    valueFromProps: (/* props */) => [
+        "Apple",
+        "Banana",
+        "Crumpets"
+    ]
+});
+
+const FruitListEditor = (props) => {
+    let {fruitListParcel} = props;
+    return <div>
+        {fruitListParcel.toArray((fruitParcel) => {
+            return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
+                {(parcel) => <div>
+                    <input type="text" {...parcel.spreadDOM()} />
+                    {parcel.meta.confirming
+                        ? <span>Are you sure?
+                            <button onClick={() => parcel.delete()}>yes</button>
+                            <button onClick={() => parcel.setMeta({confirming: false})}>no</button>
+                        </span>
+                        : <button onClick={() => parcel.setMeta({confirming: true})}>x</button>}
+                </div>}
+            </ParcelBoundary>;
+        })}
+        <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
+    </div>;
+};
+
+export default FruitListParcelHoc(FruitListEditor);
+```
+
+### What's going on
+* Clicking on an "x" button sets the `meta.confirming` state to `true`, which renders a choice of two buttons.
+* "No" sets `meta.confirming` back to false again, while "Yes" calls [delete()](/api/Parcel#delete) method on the Parcel.
+* Notice how the meta always relates to the correct element, even if other elements are deleted.
 
 <Divider />
 
 ## Selections
 
-* 👍 Necessary features complete
-* 🚧 Example under construction
+This example shows how to use meta stored against each element in an array to keep track of which items have been selected.
+
+<ParcelMetaSelections />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
+    valueFromProps: (/* props */) => [
+        "Apple",
+        "Banana",
+        "Crumpets"
+    ]
+});
+
+const FruitListEditor = (props) => {
+    let {fruitListParcel} = props;
+
+    let selectedFruit = fruitListParcel
+        .toArray()
+        .filter(fruitParcel => fruitParcel.meta.selected)
+        .map(fruitParcel => fruitParcel.value);
+
+    return <div>
+        {fruitListParcel.toArray((fruitParcel) => {
+            return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
+                {(parcel) => {
+                    let checkboxProps = {
+                        checked: !!parcel.meta.selected,
+                        onChange: (event) => parcel.setMeta({
+                            selected: event.currentTarget.checked
+                        })
+                    };
+
+                    return <div>
+                        <input type="text" {...parcel.spreadDOM()} />
+                        <input type="checkbox" {...checkboxProps} />
+                        <button onClick={() => parcel.swapPrev()}>^</button>
+                        <button onClick={() => parcel.swapNext()}>v</button>
+                        <button onClick={() => parcel.delete()}>x</button>
+                    </div>;
+                }}
+            </ParcelBoundary>;
+        })}
+        <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
+        <h4>Selected fruit:</h4>
+        <ul>
+            {selectedFruit.map((fruit, key) => <li key={key}>{fruit}</li>)}
+        </ul>
+    </div>;
+};
+
+export default FruitListParcelHoc(FruitListEditor);
+
+```
 
 <Divider />
 
