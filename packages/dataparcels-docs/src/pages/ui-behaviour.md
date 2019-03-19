@@ -301,6 +301,7 @@ This example shows how to use meta stored against each element in an array to ke
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import shape from 'react-dataparcels/shape';
 
 const FruitListParcelHoc = ParcelHoc({
     name: "fruitListParcel",
@@ -316,8 +317,12 @@ const FruitListEditor = (props) => {
 
     let selectedFruit = fruitListParcel
         .toArray()
-        .filter(fruitParcel => fruitParcel.meta.selected)
-        .map(fruitParcel => fruitParcel.value);
+        .filter(fruit => fruit.meta.selected);
+
+    let allSelected = fruitListParcel.value.length === selectedFruit.length;
+    let selectAll = (selected) => fruitListParcel.map(shape(
+        fruit => fruit.setMeta({selected})
+    ));
 
     return <div>
         {fruitListParcel.toArray((fruitParcel) => {
@@ -332,7 +337,7 @@ const FruitListEditor = (props) => {
 
                     return <div>
                         <input type="text" {...parcel.spreadDOM()} />
-                        <input type="checkbox" {...checkboxProps} />
+                        <input type="checkbox" style={{width: '2rem'}} {...checkboxProps} />
                         <button onClick={() => parcel.swapPrev()}>^</button>
                         <button onClick={() => parcel.swapNext()}>v</button>
                         <button onClick={() => parcel.delete()}>x</button>
@@ -341,9 +346,18 @@ const FruitListEditor = (props) => {
             </ParcelBoundary>;
         })}
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
+        {allSelected
+            ? <button onClick={() => selectAll(false)}>Select none</button>
+            : <button onClick={() => selectAll(true)}>Select all</button>
+        }
         <h4>Selected fruit:</h4>
         <ul>
-            {selectedFruit.map((fruit, key) => <li key={key}>{fruit}</li>)}
+            {selectedFruit.map((fruitParcel) => {
+                return <li key={fruitParcel.key}>
+                    <button onClick={() => fruitParcel.setMeta({selected: false})}>x</button>
+                    {fruitParcel.value}
+                </li>;
+            })}
         </ul>
     </div>;
 };
@@ -548,13 +562,6 @@ const PersonEditor = (props) => {
         <ParcelBoundary parcel={personParcel.get('age')}>
             {(age) => <DebugRender>
                 <input type="text" {...age.spreadDOM()} />
-            </DebugRender>}
-        </ParcelBoundary>
-
-        <label>height (not pure)</label>
-        <ParcelBoundary parcel={personParcel.get('height')} pure={false}>
-            {(height) => <DebugRender>
-                <input type="text" {...height.spreadDOM()} />
             </DebugRender>}
         </ParcelBoundary>
     </div>;
