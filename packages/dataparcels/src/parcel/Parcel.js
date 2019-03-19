@@ -330,6 +330,7 @@ export default class Parcel {
         ["1"]: (key: Key|Index) => this._methods.delete(key)
     });
     deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
+    map = (updater: ParcelValueUpdater) => this._methods.map(updater);
 
     // Advanced change methods
     setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
@@ -344,7 +345,6 @@ export default class Parcel {
         ["1"]: (value: any) => this._methods.insertBeforeSelf(value),
         ["2"]: (key: Key|Index, value: any) => this._methods.insertBefore(key, value)
     });
-    map = (updater: ParcelValueUpdater) => this._methods.map(updater);
     move = overload({
         ["1"]: (key: Key|Index) => this._methods.moveSelf(key),
         ["2"]: (keyA: Key|Index, keyB: Key|Index) => this._methods.move(keyA, keyB)
