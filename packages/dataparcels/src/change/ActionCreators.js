@@ -49,6 +49,15 @@ const insertBeforeSelf: Function = (value: *): Action => {
     });
 };
 
+const map: Function = (updater: Function): Action => {
+    return new Action({
+        type: "map",
+        payload: {
+            updater
+        }
+    });
+};
+
 const move: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
     return new Action({
         type: "move",
@@ -174,6 +183,7 @@ export default {
     insertAfterSelf,
     insertBefore,
     insertBeforeSelf,
+    map,
     move,
     moveSelf,
     push,
