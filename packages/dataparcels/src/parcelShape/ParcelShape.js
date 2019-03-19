@@ -208,6 +208,7 @@ export default class ParcelShape {
         ["2"]: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => this.updateIn([key], updater)
     });
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateIn(keyPath, updater);
+    map = (updater: ParcelShapeValueUpdater) => this._methods.map(updater);
 
     // Indexed methods
     insertAfter = (key: Key|Index, value: any) => this._methods.insertAfter(key, value);

@@ -6,9 +6,9 @@ import type ParcelShape from '../ParcelShape';
 
 import parcelDelete from '../../parcelData/delete';
 import parcelSetSelf from '../../parcelData/setSelf';
-import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
+import parcelMap from '../../parcelData/map';
+import prepUpdater from '../../parcelData/prepUpdater';
 import parcelUpdateIn from '../../parcelData/updateIn';
-import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 import butLast from 'unmutable/lib/butLast';
 import last from 'unmutable/lib/last';
@@ -35,18 +35,14 @@ export default (_this: ParcelShape) => ({
     updateIn: (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            parcelUpdateIn(
-                keyPath,
-                (parcelData) => {
-                    if(shouldDangerouslyUpdateParcelData(updater)) {
-                        return updater(parcelData);
-                    }
-                    let {value} = parcelData;
-                    let updatedValue = updater(value);
-                    ValidateValueUpdater(value, updatedValue);
-                    return parcelSetSelf(updatedValue)(parcelData);
-                }
-            )
+            parcelUpdateIn(keyPath, prepUpdater(updater))
+        );
+    },
+
+    map: (updater: ParcelShapeValueUpdater): ParcelShape => {
+        _this._prepareChildKeys();
+        return _this._pipeSelf(
+            parcelMap(prepUpdater(updater))
         );
     }
 });
