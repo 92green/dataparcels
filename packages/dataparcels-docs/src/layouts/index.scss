@@ -84,8 +84,14 @@
     }
 }
 @include DcmeTypography {
+    h2, h3 {
+        margin-top: 3rem;
+    }
     input {
         background: #FFF;
+    }
+    .Message {
+        margin-bottom: 1.5rem;
     }
 }
 @include DcmeWrapper;

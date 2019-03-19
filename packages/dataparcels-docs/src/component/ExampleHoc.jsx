@@ -33,7 +33,7 @@ const stringify = (value) => {
 export default (Component: ComponentType<*>) => class Example extends Layout<Props> {
     static elements = ['demo', 'data'];
 
-    static layout = ({demo, data}) => <Box modifier="paddingRowKilo example">
+    static layout = ({demo, data}) => <Box modifier="paddingBottomKilo example">
         <Box modifier="exampleInner">
             <Grid>
                 <GridItem modifier="6 padding">
