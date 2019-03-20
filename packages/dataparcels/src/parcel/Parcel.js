@@ -178,6 +178,8 @@ export default class Parcel {
         );
     };
 
+    _createNew = ({value, handleChange}: any): Parcel => new Parcel({value, handleChange});
+
     _dispatchToParent = (changeRequest: ChangeRequest) => {
         let parcel = this._registry[this._dispatchId];
         if(parcel) {
@@ -298,6 +300,7 @@ export default class Parcel {
     children = (mapper: ParcelMapper = _ => _): ParentType<Parcel> => this._methods.children(mapper);
     toObject = (mapper: ParcelMapper = _ => _): { [key: string]: Parcel } => this._methods.toObject(mapper);
     toArray = (mapper: ParcelMapper = _ => _): Array<Parcel> => this._methods.toArray(mapper);
+    metaAsParcel = (key: string): Parcel => this._methods.metaAsParcel(key);
 
     // Parent methods
     has = (key: Key|Index): boolean => this._methods.has(key);
