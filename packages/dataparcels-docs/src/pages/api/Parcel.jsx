@@ -27,6 +27,7 @@ import Markdown_set from 'docs/api/parcel/set.md';
 import Markdown_setIn from 'docs/api/parcel/setIn.md';
 import Markdown_update from 'docs/api/parcel/update.md';
 import Markdown_updateIn from 'docs/api/parcel/updateIn.md';
+import Markdown_map from 'docs/api/parcel/map.md';
 import Markdown_delete from 'docs/api/parcel/delete.md';
 import Markdown_deleteIn from 'docs/api/parcel/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/parcel/insertAfter.md';
@@ -80,6 +81,7 @@ const md = {
     setIn: Markdown_setIn,
     update: Markdown_update,
     updateIn: Markdown_updateIn,
+    map: Markdown_map,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
@@ -141,6 +143,7 @@ delete()
 deleteIn()
 update()
 updateIn()
+map()
 setMeta()
 dispatch()
 
