@@ -17,6 +17,7 @@ import Markdown_getIn from 'docs/api/parcel/getIn.md';
 import Markdown_children from 'docs/api/parcel/children.md';
 import Markdown_toObject from 'docs/api/parcel/toObject.md';
 import Markdown_toArray from 'docs/api/parcel/toArray.md';
+import Markdown_metaAsParcel from 'docs/api/parcel/metaAsParcel.md';
 import Markdown_has from 'docs/api/parcel/has.md';
 import Markdown_size from 'docs/api/parcel/size.md';
 import Markdown_isFirst from 'docs/api/parcel/isFirst.md';
@@ -71,6 +72,7 @@ const md = {
     children: Markdown_children,
     toObject: Markdown_toObject,
     toArray: Markdown_toArray,
+    metaAsParcel: Markdown_metaAsParcel,
     has: Markdown_has,
     size: Markdown_size,
     isFirst: Markdown_isFirst,
@@ -125,6 +127,7 @@ getIn()
 children()
 toObject()
 toArray()
+metaAsParcel()
 
 # Input binding methods
 spread()

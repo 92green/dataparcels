@@ -328,11 +328,11 @@ const FruitListEditor = (props) => {
         {fruitListParcel.toArray((fruitParcel) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => {
+                    let selectedParcel = parcel.metaAsParcel('selected');
+                    
                     let checkboxProps = {
-                        checked: !!parcel.meta.selected,
-                        onChange: (event) => parcel.setMeta({
-                            selected: event.currentTarget.checked
-                        })
+                        checked: !!selectedParcel.value,
+                        onChange: (event) => selectedParcel.set(event.currentTarget.checked)
                     };
 
                     return <div>
