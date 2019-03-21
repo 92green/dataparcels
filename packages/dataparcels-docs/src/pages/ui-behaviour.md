@@ -501,9 +501,7 @@ export default FoodParcelHoc(FoodEditor);
 
 ## Pure rendering
 
-Pure rendering is achieved through the use of <Link to="/api/ParcelBoundary">ParcelBoundaries</Link>. In this example, ParcelBoundaries render as coloured boxes. As you type in an input, the colours will change to indicate which ParcelBoundaries have re-rendered. 
-
-Note how the `height` field has a prop of `pure={false}`, and therefore updates every time there is a change.
+Pure rendering is achieved automatically through the use of <Link to="/api/ParcelBoundary">ParcelBoundaries</Link>. In this example, ParcelBoundaries render as coloured boxes. As you type in an input, the colours will change to indicate which ParcelBoundaries have re-rendered. 
 
 <ParcelBoundaryPure />
 
