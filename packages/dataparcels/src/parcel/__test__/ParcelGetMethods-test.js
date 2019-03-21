@@ -149,3 +149,14 @@ test('Parcel.pipe() should pass itself in and return what pipe() returns', () =>
     expect(updater2.mock.calls[0][0]).toBe(parcel1);
     expect(result).toBe(parcel2);
 });
+
+test('Parcel.metaAsParcel() shouldcreate a parcel out of meta', () => {
+    let handleChange = jest.fn();
+
+    var parcel = new Parcel({
+        handleChange
+    });
+    parcel.metaAsParcel('cool').set('???');
+
+    expect(handleChange.mock.calls[0][0].meta.cool).toBe('???');
+});

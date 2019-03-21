@@ -3,9 +3,13 @@ import Link from 'component/Link';
 import ValueUpdater from 'docs/notes/ValueUpdater.md';
 
 ```flow
-modifyBeforeUpdate?: Array<ValueUpdater>
+modifyBeforeUpdate?: Array<Updater>
 
-type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
+// updating value - only to be used if shape doesn't change
+type Updater = (value: any, changeRequest: ChangeRequest) => any;
+
+// updating shape, including meta
+type Updater = shape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
 ```
 
 The `modifyBeforeUpdate` config option allows derived data to be set on the Parcel in the ParcelBoundaryHoc.

@@ -11,7 +11,6 @@ import take from 'unmutable/lib/take';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
-
 import {ReducerInvalidActionError} from '../errors/Errors';
 import {ReducerInvalidStepError} from '../errors/Errors';
 import {isCancelledError} from './CancelActionMarker';
@@ -20,6 +19,7 @@ import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
+import map from '../parcelData/map';
 import move from '../parcelData/move';
 import pop from '../parcelData/pop';
 import push from '../parcelData/push';
@@ -36,6 +36,7 @@ const actionMap = {
     delete: ({lastKey}) => del(lastKey),
     insertAfter: ({lastKey, value}) => insertAfter(lastKey, value),
     insertBefore: ({lastKey, value}) => insertBefore(lastKey, value),
+    map: ({updater}) => map(updater),
     move: ({lastKey, moveKey}) => move(lastKey, moveKey),
     pop: () => pop(),
     push: ({values}) => push(...values),

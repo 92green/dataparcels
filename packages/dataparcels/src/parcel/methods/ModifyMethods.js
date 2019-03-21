@@ -8,9 +8,9 @@ import type {ParcelValueUpdater} from '../../types/Types';
 
 import {checkCancellation} from '../../change/CancelActionMarker';
 import Types from '../../types/Types';
-import setSelf from '../../parcelData/setSelf';
+import prepUpdater from '../../parcelData/prepUpdater';
 import setMetaDefault from '../../parcelData/setMetaDefault';
-import ValidateValueUpdater from '../../util/ValidateValueUpdater';
+import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 
 import HashString from '../../util/HashString';
 
@@ -20,21 +20,10 @@ import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 
-let getModifierUpdater = (updater: ParcelValueUpdater): Function => {
-    return updater._isParcelUpdater
-        ? updater
-        : (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
-            let {value} = parcelData;
-            let updatedValue = updater(value, changeRequest);
-            ValidateValueUpdater(value, updatedValue);
-            return setSelf(updatedValue)(parcelData);
-        };
-};
-
 export default (_this: Parcel): Object => ({
 
     _pushModifierId: (prefix: string, updater: Function): string => {
-        let id = updater._isParcelUpdater
+        let id = shouldDangerouslyUpdateParcelData(updater)
             ? `s${HashFunction(updater._updater || updater)}`
             : HashFunction(updater);
 
@@ -43,7 +32,7 @@ export default (_this: Parcel): Object => ({
 
     modifyDown: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyDown()`, `updater`, `function`)(updater);
-        let parcelDataUpdater: ParcelDataEvaluator = getModifierUpdater(updater);
+        let parcelDataUpdater: ParcelDataEvaluator = prepUpdater(updater);
         return _this._create({
             id: _this._methods._pushModifierId('md', updater),
             parcelData: parcelDataUpdater(_this._parcelData),
@@ -57,7 +46,7 @@ export default (_this: Parcel): Object => ({
     modifyUp: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyUp()`, `updater`, `function`)(updater);
         let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
-            let nextData = getModifierUpdater(updater)(parcelData, changeRequest);
+            let nextData = prepUpdater(updater)(parcelData, changeRequest);
             return checkCancellation(nextData);
         };
 

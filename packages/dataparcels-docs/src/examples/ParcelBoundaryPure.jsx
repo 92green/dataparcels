@@ -55,13 +55,6 @@ const PersonEditor = (props) => {
                 <input type="text" {...age.spreadDOM()} />
             </DebugRender>}
         </ParcelBoundary>
-
-        <label>height (not pure)</label>
-        <ParcelBoundary parcel={personParcel.get('height')} pure={false}>
-            {(height) => <DebugRender>
-                <input type="text" {...height.spreadDOM()} />
-            </DebugRender>}
-        </ParcelBoundary>
     </div>;
 };
 

@@ -178,6 +178,8 @@ export default class Parcel {
         );
     };
 
+    _createNew = ({value, handleChange}: any): Parcel => new Parcel({value, handleChange});
+
     _dispatchToParent = (changeRequest: ChangeRequest) => {
         let parcel = this._registry[this._dispatchId];
         if(parcel) {
@@ -197,6 +199,10 @@ export default class Parcel {
 
         changeCatcher(this);
         this._onHandleChange = _onHandleChange;
+        // _changeAndReturn should not alter _lastOriginId
+        // as it's never triggered by a user action
+        // so revert to the current parcel's _lastOriginId
+        changedParcel._lastOriginId = this._lastOriginId;
         return changedParcel;
     };
 
@@ -294,6 +300,7 @@ export default class Parcel {
     children = (mapper: ParcelMapper = _ => _): ParentType<Parcel> => this._methods.children(mapper);
     toObject = (mapper: ParcelMapper = _ => _): { [key: string]: Parcel } => this._methods.toObject(mapper);
     toArray = (mapper: ParcelMapper = _ => _): Array<Parcel> => this._methods.toArray(mapper);
+    metaAsParcel = (key: string): Parcel => this._methods.metaAsParcel(key);
 
     // Parent methods
     has = (key: Key|Index): boolean => this._methods.has(key);
@@ -326,6 +333,7 @@ export default class Parcel {
         ["1"]: (key: Key|Index) => this._methods.delete(key)
     });
     deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
+    map = (updater: ParcelValueUpdater) => this._methods.map(updater);
 
     // Advanced change methods
     setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);

@@ -183,7 +183,7 @@ test('ParcelBoundaryHoc should be not use pure rendering', () => {
     expect(propsGivenToParcelBoundary.pure).toBe(false);
 });
 
-test('ParcelBoundaryHoc config should optionally allow originalParcelProp to pass down original parcel', () => {
+test('ParcelBoundaryHoc should pass down originalParcel in ParcelBoundaryControl', () => {
     let testParcel = new Parcel({
         value: 789
     });
@@ -193,12 +193,11 @@ test('ParcelBoundaryHoc config should optionally allow originalParcelProp to pas
             testParcel
         },
         ParcelBoundaryHoc({
-            name: 'testParcel',
-            originalParcelProp: 'originalParcel'
+            name: 'testParcel'
         })
     ).dive().props();
 
-    expect(propsGivenToInnerComponent.originalParcel).toBe(testParcel);
+    expect(propsGivenToInnerComponent.testParcelControl.originalParcel).toBe(testParcel);
 });
 
 test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {
@@ -217,4 +216,36 @@ test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {
     ).props();
 
     expect(propsGivenToParcelBoundary.modifyBeforeUpdate).toBe(modifyBeforeUpdate);
+});
+
+test('ParcelBoundaryHoc config.onCancel should accept function array', () => {
+    let onCancel = [continueCancel => continueCancel()];
+
+    let propsGivenToParcelBoundary = shallowRenderHoc(
+        {
+            testParcel: new Parcel()
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel',
+            onCancel
+        })
+    ).props();
+
+    expect(propsGivenToParcelBoundary.onCancel).toBe(onCancel);
+});
+
+test('ParcelBoundaryHoc config.onRelease should accept function array', () => {
+    let onRelease = [continueRelease => continueRelease()];
+
+    let propsGivenToParcelBoundary = shallowRenderHoc(
+        {
+            testParcel: new Parcel()
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel',
+            onRelease
+        })
+    ).props();
+
+    expect(propsGivenToParcelBoundary.onRelease).toBe(onRelease);
 });

@@ -26,16 +26,16 @@ import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
     parcel={Parcel}
     debounce={?number}
     pure={?boolean}
-    forceUpdate={?Array<*>}
+    forceUpdate={?Array<any>}
     hold={?boolean}
-    modifyBeforeUpdate={?Array<ValueUpdater>}
+    modifyBeforeUpdate={?Array<Function>}
+    onCancel={?Array<Function>}
+    onRelease={?Array<Function>}
     debugBuffer={?boolean}
     debugParcel={?boolean}
 >
     {(parcel, control) => Node}
 </ParcelBoundary>
-
-type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 ```
 
 <Box modifier="margin">

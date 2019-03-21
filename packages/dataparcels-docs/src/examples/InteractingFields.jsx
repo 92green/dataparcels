@@ -41,31 +41,35 @@ const SumParcelHoc = ParcelHoc({
     ]
 });
 
-// use the function from the "Modifying data to fit the UI" example
-// to turn numbers into strings on the way down
+// turn numbers into strings on the way down
 // and back into numbers on the way up
+// but stop any changes that result in NaN
+
+// numberToString is used in the Parcel.pipe() functions below
+// parcel.pipe(fn) is equivalent to fn(parcel)
+
 const numberToString = (parcel) => parcel
     .modifyDown(number => `${number}`)
     .modifyUp(string => {
         let number = Number(string);
-        return isNaN(number) ? CancelActionMarker : number;
+        return (string === "" || isNaN(number)) ? CancelActionMarker : number;
     });
 
 const AreaEditor = (props) => {
     let {sumParcel} = props;
     return <div>
         <label>a</label>
-        <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>b</label>
-        <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>sum</label>
-        <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
     </div>;

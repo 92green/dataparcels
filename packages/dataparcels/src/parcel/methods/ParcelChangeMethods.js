@@ -7,6 +7,7 @@ import Types from '../../types/Types';
 
 import ChangeRequest from '../../change/ChangeRequest';
 import ActionCreators from '../../change/ActionCreators';
+import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 export default (_this: Parcel) => ({
@@ -62,7 +63,7 @@ export default (_this: Parcel) => ({
 
     updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf()`, `updater`, `function`)(updater);
-        if(updater._isParcelUpdater) {
+        if(shouldDangerouslyUpdateParcelData(updater)) {
             let updated = updater(_this._parcelData);
             _this.dispatch(ActionCreators.setData(updated));
             return;

@@ -17,6 +17,7 @@ import Markdown_getIn from 'docs/api/parcel/getIn.md';
 import Markdown_children from 'docs/api/parcel/children.md';
 import Markdown_toObject from 'docs/api/parcel/toObject.md';
 import Markdown_toArray from 'docs/api/parcel/toArray.md';
+import Markdown_metaAsParcel from 'docs/api/parcel/metaAsParcel.md';
 import Markdown_has from 'docs/api/parcel/has.md';
 import Markdown_size from 'docs/api/parcel/size.md';
 import Markdown_isFirst from 'docs/api/parcel/isFirst.md';
@@ -27,6 +28,7 @@ import Markdown_set from 'docs/api/parcel/set.md';
 import Markdown_setIn from 'docs/api/parcel/setIn.md';
 import Markdown_update from 'docs/api/parcel/update.md';
 import Markdown_updateIn from 'docs/api/parcel/updateIn.md';
+import Markdown_map from 'docs/api/parcel/map.md';
 import Markdown_delete from 'docs/api/parcel/delete.md';
 import Markdown_deleteIn from 'docs/api/parcel/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/parcel/insertAfter.md';
@@ -70,6 +72,7 @@ const md = {
     children: Markdown_children,
     toObject: Markdown_toObject,
     toArray: Markdown_toArray,
+    metaAsParcel: Markdown_metaAsParcel,
     has: Markdown_has,
     size: Markdown_size,
     isFirst: Markdown_isFirst,
@@ -80,6 +83,7 @@ const md = {
     setIn: Markdown_setIn,
     update: Markdown_update,
     updateIn: Markdown_updateIn,
+    map: Markdown_map,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
@@ -123,6 +127,7 @@ getIn()
 children()
 toObject()
 toArray()
+metaAsParcel()
 
 # Input binding methods
 spread()
@@ -141,6 +146,7 @@ delete()
 deleteIn()
 update()
 updateIn()
+map()
 setMeta()
 dispatch()
 

@@ -24,3 +24,5 @@ export type {Key} from './types/Types';
 export type {Index} from './types/Types';
 export type {Property} from './types/Types';
 export type {ParentType} from './types/Types';
+
+export type {ContinueChainFunction} from './types/Types';

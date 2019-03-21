@@ -31,6 +31,17 @@ export default (_this: Parcel) => ({
         onChange: _this.onChangeDOM
     }),
 
+    // Branch methods
+
+    metaAsParcel: (key: string): Parcel => {
+        return _this._createNew({
+            value: _this.meta[key],
+            handleChange: ({value}) => _this.setMeta({
+                [key]: value
+            })
+        });
+    },
+
     // Composition methods
 
     pipe: (...updaters: ParcelUpdater[]): Parcel => {

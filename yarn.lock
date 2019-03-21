@@ -13716,6 +13716,15 @@ unmutable@^0.41.1:
     is-plain-object "^2.0.4"
     lodash.range "^3.2.0"
 
+unmutable@^0.43.1:
+  version "0.43.1"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.43.1.tgz#71f8cbca2f8dc04759b60442d9b1626cbecad7be"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    fast-deep-equal "^1.0.0"
+    is-plain-object "^2.0.4"
+    lodash.range "^3.2.0"
+
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"

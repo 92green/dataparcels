@@ -65,7 +65,7 @@ test('ParcelBoundary should pass a NEW *value equivalent* parcel to children whe
     expect(ParcelBoundaryEquals(childParcel2, parcel2)).toBe(true);
 });
 
-test('ParcelBoundary should lock state to props if debounce, hold and keepState are all false', () => {
+test('ParcelBoundary should lock state to props if debounce, hold and keepValue are all false', () => {
     let childRenderer = jest.fn();
 
     let parcel = new Parcel({value: 123});
@@ -176,6 +176,45 @@ test('ParcelBoundary should release changes when called', async () => {
     expect(newParcel.value).toBe(123);
 });
 
+test('ParcelBoundary should use onRelease', async () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+    let onRelease1 = jest.fn();
+    let onRelease2 = jest.fn();
+
+    let parcel = new Parcel({
+        handleChange
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold onRelease={[onRelease1, onRelease2]}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    wrapper.update();
+
+    // call release, then onRelease1 should have been called but no others
+    childRenderer.mock.calls[1][1].release();
+    expect(onRelease1).toHaveBeenCalledTimes(1);
+    expect(onRelease2).not.toHaveBeenCalled();
+    expect(handleChange).not.toHaveBeenCalled();
+
+    // call release1, then onRelease2 should have been called
+    let release1 = onRelease1.mock.calls[0][0];
+    release1();
+    expect(onRelease1).toHaveBeenCalledTimes(1);
+    expect(onRelease2).toHaveBeenCalledTimes(1);
+    expect(handleChange).not.toHaveBeenCalled();
+
+    // call release2 and then handleChange should have been called
+    let release2 = onRelease2.mock.calls[0][0];
+    release2();
+    expect(onRelease1).toHaveBeenCalledTimes(1);
+    expect(onRelease2).toHaveBeenCalledTimes(1);
+    expect(handleChange).toHaveBeenCalledTimes(1);
+});
+
 test('ParcelBoundary should cancel changes when called', async () => {
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
@@ -212,6 +251,51 @@ test('ParcelBoundary should cancel changes when called', async () => {
     // inside the parcel boundary, the original value should be reinstated
     expect(childParcel3.value).toBe(456);
 });
+
+test('ParcelBoundary should onCancel', async () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+    let onCancel1 = jest.fn();
+    let onCancel2 = jest.fn();
+
+    let parcel = new Parcel({
+        handleChange,
+        value: 456
+    });
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} hold onCancel={[onCancel1, onCancel2]}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(123);
+    wrapper.update();
+    let childRendererCalls = childRenderer.mock.calls.length;
+
+    // call cancel, then onCancel1 should have been called but no others
+    childRenderer.mock.calls[1][1].cancel();
+    expect(onCancel1).toHaveBeenCalledTimes(1);
+    expect(onCancel2).not.toHaveBeenCalled();
+    // there should have been no re-render as the cancellation shouldn't have happened yet
+    expect(childRenderer).toHaveBeenCalledTimes(childRendererCalls);
+
+    // call cancel1, then onCancel2 should have been called
+    let cancel1 = onCancel1.mock.calls[0][0];
+    cancel1();
+    expect(onCancel1).toHaveBeenCalledTimes(1);
+    expect(onCancel2).toHaveBeenCalledTimes(1);
+    // there should have been no re-render as the cancellation shouldn't have happened yet
+    expect(childRenderer).toHaveBeenCalledTimes(childRendererCalls);
+
+    // call cancel and then inside the parcel boundary, the original value should be reinstated
+    let cancel2 = onCancel2.mock.calls[0][0];
+    cancel2();
+    wrapper.update();
+    let [childParcel2] = childRenderer.mock.calls[2];
+    // inside the parcel boundary, the original value should be reinstated
+    expect(childParcel2.value).toBe(456);
+});
+
 
 test('ParcelBoundary cancel should do nothing if no changes have occurred', async () => {
     let childRenderer = jest.fn();
@@ -398,7 +482,7 @@ test('ParcelBoundary should use an internal boundary split to stop parcel bounda
     expect(childParcelB2.value).toEqual({abc: 123, def: 456});
 });
 
-test('ParcelBoundary should ignore updates from props for updates caused by themselves if keepState is true', () => {
+test('ParcelBoundary should not update value from props for updates caused by themselves if keepValue is true', () => {
     let childRenderer = jest.fn();
     let handleChange = jest.fn();
 
@@ -409,7 +493,7 @@ test('ParcelBoundary should ignore updates from props for updates caused by them
 
     let withModify = (parcel) => parcel.modifyUp(value => value + 1);
 
-    let wrapper = shallow(<ParcelBoundary parcel={withModify(parcel)} keepState>
+    let wrapper = shallow(<ParcelBoundary parcel={withModify(parcel)} keepValue>
         {childRenderer}
     </ParcelBoundary>);
 
@@ -439,6 +523,64 @@ test('ParcelBoundary should ignore updates from props for updates caused by them
 
     let childParcel3 = childRenderer.mock.calls[3][0];
     expect(childParcel3.value).toBe(789);
+});
+
+test('ParcelBoundary should update meta from props for updates caused by themselves if keepValue is true', () => {
+    let childRenderer = jest.fn();
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    });
+
+    let withModify = (parcel) => parcel.modifyUp(value => value + 1);
+
+    let wrapper = shallow(<ParcelBoundary parcel={withModify(parcel)} keepValue>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    childParcel.onChange(456);
+
+    let newParcel = handleChange.mock.calls[0][0];
+
+    // make a change that keepValue will prevent from altering its value
+    wrapper.setProps({
+        parcel: withModify(newParcel)
+    });
+
+    // make a change to meta externally and ensure that the value in the boundary does not update
+    // but meta does
+    newParcel.setMeta({
+        abc: 789
+    });
+    let newParcel2 = handleChange.mock.calls[1][0];
+    wrapper.setProps({
+        parcel: withModify(newParcel2)
+    });
+
+    let childParcel3 = childRenderer.mock.calls[3][0];
+    expect(childParcel3.value).toBe(456);
+    expect(childParcel3.meta.abc).toBe(789);
+});
+test('ParcelBoundary should pass initial value through modifyBeforeUpdate', () => {
+    let childRenderer = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    let modifyBeforeUpdate = [
+        value => value + 1
+    ];
+
+    let wrapper = shallow(<ParcelBoundary parcel={parcel} modifyBeforeUpdate={modifyBeforeUpdate}>
+        {childRenderer}
+    </ParcelBoundary>);
+
+    let childParcel = childRenderer.mock.calls[0][0];
+    expect(childParcel.value).toBe(124);
 });
 
 test('ParcelBoundary should pass changes through modifyBeforeUpdate', () => {
@@ -490,13 +632,13 @@ test('ParcelBoundary should pass new parcel from props change through modifyBefo
     let childParcel = childRenderer.mock.calls[0][0];
     let childParcel2 = childRenderer.mock.calls[1][0];
 
-    expect(modifyBeforeUpdate[0].mock.calls[0][0]).toBe(456);
-    expect(modifyBeforeUpdate[0].mock.calls[0][1].prevData.value).toBe(123);
-    expect(modifyBeforeUpdate[0].mock.calls[0][1].nextData.value).toBe(456);
+    expect(modifyBeforeUpdate[0].mock.calls[2][0]).toBe(456);
+    expect(modifyBeforeUpdate[0].mock.calls[2][1].prevData.value).toBe(125);
+    expect(modifyBeforeUpdate[0].mock.calls[2][1].nextData.value).toBe(456);
 
-    expect(modifyBeforeUpdate[1].mock.calls[0][0]).toBe(457);
-    expect(modifyBeforeUpdate[1].mock.calls[0][1].prevData.value).toBe(123);
-    expect(modifyBeforeUpdate[1].mock.calls[0][1].nextData.value).toBe(457);
+    expect(modifyBeforeUpdate[1].mock.calls[2][0]).toBe(457);
+    expect(modifyBeforeUpdate[1].mock.calls[2][1].prevData.value).toBe(125);
+    expect(modifyBeforeUpdate[1].mock.calls[2][1].nextData.value).toBe(457);
 });
 
 test('ParcelBoundary should accept a debugParcel boolean and log about receiving initial value', () => {

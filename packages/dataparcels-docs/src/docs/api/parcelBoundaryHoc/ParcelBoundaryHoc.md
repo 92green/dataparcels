@@ -28,14 +28,13 @@ ParcelBoundaryHoc({
     name: string | (props: *) => string,
     debounce?: number | (props: *) => number,
     hold?: boolean | (props: *) => boolean,
-    originalParcelProp?: string | (props: *) => string,
-    modifyBeforeUpdate: Array<ValueUpdater>,
+    modifyBeforeUpdate: Array<Function>,
+    onCancel?: Array<Function>,
+    onRelease?: Array<Function>,
     // debugging options
     debugBuffer?: boolean,
     debugParcel?: boolean
 });
-
-type ValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 ```
 
 <Box modifier="margin">

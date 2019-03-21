@@ -8,6 +8,7 @@ import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
 import shape from '../shape';
 import CancelActionMarker from '../CancelActionMarker';
+import Validation from '../Validation';
 
 // react-dataparcels
 import ParcelHoc from '../ParcelHoc';
@@ -22,6 +23,7 @@ import InternalDeletedParcelMarker from 'dataparcels/DeletedParcelMarker';
 import InternalParcelShape from 'dataparcels/ParcelShape';
 import InternalShape from 'dataparcels/shape';
 import InternalCancelActionMarker from 'dataparcels/CancelActionMarker';
+import InternalValidation from 'dataparcels/Validation';
 
 // internal react-dataparcels
 import InternalParcelHoc from '../lib/ParcelHoc';
@@ -54,6 +56,10 @@ test('/shape should export shape', () => {
 
 test('/CancelActionMarker should export CancelActionMarker', () => {
     expect(CancelActionMarker).toBe(InternalCancelActionMarker);
+});
+
+test('/Validation should export Validation', () => {
+    expect(Validation).toBe(InternalValidation);
 });
 
 test('/ParcelHoc should export ParcelHoc', () => {

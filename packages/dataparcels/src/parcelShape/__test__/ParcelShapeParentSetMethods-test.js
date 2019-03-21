@@ -262,3 +262,68 @@ test('ParcelShapes updateIn(keyPath, shape()) should work', () => {
 
     expect(parcelShape.updateIn(['a', 'b'], shape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
 });
+
+test('ParcelShapes map() should work', () => {
+    let parcelShape = ParcelShape.fromData({
+        value: {
+            a: 1,
+            b: 2
+        }
+    });
+
+    let expectedData = {
+        value: {
+            a: 2,
+            b: 3
+        },
+        child: {
+            a: {
+                child: undefined,
+                key: "a"
+            },
+            b: {
+                child: undefined,
+                key: "b"
+            }
+        }
+    };
+
+    expect(parcelShape.map(ii => ii + 1).data).toEqual(expectedData);
+});
+
+test('ParcelShapes map() should validate value updater', () => {
+    TestValidateValueUpdater(
+        expect,
+        (value, updater) => new ParcelShape({
+            abc: value
+        }).map(updater)
+    );
+});
+
+test('ParcelShapes map(shape()) should work', () => {
+    let parcelShape = ParcelShape.fromData({
+        value: {
+            a: 1,
+            b: 2
+        }
+    });
+
+    let expectedData = {
+        value: {
+            a: 2,
+            b: 3
+        },
+        child: {
+            a: {
+                child: undefined,
+                key: "a"
+            },
+            b: {
+                child: undefined,
+                key: "b"
+            }
+        }
+    };
+
+    expect(parcelShape.map(shape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
+});

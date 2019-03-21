@@ -2,6 +2,7 @@
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
 import type Parcel from 'dataparcels';
+import type {ContinueChainFunction} from 'dataparcels';
 import type {ParcelValueUpdater} from 'dataparcels';
 import type ParcelBoundaryControl from './ParcelBoundaryControl';
 
@@ -14,8 +15,7 @@ type Props = {
 };
 type ChildProps = {
     // [config.name]?: Parcel,
-    // [config.name + "Control"]?: ParcelBoundaryControl,
-    // [config.originalParcelProp]?: Parcel
+    // [config.name + "Control"]?: ParcelBoundaryControl
     // ...
 };
 
@@ -28,7 +28,8 @@ type ParcelBoundaryHocConfig = {
     debounce?: number|(props: AnyProps) => number,
     hold?: boolean|(props: AnyProps) => boolean,
     modifyBeforeUpdate?: Array<ParcelValueUpdater>,
-    originalParcelProp?: string|(props: AnyProps) => string,
+    onCancel?: Array<ContinueChainFunction>,
+    onRelease?: Array<ContinueChainFunction>,
     debugBuffer?: boolean,
     debugParcel?: boolean
 };
@@ -49,19 +50,28 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             let debounce: ?number = fromProps(config.debounce) || undefined;
             // $FlowFixMe
             let hold: boolean = fromProps(config.hold) || false;
-            // $FlowFixMe
-            let originalParcelProp: ?string = fromProps(config.originalParcelProp);
+
+            // function array config options
             let modifyBeforeUpdate: Array<ParcelValueUpdater> = config.modifyBeforeUpdate || [];
+            let onCancel: Array<ContinueChainFunction> = config.onCancel || [];
+            let onRelease: Array<ContinueChainFunction> = config.onRelease || [];
+
+            // debug config options
             let debugBuffer: boolean = config.debugBuffer || false;
             let debugParcel: boolean = config.debugParcel || false;
 
+            // type check normal config options
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.name", "string")(name);
             debounce && Types(PARCEL_BOUNDARY_HOC_NAME, "config.debounce", "number")(debounce);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.hold", "boolean")(hold);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugBuffer", "boolean")(debugBuffer);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
-            originalParcelProp && Types(PARCEL_BOUNDARY_HOC_NAME, "config.originalParcelProp", "string")(originalParcelProp);
-            modifyBeforeUpdate.forEach((fn, index) => Types(PARCEL_BOUNDARY_HOC_NAME, `config.modifyBeforeUpdate[${index}]`, "function")(fn));
+
+            // type check function array config options
+            let checkFunctionArray = (name: string, array: Array<*>) => array.forEach((fn, index) => Types(PARCEL_BOUNDARY_HOC_NAME, `config.${name}[${index}]`, "function")(fn));
+            checkFunctionArray("modifyBeforeUpdate", modifyBeforeUpdate);
+            checkFunctionArray("onCancel", onCancel);
+            checkFunctionArray("onRelease", onRelease);
 
             let parcel = this.props[name];
             if(!parcel) {
@@ -77,6 +87,8 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                 debugBuffer={debugBuffer}
                 debugParcel={debugParcel}
                 modifyBeforeUpdate={modifyBeforeUpdate}
+                onCancel={onCancel}
+                onRelease={onRelease}
                 pure={false}
             >
                 {(innerParcel: Parcel, control: ParcelBoundaryControl): Node => {
@@ -87,10 +99,6 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                         // $FlowFixMe - I want to use a computed property, flow
                         [name + "Control"]: control
                     };
-
-                    if(originalParcelProp) {
-                        childProps[originalParcelProp] = parcel;
-                    }
 
                     return <Component {...childProps} />;
                 }}

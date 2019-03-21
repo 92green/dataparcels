@@ -189,7 +189,6 @@ export default AlphanumericParcelHoc(AlphanumericEditor);
 import React from 'react';
 import ParcelHoc from 'react-dataparcels/ParcelHoc';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
 
 const NumberParcelHoc = ParcelHoc({
     name: "numberParcel",
@@ -199,27 +198,20 @@ const NumberParcelHoc = ParcelHoc({
 const NumberInput = (props) => {
     let numberParcel = props
         .numberParcel
+        .modifyUp(string => Number(string))
         .modifyDown(number => `${number}`)
-        // ^ turn value into a string on the way down
-        .modifyUp(string => {
-            let number = Number(string);
-            return isNaN(number) ? CancelActionMarker : number;
-        });
-        // ^ turn value back into a number on the way up
-        //   but cancel the change if the string
-        //   could not be turned into a number
 
-    // without the keepState prop, typing "0.10"
+    // ^ turn value into a string on the way down
+    // and turn value back into a number on the way up
+
+    // without the keepValue prop, typing "0.10"
     // would immediately be replaced with "0.1"
     // as the new value is turned into a number on the way up,
     // and into a string on the way down
     // which would make typing very frustrating
 
-    return <ParcelBoundary parcel={numberParcel} keepState>
-        {(parcel) => <div>
-            <input type="text" {...parcel.spreadDOM()} />
-            {isNaN(Number(parcel.value)) && "Invalid number"}
-        </div>}
+    return <ParcelBoundary parcel={numberParcel} keepValue>
+        {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
     </ParcelBoundary>;
 };
 
@@ -227,7 +219,7 @@ const NumberEditor = (props) => {
     let {numberParcel} = props;
     return <div>
         <h4>Number > string</h4>
-        <p>Turns a stored number into a string for editing, and only allows changes that are valid numbers.</p>
+        <p>Turns a stored number into a string for editing</p>
         <NumberInput numberParcel={numberParcel} />
     </div>;
 };
@@ -468,9 +460,9 @@ const SumParcelHoc = ParcelHoc({
     ]
 });
 
-// use the function from the "Modifying data to fit the UI" example
-// to turn numbers into strings on the way down
+// turn numbers into strings on the way down
 // and back into numbers on the way up
+// but stop any changes that result in NaN
 
 // numberToString is used in the Parcel.pipe() functions below
 // parcel.pipe(fn) is equivalent to fn(parcel)
@@ -479,24 +471,24 @@ const numberToString = (parcel) => parcel
     .modifyDown(number => `${number}`)
     .modifyUp(string => {
         let number = Number(string);
-        return isNaN(number) ? CancelActionMarker : number;
+        return (string === "" || isNaN(number)) ? CancelActionMarker : number;
     });
 
 const AreaEditor = (props) => {
     let {sumParcel} = props;
     return <div>
         <label>a</label>
-        <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>b</label>
-        <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
 
         <label>sum</label>
-        <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepState>
+        <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
     </div>;
