@@ -12,7 +12,7 @@ const makeReducer = (actions) => pipeWith(
     new ChangeRequest(actions),
     ChangeRequestReducer
 );
-/*
+
 test('ChangeRequestReducer should pass through with no actions', () => {
     var data = {
         value: 123,
@@ -98,8 +98,14 @@ test('ChangeRequestReducer should process single "push" action with pre function
     let actions = [
         ActionCreators
             .push("B")
-            ._addPre(pre1)
-            ._addPre(pre2)
+            ._addStep({
+                type: 'md',
+                updater: pre1
+            })
+            ._addStep({
+                type: 'md',
+                updater: pre2
+            })
     ];
 
     let expectedData = {
@@ -125,8 +131,14 @@ test('ChangeRequestReducer should process single "push" action with post functio
     let actions = [
         ActionCreators
             .push("B")
-            ._addPost(post1)
-            ._addPost(post2)
+            ._addStep({
+                type: 'mu',
+                updater: post1
+            })
+            ._addStep({
+                type: 'mu',
+                updater: post2
+            })
     ];
 
     let expectedData = {
@@ -148,7 +160,10 @@ test('ChangeRequestReducer should process a single "set" action at a depth of 1'
     let actions = [
         ActionCreators
             .setSelf(456)
-            ._unget('abc')
+            ._addStep({
+                type: 'get',
+                key: 'abc'
+            })
     ];
 
     let expectedData = {
@@ -179,8 +194,14 @@ test('ChangeRequestReducer should process a single "set" action at a depth of 2'
     let actions = [
         ActionCreators
             .setSelf(456)
-            ._unget('def')
-            ._unget('abc')
+            ._addStep({
+                type: 'get',
+                key: 'def'
+            })
+            ._addStep({
+                type: 'get',
+                key: 'abc'
+            })
     ];
 
     let expectedData = {
@@ -216,11 +237,26 @@ test('ChangeRequestReducer should process aa complicated bunch of pre and post f
     let actions = [
         ActionCreators
             .setSelf(456)
-            ._addPost(update('value', value => value + 1)) // 456 -> 457
-            ._unget('abc')
-            ._addPost(update('value', value => ({...value, alsoAlso: value.abc}))) // {abc: 457, also: 788} -> {abc: 457, also: 788, alsoAlso: 457}
-            ._addPre(update('value', update('also', also => also - 1))) // {abc: 123} -> {abc: 123, also: 788}
-            ._addPre(update('value', value => ({...value, also: 789}))) // {abc: 123} -> {abc: 123, also: 789}
+            ._addStep({
+                type: 'mu',
+                updater: update('value', value => value + 1) // 456 -> 457
+            })
+            ._addStep({
+                type: 'get',
+                key: 'abc'
+            })
+            ._addStep({
+                type: 'mu',
+                updater: update('value', value => ({...value, alsoAlso: value.abc})) // {abc: 457, also: 788} -> {abc: 457, also: 788, alsoAlso: 457}
+            })
+            ._addStep({
+                type: 'md',
+                updater: update('value', update('also', also => also - 1)) // {abc: 123} -> {abc: 123, also: 788}
+            })
+            ._addStep({
+                type: 'md',
+                updater: update('value', value => ({...value, also: 789})) // {abc: 123} -> {abc: 123, also: 789}
+            })
             // wierdly, looking at this syntax, the value starts at the bottom and goes up
     ];
 
@@ -231,7 +267,7 @@ test('ChangeRequestReducer should process aa complicated bunch of pre and post f
     };
 
     expect(makeReducer(actions)(data).value).toEqual(expectedValue);
-});*/
+});
 
 test('ChangeRequestReducer should process pre and post on parentActions like "swapNextSelf"', () => {
     var data = {
@@ -245,9 +281,18 @@ test('ChangeRequestReducer should process pre and post on parentActions like "sw
     let actions = [
         ActionCreators
             .swapNextSelf()
-            ._unget(0)
-            ._addPre(pre)
-            ._addPost(post)
+            ._addStep({
+                type: 'get',
+                key: 0
+            })
+            ._addStep({
+                type: 'md',
+                updater: pre
+            })
+            ._addStep({
+                type: 'mu',
+                updater: post
+            })
     ];
 
     let expectedData = {
@@ -263,4 +308,36 @@ test('ChangeRequestReducer should process pre and post on parentActions like "sw
     } = makeReducer(actions)(data);
 
     expect(processed).toEqual(expectedData);
+});
+
+test('ChangeRequestReducer should throw error if invalid action type is used', () => {
+    expect(() => {
+        let reducer = makeReducer([
+            new Action({
+                type: "wrong"
+            })
+        ]);
+
+        reducer({
+            value: 123
+        });
+    })
+        .toThrowError(`"wrong" is not a valid action`);
+});
+
+test('ChangeRequestReducer should throw error if invalid action step type is used', () => {
+    expect(() => {
+        let reducer = makeReducer([
+            ActionCreators
+                .setSelf(456)
+                ._addStep({
+                    type: 'wrong'
+                })
+        ]);
+
+        reducer({
+            value: 123
+        });
+    })
+        .toThrowError(`"wrong" is not a valid action step type`);
 });

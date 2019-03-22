@@ -1,10 +1,15 @@
 import ValueUpdater from 'docs/notes/ValueUpdater.md';
 
 ```flow
-update(updater: ValueUpdater): void
-update(key: string|number, updater: ValueUpdater): void // only on ParentParcels, will update a child
+// updates value - only to be used if shape doesn't change
+update(updater: ParcelValueUpdater): Parcel
+update(key: string|number, updater: ParcelValueUpdater): void // only on ParentParcels, will update a child
+type ParcelValueUpdater = (value: any) => any;
 
-type ValueUpdater = (value: any, self: Parcel) => any;
+// updates shape, including meta
+update(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
+update(key: string|number, shape(updater: ParcelValueUpdater)): void // only on ParentParcels, will update a child
+type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
 Calling `update()` with one argument will trigger a change that replaces the current value in the Parcel with the result of the value updater provided to it. The value updater is passed the current value of the Parcel, from which you can return the intended replacement value.
@@ -30,4 +35,4 @@ parcel.update('abc', value => value + 1);
 // this triggers a change that sets the parcel's value to {abc: 124, def: 789}
 ```
 
-<ValueUpdater alt="updateShape" />
+<ValueUpdater />

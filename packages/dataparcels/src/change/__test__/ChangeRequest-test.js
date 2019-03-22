@@ -8,31 +8,19 @@ import range from 'unmutable/lib/util/range';
 test('ChangeRequest should build an action', () => {
     let expectedDefaultData = {
         actions: [],
-        meta: {},
         originId: null,
         originPath: null,
     };
     expect(expectedDefaultData).toEqual(new ChangeRequest().toJS());
 });
 
-test('ChangeRequest actions() should get actions', () => {
+test('ChangeRequest actions should get actions', () => {
     let actions = [
         new Action({type: "???", keyPath: ['a']}),
         new Action({type: "!!!", keyPath: ['a']})
     ];
 
-    expect(actions).toEqual(new ChangeRequest(actions).actions());
-});
-
-test('ChangeRequest updateActions() should update actions', () => {
-    let actions = [
-        new Action({type: "???", keyPath: ['a']}),
-        new Action({type: "!!!", keyPath: ['a']})
-    ];
-
-    expect([actions[0]]).toEqual(new ChangeRequest(actions)
-        .updateActions(actions => actions.filter(aa => aa.type === "???"))
-        .actions());
+    expect(actions).toEqual(new ChangeRequest(actions).actions);
 });
 
 test('ChangeRequest merge() should merge other change requests actions', () => {
@@ -51,40 +39,54 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
 
     let merged = a.merge(b);
 
-    expect([...actionsA, ...actionsB]).toEqual(merged.actions());
+    expect([...actionsA, ...actionsB]).toEqual(merged.actions);
 });
 
+test('ChangeRequest merge() should dedupe subsequent "set" actions with same keyPath', () => {
+    let existingChangeRequest = new ChangeRequest([
+        new Action({type: "set", keyPath: ['a'], payload: {value: 1}})
+    ]);
 
-test('ChangeRequest setChangeRequestMeta() and changeRequestMeta should work', () => {
-    let expectedMeta = {
-        a: 3,
-        b: 2
-    };
-    expect(expectedMeta).toEqual(new ChangeRequest()
-        .setChangeRequestMeta({a: 1})
-        .setChangeRequestMeta({b: 2})
-        .setChangeRequestMeta({a: 3})
-        .changeRequestMeta);
+    let mergableChangeRequest = new ChangeRequest([
+        new Action({type: "set", keyPath: ['a'], payload: {value: 2}}),
+        new Action({type: "set", keyPath: ['a'], payload: {value: 3}})
+    ]);
+
+    let mergedActions = existingChangeRequest
+        .merge(mergableChangeRequest)
+        .actions;
+
+    expect(mergedActions.length).toBe(1);
+    expect(mergedActions[0].payload.value).toBe(3);
+
+    // merge shouldn't happen if keypaths differ
+
+    let mergableChangeRequest2 = new ChangeRequest([
+        new Action({type: "set", keyPath: ['b'], payload: {value: 2}}),
+        new Action({type: "set", keyPath: ['a'], payload: {value: 3}})
+    ]);
+
+    let mergedActions2 = existingChangeRequest
+        .merge(mergableChangeRequest2)
+        .actions;
+
+    expect(mergedActions2.length).toBe(3);
+
+    // merge shouldn't happen if type differs
+
+    let mergableChangeRequest3 = new ChangeRequest([
+        new Action({type: "floop", keyPath: ['a'], payload: {value: 2}}),
+        new Action({type: "set", keyPath: ['a'], payload: {value: 3}})
+    ]);
+
+    let mergedActions3 = existingChangeRequest
+        .merge(mergableChangeRequest3)
+        .actions;
+
+    expect(mergedActions3.length).toBe(3);
 });
 
-test('ChangeRequest _unget() should prepend key', () => {
-    let actions = [
-        new Action({type: "???", keyPath: ['a']}),
-        new Action({type: "!!!", keyPath: ['a']})
-    ];
-
-    let expectedKeyPaths = [
-        ['b', 'a'],
-        ['b', 'a']
-    ];
-
-    expect(expectedKeyPaths).toEqual(new ChangeRequest(actions)
-        ._unget('b')
-        .actions()
-        .map(aa => aa.keyPath));
-});
-
-test('ChangeRequest _setBaseParcel() and data should use Reducer', () => {
+test('ChangeRequest nextData() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
         keyPath: ["b"],
@@ -101,7 +103,9 @@ test('ChangeRequest _setBaseParcel() and data should use Reducer', () => {
     });
 
     let {value} = new ChangeRequest(action)
-        ._setBaseParcel(parcel)
+        ._create({
+            prevData: parcel.data
+        })
         .nextData;
 
     var expectedValue = {
@@ -129,7 +133,9 @@ test('ChangeRequest prevData should return previous data', () => {
     });
 
     let {value} = new ChangeRequest(action)
-        ._setBaseParcel(parcel)
+        ._create({
+            prevData: parcel.data
+        })
         .prevData;
 
     var expectedValue = {
@@ -140,44 +146,9 @@ test('ChangeRequest prevData should return previous data', () => {
     expect(expectedValue).toEqual(value);
 });
 
-test('ChangeRequest data should get latest parcel data from treeshare when called to prevent basing onto stale data', () => {
-    expect.assertions(1);
-
-    var action = new Action({
-        type: "set",
-        keyPath: ["b"],
-        payload: {
-            value: 3
-        }
-    });
-
-    var ref = {};
-
-    var parcel = new Parcel({
-        value: {
-            a: 1,
-            b: 2
-        },
-        handleChange: (parcel) => {
-            let {value} = ref.changeRequest.nextData;
-
-            var expectedValue = {
-                a: 4,
-                b: 3
-            };
-
-            expect(expectedValue).toEqual(value);
-        }
-    });
-
-    ref.changeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
-    parcel.get('a').onChange(4);
-});
-
-
-test('ChangeRequest should throw error if data is accessed before _setBaseParcel()', () => {
-    expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcel()`);
-    expect(() => new ChangeRequest().prevData).toThrowError(`ChangeRequest data cannot be accessed before calling changeRequest._setBaseParcel()`);
+test('ChangeRequest should throw error if data is accessed before setting prevData()', () => {
+    expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before setting changeRequest.prevData`);
+    expect(() => new ChangeRequest().prevData).toThrowError(`ChangeRequest data cannot be accessed before setting changeRequest.prevData`);
 });
 
 test('ChangeRequest should keep originId and originPath', () => {
@@ -224,7 +195,9 @@ test('ChangeRequest should cache its data after its calculated, so subsequent ca
         }
     });
 
-    let changeRequest = new ChangeRequest(actions)._setBaseParcel(parcel);
+    let changeRequest = new ChangeRequest(actions)._create({
+        prevData: parcel.data
+    });
     let data;
 
     let ms = TestTimeExecution(() => {
@@ -302,7 +275,9 @@ test('ChangeRequest getDataIn should return previous and next value at keyPath',
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
     let {next, prev} = basedChangeRequest.getDataIn(['a', 'c', '#a']);
 
     expect(next.value).toBe(100);
@@ -328,7 +303,9 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path', (
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
 
     expect(basedChangeRequest.hasValueChanged(['a', 'c', '#a'])).toBe(true);
     expect(basedChangeRequest.hasValueChanged(['a', 'c', '#b'])).toBe(false);
@@ -354,7 +331,9 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path due
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
 
     expect(basedChangeRequest.hasValueChanged(['a'])).toBe(true);
     expect(basedChangeRequest.hasValueChanged(['a', 'b'])).toBe(true);
@@ -374,7 +353,9 @@ test('ChangeRequest hasValueChanged should indicate if value changed in array, i
         value: [0,1,2,3]
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._setBaseParcel(parcel);
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
 
     expect(basedChangeRequest.hasValueChanged(['#a'])).toBe(false);
     expect(basedChangeRequest.hasValueChanged(['#b'])).toBe(false);
@@ -382,4 +363,30 @@ test('ChangeRequest hasValueChanged should indicate if value changed in array, i
     expect(basedChangeRequest.hasValueChanged(['#d'])).toBe(false);
     expect(basedChangeRequest.hasValueChanged(['#e'])).toBe(true);
     expect(basedChangeRequest.hasValueChanged()).toBe(true);
+});
+
+test('ChangeRequest should throw errors when attempted to set getters', () => {
+    let readOnly = 'This property is read-only';
+
+    let changeRequest = new ChangeRequest();
+
+    expect(() => {
+        changeRequest.nextData = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        changeRequest.prevData = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        changeRequest.actions = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        changeRequest.originId = 123;
+    }).toThrow(readOnly);
+
+    expect(() => {
+        changeRequest.originPath = 123;
+    }).toThrow(readOnly);
 });

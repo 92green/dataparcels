@@ -1,11 +1,10 @@
 // @flow
 import type ParcelId from '../parcelId/ParcelId';
-import type Treeshare from '../treeshare/Treeshare';
+import type ParcelShape from '../parcelShape/ParcelShape';
 
 import Parcel from '../parcel/Parcel';
 import Action from '../change/Action';
 import ChangeRequest from '../change/ChangeRequest';
-import ParcelShape from '../parcelShape/ParcelShape';
 import isPlainObject from 'unmutable/lib/util/isPlainObject';
 
 export type ParcelData = {
@@ -22,43 +21,54 @@ export type ParcelConfig = {
     value?: *
 };
 
+export type ParcelParent = {
+    isIndexed: boolean,
+    isChildFirst: boolean,
+    isChildLast: boolean
+};
+
 export type ParcelConfigInternal = {
-    onDispatch?: Function,
     child: *,
+    dispatchId: string,
+    id: ParcelId,
     lastOriginId: string,
     meta: ParcelMeta,
-    id: ParcelId,
-    parent?: ?Parcel,
-    treeshare: Treeshare
+    parent: ParcelParent,
+    registry: ParcelRegistry,
+    updateChangeRequestOnDispatch: (changeRequest: ChangeRequest) => ChangeRequest
 };
 
 export type ParcelCreateConfigType = {
-    onDispatch?: Function,
-    lastOriginId: string,
+    dispatchId?: string,
+    lastOriginId?: string,
     id?: ParcelId,
-    parcelData?: ParcelData,
-    parent?: ?Parcel,
     handleChange?: Function,
-    treeshare?: Treeshare
+    parcelData?: ParcelData,
+    parent?: ParcelParent,
+    registry?: ParcelRegistry,
+    updateChangeRequestOnDispatch?: (changeRequest: ChangeRequest) => ChangeRequest
 };
 
 export type ParcelMeta = {[key: string]: *};
 export type ParcelMapper = (item: Parcel, property: string|number, parent: Parcel) => *;
+export type ParcelRegistry = {[id: string]: Parcel};
 export type ParcelUpdater = (item: Parcel) => Parcel;
-export type ParcelValueUpdater = (value: *, parcel: Parcel) => any;
-export type ParcelShapeUpdateFunction = Function;
-export type ParcelShapeUpdater = (item: ParcelShape) => any;
+export type ParcelValueUpdater = Function;
 
+export type ParcelShapeUpdater = (parcelShape: ParcelShape, changeRequest?: ChangeRequest) => any;
 export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
-export type ParcelShapeValueUpdater = (value: *, parcel: ParcelShape) => any;
-
-export type ParcelShapeConfigInternal = {
-    parent?: ?ParcelShape
-};
+export type ParcelShapeValueUpdater = (value: *) => any;
 
 export type Key = string;
 export type Index = number;
 export type Property = number|string;
+
+export type ActionStep = {
+    type: string,
+    key?: Key|Index,
+    updater?: ParcelDataEvaluator,
+    changeRequest?: ChangeRequest
+};
 
 export type ParentType = any; // should be any parent data type
 
@@ -67,11 +77,9 @@ export type ParcelIdData = {
     path: string[]
 };
 
+export type ContinueChainFunction = (continueChain: () => void, changeRequest: ?ChangeRequest) => void;
+
 const RUNTIME_TYPES = {
-    ['array']: {
-        name: "an array",
-        check: ii => Array.isArray(ii)
-    },
     ['boolean']: {
         name: "a boolean",
         check: ii => typeof ii === "boolean"
@@ -116,10 +124,6 @@ const RUNTIME_TYPES = {
     ['parcelData']: {
         name: "an object containing parcel data {value: *, meta?: {}, key?: *}",
         check: ii => isPlainObject(ii) && ii.hasOwnProperty('value')
-    },
-    ['parcelShape']: {
-        name: "a ParcelShape",
-        check: ii => ii instanceof ParcelShape
     },
     ['string']: {
         name: "a string",

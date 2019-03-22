@@ -3,9 +3,9 @@ import type Parcel from '../Parcel';
 
 import ActionCreators from '../../change/ActionCreators';
 
-export default (_this: Parcel, dispatch: Function): Object => ({
+export default (_this: Parcel): Object => ({
 
     deleteSelf: () => {
-        dispatch(ActionCreators.deleteSelf());
+        _this.dispatch(ActionCreators.deleteSelf());
     }
 });

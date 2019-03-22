@@ -2,6 +2,9 @@
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
 import type Parcel from 'dataparcels';
+import type {ContinueChainFunction} from 'dataparcels';
+import type {ParcelValueUpdater} from 'dataparcels';
+import type ParcelBoundaryControl from './ParcelBoundaryControl';
 
 import React from 'react';
 import ParcelBoundary from './ParcelBoundary';
@@ -12,9 +15,7 @@ type Props = {
 };
 type ChildProps = {
     // [config.name]?: Parcel,
-    // [config.name + "Actions"]?: Parcel,
-    // [config.name + "Buffered"]?: Parcel,
-    // [config.originalParcelProp]?: Parcel
+    // [config.name + "Control"]?: ParcelBoundaryControl
     // ...
 };
 
@@ -26,7 +27,9 @@ type ParcelBoundaryHocConfig = {
     name: string|((props: AnyProps) => string),
     debounce?: number|(props: AnyProps) => number,
     hold?: boolean|(props: AnyProps) => boolean,
-    originalParcelProp?: string|(props: AnyProps) => string,
+    modifyBeforeUpdate?: Array<ParcelValueUpdater>,
+    onCancel?: Array<ContinueChainFunction>,
+    onRelease?: Array<ContinueChainFunction>,
     debugBuffer?: boolean,
     debugParcel?: boolean
 };
@@ -47,17 +50,28 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             let debounce: ?number = fromProps(config.debounce) || undefined;
             // $FlowFixMe
             let hold: boolean = fromProps(config.hold) || false;
-            // $FlowFixMe
-            let originalParcelProp: ?string = fromProps(config.originalParcelProp);
+
+            // function array config options
+            let modifyBeforeUpdate: Array<ParcelValueUpdater> = config.modifyBeforeUpdate || [];
+            let onCancel: Array<ContinueChainFunction> = config.onCancel || [];
+            let onRelease: Array<ContinueChainFunction> = config.onRelease || [];
+
+            // debug config options
             let debugBuffer: boolean = config.debugBuffer || false;
             let debugParcel: boolean = config.debugParcel || false;
 
+            // type check normal config options
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.name", "string")(name);
             debounce && Types(PARCEL_BOUNDARY_HOC_NAME, "config.debounce", "number")(debounce);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.hold", "boolean")(hold);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugBuffer", "boolean")(debugBuffer);
             Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
-            originalParcelProp && Types(PARCEL_BOUNDARY_HOC_NAME, "config.originalParcelProp", "string")(originalParcelProp);
+
+            // type check function array config options
+            let checkFunctionArray = (name: string, array: Array<*>) => array.forEach((fn, index) => Types(PARCEL_BOUNDARY_HOC_NAME, `config.${name}[${index}]`, "function")(fn));
+            checkFunctionArray("modifyBeforeUpdate", modifyBeforeUpdate);
+            checkFunctionArray("onCancel", onCancel);
+            checkFunctionArray("onRelease", onRelease);
 
             let parcel = this.props[name];
             if(!parcel) {
@@ -72,22 +86,19 @@ export default (config: ParcelBoundaryHocConfig): Function => {
                 hold={hold}
                 debugBuffer={debugBuffer}
                 debugParcel={debugParcel}
+                modifyBeforeUpdate={modifyBeforeUpdate}
+                onCancel={onCancel}
+                onRelease={onRelease}
                 pure={false}
             >
-                {(innerParcel: Parcel, actions: *, buffered: boolean): Node => {
+                {(innerParcel: Parcel, control: ParcelBoundaryControl): Node => {
                     let childProps = {
                         ...this.props,
                         // $FlowFixMe - I want to use a computed property, flow
                         [name]: innerParcel,
                         // $FlowFixMe - I want to use a computed property, flow
-                        [name + "Actions"]: actions,
-                        // $FlowFixMe - I want to use a computed property, flow
-                        [name + "Buffered"]: buffered
+                        [name + "Control"]: control
                     };
-
-                    if(originalParcelProp) {
-                        childProps[originalParcelProp] = parcel;
-                    }
 
                     return <Component {...childProps} />;
                 }}

@@ -1,6 +1,7 @@
 import Link from 'component/Link';
 import {Link as HtmlLink} from 'dcme-style';
 import ParcelMetaConfirmingDeletions from 'examples/ParcelMetaConfirmingDeletions';
+import ParcelMetaSelections from 'examples/ParcelMetaSelections';
 import ParcelMetaChangedValues from 'examples/ParcelMetaChangedValues';
 
 # Parcel Meta
@@ -67,7 +68,9 @@ Here are some examples of how meta can be useful.
 
 ## Confirming deletions
 
-This example shows how to uses meta stored against each element in an array to show a confirmation message with options.
+This example shows how to use meta stored against each element in an array to show a confirmation message with options.
+
+Try deleting an item in the demo below.
 
 <ParcelMetaConfirmingDeletions />
 
@@ -113,6 +116,67 @@ export default FruitListParcelHoc(FruitListEditor);
 * Clicking on an "x" button sets the `meta.confirming` state to `true`, which renders a choice of two buttons.
 * "No" sets `meta.confirming` back to false again, while "Yes" calls [delete()](/api/Parcel#delete) method on the Parcel.
 * Notice how the meta always relates to the correct element, even if other elements are deleted.
+
+## Selecting items
+
+This example shows how to use meta stored against each element in an array to keep track of which items have been selected.
+
+<ParcelMetaSelections />
+
+```js
+import React from 'react';
+import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const FruitListParcelHoc = ParcelHoc({
+    name: "fruitListParcel",
+    valueFromProps: (/* props */) => [
+        "Apple",
+        "Banana",
+        "Crumpets"
+    ]
+});
+
+const FruitListEditor = (props) => {
+    let {fruitListParcel} = props;
+
+    let selectedFruit = fruitListParcel
+        .toArray()
+        .filter(fruitParcel => fruitParcel.meta.selected)
+        .map(fruitParcel => fruitParcel.value);
+
+    return <div>
+        {fruitListParcel.toArray((fruitParcel) => {
+            return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
+                {(parcel) => {
+                    let checkboxProps = {
+                        checked: !!parcel.meta.selected,
+                        onChange: (event) => parcel.setMeta({
+                            selected: event.currentTarget.checked
+                        })
+                    };
+
+                    return <div>
+                        <input type="text" {...parcel.spreadDOM()} />
+                        <input type="checkbox" {...checkboxProps} />
+                        <button onClick={() => parcel.swapPrev()}>^</button>
+                        <button onClick={() => parcel.swapNext()}>v</button>
+                        <button onClick={() => parcel.delete()}>x</button>
+                    </div>;
+                }}
+            </ParcelBoundary>;
+        })}
+        <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
+        <h4>Selected fruit:</h4>
+        <ul>
+            {selectedFruit.map((fruit, key) => <li key={key}>{fruit}</li>)}
+        </ul>
+    </div>;
+};
+
+export default FruitListParcelHoc(FruitListEditor);
+
+```
 
 ## Displaying changed values
 
@@ -175,7 +239,3 @@ export default PersonParcelHoc(PersonEditor);
 * The `firstname` and `lastname` parcels use the [pipe()](/api/Parcel#pipe) method, which simply passes each parcel through the `withOriginalMeta` function and calls the [initialMeta()](/api/Parcel#initialMeta) function on each of them.
 * `initialMeta()` gets the initial value of the parcel and stores it in `meta.original`
 * When rendering, `meta.original` is compared against the current `value` to detect changes of the value since the initial render.
-
-## Validation messages on forms
-
-...

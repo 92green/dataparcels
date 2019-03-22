@@ -6,31 +6,31 @@ import Types from '../../types/Types';
 
 import ActionCreators from '../../change/ActionCreators';
 
-export default (_this: Parcel, dispatch: Function): Object => ({
+export default (_this: Parcel): Object => ({
 
     insertAfterSelf: (value: *) => {
-        dispatch(ActionCreators.insertAfterSelf(value));
+        _this.dispatch(ActionCreators.insertAfterSelf(value));
     },
 
     insertBeforeSelf: (value: *) => {
-        dispatch(ActionCreators.insertBeforeSelf(value));
+        _this.dispatch(ActionCreators.insertBeforeSelf(value));
     },
 
     moveSelf: (key: Key|Index) => {
         Types(`moveSelf()`, `key`, `keyIndex`)(key);
-        dispatch(ActionCreators.moveSelf(key));
+        _this.dispatch(ActionCreators.moveSelf(key));
     },
 
     swapNextSelf: () => {
-        dispatch(ActionCreators.swapNextSelf());
+        _this.dispatch(ActionCreators.swapNextSelf());
     },
 
     swapPrevSelf: () => {
-        dispatch(ActionCreators.swapPrevSelf());
+        _this.dispatch(ActionCreators.swapPrevSelf());
     },
 
     swapSelf: (key: Key|Index) => {
         Types(`swapSelf()`, `key`, `keyIndex`)(key);
-        dispatch(ActionCreators.swapSelf(key));
+        _this.dispatch(ActionCreators.swapSelf(key));
     }
 });

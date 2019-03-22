@@ -78,28 +78,23 @@ test('Parcel.spreadDOM(notFoundValue) returns an object with notFoundValue', () 
     expect(parcel3.spreadDOM("???").value).toBe("123");
 });
 
-test('Parcel.setInternalLocationShareData() and Parcel.getInternalLocationShareData should store data per location', () => {
+test('Parcel.log() should be called with parcel', () => {
 
-    let p = new Parcel({
-        value: {
-            abc: 123,
-            def: 456
-        }
-    });
+    let {log} = console;
+    // $FlowFixMe
+    console.log = jest.fn(); // eslint-disable-line
 
-    expect({}).toEqual(p.getInternalLocationShareData());
+    new Parcel({
+        value: 123
+    })
+        .log('example')
+        .set(456);
 
-    p.get('abc').setInternalLocationShareData({x:1});
-    expect({x:1}).toEqual(p.get('abc').getInternalLocationShareData());
+    expect(console.log.mock.calls[0][0]).toEqual(`Parcel: "example" data down:`);
+    expect(console.log.mock.calls[2][0]).toEqual(`Parcel: "example" data up:`);
 
-    p.get('abc').setInternalLocationShareData({y:2});
-    expect({x:1, y:2}).toEqual(p.get('abc').getInternalLocationShareData());
-
-    expect({}).toEqual(p.get('def').getInternalLocationShareData());
-
-    p.get('def').setInternalLocationShareData({x:1});
-    expect({x:1}).toEqual(p.get('def').getInternalLocationShareData());
-
+    // $FlowFixMe
+    console.log = log; // eslint-disable-line
 });
 
 test('Parcel.spy() should be called with parcel', () => {
@@ -153,4 +148,15 @@ test('Parcel.pipe() should pass itself in and return what pipe() returns', () =>
     expect(updater1.mock.calls[0][0]).toBe(parcel1);
     expect(updater2.mock.calls[0][0]).toBe(parcel1);
     expect(result).toBe(parcel2);
+});
+
+test('Parcel.metaAsParcel() shouldcreate a parcel out of meta', () => {
+    let handleChange = jest.fn();
+
+    var parcel = new Parcel({
+        handleChange
+    });
+    parcel.metaAsParcel('cool').set('???');
+
+    expect(handleChange.mock.calls[0][0].meta.cool).toBe('???');
 });

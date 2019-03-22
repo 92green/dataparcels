@@ -1,23 +1,25 @@
 // @flow
 import type {Node} from 'react';
 import type ChangeRequest from 'dataparcels/ChangeRequest';
+import type {ContinueChainFunction} from 'dataparcels';
+import type {ParcelData} from 'dataparcels';
+import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
 import Parcel from 'dataparcels';
+import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
 
+import ParcelBoundaryControl from './ParcelBoundaryControl';
+import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
-import shallowEquals from 'unmutable/lib/shallowEquals';
 
-import set from 'unmutable/lib/set';
-import pipe from 'unmutable/lib/util/pipe';
+import identity from 'unmutable/identity';
+import isNotEmpty from 'unmutable/isNotEmpty';
+import pipe from 'unmutable/pipe';
+import set from 'unmutable/set';
+import shallowEquals from 'unmutable/shallowEquals';
 
-const log = (...args) => console.log(`ParcelBoundary:`, ...args); // eslint-disable-line
-
-type Actions = {
-    release: Function
-};
-
-type RenderFunction = (parcel: Parcel, actions: Actions, buffered: boolean) => Node;
+type RenderFunction = (parcel: Parcel, control: ParcelBoundaryControl) => Node;
 
 type Props = {
     children: RenderFunction,
@@ -26,18 +28,24 @@ type Props = {
     debugParcel: boolean,
     hold: boolean,
     forceUpdate: Array<*>,
+    modifyBeforeUpdate: Array<ParcelValueUpdater>,
+    onCancel: Array<ContinueChainFunction>,
+    onRelease: Array<ContinueChainFunction>,
     parcel: Parcel,
     pure: boolean,
-    keepState: boolean
+    keepValue: boolean
 };
 
 type State = {
     cachedChangeRequest: ?ChangeRequest,
     changeCount: number,
+    lastValueFromSelf: any,
     makeBoundarySplit: Function,
     parcel: Parcel,
     parcelFromProps: Parcel
 };
+
+const valueEquals = (a, b): boolean => a === b || (a !== a && b !== b);
 
 export default class ParcelBoundary extends React.Component<Props, State> { /* eslint-disable-line react/no-deprecated */
 
@@ -47,8 +55,11 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         debugParcel: false,
         hold: false,
         forceUpdate: [],
+        modifyBeforeUpdate: [],
+        onCancel: [],
+        onRelease: [],
         pure: true,
-        keepState: false
+        keepValue: false
     };
 
     constructor(props: Props) {
@@ -59,14 +70,15 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         this.state = {
             cachedChangeRequest: undefined,
             changeCount: 0,
+            lastValueFromSelf: parcel.value,
             makeBoundarySplit: this.makeBoundarySplit,
             parcel,
             parcelFromProps: parcel
         };
 
-        if(props.debugParcel) {
-            log(`Received initial value`);
-            props.parcel.toConsole();
+        if(process.env.NODE_ENV !== 'production' && props.debugParcel) {
+            console.log(`ParcelBoundary: Received initial value:`); // eslint-disable-line
+            console.log(props.parcel.data); // eslint-disable-line
         }
     }
 
@@ -90,41 +102,52 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
     static getDerivedStateFromProps(props: Props, state: State): * {
         let {
             parcel,
-            keepState
+            keepValue
         } = props;
 
         let {
+            lastValueFromSelf,
             makeBoundarySplit,
-            parcelFromProps
+            parcelFromProps,
+            parcel: parcelFromState
         } = state;
 
-        let updateState = parcel !== parcelFromProps;
+        let newState = {};
 
-        if(keepState && parcel._lastOriginId.startsWith(parcel.id)) {
-            // if keepState, don't update state if the last change came from within this parcel boundary
-            updateState = false;
+        let newParcelFromProps = parcel !== parcelFromProps;
+        if(newParcelFromProps) {
+            newState.parcelFromProps = parcel;
         }
 
-        if(updateState) {
-            var newState: any = {
-                parcelFromProps: parcel
-            };
+        if(newParcelFromProps && !ParcelBoundaryEquals(parcelFromProps, parcel)) {
+            let newData = parcel.data;
 
-            if(!ParcelBoundaryEquals(parcelFromProps, parcel)) {
-                if(props.debugParcel) {
-                    log(`Parcel replaced from props:`);
-                    parcel.toConsole();
+            if(keepValue) {
+                let changedBySelf = parcel._lastOriginId.startsWith(parcel.id);
+                if(changedBySelf) {
+                    newState.lastValueFromSelf = parcel.value;
                 }
 
-                newState.cachedChangeRequest = undefined;
-                newState.changeCount = 0;
-                newState.parcel = makeBoundarySplit(parcel);
+                if(changedBySelf || valueEquals(newData.value, lastValueFromSelf)) {
+                    newData = {
+                        ...parcelFromState.data,
+                        key: newData.key,
+                        meta: newData.meta
+                    };
+                }
             }
 
-            return newState;
+            if(process.env.NODE_ENV !== 'production' && props.debugParcel) {
+                console.log(`ParcelBoundary: Parcel replaced from props:`); // eslint-disable-line
+                console.log(newData); // eslint-disable-line
+            }
+
+            newState.cachedChangeRequest = undefined;
+            newState.changeCount = 0;
+            newState.parcel = makeBoundarySplit(parcel, newData, parcelFromState.data);
         }
 
-        return null;
+        return isNotEmpty()(newState) ? newState : null;
     }
 
     addToBuffer: Function = (changeRequest: ChangeRequest) => (state: State): State => {
@@ -134,9 +157,9 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             changeCount
         } = state;
 
-        if(debugBuffer) {
-            log("Add to buffer:");
-            changeRequest.toConsole();
+        if(process.env.NODE_ENV !== 'production' && debugBuffer) {
+            console.log(`ParcelBoundary: Add to buffer:`); // eslint-disable-line
+            console.log(changeRequest.toJS()); // eslint-disable-line
         }
 
         let newCachedChangeRequest = cachedChangeRequest
@@ -159,17 +182,17 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         let {cachedChangeRequest} = state;
 
-        if(debugBuffer) {
-            log("Clear buffer:");
-            cachedChangeRequest && cachedChangeRequest.toConsole();
+        if(process.env.NODE_ENV !== 'production' && debugBuffer) {
+            console.log(`ParcelBoundary: Clear buffer:`); // eslint-disable-line
+            cachedChangeRequest && console.log(cachedChangeRequest.toJS()); // eslint-disable-line
         }
         if(!cachedChangeRequest) {
             return state;
         }
 
-        if(debugParcel) {
-            log(`Buffer cancelled. Parcel reverted:`);
-            parcel.toConsole();
+        if(process.env.NODE_ENV !== 'production' && debugParcel) {
+            console.log(`ParcelBoundary: Buffer cancelled. Parcel reverted:`); // eslint-disable-line
+            console.log(parcel.data); // eslint-disable-line
         }
 
         return {
@@ -184,9 +207,9 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         let {debugBuffer} = this.props;
         let {cachedChangeRequest} = state;
 
-        if(debugBuffer) {
-            log("Release buffer:");
-            cachedChangeRequest && cachedChangeRequest.toConsole();
+        if(process.env.NODE_ENV !== 'production' && debugBuffer) {
+            console.log(`ParcelBoundary: Release buffer:`); // eslint-disable-line
+            cachedChangeRequest && console.log(cachedChangeRequest.toJS()); // eslint-disable-line
         }
 
         if(!cachedChangeRequest) {
@@ -201,72 +224,115 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
         };
     };
 
-    makeBoundarySplit: Function = (parcel: Parcel): Parcel => {
-        return parcel._boundarySplit({
-            handleChange: (newParcel: Parcel, changeRequest: ChangeRequest) => {
-                let {
-                    debounce,
-                    debugParcel,
-                    hold
-                } = this.props;
+    makeBoundarySplit: Function = (parcel: Parcel, nextData: ?ParcelData, prevData: ?ParcelData): Parcel => {
+        let {modifyBeforeUpdate} = this.props;
 
-                let {changeCount} = this.state;
+        let handleChange = (newParcel: Parcel, changeRequest: ChangeRequest) => {
+            let {
+                debounce,
+                debugParcel,
+                hold,
+                keepValue
+            } = this.props;
 
-                if(debugParcel) {
-                    log(`Parcel changed:`);
-                    newParcel.toConsole();
-                }
+            let {changeCount} = this.state;
 
-                let updateParcel = set('parcel', newParcel);
-                let addToBuffer = this.addToBuffer(changeRequest);
-                let releaseBuffer = this.releaseBuffer();
+            if(process.env.NODE_ENV !== 'production' && debugParcel) {
+                console.log(`ParcelBoundary: Parcel changed:`); // eslint-disable-line
+                console.log(newParcel.data); // eslint-disable-line
+            }
 
-                if(!debounce && !hold) {
-                    this.setState(pipe(
-                        updateParcel,
-                        addToBuffer,
-                        releaseBuffer
-                    ));
-                    return;
-                }
+            let updateParcel = set('parcel', newParcel);
+            let addToBuffer = this.addToBuffer(changeRequest);
+            let releaseBuffer = this.releaseBuffer();
 
-                if(hold) {
-                    this.setState(pipe(
-                        updateParcel,
-                        addToBuffer
-                    ));
-                    return;
-                }
+            if(!debounce && !hold) {
+                this.setState(pipe(
+                    keepValue ? updateParcel : ii => ii,
+                    addToBuffer,
+                    releaseBuffer
+                ));
+                return;
+            }
 
-                // debounce && !hold
-
-                setTimeout(() => {
-                    if(changeCount + 1 === this.state.changeCount) {
-                        this.setState(releaseBuffer);
-                    }
-                }, debounce);
-
+            if(hold) {
                 this.setState(pipe(
                     updateParcel,
                     addToBuffer
                 ));
+                return;
             }
-        });
+
+            // debounce && !hold
+
+            setTimeout(() => {
+                if(changeCount + 1 === this.state.changeCount) {
+                    this.setState(releaseBuffer);
+                }
+            }, debounce);
+
+            this.setState(pipe(
+                updateParcel,
+                addToBuffer
+            ));
+        };
+
+        return parcel
+            ._boundarySplit({
+                handleChange
+            })
+            ._changeAndReturn((parcel) => parcel
+                .modifyDown(prevData
+                    ? dangerouslyUpdateParcelData(() => prevData)
+                    : identity()
+                )
+                .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
+                ._setData(nextData || parcel.data)
+            );
     };
 
     render(): Node {
-        let {children} = this.props;
         let {
-            changeCount,
+            children,
+            modifyBeforeUpdate,
+            onCancel,
+            onRelease
+        } = this.props;
+
+        let {
+            cachedChangeRequest,
             parcel
         } = this.state;
 
-        let actions = {
-            cancel: () => this.setState(this.cancelBuffer()),
-            release: () => this.setState(this.releaseBuffer())
-        };
+        let actions = cachedChangeRequest
+            ? cachedChangeRequest.actions
+            : [];
 
-        let buffered = changeCount > 0;
-        return children(parcel, actions, buffered);
+        let handleCancel = () => this.setState(this.cancelBuffer());
+        let handleRelease = () => this.setState(this.releaseBuffer());
+
+        let chain = (callbackArray, finalCallback) => callbackArray.reduceRight(
+            (continueChain, callback) => () => {
+                let {cachedChangeRequest, parcel} = this.state;
+                return callback(
+                    continueChain,
+                    cachedChangeRequest && cachedChangeRequest._create({
+                        prevData: parcel.data
+                    })
+                );
+            },
+            finalCallback
+        );
+
+        return children(
+            ApplyModifyBeforeUpdate(modifyBeforeUpdate)(parcel),
+            new ParcelBoundaryControl({
+                cancel: chain(onCancel, handleCancel),
+                release: chain(onRelease, handleRelease),
+                buffered: actions.length > 0,
+                buffer: actions,
+                originalParcel: this.props.parcel
+            })
+        );
     }
 }

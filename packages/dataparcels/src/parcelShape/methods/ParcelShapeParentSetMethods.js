@@ -1,14 +1,14 @@
 // @flow
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
-import type {ParcelShapeUpdater} from '../../types/Types';
 import type {ParcelShapeValueUpdater} from '../../types/Types';
 import type ParcelShape from '../ParcelShape';
 
 import parcelDelete from '../../parcelData/delete';
 import parcelSetSelf from '../../parcelData/setSelf';
+import parcelMap from '../../parcelData/map';
+import prepUpdater from '../../parcelData/prepUpdater';
 import parcelUpdateIn from '../../parcelData/updateIn';
-import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 import butLast from 'unmutable/lib/butLast';
 import last from 'unmutable/lib/last';
@@ -35,25 +35,14 @@ export default (_this: ParcelShape) => ({
     updateIn: (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            parcelUpdateIn(
-                keyPath,
-                (parcelData) => {
-                    let {value} = parcelData;
-                    let updatedValue = updater(value, _this);
-                    ValidateValueUpdater(value, updatedValue);
-                    return parcelSetSelf(updatedValue)(parcelData);
-                }
-            )
+            parcelUpdateIn(keyPath, prepUpdater(updater))
         );
     },
 
-    updateShapeIn: (keyPath: Array<Key|Index>, updater: ParcelShapeUpdater): ParcelShape => {
+    map: (updater: ParcelShapeValueUpdater): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            parcelUpdateIn(
-                keyPath,
-                (parcelData) => _this._parcelShapeUpdate(updater)(parcelData)
-            )
+            parcelMap(prepUpdater(updater))
         );
     }
 });

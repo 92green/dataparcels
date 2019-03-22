@@ -10,8 +10,8 @@ let value = {
 };
 let parcel = new Parcel({value});
 parcel
-    .spy(parcel => parcel.toConsole()) // 1. logs the parcel to the console ({abc: 123})
+    .spy(parcel => console.log(parcel.data)) // 1. logs the parcel to the console ({abc: 123})
     .get('abc')
-    .spy(parcel => parcel.toConsole()) // 2. logs the parcel to the console (123)
+    .spy(parcel => console.log(parcel.data)) // 2. logs the parcel to the console (123)
     .value; // 3. returns 123
 ```

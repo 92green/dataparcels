@@ -1,5 +1,4 @@
 // @flow
-import type ChangeRequest from '../../change/ChangeRequest';
 import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
 import type Parcel from '../Parcel';
@@ -7,11 +6,14 @@ import type {ParcelMapper} from '../../types/Types';
 import type {ParentType} from '../../types/Types';
 import Types from '../../types/Types';
 
+import keyOrIndexToKey from '../../parcelData/keyOrIndexToKey';
 import parcelGet from '../../parcelData/get';
 import parcelHas from '../../parcelData/has';
 import prepareChildKeys from '../../parcelData/prepareChildKeys';
 
 import clone from 'unmutable/lib/clone';
+import first from 'unmutable/lib/first';
+import last from 'unmutable/lib/last';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
@@ -39,6 +41,12 @@ export default (_this: Parcel) => ({
     get: (key: Key|Index, notFoundValue: any): Parcel => {
         Types(`get()`, `key`, `keyIndex`)(key);
 
+        let stringKey: Key = keyOrIndexToKey(key)(_this._parcelData);
+        let cachedChildParcel: ?Parcel = _this._childParcelCache[stringKey];
+        if(cachedChildParcel) {
+            return cachedChildParcel;
+        }
+
         _this._methods._prepareChildKeys();
         let childParcelData = parcelGet(key, notFoundValue)(_this._parcelData);
 
@@ -50,16 +58,30 @@ export default (_this: Parcel) => ({
 
         let childKey: Key = childParcelData.key;
 
-        let childOnDispatch: Function = (changeRequest: ChangeRequest) => {
-            _this.dispatch(changeRequest._unget(childKey));
-        };
-
-        return _this._create({
-            parcelData: childParcelData,
-            onDispatch: childOnDispatch,
-            id: _this._id.push(childKey, _this.isIndexed()),
-            parent: _this
+        let childOnDispatch = (changeRequest) => changeRequest._addStep({
+            type: 'get',
+            key: childKey
         });
+
+        let {child} = _this._parcelData;
+        let childIsNotEmpty = size()(child) > 0;
+        let isIndexed = _this._isIndexed;
+        let isChildFirst = childIsNotEmpty && first()(child).key === childKey;
+        let isChildLast = childIsNotEmpty && last()(child).key === childKey;
+
+        let childParcel: Parcel = _this._create({
+            parcelData: childParcelData,
+            updateChangeRequestOnDispatch: childOnDispatch,
+            id: _this._id.push(childKey, isIndexed),
+            parent: {
+                isIndexed,
+                isChildFirst,
+                isChildLast
+            }
+        });
+
+        _this._childParcelCache[stringKey] = childParcel;
+        return childParcel;
     },
 
     getIn: (keyPath: Array<Key|Index>, notFoundValue: any): Parcel => {

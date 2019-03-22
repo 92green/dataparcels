@@ -4,20 +4,22 @@ import type Action from './Action';
 import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
+import findLastIndex from 'unmutable/lib/findLastIndex';
 import identity from 'unmutable/lib/identity';
 import last from 'unmutable/lib/last';
-import update from 'unmutable/lib/update';
+import take from 'unmutable/lib/take';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
-
 import {ReducerInvalidActionError} from '../errors/Errors';
+import {ReducerInvalidStepError} from '../errors/Errors';
 import {isCancelledError} from './CancelActionMarker';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
+import map from '../parcelData/map';
 import move from '../parcelData/move';
 import pop from '../parcelData/pop';
 import push from '../parcelData/push';
@@ -34,6 +36,7 @@ const actionMap = {
     delete: ({lastKey}) => del(lastKey),
     insertAfter: ({lastKey, value}) => insertAfter(lastKey, value),
     insertBefore: ({lastKey, value}) => insertBefore(lastKey, value),
+    map: ({updater}) => map(updater),
     move: ({lastKey, moveKey}) => move(lastKey, moveKey),
     pop: () => pop(),
     push: ({values}) => push(...values),
@@ -57,6 +60,21 @@ const parentActionMap = {
     swapPrev: true
 };
 
+const stepMap = {
+    get: ({key}, next) => parcelDataUpdate(key, next),
+    md: ({updater}, next) => pipe(updater, next),
+    mu: ({updater, changeRequest}, next) => (prevData) => {
+        let nextData = next(prevData);
+        return updater(
+            nextData,
+            changeRequest && changeRequest._create({
+                prevData,
+                nextData
+            })
+        );
+    }
+};
+
 const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
     let fn = actionMap[type];
     if(!fn) {
@@ -69,34 +87,32 @@ const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
 };
 
 const doDeepAction = (action: Action): ParcelDataEvaluator => {
-    let {keyPathModifiers, type} = action;
+    let {steps, type} = action;
     let isParentAction: boolean = !!(parentActionMap[type]);
 
     if(isParentAction) {
         if(action.keyPath.length === 0) {
             return type === "delete" ? deleteSelfWithMarker : identity();
         }
-        keyPathModifiers = pipeWith(
-            keyPathModifiers,
-            update(-1, keyPathModifier => keyPathModifier._addKey(null))
-            // ^ if isParentAction set last keyPathModifier to null so that
-            // next() is called instead of parcelDataUpdate(key, next)
-        );
+        let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
+        steps = take(lastGetIndex)(steps);
     }
 
     return composeWith(
-        ...keyPathModifiers.map(({key, pre, post}) => (next) => pipe(
-            ...pre,
-            (key || key === 0) ? parcelDataUpdate(key, next) : next,
-            ...post,
-        )),
+        ...steps.map((step) => (next): ParcelDataEvaluator => {
+            let fn = stepMap[step.type];
+            if(!fn) {
+                throw ReducerInvalidStepError(step.type);
+            }
+            return fn(step, next);
+        }),
         doAction(action)
     );
 };
 
 export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?ParcelData => {
     let cancelled = 0;
-    let actions = changeRequest.actions();
+    let {actions} = changeRequest;
 
     let newParcelData = pipeWith(
         parcelData,

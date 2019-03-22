@@ -17,9 +17,8 @@ import Markdown_size from 'docs/api/parcelShape/size.md';
 import Markdown_set from 'docs/api/parcelShape/set.md';
 import Markdown_setIn from 'docs/api/parcelShape/setIn.md';
 import Markdown_update from 'docs/api/parcelShape/update.md';
-import Markdown_updateShape from 'docs/api/parcelShape/updateShape.md';
 import Markdown_updateIn from 'docs/api/parcelShape/updateIn.md';
-import Markdown_updateShapeIn from 'docs/api/parcelShape/updateShapeIn.md';
+import Markdown_map from 'docs/api/parcelShape/map.md';
 import Markdown_delete from 'docs/api/parcelShape/delete.md';
 import Markdown_deleteIn from 'docs/api/parcelShape/deleteIn.md';
 import Markdown_insertAfter from 'docs/api/parcelShape/insertAfter.md';
@@ -38,7 +37,6 @@ import Markdown_isElement from 'docs/api/parcelShape/isElement.md';
 import Markdown_isIndexed from 'docs/api/parcelShape/isIndexed.md';
 import Markdown_isParent from 'docs/api/parcelShape/isParent.md';
 import Markdown_isTopLevel from 'docs/api/parcelShape/isTopLevel.md';
-import Markdown_toConsole from 'docs/api/parcelShape/toConsole.md';
 
 const md = {
     _desc: Markdown_ParcelShape,
@@ -56,9 +54,8 @@ const md = {
     set: Markdown_set,
     setIn: Markdown_setIn,
     update: Markdown_update,
-    updateShape: Markdown_updateShape,
     updateIn: Markdown_updateIn,
-    updateShapeIn: Markdown_updateShapeIn,
+    map: Markdown_map,
     delete: Markdown_delete,
     deleteIn: Markdown_deleteIn,
     insertAfter: Markdown_insertAfter,
@@ -76,8 +73,7 @@ const md = {
     isElement: Markdown_isElement,
     isIndexed: Markdown_isIndexed,
     isParent: Markdown_isParent,
-    isTopLevel: Markdown_isTopLevel,
-    toConsole: Markdown_toConsole
+    isTopLevel: Markdown_isTopLevel
 }
 
 const api = `
@@ -102,9 +98,8 @@ setIn()
 delete()
 deleteIn()
 update()
-updateShape()
 updateIn()
-updateShapeIn()
+map()
 
 # Indexed & element change methods
 insertAfter()
@@ -124,9 +119,6 @@ isElement()
 isIndexed()
 isParent()
 isTopLevel()
-
-# Debug methods
-toConsole()
 
 `;
 

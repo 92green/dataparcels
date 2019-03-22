@@ -25,25 +25,27 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 
 ### 1. Data editing
 
-<Link to="/data-editing">Data editing</Link> is the ability to manipulate data based on user input, in a way that's expressive to code. This includes:
+<Link to="/data-editing">Data editing</Link> is the ability to manipulate data based on user input. This includes:
 - <Link to="/data-editing">Data traversal</Link>
 - <Link to="/data-editing">Binding data to inputs</Link>
 - <Link to="/data-editing">Merging partial changes</Link> into larger data structures
 - Methods for working with <Link to="/data-editing#Indexed-data-types">indexed data types</Link> such as arrays
 - <Link to="/data-editing#Indexed-data-types">Automatic unique keying</Link> of array elements
 - Ability to <Link to="/data-editing#Modifying-data-to-fit-the-UI">modify data to fit the UI</Link>
+- Setting <Link to="/data-editing#Derived-data">derived data</Link> based on other data
+- <Link to="/data-editing#Fields-that-interact-with-each-other">Fields that interact with each other</Link>
 - <Link to="/data-editing#Managing-your-own-Parcel-state">Managing your own Parcel state</Link>
 
 ### 2. UI behaviour
 
 <Link to="/ui-behaviour">UI behaviour</Link> covers features that help the user interact with the data. This includes:
-- <Link to="/ui-behaviour#submit-buttons">Submit buttons</Link> for forms 🚧
-- <Link to="/ui-behaviour#validation">Validation</Link> on user input 🚀 🚧
-- <Link to="/ui-behaviour#confirmation">Confirmation</Link> on important actions such as deleting 🚧
-- <Link to="/ui-behaviour#selections">Selections</Link> of one or more items 🚧
-- <Link to="/ui-behaviour#drag-and-drop">Drag and drop sorting</Link> of arrays of items
-- <Link to="/ui-behaviour#debouncing-changes">Debouncing changes</Link> for improved rendering performance
-- <Link to="/ui-behaviour#pure-rendering">Pure rendering</Link> for improved rendering performance
+- Creating forms with <Link to="/ui-behaviour#Submit-buttons-and-autosave">submit buttons or autosave</Link>
+- <Link to="/ui-behaviour#Validation-on-user-input">Validation on user input</Link>
+- <Link to="/ui-behaviour#Confirmation">Confirmation</Link> on important actions such as deleting
+- <Link to="/ui-behaviour#Selections">Selections</Link> of one or more items
+- <Link to="/ui-behaviour#Drag-and-drop-sorting">Drag and drop sorting</Link> of arrays of items
+- <Link to="/ui-behaviour#Debouncing-changes">Debouncing changes</Link> for improved performance
+- <Link to="/ui-behaviour#Pure-rendering">Pure rendering</Link> for improved rendering performance
 
 ### 3. Data synchronisation
 
@@ -52,7 +54,7 @@ It's designed for use with [React](https://reactjs.org/), and comes with compone
 - Coping with <Link to="/data-synchronisation#Sending-failable-requests">sending failable requests</Link>, such as saving data to a server 🚧
 - <Link to="/data-synchronisation#Sending-partial-requests">Sending partial requests</Link>, such as making requests to save individual items in a list 🚧
 - <Link to="/data-synchronisation#Caching-unsaved-changes">Caching unsaved changes</Link> so data is not lost if it is not yet saved and the page unloads 🚧
-- How to <Link to="/data-synchronisation#Retaining-Parcel-keys">retain Parcel keys</Link>, so a ParcelHoc can change its value via props, and unsaved changes will still be able to apply to the right pieces of data 🚧
+- How to <Link to="/data-synchronisation#Retaining-Parcel-keys">retain Parcel keys</Link>, so a ParcelHoc can change its value via props, and unsaved changes will still be able to apply to the right pieces of data  🚀 🚧
 
 
 <p className="Text Text-small Text-emphasis">🚧 indicates that either the feature or example is still in development</p>

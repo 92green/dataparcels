@@ -19,10 +19,21 @@ type LayoutProps = {
     data: LayoutElement,
 };
 
+const stringify = (value) => {
+    let replacer = (key, value) => {
+        // The following works because NaN is the only value in javascript which is not equal to itself.
+        if(value !== value) {
+            return 'NaN';
+        }
+        return value;
+    };
+    return JSON.stringify(value, replacer, 4);
+};
+
 export default (Component: ComponentType<*>) => class Example extends Layout<Props> {
     static elements = ['demo', 'data'];
 
-    static layout = ({demo, data}) => <Box modifier="paddingRowKilo example">
+    static layout = ({demo, data}) => <Box modifier="paddingBottomKilo example">
         <Box modifier="exampleInner">
             <Grid>
                 <GridItem modifier="6 padding">
@@ -45,7 +56,7 @@ export default (Component: ComponentType<*>) => class Example extends Layout<Pro
             filter((value, key) => value && key.substr(-6) === "Parcel"),
             map((parcel, key) => <Box key={key}>
                 <Text element="div" modifier="monospace">{key}</Text>
-                <Terminal>{JSON.stringify(parcel.value, null, 4)}</Terminal>
+                <Terminal>{stringify(parcel.value)}</Terminal>
             </Box>),
             toArray()
         );

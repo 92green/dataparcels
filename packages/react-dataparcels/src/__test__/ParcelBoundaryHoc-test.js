@@ -3,6 +3,7 @@ import React from 'react';
 
 import Parcel from 'dataparcels';
 import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
+import ParcelBoundaryControl from '../ParcelBoundaryControl';
 
 let shallowRenderHoc = (props, hock) => {
     let Component = hock((props) => <div />);
@@ -61,7 +62,7 @@ test('ParcelBoundaryHoc config should pass ParcelBoundary parcel down under same
     expect(propsGivenToInnerComponent.testParcel.id.indexOf("~bs")).not.toBe(-1);
 });
 
-test('ParcelBoundaryHoc config should pass actions as config.name + "Actions', () => {
+test('ParcelBoundaryHoc config should pass control as config.name + "Control', () => {
     let propsGivenToInnerComponent = shallowRenderHoc(
         {
             testParcel: new Parcel({
@@ -73,25 +74,8 @@ test('ParcelBoundaryHoc config should pass actions as config.name + "Actions', (
         })
     ).dive().props();
 
-    // testParcelActions shoudl contain a ParcelBoundaryActions object
-    expect(typeof propsGivenToInnerComponent.testParcelActions.release).toBe("function");
-    expect(typeof propsGivenToInnerComponent.testParcelActions.cancel).toBe("function");
-});
-
-test('ParcelBoundaryHoc config should pass buffered prop as config.name + "Buffered', () => {
-    let propsGivenToInnerComponent = shallowRenderHoc(
-        {
-            testParcel: new Parcel({
-                value: 789
-            })
-        },
-        ParcelBoundaryHoc({
-            name: 'testParcel'
-        })
-    ).dive().props();
-
-    // testParcelBuffered should contain a boolean object
-    expect(typeof propsGivenToInnerComponent.testParcelBuffered).toBe("boolean");
+    // testParcelControl should contain a ParcelBoundaryControl object
+    expect(propsGivenToInnerComponent.testParcelControl instanceof ParcelBoundaryControl).toBe(true);
 });
 
 test('ParcelBoundaryHoc config.name should accept props function returning string', () => {
@@ -199,7 +183,7 @@ test('ParcelBoundaryHoc should be not use pure rendering', () => {
     expect(propsGivenToParcelBoundary.pure).toBe(false);
 });
 
-test('ParcelBoundaryHoc config should optionally allow originalParcelProp to pass down original parcel', () => {
+test('ParcelBoundaryHoc should pass down originalParcel in ParcelBoundaryControl', () => {
     let testParcel = new Parcel({
         value: 789
     });
@@ -209,10 +193,59 @@ test('ParcelBoundaryHoc config should optionally allow originalParcelProp to pas
             testParcel
         },
         ParcelBoundaryHoc({
-            name: 'testParcel',
-            originalParcelProp: 'originalParcel'
+            name: 'testParcel'
         })
     ).dive().props();
 
-    expect(propsGivenToInnerComponent.originalParcel).toBe(testParcel);
+    expect(propsGivenToInnerComponent.testParcelControl.originalParcel).toBe(testParcel);
+});
+
+test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {
+    let modifyBeforeUpdate = [
+        value => value + 1
+    ];
+
+    let propsGivenToParcelBoundary = shallowRenderHoc(
+        {
+            testParcel: new Parcel()
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel',
+            modifyBeforeUpdate
+        })
+    ).props();
+
+    expect(propsGivenToParcelBoundary.modifyBeforeUpdate).toBe(modifyBeforeUpdate);
+});
+
+test('ParcelBoundaryHoc config.onCancel should accept function array', () => {
+    let onCancel = [continueCancel => continueCancel()];
+
+    let propsGivenToParcelBoundary = shallowRenderHoc(
+        {
+            testParcel: new Parcel()
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel',
+            onCancel
+        })
+    ).props();
+
+    expect(propsGivenToParcelBoundary.onCancel).toBe(onCancel);
+});
+
+test('ParcelBoundaryHoc config.onRelease should accept function array', () => {
+    let onRelease = [continueRelease => continueRelease()];
+
+    let propsGivenToParcelBoundary = shallowRenderHoc(
+        {
+            testParcel: new Parcel()
+        },
+        ParcelBoundaryHoc({
+            name: 'testParcel',
+            onRelease
+        })
+    ).props();
+
+    expect(propsGivenToParcelBoundary.onRelease).toBe(onRelease);
 });

@@ -1,9 +1,13 @@
 import ValueUpdater from 'docs/notes/ValueUpdater.md';
 
 ```flow
-modifyUp(updater: ValueUpdater): Parcel
+// updates value - only to be used if shape doesn't change
+modifyUp(updater: ParcelValueUpdater): Parcel
+type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 
-type ValueUpdater = (value: any, self: Parcel) => any;
+// updates shape, including meta
+modifyUp(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
+type ParcelShapeUpdater = (parcelShape: ParcelShape, changeRequest: ChangeRequest) => any;
 ```
 
 `modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward.
@@ -31,7 +35,7 @@ The modify methods are particularly useful when your Parcel contains data you wa
 
 #### Cancelling a change
 
-You can also cancel a change by returning `CancelActionMarker` from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
+You can also cancel a change by returning [CancelActionMarker](/api/CancelActionMarker) from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
 
 ```js
 import CancelActionMarker from 'dataparcels/CancelActionMarker';

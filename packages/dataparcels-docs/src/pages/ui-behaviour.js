@@ -21,7 +21,7 @@ export default () => <PageLayout
             <NavigationListItem>UI behaviour</NavigationListItem>
         </NavigationList>
         <NavigationList>
-            <NavigationListItem>- <Link to="/ui-behaviour#Submit-buttons">Submit buttons</Link></NavigationListItem>
+            <NavigationListItem>- <Link to="/ui-behaviour#Submit-buttons-and-autosave">Submit buttons and autosave</Link></NavigationListItem>
             <NavigationListItem>- <Link to="/ui-behaviour#Validation-on-user-input">Validation on user input</Link></NavigationListItem>
             <NavigationListItem>- <Link to="/ui-behaviour#Confirmation">Confirmation</Link></NavigationListItem>
             <NavigationListItem>- <Link to="/ui-behaviour#Selections">Selections</Link></NavigationListItem>

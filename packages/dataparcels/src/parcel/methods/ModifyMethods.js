@@ -5,19 +5,17 @@ import type {ParcelData} from '../../types/Types';
 import type {ParcelDataEvaluator} from '../../types/Types';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
-import type {ParcelShapeUpdateFunction} from '../../types/Types';
 
 import {checkCancellation} from '../../change/CancelActionMarker';
 import Types from '../../types/Types';
-import setSelf from '../../parcelData/setSelf';
+import prepUpdater from '../../parcelData/prepUpdater';
 import setMetaDefault from '../../parcelData/setMetaDefault';
-import ValidateValueUpdater from '../../util/ValidateValueUpdater';
+import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 
 import HashString from '../../util/HashString';
 
 import filterNot from 'unmutable/lib/filterNot';
 import has from 'unmutable/lib/has';
-import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
@@ -25,59 +23,40 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 export default (_this: Parcel): Object => ({
 
     _pushModifierId: (prefix: string, updater: Function): string => {
-        let id = updater._isParcelUpdater
-            ? `s${HashFunction(updater._updater)}`
+        let id = shouldDangerouslyUpdateParcelData(updater)
+            ? `s${HashFunction(updater._updater || updater)}`
             : HashFunction(updater);
 
         return _this._id.pushModifier(`${prefix}-${id}`);
     },
 
-    _getModifierUpdater: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): ParcelDataEvaluator => {
-        // $FlowFixMe - flow just cant make the connection between updater._isParcelUpdater and the choice between ParcelValueUpdater or ParcelShapeUpdateFunction
-        return updater._isParcelUpdater
-            // $FlowFixMe - this branch should only be hit with ParcelShapeUpdateFunction
-            ? (parcelData: ParcelData): ParcelData => updater(parcelData)
-            : (parcelData: ParcelData): ParcelData => {
-                let {value} = parcelData;
-                let updatedValue = updater(value, _this);
-                ValidateValueUpdater(value, updatedValue);
-                return setSelf(updatedValue)(parcelData);
-            };
-    },
-
-    _boundarySplit: ({handleChange}: *): Parcel => {
-        return _this._create({
-            id: _this._id.pushModifier('bs'),
-            parent: _this._parent,
-            handleChange,
-            treeshare: _this._treeshare.boundarySplit()
-        });
-    },
-
-    modifyDown: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
+    modifyDown: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyDown()`, `updater`, `function`)(updater);
-        let parcelDataUpdater: ParcelDataEvaluator = _this._methods._getModifierUpdater(updater);
+        let parcelDataUpdater: ParcelDataEvaluator = prepUpdater(updater);
         return _this._create({
             id: _this._methods._pushModifierId('md', updater),
             parcelData: parcelDataUpdater(_this._parcelData),
-            onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPre(parcelDataUpdater));
-            }
+            updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
+                type: 'md',
+                updater: parcelDataUpdater
+            })
         });
     },
 
-    modifyUp: (updater: ParcelValueUpdater|ParcelShapeUpdateFunction): Parcel => {
+    modifyUp: (updater: ParcelValueUpdater): Parcel => {
         Types(`modifyUp()`, `updater`, `function`)(updater);
-        let parcelDataUpdater: ParcelDataEvaluator = pipe(
-            _this._methods._getModifierUpdater(updater),
-            checkCancellation
-        );
+        let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
+            let nextData = prepUpdater(updater)(parcelData, changeRequest);
+            return checkCancellation(nextData);
+        };
 
         return _this._create({
             id: _this._methods._pushModifierId('mu', updater),
-            onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(parcelDataUpdater));
-            }
+            updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
+                type: 'mu',
+                updater: parcelDataUpdater,
+                changeRequest
+            })
         });
     },
 
@@ -94,9 +73,11 @@ export default (_this: Parcel): Object => ({
         return _this._create({
             id: _this._id.pushModifier('im'),
             parcelData: parcelDataUpdater(_this._parcelData),
-            onDispatch: (changeRequest: ChangeRequest) => {
-                _this.dispatch(changeRequest._addPost(parcelDataUpdater));
-            }
+            updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
+                type: 'mu',
+                updater: parcelDataUpdater,
+                changeRequest
+            })
         });
     }
 });
