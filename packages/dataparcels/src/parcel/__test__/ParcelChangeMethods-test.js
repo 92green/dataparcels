@@ -222,6 +222,24 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
     });
 });
 
+test('Parcel.onChangeDOMCheckbox() should work like onChange but take the value from event.currentTarget.checked', () => {
+
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: false,
+        handleChange
+    });
+
+    parcel.onChangeDOMCheckbox({
+        currentTarget: {
+            checked: true
+        }
+    });
+
+    expect(handleChange.mock.calls[0][0].value).toBe(true);
+});
+
 test('Parcel.setMeta() should call the Parcels handleChange function with the new meta merged in', () => {
     expect.assertions(3);
 
