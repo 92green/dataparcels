@@ -23,7 +23,8 @@ let parcel = new Parcel({
 
 <Box modifier="margin">
     <Message>See also:
-        <Text element="div">- <Link href="#onChangeDOM">onChangeDOM</Link> for use with input components that call `onChange` with a new value.</Text>
-        <Text element="div">- <Link href="#spread">spreadDOM</Link> for convenient spreading of value and onChange onto an input</Text>
+        <Text element="div">- <Link href="#spreadDOM">spreadDOM</Link> for convenient spreading of value and onChangeDOM onto an input</Text>
+        <Text element="div">- <Link href="#onChange">onChange</Link> for use with input components that call `onChange` with a new value.</Text>
+        <Text element="div">- <Link href="#onChangeDOMCheckbox">onChangeDOMCheckbox</Link> for use with HTML checkboxes</Text>
     </Message>
 </Box>

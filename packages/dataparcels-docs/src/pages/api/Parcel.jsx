@@ -12,6 +12,7 @@ import Markdown_id from 'docs/api/parcel/id.md';
 import Markdown_path from 'docs/api/parcel/path.md';
 import Markdown_spread from 'docs/api/parcel/spread.md';
 import Markdown_spreadDOM from 'docs/api/parcel/spreadDOM.md';
+import Markdown_spreadDOMCheckbox from 'docs/api/parcel/spreadDOMCheckbox.md';
 import Markdown_get from 'docs/api/parcel/get.md';
 import Markdown_getIn from 'docs/api/parcel/getIn.md';
 import Markdown_children from 'docs/api/parcel/children.md';
@@ -24,6 +25,7 @@ import Markdown_isFirst from 'docs/api/parcel/isFirst.md';
 import Markdown_isLast from 'docs/api/parcel/isLast.md';
 import Markdown_onChange from 'docs/api/parcel/onChange.md';
 import Markdown_onChangeDOM from 'docs/api/parcel/onChangeDOM.md';
+import Markdown_onChangeDOMCheckbox from 'docs/api/parcel/onChangeDOMCheckbox.md';
 import Markdown_set from 'docs/api/parcel/set.md';
 import Markdown_setIn from 'docs/api/parcel/setIn.md';
 import Markdown_update from 'docs/api/parcel/update.md';
@@ -67,6 +69,7 @@ const md = {
     path: Markdown_path,
     spread: Markdown_spread,
     spreadDOM: Markdown_spreadDOM,
+    spreadDOMCheckbox: Markdown_spreadDOMCheckbox,
     get: Markdown_get,
     getIn: Markdown_getIn,
     children: Markdown_children,
@@ -79,6 +82,7 @@ const md = {
     isLast: Markdown_isLast,
     onChange: Markdown_onChange,
     onChangeDOM: Markdown_onChangeDOM,
+    onChangeDOMCheckbox: Markdown_onChangeDOMCheckbox,
     set: Markdown_set,
     setIn: Markdown_setIn,
     update: Markdown_update,
@@ -132,8 +136,10 @@ metaAsParcel()
 # Input binding methods
 spread()
 spreadDOM()
+spreadDOMCheckbox()
 onChange()
 onChangeDOM()
+onChangeDOMCheckbox()
 
 # Child methods
 isFirst()

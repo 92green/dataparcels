@@ -30,15 +30,9 @@ const FruitListEditor = (props) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => {
                     let selectedParcel = parcel.metaAsParcel('selected');
-
-                    let checkboxProps = {
-                        checked: !!selectedParcel.value,
-                        onChange: (event) => selectedParcel.set(event.currentTarget.checked)
-                    };
-
                     return <div>
                         <input type="text" {...parcel.spreadDOM()} />
-                        <input type="checkbox" style={{width: '2rem'}} {...checkboxProps} />
+                        <input type="checkbox" style={{width: '2rem'}} {...selectedParcel.spreadDOMCheckbox()} />
                         <button onClick={() => parcel.swapPrev()}>^</button>
                         <button onClick={() => parcel.swapNext()}>v</button>
                         <button onClick={() => parcel.delete()}>x</button>
