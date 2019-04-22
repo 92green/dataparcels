@@ -18,12 +18,11 @@ if(!IsRenderingStaticHtml()) {
 }
 
 export default ({children}: Props): Node => <div>
-    <Helmet
-        title="Dataparcels"
-        meta={[
-            {name: "description", content: "A super declarative user input library that works really well with React."}
-        ]}
-    />
+    <Helmet>
+        <meta charSet="utf-8" />
+        <title>Dataparcels</title>
+        <meta name="description" content="A library for editing data structures that works really well with React." />
+    </Helmet>
     <Head />
-    {children()}
+    {children}
 </div>;
