@@ -7,7 +7,7 @@
   "license": "MIT",
   "main": "n/a",
   "scripts": {
-    "build": "gatsby build",
+    "build-docs": "gatsby build",
     "watch": "gatsby develop"
   },
   "dependencies": {

@@ -2,9 +2,11 @@
   "private": true,
   "scripts": {
     "bootstrap": "yarn lerna bootstrap",
-    "build-docs": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md && lerna run build-docs --parallel --"
-  },
-  "devDependencies": {
+    "build": "yarn lerna run build",
+    "build-docs": "yarn copy-readmes && cd packages/dataparcels-docs && yarn build-docs",
+    "copy-readmes": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md",
+    "test-all": "yarn lerna run test-all",
+    "watch": "yarn lerna run watch"
   },
   "dependencies": {
     "lerna": "^3.10.7"
