@@ -7,6 +7,7 @@
     "bump": "yarn lerna publish",
     "copy-readmes": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md",
     "preversion": "yarn build",
+    "reinstall": "rm -rf node_modules && yarn && yarn bootstrap",
     "test-all": "yarn lerna run test-all",
     "watch": "yarn lerna run watch"
   },
