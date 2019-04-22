@@ -1,15 +1,16 @@
 {
   "private": true,
   "scripts": {
-    "bootstrap": "yarn lerna bootstrap",
+    "bootstrap": "yarn lerna bootstrap && yarn dedupe-react",
     "build": "yarn lerna run build",
     "build-docs": "yarn copy-readmes && cd packages/dataparcels-docs && yarn build-docs",
     "bump": "yarn lerna publish",
     "copy-readmes": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md",
+    "dedupe-react": "cd packages/react-dataparcels && npm link ../dataparcels-docs/node_modules/react",
     "preversion": "yarn build",
     "reinstall": "rm -rf node_modules && yarn && yarn bootstrap",
     "test-all": "yarn lerna run test-all",
-    "watch": "yarn lerna run watch"
+    "watch": "yarn lerna run watch --parallel"
   },
   "dependencies": {
     "lerna": "^3.10.7"
