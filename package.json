@@ -10,5 +10,14 @@
   },
   "dependencies": {
     "lerna": "^3.10.7"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "husky": "^1.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
