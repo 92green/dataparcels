@@ -1,40 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "preversion": "yarn build-all",
     "bootstrap": "yarn lerna bootstrap",
-    "build": "lerna run build --parallel --",
-    "build-all": "lerna run build-all --parallel --",
-    "build-docs": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md && lerna run build-docs --parallel --",
-    "flow": "blueflag-test flow",
-    "flow-coverage": "blueflag-test flow-coverage -M",
-    "lint": "blueflag-test lint --monorepo",
-    "test": "yarn build && yarn jest --maxWorkers=1",
-    "test-all": "yarn build && yarn test --maxWorkers=1 && yarn flow && yarn lint && yarn flow-coverage && yarn size-limit",
-    "deploy-docs": "yarn lerna --scope dataparcels-docs run deploy",
-    "view-coverage": "open ./coverage/lcov-report/index.html",
-    "watch": "lerna run watch --parallel --"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/gatsby*",
-      "**/gatsby*/**"
-    ]
+    "build-docs": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md && lerna run build-docs --parallel --"
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-core": "^6.23.0",
-    "babel-preset-blueflag": "^0.6.0",
-    "blueflag-test": "^0.21.0",
-    "lerna": "^2.9.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "stampy": "^0.40.0"
   },
   "dependencies": {
-    "babel-plugin-extract-flow-types": "^1.0.0"
+    "lerna": "^3.10.7"
   }
 }
