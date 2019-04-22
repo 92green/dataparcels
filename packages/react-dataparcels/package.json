@@ -20,6 +20,7 @@
     "ParcelHoc.js",
     "ParcelShape.js",
     "shape.js",
+    "useParcelState.js",
     "Validation.js"
   ],
   "bugs": {
@@ -50,6 +51,7 @@
     "immutable": "^4.0.0-rc.12",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-hooks-testing-library": "^0.5.0",
     "size-limit": "^0.21.1"
   },
   "peerDependencies": {

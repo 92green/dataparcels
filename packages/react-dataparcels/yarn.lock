@@ -688,7 +688,7 @@
     pirates "^4.0.0"
     source-map-support "^0.5.9"
 
-"@babel/runtime@^7.1.5", "@babel/runtime@^7.2.0":
+"@babel/runtime@^7.1.5", "@babel/runtime@^7.2.0", "@babel/runtime@^7.4.2":
   version "7.4.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.3.tgz#79888e452034223ad9609187a0ad1fe0d2ad4bdc"
   dependencies:
@@ -2415,6 +2415,14 @@ data-urls@^1.0.0:
     abab "^2.0.0"
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
+
+dataparcels@^0.19.0:
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.19.1.tgz#bc91e7f42ac5536bb17195dbb09cfb04e34c4ca5"
+  dependencies:
+    babel-runtime "6.23.0"
+    escape-string-regexp "^1.0.5"
+    unmutable "^0.41.1"
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -6488,6 +6496,12 @@ react-dom@^16.8.6:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.13.6"
+
+react-hooks-testing-library@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-hooks-testing-library/-/react-hooks-testing-library-0.5.0.tgz#571af3522f88ea4ac23c634fb4deff84873f2bc2"
+  dependencies:
+    "@babel/runtime" "^7.4.2"
 
 react-is@^16.8.1, react-is@^16.8.6:
   version "16.8.6"
