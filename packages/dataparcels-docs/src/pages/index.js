@@ -2,6 +2,7 @@
 import type {Node} from 'react';
 
 import React from 'react';
+import Layout from 'layouts/Layout';
 import {Box, CenteredLanding, Grid, GridItem, Image, Link as HtmlLink, NavigationList,NavigationListItem, Text, Typography, Wrapper} from 'dcme-style';
 import IndexMarkdown from 'pages/index.md';
 import IndexAfterMarkdown from 'pages/indexAfter.md';
@@ -10,7 +11,7 @@ import API from 'content/API';
 import IconParcel from 'content/parcelinverted.gif';
 import APINavigation from 'component/APINavigation';
 
-export default () => <Box>
+export default () => <Layout>
     <Box modifier="invertedCopy invertedBackground">
         <Wrapper>
             <CenteredLanding
@@ -67,4 +68,4 @@ export default () => <Box>
             </Wrapper>
         </Wrapper>
     </Box>
-</Box>
+</Layout>

@@ -13,6 +13,7 @@ import Markdown_onCancel from 'docs/api/parcelBoundaryHoc/onCancel.md';
 import Markdown_onRelease from 'docs/api/parcelBoundaryHoc/onRelease.md';
 import Markdown_childName from 'docs/api/parcelBoundaryHoc/childName.md';
 import Markdown_childNameControl from 'docs/api/parcelBoundaryHoc/childNameControl.md';
+import Layout from 'layouts/Layout';
 
 const md = {
     _desc: Markdown_ParcelBoundaryHoc,
@@ -44,8 +45,10 @@ $\{name\}
 $\{name\}Control
 `;
 
-export default () => <ApiPage
-    name="ParcelBoundaryHoc"
-    api={api}
-    md={md}
-/>;
+export default () => <Layout>
+    <ApiPage
+        name="ParcelBoundaryHoc"
+        api={api}
+        md={md}
+    />
+</Layout>

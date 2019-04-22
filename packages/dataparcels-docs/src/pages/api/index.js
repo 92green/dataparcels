@@ -6,8 +6,9 @@ import {Box, Text, Wrapper} from 'dcme-style';
 import PageLayout from 'component/PageLayout';
 import API from 'content/API';
 import IconParcel from 'content/parcelinverted.gif';
+import Layout from 'layouts/Layout';
 
-export default () => <Box>
+export default () => <Layout>
     <PageLayout
         modifier="marginBottom"
         content={() => <Box modifier="paddingTopKilo">
@@ -17,4 +18,4 @@ export default () => <Box>
     <Wrapper>
         <API />
     </Wrapper>
-</Box>
+</Layout>

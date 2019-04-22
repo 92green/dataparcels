@@ -55,6 +55,7 @@ import Markdown_log from 'docs/api/parcel/log.md';
 import Markdown_spy from 'docs/api/parcel/spy.md';
 import Markdown_spyChange from 'docs/api/parcel/spyChange.md';
 import Markdown_pipe from 'docs/api/parcel/pipe.md';
+import Layout from 'layouts/Layout';
 
 const md = {
     _desc: Markdown_Parcel,
@@ -189,8 +190,10 @@ pipe()
 log()
 `;
 
-export default () => <ApiPage
-    name="Parcel"
-    api={api}
-    md={md}
-/>;
+export default () => <Layout>
+    <ApiPage
+        name="Parcel"
+        api={api}
+        md={md}
+    />
+</Layout>
