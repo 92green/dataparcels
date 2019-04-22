@@ -1,0 +1,14 @@
+[
+    {
+        limit: "14 KB",
+        path: "lib/index.js"
+    },
+    {
+        limit: "15 KB",
+        path: "ParcelShape.js"
+    },
+    {
+        limit: "6 KB",
+        path: "Validation.js"
+    }
+]
