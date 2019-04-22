@@ -22,3 +22,4 @@ I hope this library helps solve some front-end problems for you.
 - Add merge mode to control how downward changes are accepted into `ParcelBoundary` components. This is required for rekey.
 - Add rekey, which enables changes via props to be merged into buffered changes (i.e. unsaved changes). This will allow multiple editors to alter the same piece of data simultaneously without overwriting. The ability to rebase unsaved changes onto updated data already exists, but rekey is required to make sense of incoming changes via props.
 - Add a hook into `useParcelBuffer` to save, reload and clear cached data. This can be used with `localStorage` or similar external storage mechanisms to retain and restore unsaved changes.
+- Add a proper build process with dev and prod builds, that doesn't rely on minification and dead code elimination being carried out by the containing project's build process. This step will finally allow proper optimisations to reduce bundle size.
