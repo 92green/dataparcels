@@ -19,7 +19,8 @@
     "ParcelBoundaryHoc.js",
     "ParcelHoc.js",
     "ParcelShape.js",
-    "shape.js"
+    "shape.js",
+    "Validation.js"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
@@ -28,14 +29,30 @@
   "scripts": {
     "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js'",
     "build-all": "yarn build",
+    "flow": "blueflag-test flow",
+    "flow-coverage": "blueflag-test flow-coverage",
+    "lint": "blueflag-test lint",
+    "size": "size-limit",
+    "test": "yarn build && yarn jest --maxWorkers=1",
+    "test-all": "yarn build && yarn jest --maxWorkers=1 && yarn flow && yarn lint && yarn flow-coverage && yarn size",
     "watch": "yarn run build -w"
   },
   "dependencies": {
-    "babel-runtime": "6.23.0",
+    "@babel/runtime": "^7.1.5",
     "dataparcels": "^0.19.0",
     "unmutable": "^0.41.1"
   },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "babel-preset-blueflag": "^1.0.0",
+    "blueflag-test": "^0.22.0",
+    "immutable": "^4.0.0-rc.12",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "size-limit": "^0.21.1"
+  },
   "peerDependencies": {
-    "react": "16.4.2"
+    "react": "^16.8.0"
   }
 }
