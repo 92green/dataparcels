@@ -17,7 +17,8 @@
     "dangerouslyUpdateParcelData.js",
     "DeletedParcelMarker.js",
     "ParcelShape.js",
-    "shape.js"
+    "shape.js",
+    "Validation.js"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
