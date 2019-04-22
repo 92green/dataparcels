@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'gatsby-link';
 import {Box, Grid, GridItem, Image, NavigationList, NavigationListItem, Text} from 'dcme-style';
-import SpruceClassName from 'stampy/lib/util/SpruceClassName';
+import SpruceClassName from 'react-spruce/lib/SpruceClassName';
 
 import IconParcel from 'content/parcel.gif';
 import IconParcelHoc from 'content/parcelhoc.gif';
