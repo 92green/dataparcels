@@ -7,6 +7,8 @@ import ChangeRequest from '../ChangeRequest';
 import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
 import shape from '../shape';
+import useParcelBuffer from '../useParcelBuffer';
+import useParcelState from '../useParcelState';
 import CancelActionMarker from '../CancelActionMarker';
 import Validation from '../Validation';
 
@@ -29,6 +31,8 @@ import InternalValidation from 'dataparcels/Validation';
 import InternalParcelHoc from '../lib/ParcelHoc';
 import InternalParcelBoundary from '../lib/ParcelBoundary';
 import InternalParcelBoundaryHoc from '../lib/ParcelBoundaryHoc';
+import InternalUseParcelBuffer from '../lib/useParcelBuffer';
+import InternalUseParcelState from '../lib/useParcelState';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
@@ -72,4 +76,12 @@ test('/ParcelBoundary should export ParcelBoundary', () => {
 
 test('/ParcelBoundaryHoc should export ParcelBoundaryHoc', () => {
     expect(ParcelBoundaryHoc).toBe(InternalParcelBoundaryHoc);
+});
+
+test('/useParcelBuffer should export useParcelBuffer', () => {
+    expect(useParcelBuffer).toBe(InternalUseParcelBuffer);
+});
+
+test('/useParcelState should export useParcelState', () => {
+    expect(useParcelState).toBe(InternalUseParcelState);
 });
