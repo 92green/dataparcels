@@ -11,4 +11,4 @@ A library for editing data structures that works really well with React.
 
 ## Packages
 
-If you're using React, get [`react-dataparcels`](https://www.npmjs.com/package/react-dataparcels) and you'll also get components and hocs to easily use dataparcels in a React app. If not, go for [`dataparcels`](https://www.npmjs.com/package/dataparcels).
+If you're using React, get [`react-dataparcels`](https://www.npmjs.com/package/react-dataparcels) and you'll also get hooks, hocs and components to easily use dataparcels in a React app. If not, go for [`dataparcels`](https://www.npmjs.com/package/dataparcels).
