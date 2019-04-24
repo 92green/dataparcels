@@ -36,5 +36,6 @@
   },
   "dependencies": {
     "babel-plugin-extract-flow-types": "^1.0.0"
-  }
+  },
+  "release": "crazy-constrictor"
 }
