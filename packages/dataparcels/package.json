@@ -1,6 +1,6 @@
 {
   "name": "dataparcels",
-  "version": "0.19.0",
+  "version": "0.19.1",
   "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "UNLICENSED",
@@ -17,7 +17,8 @@
     "dangerouslyUpdateParcelData.js",
     "DeletedParcelMarker.js",
     "ParcelShape.js",
-    "shape.js"
+    "shape.js",
+    "Validation.js"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
