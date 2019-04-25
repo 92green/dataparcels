@@ -1,9 +1,6 @@
 import Link from 'component/Link';
 import Param from 'component/Param';
 import ApiPageIcon from 'component/ApiPageIcon';
-import ParcelHocExample from 'pages/examples/parcelhoc-example.md';
-import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-valuefromprops.md';
-import ParcelHocOnChange from 'pages/examples/parcelhoc-onchange.md';
 import IconParcelHoc from 'content/parcelhoc.gif';
 
 # ParcelHoc
