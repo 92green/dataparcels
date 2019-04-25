@@ -110,13 +110,19 @@ describe('useParcelState should use config.modifyBeforeUpdate', () => {
             modifyBeforeUpdate: value => value * 2
         }));
 
-        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].value).toBe(246);
 
         act(() => {
             result.current[0].set(10);
         });
 
         expect(result.current[0].value).toBe(20);
+
+        act(() => {
+            result.current[0].set(100);
+        });
+
+        expect(result.current[0].value).toBe(200);
     });
 
     it('should apply multiple modifyBeforeUpdate to parcel', () => {
@@ -128,7 +134,7 @@ describe('useParcelState should use config.modifyBeforeUpdate', () => {
             ]
         }));
 
-        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].value).toBe(251);
 
         act(() => {
             result.current[0].set(10);
@@ -144,7 +150,7 @@ describe('useParcelState should use config.modifyBeforeUpdate', () => {
             modifyBeforeUpdate: value => value * 2
         }));
 
-        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].value).toBe(246);
 
         act(() => {
             rerender({foo: 10});
@@ -163,7 +169,7 @@ describe('useParcelState should use config.modifyBeforeUpdate', () => {
             ]
         }));
 
-        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].value).toBe(251);
 
         act(() => {
             rerender({foo: 10});
