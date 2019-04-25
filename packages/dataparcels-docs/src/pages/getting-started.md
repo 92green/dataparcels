@@ -41,25 +41,23 @@ We could do something like this.
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 
 // PLEASE DON'T USE THIS CODE
-// THIS CODE IS FOR DEMONSTRAION PURPOSES ONLY
+// THIS CODE IS FOR DEMONSTRATION PURPOSES ONLY
 // THERE'S A BETTER WAY OF DOING IT BELOW
 
-const PersonParcelHoc = ParcelHoc({
-    name: "personParcel",
-    valueFromProps: (/* props */) => ({
-        firstname: "Robert",
-        lastname: "Clamps",
-        address: {
-            postcode: "1234"
-        }
-    })
-});
+export default function PersonEditor(props) {
 
-const PersonEditor = (props) => {
-    let {personParcel} = props;
+    let [personParcel] = useParcelState({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps",
+            address: {
+                postcode: "1234"
+            }
+        }
+    });
 
     let firstname = personParcel.get('firstname');
     let lastname = personParcel.get('lastname');
@@ -76,8 +74,6 @@ const PersonEditor = (props) => {
         <input type="text" value={postcode.value} onChange={postcode.onChangeDOM} />
     </div>;
 };
-
-export default PersonParcelHoc(PersonEditor);
 ```
 
 ### What's going on
@@ -97,22 +93,21 @@ This is the same example with a few improvements added: better rendering perform
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-const PersonParcelHoc = ParcelHoc({
-    name: "personParcel",
-    valueFromProps: (/* props */) => ({
-        firstname: "Robert",
-        lastname: "Clamps",
-        address: {
-            postcode: "1234"
-        }
-    })
-});
+export default function PersonEditor(props) {
 
-const PersonEditor = (props) => {
-    let {personParcel} = props;
+    let [personParcel] = useParcelState({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps",
+            address: {
+                postcode: "1234"
+            }
+        }
+    });
+
     return <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
@@ -131,7 +126,6 @@ const PersonEditor = (props) => {
     </div>;
 };
 
-export default PersonParcelHoc(PersonEditor);
 
 ```
 
@@ -142,5 +136,5 @@ export default PersonParcelHoc(PersonEditor);
 
 ## More
 
+- Read more about <Link to="/data-editing">data editing</Link>
 - <Link to="/api">Browse the API</Link>
-- Continue on to <Link to="/data-editing">data editing</Link>

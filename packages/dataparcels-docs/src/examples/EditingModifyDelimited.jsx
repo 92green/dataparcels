@@ -1,14 +1,9 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
+import exampleFrame from 'component/exampleFrame';
 
-const DelimitedStringParcelHoc = ParcelHoc({
-    name: "delimitedParcel",
-    valueFromProps: (/* props */) => "abc.def"
-});
-
-const DelimitedStringInput = (props) => {
+function DelimitedStringInput(props) {
     let delimitedStringParcel = props
         .delimitedStringParcel
         .modifyDown(string => string.split("."))
@@ -29,15 +24,17 @@ const DelimitedStringInput = (props) => {
         })}
         <button onClick={() => delimitedStringParcel.push("")}>Add new path segment</button>
     </div>;
-};
+}
 
-const DelimitedStringEditor = (props) => {
-    let {delimitedParcel} = props;
-    return <div>
+export default function DelimitedStringEditor(props) {
+
+    let [delimitedParcel] = useParcelState({
+        value: "abc.def"
+    });
+
+    return exampleFrame({delimitedParcel}, <div>
         <h4>Delimited string > array of strings</h4>
         <p>Turns a stored string into an array so array editing controls can be rendered.</p>
         <DelimitedStringInput delimitedStringParcel={delimitedParcel} />
-    </div>;
-};
-
-export default DelimitedStringParcelHoc(ExampleHoc(DelimitedStringEditor));
+    </div>);
+}

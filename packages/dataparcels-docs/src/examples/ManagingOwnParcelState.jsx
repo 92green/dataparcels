@@ -1,34 +1,29 @@
 import React from 'react';
+import {useState} from 'react';
 import Parcel from 'react-dataparcels';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-export default class ManagingOwnParcelState extends React.Component {
-    constructor(props) {
-        super(props);
+export default function ManagingOwnParcelState(props) {
 
-        let personParcel = new Parcel({
-            value: {
-                firstname: "Robert",
-                lastname: "Clamps"
-            },
-            handleChange: (personParcel) => this.setState({personParcel})
-        });
+    let [personParcel, setPersonParcel] = useState(() => new Parcel({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps"
+        },
+        handleChange: (parcel) => {
+            setPersonParcel(parcel);
+        }
+    }));
 
-        this.state = {personParcel};
-    }
+    return <div>
+        <label>firstname</label>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+        </ParcelBoundary>
 
-    render() {
-        let {personParcel} = this.state;
-        return <div>
-            <label>firstname</label>
-            <ParcelBoundary parcel={personParcel.get('firstname')}>
-                {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
-            </ParcelBoundary>
-
-            <label>lastname</label>
-            <ParcelBoundary parcel={personParcel.get('lastname')}>
-                {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
-            </ParcelBoundary>
-        </div>;
-    }
+        <label>lastname</label>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </ParcelBoundary>
+    </div>;
 }

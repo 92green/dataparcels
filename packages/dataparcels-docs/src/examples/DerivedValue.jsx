@@ -1,31 +1,26 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
+import exampleFrame from 'component/exampleFrame';
 
-const WordParcelHoc = ParcelHoc({
-    name: "wordParcel",
-    valueFromProps: (/* props */) => ({
-        word: "blueberries",
-        uppercase: undefined
-    }),
-    modifyBeforeUpdate: [
-        (value) => ({
+export default function WordEditor(props) {
+
+    let [wordParcel] = useParcelState({
+        value: {
+            word: "blueberries",
+            wordLength: undefined
+        },
+        modifyBeforeUpdate: (value) => ({
             word: value.word,
-            uppercase: value.word.toUpperCase()
+            wordLength: value.word.length
         })
-    ]
-});
+    });
 
-const WordEditor = (props) => {
-    let {wordParcel} = props;
-    return <div>
+    return exampleFrame({wordParcel}, <div>
         <label>word</label>
         <ParcelBoundary parcel={wordParcel.get('word')}>
             {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
-        <p>Uppercase word is {wordParcel.get('uppercase').value}</p>
-    </div>;
-};
-
-export default WordParcelHoc(ExampleHoc(WordEditor));
+        <p>word length is {wordParcel.get('wordLength').value}</p>
+    </div>);
+}

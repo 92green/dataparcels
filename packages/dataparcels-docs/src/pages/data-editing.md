@@ -36,22 +36,21 @@ This example demonstrates a pretty typical React setup to do that.
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-const PersonParcelHoc = ParcelHoc({
-    name: "personParcel",
-    valueFromProps: (/* props */) => ({
-        firstname: "Robert",
-        lastname: "Clamps",
-        address: {
-            postcode: "1234"
-        }
-    })
-});
+export default function PersonEditor(props) {
 
-const PersonEditor = (props) => {
-    let {personParcel} = props;
+    let [personParcel] = useParcelState({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps",
+            address: {
+                postcode: "1234"
+            }
+        }
+    });
+
     return <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
@@ -69,8 +68,6 @@ const PersonEditor = (props) => {
         </ParcelBoundary>
     </div>;
 };
-
-export default PersonParcelHoc(PersonEditor);
 
 ```
 
@@ -92,27 +89,25 @@ Dataparcels has a powerful set of methods for manipulating indexed data types, s
 
 Notice how items in the array are given **automatic unique keys**, displayed under each input as `#a`, `#b` ..., which can be used by React to identify each element regardless of how the elements move around.
 
-<Message>Make sure you check out the <Link to="ui-behaviour#Drag-and-drop-sorting">drag and drop sorting</Link> example too.</Message>
+<Message>Make sure you check out the <Link to="/ui-behaviour#Drag-and-drop-sorting">drag and drop sorting</Link> example too.</Message>
 
 <EditingArrays />
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
 
-const FruitListParcelHoc = ParcelHoc({
-    name: "fruitListParcel",
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ]
-});
+export default function FruitListEditor(props) {
 
-const FruitListEditor = (props) => {
-    let {fruitListParcel} = props;
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
+
     return <div>
         {fruitListParcel.toArray((fruitParcel) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
@@ -122,15 +117,14 @@ const FruitListEditor = (props) => {
                     <button onClick={() => parcel.swapNext()}>v</button>
                     <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
                     <button onClick={() => parcel.delete()}>x</button>
-                    <span> key {fruitParcel.key}</span>
+                    <span className="Text Text-monospace"> key {fruitParcel.key}</span>
                 </div>}
             </ParcelBoundary>;
         })}
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
-};
+}
 
-export default FruitListParcelHoc(FruitListEditor);
 ```
 
 ### What's going on
@@ -152,15 +146,10 @@ Sometimes you may hit a situation where a Parcel contains data you want to be ab
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-const AlphanumericParcelHoc = ParcelHoc({
-    name: "alphanumericParcel",
-    valueFromProps: (/* props */) => "Abc123"
-});
-
-const AlphanumericInput = (props) => {
+function AlphanumericInput(props) {
     return <ParcelBoundary parcel={props.alphanumericParcel}>
         {(alphanumericParcel) => {
             let parcel = alphanumericParcel.modifyUp(string => string.replace(/[^a-zA-Z0-9]/g, ""));
@@ -168,18 +157,20 @@ const AlphanumericInput = (props) => {
             return <input type="text" {...parcel.spreadDOM()} />;
         }}
     </ParcelBoundary>;
-};
+}
 
-const AlphanumericEditor = (props) => {
-    let {alphanumericParcel} = props;
+export default function AlphanumericEditor(props) {
+
+    let [alphanumericParcel] = useParcelState({
+        value: "Abc123"
+    });
+
     return <div>
         <h4>Alphanumeric input</h4>
         <p>Disallows all non-alphanumeric characters. Try typing some punctuation.</p>
         <AlphanumericInput alphanumericParcel={alphanumericParcel} />
     </div>;
-};
-
-export default AlphanumericParcelHoc(AlphanumericEditor);
+}
 
 ```
 
@@ -187,15 +178,10 @@ export default AlphanumericParcelHoc(AlphanumericEditor);
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-const NumberParcelHoc = ParcelHoc({
-    name: "numberParcel",
-    valueFromProps: (/* props */) => 123
-});
-
-const NumberInput = (props) => {
+function NumberInput(props) {
     let numberParcel = props
         .numberParcel
         .modifyUp(string => Number(string))
@@ -204,42 +190,42 @@ const NumberInput = (props) => {
     // ^ turn value into a string on the way down
     // and turn value back into a number on the way up
 
-    // without the keepValue prop, typing "0.10"
-    // would immediately be replaced with "0.1"
-    // as the new value is turned into a number on the way up,
-    // and into a string on the way down
-    // which would make typing very frustrating
+    // *the keepValue prop is necessary here, see note below
 
     return <ParcelBoundary parcel={numberParcel} keepValue>
         {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
     </ParcelBoundary>;
-};
+}
 
-const NumberEditor = (props) => {
-    let {numberParcel} = props;
+export default function NumberEditor(props) {
+
+    let [numberParcel] = useParcelState({
+        value: 123
+    });
+
     return <div>
         <h4>Number > string</h4>
-        <p>Turns a stored number into a string for editing</p>
+        <p>Turns a stored number into a string for editing.</p>
         <NumberInput numberParcel={numberParcel} />
     </div>;
-};
-
-export default NumberParcelHoc(NumberEditor);
+}
 ```
+
+#### The keepValue prop
+
+The `keepValue` prop is necessary here to allow the ParcelBoundary to be the master of its own state.
+So even when a non-number is entered into the input (e.g. "A"), and this is turned into `NaN` as it passes through `.modifyUp()`, the ParcelBoundary can still remember that it should contain "A".
+
+See [ParcelBoundary.keepValue](/api/ParcelBoundary#keepValue) for more details.
 
 <EditingModifyDelimited />
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-const DelimitedStringParcelHoc = ParcelHoc({
-    name: "delimitedParcel",
-    valueFromProps: (/* props */) => "abc.def"
-});
-
-const DelimitedStringInput = (props) => {
+function DelimitedStringInput(props) {
     let delimitedStringParcel = props
         .delimitedStringParcel
         .modifyDown(string => string.split("."))
@@ -260,18 +246,21 @@ const DelimitedStringInput = (props) => {
         })}
         <button onClick={() => delimitedStringParcel.push("")}>Add new path segment</button>
     </div>;
-};
+}
 
-const DelimitedStringEditor = (props) => {
-    let {delimitedParcel} = props;
+export default function DelimitedStringEditor(props) {
+
+    let [delimitedParcel] = useParcelState({
+        value: "abc.def"
+    });
+
     return <div>
         <h4>Delimited string > array of strings</h4>
         <p>Turns a stored string into an array so array editing controls can be rendered.</p>
         <DelimitedStringInput delimitedStringParcel={delimitedParcel} />
     </div>;
-};
+}
 
-export default DelimitedStringParcelHoc(DelimitedStringEditor);
 ```
 
 <EditingModifyMissing />
@@ -323,86 +312,73 @@ It's easy to update Parcel data based on other Parcel data using `modifyBeforeUp
 
 It works quite like <Link to="/api/Parcel#modifyUp">modifyUp()</Link> as shown in <Link to="/data-editing#Modifying-data-to-fit-the-UI">Modifying data to fit the UI</Link>, but `modifyBeforeUpdate` is also applied to the initial value *and* any updates that occur because of prop changes.
 
-This example derives an uppercase version of the word.
+This example derives the length of the word.
 
 <DerivedValue />
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-const WordParcelHoc = ParcelHoc({
-    name: "wordParcel",
-    valueFromProps: (/* props */) => ({
-        word: "blueberries",
-        uppercase: undefined
-    }),
-    modifyBeforeUpdate: [
-        (value) => ({
-            word: value.word,
-            uppercase: value.word.toUpperCase()
-        })
-    ]
-});
+export default function WordEditor(props) {
 
-const WordEditor = (props) => {
-    let {wordParcel} = props;
+    let [wordParcel] = useParcelState({
+        value: {
+            word: "blueberries",
+            wordLength: undefined
+        },
+        modifyBeforeUpdate: (value) => ({
+            word: value.word,
+            wordLength: value.word.length
+        })
+    });
+
     return <div>
         <label>word</label>
         <ParcelBoundary parcel={wordParcel.get('word')}>
             {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
-        <p>Uppercase word is {wordParcel.get('uppercase').value}</p>
+        <p>word length is {wordParcel.get('wordLength').value}</p>
     </div>;
-};
-
-export default WordParcelHoc(WordEditor);
+}
 
 ```
 
-Setting derived data is particularly useful with <Link to="/parcel-meta">Parcel meta</Link>, which provides the ability to store extra data that pertains to parts of a data shape.
+A potential problem with the above example is that it stores derived data in the parcel's *value*. Perhaps the data shape you're editing can not or should not have a new field added to it. It is this reason that [Parcel meta](/parcel-meta) exists, which provides a convenient place to store extra data that pertains to parts of a data shape.
 
-This example derives the length of the word, storing it in meta. It also uses a <Link to="/api/ParcelShape">shape updater</Link>.
+This example also derives the length of the word, but this time it stores it in meta. It also uses a [shape updater](/api/ParcelShape), an advanced editing feature of dataparcels. The shape updater's syntax can look a little strange, but it allows for powerful manipulations of the shape of a value.
 
 <DerivedMeta />
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import shape from 'react-dataparcels/shape';
 
-// this example uses a shape updater to set meta data
-const setWordLengthMeta = shape(parcelShape => {
-    let word = parcelShape.value;
-    return parcelShape.setMeta({
-        wordLength: word.length
+const setWordLengthMeta = shape(parcelShape => parcelShape.setMeta({
+    wordLength: parcelShape.value.word.length
+}));
+
+export default function WordEditor(props) {
+
+    let [wordParcel] = useParcelState({
+        value: {
+            word: "blueberries",
+            wordLength: undefined
+        },
+        modifyBeforeUpdate: setWordLengthMeta
     });
-});
 
-const WordParcelHoc = ParcelHoc({
-    name: "wordParcel",
-    valueFromProps: (/* props */) => "blueberries",
-    modifyBeforeUpdate: [
-        setWordLengthMeta
-    ]
-});
-
-const WordEditor = (props) => {
-    let {wordParcel} = props;
     return <div>
         <label>word</label>
-        <ParcelBoundary parcel={wordParcel}>
-            {(parcel) => <div>
-                <input type="text" {...parcel.spreadDOM()} />
-                <p>length is {parcel.meta.wordLength}</p>
-            </div>}
+        <ParcelBoundary parcel={wordParcel.get('word')}>
+            {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
+        <p>word length is {wordParcel.meta.wordLength}</p>
     </div>;
-};
-
-export default WordParcelHoc(WordEditor);
+}
 
 ```
 
@@ -419,11 +395,11 @@ If `sum` is edited, `a` and `b` are scaled appropriately so they remain proporti
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
 
-const calculate = (value, changeRequest) => {
+function calculate(value, changeRequest) {
     let {a, b, sum} = value;
 
     if(changeRequest.originPath[0] !== "sum") {
@@ -446,19 +422,7 @@ const calculate = (value, changeRequest) => {
     }
 
     return {a, b, sum};
-};
-
-const SumParcelHoc = ParcelHoc({
-    name: "sumParcel",
-    valueFromProps: (/* props */) => ({
-        a: 5,
-        b: 5,
-        sum: undefined
-    }),
-    modifyBeforeUpdate: [
-        calculate
-    ]
-});
+}
 
 // turn numbers into strings on the way down
 // and back into numbers on the way up
@@ -474,8 +438,17 @@ const numberToString = (parcel) => parcel
         return (string === "" || isNaN(number)) ? CancelActionMarker : number;
     });
 
-const AreaEditor = (props) => {
-    let {sumParcel} = props;
+export default function AreaEditor(props) {
+
+    let [sumParcel] = useParcelState({
+        value: {
+            a: 5,
+            b: 5,
+            sum: undefined
+        },
+        modifyBeforeUpdate: calculate
+    });
+
     return <div>
         <label>a</label>
         <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepValue>
@@ -492,9 +465,8 @@ const AreaEditor = (props) => {
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
     </div>;
-};
+}
 
-export default SumParcelHoc(AreaEditor);
 
 ```
 
@@ -510,38 +482,33 @@ This example also serves as an indication on how you might use `dataparcels` wit
 
 ```js
 import React from 'react';
+import {useState} from 'react';
 import Parcel from 'react-dataparcels';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-export default class ManagingOwnParcelState extends React.Component {
-    constructor(props) {
-        super(props);
+export default function ManagingOwnParcelState(props) {
 
-        let personParcel = new Parcel({
-            value: {
-                firstname: "Robert",
-                lastname: "Clamps"
-            },
-            handleChange: (personParcel) => this.setState({personParcel})
-        });
+    let [personParcel, setPersonParcel] = useState(() => new Parcel({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps"
+        },
+        handleChange: (parcel) => {
+            setPersonParcel(parcel);
+        }
+    }));
 
-        this.state = {personParcel};
-    }
+    return <div>
+        <label>firstname</label>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+        </ParcelBoundary>
 
-    render() {
-        let {personParcel} = this.state;
-        return <div>
-            <label>firstname</label>
-            <ParcelBoundary parcel={personParcel.get('firstname')}>
-                {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
-            </ParcelBoundary>
-
-            <label>lastname</label>
-            <ParcelBoundary parcel={personParcel.get('lastname')}>
-                {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
-            </ParcelBoundary>
-        </div>;
-    }
+        <label>lastname</label>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </ParcelBoundary>
+    </div>;
 }
 
 ```
