@@ -1,8 +1,14 @@
 // @flow
 import type {ParcelValueUpdater} from 'dataparcels';
+import type Parcel from 'dataparcels';
 
-import compose from 'unmutable/compose';
-
-export default (modifyBeforeUpdate: Array<ParcelValueUpdater>) => compose(
-    ...modifyBeforeUpdate.map((fn) => parcel => parcel.modifyUp(fn))
-);
+export default (modifyBeforeUpdate: ?ParcelValueUpdater|ParcelValueUpdater[]) => {
+    return (parcel: Parcel): Parcel => {
+        return []
+            .concat(modifyBeforeUpdate || [])
+            .reduceRight(
+                (parcel, updater) => parcel.modifyUp(updater),
+                parcel
+            );
+    };
+};
