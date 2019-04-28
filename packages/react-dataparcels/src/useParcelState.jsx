@@ -6,6 +6,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
 import Parcel from 'dataparcels';
+import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
 
 type Config = {
     value: any,
@@ -25,14 +26,7 @@ export default (config: Config): Return => {
     // so that all changes made to the returned parcel
     // go up through all of modifyBeforeUpdate's functions
 
-    const applyModifyBeforeUpdate = (parcel: Parcel): Parcel => {
-        return []
-            .concat(config.modifyBeforeUpdate || [])
-            .reduceRight(
-                (parcel, updater) => parcel.modifyUp(updater),
-                parcel
-            );
-    };
+    const applyModifyBeforeUpdate = ApplyModifyBeforeUpdate(config.modifyBeforeUpdate);
 
     // takes a parcel and sets the current config.value as its value
     // (config.value is first passed through modifyBeforeUpdate),
