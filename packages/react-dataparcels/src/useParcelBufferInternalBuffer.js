@@ -7,7 +7,10 @@ import {useRef} from 'react';
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
 
-type OnRelease = (changeRequest: ChangeRequest) => void;
+type Config = {
+    onRelease: (changeRequest: ChangeRequest) => void,
+    onClear: () => void
+};
 
 type Return = {
     bufferState: ?ChangeRequest,
@@ -16,7 +19,7 @@ type Return = {
     release: Function
 };
 
-export default (onRelease: OnRelease): Return => {
+export default ({onRelease, onClear}: Config): Return => {
 
     // buffer ref is used to allow handleChange functions from past renders
     // to always affect the same buffer reference
@@ -40,13 +43,15 @@ export default (onRelease: OnRelease): Return => {
     const clear = () => {
         bufferRef.current = null;
         updateBufferState();
+        onClear();
     };
 
     const release = () => {
         if(bufferRef.current) {
             let changeRequest = bufferRef.current;
             onRelease(changeRequest);
-            clear();
+            bufferRef.current = null;
+            updateBufferState();
         }
     };
 

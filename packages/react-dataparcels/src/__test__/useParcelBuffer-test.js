@@ -211,14 +211,18 @@ describe('useParcelBuffer should use config.hold', () => {
             hold: true
         }));
 
+        expect(result.current[0].value).toEqual([]);
         expect(result.current[1].buffered).toBe(false);
         expect(result.current[1].actions.length).toBe(0);
         expect(handleChange).toHaveBeenCalledTimes(0);
+
+        let firstInnerParcel = result.current[0];
 
         act(() => {
             result.current[0].push("A");
         });
 
+        expect(result.current[0].value).toEqual(["A"]);
         expect(result.current[1].buffered).toBe(true);
         expect(result.current[1].actions.length).toBe(1);
         expect(handleChange).toHaveBeenCalledTimes(0);
@@ -227,6 +231,8 @@ describe('useParcelBuffer should use config.hold', () => {
             result.current[1].clear();
         });
 
+        expect(result.current[0].value).toEqual([]);
+        expect(result.current[0]).toBe(firstInnerParcel);
         expect(result.current[1].buffered).toBe(false);
         expect(result.current[1].actions.length).toBe(0);
         expect(handleChange).toHaveBeenCalledTimes(0);

@@ -30,6 +30,18 @@ type Return = [Parcel, ParcelBufferControl];
 export default (config: Config): Return => {
 
     //
+    // parcel state and change logic
+    //
+
+    // parcelFromProps is locked to changes in props
+    const [parcelFromProps, setParcelFromProps] = useState(null);
+    // innerParcel can deviate from props
+    const [innerParcel, setInnerParcel] = useState(null);
+
+    const shouldKeepValue = useParcelBufferInternalKeepValue(config);
+    let newInnerParcel;
+
+    //
     // buffer ref and functions
     //
 
@@ -38,9 +50,10 @@ export default (config: Config): Return => {
         push,
         clear,
         release
-    } = useParcelBufferInternalBuffer(
-        (changeRequest) => config.parcel.dispatch(changeRequest)
-    );
+    } = useParcelBufferInternalBuffer({
+        onRelease: (changeRequest) => config.parcel.dispatch(changeRequest),
+        onClear: () => setInnerParcel(parcelFromProps.inner)
+    });
 
     // debounce
 
@@ -50,18 +63,9 @@ export default (config: Config): Return => {
         callDebounceRelease();
     }
 
-    //
-    // parcel state and change logic
-    //
-
-    const [outerParcel, setOuterParcel] = useState(null);
-    const [innerParcel, setInnerParcel] = useState(null);
-    const shouldKeepValue = useParcelBufferInternalKeepValue(config);
-    let newInnerParcel;
-
     // update inner parcel when outer parcel changes (or is first set)
 
-    if(!ParcelBoundaryEquals(config.parcel, outerParcel)) {
+    if(!parcelFromProps || !ParcelBoundaryEquals(config.parcel, parcelFromProps.outer)) {
 
         const handleChange = (newParcel: Parcel, changeRequest: ChangeRequest) => {
             const {debounce, hold} = config;
@@ -100,8 +104,11 @@ export default (config: Config): Return => {
             const applyModifyBeforeUpdate = ApplyModifyBeforeUpdate(config.modifyBeforeUpdate);
             return parcel.pipe(
                 // runs newOuterParcel through modifyBeforeUpdate immediately
-                // shoving outerParcel in as a fake previous value
-                pipeWithFakePrevParcel(outerParcel, applyModifyBeforeUpdate),
+                // shoving lastReceivedOuterParcel in as a fake previous value
+                pipeWithFakePrevParcel(
+                    parcelFromProps && parcelFromProps.outer,
+                    applyModifyBeforeUpdate
+                ),
                 // adds modifyBeforeUpdate to any future changes
                 applyModifyBeforeUpdate
             );
@@ -119,8 +126,11 @@ export default (config: Config): Return => {
             ._boundarySplit({handleChange})
             .pipe(prepareInnerParcel);
 
-        setOuterParcel(newOuterParcel);
         setInnerParcel(newInnerParcel);
+        setParcelFromProps({
+            outer: newOuterParcel,
+            inner: newInnerParcel
+        });
     }
 
     //
