@@ -57,6 +57,7 @@ export default (config: Config): Return => {
     const [outerParcel, setOuterParcel] = useState(null);
     const [innerParcel, setInnerParcel] = useState(null);
     const shouldKeepValue = useParcelBufferInternalKeepValue(config);
+    let newInnerParcel;
 
     // update inner parcel when outer parcel changes (or is first set)
 
@@ -112,7 +113,7 @@ export default (config: Config): Return => {
             : prepareModifyBeforeUpdate;
 
         const newOuterParcel = config.parcel;
-        const newInnerParcel = newOuterParcel
+        newInnerParcel = config.parcel
             // boundary split to ensure that inner parcels chain are
             // completely isolated from outer parcels chain
             ._boundarySplit({handleChange})
@@ -137,5 +138,5 @@ export default (config: Config): Return => {
         actions
     });
 
-    return [innerParcel, parcelBufferControl];
+    return [innerParcel || newInnerParcel, parcelBufferControl];
 };

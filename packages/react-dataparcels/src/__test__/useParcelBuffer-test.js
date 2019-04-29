@@ -18,6 +18,14 @@ describe('useParcelBuffer should use config.parcel', () => {
         expect(result.current[0].data).toEqual(parcel.data);
     });
 
+    it('should pass through a parcel on first hook call', () => {
+        let parcel = new Parcel();
+        let hookRenderer = jest.fn(() => useParcelBuffer({parcel}));
+
+        renderHook(hookRenderer);
+        expect(hookRenderer.mock.results[0].value[0] instanceof Parcel).toBe(true);
+    });
+
     it('should propagate parcel change immediately', () => {
         let handleChange = jest.fn();
 
