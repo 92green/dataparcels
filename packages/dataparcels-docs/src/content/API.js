@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Link from 'gatsby-link';
-import {Box, Grid, GridItem, Image, NavigationList, NavigationListItem, Text} from 'dcme-style';
+import {Box, BulletList, BulletListItem, Grid, GridItem, Image, NavigationList, NavigationListItem, Text} from 'dcme-style';
 import SpruceClassName from 'react-spruce/lib/SpruceClassName';
 
 import IconParcel from 'content/parcel.gif';
@@ -36,28 +36,36 @@ export default () => <Box>
         image={IconParcel}
     />
     <Item
-        name="ParcelHoc"
+        name="useParcelState"
         description={<Box>
-            <Text element="p" modifier="marginMilli">ParcelHoc is a React higher order component.</Text>
-            <Text element="p">Its job is to provide a parcel as a prop, and to handle how the parcel binds to React props and lifecycle events.</Text>
+            <Text element="p" modifier="marginMilli">useParcelState is a React hook.</Text>
+            <Text element="p">Its job is to provide a parcel stored in state, and to handle how the parcel binds to React props.</Text>
         </Box>}
         image={IconParcelHoc}
+    />
+    <Item
+        name="useParcelBuffer"
+        description={<Box>
+            <Text element="p" modifier="marginMilli">useParcelBuffer is a React hook.</Text>
+            <Text element="p">Its job is to control the flow of parcel changes.</Text>
+        </Box>}
+        image={IconParcelBoundaryHoc}
     />
     <Item
         name="ParcelBoundary"
         description={<Box>
             <Text element="p" modifier="marginMilli">ParcelBoundary is a React component.</Text>
-            <Text element="p">Its job is to optimise rendering performance, and to optionally control the flow of parcel changes.</Text>
+            <Text element="p">Its job is to optimise rendering performance, and to optionally control the flow of parcel changes using useParcelBuffer.</Text>
         </Box>}
         image={IconParcelBoundary}
     />
-    <Item
-        name="ParcelBoundaryHoc"
-        description={<Box>
-            <Text element="p" modifier="marginMilli">ParcelBoundaryHoc is a React higher order component.</Text>
-            <Text element="p">Its job is to control the flow of parcel changes. It is the higher order component version of a ParcelBoundary.</Text>
-        </Box>}
-        image={IconParcelBoundaryHoc}
-    />
-    <Text element="p" modifier="margin">See also: <Link className="Link" to="/api/ParcelShape">ParcelShape</Link>, <Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link>, <Link className="Link" to="/api/CancelActionMarker">CancelActionMarker</Link>, <Link className="Link" to="/api/shape">shape</Link>.</Text>
+    <Text element="p" modifier="margin">See also:</Text>
+    <BulletList>
+        <BulletListItem><Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link></BulletListItem>
+        <BulletListItem><Link className="Link" to="/api/CancelActionMarker">CancelActionMarker</Link></BulletListItem>
+        <BulletListItem><Link className="Link" to="/api/ParcelShape">ParcelShape</Link></BulletListItem>
+        <BulletListItem><Link className="Link" to="/api/shape">shape</Link></BulletListItem>
+        <BulletListItem><Link className="Link" to="/api/ParcelHoc">ParcelHoc</Link></BulletListItem>
+        <BulletListItem><Link className="Link" to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link></BulletListItem>
+    </BulletList>
 </Box>;
