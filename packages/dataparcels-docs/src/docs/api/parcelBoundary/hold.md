@@ -19,5 +19,3 @@ When `hold` is true, all changes made to the parcel inside the ParcelBoundary ar
     }}
 </ParcelBoundary>
 ```
-
-<Link to="/examples/parcelboundary-hold">Example</Link>

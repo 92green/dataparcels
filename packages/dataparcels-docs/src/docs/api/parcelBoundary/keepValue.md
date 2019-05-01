@@ -25,4 +25,4 @@ The `keepValue` prop is necessary here to allow the ParcelBoundary to be the mas
 
 Other values that are preserved in this example are "0.10", which would be turned into "0.1" by the modify functions, and "0.0000001", which would be turned into "1e-7".
 
-<Link to="/data-editing#Modifying-data-to-fit-the-UI">Example</Link>
+**[See an example of keepValue](/data-editing#Modifying-data-to-fit-the-UI)**
