@@ -3,7 +3,7 @@ import React from 'react';
 
 import Parcel from 'dataparcels';
 import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
-import ParcelBoundaryControl from '../ParcelBoundaryControl';
+import ParcelBufferControl from '../ParcelBufferControl';
 
 let shallowRenderHoc = (props, hock) => {
     let Component = hock((props) => <div />);
@@ -74,8 +74,8 @@ test('ParcelBoundaryHoc config should pass control as config.name + "Control', (
         })
     ).dive().props();
 
-    // testParcelControl should contain a ParcelBoundaryControl object
-    expect(propsGivenToInnerComponent.testParcelControl instanceof ParcelBoundaryControl).toBe(true);
+    // testParcelControl should contain a ParcelBufferControl object
+    expect(propsGivenToInnerComponent.testParcelControl instanceof ParcelBufferControl).toBe(true);
 });
 
 test('ParcelBoundaryHoc config.name should accept props function returning string', () => {
@@ -156,20 +156,6 @@ test('ParcelBoundaryHoc config.hold should accept props function returning numbe
     expect(propsGivenToParcelBoundary.hold).toBe(true);
 });
 
-test('ParcelBoundaryHoc config.debugBuffer should accept number', () => {
-    let propsGivenToParcelBoundary = shallowRenderHoc(
-        {
-            testParcel: new Parcel()
-        },
-        ParcelBoundaryHoc({
-            name: 'testParcel',
-            debugBuffer: true
-        })
-    ).props();
-
-    expect(propsGivenToParcelBoundary.debugBuffer).toBe(true);
-});
-
 test('ParcelBoundaryHoc should be not use pure rendering', () => {
     let propsGivenToParcelBoundary = shallowRenderHoc(
         {
@@ -181,23 +167,6 @@ test('ParcelBoundaryHoc should be not use pure rendering', () => {
     ).props();
 
     expect(propsGivenToParcelBoundary.pure).toBe(false);
-});
-
-test('ParcelBoundaryHoc should pass down originalParcel in ParcelBoundaryControl', () => {
-    let testParcel = new Parcel({
-        value: 789
-    });
-
-    let propsGivenToInnerComponent = shallowRenderHoc(
-        {
-            testParcel
-        },
-        ParcelBoundaryHoc({
-            name: 'testParcel'
-        })
-    ).dive().props();
-
-    expect(propsGivenToInnerComponent.testParcelControl.originalParcel).toBe(testParcel);
 });
 
 test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {
@@ -218,34 +187,3 @@ test('ParcelBoundaryHoc config.modifyBeforeUpdate should accept array', () => {
     expect(propsGivenToParcelBoundary.modifyBeforeUpdate).toBe(modifyBeforeUpdate);
 });
 
-test('ParcelBoundaryHoc config.onCancel should accept function array', () => {
-    let onCancel = [continueCancel => continueCancel()];
-
-    let propsGivenToParcelBoundary = shallowRenderHoc(
-        {
-            testParcel: new Parcel()
-        },
-        ParcelBoundaryHoc({
-            name: 'testParcel',
-            onCancel
-        })
-    ).props();
-
-    expect(propsGivenToParcelBoundary.onCancel).toBe(onCancel);
-});
-
-test('ParcelBoundaryHoc config.onRelease should accept function array', () => {
-    let onRelease = [continueRelease => continueRelease()];
-
-    let propsGivenToParcelBoundary = shallowRenderHoc(
-        {
-            testParcel: new Parcel()
-        },
-        ParcelBoundaryHoc({
-            name: 'testParcel',
-            onRelease
-        })
-    ).props();
-
-    expect(propsGivenToParcelBoundary.onRelease).toBe(onRelease);
-});
