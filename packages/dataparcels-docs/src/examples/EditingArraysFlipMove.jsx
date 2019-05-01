@@ -1,21 +1,20 @@
 import React from 'react';
 import FlipMove from 'react-flip-move';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
+import exampleFrame from 'component/exampleFrame';
 
-const FruitListParcelHoc = ParcelHoc({
-    name: "fruitListParcel",
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ]
-});
+export default function FruitListEditor(props) {
 
-const FruitListEditor = (props) => {
-    let {fruitListParcel} = props;
-    return <FlipMove>
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
+
+    return exampleFrame({fruitListParcel}, <FlipMove>
         {fruitListParcel.toArray((fruitParcel) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => <div>
@@ -28,7 +27,5 @@ const FruitListEditor = (props) => {
             </ParcelBoundary>;
         })}
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
-    </FlipMove>;
-};
-
-export default FruitListParcelHoc(ExampleHoc(FruitListEditor));
+    </FlipMove>);
+}

@@ -1,19 +1,7 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
-
-const PersonParcelHoc = ParcelHoc({
-    name: "personParcel",
-    valueFromProps: (/* props */) => ({
-        name: {
-            first: "Robert",
-            last: "Clamps"
-        },
-        age: "33",
-        height: "160"
-    })
-});
+import exampleFrame from 'component/exampleFrame';
 
 const DebugRender = ({children}) => {
     // each render, have a new, random background colour
@@ -26,9 +14,20 @@ const DebugRender = ({children}) => {
     return <div style={style}>{children}</div>;
 };
 
-const PersonEditor = (props) => {
-    let {personParcel} = props;
-    return <div>
+export default function PersonEditor(props) {
+
+    let [personParcel] = useParcelState({
+        value: {
+            name: {
+                first: "Robert",
+                last: "Clamps"
+            },
+            age: "33",
+            height: "160"
+        }
+    });
+
+    return exampleFrame({personParcel}, <div>
         <label>name</label>
         <ParcelBoundary parcel={personParcel.get('name')}>
             {(name) => <DebugRender>
@@ -55,7 +54,5 @@ const PersonEditor = (props) => {
                 <input type="text" {...age.spreadDOM()} />
             </DebugRender>}
         </ParcelBoundary>
-    </div>;
-};
-
-export default PersonParcelHoc(ExampleHoc(PersonEditor));
+    </div>);
+}

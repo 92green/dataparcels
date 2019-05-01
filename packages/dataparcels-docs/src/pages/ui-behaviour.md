@@ -144,23 +144,58 @@ Try removing the value of the `name` field, or choosing a non-numeric or negativ
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
+import useParcelBuffer from 'react-dataparcels/useParcelBuffer';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ParcelBoundaryHoc from 'react-dataparcels/ParcelBoundaryHoc';
 import Validation from 'react-dataparcels/Validation';
-import composeWith from 'unmutable/composeWith';
 
 const numberToString = (parcel) => parcel
     .modifyDown(number => `${number}`)
     .modifyUp(string => Number(string));
 
+const validateStringNotBlank = (name) => (value) => {
+    return (!value || value.trim().length === 0) && `${name} must not be blank`;
+};
+
+const validateInteger = (name) => (value) => {
+    return !Number.isInteger(value) && `${name} must be a whole number`;
+};
+
+const validatePositiveNumber = (name) => (value) => {
+    return value < 0 && `${name} must not be negative`;
+};
+
+const validation = Validation({
+    'name': validateStringNotBlank("Name"),
+    'animals.*.type': validateStringNotBlank("Animal type"),
+    'animals.*.amount': [
+        validateInteger("Animal amount"),
+        validatePositiveNumber("Animal amount")
+    ]
+});
+
 const InputWithError = (parcel) => <div>
     <input type="text" {...parcel.spreadDOM()} />
-    {parcel.meta.invalid && `Error: ${parcel.meta.invalid}`}
+    {parcel.meta.invalid && <div className="Text Text-sizeMilli Box-paddingBottom">Error: {parcel.meta.invalid}</div>}
 </div>;
 
-const AnimalEditor = (props) => {
-    let {animalParcel, animalParcelControl} = props;
+export default function AnimalEditor(props) {
+
+    let [animalParcelState] = useParcelState({
+        value: {
+            name: "Robert Clamps",
+            animals: [
+                {type: "Sheep", amount: 6}
+            ]
+        }
+    });
+
+    let [animalParcel, animalParcelBuffer] = useParcelBuffer({
+        parcel: animalParcelState,
+        hold: true,
+        modifyBeforeUpdate: validation.modifyBeforeUpdate
+    });
+
     let {valid} = animalParcel.meta;
 
     return <div>
@@ -192,51 +227,10 @@ const AnimalEditor = (props) => {
             <button onClick={() => animalParcel.get('animals').push({type: "?", amount: 0})}>Add new animal</button>
         </div>
 
-        <button onClick={() => valid && animalParcelControl.release()}>{valid ? "Submit" : "Can't submit"}</button>
-        <button onClick={() => animalParcelControl.cancel()}>Cancel</button>
+        <button onClick={() => valid && animalParcelBuffer.release()}>{valid ? "Submit" : "Can't submit"}</button>
+        <button onClick={() => animalParcelBuffer.clear()}>Cancel</button>
     </div>;
-};
-
-const validateStringNotBlank = (name) => (value) => {
-    return (!value || value.trim().length === 0) && `${name} must not be blank`;
-};
-
-const validateInteger = (name) => (value) => {
-    return !Number.isInteger(value) && `${name} must be a whole number`;
-};
-
-const validatePositiveNumber = (name) => (value) => {
-    return value < 0 && `${name} must not be negative`;
-};
-
-const validation = Validation({
-    'name': validateStringNotBlank("Name"),
-    'animals.*.type': validateStringNotBlank("Animal type"),
-    'animals.*.amount': [
-        validateInteger("Animal amount"),
-        validatePositiveNumber("Animal amount")
-    ]
-});
-
-// unmutable's composeWith(a,b,c) is equivalent to a(b(c))
-
-export default composeWith(
-    ParcelHoc({
-        name: "animalParcel",
-        valueFromProps: (/* props */) => ({
-            name: "Robert Clamps",
-            animals: [
-                {type: "Sheep", amount: 6}
-            ]
-        })
-    }),
-    ParcelBoundaryHoc({
-        name: "animalParcel",
-        hold: true,
-        modifyBeforeUpdate: [validation.modifyBeforeUpdate]
-    }),
-    AnimalEditor
-);
+}
 
 ```
 
@@ -252,21 +246,19 @@ This uses [parcel meta](/parcel-meta), a generic way of storing extra data that 
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
 
-const FruitListParcelHoc = ParcelHoc({
-    name: "fruitListParcel",
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ]
-});
+export default function FruitListEditor(props) {
 
-const FruitListEditor = (props) => {
-    let {fruitListParcel} = props;
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
+
     return <div>
         {fruitListParcel.toArray((fruitParcel) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
@@ -283,9 +275,8 @@ const FruitListEditor = (props) => {
         })}
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
-};
+}
 
-export default FruitListParcelHoc(FruitListEditor);
 ```
 
 ### What's going on
@@ -303,29 +294,34 @@ This example shows how to use meta stored against each element in an array to ke
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import shape from 'react-dataparcels/shape';
 
-const FruitListParcelHoc = ParcelHoc({
-    name: "fruitListParcel",
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ]
-});
+export default function FruitListEditor(props) {
 
-const FruitListEditor = (props) => {
-    let {fruitListParcel} = props;
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
 
     let selectedFruit = fruitListParcel
         .toArray()
         .filter(fruit => fruit.meta.selected);
 
     let allSelected = fruitListParcel.value.length === selectedFruit.length;
+
     let selectAll = (selected) => fruitListParcel.map(shape(
         fruit => fruit.setMeta({selected})
+    ));
+
+    let deleteSelectedFruit = () => fruitListParcel.update(shape(
+        fruitListShape => fruitListShape
+            .toArray()
+            .filter(fruitShape => !fruitShape.meta.selected)
     ));
 
     return <div>
@@ -333,7 +329,7 @@ const FruitListEditor = (props) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => {
                     let selectedParcel = parcel.metaAsParcel('selected');
-                    
+
                     let checkboxProps = {
                         checked: !!selectedParcel.value,
                         onChange: (event) => selectedParcel.set(event.currentTarget.checked)
@@ -341,7 +337,7 @@ const FruitListEditor = (props) => {
 
                     return <div>
                         <input type="text" {...parcel.spreadDOM()} />
-                        <input type="checkbox" style={{width: '2rem'}} {...checkboxProps} />
+                        <input type="checkbox" {...checkboxProps} />
                         <button onClick={() => parcel.swapPrev()}>^</button>
                         <button onClick={() => parcel.swapNext()}>v</button>
                         <button onClick={() => parcel.delete()}>x</button>
@@ -354,6 +350,8 @@ const FruitListEditor = (props) => {
             ? <button onClick={() => selectAll(false)}>Select none</button>
             : <button onClick={() => selectAll(true)}>Select all</button>
         }
+        <button onClick={() => deleteSelectedFruit()}>Delete selected fruit</button>
+
         <h4>Selected fruit:</h4>
         <ul>
             {selectedFruit.map((fruitParcel) => {
@@ -364,9 +362,8 @@ const FruitListEditor = (props) => {
             })}
         </ul>
     </div>;
-};
+}
 
-export default FruitListParcelHoc(FruitListEditor);
 
 ```
 
@@ -382,22 +379,14 @@ The `react-dataparcels-drag` hoc attempts to keep a very similar API to `react-s
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ParcelDrag from 'react-dataparcels-drag';
-
-const FruitListParcelHoc = ParcelHoc({
-    name: "fruitListParcel",
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ]
-});
+import exampleFrame from 'component/exampleFrame';
 
 const SortableFruitList = ParcelDrag({
     element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
-        {(parcel) => <div className="Box-draggable">
+        {(parcel) => <div>
             <input type="text" {...parcel.spreadDOM()} />
             <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
             <button onClick={() => parcel.delete()}>x</button>
@@ -405,15 +394,22 @@ const SortableFruitList = ParcelDrag({
     </ParcelBoundary>
 });
 
-const FruitListEditor = (props) => {
-    let {fruitListParcel} = props;
+export default function FruitListEditor(props) {
+
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
+
     return <div>
         <SortableFruitList parcel={fruitListParcel} />
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>;
-};
+}
 
-export default FruitListParcelHoc(FruitListEditor);
 ```
 
 ### Alternatively, animations with react-flip-move
@@ -425,11 +421,19 @@ Dataparcels' also plays nicely with [react-flip-move](https://github.com/joshwco
 ```js
 import React from 'react';
 import FlipMove from 'react-flip-move';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-const FruitListEditor = (props) => {
-    let {fruitListParcel} = props;
+export default function FruitListEditor(props) {
+
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
+
     return <FlipMove>
         {fruitListParcel.toArray((fruitParcel) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
@@ -444,18 +448,8 @@ const FruitListEditor = (props) => {
         })}
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </FlipMove>;
-};
+}
 
-const FruitListParcelHoc = ParcelHoc({
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ],
-    name: "fruitListParcel"
-});
-
-export default FruitListParcelHoc(FruitListEditor);
 
 ```
 
@@ -463,7 +457,7 @@ export default FruitListParcelHoc(FruitListEditor);
 
 ## Debouncing changes
 
-Debouncing can be used to increase rendering performance for parcels that change value many times in rapid succession, such as text inputs. This feature is available through use of <Link to="/api/ParcelBoundary#debounce">ParcelBoundary</Link> or <Link to="/api/ParcelBoundaryHoc#debounce">ParcelBoundaryHoc</Link>.
+Debouncing can be used to increase rendering performance for parcels that change value many times in rapid succession, such as text inputs. This feature is available through use of [ParcelBoundary](/api/ParcelBoundary#debounce) and [useParcelBuffer](/api/useParcelBuffer#debounce).
 
 Debouncing can be good for rendering performance because parcels outside the ParcelBoundary don't needlessly update every time a small change occurs (e.g. each time the user presses a key).
 
@@ -471,19 +465,18 @@ Debouncing can be good for rendering performance because parcels outside the Par
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
-const FoodParcelHoc = ParcelHoc({
-    name: "foodParcel",
-    valueFromProps: (/* props */) => ({
-        mains: "Soup",
-        dessert: "Strudel"
-    })
-});
+export default function FoodEditor(props) {
 
-const FoodEditor = (props) => {
-    let {foodParcel} = props;
+    let [foodParcel] = useParcelState({
+        value: {
+            mains: "Soup",
+            dessert: "Strudel"
+        }
+    });
+
     return <div>
         <label>mains (with 300ms debounce)</label>
         <ParcelBoundary parcel={foodParcel.get('mains')} debounce={300}>
@@ -495,9 +488,7 @@ const FoodEditor = (props) => {
             {(dessert) => <input type="text" {...dessert.spreadDOM()} />}
         </ParcelBoundary>
     </div>;
-};
-
-export default FoodParcelHoc(FoodEditor);
+}
 
 ```
 
@@ -505,26 +496,15 @@ export default FoodParcelHoc(FoodEditor);
 
 ## Pure rendering
 
-Pure rendering is achieved automatically through the use of <Link to="/api/ParcelBoundary">ParcelBoundaries</Link>. In this example, ParcelBoundaries render as coloured boxes. As you type in an input, the colours will change to indicate which ParcelBoundaries have re-rendered. 
+Pure rendering is achieved automatically through the use of [ParcelBoundaries](/api/ParcelBoundary). In this example, ParcelBoundaries render as coloured boxes. As you type in an input, the colours will change to indicate which ParcelBoundaries have re-rendered. 
 
 <ParcelBoundaryPure />
 
 ```js
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-
-const PersonParcelHoc = ParcelHoc({
-    name: "personParcel",
-    valueFromProps: (/* props */) => ({
-        name: {
-            first: "Robert",
-            last: "Clamps"
-        },
-        age: "33",
-        height: "160"
-    })
-});
+import exampleFrame from 'component/exampleFrame';
 
 const DebugRender = ({children}) => {
     // each render, have a new, random background colour
@@ -537,8 +517,19 @@ const DebugRender = ({children}) => {
     return <div style={style}>{children}</div>;
 };
 
-const PersonEditor = (props) => {
-    let {personParcel} = props;
+export default function PersonEditor(props) {
+
+    let [personParcel] = useParcelState({
+        value: {
+            name: {
+                first: "Robert",
+                last: "Clamps"
+            },
+            age: "33",
+            height: "160"
+        }
+    });
+
     return <div>
         <label>name</label>
         <ParcelBoundary parcel={personParcel.get('name')}>
@@ -567,8 +558,6 @@ const PersonEditor = (props) => {
             </DebugRender>}
         </ParcelBoundary>
     </div>;
-};
-
-export default PersonParcelHoc(PersonEditor);
+}
 
 ```
