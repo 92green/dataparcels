@@ -27,7 +27,7 @@ const stringify = (value) => {
         }
         return value;
     };
-    return JSON.stringify(value, replacer, 4);
+    return `${JSON.stringify(value, replacer, 4)}`.replace(/"NaN"/g, "NaN");
 };
 
 class ExampleFrame extends Layout<Props> {
