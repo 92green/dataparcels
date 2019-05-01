@@ -77,8 +77,6 @@ export type ParcelIdData = {
     path: string[]
 };
 
-export type ContinueChainFunction = (continueChain: () => void, changeRequest: ?ChangeRequest) => void;
-
 const RUNTIME_TYPES = {
     ['boolean']: {
         name: "a boolean",
