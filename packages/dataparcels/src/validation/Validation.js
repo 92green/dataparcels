@@ -1,6 +1,5 @@
 // @flow
 
-import type {ContinueChainFunction} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
@@ -21,8 +20,7 @@ type ValidationRuleMap = {
 };
 
 type ValidationResult = {
-    modifyBeforeUpdate: ParcelValueUpdater,
-    onRelease: ContinueChainFunction
+    modifyBeforeUpdate: ParcelValueUpdater
 };
 
 export default (validatorMap: ValidationRuleMap): ValidationResult => {
@@ -69,15 +67,7 @@ export default (validatorMap: ValidationRuleMap): ValidationResult => {
         );
     });
 
-    // $FlowFixMe
-    let shouldSubmit = (parcelData) => !!(parcelData.meta.valid);
-
-    let onRelease = (continueRelease, changeRequest) => {
-        changeRequest && shouldSubmit(changeRequest.nextData) && continueRelease();
-    };
-
     return {
-        modifyBeforeUpdate,
-        onRelease
+        modifyBeforeUpdate
     };
 };

@@ -135,35 +135,3 @@ test('Validation should set top level meta.valid', () => {
     expect(newParcelData2.meta.valid).toBe(true);
 });
 
-test('Validation onRelease should continue chain if meta.valid is true', () => {
-
-    let continueRelease = jest.fn();
-    let changeRequestValid = {
-        nextData: {
-            meta: {
-                valid: true
-            }
-        }
-    };
-
-    // $FlowFixMe
-    Validation({}).onRelease(continueRelease, changeRequestValid);
-    expect(continueRelease).toHaveBeenCalled();
-});
-
-test('Validation onRelease should not continue chain if meta.valid is false', () => {
-
-    let continueRelease = jest.fn();
-    let changeRequestValid = {
-        nextData: {
-            meta: {
-                valid: false
-            }
-        }
-    };
-
-    // $FlowFixMe
-    Validation({}).onRelease(continueRelease, changeRequestValid);
-    expect(continueRelease).not.toHaveBeenCalled();
-});
-

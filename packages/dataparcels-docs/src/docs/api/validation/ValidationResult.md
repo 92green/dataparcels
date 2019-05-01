@@ -1,15 +1,14 @@
 ```flow
 ValidationResult = {
-    modifyBeforeUpdate: ParcelValueUpdater,
-    onRelease: ContinueChainFunction
+    modifyBeforeUpdate: ParcelValueUpdater
 };
 ```
 
-The Validation function returns an object containing two functions.
+The Validation function returns an object containing a single function.
 
 #### modifyBeforeUpdate
 
-This is a function that can be used directly with `modifyBeforeUpdate` on [ParcelHoc](/api/ParcelHoc#modifyBeforeUpdate"), [ParcelBoundary](/api/ParcelBoundary#modifyBeforeUpdate) or [ParcelBoundaryHoc](/api/ParcelBoundaryHoc#modifyBeforeUpdate).
+This is a function that can be used directly with `modifyBeforeUpdate` on [useParcelState](/api/useParcelState#modifyBeforeUpdate"), [useParcelBuffer](/api/useParcelBuffer#modifyBeforeUpdate) or [ParcelBoundary](/api/ParcelBoundary#modifyBeforeUpdate).
 
 This will check the Parcel's value and set [Parcel meta](/parcel-meta) wherever validations errors occured.
 
@@ -21,23 +20,8 @@ Please refer to the UI Behaviour page to see [a full example](/ui-behaviour#Vali
 ParcelBoundary({
     name: 'exampleParcel',
     hold: true,
-    modifyBeforeUpdate: [validation.modifyBeforeUpdate]
+    modifyBeforeUpdate: validation.modifyBeforeUpdate
     // ^ run validator before data updates
     //   to set meta on Parcels that have failed validation
-});
-```
-
-#### onRelease
-
-This is a function that can be used directly with `onRelease` on [ParcelBoundary](/api/ParcelBoundary#modifyBeforeUpdate) or [ParcelBoundaryHoc](/api/ParcelBoundaryHoc#modifyBeforeUpdate).
-
-If `release()` is called, this `onRelease` function will prevent the release from taking place if any data is invalid.
-
-```js
-ParcelBoundary({
-    name: 'exampleParcel',
-    hold: true,
-    modifyBeforeUpdate: [validation.modifyBeforeUpdate]
-    onRelease: [validation.onRelease]
 });
 ```
