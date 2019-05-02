@@ -156,7 +156,7 @@ export default class ChangeRequest {
 
     hasValueChanged = (keyPath: Array<Key|Index> = []): boolean => {
         let {next, prev} = this.getDataIn(keyPath);
-        return next.value !== prev.value;
+        return !Object.is(next.value, prev.value);
     };
 
     toJS = (): Object => ({

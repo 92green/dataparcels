@@ -78,6 +78,35 @@ test('Parcel.spreadDOM(notFoundValue) returns an object with notFoundValue', () 
     expect(parcel3.spreadDOM("???").value).toBe("123");
 });
 
+test('Parcel.spreadDOMCheckbox() returns an object with checked and onChange (onChangeDOMCheckbox)', () => {
+
+    var parcel = new Parcel({
+        value: true
+    });
+
+    const {
+        checked,
+        onChange
+    } = parcel.spreadDOMCheckbox();
+
+    expect(checked).toBe(parcel.value);
+    expect(onChange).toBe(parcel.onChangeDOMCheckbox);
+});
+
+test('Parcel.spreadDOMCheckbox(notFoundValue) returns an object with cast boolean / notFoundValue', () => {
+    var parcel = new Parcel({
+        value: undefined
+    });
+
+    var parcel3 = new Parcel({
+        value: "123"
+    });
+
+    expect(parcel.spreadDOMCheckbox().checked).toBe(false);
+    expect(parcel.spreadDOMCheckbox(true).checked).toBe(true);
+    expect(parcel.spreadDOMCheckbox(false).checked).toBe(false);
+});
+
 test('Parcel.log() should be called with parcel', () => {
 
     let {log} = console;
