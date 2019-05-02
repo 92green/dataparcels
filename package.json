@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "bootstrap": "yarn lerna bootstrap",
+    "prep": "yarn && yarn lerna bootstrap",
     "build": "yarn lerna run build",
     "build-docs": "yarn copy-readmes && cd packages/dataparcels-docs && yarn build-docs",
     "bump": "yarn lerna publish",
