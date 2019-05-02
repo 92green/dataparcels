@@ -5,6 +5,7 @@ import ApiPage from 'component/ApiPage';
 import Markdown_Validation from 'docs/api/validation/Validation.md';
 import Markdown_ValidationMap from 'docs/api/validation/ValidationMap.md';
 import Markdown_ValidationResult from 'docs/api/validation/ValidationResult.md';
+import Layout from 'layouts/Layout';
 
 const md = {
     _desc: Markdown_Validation,
@@ -20,8 +21,10 @@ ValidationMap
 ValidationResult
 `;
 
-export default () => <ApiPage
-    name="Validation"
-    api={api}
-    md={md}
-/>;
+export default () => <Layout>
+    <ApiPage
+        name="Validation"
+        api={api}
+        md={md}
+    />
+</Layout>

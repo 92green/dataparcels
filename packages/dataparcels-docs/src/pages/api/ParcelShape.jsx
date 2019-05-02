@@ -37,6 +37,7 @@ import Markdown_isElement from 'docs/api/parcelShape/isElement.md';
 import Markdown_isIndexed from 'docs/api/parcelShape/isIndexed.md';
 import Markdown_isParent from 'docs/api/parcelShape/isParent.md';
 import Markdown_isTopLevel from 'docs/api/parcelShape/isTopLevel.md';
+import Layout from 'layouts/Layout';
 
 const md = {
     _desc: Markdown_ParcelShape,
@@ -122,8 +123,10 @@ isTopLevel()
 
 `;
 
-export default () => <ApiPage
-    name="ParcelShape"
-    api={api}
-    md={md}
-/>;
+export default () => <Layout>
+    <ApiPage
+        name="ParcelShape"
+        api={api}
+        md={md}
+    />
+</Layout>

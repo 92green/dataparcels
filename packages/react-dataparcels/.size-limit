@@ -1,0 +1,14 @@
+[
+    {
+        limit: "17 KB",
+        path: "ParcelBoundary.js"
+    },
+    {
+        limit: "17 KB",
+        path: "ParcelBoundaryHoc.js"
+    },
+    {
+        limit: "17 KB",
+        path: "ParcelHoc.js"
+    }
+]

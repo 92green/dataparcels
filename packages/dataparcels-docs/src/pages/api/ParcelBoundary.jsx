@@ -16,6 +16,7 @@ import Markdown_onCancel from 'docs/api/parcelBoundary/onCancel.md';
 import Markdown_onRelease from 'docs/api/parcelBoundary/onRelease.md';
 import Markdown_debugBuffer from 'docs/api/parcelBoundary/debugBuffer.md';
 import Markdown_debugParcel from 'docs/api/parcelBoundary/debugParcel.md';
+import Layout from 'layouts/Layout';
 
 const md = {
     _desc: Markdown_ParcelBoundary,
@@ -52,8 +53,10 @@ debugBuffer
 debugParcel
 `;
 
-export default () => <ApiPage
-    name="ParcelBoundary"
-    api={api}
-    md={md}
-/>;
+export default () => <Layout>
+    <ApiPage
+        name="ParcelBoundary"
+        api={api}
+        md={md}
+    />
+</Layout>

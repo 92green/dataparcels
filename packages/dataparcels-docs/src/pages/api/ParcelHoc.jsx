@@ -13,6 +13,7 @@ import Markdown_delayUntil from 'docs/api/parcelHoc/delayUntil.md';
 import Markdown_pipe from 'docs/api/parcelHoc/pipe.md';
 import Markdown_debugParcel from 'docs/api/parcelHoc/debugParcel.md';
 import Markdown_childName from 'docs/api/parcelHoc/childName.md';
+import Layout from 'layouts/Layout';
 
 const md = {
     _desc: Markdown_ParcelHoc,
@@ -43,8 +44,10 @@ debugParcel
 $\{name\}
 `;
 
-export default () => <ApiPage
-    name="ParcelHoc"
-    api={api}
-    md={md}
-/>;
+export default () => <Layout>
+    <ApiPage
+        name="ParcelHoc"
+        api={api}
+        md={md}
+    />
+</Layout>
