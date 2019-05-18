@@ -1,13 +1,14 @@
 {
   "private": true,
   "scripts": {
-    "bootstrap": "yarn lerna bootstrap",
+    "prep": "yarn && yarn lerna run yalc-publish && yarn lerna run yalc-update && yarn lerna bootstrap",
+    "bootstrap": "yarn prep",
     "build": "yarn lerna run build",
     "build-docs": "yarn copy-readmes && cd packages/dataparcels-docs && yarn build-docs",
     "bump": "yarn lerna publish",
     "copy-readmes": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md",
     "preversion": "yarn build",
-    "reinstall": "rm -rf node_modules && yarn && yarn bootstrap",
+    "reinstall": "rm -rf node_modules && rm -rf packages/*/node_modules && rm -rf packages/*/.yalc && yarn prep",
     "test-all": "yarn lerna run test-all",
     "watch": "yarn lerna run watch"
   },
@@ -16,7 +17,8 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
-    "husky": "^1.1.2"
+    "husky": "^1.1.2",
+    "yalc": "^1.0.0-pre.27"
   },
   "husky": {
     "hooks": {
