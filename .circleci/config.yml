@@ -17,9 +17,7 @@ jobs:
       - restore_cache:
           keys: ['dataparcels-docs-deps-{{ checksum "yarn.lock" }}']
 
-      - run: yarn install
-      - run: yarn bootstrap
-      - run: yarn build
+      - run: yarn prep
 
       - save_cache:
           key: dataparcels-deps-{{ checksum "yarn.lock" }}
