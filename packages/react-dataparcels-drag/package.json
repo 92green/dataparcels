@@ -3,7 +3,7 @@
   "version": "0.18.1",
   "description": "A plugin for react-dataparcels that adds drag and drop re-ordering of elements.",
   "main": "lib/index.js",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "author": "Damien Clarke",
   "repository": {
     "type": "git",
@@ -17,7 +17,8 @@
   },
   "private": false,
   "scripts": {
-    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js'",
+    "yalc-publish": "../../node_modules/.bin/yalc publish --push --force",
+    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js' && yarn yalc-publish",
     "build-all": "yarn build",
     "flow": "blueflag-test flow",
     "flow-coverage": "blueflag-test flow-coverage",
