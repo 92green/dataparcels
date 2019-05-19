@@ -2533,6 +2533,15 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+dataparcels@^0.19.1:
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.19.1.tgz#bc91e7f42ac5536bb17195dbb09cfb04e34c4ca5"
+  integrity sha512-7j6aXb3FY1OmLGAyAAKPx1TaGqAx6Z/dWED90rWqKQxHdFGkO0mR709FlnWgiXRCHINsak/gOaMlvR0Sr8ElTw==
+  dependencies:
+    babel-runtime "6.23.0"
+    escape-string-regexp "^1.0.5"
+    unmutable "^0.41.1"
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -7085,6 +7094,19 @@ react-cool-storage@^0.1.1:
     storage-available "^1.1.0"
     unmutable "^0.39.0"
 
+"react-dataparcels-drag@file:.yalc/react-dataparcels-drag":
+  version "0.18.1-6ffb1674"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    react-sortable-hoc "1.4.0"
+
+"react-dataparcels@file:.yalc/react-dataparcels":
+  version "0.19.1-58faeabe"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    dataparcels "^0.19.1"
+    unmutable "^0.41.1"
+
 react-dev-utils@^4.2.1:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.3.tgz#5b42d9ea58d5e9e017a2f57a40a8af408a3a46fb"
@@ -7182,6 +7204,15 @@ react-side-effect@^1.1.0:
   dependencies:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
+
+react-sortable-hoc@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-1.4.0.tgz#b477ce700ba755754200a1dabd36e588e2f5608d"
+  integrity sha512-4++hdwMTrzpOHcqndi2M2gEsqgoGMGmmYzs3wp/xZdap/d8oT2yUR3m6STNi1d1trRyl9Ud0C54agbYH7XdQAQ==
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    invariant "^2.2.4"
+    prop-types "^15.5.7"
 
 react-sortable-hoc@^1.4.0:
   version "1.8.3"
@@ -8622,6 +8653,16 @@ unmutable@^0.39.0:
   version "0.39.0"
   resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.39.0.tgz#8ccdfb237ba4c572cba793cbbbd7d503227ad576"
   dependencies:
+    fast-deep-equal "^1.0.0"
+    is-plain-object "^2.0.4"
+    lodash.range "^3.2.0"
+
+unmutable@^0.41.1:
+  version "0.41.1"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.41.1.tgz#5d67409c6001108ab7deba236004e40d515dd2c7"
+  integrity sha512-XvMXhgjQCgmz3xHPKdRDILHHKEv6zN2RDnV1osUHX+1dkJZ/0HEbqlPM5dS3EE8SoFkTmfqv0fc8hlYeuJTg5Q==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
     fast-deep-equal "^1.0.0"
     is-plain-object "^2.0.4"
     lodash.range "^3.2.0"
