@@ -14,7 +14,12 @@ import map from 'unmutable/map';
 import pipeWith from 'unmutable/pipeWith';
 import toArray from 'unmutable/toArray';
 
-type ValidationRule = (value: any, keyPath: Array<any>) => any;
+type ValidationRuleMeta = {
+    keyPath: Array<any>,
+    topLevelValue: any
+};
+
+type ValidationRule = (value: any, other: ValidationRuleMeta) => any;
 
 type ValidationRuleMap = {
     [matchPath: string]: ValidationRule|ValidationRule[]
@@ -27,6 +32,7 @@ type ValidationResult = {
 
 export default (validatorMap: ValidationRuleMap): ValidationResult => {
     let modifyBeforeUpdate = dangerouslyUpdateParcelData((parcelData) => {
+        let topLevelValue = parcelData.value;
         let allValid = true;
 
         let mapValidationRuleApplier = (validator: ValidationRule|ValidationRule[], path: string): ParcelDataEvaluator => {
@@ -40,7 +46,7 @@ export default (validatorMap: ValidationRuleMap): ValidationResult => {
                 (parcelData) => {
                     let invalid = []
                         .concat(validator)
-                        .reduce((invalid, validator) => invalid || validator(parcelData.value, keyPath), "");
+                        .reduce((invalid, validator) => invalid || validator(parcelData.value, {keyPath, topLevelValue}), "");
 
                     if(invalid) {
                         allValid = false;
