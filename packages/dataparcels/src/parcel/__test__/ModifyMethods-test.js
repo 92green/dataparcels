@@ -29,6 +29,30 @@ test('Parcel.modifyDown() should return a new parcel with updated parcelData', (
     expect(updater.mock.calls[0][1]).toBe(undefined);
 });
 
+test('Parcel.modifyDown() should not destroy child data', () => {
+    let handleChange = jest.fn();
+    let updater = jest.fn(value => value + 1);
+
+    var parcel = new Parcel({
+        value: [123],
+        handleChange
+    })
+        .get(0)
+        .setMeta({def: 456});
+
+    let newParcel = handleChange.mock.calls[0][0].modifyDown(ii => ii);
+
+    expect(newParcel.data.child).toEqual([
+        {
+            key: '#a',
+            child: undefined,
+            meta: {
+                def: 456
+            }
+        }
+    ]);
+});
+
 test('Parcel.modifyDown() should allow non-parent types to be returned', () => {
     let updatedValue = new Parcel({
         value: 123
