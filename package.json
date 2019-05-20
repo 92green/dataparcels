@@ -10,7 +10,7 @@
     "preversion": "yarn build",
     "reinstall": "rm -rf node_modules && rm -rf packages/*/node_modules && rm -rf packages/*/.yalc && yarn prep",
     "test-all": "yarn lerna run test-all",
-    "watch": "yarn lerna run watch"
+    "watch": "yarn lerna run watch --parallel"
   },
   "dependencies": {
     "lerna": "^3.10.7"
