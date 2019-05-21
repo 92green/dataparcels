@@ -27,6 +27,11 @@ test('Validation should validate specified fields', () => {
 
     // validator should be called
     expect(isValid.mock.calls[0][0]).toBe(123);
+    expect(isValid.mock.calls[0][1].keyPath).toEqual(['abc']);
+    expect(isValid.mock.calls[0][1].topLevelValue).toEqual({
+        abc: 123,
+        def: 456
+    });
 
     // value should be untouched
     expect(newParcelData.value).toEqual(parcelData.value);
