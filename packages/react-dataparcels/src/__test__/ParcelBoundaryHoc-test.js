@@ -3,7 +3,7 @@ import React from 'react';
 
 import Parcel from 'dataparcels';
 import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
-import ParcelBoundaryControl from '../ParcelBoundaryControl';
+import ParcelBoundaryControl from '../ParcelBoundaryControlDeprecated';
 
 let shallowRenderHoc = (props, hock) => {
     let Component = hock((props) => <div />);
@@ -248,4 +248,24 @@ test('ParcelBoundaryHoc config.onRelease should accept function array', () => {
     ).props();
 
     expect(propsGivenToParcelBoundary.onRelease).toBe(onRelease);
+});
+
+test('ParcelBoundaryHoc should not log deprecation notice when NODE_ENV=production', () => {
+    let {NODE_ENV} = process.env;
+    process.env.NODE_ENV = 'production';
+
+    let {warn} = console;
+    // $FlowFixMe
+    console.warn = jest.fn(); // eslint-disable-line
+
+    ParcelBoundaryHoc({
+        name: 'testParcel'
+    });
+
+    expect(console.warn).not.toHaveBeenCalled();
+
+    // $FlowFixMe
+    console.warn = warn; // eslint-disable-line
+
+    process.env.NODE_ENV = NODE_ENV;
 });
