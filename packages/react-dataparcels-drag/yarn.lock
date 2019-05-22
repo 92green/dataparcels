@@ -2416,6 +2416,14 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
+dataparcels@^0.19.2:
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.19.2.tgz#f8de4ab252e12bc5445303c09dad625ac2c07314"
+  dependencies:
+    babel-runtime "6.23.0"
+    escape-string-regexp "^1.0.5"
+    unmutable "^0.41.1"
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -5058,6 +5066,10 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
 
+lodash.range@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/lodash.range/-/lodash.range-3.2.0.tgz#f461e588f66683f7eadeade513e38a69a565a15d"
+
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
@@ -6463,6 +6475,14 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-dataparcels@^0.19.0:
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/react-dataparcels/-/react-dataparcels-0.19.2.tgz#b254e9b7cd3fbfd8fcb774d878f1aa1a49987e55"
+  dependencies:
+    babel-runtime "6.23.0"
+    dataparcels "^0.19.2"
+    unmutable "^0.41.1"
+
 react-dom@15.5.4:
   version "15.5.4"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.5.4.tgz#ba0c28786fd52ed7e4f2135fe0288d462aef93da"
@@ -7710,6 +7730,15 @@ unique-slug@^2.0.0:
 universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
+
+unmutable@^0.41.1:
+  version "0.41.1"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.41.1.tgz#5d67409c6001108ab7deba236004e40d515dd2c7"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    fast-deep-equal "^1.0.0"
+    is-plain-object "^2.0.4"
+    lodash.range "^3.2.0"
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

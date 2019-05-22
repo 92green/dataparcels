@@ -2536,7 +2536,14 @@ dashdash@^1.12.0:
 dataparcels@^0.19.1:
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.19.1.tgz#bc91e7f42ac5536bb17195dbb09cfb04e34c4ca5"
-  integrity sha512-7j6aXb3FY1OmLGAyAAKPx1TaGqAx6Z/dWED90rWqKQxHdFGkO0mR709FlnWgiXRCHINsak/gOaMlvR0Sr8ElTw==
+  dependencies:
+    babel-runtime "6.23.0"
+    escape-string-regexp "^1.0.5"
+    unmutable "^0.41.1"
+
+dataparcels@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.20.0.tgz#72dce64bcebefbe57ea05ff0dc93529f0882ba6f"
   dependencies:
     babel-runtime "6.23.0"
     escape-string-regexp "^1.0.5"
@@ -7095,16 +7102,16 @@ react-cool-storage@^0.1.1:
     unmutable "^0.39.0"
 
 "react-dataparcels-drag@file:.yalc/react-dataparcels-drag":
-  version "0.18.1-6ffb1674"
+  version "0.18.1-f0979078"
   dependencies:
     "@babel/runtime" "^7.1.5"
     react-sortable-hoc "1.4.0"
 
 "react-dataparcels@file:.yalc/react-dataparcels":
-  version "0.19.1-58faeabe"
+  version "0.20.0-4b9f2766"
   dependencies:
     "@babel/runtime" "^7.1.5"
-    dataparcels "^0.19.1"
+    dataparcels "^0.20.0"
     unmutable "^0.41.1"
 
 react-dev-utils@^4.2.1:
@@ -7208,7 +7215,6 @@ react-side-effect@^1.1.0:
 react-sortable-hoc@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-1.4.0.tgz#b477ce700ba755754200a1dabd36e588e2f5608d"
-  integrity sha512-4++hdwMTrzpOHcqndi2M2gEsqgoGMGmmYzs3wp/xZdap/d8oT2yUR3m6STNi1d1trRyl9Ud0C54agbYH7XdQAQ==
   dependencies:
     "@babel/runtime" "^7.2.0"
     invariant "^2.2.4"
@@ -8660,7 +8666,6 @@ unmutable@^0.39.0:
 unmutable@^0.41.1:
   version "0.41.1"
   resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.41.1.tgz#5d67409c6001108ab7deba236004e40d515dd2c7"
-  integrity sha512-XvMXhgjQCgmz3xHPKdRDILHHKEv6zN2RDnV1osUHX+1dkJZ/0HEbqlPM5dS3EE8SoFkTmfqv0fc8hlYeuJTg5Q==
   dependencies:
     "@babel/runtime" "^7.1.5"
     fast-deep-equal "^1.0.0"
