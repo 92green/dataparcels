@@ -18,14 +18,14 @@
     "DeletedParcelMarker.js",
     "ParcelShape.js",
     "shape.js",
-    "Validation.js"
+    "validation.js"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
   },
   "private": false,
   "scripts": {
-    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js'",
+    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js && yarn yalc-publish'",
     "build-all": "yarn build",
     "flow": "blueflag-test flow",
     "flow-coverage": "blueflag-test flow-coverage",

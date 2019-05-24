@@ -1,14 +1,14 @@
 // @flow
-import Validation from '../Validation';
+import validation from '../validation';
 
 // _dangerouslyUpdate
 
-test('Validation should use a dangerous updater, so it will work in modifyBeforeUpdate', () => {
-    expect(Validation({}).modifyBeforeUpdate._dangerouslyUpdate).toBe(true);
+test('validation should use a dangerous updater, so it will work in beforeChange', () => {
+    expect(validation({})._dangerouslyUpdate).toBe(true);
 });
 
 
-test('Validation should validate specified fields', () => {
+test('validation should validate specified fields', () => {
     let isValid = jest.fn(value => value > 200 ? undefined : "Error");
 
     let parcelData = {
@@ -18,12 +18,12 @@ test('Validation should validate specified fields', () => {
         }
     };
 
-    let validation = Validation({
+    let myvalidation = validation({
         abc: isValid,
         def: isValid
     });
 
-    let newParcelData = validation.modifyBeforeUpdate(parcelData);
+    let newParcelData = myvalidation(parcelData);
 
     // validator should be called
     expect(isValid.mock.calls[0][0]).toBe(123);
@@ -36,7 +36,7 @@ test('Validation should validate specified fields', () => {
     expect(newParcelData.child.def.meta.invalid).toBe(undefined);
 });
 
-test('Validation should accept arrays of validators', () => {
+test('validation should accept arrays of validators', () => {
     let higherThan300 = value => value > 300 ? undefined : "Not higher than 300";
     let higherThan600 = value => value > 600 ? undefined : "Not higher than 600";
 
@@ -48,13 +48,13 @@ test('Validation should accept arrays of validators', () => {
         }
     };
 
-    let validation = Validation({
+    let myvalidation = validation({
         abc: [higherThan300, higherThan600],
         def: [higherThan300, higherThan600],
         ghi: [higherThan300, higherThan600]
     });
 
-    let newParcelData = validation.modifyBeforeUpdate(parcelData);
+    let newParcelData = myvalidation(parcelData);
 
     // meta should be set
     expect(newParcelData.child.abc.meta.invalid).toBe("Not higher than 300");
@@ -62,7 +62,7 @@ test('Validation should accept arrays of validators', () => {
     expect(newParcelData.child.ghi.meta.invalid).toBe(undefined);
 });
 
-test('Validation should accept wildcards to check all fields at a depth', () => {
+test('validation should accept wildcards to check all fields at a depth', () => {
 
     let parcelData = {
         value: {
@@ -71,11 +71,11 @@ test('Validation should accept wildcards to check all fields at a depth', () => 
         }
     };
 
-    let validation = Validation({
+    let myvalidation = validation({
         ['abc.*']: value => value > 4 ? "Too big" : undefined
     });
 
-    let newParcelData = validation.modifyBeforeUpdate(parcelData);
+    let newParcelData = myvalidation(parcelData);
 
     // meta should be set
     expect(newParcelData.child.abc.child[0].meta.invalid).toBe(undefined);
@@ -85,7 +85,7 @@ test('Validation should accept wildcards to check all fields at a depth', () => 
     expect(newParcelData.child.abc.child[4].meta.invalid).toBe(undefined);
 });
 
-test('Validation should accept multiple wildcards to check all fields at a depth', () => {
+test('validation should accept multiple wildcards to check all fields at a depth', () => {
 
     let parcelData = {
         value: {
@@ -94,11 +94,11 @@ test('Validation should accept multiple wildcards to check all fields at a depth
         }
     };
 
-    let validation = Validation({
+    let myvalidation = validation({
         ['*.*']: value => value > 4 ? "Too big" : undefined
     });
 
-    let newParcelData = validation.modifyBeforeUpdate(parcelData);
+    let newParcelData = myvalidation(parcelData);
 
     // meta should be set
     expect(newParcelData.child.abc.child[0].meta.invalid).toBe(undefined);
@@ -109,61 +109,62 @@ test('Validation should accept multiple wildcards to check all fields at a depth
     expect(newParcelData.child.def.child[0].meta.invalid).toBe("Too big");
 });
 
-test('Validation should set top level meta.valid', () => {
+test('validation should set top level meta.valid and meta._submit', () => {
 
-    let parcelData = {
+    let invalid = {
         value: {
             abc: 123
+        },
+        meta: {
+            _submit: false
         }
     };
 
-    let parcelData2 = {
+    let invalidSubmitted = {
+        value: {
+            abc: 123
+        },
+        meta: {
+            _submit: true
+        }
+    };
+
+    let valid = {
         value: {
             abc: 456
+        },
+        meta: {
+            _submit: false
         }
     };
 
-    let validation = Validation({
+    let validSubmitted = {
+        value: {
+            abc: 456
+        },
+        meta: {
+            _submit: true
+        }
+    };
+
+    let myvalidation = validation({
         abc: value => value > 300 ? undefined : "Not higher than 300"
     });
 
-    let newParcelData = validation.modifyBeforeUpdate(parcelData);
-    let newParcelData2 = validation.modifyBeforeUpdate(parcelData2);
+    let invalidResult = myvalidation(invalid);
+    expect(invalidResult.meta.valid).toBe(false);
+    expect(invalidResult.meta._submit).toBe(false);
 
-    // meta should be set
-    expect(newParcelData.meta.valid).toBe(false);
-    expect(newParcelData2.meta.valid).toBe(true);
-});
+    let invalidSubmittedResult = myvalidation(invalidSubmitted);
+    expect(invalidSubmittedResult.meta.valid).toBe(false);
+    expect(invalidSubmittedResult.meta._submit).toBe(false);
 
-test('Validation onRelease should continue chain if meta.valid is true', () => {
+    let validResult = myvalidation(valid);
+    expect(validResult.meta.valid).toBe(true);
+    expect(validResult.meta._submit).toBe(false);
 
-    let continueRelease = jest.fn();
-    let changeRequestValid = {
-        nextData: {
-            meta: {
-                valid: true
-            }
-        }
-    };
-
-    // $FlowFixMe
-    Validation({}).onRelease(continueRelease, changeRequestValid);
-    expect(continueRelease).toHaveBeenCalled();
-});
-
-test('Validation onRelease should not continue chain if meta.valid is false', () => {
-
-    let continueRelease = jest.fn();
-    let changeRequestValid = {
-        nextData: {
-            meta: {
-                valid: false
-            }
-        }
-    };
-
-    // $FlowFixMe
-    Validation({}).onRelease(continueRelease, changeRequestValid);
-    expect(continueRelease).not.toHaveBeenCalled();
+    let validSubmittedResult = myvalidation(validSubmitted);
+    expect(validSubmittedResult.meta.valid).toBe(true);
+    expect(validSubmittedResult.meta._submit).toBe(true);
 });
 

@@ -8,7 +8,7 @@ import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
 import shape from '../shape';
 import CancelActionMarker from '../CancelActionMarker';
-import Validation from '../Validation';
+import validation from '../validation';
 
 // internal files
 import InternalParcel from '../src/parcel/Parcel';
@@ -20,7 +20,7 @@ import InternalDeletedParcelMarker from '../lib/parcelData/DeletedParcelMarker';
 import InternalParcelShape from '../lib/parcelShape/ParcelShape';
 import InternalShape from '../lib/parcelShape/shape';
 import InternalCancelActionMarker from '../lib/change/CancelActionMarker';
-import InternalValidation from '../lib/validation/Validation';
+import InternalValidation from '../lib/validation/validation';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
@@ -50,6 +50,6 @@ test('/CancelActionMarker should export CancelActionMarker', () => {
     expect(CancelActionMarker).toBe(InternalCancelActionMarker);
 });
 
-test('/Validation should export Validation', () => {
-    expect(Validation).toBe(InternalValidation);
+test('/validation should export validation', () => {
+    expect(validation).toBe(InternalValidation);
 });

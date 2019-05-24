@@ -1,6 +1,5 @@
 // @flow
 
-import type {ContinueChainFunction} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
@@ -20,13 +19,8 @@ type ValidationRuleMap = {
     [matchPath: string]: ValidationRule|ValidationRule[]
 };
 
-type ValidationResult = {
-    modifyBeforeUpdate: ParcelValueUpdater,
-    onRelease: ContinueChainFunction
-};
-
-export default (validatorMap: ValidationRuleMap): ValidationResult => {
-    let modifyBeforeUpdate = dangerouslyUpdateParcelData((parcelData) => {
+export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
+    return dangerouslyUpdateParcelData((parcelData) => {
         let allValid = true;
 
         let mapValidationRuleApplier = (validator: ValidationRule|ValidationRule[], path: string): ParcelDataEvaluator => {
@@ -60,24 +54,16 @@ export default (validatorMap: ValidationRuleMap): ValidationResult => {
                 map(mapValidationRuleApplier),
                 toArray()
             ),
-            (parcelData) => pipeWith(
-                parcelData,
-                parcelDataSetMeta({
-                    valid: allValid
-                })
-            )
+            (parcelData) => {
+                let meta = parcelData.meta || {};
+
+                let newMeta = {
+                    valid: allValid,
+                    _submit: meta._submit && allValid
+                };
+
+                return parcelDataSetMeta(newMeta)(parcelData);
+            }
         );
     });
-
-    // $FlowFixMe
-    let shouldSubmit = (parcelData) => !!(parcelData.meta.valid);
-
-    let onRelease = (continueRelease, changeRequest) => {
-        changeRequest && shouldSubmit(changeRequest.nextData) && continueRelease();
-    };
-
-    return {
-        modifyBeforeUpdate,
-        onRelease
-    };
 };
