@@ -1,17 +1,8 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ParcelDrag from 'react-dataparcels-drag';
-import ExampleHoc from 'component/ExampleHoc';
-
-const FruitListParcelHoc = ParcelHoc({
-    name: "fruitListParcel",
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ]
-});
+import exampleFrame from 'component/exampleFrame';
 
 const SortableFruitList = ParcelDrag({
     element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
@@ -23,12 +14,18 @@ const SortableFruitList = ParcelDrag({
     </ParcelBoundary>
 });
 
-const FruitListEditor = (props) => {
-    let {fruitListParcel} = props;
-    return <div>
+export default function FruitListEditor(props) {
+
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
+
+    return exampleFrame({fruitListParcel}, <div>
         <SortableFruitList parcel={fruitListParcel} />
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
-    </div>;
-};
-
-export default FruitListParcelHoc(ExampleHoc(FruitListEditor));
+    </div>);
+}

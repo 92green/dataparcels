@@ -1,14 +1,15 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
-import {Wrapper, Text, Typography} from 'dcme-style';
-import Markdown from 'pages/parcel-meta.md';
-import PageLayout from 'component/PageLayout';
-import Layout from 'layouts/Layout';
+import Layout from 'layout/Layout';
+import ContentNav from 'shape/ContentNav';
+import ParcelMetaMarkdown from 'pages/parcel-meta.mdx';
 
 export default () => <Layout>
-    <PageLayout
-        modifier="marginBottom"
-        content={() => <Typography><Markdown /></Typography>}
+    <ContentNav
+        content={() => <ParcelMetaMarkdown />}
+        pageNav={[
+            '# Parcel Meta',
+            'Examples'
+        ]}
     />
-</Layout>
+</Layout>;

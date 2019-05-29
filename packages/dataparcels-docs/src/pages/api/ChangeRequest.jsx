@@ -1,33 +1,25 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
-import ApiPage from 'component/ApiPage';
-import Markdown_ChangeRequest from 'docs/api/changeRequest/ChangeRequest.md';
-import Layout from 'layouts/Layout';
-
-const md = {
-    _desc: Markdown_ChangeRequest
-}
-
-const api = `
-# Properties
-prevData
-nextData
-originId
-originPath
-actions
-
-# Methods
-merge()
-getDataIn()
-hasValueChanged()
-toJS()
-`;
+import Layout from 'layout/Layout';
+import ContentNav from 'shape/ContentNav';
+import ChangeRequestMarkdown from 'pages/api/ChangeRequest.mdx';
 
 export default () => <Layout>
-    <ApiPage
-        name="ChangeRequest"
-        api={api}
-        md={md}
+    <ContentNav
+        content={() => <ChangeRequestMarkdown />}
+        pageNav={[
+            '# ChangeRequest',
+            '# Properties',
+            'prevData',
+            'nextData',
+            'originId',
+            'originPath',
+            'actions',
+            '# Methods',
+            'hasValueChanged()',
+            'getDataIn()',
+            'toJS()',
+            'merge()'
+        ]}
     />
-</Layout>
+</Layout>;

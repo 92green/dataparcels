@@ -25,5 +25,3 @@ ParcelHoc({
 <Box modifier="margin">
     <Message>In future there will be more options to allow key and meta data to be retained.</Message>
 </Box>
-
-<Link to="/examples/parcelhoc-updatefromprops">Example</Link>

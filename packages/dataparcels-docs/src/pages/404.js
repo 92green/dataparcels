@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Layout from 'layouts/Layout';
+import Layout from 'layout/Layout';
 import {Box, CenteredLanding, Text} from 'dcme-style';
 import Link from 'component/Link';
 

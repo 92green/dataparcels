@@ -1,14 +1,19 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
-import {Wrapper, Text, Typography} from 'dcme-style';
-import ParcelTypesMarkdown from 'pages/parcel-types.md';
-import PageLayout from 'component/PageLayout';
-import Layout from 'layouts/Layout';
+import Layout from 'layout/Layout';
+import ContentNav from 'shape/ContentNav';
+import ParcelTypesMarkdown from 'pages/parcel-types.mdx';
 
 export default () => <Layout>
-    <PageLayout
-        modifier="marginBottom"
-        content={() => <Typography><ParcelTypesMarkdown /></Typography>}
+    <ContentNav
+        content={() => <ParcelTypesMarkdown />}
+        pageNav={[
+            '# Parcel Types',
+            'ParentParcel',
+            'ChildParcel',
+            'IndexedParcel',
+            'ElementParcel',
+            'TopLevelParcel'
+        ]}
     />
-</Layout>
+</Layout>;

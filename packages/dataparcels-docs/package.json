@@ -12,31 +12,11 @@
     "watch": "gatsby develop"
   },
   "dependencies": {
-    "babel-preset-blueflag": "^1.0.0",
-    "bruce": "^4.0.0",
     "dataparcels": "^0.19.1",
-    "dcme-style": "^0.18.1",
+    "dcme-gatsby": "^0.5.0",
+    "dcme-style": "^0.27.4",
     "gatsby": "^2.0.19",
-    "gatsby-image": "^2.0.15",
-    "gatsby-plugin-offline": "^2.0.5",
-    "gatsby-plugin-react-helmet": "^3.0.0",
-    "gatsby-plugin-resolve-src": "^2.0.0",
-    "gatsby-plugin-sass": "^2.0.11",
-    "gatsby-remark-prismjs": "^3.2.8",
-    "gatsby-source-filesystem": "^2.0.4",
-    "immutable": "^3.8.2",
-    "mdx-loader": "1.0.0-beta.3",
-    "mdxc": "^1.1.2",
-    "node-sass": "^4.11.0",
-    "react": "^16.8.6",
-    "react-cool-storage": "^0.1.1",
     "react-dataparcels": "file:.yalc/react-dataparcels",
-    "react-dataparcels-drag": "file:.yalc/react-dataparcels-drag",
-    "react-dom": "^16.8.6",
-    "react-flip-move": "^3.0.2",
-    "react-helmet": "^5.2.0",
-    "react-sortable-hoc": "^1.4.0",
-    "react-spruce": "^0.1.1",
-    "unmutable": "^0.43.1"
+    "react-dataparcels-drag": "file:.yalc/react-dataparcels-drag"
   }
 }

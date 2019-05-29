@@ -1,14 +1,18 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
-import {Wrapper, Text, Typography} from 'dcme-style';
-import GettingStartedMarkdown from 'pages/getting-started.md';
-import PageLayout from 'component/PageLayout';
-import Layout from 'layouts/Layout';
+import Layout from 'layout/Layout';
+import ContentNav from 'shape/ContentNav';
+import GettingStartedMarkdown from './getting-started.mdx';
 
 export default () => <Layout>
-    <PageLayout
-        modifier="marginBottom"
-        content={() => <Typography><GettingStartedMarkdown /></Typography>}
+    <ContentNav
+        content={() => <GettingStartedMarkdown />}
+        pageNav={[
+            '# Getting Started',
+            'Installation',
+            'Hello World',
+            'Hello World 2',
+            'More'
+        ]}
     />
-</Layout>
+</Layout>;

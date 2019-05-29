@@ -1,20 +1,14 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
-import ApiPage from 'component/ApiPage';
-import Markdown_shape from 'docs/api/shape/shape.md';
-import Layout from 'layouts/Layout';
-
-const md = {
-    _desc: Markdown_shape
-}
-
-const api = ``;
+import Layout from 'layout/Layout';
+import ContentNav from 'shape/ContentNav';
+import ShapeMarkdown from 'pages/api/shape.mdx';
 
 export default () => <Layout>
-    <ApiPage
-        name="shape"
-        api={api}
-        md={md}
+    <ContentNav
+        content={() => <ShapeMarkdown />}
+        pageNav={[
+            '# shape'
+        ]}
     />
-</Layout>
+</Layout>;

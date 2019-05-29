@@ -1,0 +1,25 @@
+import React from 'react';
+import useParcelState from 'react-dataparcels/useParcelState';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+export default function FoodEditor(props) {
+
+    let [foodParcel] = useParcelState({
+        value: {
+            mains: "Soup",
+            dessert: "Strudel"
+        }
+    });
+
+    return <div>
+        <label>mains (with 300ms debounce)</label>
+        <ParcelBoundary parcel={foodParcel.get('mains')} debounce={300}>
+            {(mains) => <input type="text" {...mains.spreadDOM()} />}
+        </ParcelBoundary>
+
+        <label>dessert (without debounce)</label>
+        <ParcelBoundary parcel={foodParcel.get('dessert')}>
+            {(dessert) => <input type="text" {...dessert.spreadDOM()} />}
+        </ParcelBoundary>
+    </div>;
+}

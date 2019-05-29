@@ -1,0 +1,31 @@
+import React from 'react';
+import useParcelState from 'react-dataparcels/useParcelState';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+export default function FruitListEditor(props) {
+
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
+
+    return <div>
+        {fruitListParcel.toArray((fruitParcel) => {
+            return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
+                {(parcel) => <div>
+                    <input type="text" {...parcel.spreadDOM()} />
+                    {parcel.meta.confirming
+                        ? <span>Are you sure?
+                            <button onClick={() => parcel.delete()}>yes</button>
+                            <button onClick={() => parcel.setMeta({confirming: false})}>no</button>
+                        </span>
+                        : <button onClick={() => parcel.setMeta({confirming: true})}>x</button>}
+                </div>}
+            </ParcelBoundary>;
+        })}
+        <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
+    </div>)
+}
