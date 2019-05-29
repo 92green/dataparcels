@@ -25,7 +25,7 @@
   },
   "private": false,
   "scripts": {
-    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js && yarn yalc-publish'",
+    "build": "rm -rf lib && NODE_ENV=production yarn babel src --out-dir lib --ignore '**/__test__/*.js'",
     "build-all": "yarn build",
     "flow": "blueflag-test flow",
     "flow-coverage": "blueflag-test flow-coverage",
