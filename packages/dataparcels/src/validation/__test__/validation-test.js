@@ -15,6 +15,9 @@ test('validation should validate specified fields', () => {
         value: {
             abc: 123,
             def: 456
+        },
+        meta: {
+            _submit: true
         }
     };
 
@@ -34,6 +37,9 @@ test('validation should validate specified fields', () => {
     // meta should be set
     expect(newParcelData.child.abc.meta.invalid).toBe("Error");
     expect(newParcelData.child.def.meta.invalid).toBe(undefined);
+
+    // top level invalid array should be set
+    expect(newParcelData.meta.invalidList).toEqual(["Error"]);
 });
 
 test('validation should accept arrays of validators', () => {
@@ -45,6 +51,9 @@ test('validation should accept arrays of validators', () => {
             abc: 123,
             def: 456,
             ghi: 789
+        },
+        meta: {
+            _submit: true
         }
     };
 
@@ -68,6 +77,9 @@ test('validation should accept wildcards to check all fields at a depth', () => 
         value: {
             abc: [1,5,2,6,1],
             def: [9]
+        },
+        meta: {
+            _submit: true
         }
     };
 
@@ -91,6 +103,9 @@ test('validation should accept multiple wildcards to check all fields at a depth
         value: {
             abc: [1,5,2,6,1],
             def: [9]
+        },
+        meta: {
+            _submit: true
         }
     };
 
@@ -152,7 +167,7 @@ test('validation should set top level meta.valid and meta._submit', () => {
     });
 
     let invalidResult = myvalidation(invalid);
-    expect(invalidResult.meta.valid).toBe(false);
+    expect(invalidResult.meta.valid).toBe(true);
     expect(invalidResult.meta._submit).toBe(false);
 
     let invalidSubmittedResult = myvalidation(invalidSubmitted);
@@ -166,5 +181,50 @@ test('validation should set top level meta.valid and meta._submit', () => {
     let validSubmittedResult = myvalidation(validSubmitted);
     expect(validSubmittedResult.meta.valid).toBe(true);
     expect(validSubmittedResult.meta._submit).toBe(true);
+});
+
+test('validation should set top level meta.showInvalid to true only after attempted submit', () => {
+
+    let invalid = {
+        value: {
+            abc: 123
+        },
+        meta: {
+            _submit: false
+        }
+    };
+
+    let invalidSubmitted = {
+        value: {
+            abc: 123
+        },
+        meta: {
+            _submit: true,
+            showInvalid: false
+        }
+    };
+
+    let valid = {
+        value: {
+            abc: 456
+        },
+        meta: {
+            _submit: false,
+            showInvalid: true
+        }
+    };
+
+    let myvalidation = validation({
+        abc: value => value > 300 ? undefined : "Not higher than 300"
+    });
+
+    let invalidResult = myvalidation(invalid);
+    expect(invalidResult.meta.showInvalid).toBe(false);
+
+    let invalidSubmittedResult = myvalidation(invalidSubmitted);
+    expect(invalidSubmittedResult.meta.showInvalid).toBe(true);
+
+    let validResult = myvalidation(valid);
+    expect(validResult.meta.showInvalid).toBe(true);
 });
 

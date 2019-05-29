@@ -21,7 +21,13 @@ type ValidationRuleMap = {
 
 export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
     return dangerouslyUpdateParcelData((parcelData) => {
-        let allValid = true;
+        let invalidList = [];
+        let meta = parcelData.meta || {};
+        let showInvalid = !!meta.showInvalid;
+
+        if(meta._submit) {
+            showInvalid = true;
+        }
 
         let mapValidationRuleApplier = (validator: ValidationRule|ValidationRule[], path: string): ParcelDataEvaluator => {
             let keyPath = path.split(".");
@@ -36,8 +42,8 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
                         .concat(validator)
                         .reduce((invalid, validator) => invalid || validator(parcelData.value, keyPath), "");
 
-                    if(invalid) {
-                        allValid = false;
+                    if(invalid && showInvalid) {
+                        invalidList.push(invalid);
                     } else {
                         invalid = undefined;
                     }
@@ -47,6 +53,19 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
             );
         };
 
+        let updateMeta = (parcelData) => {
+            let valid = invalidList.length === 0;
+            let newMeta = {
+                showInvalid,
+                invalidList,
+                valid,
+                // _submit is meta that useParcelBuffer uses to trigger a submit
+                // set this to false if a submit should not occur
+                _submit: meta._submit && valid
+            };
+            return parcelDataSetMeta(newMeta)(parcelData);
+        };
+
         return pipeWith(
             parcelData,
             ...pipeWith(
@@ -54,16 +73,7 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
                 map(mapValidationRuleApplier),
                 toArray()
             ),
-            (parcelData) => {
-                let meta = parcelData.meta || {};
-
-                let newMeta = {
-                    valid: allValid,
-                    _submit: meta._submit && allValid
-                };
-
-                return parcelDataSetMeta(newMeta)(parcelData);
-            }
+            updateMeta
         );
     });
 };
