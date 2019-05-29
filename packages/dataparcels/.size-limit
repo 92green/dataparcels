@@ -4,11 +4,35 @@
         path: "lib/index.js"
     },
     {
+        limit: "2 KB",
+        path: "Action.js"
+    },
+    {
+        limit: "200 B",
+        path: "CancelActionMarker.js"
+    },
+    {
+        limit: "8 KB",
+        path: "ChangeRequest.js"
+    },
+    {
+        limit: "102 B",
+        path: "dangerouslyUpdateParcelData.js"
+    },
+    {
+        limit: "1 KB",
+        path: "DeletedParcelMarker.js"
+    },
+    {
         limit: "15 KB",
         path: "ParcelShape.js"
     },
     {
+        limit: "15 KB",
+        path: "shape.js"
+    },
+    {
         limit: "6 KB",
-        path: "Validation.js"
+        path: "validation.js"
     }
 ]
