@@ -209,11 +209,13 @@ export default class Parcel {
     _boundarySplit = ({handleChange}: *): Parcel => {
         return this._create({
             id: this._id.pushModifier('bs'),
-            handleChange,
-            dispatchId: '%',
-            registry: {
-                '%': this
-            }
+            handleChange
+            // temporarily disabling boundary splitting
+            // until a more robust solution can be found
+            // dispatchId: '%',
+            // registry: {
+            //     '%': this
+            // }
         });
     };
 
