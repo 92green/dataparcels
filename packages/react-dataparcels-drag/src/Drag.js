@@ -2,7 +2,7 @@
 
 import type {ComponentType} from 'react';
 import type {Node} from 'react';
-import type Parcel from 'react-dataparcels';
+import type Parcel from 'dataparcels';
 
 import React from 'react';
 import {SortableContainer} from 'react-sortable-hoc';
