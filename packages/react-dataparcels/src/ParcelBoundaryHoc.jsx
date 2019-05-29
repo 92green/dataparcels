@@ -41,7 +41,7 @@ export default (config: ParcelBoundaryHocConfig): Function => {
 
     // deprecation notice
     if(process.env.NODE_ENV !== 'production') {
-        console.warn(`ParcelBoundaryHoc is deprecated. Please use the useParcelBuffer hook instead.`);
+        console.warn(`ParcelBoundaryHoc is deprecated. Please use the useParcelBuffer hook instead.`); /* eslint-disable-line no-console */
     }
 
     return (Component: ComponentType<ChildProps>) => class ParcelBoundaryHoc extends React.Component<Props> { /* eslint-disable-line */

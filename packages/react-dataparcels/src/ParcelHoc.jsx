@@ -47,7 +47,7 @@ export default (config: ParcelHocConfig): Function => {
 
     // deprecation notice
     if(process.env.NODE_ENV !== 'production') {
-        console.warn(`ParcelHoc is deprecated. Please use the useParcelState hook instead.`);
+        console.warn(`ParcelHoc is deprecated. Please use the useParcelState hook instead.`); /* eslint-disable-line no-console */
     }
 
     let {
