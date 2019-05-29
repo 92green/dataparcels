@@ -9696,17 +9696,13 @@ react-cool-storage@^0.1.1:
     unmutable "^0.39.0"
 
 "react-dataparcels-drag@file:.yalc/react-dataparcels-drag":
-  version "0.18.1-f0979078"
+  version "0.18.1-6ffb1674"
   dependencies:
     "@babel/runtime" "^7.1.5"
     react-sortable-hoc "1.4.0"
 
 "react-dataparcels@file:.yalc/react-dataparcels":
-<<<<<<< HEAD
-  version "0.19.1-c3087376"
-=======
-  version "0.20.0-4b9f2766"
->>>>>>> fec6ff1abf081c6beb83f67cdab3a080a7da8d1e
+  version "0.20.0-21c416c2"
   dependencies:
     "@babel/runtime" "^7.1.5"
     dataparcels "^0.20.0"
