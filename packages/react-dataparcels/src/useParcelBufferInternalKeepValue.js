@@ -22,10 +22,6 @@ export default ({keepValue, parcel}: Params): boolean => {
 
 
     let changedBySelf = parcel._lastOriginId.startsWith(parcel.id);
-    //console.log("--");
-    //console.log("parcel._lastOriginId", parcel._lastOriginId);
-    //console.log("parcel.id", parcel.id);
-    //console.log("changedBySelf", changedBySelf);
     if(changedBySelf) {
         keepValueReceivedRef.current = parcel.value;
         return true;
@@ -35,10 +31,6 @@ export default ({keepValue, parcel}: Params): boolean => {
         parcel.value,
         keepValueReceivedRef.current
     );
-
-    //console.log("value", parcel.value);
-    //console.log("keepValueReceivedRef.current", keepValueReceivedRef.current);
-    //console.log("valueIsSameAsLastChangeBySelf", valueIsSameAsLastChangeBySelf);
 
     if(!valueIsSameAsLastChangeBySelf) {
         keepValueReceivedRef.current = parcel.value;
