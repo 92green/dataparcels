@@ -102,7 +102,7 @@ export default (params: Params): Return => {
 
     const internalBuffer = useParcelBufferInternalBuffer({
         onReset: () => setOuterParcel(null),
-        // ^ resets by ecreating innerParcel from outerParcel
+        // ^ resets by recreating innerParcel from outerParcel
         onSubmit: (changeRequest) => {
             params.parcel.dispatch(changeRequest);
         }
