@@ -1,13 +1,19 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelForm from 'react-dataparcels/useParcelForm';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ParcelBoundaryHoc from 'react-dataparcels/ParcelBoundaryHoc';
-import ExampleHoc from 'component/ExampleHoc';
-import composeWith from 'unmutable/composeWith';
+import exampleFrame from 'component/exampleFrame';
 
-const PersonEditor = (props) => {
-    let {personParcel, personParcelControl} = props;
-    return <div>
+export default function PersonEditor(props) {
+
+    let [personParcel, personParcelBuffer] = useParcelForm({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps"
+        }
+    });
+
+    let personParcelState = personParcelBuffer._outerParcel;
+    return exampleFrame({personParcelState, personParcel}, <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
             {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
@@ -18,25 +24,7 @@ const PersonEditor = (props) => {
             {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
         </ParcelBoundary>
 
-        <button onClick={() => personParcelControl.release()}>Submit</button>
-        <button onClick={() => personParcelControl.cancel()}>Cancel</button>
-    </div>;
-};
-
-// unmutable's composeWith(a,b,c) is equivalent to a(b(c))
-
-export default composeWith(
-    ParcelHoc({
-        name: "personParcel",
-        valueFromProps: (/* props */) => ({
-            firstname: "Robert",
-            lastname: "Clamps"
-        })
-    }),
-    ExampleHoc,
-    ParcelBoundaryHoc({
-        name: "personParcel",
-        hold: true // hold onto changes until the user releases them
-    }),
-    PersonEditor
-);
+        <button onClick={() => personParcelBuffer.submit()}>Submit</button>
+        <button onClick={() => personParcelBuffer.reset()}>Reset</button>
+    </div>);
+}

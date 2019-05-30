@@ -1,5 +1,4 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
 import ApiPage from 'component/ApiPage';
 import Markdown_ParcelHoc from 'docs/api/parcelHoc/ParcelHoc.md';
@@ -13,7 +12,7 @@ import Markdown_delayUntil from 'docs/api/parcelHoc/delayUntil.md';
 import Markdown_pipe from 'docs/api/parcelHoc/pipe.md';
 import Markdown_debugParcel from 'docs/api/parcelHoc/debugParcel.md';
 import Markdown_childName from 'docs/api/parcelHoc/childName.md';
-import Layout from 'layouts/Layout';
+import Layout from 'layout/Layout';
 
 const md = {
     _desc: Markdown_ParcelHoc,
@@ -27,7 +26,7 @@ const md = {
     pipe: Markdown_pipe,
     debugParcel: Markdown_debugParcel,
     ['${name}']: Markdown_childName
-}
+};
 
 const api = `
 # Config
@@ -41,7 +40,7 @@ pipe
 debugParcel
 
 # Child props
-$\{name\}
+$\{name}
 `;
 
 export default () => <Layout>
@@ -50,4 +49,4 @@ export default () => <Layout>
         api={api}
         md={md}
     />
-</Layout>
+</Layout>;

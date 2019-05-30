@@ -1,23 +1,22 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
+import exampleFrame from 'component/exampleFrame';
 
-const DelimitedStringParcelHoc = ParcelHoc({
-    name: "delimitedParcel",
-    valueFromProps: (/* props */) => "abc.def"
-});
+export default function DelimitedStringEditor(props) {
 
-const DelimitedStringInput = (props) => {
-    let delimitedStringParcel = props
-        .delimitedStringParcel
+    let [delimitedStringParcel] = useParcelState({
+        value: "abc.def"
+    });
+
+    let delimitedArrayParcel = delimitedStringParcel
         .modifyDown(string => string.split("."))
         //  ^ turn value into an array on the way down
         .modifyUp(array => array.join("."));
         // ^ turn value back into a string on the way up
 
-    return <div>
-        {delimitedStringParcel.toArray((segmentParcel) => {
+    return exampleFrame({delimitedStringParcel}, <div>
+        {delimitedArrayParcel.toArray((segmentParcel) => {
             return <ParcelBoundary parcel={segmentParcel} key={segmentParcel.key}>
                 {(parcel) => <div>
                     <input type="text" {...parcel.spreadDOM()} />
@@ -27,17 +26,6 @@ const DelimitedStringInput = (props) => {
                 </div>}
             </ParcelBoundary>;
         })}
-        <button onClick={() => delimitedStringParcel.push("")}>Add new path segment</button>
-    </div>;
-};
-
-const DelimitedStringEditor = (props) => {
-    let {delimitedParcel} = props;
-    return <div>
-        <h4>Delimited string > array of strings</h4>
-        <p>Turns a stored string into an array so array editing controls can be rendered.</p>
-        <DelimitedStringInput delimitedStringParcel={delimitedParcel} />
-    </div>;
-};
-
-export default DelimitedStringParcelHoc(ExampleHoc(DelimitedStringEditor));
+        <button onClick={() => delimitedArrayParcel.push("")}>Add new path segment</button>
+    </div>);
+}

@@ -7,7 +7,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
-import ApplyModifyBeforeUpdate from './util/ApplyModifyBeforeUpdate';
+import ApplyBeforeChange from './util/ApplyBeforeChange';
 
 type Props = {};
 
@@ -44,6 +44,11 @@ const PARCEL_HOC_NAME = `ParcelHoc()`;
 
 export default (config: ParcelHocConfig): Function => {
     Types(`ParcelHoc()`, `config`, `object`)(config);
+
+    // deprecation notice
+    if(process.env.NODE_ENV !== 'production') {
+        console.warn(`ParcelHoc is deprecated. Please use the useParcelState hook instead.`); /* eslint-disable-line no-console */
+    }
 
     let {
         name,
@@ -89,7 +94,7 @@ export default (config: ParcelHocConfig): Function => {
         static updateParcelValueFromProps(parcel: Parcel, props: Props): Parcel {
             return parcel._changeAndReturn((parcel: Parcel) => {
                 let value: any = valueFromProps(props);
-                return ApplyModifyBeforeUpdate(modifyBeforeUpdate)(parcel).set(value);
+                return ApplyBeforeChange(modifyBeforeUpdate)(parcel).set(value);
             });
         }
 

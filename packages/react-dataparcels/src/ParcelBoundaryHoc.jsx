@@ -4,10 +4,10 @@ import type {Node} from 'react';
 import type Parcel from 'dataparcels';
 import type {ContinueChainFunction} from 'dataparcels';
 import type {ParcelValueUpdater} from 'dataparcels';
-import type ParcelBoundaryControl from './ParcelBoundaryControl';
+import type ParcelBoundaryControl from './ParcelBoundaryControlDeprecated';
 
 import React from 'react';
-import ParcelBoundary from './ParcelBoundary';
+import ParcelBoundary from './ParcelBoundaryDeprecated';
 import Types from 'dataparcels/lib/types/Types';
 
 type Props = {
@@ -38,6 +38,11 @@ const PARCEL_BOUNDARY_HOC_NAME = `ParcelBoundaryHoc()`;
 
 export default (config: ParcelBoundaryHocConfig): Function => {
     Types(`ParcelBoundaryHoc()`, `config`, `object`)(config);
+
+    // deprecation notice
+    if(process.env.NODE_ENV !== 'production') {
+        console.warn(`ParcelBoundaryHoc is deprecated. Please use the useParcelBuffer hook instead.`); /* eslint-disable-line no-console */
+    }
 
     return (Component: ComponentType<ChildProps>) => class ParcelBoundaryHoc extends React.Component<Props> { /* eslint-disable-line */
         render(): Node {

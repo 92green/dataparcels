@@ -1,0 +1,308 @@
+import Link from 'component/Link';
+import ApiPageIcon from 'component/ApiPageIcon';
+import Icon from 'assets/parcelhoc.gif';
+import {Break} from 'dcme-style';
+import {DocsSectionHeading} from 'dcme-style';
+import {Message} from 'dcme-style';
+import {Param} from 'dcme-style';
+import ValueUpdater from 'docs/notes/ValueUpdater.md';
+
+# useParcelForm
+
+<ApiPageIcon>{Icon}</ApiPageIcon>
+
+The useParcelForm function is a React hook. Its job is to make submittable forms easy to build, by combining [useParcelState](/api/useParcelState) and [useParcelBuffer](/api/useParcelBuffer) together.
+
+This is perfect for creating user interfaces that can show data that's fetched from a server, allow it to be edited by the user, and then send any changes back to the server.
+
+The useParcelForm hook holds two Parcels in state:
+1. the original data provided via `value`, hereby known as "outerParcel"
+2. a buffered version of the same Parcel that contains the user's active changes, hereby known as "innerParcel"
+
+The hook looks roughly like this:
+
+```js
+// 1. Parcel State
+//
+// holds the original data
+// and sends changed data to a callback
+let [outerParcel] = useParcelState({
+    value,
+    updateValue,
+    onChange // e.g. (parcel) => saveMyData(parcel.value)
+});
+
+// 2. Parcel Buffer
+//
+// buffers the changes that the user has made
+// and prevents those changes from being propagated
+// back up to state until its ready to be saved
+let [innerParcel, parcelBuffer] = useParcelBuffer({
+    parcel: outerParcel,
+    buffer,
+    debounce,
+    beforeChange
+});
+
+// 3. Outside of the useParcelForm hook...
+// allow the user to make changes to the data
+innerParcel.get('...') // etc
+
+parcelBuffer.submit(); // or just use debounce
+```
+
+Using this pattern, the "submit" button is really an action that instructs the useParcelBuffer hook to release all of its buffered changes up into the useParcelState hook.
+
+```js
+import useParcelForm from 'react-dataparcels/useParcelForm';
+```
+
+```flow
+let [parcel] = useParcelForm({
+    value: any,
+    // optional
+    updateValue?: boolean,
+    onChange?: Function,
+    buffer?: boolean,
+    debounce?: number,
+    validation?: Function,
+    beforeChange?: Function|Function[]
+});
+```
+
+<Break />
+
+## <DocsSectionHeading>Params</DocsSectionHeading>
+
+### value
+
+```flow
+value: any
+```
+
+Sets the initial value to be put into useParcelForm's Parcel.
+
+```js
+let [parcel] = useParcelForm({
+    value: 100
+});
+
+// parcel.value is 100
+
+parcel.set(200);
+
+// set() triggers a change and a re-render
+// parcel.value is now 200
+```
+
+If computing `value` is a heavy operation, you can return the value from a function. The function will only be called on initial mount. However, if `updateValue` is set to true then the function will be called on every update.
+
+```js
+let [parcel] = useParcelForm({
+    value: () => 100
+});
+
+// parcel.value is 100
+```
+
+### updateValue
+
+```flow
+updateValue?: boolean = false // optional
+```
+
+When `updateValue` is set to true during an update, the useParcelForm hook will check to see if `value` has changed, and will update its Parcel's value if so. This will completely replace any changes that may have happened to the Parcel since the last time `value` was put into the Parcel.
+
+Value changes are detected using `Object.is()`, comparing the new `value` with the previous one.
+
+```js
+// receivedValue is 100
+
+let [parcel] = useParcelForm({
+    value: receivedValue,
+    updateValue: true
+});
+
+// parcel.value is 100
+
+parcel.set(200);
+
+// set() triggers a change and a re-render
+// parcel.value is now 200
+
+// if component updates and receivedValue is now 300
+// then parcel.value is now 300
+```
+
+### onChange
+
+```flow
+onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => void // optional
+```
+
+If provided, this function is called whenever useParcelForm's Parcel has handled a change. It receives the new [Parcel](/api/Parcel), and the [ChangeRequest](/api/ChangeRequest) that was responsible for the change.
+
+This function can be used to relay changes further up the React heirarchy.
+
+Please keep in mind that it is possible for a change to result in the same data being contained in the Parcel, `onChange` will not dedupe subsequent calls whose Parcels contain the same data.
+
+```js
+let [parcel] = useParcelForm({
+    value: receivedValue,
+    onChange: (parcel, changeRequest) => {
+        // add logic here
+    }
+});
+```
+
+### buffer
+
+```flow
+buffer?: boolean = true // optional
+```
+
+When `buffer` is true, changes that occur to `parcel` will be caught in useParcelForm's buffer, until released explicitly by calling [parcelBuffer.submit()](#submit), or automatically if [debounce](#debounce) is being used.
+
+When `buffer` is false, changes will propagate up to the top Parcel in useParcelForm's state immediately.
+
+### debounce
+
+```flow
+debounce?: number // optional
+```
+
+If set, `debounce` will debounce any changes that enter the buffer. The number indicates the number of milliseconds to debounce.
+
+This can be used to make [autosaving forms](/ui-behaviour#Autosaving-forms).
+
+#### Debouncing explained
+
+When the `parcel` sends a change, the useParelForm hook will catch it and prevent it from being propagated up to the main Parcel that it holds in state.
+
+The useParcelForm hooks waits until no new changes have occured for `debounce` number of milliseconds. It then releases all the changes it has buffered, all together in a single change request.
+
+```js
+let [parcel] = useParcelForm({
+    value: receivedValue,
+    onChange: (parcel, changeRequest) => {
+        // add logic here
+    },
+    debounce: 500
+});
+```
+
+### validation
+
+```flow
+validation?: ParcelValidationFunction // optional
+```
+
+Applies [validation](/api/validation) to the form. [See an example here](/ui-behaviour#Validation-on-user-input).
+
+If the validation config doesn't need to change after initial mount, it can be returned from a function. The function will only be called on initial mount and the validation will be cached from then on.
+
+```js
+import validation from 'dataparcels/validation';
+import validation from 'react-dataparcels/validation';
+
+let [parcel] = useParcelForm({
+    value: {
+        name: 'unknown'
+    },
+    validation: () => validation({
+        'name': value => value ? null : `Name must not be blank`
+    })
+});
+
+// or
+
+let [parcel] = useParcelForm({
+    value: {
+        name: 'unknown'
+    },
+    validation: validation({
+        'name': value => value ? null : `Name must not be blank`
+    })
+});
+```
+
+### beforeChange
+
+```flow
+beforeChange?: ParcelValueUpdater|ParcelValueUpdater[] // optional
+
+type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any
+type ParcelValueUpdater = shape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+```
+
+The `beforeChange` parameter accepts either a single function, or an array of functions. Whenever a new `value` is taken into useParcelForm from params, and whenever the useParcelForm hook recieves a change from below, the change is passed through each `beforeChange` function.
+
+Internally the useParcelBuffer hook uses [Parcel.modifyUp()](/api/Parcel#modifyUp()) on each of the `beforeChange` functions. If more than one function is passed to `beforeChange`, the change will go through the first function in the array first, then the second etc.
+
+This is particularly useful for setting [derived data](data-editing#Deriving-meta), and plugins such as [validation](/api/validation) are built to be passed into `beforeChange`.
+
+<ValueUpdater />
+
+```js
+let [parcel] = useParcelForm({
+    value: "ABC",
+    beforeChange: value => value.toLowerCase()
+});
+
+// ^ "ABC" will be passed through `beforeChange`
+// and useParcelForm's Parcel will contain a value of "abc"
+// parcel.value is now "abc"
+
+parcel.set("HELLO");
+
+// ^ "HELLO" will be passed through `beforeChange`
+// and useParcelForm's Parcel will contain a value of "hello"
+// parcel.value is now "hello"
+```
+
+## <DocsSectionHeading>Returns</DocsSectionHeading>
+
+
+```flow
+[parcel: Parcel, parcelBuffer: ParcelBufferControl]
+```
+
+### parcel
+
+```flow
+parcel: Parcel
+```
+
+The first element of the returned array is the `parcel`, a Parcel that contains the current state of `parcel` with all the changes in the buffer applied to it. When buffering is enabled, any changes that `parcel` receives will go into the buffer.
+
+### parcelBuffer
+
+```flow
+parcelBuffer: ParcelBufferControl
+```
+
+The second element of the returned array is a ParcelBufferControl instance.
+
+## ParcelBufferControl
+
+```flow
+class ParcelBufferControl {
+    submit: Function,
+    reset: Function,
+    buffered: boolean,
+    actions: Action[]
+}
+```
+
+* <Param name="submit" type="() => void" />
+  When called, this function will release all changes in the buffer.
+
+* <Param name="reset" type="() => void" />
+  When called, this function will remove all changes in the buffer, and reset the data in `parcel` to be the same as the top Parcel stored in useParcelForm's state.
+
+* <Param name="buffered" type="boolean" />
+  This boolean is true when there are any changes in the buffer, or false if the buffer is empty.
+
+* <Param name="actions" type="Action[]" />
+  An array of actions that are currently in the buffer.
+

@@ -1,0 +1,43 @@
+import React from 'react';
+import useParcelState from 'react-dataparcels/useParcelState';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const withOriginalMeta = (parcel) => parcel.initialMeta({
+    original: parcel.value
+});
+
+export default function PersonEditor(props) {
+
+    let [personParcel] = useParcelState({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps"
+        }
+    });
+
+    let firstname = personParcel
+        .get('firstname')
+        .pipe(withOriginalMeta);
+
+    let lastname = personParcel
+        .get('lastname')
+        .pipe(withOriginalMeta);
+
+    return <div>
+        <label>firstname</label>
+        <ParcelBoundary parcel={firstname}>
+            {(firstname) => <div>
+                <input type="text" {...firstname.spreadDOM()} />
+                <div>Changed? {firstname.meta.original === firstname.value ? 'No' : 'Yes'}</div>
+            </div>}
+        </ParcelBoundary>
+
+        <label>lastname</label>
+        <ParcelBoundary parcel={lastname}>
+            {(lastname) => <div>
+                <input type="text" {...lastname.spreadDOM()} />
+                <div">Changed? {lastname.meta.original === lastname.value ? 'No' : 'Yes'}</div>
+            </div>}
+        </ParcelBoundary>
+    </div>;
+}

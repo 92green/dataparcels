@@ -335,3 +335,24 @@ test('ParcelHoc config should accept a debugParcel boolean and log about updatgi
     // $FlowFixMe
     console.log = log; // eslint-disable-line
 });
+
+test('ParcelHoc should not log deprecation notice when NODE_ENV=production', () => {
+    let {NODE_ENV} = process.env;
+    process.env.NODE_ENV = 'production';
+
+    let {warn} = console;
+    // $FlowFixMe
+    console.warn = jest.fn(); // eslint-disable-line
+
+    ParcelHoc({
+        name: 'testParcel',
+        valueFromProps: () => {}
+    });
+
+    expect(console.warn).not.toHaveBeenCalled();
+
+    // $FlowFixMe
+    console.warn = warn; // eslint-disable-line
+
+    process.env.NODE_ENV = NODE_ENV;
+});
