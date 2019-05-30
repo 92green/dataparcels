@@ -65,7 +65,6 @@ I hope this library helps solve some front-end problems for you.
 
 ### Roadmap
 
-- Add **hooks**, including a hook that rolls state and buffer together for creating forms.
 - Add **revertable changes**. The `useParcelState.onChange` callback should be able to return promises, and this can then allow failed `onChange` calls to reinstate unsaved changes in a lower Parcel buffer. This is a crucial feature that will allow for forms to rollback when requests fail.
 - Add **data synchronisation docs**, including data sync strategies strategies with examples.
 - Add **merge mode** to control how downward changes are accepted into `ParcelBoundary` components. This is required for rekey.
