@@ -1,22 +1,20 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
-
-const PersonParcelHoc = ParcelHoc({
-    name: "personParcel",
-    valueFromProps: (/* props */) => ({
-        firstname: "Robert",
-        lastname: "Clamps"
-    })
-});
+import exampleFrame from 'component/exampleFrame';
 
 const withOriginalMeta = (parcel) => parcel.initialMeta({
     original: parcel.value
 });
 
-const PersonEditor = (props) => {
-    let {personParcel} = props;
+export default function PersonEditor(props) {
+
+    let [personParcel] = useParcelState({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps"
+        }
+    });
 
     let firstname = personParcel
         .get('firstname')
@@ -26,7 +24,7 @@ const PersonEditor = (props) => {
         .get('lastname')
         .pipe(withOriginalMeta);
 
-    return <div>
+    return exampleFrame({personParcel}, <div>
         <label>firstname</label>
         <ParcelBoundary parcel={firstname}>
             {(firstname) => <div>
@@ -42,7 +40,5 @@ const PersonEditor = (props) => {
                 <div className="Text Text-right">Changed? {lastname.meta.original === lastname.value ? 'No' : 'Yes'}</div>
             </div>}
         </ParcelBoundary>
-    </div>;
-};
-
-export default PersonParcelHoc(ExampleHoc(PersonEditor));
+    </div>);
+}

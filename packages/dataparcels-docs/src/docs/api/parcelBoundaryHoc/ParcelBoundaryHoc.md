@@ -1,15 +1,16 @@
 import Link from 'component/Link';
-import Param from 'component/Param';
+import {Param} from 'dcme-style';
 import ApiPageIcon from 'component/ApiPageIcon';
-import ParcelHocExample from 'pages/examples/parcelhoc-example.md';
-import ParcelHocInitialValueFromProps from 'pages/examples/parcelhoc-valuefromprops.md';
-import ParcelHocOnChange from 'pages/examples/parcelhoc-onchange.md';
-import IconParcelBoundaryHoc from 'content/parcelboundaryhoc.gif';
+import IconParcelBoundaryHoc from 'assets/parcelboundaryhoc.gif';
 import {Box, Message} from 'dcme-style';
 
 # ParcelBoundaryHoc
 
 <ApiPageIcon>{IconParcelBoundaryHoc}</ApiPageIcon>
+
+<Box modifier="margin">
+    <Message>ParcelBoundaryHoc is <strong>deprecated</strong>, please use <Link to="/api/useParcelForm">useParcelForm</Link> or <Link to="/api/useParcelBuffer">useParcelBuffer</Link>.</Message>
+</Box>
 
 ParcelBoundaryHoc is a React higher order component. Its job is to control the flow of parcel changes. It is the higher order component version of a <Link to="/api/ParcelBoundary">ParcelBoundary</Link>.
 
@@ -36,7 +37,3 @@ ParcelBoundaryHoc({
     debugParcel?: boolean
 });
 ```
-
-<Box modifier="margin">
-    <Message>ParcelBoundaryHoc is also available as a React component, <Link to="/api/ParcelBoundary">ParcelBoundary</Link>.</Message>
-</Box>

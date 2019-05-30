@@ -1,20 +1,19 @@
 // @flow
-import type {Node} from 'react';
-
 import React from 'react';
-import {Box, Text, Wrapper} from 'dcme-style';
-import PageLayout from 'component/PageLayout';
+import Layout from 'layout/Layout';
+import ContentNav from 'shape/ContentNav';
 import API from 'content/API';
-import IconParcel from 'content/parcelinverted.gif';
+import {Text} from 'dcme-style';
 
-export default () => <Box>
-    <PageLayout
-        modifier="marginBottom"
-        content={() => <Box modifier="paddingTopKilo">
+export default () => <Layout>
+    <ContentNav
+        typography={false}
+        content={() => <>
             <Text id="API" element="h1" modifier="sizeGiga">API</Text>
-        </Box>}
+            <API />
+        </>}
+        pageNav={[
+            '# API'
+        ]}
     />
-    <Wrapper>
-        <API />
-    </Wrapper>
-</Box>
+</Layout>;

@@ -1,44 +1,43 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import shape from 'react-dataparcels/shape';
-import ExampleHoc from 'component/ExampleHoc';
+import exampleFrame from 'component/exampleFrame';
 
-const FruitListParcelHoc = ParcelHoc({
-    name: "fruitListParcel",
-    valueFromProps: (/* props */) => [
-        "Apple",
-        "Banana",
-        "Crumpets"
-    ]
-});
+export default function FruitListEditor(props) {
 
-const FruitListEditor = (props) => {
-    let {fruitListParcel} = props;
+    let [fruitListParcel] = useParcelState({
+        value: [
+            "Apple",
+            "Banana",
+            "Crumpets"
+        ]
+    });
 
     let selectedFruit = fruitListParcel
         .toArray()
         .filter(fruit => fruit.meta.selected);
 
     let allSelected = fruitListParcel.value.length === selectedFruit.length;
+
     let selectAll = (selected) => fruitListParcel.map(shape(
         fruit => fruit.setMeta({selected})
     ));
 
-    return <div>
+    let deleteSelectedFruit = () => fruitListParcel.update(shape(
+        fruitListShape => fruitListShape
+            .toArray()
+            .filter(fruitShape => !fruitShape.meta.selected)
+    ));
+
+    return exampleFrame({fruitListParcel}, <div>
         {fruitListParcel.toArray((fruitParcel) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => {
                     let selectedParcel = parcel.metaAsParcel('selected');
-
-                    let checkboxProps = {
-                        checked: !!selectedParcel.value,
-                        onChange: (event) => selectedParcel.set(event.currentTarget.checked)
-                    };
-
                     return <div>
                         <input type="text" {...parcel.spreadDOM()} />
-                        <input type="checkbox" style={{width: '2rem'}} {...checkboxProps} />
+                        <input type="checkbox" style={{width: '2rem'}} {...selectedParcel.spreadDOMCheckbox()} />
                         <button onClick={() => parcel.swapPrev()}>^</button>
                         <button onClick={() => parcel.swapNext()}>v</button>
                         <button onClick={() => parcel.delete()}>x</button>
@@ -51,6 +50,8 @@ const FruitListEditor = (props) => {
             ? <button onClick={() => selectAll(false)}>Select none</button>
             : <button onClick={() => selectAll(true)}>Select all</button>
         }
+        <button onClick={() => deleteSelectedFruit()}>Delete selected fruit</button>
+
         <h4>Selected fruit:</h4>
         <ul>
             {selectedFruit.map((fruitParcel) => {
@@ -60,7 +61,5 @@ const FruitListEditor = (props) => {
                 </li>;
             })}
         </ul>
-    </div>;
-};
-
-export default FruitListParcelHoc(ExampleHoc(FruitListEditor));
+    </div>);
+}

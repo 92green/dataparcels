@@ -1,10 +1,10 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
 import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
+import exampleFrame from 'component/exampleFrame';
 
-const calculate = (value, changeRequest) => {
+function calculate(value, changeRequest) {
     let {a, b, sum} = value;
 
     if(changeRequest.originPath[0] !== "sum") {
@@ -27,19 +27,7 @@ const calculate = (value, changeRequest) => {
     }
 
     return {a, b, sum};
-};
-
-const SumParcelHoc = ParcelHoc({
-    name: "sumParcel",
-    valueFromProps: (/* props */) => ({
-        a: 5,
-        b: 5,
-        sum: undefined
-    }),
-    modifyBeforeUpdate: [
-        calculate
-    ]
-});
+}
 
 // turn numbers into strings on the way down
 // and back into numbers on the way up
@@ -55,9 +43,18 @@ const numberToString = (parcel) => parcel
         return (string === "" || isNaN(number)) ? CancelActionMarker : number;
     });
 
-const AreaEditor = (props) => {
-    let {sumParcel} = props;
-    return <div>
+export default function AreaEditor(props) {
+
+    let [sumParcel] = useParcelState({
+        value: {
+            a: 5,
+            b: 5,
+            sum: undefined
+        },
+        beforeChange: calculate
+    });
+
+    return exampleFrame({sumParcel}, <div>
         <label>a</label>
         <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
@@ -72,7 +69,5 @@ const AreaEditor = (props) => {
         <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepValue>
             {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
-    </div>;
-};
-
-export default SumParcelHoc(ExampleHoc(AreaEditor));
+    </div>);
+}

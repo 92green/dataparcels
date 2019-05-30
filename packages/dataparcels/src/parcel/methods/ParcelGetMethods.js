@@ -31,6 +31,11 @@ export default (_this: Parcel) => ({
         onChange: _this.onChangeDOM
     }),
 
+    spreadDOMCheckbox: (notFoundValue: ?boolean = false): Object => ({
+        checked: !!getValue(_this, notFoundValue),
+        onChange: _this.onChangeDOMCheckbox
+    }),
+
     // Branch methods
 
     metaAsParcel: (key: string): Parcel => {

@@ -1,25 +1,9 @@
 // @flow
 import type {Node} from 'react';
 import React from 'react';
-import {Fragment} from 'react';
-import {Box, Grid, GridItem, NavigationList, NavigationListItem, Text, Typography} from 'dcme-style';
+import {Box, Grid, GridItem, Text, Typography} from 'dcme-style';
 import Link from 'component/Link';
-import SiteNavigation from 'component/SiteNavigation';
-import PageLayout from 'component/PageLayout';
-import APINavigation from 'component/APINavigation';
-
-const renderApi = (api) => api
-    .split('\n')
-    .map((line: string): Node => {
-        if(line.slice(0,2) === "# ") {
-            return line.slice(2);
-        }
-        if(!line) {
-            return <br />;
-        }
-        return <a className="Link" href={`#${line.replace("()","")}`}>{line.replace("()","")}</a>;
-    })
-    .map((line, key) => <NavigationListItem key={key}>{line}</NavigationListItem>);
+import ContentNav from 'shape/ContentNav';
 
 const renderDoclets = ({api, md}) => api
     .split('\n')
@@ -55,23 +39,15 @@ type Props = {
 export default ({name, api, md, after}: Props) => {
     let Description = md._desc;
     let After = md._after;
-    return <PageLayout
-        modifier="marginBottom"
-        content={() => <Box>
-            <Box modifier="marginBottomGiga">
-                <Typography>
-                    <Description />
-                </Typography>
-            </Box>
+    return <ContentNav
+        content={() => <>
+            <Description />
             {renderDoclets({api, md})}
-            {After && <Typography><After /></Typography>}
-        </Box>}
-        nav={() => <Fragment>
-            <APINavigation />
-            <NavigationList>
-                <NavigationListItem>{name}</NavigationListItem>
-                {renderApi(api)}
-            </NavigationList>
-        </Fragment>}
+            {After && <After />}
+        </>}
+        pageNav={[
+            '# validation',
+            ...api.split('\n')
+        ]}
     />;
 };

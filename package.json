@@ -1,40 +1,28 @@
 {
   "private": true,
   "scripts": {
-    "preversion": "yarn build-all",
     "bootstrap": "yarn lerna bootstrap",
-    "build": "lerna run build --parallel --",
-    "build-all": "lerna run build-all --parallel --",
-    "build-docs": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md && lerna run build-docs --parallel --",
-    "flow": "blueflag-test flow",
-    "flow-coverage": "blueflag-test flow-coverage -M",
-    "lint": "blueflag-test lint --monorepo",
-    "test": "yarn build && yarn jest --maxWorkers=1",
-    "test-all": "yarn build && yarn test --maxWorkers=1 && yarn flow && yarn lint && yarn flow-coverage && yarn size-limit",
-    "deploy-docs": "yarn lerna --scope dataparcels-docs run deploy",
-    "view-coverage": "open ./coverage/lcov-report/index.html",
-    "watch": "lerna run watch --parallel --"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/gatsby*",
-      "**/gatsby*/**"
-    ]
-  },
-  "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-core": "^6.23.0",
-    "babel-preset-blueflag": "^0.6.0",
-    "blueflag-test": "^0.21.0",
-    "lerna": "^2.9.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "stampy": "^0.40.0"
+    "prep": "yarn && yarn lerna run yalc-publish && yarn lerna run yalc-update && yarn lerna bootstrap && yarn lerna run build",
+    "build": "yarn lerna run build",
+    "build-docs": "yarn copy-readmes && cd packages/dataparcels-docs && yarn build-docs",
+    "bump": "yarn lerna publish",
+    "copy-readmes": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md",
+    "preversion": "yarn build",
+    "reinstall": "rm -rf node_modules && rm -rf packages/*/node_modules && rm -rf packages/*/.yalc && yarn prep",
+    "test-all": "yarn lerna run test-all",
+    "watch": "yarn lerna run watch --parallel"
   },
   "dependencies": {
-    "babel-plugin-extract-flow-types": "^1.0.0"
+    "lerna": "^3.10.7"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "husky": "^1.1.2",
+    "yalc": "^1.0.0-pre.27"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

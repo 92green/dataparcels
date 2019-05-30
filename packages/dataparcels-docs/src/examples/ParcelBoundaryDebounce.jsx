@@ -1,19 +1,18 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ExampleHoc from 'component/ExampleHoc';
+import exampleFrame from 'component/exampleFrame';
 
-const FoodParcelHoc = ParcelHoc({
-    name: "foodParcel",
-    valueFromProps: (/* props */) => ({
-        mains: "Soup",
-        dessert: "Strudel"
-    })
-});
+export default function FoodEditor(props) {
 
-const FoodEditor = (props) => {
-    let {foodParcel} = props;
-    return <div>
+    let [foodParcel] = useParcelState({
+        value: {
+            mains: "Soup",
+            dessert: "Strudel"
+        }
+    });
+
+    return exampleFrame({foodParcel}, <div>
         <label>mains (with 300ms debounce)</label>
         <ParcelBoundary parcel={foodParcel.get('mains')} debounce={300}>
             {(mains) => <input type="text" {...mains.spreadDOM()} />}
@@ -23,7 +22,5 @@ const FoodEditor = (props) => {
         <ParcelBoundary parcel={foodParcel.get('dessert')}>
             {(dessert) => <input type="text" {...dessert.spreadDOM()} />}
         </ParcelBoundary>
-    </div>;
-};
-
-export default FoodParcelHoc(ExampleHoc(FoodEditor));
+    </div>);
+}

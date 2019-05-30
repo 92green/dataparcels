@@ -299,7 +299,8 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path', (
                 c: [0,1],
                 d: 2
             },
-            b: 3
+            b: 3,
+            e: NaN
         }
     });
 
@@ -313,6 +314,7 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path', (
     expect(basedChangeRequest.hasValueChanged(['a', 'd'])).toBe(false);
     expect(basedChangeRequest.hasValueChanged(['a'])).toBe(true);
     expect(basedChangeRequest.hasValueChanged(['b'])).toBe(false);
+    expect(basedChangeRequest.hasValueChanged(['e'])).toBe(false);
     expect(basedChangeRequest.hasValueChanged()).toBe(true);
 });
 

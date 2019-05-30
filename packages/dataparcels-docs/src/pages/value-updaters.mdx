@@ -1,0 +1,88 @@
+import Link from 'component/Link';
+import {Box, Link as HtmlLink, Message} from 'dcme-style';
+
+# Value Updaters
+
+```flow
+import type {ParcelValueUpdater} from 'dataparcels';
+import type {ParcelValueUpdater} from 'react-dataparcels';
+```
+
+Several of the methods on [Parcel](/api/Parcel) use callbacks known as "value updaters". These functions are used to alter a value based off an existing value. There are a few rules around how you can use these value updaters, and why you might choose one kind over another.
+
+Many examples of these can be seen on **[Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI)**.
+
+## Simple value updaters
+
+Simple value updaters look something like this:
+
+```js
+.update('foo', value => value + 10);
+```
+
+They provide a value, and expect a new value to be returned.
+
+When used in [.modifyUp()](/api/Parcel#modifyUp()) they will also provide a [ChangeRequest](/api/ChangeRequest):
+
+```js
+.modifyUp((value, changeRequest) => {
+    return changeRequest.originPath()[0] === 'bar'
+        ? value + 100
+        : value;
+});
+```
+
+The simple value updater is safe to use in most simple cases, but in some cases it should not be used.
+
+- If the updater gives you a primitive value or childless value, you can return anything.
+- If the updater gives you a value that has children, you can always return a primitive value or childless value.
+- If the updater gives you a value that has children, you can return a value with children **only if the shape hasn't changed**.
+
+If the updater gives you a value that has children, please ensure you do not change the shape of the value. Changing the data shape or moving children within the data shape can cause dataparcels to misplace its keying and meta information! Dataparcels stores data against each part of a deep value's data structure, so it can only let you change the value if you promise not to alter the shape.
+
+```js
+// example updaters
+.update(string => string + "!") // good
+.update(string => [string]) // good
+.update(date => date.toString()) // good
+.update(array => array.join(".")) // good
+.update(array => array.map(number => number + 1)) // good, shape is still the same
+
+.update(array => array.slice(0,2)) // bad, shape has changed if array is longer that 2!
+.update(array => array.reverse()) // bad, shape has changed because items have moved around!
+```
+
+Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta). If you need to update the shape of the data or update meta, you can do so using a **shape updater**.
+
+## Shape updaters
+
+Use the [shape](/api/shape) function to allow the shape of data to be safely altered. It will provide you with your Parcel's data wrapped in a [ParcelShape](/api/ParcelShape) which you can then manipulate and return the result.
+
+Shape updaters look something like this:
+
+```js
+.modifyUp(shape(parcelShape => {
+     return parcelShape.setMeta({
+        foo: "bar"
+     })
+}))
+```
+
+```js
+import shape from 'dataparcels/shape';
+import shape from 'react-dataparcels/shape';
+```
+
+```js
+let parcel = new Parcel({
+    value: [1,2,3]
+});
+
+let modifiedParcel = parcel.modifyDown(shape(
+    parcelShape => parcelShape
+        .unshift(0)
+        .push(4)
+));
+
+// modifiedParcel.value is [0,1,2,3,4]
+```

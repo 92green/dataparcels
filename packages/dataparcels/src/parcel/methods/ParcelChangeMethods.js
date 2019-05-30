@@ -82,6 +82,11 @@ export default (_this: Parcel) => ({
         _this.onChange(event.currentTarget.value);
     },
 
+    onChangeDOMCheckbox: (event: Object) => {
+        Types(`onChangeDOMCheckbox()`, `event`, `event`)(event);
+        _this.onChange(event.currentTarget.checked);
+    },
+
     setMeta: (partialMeta: ParcelMeta) => {
         Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
         _this.dispatch(ActionCreators.setMeta(partialMeta));

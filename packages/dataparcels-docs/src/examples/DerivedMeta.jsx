@@ -1,36 +1,28 @@
 import React from 'react';
-import ParcelHoc from 'react-dataparcels/ParcelHoc';
+import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import shape from 'react-dataparcels/shape';
-import ExampleHoc from 'component/ExampleHoc';
+import exampleFrame from 'component/exampleFrame';
 
-// this example uses a shape updater to set meta data
-const setWordLengthMeta = shape(parcelShape => {
-    let word = parcelShape.value;
-    return parcelShape.setMeta({
-        wordLength: word.length
+const setWordLengthMeta = shape(parcelShape => parcelShape.setMeta({
+    wordLength: parcelShape.value.word.length
+}));
+
+export default function WordEditor(props) {
+
+    let [wordParcel] = useParcelState({
+        value: {
+            word: "blueberries",
+            wordLength: undefined
+        },
+        beforeChange: setWordLengthMeta
     });
-});
 
-const WordParcelHoc = ParcelHoc({
-    name: "wordParcel",
-    valueFromProps: (/* props */) => "blueberries",
-    modifyBeforeUpdate: [
-        setWordLengthMeta
-    ]
-});
-
-const WordEditor = (props) => {
-    let {wordParcel} = props;
-    return <div>
+    return exampleFrame({wordParcel}, <div>
         <label>word</label>
-        <ParcelBoundary parcel={wordParcel}>
-            {(parcel) => <div>
-                <input type="text" {...parcel.spreadDOM()} />
-                <p>length is {parcel.meta.wordLength}</p>
-            </div>}
+        <ParcelBoundary parcel={wordParcel.get('word')}>
+            {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
         </ParcelBoundary>
-    </div>;
-};
-
-export default WordParcelHoc(ExampleHoc(WordEditor));
+        <p>word length is {wordParcel.meta.wordLength}</p>
+    </div>);
+}

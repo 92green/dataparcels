@@ -209,11 +209,13 @@ export default class Parcel {
     _boundarySplit = ({handleChange}: *): Parcel => {
         return this._create({
             id: this._id.pushModifier('bs'),
-            handleChange,
-            dispatchId: '%',
-            registry: {
-                '%': this
-            }
+            handleChange
+            // temporarily disabling boundary splitting
+            // until a more robust solution can be found
+            // dispatchId: '%',
+            // registry: {
+            //     '%': this
+            // }
         });
     };
 
@@ -293,6 +295,7 @@ export default class Parcel {
     // Spread methods
     spread = (notFoundValue: any = undefined): * => this._methods.spread(notFoundValue);
     spreadDOM = (notFoundValue: any = undefined): * => this._methods.spreadDOM(notFoundValue);
+    spreadDOMCheckbox = (notFoundValue: boolean = false): * => this._methods.spreadDOMCheckbox(notFoundValue);
 
     // Branch methods
     get = (key: Key|Index, notFoundValue: any = undefined): Parcel => this._methods.get(key, notFoundValue);
@@ -318,6 +321,7 @@ export default class Parcel {
     // Change methods
     onChange = (value: any) => this._methods.onChange(value);
     onChangeDOM = (event: *) => this._methods.onChangeDOM(event);
+    onChangeDOMCheckbox = (event: *) => this._methods.onChangeDOMCheckbox(event);
     set = overload({
         ["1"]: (value: any) => this._methods.setSelf(value),
         ["2"]: (key: Key|Index, value: any) => this._methods.set(key, value)

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Link from 'gatsby-link';
-import SpruceClassName from 'stampy/lib/util/SpruceClassName';
+import SpruceClassName from 'react-spruce/lib/SpruceClassName';
 
 type Props = {
     className?: string,

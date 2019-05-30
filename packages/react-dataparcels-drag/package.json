@@ -1,9 +1,9 @@
 {
   "name": "react-dataparcels-drag",
-  "version": "0.18.1",
+  "version": "0.21.0-alpha.0",
   "description": "A plugin for react-dataparcels that adds drag and drop re-ordering of elements.",
   "main": "lib/index.js",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "author": "Damien Clarke",
   "repository": {
     "type": "git",
@@ -17,16 +17,33 @@
   },
   "private": false,
   "scripts": {
-    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js'",
+    "yalc-publish": "../../node_modules/.bin/yalc publish --push --force",
+    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js' && yarn yalc-publish",
     "build-all": "yarn build",
+    "flow": "blueflag-test flow",
+    "flow-coverage": "blueflag-test flow-coverage",
+    "lint": "blueflag-test lint",
+    "size": "size-limit",
+    "test": "yarn build && yarn jest --maxWorkers=1",
+    "test-all": "yarn build && yarn jest --maxWorkers=1 && yarn flow && yarn lint && yarn flow-coverage && yarn size",
     "watch": "yarn run build -w"
   },
   "dependencies": {
-    "babel-runtime": "6.23.0",
+    "@babel/runtime": "^7.1.5",
     "react-sortable-hoc": "1.4.0"
   },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "babel-preset-blueflag": "^1.0.0",
+    "blueflag-test": "^0.22.0",
+    "dataparcels": "^0.21.0-alpha.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "size-limit": "^0.21.1"
+  },
   "peerDependencies": {
-    "react": "16.4.2",
-    "react-dataparcels": "^0.18.0-2"
+    "dataparcels": "^0.20.0",
+    "react": "^16.8.0"
   }
 }
