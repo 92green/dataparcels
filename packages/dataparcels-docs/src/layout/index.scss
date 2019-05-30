@@ -37,14 +37,10 @@
 @include DcmeButton;
 @include DcmeCenteredLanding;
 @include DcmeContentNav;
+@include DcmeDocsHeader;
 @include DcmeDivider;
 @include DcmeGrid;
 @include DcmeImage {
-    &-logo {
-        @include BruceBreakpoint('small') {
-            margin-top: -50%;
-        }
-    }
     &-apiPageIcon {
         display: none !important;
         float: right;
