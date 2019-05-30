@@ -4,16 +4,6 @@ import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import ParcelDrag from 'react-dataparcels-drag';
 import exampleFrame from 'component/exampleFrame';
 
-const SortableFruitList = ParcelDrag({
-    element: (fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
-        {(parcel) => <div className="Box-draggable Typography">
-            <input type="text" {...parcel.spreadDOM()} />
-            <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
-            <button onClick={() => parcel.delete()}>x</button>
-        </div>}
-    </ParcelBoundary>
-});
-
 export default function FruitListEditor(props) {
 
     let [fruitListParcel] = useParcelState({
@@ -25,7 +15,15 @@ export default function FruitListEditor(props) {
     });
 
     return exampleFrame({fruitListParcel}, <div>
-        <SortableFruitList parcel={fruitListParcel} />
+        <ParcelDrag parcel={fruitListParcel}>
+            {(fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
+                {(parcel) => <div className="Box-draggable Typography">
+                    <input type="text" {...parcel.spreadDOM()} />
+                    <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
+                    <button onClick={() => parcel.delete()}>x</button>
+                </div>}
+            </ParcelBoundary>}
+        </ParcelDrag>
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
     </div>);
 }
