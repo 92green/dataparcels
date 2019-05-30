@@ -1,7 +1,7 @@
 {
   "name": "dataparcels-docs",
   "private": true,
-  "version": "0.21.0-alpha.0",
+  "version": "0.21.0",
   "description": "Dataparcels Documentation",
   "author": "Damien Clarke",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "watch": "gatsby develop"
   },
   "dependencies": {
-    "dataparcels": "^0.21.0-alpha.0",
+    "dataparcels": "^0.21.0",
     "dcme-gatsby": "^0.5.0",
     "dcme-style": "^0.27.4",
     "gatsby": "^2.0.19",
