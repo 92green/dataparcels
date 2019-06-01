@@ -1,6 +1,6 @@
 // @flow
 
-import type ChangeRequest from 'dataparcels/ChangeRequest';
+import ChangeRequest from 'dataparcels/ChangeRequest';
 
 // $FlowFixMe - useState is a named export of react
 import {useRef} from 'react';
@@ -52,6 +52,8 @@ export default ({onSubmit, onReset}: Params): Return => {
             onSubmit(changeRequest);
             bufferRef.current = null;
             updateBufferState();
+        } else {
+            onSubmit(new ChangeRequest());
         }
     };
 
