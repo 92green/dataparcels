@@ -1,6 +1,6 @@
 // // @flow
 import React from 'react';
-import Parcel from 'react-dataparcels';
+import Parcel from 'dataparcels';
 import Drag from '../Drag';
 
 test('Drag must pass props correctly', () => {
