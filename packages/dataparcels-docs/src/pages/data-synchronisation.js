@@ -8,7 +8,8 @@ export default () => <Layout>
     <ContentNav
         content={() => <DataSynchronisationMarkdown />}
         pageNav={[
-            '# Data synchronisation'
+            '# Data synchronisation',
+            'Saving data from a form'
         ]}
     />
 </Layout>;

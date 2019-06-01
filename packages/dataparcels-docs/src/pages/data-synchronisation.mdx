@@ -1,41 +1,18 @@
 import Link from 'gatsby-link';
+import {Code} from 'dcme-style';
 import {Divider} from 'dcme-style';
+import SubmitButtonOnChange from 'examples/SubmitButtonOnChange';
+import SubmitButtonOnChangeSource from 'examples/SubmitButtonOnChangeSource.txt';
 
 # Data synchronisation
 
 Data synchronisation encompasses how dataparcels interacts with pieces of data stored externally.
 
-## Parcel as a slave
+**This part of the library is being developed and will be complete soon.**
 
-* 👍 Necessary features complete
-* 🚧 Example under construction
+## Saving data from a form
 
-<Divider />
+The simplest type of data synchronisation is a typical web form that can be submitted. Typical forms are often initially blank, or may occasionally preload some data from a server. Once the form is presented to the user it is the master of its own state. The data flow from this point on is unidirectional e.g. the form sends data to the server, and the server never pushes data back into the form.
 
-## Sending failable requests
-
-### When your Parcel is the source of truth
-
-* 📐 Feature in design phase
-
-### When you're using a higher state management system
-
-* 📐 Feature in design phase
-
-<Divider />
-
-## Sending partial requests
-
-* 📐 Feature in design phase
-
-<Divider />
-
-## Caching unsaved changes
-
-* 📐 Feature in design phase
-
-<Divider />
-
-## Retaining Parcel keys
-
-* 📐 Feature in design phase
+<SubmitButtonOnChange />
+<Code language="jsx">{SubmitButtonOnChangeSource}</Code>

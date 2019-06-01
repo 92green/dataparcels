@@ -1,0 +1,31 @@
+import React from 'react';
+import useParcelForm from 'react-dataparcels/useParcelForm';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const initialValue = {
+    firstname: "",
+    lastname: ""
+};
+
+export default function SignUpForm(props) {
+
+    let [personParcel, personParcelBuffer] = useParcelForm({
+        value: initialValue,
+        onChange: (parcel) => saveMyData(parcel.value)
+        // ^ returns a promise
+    });
+
+    return <div>
+        <label>firstname</label>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+        </ParcelBoundary>
+
+        <label>lastname</label>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </ParcelBoundary>
+
+        <button onClick={() => personParcelBuffer.submit()}>Submit</button>
+    </div>;
+}
