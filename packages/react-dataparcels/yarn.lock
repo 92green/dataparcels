@@ -2416,6 +2416,14 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
+dataparcels@^0.21.0:
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.21.0.tgz#c0c27a8a7f4850e1c792301eda7c4c4b505a442e"
+  integrity sha512-yLeQxOX8RzbCMfN4fDO4m++nr0mj/2cwXcERMoZYK+Yi/bsXHXGgxEmvfCxZMMrfZsFf3dBfXKGYPL/u6ZiYqw==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    unmutable "^0.41.1"
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -4204,6 +4212,7 @@ is-primitive@^2.0.0:
 is-promise@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/is-promise/-/is-promise-2.1.0.tgz#79a2a9ece7f096e80f36d2b2f3bc16c1ff4bf3fa"
+  integrity sha1-eaKp7OfwlugPNtKy87wWwf9L8/o=
 
 is-regex@^1.0.4:
   version "1.0.4"

@@ -61,6 +61,10 @@
     },
     {
         limit: "14 KB",
+        path: "useParcelSideEffect.js"
+    },
+    {
+        limit: "14 KB",
         path: "useParcelState.js"
     }
 ]
