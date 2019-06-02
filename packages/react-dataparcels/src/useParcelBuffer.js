@@ -80,9 +80,11 @@ export default (params: Params): Return => {
             child: innerParcel.child
         };
 
-        return parcel._changeAndReturn(
+        let [changedParcel] = parcel._changeAndReturn(
             parcel => parcel._setData(data)
         );
+
+        return changedParcel;
     };
 
     const prepareInnerParcelFromOuter = () => {

@@ -38,7 +38,7 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     });
     parcel._lastOriginId = "foo";
 
-    let newParcel = parcel._changeAndReturn((parcel) => {
+    let [newParcel] = parcel._changeAndReturn((parcel) => {
         parcel.get('abc').onChange(789);
     });
 

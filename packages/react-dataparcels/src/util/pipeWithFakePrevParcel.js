@@ -6,7 +6,7 @@ import Parcel from 'dataparcels';
 import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
 
 export default (prevParcel: ?Parcel, ...pipe: ParcelUpdater[]) => (parcel: Parcel): Parcel => {
-    return parcel._changeAndReturn((parcel) => {
+    let [changedParcel] = parcel._changeAndReturn((parcel) => {
 
         let setPrevParcel;
         if(prevParcel) {
@@ -19,4 +19,6 @@ export default (prevParcel: ?Parcel, ...pipe: ParcelUpdater[]) => (parcel: Parce
             .pipe(...pipe)
             ._setData(parcel.data);
     });
+
+    return changedParcel;
 };

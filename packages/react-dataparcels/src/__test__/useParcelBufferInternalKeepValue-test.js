@@ -90,7 +90,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
 
         act(() => {
             // pretend that a another change came from 'def', but this time with a changed value
-            parcel = parcel._changeAndReturn(parcel => parcel.set(124));
+            parcel = parcel._changeAndReturn(parcel => parcel.set(124))[0];
             parcel._lastOriginId = "^.def";
 
             rerender({
