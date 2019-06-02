@@ -24,6 +24,7 @@
     "shape.js",
     "useParcelBuffer.js",
     "useParcelForm.js",
+    "useParcelSideEffect.js",
     "useParcelState.js",
     "Validation.js"
   ],
