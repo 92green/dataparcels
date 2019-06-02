@@ -38,8 +38,7 @@ type Return = [Parcel, ParcelBufferControl];
 
 export default (params: Params): Return => {
 
-    const beforeChange = [].concat(params.beforeChange || []);
-    const applyBeforeChange = ApplyBeforeChange(beforeChange);
+    const applyBeforeChange = ApplyBeforeChange(params.beforeChange);
 
     //
     // parcel state and change logic

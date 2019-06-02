@@ -28,9 +28,7 @@ export default (params: Params): Return => {
     // so that all changes made to the returned parcel
     // go up through all of beforeChange's functions
 
-    let beforeChange = [].concat(params.beforeChange || []);
-
-    const applyBeforeChange = ApplyBeforeChange(beforeChange);
+    const applyBeforeChange = ApplyBeforeChange(params.beforeChange);
 
     //
     // debounce
