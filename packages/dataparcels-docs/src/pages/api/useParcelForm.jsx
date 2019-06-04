@@ -13,6 +13,7 @@ export default () => <Layout>
             'value',
             'updateValue',
             'onChange',
+            'onChangeUseResult',
             'buffer',
             'debounce',
             'validation',

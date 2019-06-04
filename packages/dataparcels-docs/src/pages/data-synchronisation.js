@@ -9,7 +9,8 @@ export default () => <Layout>
         content={() => <DataSynchronisationMarkdown />}
         pageNav={[
             '# Data synchronisation',
-            'Saving data from a form'
+            'Saving data from a form',
+            'Changing or clearing form data after save'
         ]}
     />
 </Layout>;

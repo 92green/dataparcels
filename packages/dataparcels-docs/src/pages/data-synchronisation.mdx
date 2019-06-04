@@ -3,6 +3,8 @@ import {Code} from 'dcme-style';
 import {Divider} from 'dcme-style';
 import SubmitButtonOnChange from 'examples/SubmitButtonOnChange';
 import SubmitButtonOnChangeSource from 'examples/SubmitButtonOnChangeSource.txt';
+import SubmitButtonOnChangeClear from 'examples/SubmitButtonOnChangeClear';
+import SubmitButtonOnChangeClearSource from 'examples/SubmitButtonOnChangeClearSource.txt';
 
 # Data synchronisation
 
@@ -16,3 +18,10 @@ The simplest type of data synchronisation is a typical web form that can be subm
 
 <SubmitButtonOnChange />
 <Code language="jsx">{SubmitButtonOnChangeSource}</Code>
+
+## Changing or clearing form data after save
+
+You can set the data in the form to something else after it's sent its data by setting `onChangeUseResult` to true. The form's current state will be replaced by whatever returned from `onChange`.
+
+<SubmitButtonOnChangeClear />
+<Code language="jsx">{SubmitButtonOnChangeClearSource}</Code>
