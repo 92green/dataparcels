@@ -146,8 +146,10 @@ If provided, this function is called after innerParcel releases the contents of 
 
 It's possible to return a promise from `onChange`. When doing this, the ChangeRequest's propagation is halted and is only released once the promise resolves, at which point outerParcel's state will be updated to contain the new Parcel.
 
-If another change arrives while a promise is pending, it will be passed through `onChange` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's promise is rejected, the changes will be merged with the next ChangeRequest when `onChange` is called the second time.
+If another change arrives while a promise is pending, it will be passed through `onChange` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's
+promise is rejected, the changes will be merged with the next ChangeRequest when `onChange` is called the second time.
 
+This is discussed in more detail in [data synchronisation](/data-synchronisation).
 
 ```js
 let [parcel] = useParcelForm({
@@ -168,7 +170,7 @@ onChangeUseResult?: boolean = false // optional
 
 When true, this sets the value of the outerParcel to the return value of `onChange`. If `onChange` returns a promise, the resolved value of the promise will be used.
 
-Using `onChangeUseResult` can be useful for receiving data back from a request to write data to a server, as it ensures that outerParcel's value is as up-to-date as possible. This is discussed in more detail in [data synchronisation](/data-synchronisation).
+Using `onChangeUseResult` can be useful for receiving data back from a request to write data to a server, as it ensures that outerParcel's value is as up-to-date as possible. This is discussed in more detail in [data synchronisation](/data-synchronisation#Receiving-data-from-the-server-after-saving).
 
 ```js
 let [parcel] = useParcelForm({

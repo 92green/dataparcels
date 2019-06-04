@@ -10,7 +10,8 @@ export default () => <Layout>
         pageNav={[
             '# Data synchronisation',
             'Saving data from a form',
-            'Changing or clearing form data after save'
+            'Clearing a form after submit',
+            'Receiving data from the server after saving'
         ]}
     />
 </Layout>;

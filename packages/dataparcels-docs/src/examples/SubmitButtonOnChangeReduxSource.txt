@@ -1,0 +1,36 @@
+import React from 'react';
+import useParcelForm from 'react-dataparcels/useParcelForm';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+export default function PersonEditor(props) {
+
+    let [personParcel, personParcelBuffer] = useParcelForm({
+        value: props.personData,
+        updateValue: true,
+        onChange: (parcel) => props.dispatchMySaveAction(parcel.value)
+    });
+
+    // ^ dispatchMySaveAction should return a promise if it is
+    // to work correctly with useParcelForm
+    // The return value doesn't matter,
+    // useParcelForm just wants to know
+    // if the request succeeded or not
+
+    let {timeUpdated} = personParcel.value;
+
+    return <div>
+        <label>firstname</label>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+        </ParcelBoundary>
+
+        <label>lastname</label>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </ParcelBoundary>
+
+        <p>Time updated: {timeUpdated.toLocaleString()}</p>
+
+        <button onClick={() => personParcelBuffer.submit()}>Submit</button>
+    </div>;
+}
