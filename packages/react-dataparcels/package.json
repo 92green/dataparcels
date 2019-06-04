@@ -57,12 +57,15 @@
     "babel-preset-blueflag": "^1.0.0",
     "blueflag-test": "^0.22.0",
     "immutable": "^4.0.0-rc.12",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.9.0-alpha",
+    "react-dom": "^16.9.0-alpha",
     "react-hooks-testing-library": "^0.5.0",
     "size-limit": "^0.21.1"
   },
   "peerDependencies": {
     "react": "^16.8.0"
+  },
+  "resolutions": {
+    "**/react-test-renderer": "16.9.0-alpha.0"
   }
 }
