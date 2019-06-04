@@ -2,6 +2,7 @@
 import {act} from 'react-hooks-testing-library';
 import {renderHook} from 'react-hooks-testing-library';
 import useParcelSideEffect from '../useParcelSideEffect';
+import useParcelBuffer from '../useParcelBuffer';
 import Parcel from 'dataparcels';
 
 const renderHookWithProps = (initialProps, callback) => renderHook(callback, {initialProps});
@@ -313,5 +314,4 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange.mock.calls[0][0].value).toEqual([123, 456]);
     });
-
 });

@@ -105,6 +105,11 @@ export default (params: Params): Return => {
         onReset: () => setOuterParcel(null),
         // ^ resets by recreating innerParcel from outerParcel
         onSubmit: (changeRequest) => {
+
+            changeRequest._revertCallback = (changeRequest: ChangeRequest) => {
+                internalBuffer.unshift(changeRequest);
+            };
+
             params.parcel.dispatch(changeRequest);
         }
         // ^ submits by dispatching the buffered change request

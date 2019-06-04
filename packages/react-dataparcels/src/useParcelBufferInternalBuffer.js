@@ -16,7 +16,8 @@ type Return = {
     bufferState: ?ChangeRequest,
     push: Function,
     reset: Function,
-    submit: Function
+    submit: Function,
+    unshift: Function
 };
 
 export default ({onSubmit, onReset}: Params): Return => {
@@ -57,10 +58,19 @@ export default ({onSubmit, onReset}: Params): Return => {
         }
     };
 
+    const unshift = (changeRequest: ChangeRequest) => {
+        bufferRef.current = bufferRef.current
+            ? changeRequest.merge(bufferRef.current)
+            : changeRequest;
+
+        updateBufferState();
+    };
+
     return {
         bufferState,
         push,
         reset,
-        submit
+        submit,
+        unshift
     };
 };

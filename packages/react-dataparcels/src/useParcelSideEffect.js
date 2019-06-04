@@ -82,9 +82,9 @@ export default (params: Params): Return => {
         params.parcel.dispatch(changeRequest);
     });
 
-    const processChangeError = processChangeDone(() => {
+    const processChangeError = processChangeDone((newParcel: Parcel, changeRequest: ChangeRequest) => {
+        changeRequest._revert();
         queueRef.current = [];
-        // in future, revert the change request, as this obviously hasn't gone well...
     });
 
     const processChange = () => {
