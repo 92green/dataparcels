@@ -8,19 +8,20 @@ import React from 'react';
 import {SortableContainer} from 'react-sortable-hoc';
 import {SortableElement} from 'react-sortable-hoc';
 
-type Config = {
-    element: (parcel: Parcel, rest: *) => Node,
+type Props = {
+    children: (parcel: Parcel) => Node,
+    parcel: Parcel,
+    onSortEnd?: ({oldIndex: number, newIndex: number}) => void,
     container?: ComponentType<*>
 };
 
-type Props = {
-    parcel: Parcel,
-    onSortEnd?: ({oldIndex: number, newIndex: number}) => void
-};
+export default ({children, parcel, onSortEnd, container, ...sortableElementProps}: Props) => {
+    if(!parcel.isIndexed()) {
+        throw new Error(`react-dataparcels-drag's parcel prop must be of type indexed`);
+    }
 
-export default ({element, container, ...configRest}: Config) => {
     let Container = container || 'div';
-    let ConfiguredElement = SortableElement(({parcel, ...rest}) => element(parcel, rest));
+    let ConfiguredElement = SortableElement(({parcel}) => children(parcel));
     let ConfiguredContainer = SortableContainer(({parcel}) => <Container>
         {parcel.toArray((elementParcel, index) => <ConfiguredElement
             key={elementParcel.key}
@@ -29,19 +30,13 @@ export default ({element, container, ...configRest}: Config) => {
         />)}
     </Container>);
 
-    return ({parcel, onSortEnd, ...rest}: Props): Node => {
-        if(!parcel.isIndexed()) {
-            throw new Error(`react-dataparcels-drag's parcel prop must be of type indexed`);
-        }
-        return <ConfiguredContainer
-            parcel={parcel}
-            onSortEnd={(param) => {
-                let {oldIndex, newIndex} = param;
-                parcel.move(oldIndex, newIndex);
-                onSortEnd && onSortEnd(param);
-            }}
-            {...configRest}
-            {...rest}
-        />;
-    };
+    return <ConfiguredContainer
+        parcel={parcel}
+        onSortEnd={(param) => {
+            let {oldIndex, newIndex} = param;
+            parcel.move(oldIndex, newIndex);
+            onSortEnd && onSortEnd(param);
+        }}
+        {...sortableElementProps}
+    />;
 };
