@@ -1,4 +1,15 @@
 {
   "version": "v1",
-  "packages": {}
+  "packages": {
+    "react-dataparcels": {
+      "signature": "bf3cf47614ad794dc36c0c80634205f1",
+      "file": true,
+      "replaced": "^0.21.0"
+    },
+    "react-dataparcels-drag": {
+      "signature": "415240e94e3a264282965023f77a2fbb",
+      "file": true,
+      "replaced": "^0.21.0"
+    }
+  }
 }
