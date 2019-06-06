@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "react-dataparcels": {
-      "signature": "c304f58a2d5739a45c0ea23abad4aa96",
+      "signature": "8aee6066485f934e4ddf70e9fa3c689c",
       "file": true,
       "replaced": "^0.21.0"
     },

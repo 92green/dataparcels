@@ -20,6 +20,7 @@ type Params = {
     buffer?: boolean,
     debounce?: number,
     validation?: ParcelValueUpdater|() => ParcelValueUpdater,
+    rekey?: ParcelValueUpdater|() => ParcelValueUpdater,
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
 };
 
@@ -35,11 +36,17 @@ export default (params: Params): Return => {
         buffer = true,
         debounce = 0,
         validation,
+        rekey,
         beforeChange = []
     } = params;
 
     const [validationFn] = useState(() => (validation && validation.length === 0)
         ? validation()
+        : undefined
+    );
+
+    const [rekeyFn] = useState(() => (rekey && rekey.length === 0)
+        ? rekey()
         : undefined
     );
 
@@ -50,7 +57,8 @@ export default (params: Params): Return => {
 
     let [outerParcel] = useParcelState({
         value,
-        updateValue
+        updateValue,
+        beforeChange: rekeyFn || rekey || []
     });
 
     let [sideEffectParcel] = useParcelSideEffect({

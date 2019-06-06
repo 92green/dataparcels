@@ -21,6 +21,7 @@
     "ParcelBufferControl.js",
     "ParcelHoc.js",
     "ParcelShape.js",
+    "rekey.js",
     "shape.js",
     "useParcelBuffer.js",
     "useParcelForm.js",

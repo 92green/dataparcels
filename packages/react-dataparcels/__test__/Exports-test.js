@@ -7,6 +7,7 @@ import ChangeRequest from '../ChangeRequest';
 import dangerouslyUpdateParcelData from '../dangerouslyUpdateParcelData';
 import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
+import rekey from '../rekey';
 import shape from '../shape';
 import CancelActionMarker from '../CancelActionMarker';
 import validation from '../validation';
@@ -30,6 +31,7 @@ import InternalDeletedParcelMarker from 'dataparcels/DeletedParcelMarker';
 import InternalParcelShape from 'dataparcels/ParcelShape';
 import InternalShape from 'dataparcels/shape';
 import InternalCancelActionMarker from 'dataparcels/CancelActionMarker';
+import InternalRekey from 'dataparcels/rekey';
 import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
@@ -64,6 +66,10 @@ test('/DeletedParcelMarker should export DeletedParcelMarker', () => {
 
 test('/ParcelShape should export ParcelShape', () => {
     expect(ParcelShape).toBe(InternalParcelShape);
+});
+
+test('/rekey should export rekey', () => {
+    expect(rekey).toBe(InternalRekey);
 });
 
 test('/shape should export shape', () => {

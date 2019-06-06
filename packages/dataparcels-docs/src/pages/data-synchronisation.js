@@ -11,7 +11,8 @@ export default () => <Layout>
             '# Data synchronisation',
             'Saving data from a form',
             'Clearing a form after submit',
-            'Receiving data from the server after saving'
+            'Receiving data from the server after saving',
+            'Rekey'
         ]}
     />
 </Layout>;

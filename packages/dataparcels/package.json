@@ -17,6 +17,7 @@
     "dangerouslyUpdateParcelData.js",
     "DeletedParcelMarker.js",
     "ParcelShape.js",
+    "rekey.js",
     "shape.js",
     "validation.js"
   ],
