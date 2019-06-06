@@ -28,9 +28,7 @@ export default (params: Params): Return => {
     // so that all changes made to the returned parcel
     // go up through all of beforeChange's functions
 
-    let beforeChange = [].concat(params.beforeChange || []);
-
-    const applyBeforeChange = ApplyBeforeChange(beforeChange);
+    const applyBeforeChange = ApplyBeforeChange(params.beforeChange);
 
     //
     // debounce
@@ -44,11 +42,14 @@ export default (params: Params): Return => {
     // so that all changes made to the returned parcel
     // go up through all of beforeChange's functions
 
-    const updateParcelValue = (parcel: Parcel): Parcel => applyBeforeChange(
-        parcel._changeAndReturn(
+    const updateParcelValue = (parcel: Parcel): Parcel => {
+
+        let [changedParcel] = parcel._changeAndReturn(
             parcel => applyBeforeChange(parcel).set(getValue())
-        )
-    );
+        );
+
+        return applyBeforeChange(changedParcel);
+    };
 
     const [parcel, setParcel] = useState(() => updateParcelValue(
         new Parcel({

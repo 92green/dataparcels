@@ -38,8 +38,7 @@ type Return = [Parcel, ParcelBufferControl];
 
 export default (params: Params): Return => {
 
-    const beforeChange = [].concat(params.beforeChange || []);
-    const applyBeforeChange = ApplyBeforeChange(beforeChange);
+    const applyBeforeChange = ApplyBeforeChange(params.beforeChange);
 
     //
     // parcel state and change logic
@@ -81,9 +80,11 @@ export default (params: Params): Return => {
             child: innerParcel.child
         };
 
-        return parcel._changeAndReturn(
+        let [changedParcel] = parcel._changeAndReturn(
             parcel => parcel._setData(data)
         );
+
+        return changedParcel;
     };
 
     const prepareInnerParcelFromOuter = () => {
@@ -104,6 +105,11 @@ export default (params: Params): Return => {
         onReset: () => setOuterParcel(null),
         // ^ resets by recreating innerParcel from outerParcel
         onSubmit: (changeRequest) => {
+
+            changeRequest._revertCallback = (changeRequest: ChangeRequest) => {
+                internalBuffer.unshift(changeRequest);
+            };
+
             params.parcel.dispatch(changeRequest);
         }
         // ^ submits by dispatching the buffered change request
@@ -133,11 +139,6 @@ export default (params: Params): Return => {
         const handleChange = (newParcel: Parcel, changeRequest: ChangeRequest) => {
             const {debounce, buffer = true, keepValue} = params;
 
-            // trigger buffer actions if meta says so
-            const {_submit, _reset} = newParcel.meta;
-            _submit && internalBuffer.submit();
-            _reset && internalBuffer.reset();
-
             // remove buffer actions meta from change request
             // and push any remaining change into the buffer
             let actions = changeRequest._actions.filter(removeInternalMeta);
@@ -145,19 +146,24 @@ export default (params: Params): Return => {
                 internalBuffer.push(changeRequest._create({actions}));
             }
 
-            if(!buffer) {
+            if(buffer) {
+                // if buffer is to be used, update inner parcel immediately
+                // and request a debounced submit if debounce is set
+                setInnerParcel(newParcel.pipe(applyModifiers));
+                debounce && debounceRelease();
+
+            } else {
                 // if no buffer, just propagate it immediately
                 internalBuffer.submit();
                 // if keepValue is true, the buffer is in change of its own state
                 // rather than waiting for new props containing the new value
                 keepValue && setInnerParcel(newParcel.pipe(applyModifiers));
-                return;
             }
 
-            // if buffer is to be used, update inner parcel immediately
-            // and request a debounced submit if debounce is set
-            setInnerParcel(newParcel.pipe(applyModifiers));
-            debounce && debounceRelease();
+            // trigger buffer actions if meta says so
+            const {_submit, _reset} = newParcel.meta;
+            _submit && internalBuffer.submit();
+            _reset && internalBuffer.reset();
         };
 
         const newOuterParcel = params.parcel;

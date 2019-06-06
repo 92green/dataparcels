@@ -279,7 +279,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             ));
         };
 
-        return parcel
+        let [changedParcel] = parcel
             ._boundarySplit({
                 handleChange
             })
@@ -291,6 +291,8 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
                 .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
                 ._setData(nextData || parcel.data)
             );
+
+        return changedParcel;
     };
 
     render(): Node {

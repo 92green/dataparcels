@@ -38,7 +38,7 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     });
     parcel._lastOriginId = "foo";
 
-    let newParcel = parcel._changeAndReturn((parcel) => {
+    let [newParcel] = parcel._changeAndReturn((parcel) => {
         parcel.get('abc').onChange(789);
     });
 
@@ -62,6 +62,20 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     // _changeAndReturn should not affect parcel._lastOriginId as it is an internal function
     // that never corresponds to actions triggered by user input
     expect(newParcel._lastOriginId).toBe("foo");
+});
+
+test('Parcel._changeAndReturn() should throw error if no changes are made', () => {
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: {
+            abc: 123,
+            def: 456
+        },
+        handleChange
+    });
+
+    expect(() => parcel._changeAndReturn((parcel) => {})).toThrow("_changeAndReturn unchanged");
 });
 
 test('Parcel types should correctly identify primitive values', () => {

@@ -18,6 +18,7 @@ import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
 import ParcelBufferControl from '../ParcelBufferControl';
 import useParcelBuffer from '../useParcelBuffer';
 import useParcelForm from '../useParcelForm';
+import useParcelSideEffect from '../useParcelSideEffect';
 import useParcelState from '../useParcelState';
 
 // internal dataparcels files
@@ -38,6 +39,7 @@ import InternalParcelBoundaryHoc from '../lib/ParcelBoundaryHoc';
 import InternalParcelBufferControl from '../lib/ParcelBufferControl';
 import InternalUseParcelBuffer from '../lib/useParcelBuffer';
 import InternalUseParcelForm from '../lib/useParcelForm';
+import InternalUseParcelSideEffect from '../lib/useParcelSideEffect';
 import InternalUseParcelState from '../lib/useParcelState';
 
 test('index should export Parcel', () => {
@@ -98,6 +100,10 @@ test('/useParcelBuffer should export useParcelBuffer', () => {
 
 test('/useParcelForm should export useParcelForm', () => {
     expect(useParcelForm).toBe(InternalUseParcelForm);
+});
+
+test('/useParcelSideEffect should export useParcelSideEffect', () => {
+    expect(useParcelSideEffect).toBe(InternalUseParcelSideEffect);
 });
 
 test('/useParcelState should export useParcelState', () => {

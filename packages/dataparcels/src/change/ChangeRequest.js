@@ -25,6 +25,7 @@ export default class ChangeRequest {
     _nextData: ?ParcelData;
     _originId: ?string = null;
     _originPath: ?string[] = null;
+    _revertCallback: ?Function;
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
@@ -38,6 +39,7 @@ export default class ChangeRequest {
             nextData: this._nextData,
             originId: this._originId,
             originPath: this._originPath,
+            revertCallback: this._revertCallback,
             ...changeRequestData
         };
 
@@ -47,6 +49,7 @@ export default class ChangeRequest {
         changeRequest._nextData = changeRequestData.nextData;
         changeRequest._originId = changeRequestData.originId;
         changeRequest._originPath = changeRequestData.originPath;
+        changeRequest._revertCallback = changeRequestData.revertCallback;
         return changeRequest;
     };
 
@@ -56,6 +59,10 @@ export default class ChangeRequest {
             nextData: undefined,
             prevData: undefined
         });
+    };
+
+    _revert = () => {
+        this._revertCallback && this._revertCallback(this);
     };
 
     // $FlowFixMe - this doesn't have side effects
