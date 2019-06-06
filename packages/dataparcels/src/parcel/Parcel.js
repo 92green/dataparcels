@@ -17,6 +17,7 @@ import type {ParentType} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
+import {ChangeAndReturnNotCalledError} from '../errors/Errors';
 
 import ParcelGetMethods from './methods/ParcelGetMethods';
 import ParcelChangeMethods from './methods/ParcelChangeMethods';
@@ -187,7 +188,7 @@ export default class Parcel {
         }
     };
 
-    _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): ?[Parcel, ChangeRequest] => {
+    _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): [Parcel, ChangeRequest] => {
         let result;
         let {_onHandleChange, _lastOriginId} = this;
 
@@ -203,6 +204,9 @@ export default class Parcel {
 
         changeCatcher(this);
         this._onHandleChange = _onHandleChange;
+        if(!result) {
+            throw ChangeAndReturnNotCalledError();
+        }
         return result;
     };
 

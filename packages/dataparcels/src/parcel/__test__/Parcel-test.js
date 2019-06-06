@@ -64,6 +64,20 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     expect(newParcel._lastOriginId).toBe("foo");
 });
 
+test('Parcel._changeAndReturn() should throw error if no changes are made', () => {
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: {
+            abc: 123,
+            def: 456
+        },
+        handleChange
+    });
+
+    expect(() => parcel._changeAndReturn((parcel) => {})).toThrow("_changeAndReturn unchanged");
+});
+
 test('Parcel types should correctly identify primitive values', () => {
     var data = {
         value: 123
