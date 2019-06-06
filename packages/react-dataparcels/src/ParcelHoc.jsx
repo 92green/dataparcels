@@ -92,10 +92,12 @@ export default (config: ParcelHocConfig): Function => {
         }
 
         static updateParcelValueFromProps(parcel: Parcel, props: Props): Parcel {
-            return parcel._changeAndReturn((parcel: Parcel) => {
+            let [changedParcel] = parcel._changeAndReturn((parcel: Parcel) => {
                 let value: any = valueFromProps(props);
                 return ApplyBeforeChange(modifyBeforeUpdate)(parcel).set(value);
             });
+
+            return changedParcel;
         }
 
         static applyModifyBeforeUpdate(parcel: Parcel): Parcel {

@@ -28,9 +28,10 @@ The hook looks roughly like this:
 // and sends changed data to a callback
 let [outerParcel] = useParcelState({
     value,
-    updateValue,
-    onChange // e.g. (parcel) => saveMyData(parcel.value)
+    updateValue
 });
+
+// ...some magic related to the onChange function...
 
 // 2. Parcel Buffer
 //
@@ -63,6 +64,7 @@ let [parcel] = useParcelForm({
     // optional
     updateValue?: boolean,
     onChange?: Function,
+    onChangeUseResult?: boolean,
     buffer?: boolean,
     debounce?: number,
     validation?: Function,
@@ -137,14 +139,17 @@ parcel.set(200);
 ### onChange
 
 ```flow
-onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => void // optional
+onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any> // optional
 ```
 
-If provided, this function is called whenever useParcelForm's Parcel has handled a change. It receives the new [Parcel](/api/Parcel), and the [ChangeRequest](/api/ChangeRequest) that was responsible for the change.
+If provided, this function is called after innerParcel releases the contents of its buffer and propagates its changes, but before outerParcel's state is updated. It receives the new [Parcel](/api/Parcel), and the [ChangeRequest](/api/ChangeRequest) that was responsible for the change. This function can be used to relay changes further up the React heirarchy.
 
-This function can be used to relay changes further up the React heirarchy.
+It's possible to return a promise from `onChange`. When doing this, the ChangeRequest's propagation is halted and is only released once the promise resolves, at which point outerParcel's state will be updated to contain the new Parcel.
 
-Please keep in mind that it is possible for a change to result in the same data being contained in the Parcel, `onChange` will not dedupe subsequent calls whose Parcels contain the same data.
+If another change arrives while a promise is pending, it will be passed through `onChange` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's
+promise is rejected, the changes will be merged with the next ChangeRequest when `onChange` is called the second time.
+
+This is discussed in more detail in [data synchronisation](/data-synchronisation).
 
 ```js
 let [parcel] = useParcelForm({
@@ -152,6 +157,30 @@ let [parcel] = useParcelForm({
     onChange: (parcel, changeRequest) => {
         // add logic here
     }
+});
+```
+
+*Please keep in mind that it is possible for a change to result in the same data being contained in the Parcel, `onChange` will not dedupe subsequent calls whose Parcels contain the same data.*
+
+### onChangeUseResult
+
+```flow
+onChangeUseResult?: boolean = false // optional
+```
+
+When true, this sets the value of the outerParcel to the return value of `onChange`. If `onChange` returns a promise, the resolved value of the promise will be used.
+
+Using `onChangeUseResult` can be useful for receiving data back from a request to write data to a server, as it ensures that outerParcel's value is as up-to-date as possible. This is discussed in more detail in [data synchronisation](/data-synchronisation#Receiving-data-from-the-server-after-saving).
+
+```js
+let [parcel] = useParcelForm({
+    value: receivedValue,
+    onChange: (parcel, changeRequest) => {
+        return saveMyData(parcel.value);
+        // ^ saveMyData send a request to a server to save the data,
+        // and returns a promise containing the updated data from the server
+    },
+    onChangeUseResult: true
 });
 ```
 
@@ -163,7 +192,7 @@ buffer?: boolean = true // optional
 
 When `buffer` is true, changes that occur to `parcel` will be caught in useParcelForm's buffer, until released explicitly by calling [parcelBuffer.submit()](#submit), or automatically if [debounce](#debounce) is being used.
 
-When `buffer` is false, changes will propagate up to the top Parcel in useParcelForm's state immediately.
+When `buffer` is false, changes will propagate up to useParcelForm's outerParcel immediately.
 
 ### debounce
 
@@ -177,7 +206,7 @@ This can be used to make [autosaving forms](/ui-behaviour#Autosaving-forms).
 
 #### Debouncing explained
 
-When the `parcel` sends a change, the useParelForm hook will catch it and prevent it from being propagated up to the main Parcel that it holds in state.
+When the `parcel` sends a change, the useParelForm hook will catch it and prevent it from being propagated up to useParcelForm's outerParcel.
 
 The useParcelForm hooks waits until no new changes have occured for `debounce` number of milliseconds. It then releases all the changes it has buffered, all together in a single change request.
 
@@ -273,7 +302,7 @@ parcel.set("HELLO");
 parcel: Parcel
 ```
 
-The first element of the returned array is the `parcel`, a Parcel that contains the current state of `parcel` with all the changes in the buffer applied to it. When buffering is enabled, any changes that `parcel` receives will go into the buffer.
+The first element of the returned array is the parcel previously referred to as innerParcel. It's a Parcel that contains the current state of outerParcel, with all the changes in the buffer applied to it. When buffering is enabled, any changes that `parcel` receives will go into the buffer.
 
 ### parcelBuffer
 

@@ -17,6 +17,7 @@ import type {ParentType} from '../types/Types';
 
 import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
+import {ChangeAndReturnNotCalledError} from '../errors/Errors';
 
 import ParcelGetMethods from './methods/ParcelGetMethods';
 import ParcelChangeMethods from './methods/ParcelChangeMethods';
@@ -187,23 +188,26 @@ export default class Parcel {
         }
     };
 
-    _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): Parcel => {
-        let changedParcel = this;
-        let {_onHandleChange} = this;
+    _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): [Parcel, ChangeRequest] => {
+        let result;
+        let {_onHandleChange, _lastOriginId} = this;
 
         // swap out the parcels real _onHandleChange with a spy
-        this._onHandleChange = (parcel) => {
-            changedParcel = parcel;
-            changedParcel._onHandleChange = _onHandleChange;
+        this._onHandleChange = (parcel, changeRequest) => {
+            // _changeAndReturn should not alter _lastOriginId
+            // as it's never triggered by a user action
+            // so revert to the current parcel's _lastOriginId
+            parcel._onHandleChange = _onHandleChange;
+            parcel._lastOriginId = _lastOriginId;
+            result = [parcel, changeRequest];
         };
 
         changeCatcher(this);
         this._onHandleChange = _onHandleChange;
-        // _changeAndReturn should not alter _lastOriginId
-        // as it's never triggered by a user action
-        // so revert to the current parcel's _lastOriginId
-        changedParcel._lastOriginId = this._lastOriginId;
-        return changedParcel;
+        if(!result) {
+            throw ChangeAndReturnNotCalledError();
+        }
+        return result;
     };
 
     _boundarySplit = ({handleChange}: *): Parcel => {

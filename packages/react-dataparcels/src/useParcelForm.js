@@ -8,16 +8,18 @@ import type ChangeRequest from 'dataparcels/ChangeRequest';
 import type {ParcelValueUpdater} from 'dataparcels';
 
 import useParcelState from './useParcelState';
+import useParcelSideEffect from './useParcelSideEffect';
 import useParcelBuffer from './useParcelBuffer';
 import ParcelBufferControl from './ParcelBufferControl';
 
 type Params = {
     value: any,
     updateValue?: boolean,
-    onChange?: (value: any, changeRequest: ChangeRequest) => void,
+    onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
+    onChangeUseResult?: boolean,
     buffer?: boolean,
     debounce?: number,
-    validation: ParcelValueUpdater|() => ParcelValueUpdater,
+    validation?: ParcelValueUpdater|() => ParcelValueUpdater,
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
 };
 
@@ -29,6 +31,7 @@ export default (params: Params): Return => {
         value,
         updateValue = false,
         onChange,
+        onChangeUseResult = false,
         buffer = true,
         debounce = 0,
         validation,
@@ -47,12 +50,17 @@ export default (params: Params): Return => {
 
     let [outerParcel] = useParcelState({
         value,
-        updateValue,
-        onChange
+        updateValue
+    });
+
+    let [sideEffectParcel] = useParcelSideEffect({
+        parcel: outerParcel,
+        onChange,
+        onChangeUseResult
     });
 
     let [innerParcel, innerParcelControl] = useParcelBuffer({
-        parcel: outerParcel,
+        parcel: sideEffectParcel,
         buffer,
         debounce,
         beforeChange

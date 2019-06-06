@@ -1,41 +1,52 @@
 import Link from 'gatsby-link';
+import {Code} from 'dcme-style';
 import {Divider} from 'dcme-style';
+import SubmitButtonOnChange from 'examples/SubmitButtonOnChange';
+import SubmitButtonOnChangeSource from 'examples/SubmitButtonOnChangeSource.txt';
+import SubmitButtonOnChangeClear from 'examples/SubmitButtonOnChangeClear';
+import SubmitButtonOnChangeClearSource from 'examples/SubmitButtonOnChangeClearSource.txt';
+import SubmitButtonOnChangeLoad from 'examples/SubmitButtonOnChangeLoad';
+import SubmitButtonOnChangeLoadSource from 'examples/SubmitButtonOnChangeLoadSource.txt';
+import SubmitButtonOnChangeReduxSource from 'examples/SubmitButtonOnChangeReduxSource.txt';
 
 # Data synchronisation
 
 Data synchronisation encompasses how dataparcels interacts with pieces of data stored externally.
 
-## Parcel as a slave
+**This part of the library is being developed and will be complete soon.**
 
-* 👍 Necessary features complete
-* 🚧 Example under construction
+## Saving data from a form
 
-<Divider />
+The simplest type of data synchronisation is a typical web form that can be submitted. Typical forms are often initially blank, or may occasionally preload some data from a server. Once the form is presented to the user it is the master of its own state. The data flow from this point on is unidirectional e.g. the form sends data to the server, and the server never pushes data back into the form.
 
-## Sending failable requests
+This example makes use of the [useParcelForm](/api/useParcelForm) hook. This is the most commonly used hook, and is perfect for building submittable forms.
 
-### When your Parcel is the source of truth
+<SubmitButtonOnChange />
+<Code language="jsx">{SubmitButtonOnChangeSource}</Code>
 
-* 📐 Feature in design phase
+## Clearing a form after submit
 
-### When you're using a higher state management system
+You can set the data in the form to something else after it's sent its data by setting [onChangeUseResult](/api/useParcelForm#onChangeUseResult) to true. The form's current state will be replaced by whatever returned from `onChange`.
 
-* 📐 Feature in design phase
+<SubmitButtonOnChangeClear />
+<Code language="jsx">{SubmitButtonOnChangeClearSource}</Code>
 
-<Divider />
+## Receiving data from the server after saving
 
-## Sending partial requests
+Sometimes the data you're editing in a form corresponds to data in a database somewhere. When this is the case, it's important that the data in your form is an accurate representation of the data in the database whenever possible. Updating the state of your form after saving is a good way to ensure that the state held in your form is refreshed from the server periodically.
 
-* 📐 Feature in design phase
+Both these examples show forms that make fake requests to a fake server. The fake server will remove any uppercase letters when it saves, and update the `timeUpdated` field. Try typing some uppercase letters into the form, and watch as the data is synchronised with the server's data after the save completes.
 
-<Divider />
+### Updating form data via props
 
-## Caching unsaved changes
+If you're using something like [Redux](https://redux.js.org/), you'll likely be receiving your data via props. That data from Redux should already update as a result of save operations. Use the [updateValue](/api/useParcelForm#updateValue) parameter on useParcelForm to allow the form hook to update based on changes to your source data. Also make sure that the function that does the saving returns a promise, so useParcelForm can know if the request succeeded or not.
 
-* 📐 Feature in design phase
+<SubmitButtonOnChangeLoad />
+<Code language="jsx">{SubmitButtonOnChangeReduxSource}</Code>
 
-<Divider />
+### Updating form data via a promise
 
-## Retaining Parcel keys
+You may not have centralised state management like Redux in your app. In this case you can get useParcelForm to update based off the return value of the promise returned by the save function. To use this approach, set the [onChangeUseResult](/api/useParcelForm#onChangeUseResult) parameter to true.
 
-* 📐 Feature in design phase
+<SubmitButtonOnChangeLoad />
+<Code language="jsx">{SubmitButtonOnChangeLoadSource}</Code>

@@ -173,7 +173,7 @@ describe('useParcelBuffer should use buffer by default', () => {
         expect(handleChange.mock.calls[0][0].value).toEqual(["A", "B"]);
     });
 
-    it('should try to submit changes but do nothing if there are no changes', () => {
+    it('should submit empty change request if there are no changes', () => {
 
         let handleChange = jest.fn();
 
@@ -190,7 +190,8 @@ describe('useParcelBuffer should use buffer by default', () => {
             result.current[1].submit();
         });
 
-        expect(handleChange).not.toHaveBeenCalled();
+        expect(handleChange).toHaveBeenCalled();
+        expect(handleChange.mock.calls[0][1].actions.length).toBe(0);
     });
 
     it('should reset changes', () => {

@@ -392,3 +392,16 @@ test('ChangeRequest should throw errors when attempted to set getters', () => {
         changeRequest.originPath = 123;
     }).toThrow(readOnly);
 });
+
+test('ChangeRequest _revert() should call _revertCallback and pass self', () => {
+
+    let changeRequest = new ChangeRequest();
+    expect(() => changeRequest._revert()).not.toThrow();
+
+    let callback = jest.fn();
+    changeRequest._revertCallback = callback;
+    changeRequest._revert();
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback.mock.calls[0][0]).toBe(changeRequest);
+});

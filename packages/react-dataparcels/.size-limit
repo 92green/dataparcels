@@ -12,7 +12,7 @@
         path: "CancelActionMarker.js"
     },
     {
-        limit: "8 KB",
+        limit: "9 KB",
         path: "ChangeRequest.js"
     },
     {
@@ -58,6 +58,10 @@
     {
         limit: "17 KB",
         path: "useParcelForm.js"
+    },
+    {
+        limit: "14 KB",
+        path: "useParcelSideEffect.js"
     },
     {
         limit: "14 KB",
