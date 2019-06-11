@@ -3,24 +3,25 @@ import {useRef} from 'react';
 import {useState} from 'react';
 import useParcelForm from 'react-dataparcels/useParcelForm';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import dangerouslyUpdateParcelData from 'react-dataparcels/dangerouslyUpdateParcelData';
 import rekey from 'react-dataparcels/rekey';
 import exampleFrame from 'component/exampleFrame';
 
-export default function PersonEditor(props) {
+const initialValue = {
+    firstname: "",
+    lastname: ""
+};
+
+export default function SignUpForm(props) {
 
     let [requestState, setRequestState] = useState("idle");
     let rejectRef = useRef(() => {});
 
-    let saveMyData = (data) => new Promise((resolve, reject) => {
+    let saveMyData = () => new Promise((resolve, reject) => {
         setRequestState("pending...");
 
         let timeout = setTimeout(() => {
             setRequestState("resolved");
-            resolve({
-                ...data,
-                timeUpdated: new Date()
-            });
+            resolve();
         }, 2000);
 
         rejectRef.current = () => {
@@ -31,39 +32,23 @@ export default function PersonEditor(props) {
     });
 
     let [personParcel, personParcelBuffer] = useParcelForm({
-        value: () => ({
-            animals: [
-                {id: "A", type: "dog"},
-                {id: "B", type: "cat"}
-            ],
-            timeUpdated: undefined
-        }),
+        value: initialValue,
         onChange: (parcel) => saveMyData(parcel.value),
-        onChangeUseResult: true,
+        // ^ returns a promise
         rekey: () => rekey()
-        //beforeChange: [dangerouslyUpdateParcelData((d => console.log("beforeChange", d) || d))]
     });
-
-    let {timeUpdated} = personParcel.value;
 
     let personParcelState = personParcelBuffer._outerParcel;
     return exampleFrame({personParcelState, personParcel}, <div>
-        <label>animals</label>
-        {personParcel.get('animals').toArray((fruitParcel) => {
-            return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
-                {(parcel) => <div>
-                    <label>id: "{fruitParcel.get('id').value}"</label>
-                    <input type="text" {...parcel.get('type').spreadDOM()} />
-                    <button onClick={() => parcel.swapPrev()}>^</button>
-                    <button onClick={() => parcel.swapNext()}>v</button>
-                    <button onClick={() => parcel.insertAfter(`${parcel.get('type').value} copy`)}>+</button>
-                    <button onClick={() => parcel.delete()}>x</button>
-                    <span className="Text Text-monospace">key {fruitParcel.key}</span>
-                </div>}
-            </ParcelBoundary>;
-        })}
+        <label>firstname</label>
+        <ParcelBoundary parcel={personParcel.get('firstname')}>
+            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+        </ParcelBoundary>
 
-        <p>Time updated: {timeUpdated && timeUpdated.toLocaleString()}</p>
+        <label>lastname</label>
+        <ParcelBoundary parcel={personParcel.get('lastname')}>
+            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+        </ParcelBoundary>
 
         <button onClick={() => personParcelBuffer.submit()}>Submit</button>
 
