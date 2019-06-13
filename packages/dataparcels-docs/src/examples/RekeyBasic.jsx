@@ -16,12 +16,12 @@ export default function SignUpForm(props) {
     let [requestState, setRequestState] = useState("idle");
     let rejectRef = useRef(() => {});
 
-    let saveMyData = () => new Promise((resolve, reject) => {
+    let saveMyData = (value) => new Promise((resolve, reject) => {
         setRequestState("pending...");
 
         let timeout = setTimeout(() => {
             setRequestState("resolved");
-            resolve();
+            resolve(value);
         }, 2000);
 
         rejectRef.current = () => {
@@ -35,6 +35,7 @@ export default function SignUpForm(props) {
         value: initialValue,
         onChange: (parcel) => saveMyData(parcel.value),
         // ^ returns a promise
+        onChangeUseResult: true,
         rekey: () => rekey()
     });
 
@@ -42,12 +43,18 @@ export default function SignUpForm(props) {
     return exampleFrame({personParcelState, personParcel}, <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+            {(firstname) => <div>
+                <input type="checkbox" style={{width: '2rem'}} {...firstname.metaAsParcel('selected').spreadDOMCheckbox()} />
+                <input type="text" {...firstname.spreadDOM()} />
+            </div>}
         </ParcelBoundary>
 
         <label>lastname</label>
         <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+            {(lastname) => <div>
+                <input type="checkbox" style={{width: '2rem'}} {...lastname.metaAsParcel('selected').spreadDOMCheckbox()} />
+                <input type="text" {...lastname.spreadDOM()} />
+            </div>}
         </ParcelBoundary>
 
         <button onClick={() => personParcelBuffer.submit()}>Submit</button>
