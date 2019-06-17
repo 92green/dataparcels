@@ -52,6 +52,13 @@ You may not have centralised state management like Redux in your app. In this ca
 <SubmitButtonOnChangeLoad />
 <Code language="jsx">{SubmitButtonOnChangeLoadSource}</Code>
 
-## Rekey
+## Keeping data in sync during editing
+
+Yes, **during** editing. You can set up editors that multiple people can use at once, even if your server does not store user interactions as an event log.
+
+Normally when dataparcels' hooks update their contents via props or via promise, their normal behaviour is to forget everything and simply reinitialise with the new value. When they are reinitialised, all buffered (unsaved) changes in the form are immediately forgotten, all [parcel keys](/parcel-keys) are forgotten and regenerated, and all [parcel meta](/parcel-meta) is reset. This is safe behaviour and perfectly fine for a form that prevents the user from editing anything until after the data has finished saving, but it's obviously a terrible idea if the form where to update while the user is still using it.
+
+The [rekey](/rekey) feature allows for unsaved (buffered) changes to be retained. How it works is a deeper discussion you can read about on the rekey page, but here's how it behaves in practise. New data is fetched every couple of seconds, and passed into useParcelForm via props.
 
 <RekeyBasic />
+

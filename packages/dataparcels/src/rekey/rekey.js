@@ -19,8 +19,6 @@ type RekeyMap = {
 
 export default (rekeyMap: RekeyMap) => dangerouslyUpdateParcelData(
     (parcelData, changeRequest) => {
-        console.log("parcelData", parcelData);
-        console.log("changeRequest", changeRequest.prevData);
         return parcelData;
     }
 );

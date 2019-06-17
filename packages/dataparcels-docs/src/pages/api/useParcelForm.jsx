@@ -17,6 +17,7 @@ export default () => <Layout>
             'buffer',
             'debounce',
             'validation',
+            'rekey',
             'beforeChange',
             '# Returns',
             'parcel',

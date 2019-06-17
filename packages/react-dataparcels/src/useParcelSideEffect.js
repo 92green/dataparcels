@@ -1,6 +1,7 @@
 // @flow
 
 import type ChangeRequest from 'dataparcels/ChangeRequest';
+import type {ParcelValueUpdater} from 'dataparcels';
 
 // $FlowFixMe - useState is a named export of react
 import {useRef} from 'react';
@@ -8,7 +9,9 @@ import {useRef} from 'react';
 import {useState} from 'react';
 
 import isPromise from 'is-promise';
+
 import Parcel from 'dataparcels';
+import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
 
 type QueueItem = [Parcel, ChangeRequest];
 
@@ -31,7 +34,8 @@ const mergeQueue = (parcel: Parcel, queue: QueueItem[]): QueueItem[] => {
 type Params = {
     parcel: Parcel,
     onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
-    onChangeUseResult?: boolean
+    onChangeUseResult?: boolean,
+    rekey?: ParcelValueUpdater
 };
 
 type Return = [Parcel];
@@ -71,8 +75,19 @@ export default (params: Params): Return => {
     const processChangeSuccess = processChangeDone((newParcel: Parcel, changeRequest: ChangeRequest, result: any) => {
 
         if(params.onChange && params.onChangeUseResult) {
+
             let [/*parcel*/, changeRequestWithResult] = newParcel._changeAndReturn(
-                newParcel => newParcel.set(result)
+                newParcel => {
+                    if(params.rekey) {
+                        return newParcel
+                            .modifyUp(params.rekey)
+                            .update(dangerouslyUpdateParcelData((parcelData) => ({
+                                ...parcelData,
+                                value: result
+                            })));
+                    }
+                    return newParcel.set(result);
+                }
             );
             changeRequestWithResult._originId = changeRequest._originId;
             changeRequestWithResult._originPath = changeRequest._originPath;

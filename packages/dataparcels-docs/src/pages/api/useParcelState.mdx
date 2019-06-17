@@ -25,7 +25,8 @@ let [parcel] = useParcelState({
     updateValue?: boolean,
     onChange?: Function,
     debounce?: number,
-    beforeChange?: Function|Function[]
+    beforeChange?: Function|Function[],
+    rekey: Function
 });
 ```
 
@@ -187,3 +188,13 @@ parcel: Parcel
 ```
 
 The useParcelState hook returns an array containing a single element, the Parcel that it holds in React state.
+
+### rekey
+
+```flow
+rekey?: ParcelRekeyFunction // optional
+```
+
+Applies a [rekey](/api/rekey) function TODOOOO. [See an example here](/ui-behaviour#Keeping-data-in-sync-during-editing).
+
+If the rekey config doesn't need to change after initial mount, it can be returned from a function. The function will only be called on initial mount and the rekey will be cached from then on.

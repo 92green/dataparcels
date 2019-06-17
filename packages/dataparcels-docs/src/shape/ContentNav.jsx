@@ -15,10 +15,10 @@ const nav = () => <NavigationList>
     <NavigationListItem modifier="section">API</NavigationListItem>
     <NavigationListItem><Link to="/api/Parcel">Parcel</Link></NavigationListItem>
     <NavigationListItem><Link to="/api/ParcelBoundary">ParcelBoundary</Link></NavigationListItem>
-    <NavigationListItem><Link to="/api/useParcelState">useParcelState</Link></NavigationListItem>
     <NavigationListItem><Link to="/api/useParcelForm">useParcelForm</Link></NavigationListItem>
-    <NavigationListItem><Link to="/api/useParcelBuffer">useParcelBuffer</Link></NavigationListItem>
+    <NavigationListItem><Link to="/api/useParcelState">useParcelState</Link></NavigationListItem>
     <NavigationListItem><Link to="/api/validation">validation</Link></NavigationListItem>
+    <NavigationListItem><Link to="/api/rekey">rekey</Link></NavigationListItem>
     <NavigationListItem><Link to="/api/ParcelDrag">ParcelDrag</Link></NavigationListItem>
     <NavigationListItem><Link to="/api">more...</Link></NavigationListItem>
     <NavigationListItem modifier="section">Concepts</NavigationListItem>
@@ -26,6 +26,7 @@ const nav = () => <NavigationList>
     <NavigationListItem><Link to="/parcel-meta">Parcel meta</Link></NavigationListItem>
     <NavigationListItem><Link to="/parcel-types">Parcel types</Link></NavigationListItem>
     <NavigationListItem><Link to="/value-updaters">Value updaters</Link></NavigationListItem>
+    <NavigationListItem><Link to="/rekey">Rekey</Link></NavigationListItem>
 </NavigationList>;
 
 export default (props) => <ContentNav nav={nav} {...props} />;

@@ -58,13 +58,14 @@ export default (params: Params): Return => {
     let [outerParcel] = useParcelState({
         value,
         updateValue,
-        beforeChange: rekeyFn || rekey || []
+        rekey: rekeyFn || rekey
     });
 
     let [sideEffectParcel] = useParcelSideEffect({
         parcel: outerParcel,
         onChange,
-        onChangeUseResult
+        onChangeUseResult,
+        rekey: rekeyFn || rekey
     });
 
     let [innerParcel, innerParcelControl] = useParcelBuffer({

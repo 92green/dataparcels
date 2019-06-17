@@ -6,6 +6,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
 import Parcel from 'dataparcels';
+import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
 import useDebouncedCallback from 'use-debounce/lib/callback';
 import ApplyBeforeChange from './util/ApplyBeforeChange';
 
@@ -14,7 +15,8 @@ type Params = {
     updateValue?: boolean,
     onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => void,
     debounce?: number,
-    beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
+    beforeChange?: ParcelValueUpdater|ParcelValueUpdater[],
+    rekey?: ParcelValueUpdater
 };
 
 type Return = [Parcel];
@@ -45,7 +47,18 @@ export default (params: Params): Return => {
     const updateParcelValue = (parcel: Parcel): Parcel => {
 
         let [changedParcel] = parcel._changeAndReturn(
-            parcel => applyBeforeChange(parcel).set(getValue())
+            newParcel => {
+                let value = getValue();
+                if(params.rekey) {
+                    return newParcel
+                        .modifyUp(params.rekey)
+                        .update(dangerouslyUpdateParcelData((parcelData) => ({
+                            ...parcelData,
+                            value
+                        })));
+                }
+                return applyBeforeChange(newParcel).set(value);
+            }
         );
 
         return applyBeforeChange(changedParcel);

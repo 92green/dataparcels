@@ -1,17 +1,14 @@
 import React from 'react';
+import {useEffect} from 'react';
 import {useRef} from 'react';
 import {useState} from 'react';
 import useParcelForm from 'react-dataparcels/useParcelForm';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import rekey from 'react-dataparcels/rekey';
 import exampleFrame from 'component/exampleFrame';
+import dogNames from 'dog-names';
 
-const initialValue = {
-    firstname: "",
-    lastname: ""
-};
-
-export default function SignUpForm(props) {
+function Foo(props) {
 
     let [requestState, setRequestState] = useState("idle");
     let rejectRef = useRef(() => {});
@@ -22,7 +19,7 @@ export default function SignUpForm(props) {
         let timeout = setTimeout(() => {
             setRequestState("resolved");
             resolve(value);
-        }, 2000);
+        }, 1000);
 
         rejectRef.current = () => {
             setRequestState("rejected");
@@ -31,36 +28,73 @@ export default function SignUpForm(props) {
         };
     });
 
-    let [personParcel, personParcelBuffer] = useParcelForm({
-        value: initialValue,
+    let [personParcel, petNamesParcelBuffer] = useParcelForm({
+        value: props.petNames,
+        updateValue: true,
         onChange: (parcel) => saveMyData(parcel.value),
         // ^ returns a promise
-        onChangeUseResult: true,
         rekey: () => rekey()
     });
 
-    let personParcelState = personParcelBuffer._outerParcel;
-    return exampleFrame({personParcelState, personParcel}, <div>
-        <label>firstname</label>
-        <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <div>
-                <input type="checkbox" style={{width: '2rem'}} {...firstname.metaAsParcel('selected').spreadDOMCheckbox()} />
-                <input type="text" {...firstname.spreadDOM()} />
+    let petNamesParcelState = petNamesParcelBuffer._outerParcel;
+    return exampleFrame({petNamesParcelState, personParcel}, <div>
+        <label>cat</label>
+        <ParcelBoundary parcel={personParcel.get('cat')}>
+            {(cat) => <div>
+                <input type="checkbox" style={{width: '2rem'}} {...cat.metaAsParcel('selected').spreadDOMCheckbox()} />
+                <input type="text" {...cat.spreadDOM()} />
             </div>}
         </ParcelBoundary>
 
-        <label>lastname</label>
-        <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <div>
-                <input type="checkbox" style={{width: '2rem'}} {...lastname.metaAsParcel('selected').spreadDOMCheckbox()} />
-                <input type="text" {...lastname.spreadDOM()} />
+        <label>dog</label>
+        <ParcelBoundary parcel={personParcel.get('dog')}>
+            {(dog) => <div>
+                <input type="checkbox" style={{width: '2rem'}} {...dog.metaAsParcel('selected').spreadDOMCheckbox()} />
+                <input type="text" {...dog.spreadDOM()} />
             </div>}
         </ParcelBoundary>
 
-        <button onClick={() => personParcelBuffer.submit()}>Submit</button>
+        <label>fish</label>
+        <ParcelBoundary parcel={personParcel.get('fish')}>
+            {(fish) => <div>
+                <input type="checkbox" style={{width: '2rem'}} {...fish.metaAsParcel('selected').spreadDOMCheckbox()} />
+                <input type="text" {...fish.spreadDOM()} />
+            </div>}
+        </ParcelBoundary>
+
+        <button onClick={() => petNamesParcelBuffer.submit()}>Submit</button>
 
         <p>Request state: <strong>{requestState}</strong>
             {requestState === "pending..." && <button onClick={rejectRef.current}>reject</button>}
         </p>
     </div>);
+}
+
+export default function FooData() {
+
+    let [petNames, setPetNames] = useState(() => ({
+        dog: "Fido",
+        cat: "Snowball",
+        fish: "Swimmy"
+    }));
+
+    useEffect(() => {
+        let timer;
+        let step = () => {
+            setPetNames(petNames => {
+                let newPetNames = {...petNames};
+                let key = ['dog','cat','fish'][Math.floor(Math.random() * 3)];
+                newPetNames[key] = dogNames.allRandom();
+                return newPetNames;
+            });
+            timer = setTimeout(step, 2000 + Math.random() * 2000);
+        };
+        step();
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
+
+    return <Foo petNames={petNames} />;
 }

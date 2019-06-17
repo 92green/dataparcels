@@ -43,6 +43,14 @@ export default () => <Box>
         image={IconParcelBoundary}
     />
     <Item
+        name="useParcelForm"
+        description={<Box>
+            <Text element="p" modifier="marginMilli">useParcelForm is a React hook.</Text>
+            <Text element="p">Its job is to make submittable forms easy to build. It provides a parcel stored in state and a buffer to store unsaved changes, and also handles how the parcel responds to changes in React props.</Text>
+        </Box>}
+        image={IconParcelHoc}
+    />
+    <Item
         name="useParcelState"
         description={<Box>
             <Text element="p" modifier="marginMilli">useParcelState is a React hook.</Text>
@@ -50,26 +58,12 @@ export default () => <Box>
         </Box>}
         image={IconParcelHoc}
     />
-    <Item
-        name="useParcelForm"
-        description={<Box>
-            <Text element="p" modifier="marginMilli">useParcelForm is a React hook.</Text>
-            <Text element="p">Its job is to make submittable forms easy to build, by combining useParcelState and useParcelBuffer together.</Text>
-        </Box>}
-        image={IconParcelBoundaryHoc}
-    />
-    <Item
-        name="useParcelBuffer"
-        description={<Box>
-            <Text element="p" modifier="marginMilli">useParcelBuffer is a React hook.</Text>
-            <Text element="p">Its job is to control the flow of parcel changes by providing a buffer.</Text>
-        </Box>}
-        image={IconParcelBoundaryHoc}
-    />
     <Text element="h3" modifier="marginKilo sizeKilo">See also</Text>
     <BulletList>
         <BulletListItem><Link className="Link" to="/api/ParcelDrag">ParcelDrag</Link></BulletListItem>
         <BulletListItem><Link className="Link" to="/api/validation">validation</Link></BulletListItem>
+        <BulletListItem><Link className="Link" to="/api/rekey">rekey</Link></BulletListItem>
+        <BulletListItem><Link className="Link" to="/api/useParcelBuffer">useParcelBuffer</Link></BulletListItem>
         <BulletListItem><Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link></BulletListItem>
         <BulletListItem><Link className="Link" to="/api/CancelActionMarker">CancelActionMarker</Link></BulletListItem>
         <BulletListItem><Link className="Link" to="/api/ParcelShape">ParcelShape</Link></BulletListItem>
