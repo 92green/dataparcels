@@ -38,7 +38,7 @@ let [outerParcel] = useParcelState({
 // buffers the changes that the user has made
 // and prevents those changes from being propagated
 // back up to state until its ready to be saved
-let [innerParcel, parcelBuffer] = useParcelBuffer({
+let [innerParcel, parcelControl] = useParcelBuffer({
     parcel: outerParcel,
     buffer,
     debounce,
@@ -49,7 +49,7 @@ let [innerParcel, parcelBuffer] = useParcelBuffer({
 // allow the user to make changes to the data
 innerParcel.get('...') // etc
 
-parcelBuffer.submit(); // or just use debounce
+parcelControl.submit(); // or just use debounce
 ```
 
 Using this pattern, the "submit" button is really an action that instructs the useParcelBuffer hook to release all of its buffered changes up into the useParcelState hook.
@@ -144,13 +144,6 @@ onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any> //
 
 If provided, this function is called after innerParcel releases the contents of its buffer and propagates its changes, but before outerParcel's state is updated. It receives the new [Parcel](/api/Parcel), and the [ChangeRequest](/api/ChangeRequest) that was responsible for the change. This function can be used to relay changes further up the React heirarchy.
 
-It's possible to return a promise from `onChange`. When doing this, the ChangeRequest's propagation is halted and is only released once the promise resolves, at which point outerParcel's state will be updated to contain the new Parcel.
-
-If another change arrives while a promise is pending, it will be passed through `onChange` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's
-promise is rejected, the changes will be merged with the next ChangeRequest when `onChange` is called the second time.
-
-This is discussed in more detail in [data synchronisation](/data-synchronisation).
-
 ```js
 let [parcel] = useParcelForm({
     value: receivedValue,
@@ -159,6 +152,15 @@ let [parcel] = useParcelForm({
     }
 });
 ```
+
+#### onChange with promises
+
+It's possible to return a promise from `onChange`. When doing this, the ChangeRequest's propagation is halted and is only released once the promise resolves, at which point outerParcel's state will be updated to contain the new Parcel.
+
+If another change arrives while a promise is pending, it will be passed through `onChange` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's
+promise is rejected, the changes will be merged with the next ChangeRequest when `onChange` is called the second time.
+
+This is discussed in more detail in [data synchronisation](/data-synchronisation).
 
 *Please keep in mind that it is possible for a change to result in the same data being contained in the Parcel, `onChange` will not dedupe subsequent calls whose Parcels contain the same data.*
 
@@ -190,7 +192,7 @@ let [parcel] = useParcelForm({
 buffer?: boolean = true // optional
 ```
 
-When `buffer` is true, changes that occur to `parcel` will be caught in useParcelForm's buffer, until released explicitly by calling [parcelBuffer.submit()](#submit), or automatically if [debounce](#debounce) is being used.
+When `buffer` is true, changes that occur to `parcel` will be caught in useParcelForm's buffer, until released explicitly by calling [parcelControl.submit()](#submit), or automatically if [debounce](#debounce) is being used.
 
 When `buffer` is false, changes will propagate up to useParcelForm's outerParcel immediately.
 
@@ -293,7 +295,7 @@ parcel.set("HELLO");
 
 
 ```flow
-[parcel: Parcel, parcelBuffer: ParcelBufferControl]
+[parcel: Parcel, parcelControl: ParcelHookControl]
 ```
 
 ### parcel
@@ -304,18 +306,18 @@ parcel: Parcel
 
 The first element of the returned array is the parcel previously referred to as innerParcel. It's a Parcel that contains the current state of outerParcel, with all the changes in the buffer applied to it. When buffering is enabled, any changes that `parcel` receives will go into the buffer.
 
-### parcelBuffer
+### parcelControl
 
 ```flow
-parcelBuffer: ParcelBufferControl
+parcelControl: ParcelHookControl
 ```
 
-The second element of the returned array is a ParcelBufferControl instance.
+The second element of the returned array is an object containing data and functions for controlling the hook.
 
-## ParcelBufferControl
+## ParcelHookControl
 
 ```flow
-class ParcelBufferControl {
+type ParcelHookControl {
     submit: Function,
     reset: Function,
     buffered: boolean,

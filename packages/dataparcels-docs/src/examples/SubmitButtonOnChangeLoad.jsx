@@ -35,7 +35,7 @@ export default function PersonEditor(props) {
         };
     });
 
-    let [personParcel, personParcelBuffer] = useParcelForm({
+    let [personParcel, personParcelControl] = useParcelForm({
         value: initialValue,
         onChange: (parcel) => saveMyData(parcel.value),
         onChangeUseResult: true
@@ -43,7 +43,7 @@ export default function PersonEditor(props) {
 
     let {timeUpdated} = personParcel.value;
 
-    let personParcelState = personParcelBuffer._outerParcel;
+    let personParcelState = personParcelControl._outerParcel;
     return exampleFrame({personParcelState, personParcel}, <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
@@ -57,7 +57,7 @@ export default function PersonEditor(props) {
 
         <p>Time updated: {timeUpdated && timeUpdated.toLocaleString()}</p>
 
-        <button onClick={() => personParcelBuffer.submit()}>Submit</button>
+        <button onClick={() => personParcelControl.submit()}>Submit</button>
 
         <p>Request state: <strong>{requestState}</strong>
             {requestState === "pending..." && <button onClick={rejectRef.current}>reject</button>}

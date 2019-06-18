@@ -30,7 +30,7 @@ export default function SignUpForm(props) {
         };
     });
 
-    let [personParcel, personParcelBuffer] = useParcelForm({
+    let [personParcel, personParcelControl] = useParcelForm({
         value: initialValue,
         onChange: async (parcel) => {
             await saveMyData(parcel.value);
@@ -39,7 +39,7 @@ export default function SignUpForm(props) {
         onChangeUseResult: true
     });
 
-    let personParcelState = personParcelBuffer._outerParcel;
+    let personParcelState = personParcelControl._outerParcel;
     return exampleFrame({personParcelState, personParcel}, <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
@@ -51,7 +51,7 @@ export default function SignUpForm(props) {
             {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
         </ParcelBoundary>
 
-        <button onClick={() => personParcelBuffer.submit()}>Submit</button>
+        <button onClick={() => personParcelControl.submit()}>Submit</button>
 
         <p>Request state: <strong>{requestState}</strong>
             {requestState === "pending..." && <button onClick={rejectRef.current}>reject</button>}

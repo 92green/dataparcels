@@ -5,7 +5,7 @@ import exampleFrame from 'component/exampleFrame';
 
 export default function PersonEditor(props) {
 
-    let [personParcel, personParcelBuffer] = useParcelForm({
+    let [personParcel, personParcelControl] = useParcelForm({
         value: {
             firstname: "Robert",
             lastname: "Clamps"
@@ -23,7 +23,7 @@ export default function PersonEditor(props) {
             {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
         </ParcelBoundary>
 
-        <button onClick={() => personParcelBuffer.submit()}>Submit</button>
-        <button onClick={() => personParcelBuffer.reset()}>Reset</button>
+        <button onClick={() => personParcelControl.submit()}>Submit</button>
+        <button onClick={() => personParcelControl.reset()}>Reset</button>
     </div>;
 }

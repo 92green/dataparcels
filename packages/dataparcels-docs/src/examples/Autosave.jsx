@@ -5,7 +5,7 @@ import exampleFrame from 'component/exampleFrame';
 
 export default function PersonEditor(props) {
 
-    let [personParcel, personParcelBuffer] = useParcelForm({
+    let [personParcel, personParcelControl] = useParcelForm({
         value: {
             firstname: "Robert",
             lastname: "Clamps"
@@ -13,7 +13,7 @@ export default function PersonEditor(props) {
         debounce: 500  // hold onto changes until 500ms have elapsed since last change
     });
 
-    let personParcelState = personParcelBuffer._outerParcel;
+    let personParcelState = personParcelControl._outerParcel;
     return exampleFrame({personParcelState, personParcel}, <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>

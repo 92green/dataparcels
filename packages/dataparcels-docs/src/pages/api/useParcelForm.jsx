@@ -20,8 +20,8 @@ export default () => <Layout>
             'beforeChange',
             '# Returns',
             'parcel',
-            'parcelBuffer',
-            '# ParcelBufferControl'
+            'parcelControl',
+            '# ParcelHookControl'
         ]}
     />
 </Layout>;

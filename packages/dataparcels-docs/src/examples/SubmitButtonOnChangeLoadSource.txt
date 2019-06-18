@@ -4,7 +4,7 @@ import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 
 export default function PersonEditor(props) {
 
-    let [personParcel, personParcelBuffer] = useParcelForm({
+    let [personParcel, personParcelControl] = useParcelForm({
         value: props.valueLoadedFromServer,
         onChange: (parcel) => saveMyData(parcel.value),
         onChangeUseResult: true
@@ -25,6 +25,6 @@ export default function PersonEditor(props) {
 
         <p>Time updated: {timeUpdated.toLocaleString()}</p>
 
-        <button onClick={() => personParcelBuffer.submit()}>Submit</button>
+        <button onClick={() => personParcelControl.submit()}>Submit</button>
     </div>;
 }
