@@ -18,7 +18,6 @@
     "DeletedParcelMarker.js",
     "ParcelBoundary.js",
     "ParcelBoundaryHoc.js",
-    "ParcelBufferControl.js",
     "ParcelHoc.js",
     "ParcelShape.js",
     "shape.js",

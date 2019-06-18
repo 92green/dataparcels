@@ -1,14 +1,13 @@
 // @flow
 import type {Node} from 'react';
 import type Parcel from 'dataparcels';
-import type ParcelBufferControl from './ParcelBufferControl';
 import type {ParcelValueUpdater} from 'dataparcels';
 
 // $FlowFixMe - useMemo is a named export of react
 import {useMemo} from 'react';
 import useParcelBuffer from './useParcelBuffer';
 
-type RenderFunction = (parcel: Parcel, buffer: ParcelBufferControl) => Node;
+type RenderFunction = (parcel: Parcel, control: {[key: string]: any}) => Node;
 
 type Props = {
     parcel: Parcel,

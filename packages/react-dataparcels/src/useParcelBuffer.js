@@ -13,7 +13,6 @@ import Parcel from 'dataparcels';
 import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
 import setMeta from 'dataparcels/lib/parcelData/setMeta';
 
-import ParcelBufferControl from './ParcelBufferControl';
 import ApplyBeforeChange from './util/ApplyBeforeChange';
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 import pipeWithFakePrevParcel from './util/pipeWithFakePrevParcel';
@@ -34,7 +33,7 @@ type Params = {
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
 };
 
-type Return = [Parcel, ParcelBufferControl];
+type Return = [Parcel, {[key: string]: any}];
 
 export default (params: Params): Return => {
 
@@ -191,17 +190,17 @@ export default (params: Params): Return => {
         ? internalBuffer.bufferState.actions
         : [];
 
-    const parcelBufferControl = new ParcelBufferControl({
+    const parcelControl = {
         submit: () => returnedParcel.setMeta({_submit: true}),
         reset: () => returnedParcel.setMeta({_reset: true}),
         buffered: actions.length > 0,
         actions,
         _outerParcel: params.parcel
-    });
+    };
 
     //
     // return
     //
 
-    return [returnedParcel, parcelBufferControl];
+    return [returnedParcel, parcelControl];
 };

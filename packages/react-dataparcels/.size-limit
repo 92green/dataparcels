@@ -44,10 +44,6 @@
         path: "ParcelBoundaryHoc.js"
     },
     {
-        limit: "1 KB",
-        path: "ParcelBufferControl.js"
-    },
-    {
         limit: "17 KB",
         path: "ParcelHoc.js"
     },
