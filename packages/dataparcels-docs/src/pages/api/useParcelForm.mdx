@@ -321,7 +321,12 @@ type ParcelHookControl {
     submit: Function,
     reset: Function,
     buffered: boolean,
-    actions: Action[]
+    actions: Action[],
+    onChangeStatus: {
+        status: string
+        pending: boolean,
+        error: any
+    }
 }
 ```
 
@@ -336,4 +341,27 @@ type ParcelHookControl {
 
 * <Param name="actions" type="Action[]" />
   An array of actions that are currently in the buffer.
+
+* <Param name="onChangeStatus" type="Object" />
+  An object containing information about the current state of the execution of the `onChange` function. This is useful if you're using promises with `onChange` and want to conditionally render elements based on the state of the promise.
+
+  * <Param name="status" type="string" />
+    Status is always one of four possible string values:
+
+    * `"idle"` - no promises have yet been returned from `onChange`
+    * `"pending"` - if `onChange` returned a promise and that promise is pending.
+    * `"resolved"` - if the last promise returned from `onChange` was resolved.
+    * `"rejected"` - if the last promise returned from `onChange` was rejected.
+
+  * <Param name="isPending" type="boolean" />
+    The `isPending` boolean is true if `onChange` returned a promise and that promise is pending, otherwise it is false.
+
+  * <Param name="isResolved" type="boolean" />
+    The `isResolved` boolean is true if the last promise returned from `onChange` was resolved.
+
+  * <Param name="isRejected" type="boolean" />
+    The `isRejected` boolean is true if the last promise returned from `onChange` was rejected.
+
+  * <Param name="error" type="any" />
+    If the last promise returned from `onChange` was rejected, this contains the rejected promise's payload.
 
