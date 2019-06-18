@@ -52,7 +52,7 @@ export default (params: Params): Return => {
         updateValue
     });
 
-    let [sideEffectParcel] = useParcelSideEffect({
+    let [sideEffectParcel, sideEffectControl] = useParcelSideEffect({
         parcel: outerParcel,
         onChange,
         onChangeUseResult
@@ -65,5 +65,10 @@ export default (params: Params): Return => {
         beforeChange
     });
 
-    return [innerParcel, innerParcelControl];
+    let control = {
+        ...sideEffectControl,
+        ...innerParcelControl
+    };
+
+    return [innerParcel, control];
 };

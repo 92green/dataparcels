@@ -119,7 +119,7 @@ describe('useParcelForm should pass config to useParcelBuffer', () => {
         }));
 
         expect(result.current[0]).toBe(getLastResult(useParcelBuffer)[0]);
-        expect(result.current[1]).toBe(getLastResult(useParcelBuffer)[1]);
+        expect(result.current[1]).toEqual(getLastResult(useParcelBuffer)[1]);
     });
 
 });
