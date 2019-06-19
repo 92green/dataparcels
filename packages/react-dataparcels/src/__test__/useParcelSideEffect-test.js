@@ -148,6 +148,34 @@ describe('useParcelSideEffect should use config.onChange', () => {
 
 describe('useParcelSideEffect should use config.onChange with promises', () => {
 
+    it('should default to a default onChangeStatus', async () => {
+
+        let handleChange = jest.fn();
+        let onChange = jest.fn(() => Promise.resolve(333));
+
+        let parcel = new Parcel({
+            value: 123,
+            handleChange
+        });
+
+        let {result} = renderHook(() => useParcelSideEffect({
+            parcel,
+            onChange
+        }));
+
+        expect(result.current[1]).toEqual({
+            onChangeStatus: {
+                status: 'idle',
+                isPending: false,
+                isResolved: false,
+                isRejected: false,
+                error: undefined
+            }
+        });
+
+    });
+
+
     it('should call onChange with promise that resolves', async () => {
         let handleChange = jest.fn();
         let onChange = jest.fn(() => Promise.resolve(333));
@@ -171,15 +199,58 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
-        await onChangePromise(onChange);
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
 
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange.mock.calls[0][0].value).toBe(456);
     });
 
+    it('should set status correctly with promise that resolves', async () => {
+        let onChange = jest.fn(() => Promise.resolve(333));
+
+        let parcel = new Parcel({
+            value: 123
+        });
+
+        let {result} = renderHook(() => useParcelSideEffect({
+            parcel,
+            onChange
+        }));
+
+        act(() => {
+            result.current[0].set(456);
+        });
+
+        expect(result.current[1]).toEqual({
+            onChangeStatus: {
+                status: 'pending',
+                isPending: true,
+                isResolved: false,
+                isRejected: false,
+                error: undefined
+            }
+        });
+
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
+
+        expect(result.current[1]).toEqual({
+            onChangeStatus: {
+                status: 'resolved',
+                isPending: false,
+                isResolved: true,
+                isRejected: false,
+                error: undefined
+            }
+        });
+    });
+
     it('should not call onChange with promise that rejects', async () => {
         let handleChange = jest.fn();
-        let onChange = jest.fn(() => Promise.reject('error'));
+        let onChange = jest.fn(() => Promise.reject('error message!'));
 
         let parcel = new Parcel({
             value: 123,
@@ -198,13 +269,45 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][0].value).toBe(456);
         expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
-
         expect(handleChange).toHaveBeenCalledTimes(0);
 
-        await onChangePromise(onChange);
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
 
         expect(handleChange).toHaveBeenCalledTimes(0);
         // test for revert...
+    });
+
+    it('should set status correctly with promise that rejects', async () => {
+        let onChange = jest.fn(() => Promise.reject('error message!'));
+
+        let parcel = new Parcel({
+            value: 123
+        });
+
+        let {result} = renderHook(() => useParcelSideEffect({
+            parcel,
+            onChange
+        }));
+
+        act(() => {
+            result.current[0].set(456);
+        });
+
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
+
+        expect(result.current[1]).toEqual({
+            onChangeStatus: {
+                status: 'rejected',
+                isPending: false,
+                isResolved: false,
+                isRejected: true,
+                error: 'error message!'
+            }
+        });
     });
 
     it('should call onChange with promise that resolves with result if onChangeUseResult = true', async () => {
@@ -231,7 +334,9 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
-        await onChangePromise(onChange);
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
 
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange.mock.calls[0][0].value).toBe(333);
@@ -267,7 +372,9 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         // wait until the first promise is complete before firing off anything
         expect(handleChange).toHaveBeenCalledTimes(0);
 
-        await onChangePromise(onChange);
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
 
         expect(onChange).toHaveBeenCalledTimes(2);
         expect(onChange.mock.calls[1][0].value).toEqual([123, 456]);
@@ -306,7 +413,9 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         // wait until the first promise is complete before firing off anything
         expect(handleChange).toHaveBeenCalledTimes(0);
 
-        await onChangePromise(onChange);
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
 
         expect(onChange).toHaveBeenCalledTimes(2);
         expect(onChange.mock.calls[1][0].value).toEqual([123, 456]);

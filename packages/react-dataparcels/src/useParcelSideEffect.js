@@ -34,7 +34,7 @@ type Params = {
     onChangeUseResult?: boolean
 };
 
-type Return = [Parcel];
+type Return = [Parcel, {[key: string]: any}];
 
 export default (params: Params): Return => {
 
@@ -52,20 +52,43 @@ export default (params: Params): Return => {
     //
 
     const queueRef = useRef([]);
-    const pendingRef = useRef(false);
+    const statusRef = useRef('idle');
+    const errorRef = useRef(undefined);
+
+    //
+    // onChange status
+    //
+
+    let getOnChangeStatus = () => {
+        let status = statusRef.current;
+        let error = status === 'rejected' ? errorRef.current.error : undefined;
+
+        return {
+            status,
+            isPending: status === 'pending',
+            isResolved: status === 'resolved',
+            isRejected: status === 'rejected',
+            error
+        };
+    };
+
+    // control contains the hooks control object
+    const [onChangeStatus, setOnChangeStatus] = useState(getOnChangeStatus);
+
+    let updateOnChangeStatus = () => setOnChangeStatus(getOnChangeStatus());
 
     //
     // queue processing
     //
 
     const processChangeDone = (onDispatch: Function) => (result: any) => {
-        pendingRef.current = false;
         if(queueRef.current.length > 1) {
             processChange();
         } else {
             let [newParcel, changeRequest] = queueRef.current.shift();
             onDispatch(newParcel, changeRequest, result);
         }
+        updateOnChangeStatus();
     };
 
     const processChangeSuccess = processChangeDone((newParcel: Parcel, changeRequest: ChangeRequest, result: any) => {
@@ -79,12 +102,15 @@ export default (params: Params): Return => {
             changeRequest = changeRequestWithResult;
         }
 
+        statusRef.current = 'resolved';
         params.parcel.dispatch(changeRequest);
     });
 
-    const processChangeError = processChangeDone((newParcel: Parcel, changeRequest: ChangeRequest) => {
+    const processChangeError = processChangeDone((newParcel: Parcel, changeRequest: ChangeRequest, error: any) => {
         changeRequest._revert();
         queueRef.current = [];
+        errorRef.current = {error};
+        statusRef.current = 'rejected';
     });
 
     const processChange = () => {
@@ -106,7 +132,9 @@ export default (params: Params): Return => {
             return;
         }
 
-        pendingRef.current = true;
+        statusRef.current = 'pending';
+        updateOnChangeStatus();
+
         // $FlowFixMe - flow can't tell that isPromise() guarantees
         // that this is a promise
         result.then(processChangeSuccess, processChangeError);
@@ -125,7 +153,7 @@ export default (params: Params): Return => {
             queueRef.current.push([newParcel, changeRequest]);
 
             // if nothing is pending, then call onChange
-            if(!pendingRef.current) {
+            if(statusRef.current !== 'pending') {
                 processChange();
             }
         };
@@ -141,5 +169,9 @@ export default (params: Params): Return => {
     // return
     //
 
-    return [returnedParcel];
+    let control = {
+        onChangeStatus
+    };
+
+    return [returnedParcel, control];
 };

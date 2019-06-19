@@ -10,7 +10,6 @@ import type {ParcelValueUpdater} from 'dataparcels';
 import useParcelState from './useParcelState';
 import useParcelSideEffect from './useParcelSideEffect';
 import useParcelBuffer from './useParcelBuffer';
-import ParcelBufferControl from './ParcelBufferControl';
 
 type Params = {
     value: any,
@@ -23,7 +22,7 @@ type Params = {
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
 };
 
-type Return = [Parcel, ParcelBufferControl];
+type Return = [Parcel, {[key: string]: any}];
 
 export default (params: Params): Return => {
 
@@ -53,7 +52,7 @@ export default (params: Params): Return => {
         updateValue
     });
 
-    let [sideEffectParcel] = useParcelSideEffect({
+    let [sideEffectParcel, sideEffectControl] = useParcelSideEffect({
         parcel: outerParcel,
         onChange,
         onChangeUseResult
@@ -66,5 +65,10 @@ export default (params: Params): Return => {
         beforeChange
     });
 
-    return [innerParcel, innerParcelControl];
+    let control = {
+        ...sideEffectControl,
+        ...innerParcelControl
+    };
+
+    return [innerParcel, control];
 };

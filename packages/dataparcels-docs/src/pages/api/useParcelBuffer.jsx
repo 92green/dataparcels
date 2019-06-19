@@ -17,7 +17,7 @@ export default () => <Layout>
             '# Returns',
             'innerParcel',
             'control',
-            '# ParcelBufferControl'
+            '# ParcelHookControl'
         ]}
     />
 </Layout>;

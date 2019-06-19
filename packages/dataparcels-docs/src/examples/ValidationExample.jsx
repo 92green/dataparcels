@@ -15,7 +15,7 @@ const InputWithError = (parcel) => <div>
 
 export default function AnimalEditor(props) {
 
-    let [animalParcel, animalParcelBuffer] = useParcelForm({
+    let [animalParcel, animalParcelControl] = useParcelForm({
         value: {
             name: "Robert Clamps",
             animals: [
@@ -32,7 +32,7 @@ export default function AnimalEditor(props) {
         })
     });
 
-    let animalParcelState = animalParcelBuffer._outerParcel;
+    let animalParcelState = animalParcelControl._outerParcel;
     return exampleFrame({animalParcelState, animalParcel}, <div>
         <label>name</label>
         <ParcelBoundary parcel={animalParcel.get('name')}>
@@ -62,7 +62,7 @@ export default function AnimalEditor(props) {
             <button onClick={() => animalParcel.get('animals').push({type: "?", amount: 0})}>Add new animal</button>
         </div>
 
-        <button onClick={() => animalParcelBuffer.submit()}>Submit</button>
-        <button onClick={() => animalParcelBuffer.reset()}>Reset</button>
+        <button onClick={() => animalParcelControl.submit()}>Submit</button>
+        <button onClick={() => animalParcelControl.reset()}>Reset</button>
     </div>);
 }

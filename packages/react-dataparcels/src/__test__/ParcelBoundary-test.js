@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import ParcelBoundary from '../ParcelBoundary';
-import ParcelBufferControl from '../ParcelBufferControl';
 import Parcel from 'dataparcels';
 import Action from 'dataparcels/Action';
 
@@ -75,7 +74,6 @@ test('ParcelBoundary should pass parcelBufferControl to childRenderer', async ()
     let [, control] = childRenderer.mock.calls[0];
 
     // handleChange shouldn't be called yet because buffer is true
-    expect(control instanceof ParcelBufferControl).toBe(true);
     expect(control.buffered).toBe(false);
     expect(control.actions.length).toBe(0);
 });

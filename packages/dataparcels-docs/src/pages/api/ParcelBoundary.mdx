@@ -41,9 +41,9 @@ import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 ### childRenderer
 
 ```flow
-(parcel: Parcel, buffer: ParcelBufferControl) => Node
+(parcel: Parcel, buffer: ParcelHookControl) => Node
 
-type ParcelBufferControl = {
+type ParcelHookControl = {
     submit: () => void,
     reset: () => void,
     buffered: boolean,
@@ -53,11 +53,11 @@ type ParcelBufferControl = {
 
 ParcelBoundaries must be given a `childRenderer` function as children. This is called whenever the ParcelBoundary updates.
 
-It is passed a `parcel` and a ParcelBufferControl instance.
+It is passed a `parcel` and a ParcelHookControl object.
 - The `parcel` is on the "inside" of the parcel boundary, and is able to update independently of the parcel that was passed into the ParcelBoundary.
-- The `buffer` argument passes a ParcelBufferControl which can be used to control the ParcelBoundary's action buffer and information about the current state of the action buffer.
+- The `buffer` argument passes a ParcelHookControl which can be used to control the ParcelBoundary's action buffer and information about the current state of the action buffer.
 
-#### ParcelBufferControl
+#### ParcelHookControl
 
 - The `submit()` function will submit changes in the buffer, allowing them to propagate upward out of the ParcelBoundary.
 - The `reset()` function will reset the buffer, clearing any changes in the buffer.

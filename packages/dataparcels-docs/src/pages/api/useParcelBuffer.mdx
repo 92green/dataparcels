@@ -115,7 +115,7 @@ innerParcel.set("HELLO");
 
 
 ```flow
-[innerParcel: Parcel, control: ParcelBufferControl]
+[innerParcel: Parcel, control: ParcelHookControl]
 ```
 
 ### innerParcel
@@ -129,15 +129,15 @@ The first element of the returned array is the `innerParcel`, a Parcel that cont
 ### control
 
 ```flow
-control: ParcelBufferControl
+control: ParcelHookControl
 ```
 
-The second element of the returned array is a ParcelBufferControl instance.
+The second element of the returned array is a ParcelHookControl instance.
 
-## ParcelBufferControl
+## ParcelHookControl
 
 ```flow
-class ParcelBufferControl {
+class ParcelHookControl {
     submit: Function,
     reset: Function,
     buffered: boolean,
