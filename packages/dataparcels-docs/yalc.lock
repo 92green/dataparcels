@@ -2,12 +2,12 @@
   "version": "v1",
   "packages": {
     "react-dataparcels": {
-      "signature": "ccabd43f7044802f982415fa871cf329",
+      "signature": "d4b85df241289d4830108fcb27e75b96",
       "file": true,
       "replaced": "^0.21.0"
     },
     "react-dataparcels-drag": {
-      "signature": "b07beb787b6b0845782081f15d8d701c",
+      "signature": "2bbfb62a379e217a2f905af04c7e5fe1",
       "file": true,
       "replaced": "^0.21.0"
     }
