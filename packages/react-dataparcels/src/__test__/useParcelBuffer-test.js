@@ -440,6 +440,9 @@ describe('useParcelBuffer should use config.keepValue', () => {
         });
 
         let newParcel = handleChange.mock.calls[0][0];
+        newParcel._frameMeta = {
+            lastOriginId: handleChange.mock.calls[0][1].originId
+        };
 
         expect(newParcel.value).toEqual({
             abc: NaN

@@ -467,6 +467,9 @@ test('ParcelBoundary should not update value from props for updates caused by th
     childParcel.onChange(456);
 
     let newParcel = handleChange.mock.calls[0][0];
+    newParcel._frameMeta = {
+        lastOriginId: handleChange.mock.calls[0][1].originId
+    };
 
     // verify that the current value of the parcel has been updated
     expect(newParcel.value).toBe(457);
@@ -483,6 +486,9 @@ test('ParcelBoundary should not update value from props for updates caused by th
     // make a change externally and ensure that the value in the boundary does update
     newParcel.set(789);
     let newParcel2 = handleChange.mock.calls[1][0];
+    newParcel2._frameMeta = {
+        lastOriginId: handleChange.mock.calls[1][1].originId
+    };
     wrapper.setProps({
         parcel: withModify(newParcel2)
     });
@@ -510,6 +516,9 @@ test('ParcelBoundary should update meta from props for updates caused by themsel
     childParcel.onChange(456);
 
     let newParcel = handleChange.mock.calls[0][0];
+    newParcel._frameMeta = {
+        lastOriginId: handleChange.mock.calls[0][1].originId
+    };
 
     // make a change that keepValue will prevent from altering its value
     wrapper.setProps({
@@ -522,6 +531,9 @@ test('ParcelBoundary should update meta from props for updates caused by themsel
         abc: 789
     });
     let newParcel2 = handleChange.mock.calls[1][0];
+    newParcel2._frameMeta = {
+        lastOriginId: handleChange.mock.calls[1][1].originId
+    };
     wrapper.setProps({
         parcel: withModify(newParcel2)
     });
