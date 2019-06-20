@@ -75,6 +75,9 @@
         text-shadow: -6px 6px 0px lighten(color('primary'), 10),
             -12px 12px 0px lighten(color('primary'), 30)
     }
+    &-code {
+        overflow: auto;
+    }
 }
 @include DcmeTypography {
     input {
