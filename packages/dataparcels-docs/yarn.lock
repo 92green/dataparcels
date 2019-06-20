@@ -3597,10 +3597,10 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-dataparcels@^0.22.0:
-  version "0.22.0"
-  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.22.0.tgz#386ad3b072970bc1f5db77fbdaf7d6b1c5fc8e78"
-  integrity sha512-8LEBB0hVHUwvuDSM3e/ybWiKqZoO8AfiLx7h41f58Ov+pZ7ia+1RCcNNm0+qq1VIK/E7QAYphN8Rybb0iJPyDA==
+dataparcels@^0.23.0:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.23.0.tgz#da9e5f4075906f9ea6540ea94130e6ab93746b92"
+  integrity sha512-hw7K+aTTJzPZmkfU+Ct2W+yyH6092t3bXoQ9p8fSQfAsEEAuiBSUU4eHxlqCOdb7z6wrVXWoLya5/WnA3St3rA==
   dependencies:
     "@babel/runtime" "^7.1.5"
     unmutable "^0.41.1"
@@ -9688,16 +9688,16 @@ react-cool-storage@^0.1.1:
     unmutable "^0.39.0"
 
 "react-dataparcels-drag@file:.yalc/react-dataparcels-drag":
-  version "0.22.0-b07beb78"
+  version "0.23.0-2bbfb62a"
   dependencies:
     "@babel/runtime" "^7.1.5"
     react-sortable-hoc "1.4.0"
 
 "react-dataparcels@file:.yalc/react-dataparcels":
-  version "0.22.0-c304f58a"
+  version "0.23.0-640ebd29"
   dependencies:
     "@babel/runtime" "^7.1.5"
-    dataparcels "^0.22.0"
+    dataparcels "^0.23.0"
     is-promise "^2.1.0"
     unmutable "^0.41.1"
     use-debounce "^1.1.3"
