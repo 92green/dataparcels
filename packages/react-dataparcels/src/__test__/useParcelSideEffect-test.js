@@ -2,12 +2,11 @@
 import {act} from 'react-hooks-testing-library';
 import {renderHook} from 'react-hooks-testing-library';
 import useParcelSideEffect from '../useParcelSideEffect';
-import useParcelBuffer from '../useParcelBuffer';
 import Parcel from 'dataparcels';
 
 const renderHookWithProps = (initialProps, callback) => renderHook(callback, {initialProps});
 
-const onChangePromise = (onChange, index = 0) => onChange.mock.results[index].value.catch(() => {});
+const onSubmitPromise = (onSubmit, index = 0) => onSubmit.mock.results[index].value.catch(() => {});
 
 describe('useParcelSideEffect should use config.parcel', () => {
 
@@ -91,11 +90,11 @@ describe('useParcelSideEffect should use config.parcel', () => {
 
 });
 
-describe('useParcelSideEffect should use config.onChange', () => {
+describe('useParcelSideEffect should use config.onSubmit', () => {
 
-    it('should call onChange with value and change request if provided', () => {
+    it('should call onSubmit with value and change request if provided', () => {
         let handleChange = jest.fn();
-        let onChange = jest.fn();
+        let onSubmit = jest.fn();
 
         let parcel = new Parcel({
             value: 123,
@@ -104,22 +103,22 @@ describe('useParcelSideEffect should use config.onChange', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange
+            onSubmit
         }));
 
         act(() => {
             result.current[0].set(456);
         });
 
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].value).toBe(456);
-        expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onSubmit.mock.calls[0][0].value).toBe(456);
+        expect(onSubmit.mock.calls[0][1].prevData.value).toBe(123);
         expect(handleChange.mock.calls[0][0].value).toBe(456);
     });
 
-    it('should call onChange with result if onChangeUseResult = true', () => {
+    it('should call onSubmit with result if onSubmitUseResult = true', () => {
         let handleChange = jest.fn();
-        let onChange = jest.fn(() => 333);
+        let onSubmit = jest.fn(() => 333);
 
         let parcel = new Parcel({
             value: [123],
@@ -128,30 +127,30 @@ describe('useParcelSideEffect should use config.onChange', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange,
-            onChangeUseResult: true
+            onSubmit,
+            onSubmitUseResult: true
         }));
 
         act(() => {
             result.current[0].get(0).set(456);
         });
 
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].value).toEqual([456]);
-        expect(onChange.mock.calls[0][1].prevData.value).toEqual([123]);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onSubmit.mock.calls[0][0].value).toEqual([456]);
+        expect(onSubmit.mock.calls[0][1].prevData.value).toEqual([123]);
         expect(handleChange.mock.calls[0][0].value).toEqual(333);
-        expect(handleChange.mock.calls[0][1].originId).toBe(onChange.mock.calls[0][1].originId);
+        expect(handleChange.mock.calls[0][1].originId).toBe(onSubmit.mock.calls[0][1].originId);
     });
 
 });
 
 
-describe('useParcelSideEffect should use config.onChange with promises', () => {
+describe('useParcelSideEffect should use config.onSubmit with promises', () => {
 
-    it('should default to a default onChangeStatus', async () => {
+    it('should default to a default submitStatus', async () => {
 
         let handleChange = jest.fn();
-        let onChange = jest.fn(() => Promise.resolve(333));
+        let onSubmit = jest.fn(() => Promise.resolve(333));
 
         let parcel = new Parcel({
             value: 123,
@@ -160,11 +159,11 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange
+            onSubmit
         }));
 
         expect(result.current[1]).toEqual({
-            onChangeStatus: {
+            submitStatus: {
                 status: 'idle',
                 isPending: false,
                 isResolved: false,
@@ -176,9 +175,9 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
     });
 
 
-    it('should call onChange with promise that resolves', async () => {
+    it('should call onSubmit with promise that resolves', async () => {
         let handleChange = jest.fn();
-        let onChange = jest.fn(() => Promise.resolve(333));
+        let onSubmit = jest.fn(() => Promise.resolve(333));
 
         let parcel = new Parcel({
             value: 123,
@@ -187,20 +186,20 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange
+            onSubmit
         }));
 
         act(() => {
             result.current[0].set(456);
         });
 
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].value).toBe(456);
-        expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onSubmit.mock.calls[0][0].value).toBe(456);
+        expect(onSubmit.mock.calls[0][1].prevData.value).toBe(123);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         await act(async () => {
-            await onChangePromise(onChange);
+            await onSubmitPromise(onSubmit);
         });
 
         expect(handleChange).toHaveBeenCalledTimes(1);
@@ -208,7 +207,7 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
     });
 
     it('should set status correctly with promise that resolves', async () => {
-        let onChange = jest.fn(() => Promise.resolve(333));
+        let onSubmit = jest.fn(() => Promise.resolve(333));
 
         let parcel = new Parcel({
             value: 123
@@ -216,7 +215,7 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange
+            onSubmit
         }));
 
         act(() => {
@@ -224,7 +223,7 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         });
 
         expect(result.current[1]).toEqual({
-            onChangeStatus: {
+            submitStatus: {
                 status: 'pending',
                 isPending: true,
                 isResolved: false,
@@ -234,11 +233,11 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         });
 
         await act(async () => {
-            await onChangePromise(onChange);
+            await onSubmitPromise(onSubmit);
         });
 
         expect(result.current[1]).toEqual({
-            onChangeStatus: {
+            submitStatus: {
                 status: 'resolved',
                 isPending: false,
                 isResolved: true,
@@ -248,9 +247,9 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         });
     });
 
-    it('should not call onChange with promise that rejects', async () => {
+    it('should not call onSubmit with promise that rejects', async () => {
         let handleChange = jest.fn();
-        let onChange = jest.fn(() => Promise.reject('error message!'));
+        let onSubmit = jest.fn(() => Promise.reject('error message!'));
 
         let parcel = new Parcel({
             value: 123,
@@ -259,20 +258,20 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange
+            onSubmit
         }));
 
         act(() => {
             result.current[0].set(456);
         });
 
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].value).toBe(456);
-        expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onSubmit.mock.calls[0][0].value).toBe(456);
+        expect(onSubmit.mock.calls[0][1].prevData.value).toBe(123);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         await act(async () => {
-            await onChangePromise(onChange);
+            await onSubmitPromise(onSubmit);
         });
 
         expect(handleChange).toHaveBeenCalledTimes(0);
@@ -280,7 +279,7 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
     });
 
     it('should set status correctly with promise that rejects', async () => {
-        let onChange = jest.fn(() => Promise.reject('error message!'));
+        let onSubmit = jest.fn(() => Promise.reject('error message!'));
 
         let parcel = new Parcel({
             value: 123
@@ -288,7 +287,7 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange
+            onSubmit
         }));
 
         act(() => {
@@ -296,11 +295,11 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         });
 
         await act(async () => {
-            await onChangePromise(onChange);
+            await onSubmitPromise(onSubmit);
         });
 
         expect(result.current[1]).toEqual({
-            onChangeStatus: {
+            submitStatus: {
                 status: 'rejected',
                 isPending: false,
                 isResolved: false,
@@ -310,9 +309,9 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         });
     });
 
-    it('should call onChange with promise that resolves with result if onChangeUseResult = true', async () => {
+    it('should call onSubmit with promise that resolves with result if onSubmitUseResult = true', async () => {
         let handleChange = jest.fn();
-        let onChange = jest.fn(() => Promise.resolve(333));
+        let onSubmit = jest.fn(() => Promise.resolve(333));
 
         let parcel = new Parcel({
             value: 123,
@@ -321,31 +320,31 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange,
-            onChangeUseResult: true
+            onSubmit,
+            onSubmitUseResult: true
         }));
 
         act(() => {
             result.current[0].set(456);
         });
 
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].value).toBe(456);
-        expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onSubmit.mock.calls[0][0].value).toBe(456);
+        expect(onSubmit.mock.calls[0][1].prevData.value).toBe(123);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         await act(async () => {
-            await onChangePromise(onChange);
+            await onSubmitPromise(onSubmit);
         });
 
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange.mock.calls[0][0].value).toBe(333);
     });
 
-    it('should merge subsequent onChange if promise resolves twice', async () => {
+    it('should merge subsequent onSubmit if promise resolves twice', async () => {
         let handleChange = jest.fn();
-        let onChange = jest.fn();
-        onChange
+        let onSubmit = jest.fn();
+        onSubmit
             .mockReturnValueOnce(Promise.resolve())
             .mockReturnValueOnce(Promise.resolve());
 
@@ -356,7 +355,7 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange
+            onSubmit
         }));
 
         act(() => {
@@ -365,28 +364,28 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         });
 
         // only process one change at a time...
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].value).toEqual([123]);
-        expect(onChange.mock.calls[0][1].prevData.value).toEqual([]);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onSubmit.mock.calls[0][0].value).toEqual([123]);
+        expect(onSubmit.mock.calls[0][1].prevData.value).toEqual([]);
 
         // wait until the first promise is complete before firing off anything
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         await act(async () => {
-            await onChangePromise(onChange);
+            await onSubmitPromise(onSubmit);
         });
 
-        expect(onChange).toHaveBeenCalledTimes(2);
-        expect(onChange.mock.calls[1][0].value).toEqual([123, 456]);
-        expect(onChange.mock.calls[1][1].prevData.value).toEqual([]);
+        expect(onSubmit).toHaveBeenCalledTimes(2);
+        expect(onSubmit.mock.calls[1][0].value).toEqual([123, 456]);
+        expect(onSubmit.mock.calls[1][1].prevData.value).toEqual([]);
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange.mock.calls[0][0].value).toEqual([123, 456]);
     });
 
-    it('should merge subsequent onChange if promise rejects and then resolves', async () => {
+    it('should merge subsequent onSubmit if promise rejects and then resolves', async () => {
         let handleChange = jest.fn();
-        let onChange = jest.fn();
-        onChange
+        let onSubmit = jest.fn();
+        onSubmit
             .mockReturnValueOnce(Promise.reject())
             .mockReturnValueOnce(Promise.resolve());
 
@@ -397,7 +396,7 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
 
         let {result} = renderHook(() => useParcelSideEffect({
             parcel,
-            onChange
+            onSubmit
         }));
 
         act(() => {
@@ -406,20 +405,20 @@ describe('useParcelSideEffect should use config.onChange with promises', () => {
         });
 
         // only process one change at a time...
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].value).toEqual([123]);
-        expect(onChange.mock.calls[0][1].prevData.value).toEqual([]);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onSubmit.mock.calls[0][0].value).toEqual([123]);
+        expect(onSubmit.mock.calls[0][1].prevData.value).toEqual([]);
 
         // wait until the first promise is complete before firing off anything
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         await act(async () => {
-            await onChangePromise(onChange);
+            await onSubmitPromise(onSubmit);
         });
 
-        expect(onChange).toHaveBeenCalledTimes(2);
-        expect(onChange.mock.calls[1][0].value).toEqual([123, 456]);
-        expect(onChange.mock.calls[1][1].prevData.value).toEqual([]);
+        expect(onSubmit).toHaveBeenCalledTimes(2);
+        expect(onSubmit.mock.calls[1][0].value).toEqual([123, 456]);
+        expect(onSubmit.mock.calls[1][1].prevData.value).toEqual([]);
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange.mock.calls[0][0].value).toEqual([123, 456]);
     });

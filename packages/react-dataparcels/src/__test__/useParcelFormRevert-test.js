@@ -6,7 +6,7 @@ import useParcelForm from '../useParcelForm';
 
 describe('useParcelForm should revert change request', () => {
 
-    it('should put changes back into buffer from rejected onChange', async () => {
+    it('should put changes back into buffer from rejected onSubmit', async () => {
         let rejectMyPromise;
         let promise = new Promise((resolve, reject) => {
             rejectMyPromise = () => {
@@ -17,7 +17,7 @@ describe('useParcelForm should revert change request', () => {
 
         let {result} = renderHook(() => useParcelForm({
             value: [],
-            onChange: () => promise
+            onSubmit: () => promise
         }));
 
         act(() => {
@@ -42,7 +42,7 @@ describe('useParcelForm should revert change request', () => {
         expect(result.current[1].actions[0]).toBe(firstAction);
     });
 
-    it('should put changes back into buffer from rejected onChange, onto new changes', async () => {
+    it('should put changes back into buffer from rejected onSubmit, onto new changes', async () => {
         let rejectMyPromise;
         let promise = new Promise((resolve, reject) => {
             rejectMyPromise = () => {
@@ -53,7 +53,7 @@ describe('useParcelForm should revert change request', () => {
 
         let {result} = renderHook(() => useParcelForm({
             value: [],
-            onChange: () => promise
+            onSubmit: () => promise
         }));
 
         act(() => {

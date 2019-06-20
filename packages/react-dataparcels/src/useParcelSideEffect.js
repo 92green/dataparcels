@@ -30,8 +30,8 @@ const mergeQueue = (parcel: Parcel, queue: QueueItem[]): QueueItem[] => {
 
 type Params = {
     parcel: Parcel,
-    onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
-    onChangeUseResult?: boolean
+    onSubmit?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
+    onSubmitUseResult?: boolean
 };
 
 type Return = [Parcel, {[key: string]: any}];
@@ -56,10 +56,10 @@ export default (params: Params): Return => {
     const errorRef = useRef(undefined);
 
     //
-    // onChange status
+    // submit status
     //
 
-    let getOnChangeStatus = () => {
+    let getSubmitStatus = () => {
         let status = statusRef.current;
         let error = status === 'rejected' ? errorRef.current.error : undefined;
 
@@ -73,9 +73,9 @@ export default (params: Params): Return => {
     };
 
     // control contains the hooks control object
-    const [onChangeStatus, setOnChangeStatus] = useState(getOnChangeStatus);
+    const [submitStatus, setSubmitStatus] = useState(getSubmitStatus);
 
-    let updateOnChangeStatus = () => setOnChangeStatus(getOnChangeStatus());
+    let updateSubmitStatus = () => setSubmitStatus(getSubmitStatus());
 
     //
     // queue processing
@@ -88,12 +88,12 @@ export default (params: Params): Return => {
             let [newParcel, changeRequest] = queueRef.current.shift();
             onDispatch(newParcel, changeRequest, result);
         }
-        updateOnChangeStatus();
+        updateSubmitStatus();
     };
 
     const processChangeSuccess = processChangeDone((newParcel: Parcel, changeRequest: ChangeRequest, result: any) => {
 
-        if(params.onChange && params.onChangeUseResult) {
+        if(params.onSubmit && params.onSubmitUseResult) {
             let [/*parcel*/, changeRequestWithResult] = newParcel._changeAndReturn(
                 newParcel => newParcel.set(result)
             );
@@ -114,17 +114,17 @@ export default (params: Params): Return => {
     });
 
     const processChange = () => {
-        let {onChange} = params;
+        let {onSubmit} = params;
 
-        // if no onChange is present, success! skip to the end
-        if(!onChange) {
+        // if no onSubmit is present, success! skip to the end
+        if(!onSubmit) {
             processChangeSuccess();
             return;
         }
 
         // merge remaining changes in the queue together
         queueRef.current = mergeQueue(params.parcel, queueRef.current);
-        let result = onChange(...queueRef.current[0]);
+        let result = onSubmit(...queueRef.current[0]);
 
         // if a promise isn't returned, success! skip to the end
         if(!isPromise(result)) {
@@ -133,7 +133,7 @@ export default (params: Params): Return => {
         }
 
         statusRef.current = 'pending';
-        updateOnChangeStatus();
+        updateSubmitStatus();
 
         // $FlowFixMe - flow can't tell that isPromise() guarantees
         // that this is a promise
@@ -152,7 +152,7 @@ export default (params: Params): Return => {
             // all changes go into the queue
             queueRef.current.push([newParcel, changeRequest]);
 
-            // if nothing is pending, then call onChange
+            // if nothing is pending, then call onSubmit
             if(statusRef.current !== 'pending') {
                 processChange();
             }
@@ -170,7 +170,7 @@ export default (params: Params): Return => {
     //
 
     let control = {
-        onChangeStatus
+        submitStatus
     };
 
     return [returnedParcel, control];
