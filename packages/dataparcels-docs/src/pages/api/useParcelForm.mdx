@@ -11,48 +11,9 @@ import ValueUpdater from 'docs/notes/ValueUpdater.md';
 
 <ApiPageIcon>{Icon}</ApiPageIcon>
 
-The useParcelForm function is a React hook. Its job is to make submittable forms easy to build, by combining [useParcelState](/api/useParcelState) and [useParcelBuffer](/api/useParcelBuffer) together.
+The useParcelForm function is a React hook. Its job is to make submittable forms easy to build. It provides a parcel stored in state and an internal buffer to store unsaved changes, and also handles how the parcel responds to changes in React props.
 
-This is perfect for creating user interfaces that can show data that's fetched from a server, allow it to be edited by the user, and then send any changes back to the server.
-
-The useParcelForm hook holds two Parcels in state:
-1. the original data provided via `value`, hereby known as "outerParcel"
-2. a buffered version of the same Parcel that contains the user's active changes, hereby known as "innerParcel"
-
-The hook looks roughly like this:
-
-```js
-// 1. Parcel State
-//
-// holds the original data
-// and sends changed data to a callback
-let [outerParcel] = useParcelState({
-    value,
-    updateValue
-});
-
-// ...some magic related to the onChange function...
-
-// 2. Parcel Buffer
-//
-// buffers the changes that the user has made
-// and prevents those changes from being propagated
-// back up to state until its ready to be saved
-let [innerParcel, parcelControl] = useParcelBuffer({
-    parcel: outerParcel,
-    buffer,
-    debounce,
-    beforeChange
-});
-
-// 3. Outside of the useParcelForm hook...
-// allow the user to make changes to the data
-innerParcel.get('...') // etc
-
-parcelControl.submit(); // or just use debounce
-```
-
-Using this pattern, the "submit" button is really an action that instructs the useParcelBuffer hook to release all of its buffered changes up into the useParcelState hook.
+This is perfect for creating user interfaces that allow the user to edit data and send changes back to the server.
 
 ```js
 import useParcelForm from 'react-dataparcels/useParcelForm';
@@ -63,14 +24,26 @@ let [parcel] = useParcelForm({
     value: any,
     // optional
     updateValue?: boolean,
-    onChange?: Function,
-    onChangeUseResult?: boolean,
+    onSubmit?: Function,
+    onSubmitUseResult?: boolean,
     buffer?: boolean,
     debounce?: number,
     validation?: Function,
     beforeChange?: Function|Function[]
 });
 ```
+
+The explanations on this page sometimes refer to an "outerParcel" and an "innerParcel". This is because the useParcelForm hook actually holds two Parcels in state:
+
+#### outerParcel
+
+The original data provided via `value`. This parcel updates less frequently than innerParcel, only updating when the form is submitted, or if it is instructed to receive a new value via props or via the `onSubmit` function.
+
+#### innerParcel
+
+A parcel that sits downstream of outerParcel, acting as a buffer to hold on to unsaved changes. It updates each time the user changes the form, or as a result of outerParcel updating.
+
+If you're interested you can [read more about what's inside the hook](#Inside-the-hook).
 
 <Break />
 
@@ -136,10 +109,10 @@ parcel.set(200);
 // then parcel.value is now 300
 ```
 
-### onChange
+### onSubmit
 
 ```flow
-onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any> // optional
+onSubmit?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any> // optional
 ```
 
 If provided, this function is called after innerParcel releases the contents of its buffer and propagates its changes, but before outerParcel's state is updated. It receives the new [Parcel](/api/Parcel), and the [ChangeRequest](/api/ChangeRequest) that was responsible for the change. This function can be used to relay changes further up the React heirarchy.
@@ -147,42 +120,42 @@ If provided, this function is called after innerParcel releases the contents of 
 ```js
 let [parcel] = useParcelForm({
     value: receivedValue,
-    onChange: (parcel, changeRequest) => {
+    onSubmit: (parcel, changeRequest) => {
         // add logic here
     }
 });
 ```
 
-#### onChange with promises
+#### onSubmit with promises
 
-It's possible to return a promise from `onChange`. When doing this, the ChangeRequest's propagation is halted and is only released once the promise resolves, at which point outerParcel's state will be updated to contain the new Parcel.
+It's possible to return a promise from `onSubmit`. When doing this, the ChangeRequest's propagation is halted and is only released once the promise resolves, at which point outerParcel's state will be updated to contain the new Parcel.
 
-If another change arrives while a promise is pending, it will be passed through `onChange` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's
-promise is rejected, the changes will be merged with the next ChangeRequest when `onChange` is called the second time.
+If another change arrives while a promise is pending, it will be passed through `onSubmit` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's
+promise is rejected, the changes will be merged with the next ChangeRequest when `onSubmit` is called the second time.
 
 This is discussed in more detail in [data synchronisation](/data-synchronisation).
 
-*Please keep in mind that it is possible for a change to result in the same data being contained in the Parcel, `onChange` will not dedupe subsequent calls whose Parcels contain the same data.*
+*Please keep in mind that it is possible for a change to result in the same data being contained in the Parcel, `onSubmit` will not dedupe subsequent calls whose Parcels contain the same data.*
 
-### onChangeUseResult
+### onSubmitUseResult
 
 ```flow
-onChangeUseResult?: boolean = false // optional
+onSubmitUseResult?: boolean = false // optional
 ```
 
-When true, this sets the value of the outerParcel to the return value of `onChange`. If `onChange` returns a promise, the resolved value of the promise will be used.
+When true, this sets the value of the outerParcel to the return value of `onSubmit`. If `onSubmit` returns a promise, the resolved value of the promise will be used.
 
-Using `onChangeUseResult` can be useful for receiving data back from a request to write data to a server, as it ensures that outerParcel's value is as up-to-date as possible. This is discussed in more detail in [data synchronisation](/data-synchronisation#Receiving-data-from-the-server-after-saving).
+Using `onSubmitUseResult` can be useful for receiving data back from a request to write data to a server, as it ensures that outerParcel's value is as up-to-date as possible. This is discussed in more detail in [data synchronisation](/data-synchronisation#Receiving-data-from-the-server-after-saving).
 
 ```js
 let [parcel] = useParcelForm({
     value: receivedValue,
-    onChange: (parcel, changeRequest) => {
+    onSubmit: (parcel, changeRequest) => {
         return saveMyData(parcel.value);
         // ^ saveMyData send a request to a server to save the data,
         // and returns a promise containing the updated data from the server
     },
-    onChangeUseResult: true
+    onSubmitUseResult: true
 });
 ```
 
@@ -215,7 +188,7 @@ The useParcelForm hooks waits until no new changes have occured for `debounce` n
 ```js
 let [parcel] = useParcelForm({
     value: receivedValue,
-    onChange: (parcel, changeRequest) => {
+    onSubmit: (parcel, changeRequest) => {
         // add logic here
     },
     debounce: 500
@@ -322,7 +295,7 @@ type ParcelHookControl {
     reset: Function,
     buffered: boolean,
     actions: Action[],
-    onChangeStatus: {
+    submitStatus: {
         status: string
         pending: boolean,
         error: any
@@ -342,26 +315,71 @@ type ParcelHookControl {
 * <Param name="actions" type="Action[]" />
   An array of actions that are currently in the buffer.
 
-* <Param name="onChangeStatus" type="Object" />
-  An object containing information about the current state of the execution of the `onChange` function. This is useful if you're using promises with `onChange` and want to conditionally render elements based on the state of the promise.
+* <Param name="submitStatus" type="Object" />
+  An object containing information about the current state of the execution of the `onSubmit` function. This is useful if you're using promises with `onSubmit` and want to conditionally render elements based on the state of the promise.
 
   * <Param name="status" type="string" />
     Status is always one of four possible string values:
 
-    * `"idle"` - no promises have yet been returned from `onChange`
-    * `"pending"` - if `onChange` returned a promise and that promise is pending.
-    * `"resolved"` - if the last promise returned from `onChange` was resolved.
-    * `"rejected"` - if the last promise returned from `onChange` was rejected.
+    * `"idle"` - no promises have yet been returned from `onSubmit`
+    * `"pending"` - if `onSubmit` returned a promise and that promise is pending.
+    * `"resolved"` - if the last promise returned from `onSubmit` was resolved.
+    * `"rejected"` - if the last promise returned from `onSubmit` was rejected.
 
   * <Param name="isPending" type="boolean" />
-    The `isPending` boolean is true if `onChange` returned a promise and that promise is pending, otherwise it is false.
+    The `isPending` boolean is true if `onSubmit` returned a promise and that promise is pending, otherwise it is false.
 
   * <Param name="isResolved" type="boolean" />
-    The `isResolved` boolean is true if the last promise returned from `onChange` was resolved.
+    The `isResolved` boolean is true if the last promise returned from `onSubmit` was resolved.
 
   * <Param name="isRejected" type="boolean" />
-    The `isRejected` boolean is true if the last promise returned from `onChange` was rejected.
+    The `isRejected` boolean is true if the last promise returned from `onSubmit` was rejected.
 
   * <Param name="error" type="any" />
-    If the last promise returned from `onChange` was rejected, this contains the rejected promise's payload.
+    If the last promise returned from `onSubmit` was rejected, this contains the rejected promise's payload.
 
+## Inside the hook
+
+The useParcelForm hook is a combination of [useParcelState](/api/useParcelState) and [useParcelBuffer](/api/useParcelBuffer).
+
+Internally, the hook looks roughly like this:
+
+```js
+
+useParcelForm = (hookConfig) => {
+
+    // 1. Parcel State
+    //
+    // holds the original data
+    // and sends changed data to a callback
+    let [outerParcel] = useParcelState({
+        value,
+        updateValue
+    });
+
+    // ...some magic related to the onSubmit function...
+
+    // 2. Parcel Buffer
+    //
+    // buffers the changes that the user has made
+    // and prevents those changes from being propagated
+    // back up to state until its ready to be saved
+    let [innerParcel, parcelControl] = useParcelBuffer({
+        parcel: outerParcel,
+        buffer,
+        debounce,
+        beforeChange
+    });
+
+    return [innerParcel, parcelControl];
+}
+
+// 3. Outside of the useParcelForm hook
+// allow the user to make changes to the data
+let [innerParcel, parcelControl] = useParcelForm(...);
+
+innerParcel.get('...') // etc
+parcelControl.submit();
+```
+
+The "submit" button is really an action that instructs the useParcelBuffer hook to release all of its buffered changes up into the useParcelState hook.
