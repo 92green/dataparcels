@@ -41,7 +41,7 @@ import overload from 'unmutable/lib/util/overload';
 const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
     dispatchId: '',
-    lastOriginId: '',
+    frameMeta: {},
     meta: {},
     id: new ParcelId(),
     parent: {
@@ -67,7 +67,7 @@ export default class Parcel {
         let {
             child,
             dispatchId,
-            lastOriginId,
+            frameMeta,
             meta,
             id,
             parent,
@@ -75,7 +75,7 @@ export default class Parcel {
             updateChangeRequestOnDispatch
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
-        this._lastOriginId = lastOriginId;
+        this._frameMeta = frameMeta;
         this._onHandleChange = handleChange;
         this._updateChangeRequestOnDispatch = updateChangeRequestOnDispatch;
 
@@ -124,15 +124,15 @@ export default class Parcel {
     //
 
     // from constructor
-    _childParcelCache: { [key: string]: Parcel } = {};
+    _childParcelCache: {[key: string]: Parcel} = {};
     _dispatchId: string;
     _id: ParcelId;
     _isChild: boolean;
     _isElement: boolean;
     _isIndexed: boolean;
     _isParent: boolean;
-    _lastOriginId: string;
-    _methods: { [key: string]: * };
+    _frameMeta: {[key: string]: any};
+    _methods: {[key: string]: any};
     _onHandleChange: ?Function;
     _parcelData: ParcelData;
     _parent: ParcelParent;
@@ -148,7 +148,7 @@ export default class Parcel {
             dispatchId = this._id.id(),
             handleChange,
             id = this._id,
-            lastOriginId = this._lastOriginId,
+            frameMeta = this._frameMeta,
             parcelData = this._parcelData,
             parent = this._parent,
             registry = this._registry,
@@ -169,7 +169,7 @@ export default class Parcel {
             {
                 child,
                 dispatchId,
-                lastOriginId,
+                frameMeta,
                 meta,
                 id,
                 parent,
@@ -190,15 +190,12 @@ export default class Parcel {
 
     _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): [Parcel, ChangeRequest] => {
         let result;
-        let {_onHandleChange, _lastOriginId} = this;
+        let {_onHandleChange} = this;
 
         // swap out the parcels real _onHandleChange with a spy
         this._onHandleChange = (parcel, changeRequest) => {
-            // _changeAndReturn should not alter _lastOriginId
-            // as it's never triggered by a user action
-            // so revert to the current parcel's _lastOriginId
             parcel._onHandleChange = _onHandleChange;
-            parcel._lastOriginId = _lastOriginId;
+            parcel._frameMeta = this._frameMeta;
             result = [parcel, changeRequest];
         };
 

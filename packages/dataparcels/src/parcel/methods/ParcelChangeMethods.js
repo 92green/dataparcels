@@ -47,7 +47,7 @@ export default (_this: Parcel) => ({
             let parcelWithChangedData = _this._create({
                 handleChange: _onHandleChange,
                 parcelData,
-                lastOriginId: changeRequest.originId
+                frameMeta: {}
             });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);

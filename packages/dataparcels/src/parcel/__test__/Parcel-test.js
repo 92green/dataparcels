@@ -36,7 +36,6 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
         },
         handleChange
     });
-    parcel._lastOriginId = "foo";
 
     let [newParcel] = parcel._changeAndReturn((parcel) => {
         parcel.get('abc').onChange(789);
@@ -59,9 +58,8 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     newParcel.get('abc').onChange(100);
     expect(handleChange).toHaveBeenCalledTimes(2);
 
-    // _changeAndReturn should not affect parcel._lastOriginId as it is an internal function
-    // that never corresponds to actions triggered by user input
-    expect(newParcel._lastOriginId).toBe("foo");
+    // _frameMeta should be passed through
+    expect(parcel._frameMeta).toBe(newParcel._frameMeta);
 });
 
 test('Parcel._changeAndReturn() should throw error if no changes are made', () => {
@@ -265,5 +263,30 @@ test('Correct methods are created for array element values', () => {
     expect(() => new Parcel(data).get(0).pop()).toThrowError(`.pop() is not a function`);
     expect(() => new Parcel(data).get(0).delete()).not.toThrow();
     expect(() => new Parcel(data).get(0).swapNext()).not.toThrow();
+});
+
+test('Frame meta should be passed down to child parcels', () => {
+    let parcel = new Parcel({
+        value: [[123]]
+    });
+
+    parcel._frameMeta.foo = 123;
+
+    expect(parcel.get(0)._frameMeta.foo).toBe(123);
+    expect(parcel.get(0).get(0)._frameMeta.foo).toBe(123);
+});
+
+test('Frame meta should not persist after change', () => {
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    });
+
+    parcel._frameMeta.foo = "bar";
+    parcel.set(456);
+
+    expect(handleChange.mock.calls[0][0]._frameMeta).toEqual({});
 });
 
