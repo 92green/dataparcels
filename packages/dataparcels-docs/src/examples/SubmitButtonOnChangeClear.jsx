@@ -25,11 +25,11 @@ export default function SignUpForm(props) {
 
     let [personParcel, personParcelControl] = useParcelForm({
         value: initialValue,
-        onChange: async (parcel) => {
+        onSubmit: async (parcel) => {
             await saveMyData(parcel.value);
             return initialValue;
         },
-        onChangeUseResult: true
+        onSubmitUseResult: true
     });
 
     let personParcelState = personParcelControl._outerParcel;
@@ -46,8 +46,8 @@ export default function SignUpForm(props) {
 
         <button onClick={() => personParcelControl.submit()}>Submit</button>
 
-        <p>Request state: <strong>{personParcelControl.onChangeStatus.status}</strong>
-            {personParcelControl.onChangeStatus.isPending && <button onClick={rejectRef.current}>reject</button>}
+        <p>Request state: <strong>{personParcelControl.submitStatus.status}</strong>
+            {personParcelControl.submitStatus.isPending && <button onClick={rejectRef.current}>reject</button>}
         </p>
     </div>);
 }
