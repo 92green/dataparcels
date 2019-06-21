@@ -6,8 +6,8 @@ export default function PersonEditor(props) {
 
     let [personParcel, personParcelControl] = useParcelForm({
         value: props.valueLoadedFromServer,
-        onChange: (parcel) => saveMyData(parcel.value),
-        onChangeUseResult: true
+        onSubmit: (parcel) => saveMyData(parcel.value),
+        onSubmitUseResult: true
     });
 
     let {timeUpdated} = personParcel.value;

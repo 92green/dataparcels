@@ -24,7 +24,7 @@ describe('useParcelForm should pass config to useParcelState', () => {
 
         expect(calledWith.value).toBe(123);
         expect(calledWith.updateValue).toBe(false);
-        expect(calledWith.onChange).toBe(undefined);
+        expect(calledWith.onSubmit).toBe(undefined);
     });
 
     it('should pass updateValue to useParcelState', () => {
@@ -47,28 +47,28 @@ describe('useParcelForm should pass config to useParcelSideEffect', () => {
         }));
 
         expect(getLastCall(useParcelSideEffect)[0].parcel).toBe(getLastResult(useParcelState)[0]);
-        expect(getLastCall(useParcelSideEffect)[0].onChangeUseResult).toBe(false);
+        expect(getLastCall(useParcelSideEffect)[0].onSubmitUseResult).toBe(false);
     });
 
-    it('should pass onChange to useParcelSideEffect', () => {
-        let onChange = () => {};
+    it('should pass onSubmit to useParcelSideEffect', () => {
+        let onSubmit = () => {};
 
         renderHook(() => useParcelForm({
             value: 123,
-            onChange
+            onSubmit
         }));
 
-        expect(getLastCall(useParcelSideEffect)[0].onChange).toBe(onChange);
+        expect(getLastCall(useParcelSideEffect)[0].onSubmit).toBe(onSubmit);
     });
 
-    it('should pass onChangeUseResult to useParcelSideEffect', () => {
+    it('should pass onSubmitUseResult to useParcelSideEffect', () => {
 
         renderHook(() => useParcelForm({
             value: 123,
-            onChangeUseResult: true
+            onSubmitUseResult: true
         }));
 
-        expect(getLastCall(useParcelSideEffect)[0].onChangeUseResult).toBe(true);
+        expect(getLastCall(useParcelSideEffect)[0].onSubmitUseResult).toBe(true);
     });
 
 });
