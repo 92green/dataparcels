@@ -172,6 +172,12 @@ export default (params: Params): Return => {
         };
 
         const newOuterParcel = params.parcel;
+        setOuterParcel(newOuterParcel);
+
+        // clear buffer if it exists
+        if(internalBuffer.bufferState) {
+            internalBuffer.reset();
+        }
 
         // boundary split to ensure that inner parcels chain are
         // completely isolated from outer parcels chain
@@ -183,7 +189,6 @@ export default (params: Params): Return => {
             );
 
         setInnerParcel(newInnerParcel);
-        setOuterParcel(newOuterParcel);
     }
 
     let returnedParcel: Parcel = innerParcel || newInnerParcel;

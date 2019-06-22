@@ -72,13 +72,17 @@ describe('useParcelBuffer should use config.parcel', () => {
         expect(result.current[0]).toBe(firstResult);
     });
 
-    it('should pass new inner parcel if outer parcel is different', () => {
+    it('should pass new inner parcel and clear buffer contents if outer parcel is different', () => {
 
         let parcel = new Parcel({
             value: 123
         });
 
         let {result, rerender} = renderHookWithProps({parcel}, ({parcel}) => useParcelBuffer({parcel}));
+
+        act(() => {
+            result.current[0].set(124);
+        });
 
         act(() => {
             rerender({
@@ -88,7 +92,10 @@ describe('useParcelBuffer should use config.parcel', () => {
             });
         });
 
+        // inner parcel should have outer parcels value
         expect(result.current[0].value).toEqual(456);
+        // buffer should be cleared
+        expect(result.current[1].actions.length).toBe(0);
     });
 
 });
