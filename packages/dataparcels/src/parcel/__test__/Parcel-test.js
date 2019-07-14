@@ -62,7 +62,7 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     expect(parcel._frameMeta).toBe(newParcel._frameMeta);
 });
 
-test('Parcel._changeAndReturn() should throw error if no changes are made', () => {
+test('Parcel._changeAndReturn() should return [parcel, undefined] if no changes are made', () => {
     let handleChange = jest.fn();
 
     let parcel = new Parcel({
@@ -73,7 +73,9 @@ test('Parcel._changeAndReturn() should throw error if no changes are made', () =
         handleChange
     });
 
-    expect(() => parcel._changeAndReturn((parcel) => {})).toThrow("_changeAndReturn unchanged");
+    let result = parcel._changeAndReturn(() => {});
+
+    expect(result).toEqual([parcel, undefined]);
 });
 
 test('Parcel types should correctly identify primitive values', () => {
