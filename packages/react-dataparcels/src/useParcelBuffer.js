@@ -92,8 +92,8 @@ export default (params: Params): Return => {
             return shouldKeepValue ? prepareKeepValue : parcel => parcel;
         }
         return pipeWithFakePrevParcel(outerParcel, applyBeforeChange);
-        // ^ this runs newOuterParcel through beforeChange immediately
-        // shoving lastReceivedOuterParcel in as a fake previous value
+        // ^ this runs a parcel through beforeChange immediately
+        // shoving outerParcel in as a fake previous value
     };
 
     //
@@ -174,8 +174,8 @@ export default (params: Params): Return => {
         const newOuterParcel = params.parcel;
         setOuterParcel(newOuterParcel);
 
-        // clear buffer if it exists
-        if(internalBuffer.bufferState) {
+        // clear buffer if it exists and if we aren't rebasing
+        if(internalBuffer.bufferState && newOuterParcel._frameMeta.mergeMode !== "rebase") {
             internalBuffer.reset();
         }
 
@@ -183,10 +183,14 @@ export default (params: Params): Return => {
         // completely isolated from outer parcels chain
         newInnerParcel = params.parcel
             ._boundarySplit({handleChange})
-            .pipe(
-                prepareInnerParcelFromOuter(),
-                applyModifiers
-            );
+            .pipe(prepareInnerParcelFromOuter())
+            ._changeAndReturn(parcel => {
+                // apply buffered changes to new parcel from props
+                let changeRequest = internalBuffer.bufferState;
+                // TODO: this resetting of the changerequests state should be handled by dispatch...
+                changeRequest && parcel.dispatch(changeRequest);
+            })[0]
+            .pipe(applyModifiers);
 
         setInnerParcel(newInnerParcel);
     }
