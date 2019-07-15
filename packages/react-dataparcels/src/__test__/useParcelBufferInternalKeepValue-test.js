@@ -16,7 +16,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
     it('should return false when keepValue is false and change comes from self', () => {
 
         let parcel = new Parcel({value}).get('abc');
-        parcel._lastOriginId = "^.abc";
+        parcel._frameMeta.lastOriginId = "^.abc";
 
         let {result} = renderHook(() => useParcelBufferInternalKeepValue({
             keepValue: false,
@@ -29,7 +29,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
     it('should return true when keepValue is true and change comes from self', () => {
 
         let parcel = new Parcel({value}).get('abc');
-        parcel._lastOriginId = "^.abc";
+        parcel._frameMeta.lastOriginId = "^.abc";
 
         let {result} = renderHook(() => useParcelBufferInternalKeepValue({
             keepValue: true,
@@ -42,7 +42,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
     it('should return true when keepValue is true and change comes from within self', () => {
 
         let parcel = new Parcel({value}).get('abc');
-        parcel._lastOriginId = "^.abc.a";
+        parcel._frameMeta.lastOriginId = "^.abc.a";
 
         let {result} = renderHook(() => useParcelBufferInternalKeepValue({
             keepValue: true,
@@ -55,7 +55,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
     it('should return false when keepValue is true and change comes from elsewhere', () => {
 
         let parcel = new Parcel({value}).get('abc');
-        parcel._lastOriginId = "^";
+        parcel._frameMeta.lastOriginId = "^";
 
         let {result} = renderHook(() => useParcelBufferInternalKeepValue({
             keepValue: true,
@@ -68,7 +68,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
     it('should return true when a change from elsewhere contains the same value as the last change that came from self', () => {
 
         let parcel = new Parcel({value}).get('abc');
-        parcel._lastOriginId = "^.abc";
+        parcel._frameMeta.lastOriginId = "^.abc";
 
         let {result, rerender} = renderHookWithProps({parcel}, ({parcel}) => useParcelBufferInternalKeepValue({
             keepValue: true,
@@ -79,7 +79,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
 
         act(() => {
             // pretend that a another identical change came from 'def'
-            parcel._lastOriginId = "^.def";
+            parcel._frameMeta.lastOriginId = "^.def";
 
             rerender({
                 parcel
@@ -91,7 +91,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
         act(() => {
             // pretend that a another change came from 'def', but this time with a changed value
             parcel = parcel._changeAndReturn(parcel => parcel.set(124))[0];
-            parcel._lastOriginId = "^.def";
+            parcel._frameMeta.lastOriginId = "^.def";
 
             rerender({
                 parcel
@@ -104,7 +104,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
     it('should clear any memory of received values if keepValue becomes false', () => {
 
         let parcel = new Parcel({value}).get('abc');
-        parcel._lastOriginId = "^.abc";
+        parcel._frameMeta.lastOriginId = "^.abc";
 
         let {result, rerender} = renderHookWithProps(
             {
@@ -129,7 +129,7 @@ describe('useParcelBufferInternalKeepValue should work', () => {
         act(() => {
             // pretend that a change came from 'def' with the same value
             // that was recieved when keepValue was last true
-            parcel._lastOriginId = "^.def";
+            parcel._frameMeta.lastOriginId = "^.def";
 
             rerender({
                 parcel,

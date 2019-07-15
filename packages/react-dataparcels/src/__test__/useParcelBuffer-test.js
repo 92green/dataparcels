@@ -72,13 +72,17 @@ describe('useParcelBuffer should use config.parcel', () => {
         expect(result.current[0]).toBe(firstResult);
     });
 
-    it('should pass new inner parcel if outer parcel is different', () => {
+    it('should pass new inner parcel and clear buffer contents if outer parcel is different', () => {
 
         let parcel = new Parcel({
             value: 123
         });
 
         let {result, rerender} = renderHookWithProps({parcel}, ({parcel}) => useParcelBuffer({parcel}));
+
+        act(() => {
+            result.current[0].set(124);
+        });
 
         act(() => {
             rerender({
@@ -88,7 +92,57 @@ describe('useParcelBuffer should use config.parcel', () => {
             });
         });
 
+        // inner parcel should have outer parcels value
         expect(result.current[0].value).toEqual(456);
+        // buffer should be cleared
+        expect(result.current[1].actions.length).toBe(0);
+    });
+
+    it('should keep inner parcel and buffer contents if outer parcel is different and mergeMode is "rebase"', () => {
+
+        let parcel = new Parcel({
+            value: {
+                abc: 100,
+                def: 100
+            }
+        });
+
+        let {result, rerender} = renderHookWithProps({parcel}, ({parcel}) => useParcelBuffer({parcel}));
+
+        act(() => {
+            result.current[0].set('abc', 400);
+        });
+
+        // confirm that set() has worked
+        expect(result.current[0].value).toEqual({
+            abc: 400,
+            def: 100
+        });
+
+        act(() => {
+            let parcel = new Parcel({
+                value: {
+                    abc: 200,
+                    def: 200
+                }
+            });
+
+            parcel._frameMeta.mergeMode = "rebase";
+
+            rerender({
+                parcel
+            });
+        });
+
+        // actions should be rebased onto new parcel from props
+        // and inner parcel should contain the resulting data
+        expect(result.current[0].value).toEqual({
+            abc: 400,
+            def: 200
+        });
+
+        // buffer should remain
+        expect(result.current[1].actions.length).toBe(1);
     });
 
 });
@@ -272,7 +326,7 @@ describe('useParcelBuffer should use config.debounce', () => {
         });
 
         expect(handleChange.mock.calls[0][0].value).toEqual(["A", "B"]);
-        expect(handleChange.mock.calls[1][0].value).toEqual(["A", "B", "C"]);
+        expect(handleChange.mock.calls[1][0].value).toEqual(["C"]);
     });
 
     it('should flush debounced changes if config.debounce is removed', () => {
@@ -440,6 +494,9 @@ describe('useParcelBuffer should use config.keepValue', () => {
         });
 
         let newParcel = handleChange.mock.calls[0][0];
+        newParcel._frameMeta = {
+            lastOriginId: handleChange.mock.calls[0][1].originId
+        };
 
         expect(newParcel.value).toEqual({
             abc: NaN

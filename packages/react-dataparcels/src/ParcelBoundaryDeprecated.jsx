@@ -125,7 +125,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             let newData = parcel.data;
 
             if(keepValue) {
-                let changedBySelf = parcel._lastOriginId.startsWith(parcel.id);
+                let changedBySelf = parcel._frameMeta.lastOriginId.startsWith(parcel.id);
                 if(changedBySelf) {
                     newState.lastValueFromSelf = parcel.value;
                 }

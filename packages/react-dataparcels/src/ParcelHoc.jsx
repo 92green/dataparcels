@@ -138,6 +138,10 @@ export default (config: ParcelHocConfig): Function => {
         }
 
         handleChange = (parcel: Parcel, changeRequest: ChangeRequest) => {
+            parcel._frameMeta = {
+                lastOriginId: changeRequest.originId
+            };
+
             this.setState({parcel});
             if(process.env.NODE_ENV !== 'production' && debugParcel) {
                 console.log(`ParcelHoc: Parcel changed:`); // eslint-disable-line

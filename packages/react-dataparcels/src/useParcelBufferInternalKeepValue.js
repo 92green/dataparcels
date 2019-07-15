@@ -20,8 +20,8 @@ export default ({keepValue, parcel}: Params): boolean => {
         return false;
     }
 
-
-    let changedBySelf = parcel._lastOriginId.startsWith(parcel.id);
+    let {lastOriginId = ''} = parcel._frameMeta;
+    let changedBySelf = lastOriginId.startsWith(parcel.id);
     if(changedBySelf) {
         keepValueReceivedRef.current = parcel.value;
         return true;
