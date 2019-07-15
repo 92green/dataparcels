@@ -187,7 +187,6 @@ export default (params: Params): Return => {
             ._changeAndReturn(parcel => {
                 // apply buffered changes to new parcel from props
                 let changeRequest = internalBuffer.bufferState;
-                // TODO: this resetting of the changerequests state should be handled by dispatch...
                 changeRequest && parcel.dispatch(changeRequest);
             })[0]
             .pipe(applyModifiers);
