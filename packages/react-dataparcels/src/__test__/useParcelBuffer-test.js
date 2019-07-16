@@ -329,6 +329,48 @@ describe('useParcelBuffer should use config.debounce', () => {
         expect(handleChange.mock.calls[1][0].value).toEqual(["C"]);
     });
 
+    it('should debounce even when buffer = false', () => {
+        let handleChange = jest.fn();
+
+        let parcel = new Parcel({
+            value: [],
+            handleChange
+        });
+
+        let {result} = renderHook(() => useParcelBuffer({
+            parcel,
+            debounce: 20,
+            buffer: false
+        }));
+
+        act(() => {
+            result.current[0].push("A");
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(10);
+        });
+
+        act(() => {
+            result.current[0].push("B");
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(40);
+        });
+
+        act(() => {
+            result.current[0].push("C");
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(40);
+        });
+
+        expect(handleChange.mock.calls[0][0].value).toEqual(["A", "B"]);
+        expect(handleChange.mock.calls[1][0].value).toEqual(["C"]);
+    });
+
     it('should flush debounced changes if config.debounce is removed', () => {
 
         let handleChange = jest.fn();
