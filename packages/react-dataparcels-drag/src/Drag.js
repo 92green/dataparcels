@@ -8,6 +8,20 @@ import React from 'react';
 import {SortableContainer} from 'react-sortable-hoc';
 import {SortableElement} from 'react-sortable-hoc';
 
+const DragElement = SortableElement(({parcel, childRenderer}) => childRenderer(parcel));
+
+const DragContainer = SortableContainer(({parcel, container, childRenderer}) => {
+    let Container = container || 'div';
+    return <Container>
+        {parcel.toArray((elementParcel, index) => <DragElement
+            key={elementParcel.key}
+            index={index}
+            parcel={elementParcel}
+            childRenderer={childRenderer}
+        />)}
+    </Container>;
+});
+
 type Props = {
     children: (parcel: Parcel) => Node,
     parcel: Parcel,
@@ -20,18 +34,10 @@ export default ({children, parcel, onSortEnd, container, ...sortableElementProps
         throw new Error(`react-dataparcels-drag's parcel prop must be of type indexed`);
     }
 
-    let Container = container || 'div';
-    let ConfiguredElement = SortableElement(({parcel}) => children(parcel));
-    let ConfiguredContainer = SortableContainer(({parcel}) => <Container>
-        {parcel.toArray((elementParcel, index) => <ConfiguredElement
-            key={elementParcel.key}
-            index={index}
-            parcel={elementParcel}
-        />)}
-    </Container>);
-
-    return <ConfiguredContainer
+    return <DragContainer
         parcel={parcel}
+        container={container}
+        childRenderer={children}
         onSortEnd={(param) => {
             let {oldIndex, newIndex} = param;
             parcel.move(oldIndex, newIndex);
