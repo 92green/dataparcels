@@ -151,7 +151,7 @@ export default (params: Params): Return => {
                 internalBuffer.push(changeRequest._create({actions}));
             }
 
-            if(buffer) {
+            if(buffer || debounce) {
                 // if buffer is to be used, update inner parcel immediately
                 // and request a debounced submit if debounce is set
                 setInnerParcel(newParcel.pipe(applyModifiers));
