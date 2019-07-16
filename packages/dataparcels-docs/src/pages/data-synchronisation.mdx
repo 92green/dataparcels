@@ -26,7 +26,7 @@ This example makes use of the [useParcelForm](/api/useParcelForm) hook. This is 
 
 ## Clearing a form after submit
 
-You can set the data in the form to something else after it's sent its data by setting [onChangeUseResult](/api/useParcelForm#onChangeUseResult) to true. The form's current state will be replaced by whatever returned from `onChange`.
+You can set the data in the form to something else after it's sent its data by setting [onSubmitUseResult](/api/useParcelForm#onSubmitUseResult) to true. The form's current state will be replaced by whatever returned from `onSubmit`.
 
 <SubmitButtonOnChangeClear />
 <Code language="jsx">{SubmitButtonOnChangeClearSource}</Code>
@@ -46,7 +46,7 @@ If you're using something like [Redux](https://redux.js.org/), you'll likely be 
 
 ### Updating form data via a promise
 
-You may not have centralised state management like Redux in your app. In this case you can get useParcelForm to update based off the return value of the promise returned by the save function. To use this approach, set the [onChangeUseResult](/api/useParcelForm#onChangeUseResult) parameter to true.
+You may not have centralised state management like Redux in your app. In this case you can get useParcelForm to update based off the return value of the promise returned by the save function. To use this approach, set the [onSubmitUseResult](/api/useParcelForm#onSubmitUseResult) parameter to true.
 
 <SubmitButtonOnChangeLoad />
 <Code language="jsx">{SubmitButtonOnChangeLoadSource}</Code>

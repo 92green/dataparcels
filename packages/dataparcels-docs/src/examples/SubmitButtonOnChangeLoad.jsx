@@ -32,8 +32,8 @@ export default function PersonEditor(props) {
 
     let [personParcel, personParcelControl] = useParcelForm({
         value: initialValue,
-        onChange: (parcel) => saveMyData(parcel.value),
-        onChangeUseResult: true
+        onSubmit: (parcel) => saveMyData(parcel.value),
+        onSubmitUseResult: true
     });
 
     let {timeUpdated} = personParcel.value;
@@ -54,8 +54,8 @@ export default function PersonEditor(props) {
 
         <button onClick={() => personParcelControl.submit()}>Submit</button>
 
-        <p>Request state: <strong>{personParcelControl.onChangeStatus.status}</strong>
-            {personParcelControl.onChangeStatus.isPending && <button onClick={rejectRef.current}>reject</button>}
+        <p>Request state: <strong>{personParcelControl.submitStatus.status}</strong>
+            {personParcelControl.submitStatus.isPending && <button onClick={rejectRef.current}>reject</button>}
         </p>
     </div>);
 }

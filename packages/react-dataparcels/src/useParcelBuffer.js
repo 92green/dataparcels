@@ -92,8 +92,8 @@ export default (params: Params): Return => {
             return shouldKeepValue ? prepareKeepValue : parcel => parcel;
         }
         return pipeWithFakePrevParcel(outerParcel, applyBeforeChange);
-        // ^ this runs newOuterParcel through beforeChange immediately
-        // shoving lastReceivedOuterParcel in as a fake previous value
+        // ^ this runs a parcel through beforeChange immediately
+        // shoving outerParcel in as a fake previous value
     };
 
     //
@@ -138,6 +138,12 @@ export default (params: Params): Return => {
         const handleChange = (newParcel: Parcel, changeRequest: ChangeRequest) => {
             const {debounce, buffer = true, keepValue} = params;
 
+            // remember the origin of the last change
+            // useParcelBufferInternalKeepValue needs it
+            newParcel._frameMeta = {
+                lastOriginId: changeRequest.originId
+            };
+
             // remove buffer actions meta from change request
             // and push any remaining change into the buffer
             let actions = changeRequest._actions.filter(removeInternalMeta);
@@ -166,18 +172,26 @@ export default (params: Params): Return => {
         };
 
         const newOuterParcel = params.parcel;
+        setOuterParcel(newOuterParcel);
+
+        // clear buffer if it exists and if we aren't rebasing
+        if(internalBuffer.bufferState && newOuterParcel._frameMeta.mergeMode !== "rebase") {
+            internalBuffer.reset();
+        }
 
         // boundary split to ensure that inner parcels chain are
         // completely isolated from outer parcels chain
         newInnerParcel = params.parcel
             ._boundarySplit({handleChange})
-            .pipe(
-                prepareInnerParcelFromOuter(),
-                applyModifiers
-            );
+            .pipe(prepareInnerParcelFromOuter())
+            ._changeAndReturn(parcel => {
+                // apply buffered changes to new parcel from props
+                let changeRequest = internalBuffer.bufferState;
+                changeRequest && parcel.dispatch(changeRequest);
+            })[0]
+            .pipe(applyModifiers);
 
         setInnerParcel(newInnerParcel);
-        setOuterParcel(newOuterParcel);
     }
 
     let returnedParcel: Parcel = innerParcel || newInnerParcel;

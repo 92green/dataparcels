@@ -11,7 +11,7 @@ export default function SignUpForm(props) {
 
     let [personParcel, personParcelControl] = useParcelForm({
         value: initialValue,
-        onChange: (parcel) => saveMyData(parcel.value)
+        onSubmit: (parcel) => saveMyData(parcel.value)
         // ^ returns a promise
     });
 

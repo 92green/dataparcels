@@ -15,9 +15,8 @@ const nav = () => <NavigationList>
     <NavigationListItem modifier="section">API</NavigationListItem>
     <NavigationListItem><Link to="/api/Parcel">Parcel</Link></NavigationListItem>
     <NavigationListItem><Link to="/api/ParcelBoundary">ParcelBoundary</Link></NavigationListItem>
-    <NavigationListItem><Link to="/api/useParcelState">useParcelState</Link></NavigationListItem>
     <NavigationListItem><Link to="/api/useParcelForm">useParcelForm</Link></NavigationListItem>
-    <NavigationListItem><Link to="/api/useParcelBuffer">useParcelBuffer</Link></NavigationListItem>
+    <NavigationListItem><Link to="/api/useParcelState">useParcelState</Link></NavigationListItem>
     <NavigationListItem><Link to="/api/validation">validation</Link></NavigationListItem>
     <NavigationListItem><Link to="/api/ParcelDrag">ParcelDrag</Link></NavigationListItem>
     <NavigationListItem><Link to="/api">more...</Link></NavigationListItem>

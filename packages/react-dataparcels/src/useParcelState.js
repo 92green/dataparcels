@@ -54,6 +54,13 @@ export default (params: Params): Return => {
     const [parcel, setParcel] = useState(() => updateParcelValue(
         new Parcel({
             handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
+
+                // remember the origin of the last change
+                // useParcelBufferInternalKeepValue needs it
+                parcel._frameMeta = {
+                    lastOriginId: changeRequest.originId
+                };
+
                 setParcel(applyBeforeChange(parcel));
 
                 if(params.onChange) {

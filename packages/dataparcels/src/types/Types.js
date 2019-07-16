@@ -31,7 +31,7 @@ export type ParcelConfigInternal = {
     child: *,
     dispatchId: string,
     id: ParcelId,
-    lastOriginId: string,
+    frameMeta: {[key: string]: any},
     meta: ParcelMeta,
     parent: ParcelParent,
     registry: ParcelRegistry,
@@ -40,7 +40,7 @@ export type ParcelConfigInternal = {
 
 export type ParcelCreateConfigType = {
     dispatchId?: string,
-    lastOriginId?: string,
+    frameMeta?: {[key: string]: any},
     id?: ParcelId,
     handleChange?: Function,
     parcelData?: ParcelData,

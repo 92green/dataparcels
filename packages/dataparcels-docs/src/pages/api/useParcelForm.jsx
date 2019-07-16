@@ -12,8 +12,8 @@ export default () => <Layout>
             '# Params',
             'value',
             'updateValue',
-            'onChange',
-            'onChangeUseResult',
+            'onSubmit',
+            'onSubmitUseResult',
             'buffer',
             'debounce',
             'validation',
@@ -21,7 +21,8 @@ export default () => <Layout>
             '# Returns',
             'parcel',
             'parcelControl',
-            '# ParcelHookControl'
+            '# ParcelHookControl',
+            '# Inside the hook'
         ]}
     />
 </Layout>;

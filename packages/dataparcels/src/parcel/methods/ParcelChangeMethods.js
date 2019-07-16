@@ -29,6 +29,12 @@ export default (_this: Parcel) => ({
             changeRequest._originPath = _this.path;
         }
 
+        // clear changeRequest's cache
+        changeRequest = changeRequest._create({
+            prevData: undefined,
+            nextData: undefined
+        });
+
         if(process.env.NODE_ENV !== 'production' && _this._log) {
             console.log(`Parcel: "${_this._logName}" data up:`); // eslint-disable-line
             console.log(changeRequest.toJS()); // eslint-disable-line
@@ -47,7 +53,7 @@ export default (_this: Parcel) => ({
             let parcelWithChangedData = _this._create({
                 handleChange: _onHandleChange,
                 parcelData,
-                lastOriginId: changeRequest.originId
+                frameMeta: {}
             });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);

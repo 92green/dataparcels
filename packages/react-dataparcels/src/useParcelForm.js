@@ -14,8 +14,8 @@ import useParcelBuffer from './useParcelBuffer';
 type Params = {
     value: any,
     updateValue?: boolean,
-    onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
-    onChangeUseResult?: boolean,
+    onSubmit?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
+    onSubmitUseResult?: boolean,
     buffer?: boolean,
     debounce?: number,
     validation?: ParcelValueUpdater|() => ParcelValueUpdater,
@@ -29,8 +29,8 @@ export default (params: Params): Return => {
     let {
         value,
         updateValue = false,
-        onChange,
-        onChangeUseResult = false,
+        onSubmit,
+        onSubmitUseResult = false,
         buffer = true,
         debounce = 0,
         validation,
@@ -54,8 +54,8 @@ export default (params: Params): Return => {
 
     let [sideEffectParcel, sideEffectControl] = useParcelSideEffect({
         parcel: outerParcel,
-        onChange,
-        onChangeUseResult
+        onSubmit,
+        onSubmitUseResult
     });
 
     let [innerParcel, innerParcelControl] = useParcelBuffer({
