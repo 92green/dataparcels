@@ -14,6 +14,7 @@ import useParcelBuffer from './useParcelBuffer';
 type Params = {
     value: any,
     updateValue?: boolean,
+    rebase?: boolean,
     onSubmit?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
     onSubmitUseResult?: boolean,
     buffer?: boolean,
@@ -29,6 +30,7 @@ export default (params: Params): Return => {
     let {
         value,
         updateValue = false,
+        rebase = false,
         onSubmit,
         onSubmitUseResult = false,
         buffer = true,
@@ -49,7 +51,8 @@ export default (params: Params): Return => {
 
     let [outerParcel] = useParcelState({
         value,
-        updateValue
+        updateValue,
+        rebase
     });
 
     let [sideEffectParcel, sideEffectControl] = useParcelSideEffect({

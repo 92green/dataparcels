@@ -12,6 +12,7 @@ import ApplyBeforeChange from './util/ApplyBeforeChange';
 type Params = {
     value: any,
     updateValue?: boolean,
+    rebase?: boolean,
     onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => void,
     debounce?: number,
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
@@ -78,6 +79,10 @@ export default (params: Params): Return => {
             setPrevValue(value);
             setParcel(updateParcelValue(parcel));
         }
+    }
+
+    if(params.rebase) {
+        parcel._frameMeta.rebase = true;
     }
 
     return [parcel];

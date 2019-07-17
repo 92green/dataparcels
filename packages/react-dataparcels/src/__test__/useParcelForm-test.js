@@ -36,6 +36,15 @@ describe('useParcelForm should pass config to useParcelState', () => {
         expect(getLastCall(useParcelState)[0].updateValue).toBe(true);
     });
 
+    it('should pass rebase to useParcelState', () => {
+        renderHook(() => useParcelForm({
+            value: 123,
+            rebase: true
+        }));
+
+        expect(getLastCall(useParcelState)[0].rebase).toBe(true);
+    });
+
 });
 
 
