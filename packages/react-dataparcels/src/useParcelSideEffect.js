@@ -100,6 +100,16 @@ export default (params: Params): Return => {
             changeRequestWithResult._originId = changeRequest._originId;
             changeRequestWithResult._originPath = changeRequest._originPath;
             changeRequest = changeRequestWithResult;
+        } else {
+            // when onSubmitUseResult is false, its necessary to rebase
+            // so changes made after submit but before
+            // processChangeSuccess() are not overwritten when the top
+            // parcel finally updates
+            changeRequest = changeRequest._create({
+                nextFrameMeta: {
+                    rebase: true
+                }
+            });
         }
 
         statusRef.current = 'resolved';
