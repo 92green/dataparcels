@@ -42,6 +42,34 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
     expect([...actionsA, ...actionsB]).toEqual(merged.actions);
 });
 
+test('ChangeRequest merge() should merge other change requests nextFrameMetas', () => {
+    let actionsA = [
+        new Action({type: "???", keyPath: ['a']}),
+        new Action({type: "!!!", keyPath: ['a']})
+    ];
+
+    let actionsB = [
+        new Action({type: "aaa", keyPath: ['b']}),
+        new Action({type: "bbb", keyPath: ['b']})
+    ];
+
+    let a = new ChangeRequest(actionsA)._create({
+        nextFrameMeta: {foo: 100, bar: 200}
+    });
+
+    let b = new ChangeRequest(actionsB)._create({
+        nextFrameMeta: {bar: 300, baz: 400}
+    });
+
+    let merged = a.merge(b);
+
+    expect(merged._nextFrameMeta).toEqual({
+        foo: 100,
+        bar: 300,
+        baz: 400
+    });
+});
+
 test('ChangeRequest merge() should dedupe subsequent "set" actions with same keyPath', () => {
     let existingChangeRequest = new ChangeRequest([
         new Action({type: "set", keyPath: ['a'], payload: {value: 1}})

@@ -53,7 +53,7 @@ export default (_this: Parcel) => ({
             let parcelWithChangedData = _this._create({
                 handleChange: _onHandleChange,
                 parcelData,
-                frameMeta: {}
+                frameMeta: changeRequest._nextFrameMeta
             });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
