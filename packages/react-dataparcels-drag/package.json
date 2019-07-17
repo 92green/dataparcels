@@ -1,6 +1,6 @@
 {
   "name": "react-dataparcels-drag",
-  "version": "0.25.0-alpha.0",
+  "version": "0.25.0-alpha.1",
   "description": "A plugin for react-dataparcels that adds drag and drop re-ordering of elements.",
   "main": "lib/index.js",
   "license": "MIT",
@@ -37,7 +37,7 @@
     "@babel/core": "^7.1.2",
     "babel-preset-blueflag": "^1.0.0",
     "blueflag-test": "^0.22.0",
-    "dataparcels": "^0.25.0-alpha.0",
+    "dataparcels": "^0.25.0-alpha.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "size-limit": "^0.21.1"
