@@ -98,7 +98,7 @@ describe('useParcelBuffer should use config.parcel', () => {
         expect(result.current[1].actions.length).toBe(0);
     });
 
-    it('should keep inner parcel and buffer contents if outer parcel is different and mergeMode is "rebase"', () => {
+    it('should keep inner parcel and buffer contents if outer parcel is different and frameMeta has rebase = true', () => {
 
         let parcel = new Parcel({
             value: {
@@ -127,7 +127,7 @@ describe('useParcelBuffer should use config.parcel', () => {
                 }
             });
 
-            parcel._frameMeta.mergeMode = "rebase";
+            parcel._frameMeta.rebase = true;
 
             rerender({
                 parcel

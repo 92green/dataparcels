@@ -175,7 +175,7 @@ export default (params: Params): Return => {
         setOuterParcel(newOuterParcel);
 
         // clear buffer if it exists and if we aren't rebasing
-        if(internalBuffer.bufferState && newOuterParcel._frameMeta.mergeMode !== "rebase") {
+        if(internalBuffer.bufferState && !newOuterParcel._frameMeta.rebase) {
             internalBuffer.reset();
         }
 
