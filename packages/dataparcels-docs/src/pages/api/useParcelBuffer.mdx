@@ -49,6 +49,16 @@ parcel: Parcel
 
 The useParcelBuffer hook must be passed a `parcel`, the Parcel which the buffer will apply to.
 
+#### Behaviour notes
+
+Whenever a useParcelBuffer hook receives a new Parcel via props, its default behaviour is to:
+- update to contain the new Parcel’s data
+- forget about all its buffered changes
+
+This is safe default behaviour because changes in the buffer may not be compatible with the new Parcel's data shape. However it may be user unfriendly in some cases, depending on when and how often the parcel updates.
+
+If you would like to keep the changes in the buffer, and you know that buffered changes will always be compatible with any new Parcel's data shape, consider using [useParcelForm.rebase](/api/useParcelForm#rebase) or [useParcelState.rebase](/api/useParcelState#rebase).
+
 ### buffer
 
 ```flow

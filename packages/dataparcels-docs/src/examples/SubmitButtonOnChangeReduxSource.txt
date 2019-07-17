@@ -7,7 +7,8 @@ export default function PersonEditor(props) {
     let [personParcel, personParcelControl] = useParcelForm({
         value: props.personData,
         updateValue: true,
-        onSubmit: (parcel) => props.dispatchMySaveAction(parcel.value)
+        onSubmit: (parcel) => props.dispatchMySaveAction(parcel.value),
+        rebase: true
     });
 
     // ^ dispatchMySaveAction should return a promise if it is

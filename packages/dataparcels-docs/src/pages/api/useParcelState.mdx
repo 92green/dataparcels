@@ -23,6 +23,7 @@ let [parcel] = useParcelState({
     value: any,
     // optional
     updateValue?: boolean,
+    rebase?: boolean,
     onChange?: Function,
     debounce?: number,
     beforeChange?: Function|Function[]
@@ -74,6 +75,8 @@ updateValue?: boolean = false // optional
 
 When `updateValue` is set to true during an update, the useParcelState hook will check to see if `value` has changed, and will update its Parcel's value if so. This will completely replace any changes that may have happened to the Parcel since the last time `value` was put into the Parcel.
 
+Note that it will also cause any downstream [useParcelBuffer](/api/useParcelBuffer#parcel) hooks and [ParcelBoundaries](/api/ParcelBoundary#parcel) to forget all their buffered changes, unless [rebase](#rebase) is used.
+
 Value changes are detected using `Object.is()`, comparing the new `value` with the previous one.
 
 ```js
@@ -94,6 +97,22 @@ parcel.set(200);
 // if component updates and receivedValue is now 300
 // then parcel.value is now 300
 ```
+
+### rebase
+
+```flow
+rebase?: boolean = false // optional
+```
+
+As described above, updates caused by `updateValue` will cause any downstream [useParcelBuffer](/api/useParcelBuffer#parcel) hooks and [ParcelBoundaries](/api/ParcelBoundary#parcel) to forget all their buffered changes. This is safe default behaviour because changes in the downstream buffers may not be compatible with the new Parcel's data shape. However it may be user unfriendly in some cases, depending on when and how often the parcel updates.
+
+Setting `rebase` to true will prevent downstream buffers from being cleared.
+
+#### Please note
+
+Only use this if the shape of your data does not change, so that downstream buffered changes are compatible with the new Parcel's data shape.
+
+This restriction will be lifted in future with the introduction of a feature known as *rekey*.
 
 ### onChange
 
