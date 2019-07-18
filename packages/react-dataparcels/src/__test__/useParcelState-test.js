@@ -251,3 +251,23 @@ describe('useParcelState should use config.debounce', () => {
         expect(onChange.mock.calls[1][0].value).toEqual(["A", "B", "C"]);
     });
 });
+
+describe('useParcelState should use config.rebase', () => {
+
+    it('should set frame meta of rebase = true', () => {
+        let {result} = renderHook(() => useParcelState({
+            value: 123,
+            rebase: true
+        }));
+
+        expect(result.current[0]._frameMeta.rebase).toBe(true);
+    });
+
+    it('should not normally set frame meta of rebase = true', () => {
+        let {result} = renderHook(() => useParcelState({
+            value: 123
+        }));
+
+        expect(!result.current[0]._frameMeta.rebase).toBe(true);
+    });
+});

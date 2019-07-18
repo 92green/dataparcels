@@ -1,5 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
+import ChangeRequest from '../../change/ChangeRequest';
+import Action from '../../change/Action';
 import {Map, List} from 'immutable';
 
 test('Parcels should be able to accept no config', () => {
@@ -17,14 +19,19 @@ test('Parcels should be able to accept just value in config', () => {
 });
 
 test('Parcels should be able to accept just handleChange in config', () => {
+    let handleChange = jest.fn();
+
     let parcel = new Parcel({
-        handleChange: (parcel) => {
-            expect(456).toBe(parcel.value);
-        }
+        handleChange
     });
-    expect(undefined).toEqual(parcel.value);
+
+    expect(parcel.value).toBe(undefined);
     parcel.onChange(456);
+
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].value).toBe(456);
 });
+
 
 test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     let handleChange = jest.fn();
@@ -292,3 +299,26 @@ test('Frame meta should not persist after change', () => {
     expect(handleChange.mock.calls[0][0]._frameMeta).toEqual({});
 });
 
+test('Frame meta should use last change requests nextFrameMeta', () => {
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    });
+
+    let actions = [
+        new Action({type: "set", keyPath: [], payload: {value: 456}})
+    ];
+
+    let changeRequest = new ChangeRequest(actions)
+        ._create({
+            nextFrameMeta: {
+                foo: 123
+            }
+        });
+
+    parcel.dispatch(changeRequest);
+
+    expect(handleChange.mock.calls[0][0]._frameMeta).toEqual({foo: 123});
+});

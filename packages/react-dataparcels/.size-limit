@@ -56,7 +56,7 @@
         path: "useParcelForm.js"
     },
     {
-        limit: "14 KB",
+        limit: "15 KB",
         path: "useParcelSideEffect.js"
     },
     {

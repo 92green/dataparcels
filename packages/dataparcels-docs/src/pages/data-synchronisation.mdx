@@ -41,12 +41,16 @@ Both these examples show forms that make fake requests to a fake server. The fak
 
 If you're using something like [Redux](https://redux.js.org/), you'll likely be receiving your data via props. That data from Redux should already update as a result of save operations. Use the [updateValue](/api/useParcelForm#updateValue) parameter on useParcelForm to allow the form hook to update based on changes to your source data. Also make sure that the function that does the saving returns a promise, so useParcelForm can know if the request succeeded or not.
 
+The [rebase](/api/useParcelForm#rebase) option is also used here. It allows changes from the source data to slide in underneath any unsaved changes that the user might make after they pressed submit.
+
 <SubmitButtonOnChangeLoad />
 <Code language="jsx">{SubmitButtonOnChangeReduxSource}</Code>
 
 ### Updating form data via a promise
 
 You may not have centralised state management like Redux in your app. In this case you can get useParcelForm to update based off the return value of the promise returned by the save function. To use this approach, set the [onSubmitUseResult](/api/useParcelForm#onSubmitUseResult) parameter to true.
+
+The [rebase](/api/useParcelForm#rebase) option is also used here. It allows the return value of the promise to slide in underneath any unsaved changes that the user might make after they pressed submit.
 
 <SubmitButtonOnChangeLoad />
 <Code language="jsx">{SubmitButtonOnChangeLoadSource}</Code>

@@ -26,6 +26,7 @@ export default class ChangeRequest {
     _originId: ?string = null;
     _originPath: ?string[] = null;
     _revertCallback: ?Function;
+    _nextFrameMeta: {[key: string]: any} = {};
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
@@ -40,6 +41,7 @@ export default class ChangeRequest {
             originId: this._originId,
             originPath: this._originPath,
             revertCallback: this._revertCallback,
+            nextFrameMeta: this._nextFrameMeta,
             ...changeRequestData
         };
 
@@ -50,6 +52,7 @@ export default class ChangeRequest {
         changeRequest._originId = changeRequestData.originId;
         changeRequest._originPath = changeRequestData.originPath;
         changeRequest._revertCallback = changeRequestData.revertCallback;
+        changeRequest._nextFrameMeta = changeRequestData.nextFrameMeta;
         return changeRequest;
     };
 
@@ -123,8 +126,14 @@ export default class ChangeRequest {
             );
         }, this._actions);
 
+        let nextFrameMeta = {
+            ...this._nextFrameMeta,
+            ...other._nextFrameMeta
+        };
+
         return this._create({
             actions,
+            nextFrameMeta,
             nextData: undefined,
             prevData: undefined
         });

@@ -12,6 +12,7 @@ export default () => <Layout>
             '# Params',
             'value',
             'updateValue',
+            'rebase',
             'onChange',
             'debounce',
             'beforeChange',
