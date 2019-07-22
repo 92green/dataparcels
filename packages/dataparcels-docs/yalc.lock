@@ -1,19 +1,4 @@
 {
   "version": "v1",
-  "packages": {
-    "react-dataparcels": {
-<<<<<<< HEAD
-      "signature": "1162a63c6efe382d452ce87c33524b57",
-=======
-      "signature": "c623e1b4692e4a2e781c259253d186d2",
->>>>>>> 81f28688496ba06ea63a17e8da77006a58ac4a2d
-      "file": true,
-      "replaced": "^0.21.0"
-    },
-    "react-dataparcels-drag": {
-      "signature": "ce6ab1a7ba7c29d55c80a3df917c767b",
-      "file": true,
-      "replaced": "^0.21.0"
-    }
-  }
+  "packages": {}
 }
