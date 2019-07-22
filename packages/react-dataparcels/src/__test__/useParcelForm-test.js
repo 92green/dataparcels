@@ -103,14 +103,27 @@ describe('useParcelForm should pass config to useParcelBuffer', () => {
         expect(getLastCall(useParcelBuffer)[0].debounce).toBe(100);
     });
 
-    it('should pass beforeChange to useParcelBuffer', () => {
-        let beforeChange = [];
+    it('should pass beforeChange item to useParcelBuffer', () => {
+        let beforeChange = () => {};
         renderHook(() => useParcelForm({
             value: 123,
             beforeChange
         }));
 
-        expect(getLastCall(useParcelBuffer)[0].beforeChange).toEqual(beforeChange);
+        expect(getLastCall(useParcelBuffer)[0].beforeChange[0]).toBe(beforeChange);
+    });
+
+    it('should pass beforeChange array to useParcelBuffer', () => {
+        let fn1 = () => {};
+        let fn2 = () => {};
+        let beforeChange = [fn1, fn2];
+        renderHook(() => useParcelForm({
+            value: 123,
+            beforeChange
+        }));
+
+        expect(getLastCall(useParcelBuffer)[0].beforeChange[0]).toBe(fn1);
+        expect(getLastCall(useParcelBuffer)[0].beforeChange[1]).toBe(fn2);
     });
 
     it('should pass result of useParcelBuffer out of useParcelForm', () => {
