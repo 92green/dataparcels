@@ -36,7 +36,7 @@ export default (params: Params): Return => {
         buffer = true,
         debounce = 0,
         validation,
-        beforeChange = []
+        beforeChange
     } = params;
 
     const [validationFn] = useState(() => (validation && validation.length === 0)
@@ -46,7 +46,7 @@ export default (params: Params): Return => {
 
     beforeChange = [
         validationFn || validation,
-        ...beforeChange
+        ...([].concat(beforeChange))
     ].filter(Boolean);
 
     let [outerParcel] = useParcelState({
