@@ -648,8 +648,8 @@ update(key: string|number, updater: ParcelValueUpdater): void // only on ParentP
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-update(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
-update(key: string|number, shape(updater: ParcelValueUpdater)): void // only on ParentParcels, will update a child
+update(updateShape(shapeUpdater: ParcelShapeUpdater)): Parcel
+update(key: string|number, updateShape(updater: ParcelValueUpdater)): void // only on ParentParcels, will update a child
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -686,7 +686,7 @@ updateIn(keyPath: Array<string|number>, updater: ParcelValueUpdater): void // on
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-updateIn(keyPath: Array<string|number>, shape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
+updateIn(keyPath: Array<string|number>, updateShape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -714,7 +714,7 @@ map(updater: ParcelValueUpdater): void // only on ParentParcels
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-map(shape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
+map(updateShape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -1044,7 +1044,7 @@ modifyDown(updater: ParcelValueUpdater): Parcel
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-modifyDown(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
+modifyDown(updateShape(shapeUpdater: ParcelShapeUpdater)): Parcel
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -1072,7 +1072,7 @@ modifyUp(updater: ParcelValueUpdater): Parcel
 type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 
 // updates shape, including meta
-modifyUp(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
+modifyUp(updateShape(shapeUpdater: ParcelShapeUpdater)): Parcel
 type ParcelShapeUpdater = (parcelShape: ParcelShape, changeRequest: ChangeRequest) => any;
 ```
 

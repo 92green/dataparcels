@@ -1,0 +1,40 @@
+import Link from 'component/Link';
+import {Param} from 'dcme-style';
+import ApiPageIcon from 'component/ApiPageIcon';
+import IconParcel from 'assets/parcelshape.gif';
+
+# updateShape
+
+```js
+import updateShape from 'dataparcels/updateShape';
+import updateShape from 'react-dataparcels/updateShape';
+```
+
+```flow
+updateShape((parcelShape: ParcelShape, changeRequest:?ChangeRequest) => ParcelShape|any) => Function;
+```
+
+The updateShape function is used to allow the shapes of data to be safely altered inside of an updater, such as those passed to [Parcel.update](/api/Parcel#update) or [Parcel.modifyUp](/api/Parcel#modifyUp). They also provide the ability to set [parcel meta](/parcel-meta).
+
+It must be passed a function, whose first pargument will be a [ParcelShape](/api/ParcelShape). It will sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `updateShape()` function is being passed into.
+
+Your updater function should either return another ParcelShape, or if you return anything else, this value will be used instead.
+
+ See [ParcelShape](/api/ParcelShape) for more details.
+
+```js
+import updateShape from 'dataparcels/updateShape';
+
+let parcel = new Parcel({
+    value: [1,2,3]
+});
+
+let modifiedParcel = parcel.modifyDown(updateShape(
+    parcelShape => parcelShape
+        .unshift(0)
+        .push(4)
+    )
+);
+
+// modifiedParcel.value will be [0,1,2,3,4]
+```

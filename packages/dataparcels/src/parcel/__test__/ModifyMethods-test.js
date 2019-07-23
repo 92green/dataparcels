@@ -5,7 +5,7 @@ import ChangeRequest from '../../change/ChangeRequest';
 import Parcel from '../Parcel';
 import ParcelShape from '../../parcelShape/ParcelShape';
 import CancelActionMarker from '../../change/CancelActionMarker';
-import shape from '../../parcelShape/shape';
+import updateShape from '../../parcelShape/updateShape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.modifyDown() should return a new parcel with updated parcelData', () => {
@@ -99,9 +99,9 @@ test('Parcel.modifyDown() should have id which is unique to updater', () => {
     let sameA2 = new Parcel().modifyDown(updater);
     let differentA = new Parcel().modifyDown(a => 1 + 2);
 
-    let sameB1 = new Parcel().modifyDown(shape(updater));
-    let sameB2 = new Parcel().modifyDown(shape(updater));
-    let differentB = new Parcel().modifyDown(shape(a => 1 + 2));
+    let sameB1 = new Parcel().modifyDown(updateShape(updater));
+    let sameB2 = new Parcel().modifyDown(updateShape(updater));
+    let differentB = new Parcel().modifyDown(updateShape(a => 1 + 2));
 
     expect(sameA1.id).toBe(sameA2.id);
     expect(sameA1.id).not.toBe(differentA.id);
@@ -115,9 +115,9 @@ test('Parcel.modifyUp() should have id which is unique to updater', () => {
     let sameA2 = new Parcel().modifyUp(updater);
     let differentA = new Parcel().modifyUp(a => 1 + 2);
 
-    let sameB1 = new Parcel().modifyUp(shape(updater));
-    let sameB2 = new Parcel().modifyUp(shape(updater));
-    let differentB = new Parcel().modifyUp(shape(a => 1 + 2));
+    let sameB1 = new Parcel().modifyUp(updateShape(updater));
+    let sameB2 = new Parcel().modifyUp(updateShape(updater));
+    let differentB = new Parcel().modifyUp(updateShape(a => 1 + 2));
 
     expect(sameA1.id).toBe(sameA2.id);
     expect(sameA1.id).not.toBe(differentA.id);
@@ -173,7 +173,7 @@ test('Parcel.modifyUp() should allow changes to meta through', () => {
 
     new Parcel(data)
         .modifyUp(value => value + 1)
-        .update(shape(parcelShape => parcelShape
+        .update(updateShape(parcelShape => parcelShape
             .set(456)
             .setMeta({
                 abc: 123
@@ -207,7 +207,7 @@ test('Parcel.modifyDown(parcelShapeUpdater) should be called with parcelShape an
         value: [1,2,3]
     });
 
-    let modifiedParcel = parcel.modifyDown(shape(updater));
+    let modifiedParcel = parcel.modifyDown(updateShape(updater));
     modifiedParcel.push(4);
 
     expect(modifiedParcel.value).toEqual([1,2,3]);
@@ -228,7 +228,7 @@ test('Parcel.modifyDown(parcelShapeUpdater) should modify value', () => {
         value: [1,2,3]
     });
 
-     let modifiedParcel = parcel.modifyDown(shape(updater));
+     let modifiedParcel = parcel.modifyDown(updateShape(updater));
     modifiedParcel.push(5);
 
     expect(modifiedParcel.value).toEqual([1,2,3,4]);
@@ -246,7 +246,7 @@ test('Parcel.modifyDown(parcelShapeUpdater) should work with a returned primitiv
         value: [1,2,3]
     });
 
-    let modifiedParcel = parcel.modifyDown(shape(updater));
+    let modifiedParcel = parcel.modifyDown(updateShape(updater));
     modifiedParcel.set(456)
 
     expect(modifiedParcel.value).toEqual("!!!");
@@ -263,7 +263,7 @@ test('Parcel.modifyDown(parcelShapeUpdater) should work with a returned undefine
         value: [1,2,3]
     });
 
-    let modifiedParcel = parcel.modifyDown(shape(updater));
+    let modifiedParcel = parcel.modifyDown(updateShape(updater));
     modifiedParcel.set(456)
 
     let expectedValue = undefined;
@@ -282,7 +282,7 @@ test('Parcel.modifyDown(parcelShapeUpdater) should work with a returned collecti
         value: [1,2,3]
     });
 
-    let modifiedParcel = parcel.modifyDown(shape(updater));
+    let modifiedParcel = parcel.modifyDown(updateShape(updater));
     modifiedParcel.push(4);
 
     let expectedValue = [3,2,1];
@@ -301,7 +301,7 @@ test('Parcel.modifyUp(parcelShapeUpdater) should be called with parcelShape and 
         value: 123
     });
 
-    let parcelWithModifier = parcel.modifyUp(shape(updater));
+    let parcelWithModifier = parcel.modifyUp(updateShape(updater));
     let {value} = parcelWithModifier.data;
 
     expect(value).toEqual(123);
@@ -330,7 +330,7 @@ test('Parcel.modifyUp(parcelShapeUpdater) should modify value', () => {
         value: [1,2,3]
     });
 
-    let parcelWithModifier = parcel.modifyUp(shape(updater));
+    let parcelWithModifier = parcel.modifyUp(updateShape(updater));
     parcelWithModifier.push(4);
 
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4,5]);
@@ -346,7 +346,7 @@ test('Parcel.modifyUp(parcelShapeUpdater) should work with a returned primitive'
         value: [1,2,3]
     });
 
-    let parcelWithModifier = parcel.modifyUp(shape(updater));
+    let parcelWithModifier = parcel.modifyUp(updateShape(updater));
     parcelWithModifier.push(4);
 
     expect(handleChange.mock.calls[0][0].data.value).toEqual(123);
@@ -362,7 +362,7 @@ test('Parcel.modifyUp(parcelShapeUpdater) should work with a returned collection
         value: [1,2,3]
     });
 
-    let parcelWithModifier = parcel.modifyUp(shape(updater));
+    let parcelWithModifier = parcel.modifyUp(updateShape(updater));
     parcelWithModifier.push(4);
 
     expect(handleChange.mock.calls[0][0].data.value).toEqual([4,3,2,1]);
@@ -378,7 +378,7 @@ test('Parcel.modifyUp(parcelShapeUpdater) should cancel a change if CancelAction
         value: [1,2,3]
     });
 
-    let parcelWithModifier = parcel.modifyUp(shape(updater));
+    let parcelWithModifier = parcel.modifyUp(updateShape(updater));
     parcelWithModifier.push(4);
 
     expect(handleChange).not.toHaveBeenCalled();
@@ -471,8 +471,8 @@ test('Sanity check: A big strange test of a big strange chain of deep updatery s
         handleChange,
         value: [1,2,3]
     })
-        .modifyDown(shape(parcelShape => parcelShape.children().reverse())) // 1. reverse the elements in the parcel (value: [3,2,1])
-        .modifyUp(shape(parcelShape => parcelShape.children().reverse())) // 6. reverse the elements in the parcel (value: [3333,2,1])
+        .modifyDown(updateShape(parcelShape => parcelShape.children().reverse())) // 1. reverse the elements in the parcel (value: [3,2,1])
+        .modifyUp(updateShape(parcelShape => parcelShape.children().reverse())) // 6. reverse the elements in the parcel (value: [3333,2,1])
         .get(0) // 2. get the first element (value: 3)
         .modifyDown(value => value + "") // 3. cast number to string value: "3")
         .modifyUp(value => parseInt(value, 10)) // 5. cast string to number (value will be: 3333)

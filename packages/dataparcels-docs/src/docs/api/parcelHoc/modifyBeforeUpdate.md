@@ -9,7 +9,7 @@ modifyBeforeUpdate?: Array<Updater>
 type Updater = (value: any, changeRequest: ChangeRequest) => any;
 
 // updating shape, including meta
-type Updater = shape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+type Updater = updateShape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
 ```
 
 The `modifyBeforeUpdate` config option allows derived data to be set on a Parcel.

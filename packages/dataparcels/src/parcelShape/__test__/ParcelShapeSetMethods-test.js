@@ -1,6 +1,6 @@
 // @flow
 import ParcelShape from '../ParcelShape';
-import shape from '../shape';
+import updateShape from '../updateShape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('ParcelShapes set() should work', () => {
@@ -87,7 +87,7 @@ test('ParcelShapes update() should validate value updater', () => {
     );
 });
 
-test('ParcelShapes update(shape()) should work', () => {
+test('ParcelShapes update(updateShape()) should work', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
             abc: 123
@@ -99,7 +99,7 @@ test('ParcelShapes update(shape()) should work', () => {
         def: 456
     };
 
-    expect(parcelShape.update(shape(parcelShape => parcelShape.set('def', 456))).value).toEqual(expectedValue);
+    expect(parcelShape.update(updateShape(parcelShape => parcelShape.set('def', 456))).value).toEqual(expectedValue);
 });
 
 

@@ -17,7 +17,7 @@
     "dangerouslyUpdateParcelData.js",
     "DeletedParcelMarker.js",
     "ParcelShape.js",
-    "shape.js",
+    "updateShape.js",
     "validation.js"
   ],
   "bugs": {

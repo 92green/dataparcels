@@ -1,10 +1,10 @@
 import React from 'react';
 import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import shape from 'react-dataparcels/shape';
+import updateShape from 'react-dataparcels/updateShape';
 import exampleFrame from 'component/exampleFrame';
 
-const setWordLengthMeta = shape(parcelShape => parcelShape.setMeta({
+const setWordLengthMeta = updateShape(parcelShape => parcelShape.setMeta({
     wordLength: parcelShape.value.word.length
 }));
 

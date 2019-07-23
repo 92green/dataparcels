@@ -56,12 +56,12 @@ Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta).
 
 ## Shape updaters
 
-Use the [shape](/api/shape) function to allow the shape of data to be safely altered. It will provide you with your Parcel's data wrapped in a [ParcelShape](/api/ParcelShape) which you can then manipulate and return the result.
+Use the [updateShape](/api/updateShape) function to allow the shape of data to be safely altered. It will provide you with your Parcel's data wrapped in a [ParcelShape](/api/ParcelShape) which you can then manipulate and return the result.
 
 Shape updaters look something like this:
 
 ```js
-.modifyUp(shape(parcelShape => {
+.modifyUp(updateShape(parcelShape => {
      return parcelShape.setMeta({
         foo: "bar"
      })
@@ -69,8 +69,8 @@ Shape updaters look something like this:
 ```
 
 ```js
-import shape from 'dataparcels/shape';
-import shape from 'react-dataparcels/shape';
+import updateShape from 'dataparcels/updateShape';
+import updateShape from 'react-dataparcels/updateShape';
 ```
 
 ```js
@@ -78,7 +78,7 @@ let parcel = new Parcel({
     value: [1,2,3]
 });
 
-let modifiedParcel = parcel.modifyDown(shape(
+let modifiedParcel = parcel.modifyDown(updateShape(
     parcelShape => parcelShape
         .unshift(0)
         .push(4)
