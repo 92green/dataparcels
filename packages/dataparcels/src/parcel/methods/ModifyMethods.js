@@ -10,7 +10,6 @@ import {checkCancellation} from '../../change/CancelActionMarker';
 import Types from '../../types/Types';
 import prepUpdater from '../../parcelData/prepUpdater';
 import setMetaDefault from '../../parcelData/setMetaDefault';
-import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 
 import HashString from '../../util/HashString';
 
@@ -23,7 +22,7 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 export default (_this: Parcel): Object => ({
 
     _pushModifierId: (prefix: string, updater: Function): string => {
-        let id = shouldDangerouslyUpdateParcelData(updater)
+        let id = updater._updateRaw
             ? `s${HashFunction(updater._updater || updater)}`
             : HashFunction(updater);
 

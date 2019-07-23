@@ -16,16 +16,16 @@
         path: "ChangeRequest.js"
     },
     {
-        limit: "102 B",
-        path: "dangerouslyUpdateParcelData.js"
-    },
-    {
         limit: "1 KB",
         path: "DeletedParcelMarker.js"
     },
     {
         limit: "15 KB",
         path: "ParcelShape.js"
+    },
+    {
+        limit: "102 B",
+        path: "updateRaw.js"
     },
     {
         limit: "15 KB",

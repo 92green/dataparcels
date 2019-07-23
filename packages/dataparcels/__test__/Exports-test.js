@@ -4,7 +4,7 @@
 import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import dangerouslyUpdateParcelData from '../dangerouslyUpdateParcelData';
+import updateRaw from '../updateRaw';
 import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
 import updateShape from '../updateShape';
@@ -17,7 +17,7 @@ import InternalParcel from '../src/parcel/Parcel';
 // internal lib files
 import InternalAction from '../lib/change/Action';
 import InternalChangeRequest from '../lib/change/ChangeRequest';
-import InternalDangerouslyUpdateParcelData from '../lib/parcelData/dangerouslyUpdateParcelData';
+import InternalUpdateRaw from '../lib/parcelData/updateRaw';
 import InternalDeletedParcelMarker from '../lib/parcelData/DeletedParcelMarker';
 import InternalParcelShape from '../lib/parcelShape/ParcelShape';
 import InternalShape from '../lib/parcelShape/updateShape';
@@ -36,8 +36,8 @@ test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
 });
 
-test('/dangerouslyUpdateParcelData should export dangerouslyUpdateParcelData', () => {
-    expect(dangerouslyUpdateParcelData).toBe(InternalDangerouslyUpdateParcelData);
+test('/updateRaw should export updateRaw', () => {
+    expect(updateRaw).toBe(InternalUpdateRaw);
 });
 
 test('/DeletedParcelMarker should export DeletedParcelMarker', () => {

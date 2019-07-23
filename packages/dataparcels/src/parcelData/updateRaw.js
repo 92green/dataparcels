@@ -1,6 +1,6 @@
 // @flow
 
 export default (updater: Function): Function => {
-    updater._dangerouslyUpdate = true;
+    updater._updateRaw = true;
     return updater;
 };

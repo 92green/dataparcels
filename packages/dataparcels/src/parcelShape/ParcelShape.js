@@ -31,7 +31,7 @@ import overload from 'unmutable/lib/util/overload';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-import dangerouslyUpdateParcelData from '../parcelData/dangerouslyUpdateParcelData';
+import updateRaw from '../parcelData/updateRaw';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
@@ -182,7 +182,7 @@ export default class ParcelShape {
         };
 
         fn._updater = updater;
-        return dangerouslyUpdateParcelData(fn);
+        return updateRaw(fn);
     }
 
     // Parent methods

@@ -14,9 +14,9 @@
     "Action.js",
     "CancelActionMarker.js",
     "ChangeRequest.js",
-    "dangerouslyUpdateParcelData.js",
     "DeletedParcelMarker.js",
     "ParcelShape.js",
+    "updateRaw.js",
     "updateShape.js",
     "validation.js"
   ],
