@@ -25,8 +25,8 @@ import ParcelShape from 'dataparcels/ParcelShape';
 import ParcelShape from 'react-dataparcels/ParcelShape';
 
 // it is more like you would encounter these from using shape updaters
-import updateShape from 'dataparcels/updateShape';
-import updateShape from 'react-dataparcels/updateShape';
+import asShape from 'dataparcels/asShape';
+import asShape from 'react-dataparcels/asShape';
 ```
 
 ```flow
@@ -46,7 +46,7 @@ let parcelShape = new ParcelShape(123);
 ParcelShapes are used in a very similar way to [Immutable.js Maps and Lists](https://facebook.github.io/immutable-js/docs/), by calling methods that return new and updated ParcelShapes.
 
 ```js
-let modifiedParcel = parcel.modifyDown(updateShape(
+let modifiedParcel = parcel.modifyDown(asShape(
     parcelShape => parcelShape
         .unshift(0)
         .push(4)
@@ -302,8 +302,8 @@ update(key: string|number, updater: ParcelValueUpdater): ParcelShape // only on 
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-update(updateShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape
-update(key: string|number, updateShape(updater: ParcelValueUpdater)): ParcelShape // only on ParentParcels, will update a child
+update(asShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape
+update(key: string|number, asShape(updater: ParcelValueUpdater)): ParcelShape // only on ParentParcels, will update a child
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -321,7 +321,7 @@ updateIn(keyPath: Array<string|number>, updater: ParcelValueUpdater): ParcelShap
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-updateIn(keyPath: Array<string|number>, updateShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape // only on ParentParcels
+updateIn(keyPath: Array<string|number>, asShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape // only on ParentParcels
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -337,7 +337,7 @@ map(updater: ParcelValueUpdater): ParcelShape // only on ParentParcels
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-map(updateShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape // only on ParentParcels
+map(asShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape // only on ParentParcels
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 

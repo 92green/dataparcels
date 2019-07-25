@@ -92,7 +92,7 @@ export default class ParcelShape {
         }
     }
 
-    _updateShape = (updater: ParcelShapeUpdater): ParcelShape => {
+    _asShape = (updater: ParcelShapeUpdater): ParcelShape => {
         let updated: any = updater(this);
         if(this._isParcelShape(updated)) {
             return updated;
@@ -177,7 +177,7 @@ export default class ParcelShape {
         let fn = (parcelData: ParcelData, changeRequest: *): ParcelData => {
             return ParcelShape
                 .fromData(parcelData)
-                ._updateShape((parcelShape) => updater(parcelShape, changeRequest))
+                ._asShape((parcelShape) => updater(parcelShape, changeRequest))
                 .data;
         };
 

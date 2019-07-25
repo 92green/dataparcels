@@ -17,7 +17,7 @@
     "DeletedParcelMarker.js",
     "ParcelShape.js",
     "updateRaw.js",
-    "updateShape.js",
+    "asShape.js",
     "validation.js"
   ],
   "bugs": {

@@ -20,7 +20,7 @@
     "ParcelHoc.js",
     "ParcelShape.js",
     "updateRaw.js",
-    "updateShape.js",
+    "asShape.js",
     "useParcelBuffer.js",
     "useParcelForm.js",
     "useParcelSideEffect.js",

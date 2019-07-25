@@ -1,7 +1,7 @@
 import React from 'react';
 import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import updateShape from 'react-dataparcels/updateShape';
+import asShape from 'react-dataparcels/asShape';
 import exampleFrame from 'component/exampleFrame';
 
 export default function FruitListEditor(props) {
@@ -20,11 +20,11 @@ export default function FruitListEditor(props) {
 
     let allSelected = fruitListParcel.value.length === selectedFruit.length;
 
-    let selectAll = (selected) => fruitListParcel.map(updateShape(
+    let selectAll = (selected) => fruitListParcel.map(asShape(
         fruit => fruit.setMeta({selected})
     ));
 
-    let deleteSelectedFruit = () => fruitListParcel.update(updateShape(
+    let deleteSelectedFruit = () => fruitListParcel.update(asShape(
         fruitListShape => fruitListShape
             .toArray()
             .filter(fruitShape => !fruitShape.meta.selected)

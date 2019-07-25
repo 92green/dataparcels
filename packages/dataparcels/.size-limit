@@ -29,7 +29,7 @@
     },
     {
         limit: "15 KB",
-        path: "updateShape.js"
+        path: "asShape.js"
     },
     {
         limit: "6 KB",

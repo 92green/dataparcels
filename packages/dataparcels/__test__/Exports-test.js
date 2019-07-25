@@ -7,7 +7,7 @@ import ChangeRequest from '../ChangeRequest';
 import updateRaw from '../updateRaw';
 import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
-import updateShape from '../updateShape';
+import asShape from '../asShape';
 import CancelActionMarker from '../CancelActionMarker';
 import validation from '../validation';
 
@@ -20,7 +20,7 @@ import InternalChangeRequest from '../lib/change/ChangeRequest';
 import InternalUpdateRaw from '../lib/parcelData/updateRaw';
 import InternalDeletedParcelMarker from '../lib/parcelData/DeletedParcelMarker';
 import InternalParcelShape from '../lib/parcelShape/ParcelShape';
-import InternalShape from '../lib/parcelShape/updateShape';
+import InternalShape from '../lib/parcelShape/asShape';
 import InternalCancelActionMarker from '../lib/change/CancelActionMarker';
 import InternalValidation from '../lib/validation/validation';
 
@@ -48,8 +48,8 @@ test('/ParcelShape should export ParcelShape', () => {
     expect(ParcelShape).toBe(InternalParcelShape);
 });
 
-test('/updateShape should export updateShape', () => {
-    expect(updateShape).toBe(InternalShape);
+test('/asShape should export asShape', () => {
+    expect(asShape).toBe(InternalShape);
 });
 
 test('/CancelActionMarker should export CancelActionMarker', () => {
