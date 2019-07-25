@@ -30,16 +30,6 @@ test('ParcelHoc config should accept an initial valueFromProps', () => {
     expect(childProps.proppy.value).toBe(456);
 });
 
-test('ParcelHoc must be passed a name, and throw an error if it isnt', () => {
-    // $FlowFixMe - intentiaal misuse of types
-    expect(() => ParcelHoc({})).toThrow(`ParcelHoc() expects param "config.name" to be a string, but got undefined`);
-});
-
-
-test('ParcelHoc config should throw error if valueFromProps is not provided', () => {
-    expect(() => ParcelHoc({name: "proppy"})).toThrow(`ParcelHoc() expects param "config.valueFromProps" to be a function, but got undefined`);
-});
-
 test('ParcelHoc changes should be put back into ParcelHoc state', () => {
     let Child = () => <div />;
     let Hocked = ParcelHoc({
