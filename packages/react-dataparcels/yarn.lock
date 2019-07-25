@@ -2540,14 +2540,6 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-dataparcels@^0.25.0-alpha.1:
-  version "0.25.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.25.0-alpha.1.tgz#31ec7ac810ea587dd3a334a60465efc3adc77638"
-  integrity sha512-FJidseLUd3J0vS0DzNG0m6qbkJolO48XlexoKmtzHppU90Da1kcDV9ViJ7auM6T/8W+tntqZAdRbcpveHjsNQQ==
-  dependencies:
-    "@babel/runtime" "^7.1.5"
-    unmutable "^0.41.1"
-
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
