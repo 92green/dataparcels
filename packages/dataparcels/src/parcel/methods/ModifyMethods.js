@@ -22,7 +22,7 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 export default (_this: Parcel): Object => ({
 
     _pushModifierId: (prefix: string, updater: Function): string => {
-        let id = updater._updateRaw
+        let id = updater._asRaw
             ? `s${HashFunction(updater._updater || updater)}`
             : HashFunction(updater);
 

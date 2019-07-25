@@ -16,7 +16,7 @@
     "ChangeRequest.js",
     "DeletedParcelMarker.js",
     "ParcelShape.js",
-    "updateRaw.js",
+    "asRaw.js",
     "asShape.js",
     "validation.js"
   ],

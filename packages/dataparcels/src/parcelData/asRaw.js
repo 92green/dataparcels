@@ -1,6 +1,6 @@
 // @flow
 
 export default (updater: Function): Function => {
-    updater._updateRaw = true;
+    updater._asRaw = true;
     return updater;
 };

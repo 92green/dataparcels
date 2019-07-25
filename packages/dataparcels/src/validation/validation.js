@@ -3,7 +3,7 @@
 import type {ParcelDataEvaluator} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
-import updateRaw from '../parcelData/updateRaw';
+import asRaw from '../parcelData/asRaw';
 import parcelDataMap from '../parcelData/map';
 import parcelDataSetMeta from '../parcelData/setMeta';
 import parcelDataUpdate from '../parcelData/update';
@@ -25,7 +25,7 @@ type ValidationRuleMap = {
 };
 
 export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
-    return updateRaw((parcelData) => {
+    return asRaw((parcelData) => {
         let invalidList = [];
         let topLevelValue = parcelData.value;
         let meta = parcelData.meta || {};

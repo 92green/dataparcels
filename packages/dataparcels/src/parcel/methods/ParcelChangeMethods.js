@@ -68,7 +68,7 @@ export default (_this: Parcel) => ({
 
     updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf()`, `updater`, `function`)(updater);
-        if(updater._updateRaw) {
+        if(updater._asRaw) {
             let updated = updater(_this._parcelData);
             _this.dispatch(ActionCreators.setData(updated));
             return;

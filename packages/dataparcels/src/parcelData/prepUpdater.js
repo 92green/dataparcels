@@ -7,7 +7,7 @@ import setValue from './setValue';
 import ValidateValueUpdater from '../util/ValidateValueUpdater';
 
 export default (updater: ParcelValueUpdater): Function => {
-    return updater._updateRaw
+    return updater._asRaw
         ? updater
         : (parcelData: ParcelData, changeRequest: ?ChangeRequest): ParcelData => {
             let {value} = parcelData;
