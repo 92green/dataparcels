@@ -1099,18 +1099,18 @@ It does not trigger any changes of its own, but awaits a change from below. Valu
 
 #### Cancelling a change
 
-You can also cancel a change by returning [CancelActionMarker](/api/CancelActionMarker) from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
+You can also cancel a change by returning [cancel](/api/cancel) from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
 
 ```js
-import CancelActionMarker from 'dataparcels/CancelActionMarker';
+import cancel from 'dataparcels/cancel';
 // or
-import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
+import cancel from 'react-dataparcels/cancel';
 
 let parcel = new Parcel({
     value: 123
 })
 
-parcel = parcel.modifyUp(value => value === null ? CancelActionMarker : value);
+parcel = parcel.modifyUp(value => value === null ? cancel : value);
 
 parcel.set(456); // this would work, value becomes 123
 parcel.set(null); // this would cause no change

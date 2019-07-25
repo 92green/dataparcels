@@ -1,7 +1,7 @@
 import React from 'react';
 import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
+import cancel from 'react-dataparcels/cancel';
 import exampleFrame from 'component/exampleFrame';
 
 function calculate(value, changeRequest) {
@@ -40,7 +40,7 @@ const numberToString = (parcel) => parcel
     .modifyDown(number => `${number}`)
     .modifyUp(string => {
         let number = Number(string);
-        return (string === "" || isNaN(number)) ? CancelActionMarker : number;
+        return (string === "" || isNaN(number)) ? cancel : number;
     });
 
 export default function AreaEditor(props) {

@@ -64,7 +64,7 @@ export default () => <Box>
         <BulletListItem><Link className="Link" to="/api/validation">validation</Link></BulletListItem>
         <BulletListItem><Link className="Link" to="/api/useParcelBuffer">useParcelBuffer</Link></BulletListItem>
         <BulletListItem><Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link></BulletListItem>
-        <BulletListItem><Link className="Link" to="/api/CancelActionMarker">CancelActionMarker</Link></BulletListItem>
+        <BulletListItem><Link className="Link" to="/api/cancel">cancel</Link></BulletListItem>
         <BulletListItem><Link className="Link" to="/api/ParcelShape">ParcelShape</Link></BulletListItem>
         <BulletListItem><Link className="Link" to="/api/asShape">asShape</Link></BulletListItem>
     </BulletList>

@@ -6,7 +6,7 @@ import type {ParcelDataEvaluator} from '../../types/Types';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
 
-import {checkCancellation} from '../../change/CancelActionMarker';
+import {checkCancellation} from '../../change/cancel';
 import Types from '../../types/Types';
 import prepUpdater from '../../parcelData/prepUpdater';
 import setMetaDefault from '../../parcelData/setMetaDefault';

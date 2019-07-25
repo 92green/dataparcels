@@ -8,7 +8,7 @@ import asRaw from '../asRaw';
 import DeletedParcelMarker from '../DeletedParcelMarker';
 import ParcelShape from '../ParcelShape';
 import asShape from '../asShape';
-import CancelActionMarker from '../CancelActionMarker';
+import cancel from '../cancel';
 import validation from '../validation';
 
 // react-dataparcels
@@ -28,7 +28,7 @@ import InternalUpdateRaw from 'dataparcels/asRaw';
 import InternalDeletedParcelMarker from 'dataparcels/DeletedParcelMarker';
 import InternalParcelShape from 'dataparcels/ParcelShape';
 import InternalShape from 'dataparcels/asShape';
-import InternalCancelActionMarker from 'dataparcels/CancelActionMarker';
+import Internalcancel from 'dataparcels/cancel';
 import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
@@ -68,8 +68,8 @@ test('/asShape should export asShape', () => {
     expect(asShape).toBe(InternalShape);
 });
 
-test('/CancelActionMarker should export CancelActionMarker', () => {
-    expect(CancelActionMarker).toBe(InternalCancelActionMarker);
+test('/cancel should export cancel', () => {
+    expect(cancel).toBe(Internalcancel);
 });
 
 test('/validation should export validation', () => {

@@ -9,7 +9,7 @@
     },
     {
         "limit": "200 B",
-        "path": "CancelActionMarker.js"
+        "path": "cancel.js"
     },
     {
         "limit": "9 KB",

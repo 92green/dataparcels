@@ -12,7 +12,7 @@
   "files": [
     "lib",
     "Action.js",
-    "CancelActionMarker.js",
+    "cancel.js",
     "ChangeRequest.js",
     "DeletedParcelMarker.js",
     "ParcelShape.js",
