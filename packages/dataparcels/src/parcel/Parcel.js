@@ -138,10 +138,6 @@ export default class Parcel {
     _registry: ParcelRegistry;
     _updateChangeRequestOnDispatch: Function;
 
-    // from methods
-    _log: boolean = false; // used by log()
-    _logName: string = ""; // used by log()
-
     _create = (createParcelConfig: ParcelCreateConfigType): Parcel => {
         let {
             dispatchId = this._id.id(),
@@ -314,7 +310,6 @@ export default class Parcel {
     isLast = (): boolean => this._methods.isLast();
 
     // Side-effect methods
-    log = (name: string = ""): Parcel => this._methods.log(name);
     spy = (sideEffect: Function): Parcel => this._methods.spy(sideEffect);
     spyChange = (sideEffect: Function): Parcel => this._methods.spyChange(sideEffect);
 

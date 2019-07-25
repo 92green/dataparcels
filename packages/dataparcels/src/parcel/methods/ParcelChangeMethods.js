@@ -34,11 +34,6 @@ export default (_this: Parcel) => ({
             nextData: undefined
         });
 
-        if(process.env.NODE_ENV !== 'production' && _this._log) {
-            console.log(`Parcel: "${_this._logName}" data up:`); // eslint-disable-line
-            console.log(changeRequest.toJS()); // eslint-disable-line
-        }
-
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._create({
                 prevData: _this.data

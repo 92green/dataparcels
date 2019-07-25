@@ -107,25 +107,6 @@ test('Parcel.spreadDOMCheckbox(notFoundValue) returns an object with cast boolea
     expect(parcel.spreadDOMCheckbox(false).checked).toBe(false);
 });
 
-test('Parcel.log() should be called with parcel', () => {
-
-    let {log} = console;
-    // $FlowFixMe
-    console.log = jest.fn(); // eslint-disable-line
-
-    new Parcel({
-        value: 123
-    })
-        .log('example')
-        .set(456);
-
-    expect(console.log.mock.calls[0][0]).toEqual(`Parcel: "example" data down:`);
-    expect(console.log.mock.calls[2][0]).toEqual(`Parcel: "example" data up:`);
-
-    // $FlowFixMe
-    console.log = log; // eslint-disable-line
-});
-
 test('Parcel.spy() should be called with parcel', () => {
 
     let spy = jest.fn();
