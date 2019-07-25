@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import ParcelBoundary from '../ParcelBoundaryDeprecated';
-import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
+import ParcelBoundaryEquals from '../../util/ParcelBoundaryEquals';
 import Parcel from 'dataparcels';
 import Action from 'dataparcels/Action';
 

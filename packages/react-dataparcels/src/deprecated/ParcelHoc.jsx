@@ -7,7 +7,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 import React from 'react';
 import Parcel from 'dataparcels';
 import Types from 'dataparcels/lib/types/Types';
-import ApplyBeforeChange from './util/ApplyBeforeChange';
+import ApplyBeforeChange from '../util/ApplyBeforeChange';
 
 type Props = {};
 

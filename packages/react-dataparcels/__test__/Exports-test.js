@@ -32,9 +32,9 @@ import Internalcancel from 'dataparcels/cancel';
 import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
-import InternalParcelHoc from '../lib/ParcelHoc';
+import InternalParcelHoc from '../lib/deprecated/ParcelHoc';
 import InternalParcelBoundary from '../lib/ParcelBoundary';
-import InternalParcelBoundaryHoc from '../lib/ParcelBoundaryHoc';
+import InternalParcelBoundaryHoc from '../lib/deprecated/ParcelBoundaryHoc';
 import InternalUseParcelBuffer from '../lib/useParcelBuffer';
 import InternalUseParcelForm from '../lib/useParcelForm';
 import InternalUseParcelSideEffect from '../lib/useParcelSideEffect';

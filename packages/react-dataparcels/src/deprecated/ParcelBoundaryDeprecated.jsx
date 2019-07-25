@@ -10,7 +10,7 @@ import Parcel from 'dataparcels';
 import asRaw from 'dataparcels/asRaw';
 
 import ParcelBoundaryControl from './ParcelBoundaryControlDeprecated';
-import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
+import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
 
 import identity from 'unmutable/identity';
 import isNotEmpty from 'unmutable/isNotEmpty';
