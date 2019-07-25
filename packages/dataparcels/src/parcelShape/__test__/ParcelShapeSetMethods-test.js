@@ -1,6 +1,6 @@
 // @flow
 import ParcelShape from '../ParcelShape';
-import shape from '../shape';
+import asShape from '../asShape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('ParcelShapes set() should work', () => {
@@ -87,7 +87,7 @@ test('ParcelShapes update() should validate value updater', () => {
     );
 });
 
-test('ParcelShapes update(shape()) should work', () => {
+test('ParcelShapes update(asShape()) should work', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
             abc: 123
@@ -99,11 +99,11 @@ test('ParcelShapes update(shape()) should work', () => {
         def: 456
     };
 
-    expect(parcelShape.update(shape(parcelShape => parcelShape.set('def', 456))).value).toEqual(expectedValue);
+    expect(parcelShape.update(asShape(parcelShape => parcelShape.set('def', 456))).value).toEqual(expectedValue);
 });
 
 
-test('ParcelShapes _updateShape() should work with returned ParcelShape', () => {
+test('ParcelShapes _asShape() should work with returned ParcelShape', () => {
     let parcelShape = ParcelShape.fromData({
         value: 123,
         meta: {
@@ -120,10 +120,10 @@ test('ParcelShapes _updateShape() should work with returned ParcelShape', () => 
         key: "z"
     };
 
-    expect(parcelShape._updateShape(parcelShape => parcelShape.set(456)).data).toEqual(expectedData);
+    expect(parcelShape._asShape(parcelShape => parcelShape.set(456)).data).toEqual(expectedData);
 });
 
-test('ParcelShapes _updateShape() should work with returned primitive', () => {
+test('ParcelShapes _asShape() should work with returned primitive', () => {
     let parcelShape = ParcelShape.fromData({
         value: 123,
         meta: {
@@ -140,10 +140,10 @@ test('ParcelShapes _updateShape() should work with returned primitive', () => {
         key: "z"
     };
 
-    expect(parcelShape._updateShape(() => 456).data).toEqual(expectedData);
+    expect(parcelShape._asShape(() => 456).data).toEqual(expectedData);
 });
 
-test('ParcelShapes _updateShape() should work with returned parent value', () => {
+test('ParcelShapes _asShape() should work with returned parent value', () => {
     let parcelShape = ParcelShape.fromData({
         value: [1,2,3],
         meta: {
@@ -165,7 +165,7 @@ test('ParcelShapes _updateShape() should work with returned parent value', () =>
         key: "z"
     };
 
-    let {data} = parcelShape._updateShape((parcelShape) => {
+    let {data} = parcelShape._asShape((parcelShape) => {
         return parcelShape
             .children()
             .map((child => child.update(value => value + 1)))
@@ -174,7 +174,7 @@ test('ParcelShapes _updateShape() should work with returned parent value', () =>
     expect(data).toEqual(expectedData);
 });
 
-test('ParcelShapes _updateShape() should work with returned parent value of different type', () => {
+test('ParcelShapes _asShape() should work with returned parent value of different type', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
             abc: 123,
@@ -201,12 +201,12 @@ test('ParcelShapes _updateShape() should work with returned parent value of diff
         key: "z"
     };
 
-    let {data} = parcelShape._updateShape((parcelShape) => parcelShape.toArray());
+    let {data} = parcelShape._asShape((parcelShape) => parcelShape.toArray());
 
     expect(data).toEqual(expectedData);
 });
 
-test('ParcelShapes _updateShape() should retain childs keys', () => {
+test('ParcelShapes _asShape() should retain childs keys', () => {
     let parcelShape = ParcelShape.fromData({
         value: ["a","b","c","d"],
         child: [
@@ -225,7 +225,7 @@ test('ParcelShapes _updateShape() should retain childs keys', () => {
         ]
     };
 
-    let {data} = parcelShape._updateShape((parcelShape) => {
+    let {data} = parcelShape._asShape((parcelShape) => {
         return parcelShape
             .toArray()
             .filter((value, key) => key % 2 === 1)
@@ -234,12 +234,12 @@ test('ParcelShapes _updateShape() should retain childs keys', () => {
     expect(data).toEqual(expectedData);
 });
 
-test('ParcelShapes _updateShape() should throw error if non ParcelShape is a child of the return value', () => {
+test('ParcelShapes _asShape() should throw error if non ParcelShape is a child of the return value', () => {
     let parcelShape = ParcelShape.fromData({
         value: [123, 456]
     });
 
-    expect(() => parcelShape._updateShape((parcelShape) => {
+    expect(() => parcelShape._asShape((parcelShape) => {
         let arr = parcelShape.toArray();
         arr.push(789);
         return arr;

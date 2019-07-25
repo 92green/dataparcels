@@ -71,9 +71,7 @@ export default () => <Layout>
             'spy()',
             'spyChange()',
             '# Composition methods',
-            'pipe()',
-            '# Debug methods',
-            'log()'
+            'pipe()'
         ]}
     />
 </Layout>;

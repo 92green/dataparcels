@@ -648,8 +648,8 @@ update(key: string|number, updater: ParcelValueUpdater): void // only on ParentP
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-update(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
-update(key: string|number, shape(updater: ParcelValueUpdater)): void // only on ParentParcels, will update a child
+update(asShape(shapeUpdater: ParcelShapeUpdater)): Parcel
+update(key: string|number, asShape(updater: ParcelValueUpdater)): void // only on ParentParcels, will update a child
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -686,7 +686,7 @@ updateIn(keyPath: Array<string|number>, updater: ParcelValueUpdater): void // on
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-updateIn(keyPath: Array<string|number>, shape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
+updateIn(keyPath: Array<string|number>, asShape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -714,7 +714,7 @@ map(updater: ParcelValueUpdater): void // only on ParentParcels
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-map(shape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
+map(asShape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -1044,7 +1044,7 @@ modifyDown(updater: ParcelValueUpdater): Parcel
 type ParcelValueUpdater = (value: any) => any;
 
 // updates shape, including meta
-modifyDown(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
+modifyDown(asShape(shapeUpdater: ParcelShapeUpdater)): Parcel
 type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 ```
 
@@ -1072,7 +1072,7 @@ modifyUp(updater: ParcelValueUpdater): Parcel
 type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
 
 // updates shape, including meta
-modifyUp(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
+modifyUp(asShape(shapeUpdater: ParcelShapeUpdater)): Parcel
 type ParcelShapeUpdater = (parcelShape: ParcelShape, changeRequest: ChangeRequest) => any;
 ```
 
@@ -1099,18 +1099,18 @@ It does not trigger any changes of its own, but awaits a change from below. Valu
 
 #### Cancelling a change
 
-You can also cancel a change by returning [CancelActionMarker](/api/CancelActionMarker) from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
+You can also cancel a change by returning [cancel](/api/cancel) from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
 
 ```js
-import CancelActionMarker from 'dataparcels/CancelActionMarker';
+import cancel from 'dataparcels/cancel';
 // or
-import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
+import cancel from 'react-dataparcels/cancel';
 
 let parcel = new Parcel({
     value: 123
 })
 
-parcel = parcel.modifyUp(value => value === null ? CancelActionMarker : value);
+parcel = parcel.modifyUp(value => value === null ? cancel : value);
 
 parcel.set(456); // this would work, value becomes 123
 parcel.set(null); // this would cause no change
@@ -1223,11 +1223,3 @@ parcel
 ```
 
 ## <DocsSectionHeading>Debug methods</DocsSectionHeading>
-
-### log()
-
-```flow
-log(name: string?): Parcel
-```
-
-Output's the parcel's data to the console each time data flows downward, and outputs the ChangeRequest each time a change has propagated upward.

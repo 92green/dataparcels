@@ -2,13 +2,13 @@
 import React from 'react';
 import Layout from 'layout/Layout';
 import ContentNav from 'shape/ContentNav';
-import CancelActionMarkerMarkdown from 'pages/api/CancelActionMarker.mdx';
+import ShapeMarkdown from 'pages/api/asShape.mdx';
 
 export default () => <Layout>
     <ContentNav
-        content={() => <CancelActionMarkerMarkdown />}
+        content={() => <ShapeMarkdown />}
         pageNav={[
-            '# CancelActionMarker'
+            '# asShape'
         ]}
     />
 </Layout>;

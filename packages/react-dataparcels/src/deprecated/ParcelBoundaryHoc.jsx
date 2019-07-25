@@ -8,7 +8,6 @@ import type ParcelBoundaryControl from './ParcelBoundaryControlDeprecated';
 
 import React from 'react';
 import ParcelBoundary from './ParcelBoundaryDeprecated';
-import Types from 'dataparcels/lib/types/Types';
 
 type Props = {
     // [config.name]?: Parcel
@@ -34,10 +33,7 @@ type ParcelBoundaryHocConfig = {
     debugParcel?: boolean
 };
 
-const PARCEL_BOUNDARY_HOC_NAME = `ParcelBoundaryHoc()`;
-
 export default (config: ParcelBoundaryHocConfig): Function => {
-    Types(`ParcelBoundaryHoc()`, `config`, `object`)(config);
 
     // deprecation notice
     if(process.env.NODE_ENV !== 'production') {
@@ -65,25 +61,10 @@ export default (config: ParcelBoundaryHocConfig): Function => {
             let debugBuffer: boolean = config.debugBuffer || false;
             let debugParcel: boolean = config.debugParcel || false;
 
-            // type check normal config options
-            Types(PARCEL_BOUNDARY_HOC_NAME, "config.name", "string")(name);
-            debounce && Types(PARCEL_BOUNDARY_HOC_NAME, "config.debounce", "number")(debounce);
-            Types(PARCEL_BOUNDARY_HOC_NAME, "config.hold", "boolean")(hold);
-            Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugBuffer", "boolean")(debugBuffer);
-            Types(PARCEL_BOUNDARY_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
-
-            // type check function array config options
-            let checkFunctionArray = (name: string, array: Array<*>) => array.forEach((fn, index) => Types(PARCEL_BOUNDARY_HOC_NAME, `config.${name}[${index}]`, "function")(fn));
-            checkFunctionArray("modifyBeforeUpdate", modifyBeforeUpdate);
-            checkFunctionArray("onCancel", onCancel);
-            checkFunctionArray("onRelease", onRelease);
-
             let parcel = this.props[name];
             if(!parcel) {
                 return <Component {...this.props} />;
             }
-
-            Types(`ParcelBoundaryHoc()`, `prop "${name}"`, `parcel`)(parcel);
 
             return <ParcelBoundary
                 parcel={parcel}

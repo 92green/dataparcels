@@ -12,12 +12,12 @@
   "files": [
     "lib",
     "Action.js",
-    "CancelActionMarker.js",
+    "cancel.js",
     "ChangeRequest.js",
-    "dangerouslyUpdateParcelData.js",
-    "DeletedParcelMarker.js",
+    "deleted.js",
     "ParcelShape.js",
-    "shape.js",
+    "asRaw.js",
+    "asShape.js",
     "validation.js"
   ],
   "bugs": {
@@ -47,6 +47,6 @@
     "immutable": "^4.0.0-rc.12",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "size-limit": "^0.21.1"
+    "size-limit": "1.0.1"
   }
 }

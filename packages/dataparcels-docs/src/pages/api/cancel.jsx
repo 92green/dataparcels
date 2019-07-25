@@ -2,13 +2,13 @@
 import React from 'react';
 import Layout from 'layout/Layout';
 import ContentNav from 'shape/ContentNav';
-import ShapeMarkdown from 'pages/api/shape.mdx';
+import cancelMarkdown from 'pages/api/cancel.mdx';
 
 export default () => <Layout>
     <ContentNav
-        content={() => <ShapeMarkdown />}
+        content={() => <cancelMarkdown />}
         pageNav={[
-            '# shape'
+            '# cancel'
         ]}
     />
 </Layout>;

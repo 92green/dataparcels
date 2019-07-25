@@ -12,15 +12,15 @@
   "files": [
     "lib",
     "Action.js",
-    "CancelActionMarker.js",
+    "cancel.js",
     "ChangeRequest.js",
-    "dangerouslyUpdateParcelData.js",
-    "DeletedParcelMarker.js",
+    "deleted.js",
     "ParcelBoundary.js",
     "ParcelBoundaryHoc.js",
     "ParcelHoc.js",
     "ParcelShape.js",
-    "shape.js",
+    "asRaw.js",
+    "asShape.js",
     "useParcelBuffer.js",
     "useParcelForm.js",
     "useParcelSideEffect.js",
@@ -32,8 +32,7 @@
   },
   "private": false,
   "scripts": {
-    "yalc-publish": "../../node_modules/.bin/yalc publish --push --force",
-    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js' --ignore '**/__mocks__/*.js' && yarn yalc-publish",
+    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js' --ignore '**/__mocks__/*.js'",
     "build-all": "yarn build",
     "flow": "blueflag-test flow",
     "flow-coverage": "blueflag-test flow-coverage",
@@ -59,7 +58,7 @@
     "react": "^16.9.0-alpha",
     "react-dom": "^16.9.0-alpha",
     "react-hooks-testing-library": "^0.5.0",
-    "size-limit": "^0.21.1"
+    "size-limit": "1.0.1"
   },
   "peerDependencies": {
     "react": "^16.8.0"

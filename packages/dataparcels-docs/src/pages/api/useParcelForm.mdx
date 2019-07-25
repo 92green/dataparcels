@@ -257,7 +257,7 @@ let [parcel] = useParcelForm({
 beforeChange?: ParcelValueUpdater|ParcelValueUpdater[] // optional
 
 type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any
-type ParcelValueUpdater = shape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+type ParcelValueUpdater = asShape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
 ```
 
 The `beforeChange` parameter accepts either a single function, or an array of functions. Whenever a new `value` is taken into useParcelForm from params, and whenever the useParcelForm hook recieves a change from below, the change is passed through each `beforeChange` function.

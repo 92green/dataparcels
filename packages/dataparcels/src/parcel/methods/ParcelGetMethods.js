@@ -4,15 +4,13 @@ import type Parcel from '../../parcel/Parcel';
 import type {ParcelUpdater} from '../../types/Types';
 
 import Types from '../../types/Types';
-import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
+import deleted from '../../parcelData/deleted';
 
-import map from 'unmutable/lib/map';
-import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let getValue = (_this: Parcel, notFoundValue: *): * => {
     let {value} = _this;
-    return value === DeletedParcelMarker || typeof value === "undefined"
+    return value === deleted || typeof value === "undefined"
         ? notFoundValue
         : value;
 };
@@ -50,30 +48,13 @@ export default (_this: Parcel) => ({
     // Composition methods
 
     pipe: (...updaters: ParcelUpdater[]): Parcel => {
-        updaters.forEach(Types(`pipe()`, `all updaters`, `function`));
         return pipeWith(
             _this,
-            ...pipeWith(
-                updaters,
-                map(updater => pipe(
-                    updater,
-                    Types(`pipe()`, `the result of all functions`, `parcel`)
-                ))
-            )
+            ...updaters
         );
     },
 
     // Side-effect methods
-
-    log: (name: string): Parcel => {
-        if(process.env.NODE_ENV !== 'production') {
-            _this._log = true;
-            _this._logName = name;
-            console.log(`Parcel: "${name}" data down:`); // eslint-disable-line
-            console.log(_this.data); // eslint-disable-line
-        }
-        return _this;
-    },
 
     spy: (sideEffect: Function): Parcel => {
         Types(`spy()`, `sideEffect`, `function`)(sideEffect);

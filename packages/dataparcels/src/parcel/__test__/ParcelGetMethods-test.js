@@ -1,6 +1,6 @@
 // @flow
 import Parcel from '../Parcel';
-import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
+import deleted from '../../parcelData/deleted';
 
 test('Parcel.spread() returns an object with value and onChange', () => {
     var data = {
@@ -28,7 +28,7 @@ test('Parcel.spread(notFoundValue) returns an object with notFoundValue', () => 
     });
 
     var parcel2 = new Parcel({
-        value: DeletedParcelMarker
+        value: deleted
     });
 
     var parcel3 = new Parcel({
@@ -66,7 +66,7 @@ test('Parcel.spreadDOM(notFoundValue) returns an object with notFoundValue', () 
     });
 
     var parcel2 = new Parcel({
-        value: DeletedParcelMarker
+        value: deleted
     });
 
     var parcel3 = new Parcel({
@@ -105,25 +105,6 @@ test('Parcel.spreadDOMCheckbox(notFoundValue) returns an object with cast boolea
     expect(parcel.spreadDOMCheckbox().checked).toBe(false);
     expect(parcel.spreadDOMCheckbox(true).checked).toBe(true);
     expect(parcel.spreadDOMCheckbox(false).checked).toBe(false);
-});
-
-test('Parcel.log() should be called with parcel', () => {
-
-    let {log} = console;
-    // $FlowFixMe
-    console.log = jest.fn(); // eslint-disable-line
-
-    new Parcel({
-        value: 123
-    })
-        .log('example')
-        .set(456);
-
-    expect(console.log.mock.calls[0][0]).toEqual(`Parcel: "example" data down:`);
-    expect(console.log.mock.calls[2][0]).toEqual(`Parcel: "example" data up:`);
-
-    // $FlowFixMe
-    console.log = log; // eslint-disable-line
 });
 
 test('Parcel.spy() should be called with parcel', () => {

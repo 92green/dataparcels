@@ -7,7 +7,6 @@ import Types from '../../types/Types';
 
 import ChangeRequest from '../../change/ChangeRequest';
 import ActionCreators from '../../change/ActionCreators';
-import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 import ValidateValueUpdater from '../../util/ValidateValueUpdater';
 
 export default (_this: Parcel) => ({
@@ -34,11 +33,6 @@ export default (_this: Parcel) => ({
             prevData: undefined,
             nextData: undefined
         });
-
-        if(process.env.NODE_ENV !== 'production' && _this._log) {
-            console.log(`Parcel: "${_this._logName}" data up:`); // eslint-disable-line
-            console.log(changeRequest.toJS()); // eslint-disable-line
-        }
 
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._create({
@@ -69,7 +63,7 @@ export default (_this: Parcel) => ({
 
     updateSelf: (updater: ParcelValueUpdater) => {
         Types(`updateSelf()`, `updater`, `function`)(updater);
-        if(shouldDangerouslyUpdateParcelData(updater)) {
+        if(updater._asRaw) {
             let updated = updater(_this._parcelData);
             _this.dispatch(ActionCreators.setData(updated));
             return;

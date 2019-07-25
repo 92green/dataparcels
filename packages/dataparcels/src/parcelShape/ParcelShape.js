@@ -31,7 +31,7 @@ import overload from 'unmutable/lib/util/overload';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-import dangerouslyUpdateParcelData from '../parcelData/dangerouslyUpdateParcelData';
+import asRaw from '../parcelData/asRaw';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
@@ -92,7 +92,7 @@ export default class ParcelShape {
         }
     }
 
-    _updateShape = (updater: ParcelShapeUpdater): ParcelShape => {
+    _asShape = (updater: ParcelShapeUpdater): ParcelShape => {
         let updated: any = updater(this);
         if(this._isParcelShape(updated)) {
             return updated;
@@ -177,12 +177,12 @@ export default class ParcelShape {
         let fn = (parcelData: ParcelData, changeRequest: *): ParcelData => {
             return ParcelShape
                 .fromData(parcelData)
-                ._updateShape((parcelShape) => updater(parcelShape, changeRequest))
+                ._asShape((parcelShape) => updater(parcelShape, changeRequest))
                 .data;
         };
 
         fn._updater = updater;
-        return dangerouslyUpdateParcelData(fn);
+        return asRaw(fn);
     }
 
     // Parent methods

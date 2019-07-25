@@ -1,6 +1,6 @@
 // @flow
-import DeletedParcelMarker from './DeletedParcelMarker';
+import deleted from './deleted';
 
 export default () => ({
-    value: DeletedParcelMarker
+    value: deleted
 });

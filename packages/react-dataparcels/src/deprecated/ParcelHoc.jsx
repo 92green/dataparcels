@@ -6,8 +6,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
 import Parcel from 'dataparcels';
-import Types from 'dataparcels/lib/types/Types';
-import ApplyBeforeChange from './util/ApplyBeforeChange';
+import ApplyBeforeChange from '../util/ApplyBeforeChange';
 
 type Props = {};
 
@@ -40,10 +39,7 @@ type ParcelHocConfig = {
     debugParcel?: boolean
 };
 
-const PARCEL_HOC_NAME = `ParcelHoc()`;
-
 export default (config: ParcelHocConfig): Function => {
-    Types(`ParcelHoc()`, `config`, `object`)(config);
 
     // deprecation notice
     if(process.env.NODE_ENV !== 'production') {
@@ -61,16 +57,6 @@ export default (config: ParcelHocConfig): Function => {
         // debug options
         debugParcel = false
     } = config;
-
-    Types(PARCEL_HOC_NAME, "config.name", "string")(name);
-    Types(PARCEL_HOC_NAME, "config.valueFromProps", "function")(valueFromProps);
-    onChange && Types(PARCEL_HOC_NAME, "config.onChange", "function")(onChange);
-    shouldParcelUpdateFromProps && Types(PARCEL_HOC_NAME, "config.shouldParcelUpdateFromProps", "function")(shouldParcelUpdateFromProps);
-    modifyBeforeUpdate.forEach((fn, index) => Types(PARCEL_HOC_NAME, `config.modifyBeforeUpdate[${index}]`, "function")(fn));
-
-    Types(PARCEL_HOC_NAME, "config.delayUntil", "function")(delayUntil);
-    Types(PARCEL_HOC_NAME, "config.pipe", "function")(pipe);
-    Types(PARCEL_HOC_NAME, "config.debugParcel", "boolean")(debugParcel);
 
     return (Component: ComponentType<ChildProps>) => class ParcelHoc extends React.Component<Props, State> {
         constructor(props: Props) {
@@ -151,7 +137,6 @@ export default (config: ParcelHocConfig): Function => {
                     return;
                 }
                 let onChangeWithProps = onChange(this.props);
-                Types(`handleChange()`, "return value of onChange", "function")(onChangeWithProps);
                 onChangeWithProps(value, changeRequest);
             };
 
@@ -173,7 +158,6 @@ export default (config: ParcelHocConfig): Function => {
             }
 
             let pipeWithProps = pipe(this.props);
-            Types(`pipe()`, `return value of pipe`, `function`)(pipeWithProps);
 
             let pipeFunctions = [
                 ParcelHoc.applyModifyBeforeUpdate,

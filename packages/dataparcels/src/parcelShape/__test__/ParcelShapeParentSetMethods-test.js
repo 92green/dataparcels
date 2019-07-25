@@ -1,6 +1,6 @@
 // @flow
 import ParcelShape from '../ParcelShape';
-import shape from '../shape';
+import asShape from '../asShape';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('ParcelShapes set(key) should work', () => {
@@ -162,7 +162,7 @@ test('ParcelShapes update(key) should validate value updater', () => {
     );
 });
 
-test('ParcelShapes update(key, shape()) should work', () => {
+test('ParcelShapes update(key, asShape()) should work', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
             a: 1,
@@ -187,7 +187,7 @@ test('ParcelShapes update(key, shape()) should work', () => {
         }
     };
 
-    expect(parcelShape.update('a', shape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
+    expect(parcelShape.update('a', asShape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
 });
 
 test('ParcelShapes updateIn(keyPath) should work', () => {
@@ -232,7 +232,7 @@ test('ParcelShapes updateIn(keyPath) should validate value updater', () => {
     );
 });
 
-test('ParcelShapes updateIn(keyPath, shape()) should work', () => {
+test('ParcelShapes updateIn(keyPath, asShape()) should work', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
             a: {
@@ -260,7 +260,7 @@ test('ParcelShapes updateIn(keyPath, shape()) should work', () => {
         }
     };
 
-    expect(parcelShape.updateIn(['a', 'b'], shape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
+    expect(parcelShape.updateIn(['a', 'b'], asShape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
 });
 
 test('ParcelShapes map() should work', () => {
@@ -300,7 +300,7 @@ test('ParcelShapes map() should validate value updater', () => {
     );
 });
 
-test('ParcelShapes map(shape()) should work', () => {
+test('ParcelShapes map(asShape()) should work', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
             a: 1,
@@ -325,5 +325,5 @@ test('ParcelShapes map(shape()) should work', () => {
         }
     };
 
-    expect(parcelShape.map(shape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
+    expect(parcelShape.map(asShape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
 });

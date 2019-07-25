@@ -1,0 +1,19 @@
+# cancel
+
+```js
+import cancel from 'dataparcels/cancel';
+import cancel from 'react-dataparcels/cancel';
+```
+
+The cancel can be used inside of [Parcel.modifyUp](/api/Parcel#modifyUp) to cancel a change. See [Parcel.modifyUp](/api/Parcel#modifyUp) for more details.
+
+```js
+let parcel = new Parcel({
+    value: 123
+})
+
+parcel = parcel.modifyUp(value => value === null ? cancel : value);
+
+parcel.set(456); // this would work, value becomes 123
+parcel.set(null); // this would cause no change
+```

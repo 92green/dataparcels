@@ -6,11 +6,10 @@ import type {ParcelDataEvaluator} from '../../types/Types';
 import type {ParcelMeta} from '../../types/Types';
 import type {ParcelValueUpdater} from '../../types/Types';
 
-import {checkCancellation} from '../../change/CancelActionMarker';
+import {checkCancellation} from '../../change/cancel';
 import Types from '../../types/Types';
 import prepUpdater from '../../parcelData/prepUpdater';
 import setMetaDefault from '../../parcelData/setMetaDefault';
-import shouldDangerouslyUpdateParcelData from '../../parcelData/shouldDangerouslyUpdateParcelData';
 
 import HashString from '../../util/HashString';
 
@@ -23,7 +22,7 @@ let HashFunction = (fn: Function): string => `${HashString(fn.toString())}`;
 export default (_this: Parcel): Object => ({
 
     _pushModifierId: (prefix: string, updater: Function): string => {
-        let id = shouldDangerouslyUpdateParcelData(updater)
+        let id = updater._asRaw
             ? `s${HashFunction(updater._updater || updater)}`
             : HashFunction(updater);
 

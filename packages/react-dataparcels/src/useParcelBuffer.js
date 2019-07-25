@@ -10,7 +10,7 @@ import useDebouncedCallback from 'use-debounce/lib/callback';
 import pipe from 'unmutable/pipe';
 
 import Parcel from 'dataparcels';
-import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
+import asRaw from 'dataparcels/asRaw';
 import setMeta from 'dataparcels/lib/parcelData/setMeta';
 
 import ApplyBeforeChange from './util/ApplyBeforeChange';
@@ -59,7 +59,7 @@ export default (params: Params): Return => {
     // 2. always add and set buffer meta to be passed to innerParcel
 
     const applyBufferMeta = (parcel) => parcel
-        .modifyDown(dangerouslyUpdateParcelData(
+        .modifyDown(asRaw(
             setMeta({
                 _submit: false,
                 _reset: false
