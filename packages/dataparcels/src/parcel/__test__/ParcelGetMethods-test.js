@@ -1,6 +1,6 @@
 // @flow
 import Parcel from '../Parcel';
-import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
+import deleted from '../../parcelData/deleted';
 
 test('Parcel.spread() returns an object with value and onChange', () => {
     var data = {
@@ -28,7 +28,7 @@ test('Parcel.spread(notFoundValue) returns an object with notFoundValue', () => 
     });
 
     var parcel2 = new Parcel({
-        value: DeletedParcelMarker
+        value: deleted
     });
 
     var parcel3 = new Parcel({
@@ -66,7 +66,7 @@ test('Parcel.spreadDOM(notFoundValue) returns an object with notFoundValue', () 
     });
 
     var parcel2 = new Parcel({
-        value: DeletedParcelMarker
+        value: deleted
     });
 
     var parcel3 = new Parcel({

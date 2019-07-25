@@ -4,13 +4,13 @@ import type Parcel from '../../parcel/Parcel';
 import type {ParcelUpdater} from '../../types/Types';
 
 import Types from '../../types/Types';
-import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
+import deleted from '../../parcelData/deleted';
 
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let getValue = (_this: Parcel, notFoundValue: *): * => {
     let {value} = _this;
-    return value === DeletedParcelMarker || typeof value === "undefined"
+    return value === deleted || typeof value === "undefined"
         ? notFoundValue
         : value;
 };

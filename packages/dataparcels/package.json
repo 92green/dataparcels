@@ -14,7 +14,7 @@
     "Action.js",
     "cancel.js",
     "ChangeRequest.js",
-    "DeletedParcelMarker.js",
+    "deleted.js",
     "ParcelShape.js",
     "asRaw.js",
     "asShape.js",
