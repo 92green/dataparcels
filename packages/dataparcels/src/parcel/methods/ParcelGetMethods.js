@@ -6,8 +6,6 @@ import type {ParcelUpdater} from '../../types/Types';
 import Types from '../../types/Types';
 import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
 
-import map from 'unmutable/lib/map';
-import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 let getValue = (_this: Parcel, notFoundValue: *): * => {
@@ -50,16 +48,9 @@ export default (_this: Parcel) => ({
     // Composition methods
 
     pipe: (...updaters: ParcelUpdater[]): Parcel => {
-        updaters.forEach(Types(`pipe()`, `all updaters`, `function`));
         return pipeWith(
             _this,
-            ...pipeWith(
-                updaters,
-                map(updater => pipe(
-                    updater,
-                    Types(`pipe()`, `the result of all functions`, `parcel`)
-                ))
-            )
+            ...updaters
         );
     },
 
