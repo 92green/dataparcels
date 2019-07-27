@@ -21,7 +21,6 @@ import {checkCancellation} from '../change/cancel';
 import ChangeRequest from '../change/ChangeRequest';
 import ActionCreators from '../change/ActionCreators';
 
-import ParcelId from '../parcelId/ParcelId';
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 import deleted from '../parcelData/deleted';
@@ -42,16 +41,20 @@ import last from 'unmutable/last';
 import clone from 'unmutable/clone';
 import map from 'unmutable/map';
 import size from 'unmutable/size';
+import rest from 'unmutable/rest';
 import toArray from 'unmutable/toArray';
 
 import HashString from '../util/HashString';
+
+const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
 
 const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
     dispatchId: '',
     frameMeta: {},
     meta: {},
-    id: new ParcelId(),
+    rawId: ["^"],
+    rawPath: ["^"],
     parent: {
         isIndexed: false,
         isChildFirst: false,
@@ -70,7 +73,8 @@ export default class Parcel {
     // from constructor
     _childParcelCache: {[key: string]: Parcel} = {};
     _dispatchId: string;
-    _id: ParcelId;
+    _rawId: string[];
+    _rawPath: string[];
     _isChild: boolean;
     _isElement: boolean;
     _isIndexed: boolean;
@@ -166,7 +170,8 @@ export default class Parcel {
             dispatchId,
             frameMeta,
             meta,
-            id,
+            rawId,
+            rawPath,
             parent,
             registry,
             updateChangeRequestOnDispatch
@@ -179,19 +184,20 @@ export default class Parcel {
         this._parcelData = {
             value,
             child,
-            key: id.key(),
+            key: this._getKeyFromRawPath(rawPath),
             meta
         };
 
         this._dispatchId = dispatchId;
-        this._id = id;
-        this._isChild = !(id && id.path().length === 0);
+        this._rawId = rawId;
+        this._rawPath = rawPath;
+        this._isChild = rawPath.length > 1;
         this._isElement = parent.isIndexed;
         this._isIndexed = isIndexedValue(value);
         this._isParent = isParentValue(value);
         this._parent = parent;
         this._registry = registry;
-        this._registry[id.id()] = this;
+        this._registry[this._getIdFromRawId(rawId)] = this;
 
         let onlyType = (type: string, name: string, fn: Function) => {
             // $FlowFixMe
@@ -301,7 +307,7 @@ export default class Parcel {
         // Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
         this.spyChange = (sideEffect: Function): Parcel => {
             return this._create({
-                id: this._id.pushModifier('sc'),
+                rawId: this._idPushModifier('sc'),
                 updateChangeRequestOnDispatch: (changeRequest: ChangeRequest): ChangeRequest => {
                     let basedChangeRequest = changeRequest._create({
                         prevData: this.data
@@ -371,7 +377,7 @@ export default class Parcel {
         this.modifyDown = (updater: ParcelValueUpdater): Parcel => {
             let parcelDataUpdater = prepUpdater(updater);
             return this._create({
-                id: this._pushModifierId('md', updater),
+                rawId: this._idPushModifierUpdater('md', updater),
                 parcelData: parcelDataUpdater(this._parcelData),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'md',
@@ -388,7 +394,7 @@ export default class Parcel {
             };
 
             return this._create({
-                id: this._pushModifierId('mu', updater),
+                rawId: this._idPushModifierUpdater('mu', updater),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'mu',
                     updater: parcelDataUpdater,
@@ -408,7 +414,7 @@ export default class Parcel {
             );
 
             return this._create({
-                id: this._id.pushModifier('im'),
+                rawId: this._idPushModifier('im'),
                 parcelData: parcelDataUpdater(this._parcelData),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'mu',
@@ -425,9 +431,10 @@ export default class Parcel {
 
     _create = (createParcelConfig: ParcelCreateConfigType): Parcel => {
         let {
-            dispatchId = this._id.id(),
+            dispatchId = this.id,
             handleChange,
-            id = this._id,
+            rawId = this._rawId,
+            rawPath = this._rawPath,
             frameMeta = this._frameMeta,
             parcelData = this._parcelData,
             parent = this._parent,
@@ -451,7 +458,8 @@ export default class Parcel {
                 dispatchId,
                 frameMeta,
                 meta,
-                id,
+                rawId,
+                rawPath,
                 parent,
                 registry,
                 updateChangeRequestOnDispatch
@@ -535,7 +543,7 @@ export default class Parcel {
 
     _boundarySplit = ({handleChange}: *): Parcel => {
         return this._create({
-            id: this._id.pushModifier('bs'),
+            rawId: this._idPushModifier('bs'),
             handleChange
             // temporarily disabling boundary splitting
             // until a more robust solution can be found
@@ -581,10 +589,14 @@ export default class Parcel {
         let isChildFirst = childIsNotEmpty && first()(child).key === childKey;
         let isChildLast = childIsNotEmpty && last()(child).key === childKey;
 
+        let rawId = [...this._rawId, isIndexed ? childKey : escapeKey(childKey)];
+        let rawPath = [...this._rawPath, childKey];
+
         let childParcel: Parcel = this._create({
             parcelData: childParcelData,
             updateChangeRequestOnDispatch: childOnDispatch,
-            id: this._id.push(childKey, isIndexed),
+            rawId,
+            rawPath,
             parent: {
                 isIndexed,
                 isChildFirst,
@@ -603,13 +615,21 @@ export default class Parcel {
             : value;
     };
 
-    _pushModifierId = (prefix: string, updater: ParcelValueUpdater): ParcelId => {
+    _getKeyFromRawPath = (rawPath: string[]): string =>  last()(rawPath);
+
+    _getIdFromRawId = (rawId: string[]): string => rawId.join('.');
+
+    _idPushModifier = (name: string): string[] => {
+        return [...this._rawId, `~${name}`];
+    };
+
+    _idPushModifierUpdater = (prefix: string, updater: ParcelValueUpdater): string[] => {
         let hash = (fn: Function): string => `${HashString(fn.toString())}`;
         let id = updater._asRaw
             ? `s${hash(updater._updater || updater)}`
             : hash(updater);
 
-        return this._id.pushModifier(`${prefix}-${id}`);
+        return this._idPushModifier(`${prefix}-${id}`);
     };
 
     // prepare child keys only once per parcel instance
@@ -658,7 +678,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     get key(): Key {
-        return this._id.key();
+        return this._getKeyFromRawPath(this._rawPath);
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -668,7 +688,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     get id(): string {
-        return this._id.id();
+        return this._getIdFromRawId(this._rawId);
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -678,7 +698,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     get path(): Array<Key> {
-        return this._id.path();
+        return rest()(this._rawPath);
     }
 
     // $FlowFixMe - this doesn't have side effects

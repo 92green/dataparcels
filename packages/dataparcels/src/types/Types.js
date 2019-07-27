@@ -1,5 +1,4 @@
 // @flow
-import type ParcelId from '../parcelId/ParcelId';
 import type ParcelShape from '../parcelShape/ParcelShape';
 
 import Parcel from '../parcel/Parcel';
@@ -30,7 +29,8 @@ export type ParcelParent = {
 export type ParcelConfigInternal = {
     child: *,
     dispatchId: string,
-    id: ParcelId,
+    rawId: string[],
+    rawPath: string[],
     frameMeta: {[key: string]: any},
     meta: ParcelMeta,
     parent: ParcelParent,
@@ -41,7 +41,8 @@ export type ParcelConfigInternal = {
 export type ParcelCreateConfigType = {
     dispatchId?: string,
     frameMeta?: {[key: string]: any},
-    id?: ParcelId,
+    rawId?: string[],
+    rawPath?: string[],
     handleChange?: Function,
     parcelData?: ParcelData,
     parent?: ParcelParent,
@@ -73,11 +74,6 @@ export type ActionStep = {
 };
 
 export type ParentType = any; // should be any parent data type
-
-export type ParcelIdData = {
-    id: string[],
-    path: string[]
-};
 
 export type ContinueChainFunction = (continueChain: () => void, changeRequest: ?ChangeRequest) => void;
 

@@ -14,8 +14,6 @@ import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
 import {ShapeUpdaterNonShapeChildError} from '../errors/Errors';
 
-import ParcelId from '../parcelId/ParcelId';
-
 import ParcelShapeParentGetMethods from './methods/ParcelShapeParentGetMethods';
 import ParcelShapeParentSetMethods from './methods/ParcelShapeParentSetMethods';
 import ParcelShapeSetMethods from './methods/ParcelShapeSetMethods';
@@ -67,7 +65,6 @@ export default class ParcelShape {
     //
 
     // from constructor
-    _id: ParcelId;
     _isChild: boolean;
     _isElement: boolean;
     _isIndexed: boolean;
