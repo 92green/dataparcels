@@ -11,7 +11,6 @@ import ChangeRequestReducer from '../change/ChangeRequestReducer';
 import parcelGet from '../parcelData/get';
 
 import butLast from 'unmutable/butLast';
-import equals from 'unmutable/equals';
 import identity from 'unmutable/identity';
 import last from 'unmutable/last';
 import pipe from 'unmutable/pipe';
@@ -112,7 +111,7 @@ export default class ChangeRequest {
         let actions = other._actions.reduce((actions, thisAction) => {
             let lastAction = last()(actions);
 
-            let keyPathEquals = () => equals(thisAction.keyPath)(lastAction.keyPath);
+            let keyPathEquals = () => thisAction.keyPath.join(".") === lastAction.keyPath.join(".");
 
             let shouldReplace: boolean = lastAction
                 && thisAction.type === "set"
