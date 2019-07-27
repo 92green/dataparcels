@@ -308,17 +308,6 @@ When called with two arguments, this inserts `value` as the next sibling Parcel 
 
 <IndexedKeys />
 
-### move()
-
-```flow
-move(keyA: string|number, keyB: string|number): ParcelShape // only on IndexedParcels, will move children
-```
-
-This moves the child Parcel at `keyA` to the position of `keyB`.
-Other elements will shift left to fill any gaps left and/or shift right to make room for moved values.
-
-<IndexedKeys />
-
 ### push()
 
 ```flow
@@ -342,45 +331,6 @@ shift(): ParcelShape // only on IndexedParcels
 ```
 
 This triggers a change that pops the first value off of the start of the current ParentParcel.
-
-### swap()
-
-```flow
-swap(key: string|number): ParcelShape // only on ElementParcels, will swap with sibling
-swap(keyA: string|number, keyB: string|number): ParcelShape // only on IndexedParcels, will swap children
-```
-
-When called with one argument, this swaps the current Parcel with the one at the position of `key`, within the current ParentParcel.
-
-When called with two arguments, this swaps the child Parcel at `keyA` with the one at the position of `keyB`.
-
-<IndexedKeys />
-
-### swapNext()
-
-```flow
-swapNext(): ParcelShape // only on ElementParcels, will swap with next sibling
-swapNext(key: string|number): ParcelShape // only on IndexedParcels, will swap child with next child
-```
-
-When called with no arguments, this swaps the current Parcel with its next sibling Parcel, within the current ParentParcel. If called on the last child, it swaps with the first child.
-
-When called with one argument, this swaps the child at the position of `key` with the next sibling Parcel.
-
-<IndexedKeys />
-
-### swapPrev()
-
-```flow
-swapPrev(): ParcelShape // only on ElementParcels, will swap with previous sibling
-swapPrev(key: string|number): ParcelShape // only on IndexedParcels, will swap child with previous child
-```
-
-When called with no arguments, this swaps the current Parcel with its previous sibling Parcel, within the current ParentParcel. If called on the first child, it swaps with the last child.
-
-When called with one argument, this swaps the child at the position of `key` with the previous sibling Parcel.
-
-<IndexedKeys />
 
 ### unshift()
 
