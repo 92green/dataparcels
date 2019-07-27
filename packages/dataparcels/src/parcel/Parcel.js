@@ -224,10 +224,6 @@ export default class Parcel {
         // public methods
         //
 
-        // TODO - compact args
-        // TODO - dedupe dispatches
-        // TODO - identify
-
         // Spread Methods
 
         this.spread = (notFoundValue: ?* = undefined): any => ({
@@ -705,72 +701,4 @@ export default class Parcel {
     set path(value: any) {
         throw ReadOnlyError();
     }
-
-    // //
-    // // public methods
-    // //
-
-    // // Spread methods
-    // spread = (notFoundValue: any = undefined): * => this._methods.spread(notFoundValue);
-    // spreadDOM = (notFoundValue: any = undefined): * => this._methods.spreadDOM(notFoundValue);
-    // spreadDOMCheckbox = (notFoundValue: boolean = false): * => this._methods.spreadDOMCheckbox(notFoundValue);
-
-    // // Branch methods
-    // get = (key: Key|Index, notFoundValue: any = undefined): Parcel => this._methods.get(key, notFoundValue);
-    // getIn = (keyPath: Array<Key|Index>, notFoundValue: any = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);
-    // children = (mapper: ParcelMapper = _ => _): ParentType<Parcel> => this._methods.children(mapper);
-    // toArray = (mapper: ParcelMapper = _ => _): Array<Parcel> => this._methods.toArray(mapper);
-    // metaAsParcel = (key: string): Parcel => this._methods.metaAsParcel(key);
-
-    // // Parent methods
-    // has = (key: Key|Index): boolean => this._methods.has(key);
-    // size = (): number => this._methods.size();
-
-    // // Child methods
-    // isFirst = (): boolean => this._methods.isFirst();
-    // isLast = (): boolean => this._methods.isLast();
-
-    // // Side-effect methods
-    // spy = (sideEffect: Function): Parcel => this._methods.spy(sideEffect);
-    // spyChange = (sideEffect: Function): Parcel => this._methods.spyChange(sideEffect);
-
-    // // Change methods
-    // onChange = (value: any) => this._methods.onChange(value);
-    // onChangeDOM = (event: *) => this._methods.onChangeDOM(event);
-    // onChangeDOMCheckbox = (event: *) => this._methods.onChangeDOMCheckbox(event);
-    // set = (value: any) => this._methods.set(value);
-    // update = (updater: ParcelValueUpdater) => this._methods.update(updater);
-    // delete = () => this._methods.deleteSelf();
-    // map = (updater: ParcelValueUpdater) => this._methods.map(updater);
-
-    // // Advanced change methods
-    // setMeta = (partialMeta: ParcelMeta) => this._methods.setMeta(partialMeta);
-    // dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
-
-    // // Indexed methods
-    // insertAfter = (value: any) => this._methods.insertAfterSelf(value);
-    // insertBefore = (value: any) => this._methods.insertBeforeSelf(value);
-    // move = (keyA: Key|Index, keyB: Key|Index) => this._methods.move(keyA, keyB);
-    // push = (...values: Array<any>) => this._methods.push(...values);
-    // pop = () => this._methods.pop();
-    // shift = () => this._methods.shift();
-    // swap = (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB);
-    // swapNext = () => this._methods.swapNextSelf();
-    // swapPrev = () => this._methods.swapPrevSelf();
-    // unshift = (...values: Array<any>) => this._methods.unshift(...values);
-
-    // // Modify methods
-    // modifyDown = (updater: ParcelValueUpdater): Parcel => this._methods.modifyDown(updater);
-    // modifyUp = (updater: ParcelValueUpdater): Parcel => this._methods.modifyUp(updater);
-    // initialMeta = (initialMeta: ParcelMeta): Parcel => this._methods.initialMeta(initialMeta);
-
-    // // Type methods
-    // isChild = (): boolean => this._isChild;
-    // isElement = (): boolean => this._isElement;
-    // isIndexed = (): boolean => this._isIndexed;
-    // isParent = (): boolean => this._isParent;
-    // isTopLevel = (): boolean => !this._isChild;
-
-    // // Composition methods
-    // pipe = (...updaters: ParcelUpdater[]): Parcel => this._methods.pipe(...updaters);
 }
