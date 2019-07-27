@@ -311,14 +311,11 @@ When called with two arguments, this inserts `value` as the next sibling Parcel 
 ### move()
 
 ```flow
-move(key: string|number): ParcelShape // only on ElementParcels, will move with sibling
 move(keyA: string|number, keyB: string|number): ParcelShape // only on IndexedParcels, will move children
 ```
 
-When called with one argument, this moves the current Parcel to the position of `key`, within the current ParentParcel.
+This moves the child Parcel at `keyA` to the position of `keyB`.
 Other elements will shift left to fill any gaps left and/or shift right to make room for moved values.
-
-When called with two arguments, this moves the child Parcel at `keyA` to the position of `keyB`.
 
 <IndexedKeys />
 

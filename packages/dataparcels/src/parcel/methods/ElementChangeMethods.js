@@ -16,11 +16,6 @@ export default (_this: Parcel): Object => ({
         _this.dispatch(ActionCreators.insertBeforeSelf(value));
     },
 
-    moveSelf: (key: Key|Index) => {
-        Types(`moveSelf()`, `key`, `keyIndex`)(key);
-        _this.dispatch(ActionCreators.moveSelf(key));
-    },
-
     swapNextSelf: () => {
         _this.dispatch(ActionCreators.swapNextSelf());
     },

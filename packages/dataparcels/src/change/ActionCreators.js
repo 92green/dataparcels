@@ -48,15 +48,6 @@ const move: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
     });
 };
 
-const moveSelf: Function = (keyB: Key|Index): Action => {
-    return new Action({
-        type: "move",
-        payload: {
-            moveKey: keyB
-        }
-    });
-};
-
 const push: Function = (values: Array<*>): Action => {
     return new Action({
         type: "push",
@@ -163,7 +154,6 @@ export default {
     insertBeforeSelf,
     map,
     move,
-    moveSelf,
     push,
     pop,
     setData,

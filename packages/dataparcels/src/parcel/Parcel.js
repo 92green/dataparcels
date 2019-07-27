@@ -328,10 +328,7 @@ export default class Parcel {
     // Indexed methods
     insertAfter = (value: any) => this._methods.insertAfterSelf(value);
     insertBefore = (value: any) => this._methods.insertBeforeSelf(value);
-    move = overload({
-        ["1"]: (key: Key|Index) => this._methods.moveSelf(key),
-        ["2"]: (keyA: Key|Index, keyB: Key|Index) => this._methods.move(keyA, keyB)
-    });
+    move = (keyA: Key|Index, keyB: Key|Index) => this._methods.move(keyA, keyB);
     push = (...values: Array<any>) => this._methods.push(...values);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
