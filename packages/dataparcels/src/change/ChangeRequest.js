@@ -173,10 +173,4 @@ export default class ChangeRequest {
         let {next, prev} = this.getDataIn(keyPath);
         return !Object.is(next.value, prev.value);
     };
-
-    toJS = (): Object => ({
-        actions: this._actions.map(action => action.toJS()),
-        originId: this._originId,
-        originPath: this._originPath
-    });
 }

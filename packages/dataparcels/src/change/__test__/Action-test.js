@@ -2,13 +2,10 @@
 import Action from '../Action';
 
 test('Action should build an action', () => {
-    let expectedDefaultData = {
-        type: "",
-        payload: {},
-        keyPath: [],
-        steps: []
-    };
-    expect(new Action().toJS()).toEqual(expectedDefaultData);
+    expect(new Action().type).toEqual("");
+    expect(new Action().payload).toEqual({});
+    expect(new Action().keyPath).toEqual([]);
+    expect(new Action().steps).toEqual([]);
 });
 
 test('Action should build an action with a type', () => {
