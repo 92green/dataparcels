@@ -17,8 +17,7 @@ export default (parcelType: string, methodCreator: Function) => (parcel: Parcel|
     return pipeWith(
         methods,
         map((value, key) => () => {
-            let suffix = Array.isArray(parcel.path) ? `(keyPath: [${parcel.path.join(', ')}]).` : ``;
-            throw ParcelTypeMethodMismatch(key.replace('Self', ''), parcelType, suffix);
+            throw ParcelTypeMethodMismatch(key.replace('Self', ''), parcelType);
         })
     );
 };
