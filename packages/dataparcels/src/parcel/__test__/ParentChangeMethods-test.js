@@ -1,23 +1,6 @@
 // @flow
 import Parcel from '../Parcel';
-import map from 'unmutable/lib/map';
 import ParcelShape from '../../parcelShape/ParcelShape';
-
-test('ParentParcel.set(key) should call the Parcels handleChange function with the new parcelData', () => {
-    expect.assertions(1);
-
-    var data = {
-        value: {
-            a: "!!!"
-        },
-        handleChange: (parcel) => {
-            let {value} = parcel.data;
-            expect({a: "???"}).toEqual(value);
-        }
-    };
-
-    new Parcel(data).set("a", "???");
-});
 
 test('ParentParcel.update(key) should call the Parcels handleChange function with the new parcelData', () => {
     let updater = jest.fn(ii => ii + 1);

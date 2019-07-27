@@ -8,10 +8,6 @@ import ActionCreators from '../../change/ActionCreators';
 import prepUpdater from '../../parcelData/prepUpdater';
 
 export default (_this: Parcel): Object => ({
-    set: (key: Key|Index, value: *) => {
-        Types(`set()`, `key`, `keyIndex`)(key);
-        _this.get(key).set(value);
-    },
 
     setIn: (keyPath: Array<Key|Index>, value: *) => {
         Types(`setIn()`, `keyPath`, `keyIndexPath`)(keyPath);

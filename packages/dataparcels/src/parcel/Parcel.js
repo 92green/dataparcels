@@ -316,10 +316,7 @@ export default class Parcel {
     onChange = (value: any) => this._methods.onChange(value);
     onChangeDOM = (event: *) => this._methods.onChangeDOM(event);
     onChangeDOMCheckbox = (event: *) => this._methods.onChangeDOMCheckbox(event);
-    set = overload({
-        ["1"]: (value: any) => this._methods.setSelf(value),
-        ["2"]: (key: Key|Index, value: any) => this._methods.set(key, value)
-    });
+    set = (value: any) => this._methods.setSelf(value);
     update = overload({
         ["1"]: (updater: ParcelValueUpdater) => this._methods.updateSelf(updater),
         ["2"]: (key: Key|Index, updater: ParcelValueUpdater) => this._methods.update(key, updater)
