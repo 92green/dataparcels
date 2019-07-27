@@ -32,16 +32,16 @@ import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
 import parcelGet from '../parcelData/get';
 import parcelHas from '../parcelData/has';
 
-import identity from 'unmutable/lib/identity';
-import filterNot from 'unmutable/lib/filterNot';
-import has from 'unmutable/lib/has';
-import pipeWith from 'unmutable/lib/util/pipeWith';
-import first from 'unmutable/lib/first';
-import last from 'unmutable/lib/last';
-import clone from 'unmutable/lib/clone';
-import map from 'unmutable/lib/map';
-import size from 'unmutable/lib/size';
-import toArray from 'unmutable/lib/toArray';
+import identity from 'unmutable/identity';
+import filterNot from 'unmutable/filterNot';
+import has from 'unmutable/has';
+import pipeWith from 'unmutable/pipeWith';
+import first from 'unmutable/first';
+import last from 'unmutable/last';
+import clone from 'unmutable/clone';
+import map from 'unmutable/map';
+import size from 'unmutable/size';
+import toArray from 'unmutable/toArray';
 
 import HashString from '../util/HashString';
 import ValidateValueUpdater from '../util/ValidateValueUpdater';
@@ -203,6 +203,12 @@ export default class Parcel {
             return fn;
         };
 
+        let dispatchOnlyType = (type: string, name: string, fn: Function) => {
+            return onlyType(type, name, (...args) => {
+                this._dispatch(fn(...args));
+            });
+        };
+
         const Parent = 'Parent';
         const Child = 'Child';
         const Indexed = 'Indexed';
@@ -248,7 +254,6 @@ export default class Parcel {
 
         // Types(`children()`, `mapper`, `function`)(mapper);
         this.children = onlyType(Parent, 'children', (mapper: ParcelMapper = identity()): ParentType<Parcel> => {
-
             return pipeWith(
                 this._parcelData.value,
                 clone(),
@@ -272,8 +277,8 @@ export default class Parcel {
 
         // Parent methods
 
+        //Types(`has()`, `key`, `keyIndex`)(key);
         this.has = onlyType(Parent, 'has', (key: Key|Index): boolean => {
-            //Types(`has()`, `key`, `keyIndex`)(key);
             this._prepareChildKeys();
             return parcelHas(key)(this._parcelData);
         });
@@ -337,11 +342,11 @@ export default class Parcel {
             this.set(updatedValue);
         };
 
-        this.delete = onlyType(Child, 'delete', () => this._dispatch(ActionCreators.deleteSelf()));
+        this.delete = dispatchOnlyType(Child, 'delete', ActionCreators.deleteSelf);
 
         // Types(`map()`, `updater`, `function`)(updater);
-        this.map = onlyType(Parent, 'map', (updater: ParcelValueUpdater) => {
-            this._dispatch(ActionCreators.map(prepUpdater(updater)));
+        this.map = dispatchOnlyType(Parent, 'map', (updater: ParcelValueUpdater) => {
+            return ActionCreators.map(prepUpdater(updater));
         });
 
         // Advanced change methods
@@ -354,49 +359,21 @@ export default class Parcel {
         this.dispatch = this._dispatch;
 
         // Indexed methods
-        this.insertAfter = onlyType(Element, 'insertAfter', (value: any) => {
-            this._dispatch(ActionCreators.insertAfterSelf(value));
-        });
-
-        this.insertBefore = onlyType(Element, 'insertBefore', (value: any) => {
-            this._dispatch(ActionCreators.insertBeforeSelf(value));
-        });
 
         // Types(`move()`, `keyA`, `keyIndex`)(keyA);
         // Types(`move()`, `keyB`, `keyIndex`)(keyB);
-        this.move = onlyType(Indexed, 'move', (keyA: Key|Index, keyB: Key|Index) => {
-            this._dispatch(ActionCreators.move(keyA, keyB));
-        });
-
-        this.push = onlyType(Indexed, 'push', (...values: Array<*>) => {
-            this._dispatch(ActionCreators.push(...values));
-        });
-
-        this.pop = onlyType(Indexed, 'pop', () => {
-            this._dispatch(ActionCreators.pop());
-        });
-
-        this.shift = onlyType(Indexed, 'shift', () => {
-            this._dispatch(ActionCreators.shift());
-        });
-
         // Types(`swap()`, `keyA`, `keyIndex`)(keyA);
         // Types(`swap()`, `keyB`, `keyIndex`)(keyB);
-        this.swap = onlyType(Indexed, 'swap', (keyA: Key|Index, keyB: Key|Index) => {
-            this._dispatch(ActionCreators.swap(keyA, keyB));
-        });
-
-        this.swapNext = onlyType(Element, 'swapNext', () => {
-            this._dispatch(ActionCreators.swapNextSelf());
-        });
-
-        this.swapPrev = onlyType(Element, 'swapPrev', () => {
-            this._dispatch(ActionCreators.swapPrevSelf());
-        });
-
-        this.unshift = onlyType(Indexed, 'unshift', (...values: Array<*>) => {
-            this._dispatch(ActionCreators.unshift(...values));
-        });
+        this.insertAfter = dispatchOnlyType(Element, 'insertAfter', ActionCreators.insertAfterSelf);
+        this.insertBefore = dispatchOnlyType(Element, 'insertBefore', ActionCreators.insertBeforeSelf);
+        this.move = dispatchOnlyType(Indexed, 'move', ActionCreators.move);
+        this.push = dispatchOnlyType(Indexed, 'push', ActionCreators.push);
+        this.pop = dispatchOnlyType(Indexed, 'pop', ActionCreators.pop);
+        this.shift = dispatchOnlyType(Indexed, 'shift', ActionCreators.shift);
+        this.swap = dispatchOnlyType(Indexed, 'swap', ActionCreators.swap);
+        this.swapNext = dispatchOnlyType(Element, 'swapNext', ActionCreators.swapNextSelf);
+        this.swapPrev = dispatchOnlyType(Element, 'swapPrev', ActionCreators.swapPrevSelf);
+        this.unshift = dispatchOnlyType(Indexed, 'unshift', ActionCreators.unshift);
 
         // Modify methods
 

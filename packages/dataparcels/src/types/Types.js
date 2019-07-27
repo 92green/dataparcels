@@ -35,7 +35,7 @@ export type ParcelConfigInternal = {
     meta: ParcelMeta,
     parent: ParcelParent,
     registry: ParcelRegistry,
-    updateChangeRequestOnDispatch: (changeRequest: ChangeRequest) => ChangeRequest
+    updateChangeRequestOnDispatch: UpdateChangeRequestOnDispatch
 };
 
 export type ParcelCreateConfigType = {
@@ -46,8 +46,10 @@ export type ParcelCreateConfigType = {
     parcelData?: ParcelData,
     parent?: ParcelParent,
     registry?: ParcelRegistry,
-    updateChangeRequestOnDispatch?: (changeRequest: ChangeRequest) => ChangeRequest
+    updateChangeRequestOnDispatch?: UpdateChangeRequestOnDispatch
 };
+
+export type UpdateChangeRequestOnDispatch = (changeRequest: ChangeRequest) => ChangeRequest;
 
 export type ParcelMeta = {[key: string]: *};
 export type ParcelMapper = (item: Parcel, property: string|number, parent: Parcel) => *;
