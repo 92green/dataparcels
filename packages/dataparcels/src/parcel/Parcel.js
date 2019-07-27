@@ -35,6 +35,7 @@ import parcelHas from '../parcelData/has';
 import identity from 'unmutable/identity';
 import filterNot from 'unmutable/filterNot';
 import has from 'unmutable/has';
+import pipe from 'unmutable/pipe';
 import pipeWith from 'unmutable/pipeWith';
 import first from 'unmutable/first';
 import last from 'unmutable/last';
@@ -44,7 +45,6 @@ import size from 'unmutable/size';
 import toArray from 'unmutable/toArray';
 
 import HashString from '../util/HashString';
-import ValidateValueUpdater from '../util/ValidateValueUpdater';
 
 const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
@@ -330,24 +330,14 @@ export default class Parcel {
 
         // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
-            if(updater._asRaw) {
-                let updated = updater(this._parcelData);
-                this._dispatch(ActionCreators.setData(updated));
-                return;
-            }
-
-            let {value} = this;
-            let updatedValue = updater(value);
-            ValidateValueUpdater(value, updatedValue);
-            this.set(updatedValue);
+            let updated = prepUpdater(updater)(this._parcelData);
+            this._dispatch(ActionCreators.setData(updated));
         };
 
         this.delete = dispatchOnlyType(Child, 'delete', ActionCreators.deleteSelf);
 
         // Types(`map()`, `updater`, `function`)(updater);
-        this.map = dispatchOnlyType(Parent, 'map', (updater: ParcelValueUpdater) => {
-            return ActionCreators.map(prepUpdater(updater));
-        });
+        this.map = dispatchOnlyType(Parent, 'map', pipe(prepUpdater, ActionCreators.map));
 
         // Advanced change methods
 
