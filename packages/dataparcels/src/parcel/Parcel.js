@@ -35,7 +35,6 @@ import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 
 import identity from 'unmutable/lib/identity';
-import overload from 'unmutable/lib/util/overload';
 
 const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
@@ -333,14 +332,8 @@ export default class Parcel {
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
     swap = (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB);
-    swapNext = overload({
-        ["0"]: () => this._methods.swapNextSelf(),
-        ["1"]: (key: Key|Index) => this._methods.swapNext(key)
-    });
-    swapPrev = overload({
-        ["0"]: () => this._methods.swapPrevSelf(),
-        ["1"]: (key: Key|Index) => this._methods.swapPrev(key)
-    });
+    swapNext = () => this._methods.swapNextSelf();
+    swapPrev = () => this._methods.swapPrevSelf();
     unshift = (...values: Array<any>) => this._methods.unshift(...values);
 
     // Modify methods

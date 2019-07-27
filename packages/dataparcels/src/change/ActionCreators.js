@@ -104,23 +104,9 @@ const swap: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
     });
 };
 
-const swapNext: Function = (key: Key|Index): Action => {
-    return new Action({
-        type: "swapNext",
-        keyPath: [key]
-    });
-};
-
 const swapNextSelf: Function = (): Action => {
     return new Action({
         type: "swapNext"
-    });
-};
-
-const swapPrev: Function = (key: Key|Index): Action => {
-    return new Action({
-        type: "swapPrev",
-        keyPath: [key]
     });
 };
 
@@ -152,9 +138,7 @@ export default {
     setSelf,
     shift,
     swap,
-    swapNext,
     swapNextSelf,
-    swapPrev,
     swapPrevSelf,
     unshift
 };

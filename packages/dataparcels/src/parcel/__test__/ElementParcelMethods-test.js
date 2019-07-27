@@ -110,7 +110,7 @@ test('ElementParcel.insertAfter() should insert', () => {
 });
 
 test('ElementParcel.swapNext() should swapNext', () => {
-    expect.assertions(4);
+    expect.assertions(2);
 
     var data = {
         value: [1,2,3],
@@ -147,20 +147,6 @@ test('ElementParcel.swapNext() should swapNext', () => {
     })
         .get(0)
         .swapNext();
-
-    expectedAction = {
-        type: "swapNext",
-        keyPath: ["#a"],
-        payload: {}
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).swapNext("#a");
 });
 
 

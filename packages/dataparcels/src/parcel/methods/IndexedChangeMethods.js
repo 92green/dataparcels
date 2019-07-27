@@ -32,16 +32,6 @@ export default (_this: Parcel): Object => ({
         _this.dispatch(ActionCreators.swap(keyA, keyB));
     },
 
-    swapNext: (key: Key|Index) => {
-        Types(`swapNext()`, `key`, `keyIndex`)(key);
-        _this.dispatch(ActionCreators.swapNext(key));
-    },
-
-    swapPrev: (key: Key|Index) => {
-        Types(`swapPrev()`, `key`, `keyIndex`)(key);
-        _this.dispatch(ActionCreators.swapPrev(key));
-    },
-
     unshift: (...values: Array<*>) => {
         _this.dispatch(ActionCreators.unshift(values));
     }
