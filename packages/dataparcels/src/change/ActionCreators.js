@@ -130,15 +130,6 @@ const swapPrevSelf: Function = (): Action => {
     });
 };
 
-const swapSelf: Function = (keyB: Key|Index): Action => {
-    return new Action({
-        type: "swap",
-        payload: {
-            swapKey: keyB
-        }
-    });
-};
-
 const unshift: Function = (values: Array<*>): Action => {
     return new Action({
         type: "unshift",
@@ -165,6 +156,5 @@ export default {
     swapNextSelf,
     swapPrev,
     swapPrevSelf,
-    swapSelf,
     unshift
 };
