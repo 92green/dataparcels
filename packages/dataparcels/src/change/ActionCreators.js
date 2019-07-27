@@ -48,7 +48,7 @@ const move: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
     });
 };
 
-const push: Function = (values: Array<*>): Action => {
+const push: Function = (...values: Array<*>): Action => {
     return new Action({
         type: "push",
         payload: {
@@ -116,7 +116,7 @@ const swapPrevSelf: Function = (): Action => {
     });
 };
 
-const unshift: Function = (values: Array<*>): Action => {
+const unshift: Function = (...values: Array<*>): Action => {
     return new Action({
         type: "unshift",
         payload: {

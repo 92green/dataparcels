@@ -14,7 +14,6 @@ import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
 
-import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
 import {ParcelTypeMethodMismatch} from '../errors/Errors';
 
@@ -153,14 +152,14 @@ export default class Parcel {
     pipe = (...updaters: ParcelUpdater[]): Parcel => pipeWith(this, ...updaters);
 
     constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
-        Types(`Parcel()`, `config`, `object`)(config);
+        //Types(`Parcel()`, `config`, `object`)(config);
 
         let {
             handleChange,
             value
         } = config;
 
-        handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
+        //handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
 
         let {
             child,
@@ -204,12 +203,16 @@ export default class Parcel {
             return fn;
         };
 
+        const Parent = 'Parent';
+        const Child = 'Child';
+        const Indexed = 'Indexed';
+        const Element = 'Element';
+
         //
         // public methods
         //
 
         // TODO - compact args
-        // TODO - dedupe string refs
         // TODO - dedupe dispatches
         // TODO - identify
 
@@ -232,10 +235,10 @@ export default class Parcel {
 
         // Branch methods
 
-        this.get = onlyType('Parent', 'get', this._get);
+        this.get = onlyType(Parent, 'get', this._get);
 
-        this.getIn = onlyType('Parent', 'getIn', (keyPath: Array<Key|Index>, notFoundValue: any): Parcel => {
-            // Types(`getIn()`, `keyPath`, `keyIndexPath`)(keyPath);
+        // Types(`getIn()`, `keyPath`, `keyIndexPath`)(keyPath);
+        this.getIn = onlyType(Parent, 'getIn', (keyPath: Array<Key|Index>, notFoundValue: any): Parcel => {
             var parcel = this;
             for(let i = 0; i < keyPath.length; i++) {
                 parcel = parcel.get(keyPath[i], i < keyPath.length - 1 ? {} : notFoundValue);
@@ -243,8 +246,8 @@ export default class Parcel {
             return parcel;
         });
 
-        this.children = onlyType('Parent', 'children', (mapper: ParcelMapper = identity()): ParentType<Parcel> => {
-            // Types(`children()`, `mapper`, `function`)(mapper);
+        // Types(`children()`, `mapper`, `function`)(mapper);
+        this.children = onlyType(Parent, 'children', (mapper: ParcelMapper = identity()): ParentType<Parcel> => {
 
             return pipeWith(
                 this._parcelData.value,
@@ -253,8 +256,8 @@ export default class Parcel {
             );
         });
 
-        this.toArray = onlyType('Parent', 'toArray', (mapper: ParcelMapper = identity()): Array<Parcel> => {
-            // Types(`toArray()`, `mapper`, `function`)(mapper);
+        // Types(`toArray()`, `mapper`, `function`)(mapper);
+        this.toArray = onlyType(Parent, 'toArray', (mapper: ParcelMapper = identity()): Array<Parcel> => {
             return toArray()(this.children(mapper));
         });
 
@@ -269,13 +272,13 @@ export default class Parcel {
 
         // Parent methods
 
-        this.has = onlyType('Parent', 'has', (key: Key|Index): boolean => {
+        this.has = onlyType(Parent, 'has', (key: Key|Index): boolean => {
             //Types(`has()`, `key`, `keyIndex`)(key);
             this._prepareChildKeys();
             return parcelHas(key)(this._parcelData);
         });
 
-        this.size = onlyType('Parent', 'size', (): number => size()(this.value));
+        this.size = onlyType(Parent, 'size', (): number => size()(this.value));
 
         // Child methods
 
@@ -284,14 +287,14 @@ export default class Parcel {
 
         // Side-effect methods
 
+        // Types(`spy()`, `sideEffect`, `function`)(sideEffect);
         this.spy = (sideEffect: Function): Parcel => {
-            // Types(`spy()`, `sideEffect`, `function`)(sideEffect);
             sideEffect(this);
             return this;
         };
 
+        // Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
         this.spyChange = (sideEffect: Function): Parcel => {
-            // Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
             return this._create({
                 id: this._id.pushModifier('sc'),
                 updateChangeRequestOnDispatch: (changeRequest: ChangeRequest): ChangeRequest => {
@@ -308,20 +311,20 @@ export default class Parcel {
 
         this.onChange = (value: any) => this.set(value);
 
+        // Types(`onChangeDOM()`, `event`, `event`)(event);
         this.onChangeDOM = (event: Object) => {
-            // Types(`onChangeDOM()`, `event`, `event`)(event);
             this.set(event.currentTarget.value);
         };
 
+        // Types(`onChangeDOMCheckbox()`, `event`, `event`)(event);
         this.onChangeDOMCheckbox = (event: Object) => {
-            // Types(`onChangeDOMCheckbox()`, `event`, `event`)(event);
             this.set(event.currentTarget.checked);
         };
 
         this.set = (value: any) => this._dispatch(ActionCreators.setSelf(value));
 
+        // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
-            // Types(`update()`, `updater`, `function`)(updater);
             if(updater._asRaw) {
                 let updated = updater(this._parcelData);
                 this._dispatch(ActionCreators.setData(updated));
@@ -334,71 +337,71 @@ export default class Parcel {
             this.set(updatedValue);
         };
 
-        this.delete = onlyType('Child', 'delete', () => this._dispatch(ActionCreators.deleteSelf()));
+        this.delete = onlyType(Child, 'delete', () => this._dispatch(ActionCreators.deleteSelf()));
 
-        this.map = onlyType('Parent', 'map', (updater: ParcelValueUpdater) => {
-            // Types(`map()`, `updater`, `function`)(updater);
+        // Types(`map()`, `updater`, `function`)(updater);
+        this.map = onlyType(Parent, 'map', (updater: ParcelValueUpdater) => {
             this._dispatch(ActionCreators.map(prepUpdater(updater)));
         });
 
         // Advanced change methods
 
+        // Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
         this.setMeta = (partialMeta: ParcelMeta) => {
-            // Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
             this._dispatch(ActionCreators.setMeta(partialMeta));
         };
 
         this.dispatch = this._dispatch;
 
         // Indexed methods
-        this.insertAfter = onlyType('Element', 'insertAfter', (value: any) => {
+        this.insertAfter = onlyType(Element, 'insertAfter', (value: any) => {
             this._dispatch(ActionCreators.insertAfterSelf(value));
         });
 
-        this.insertBefore = onlyType('Element', 'insertBefore', (value: any) => {
+        this.insertBefore = onlyType(Element, 'insertBefore', (value: any) => {
             this._dispatch(ActionCreators.insertBeforeSelf(value));
         });
 
-        this.move = onlyType('Indexed', 'move', (keyA: Key|Index, keyB: Key|Index) => {
-            // Types(`move()`, `keyA`, `keyIndex`)(keyA);
-            // Types(`move()`, `keyB`, `keyIndex`)(keyB);
+        // Types(`move()`, `keyA`, `keyIndex`)(keyA);
+        // Types(`move()`, `keyB`, `keyIndex`)(keyB);
+        this.move = onlyType(Indexed, 'move', (keyA: Key|Index, keyB: Key|Index) => {
             this._dispatch(ActionCreators.move(keyA, keyB));
         });
 
-        this.push = onlyType('Indexed', 'push', (...values: Array<*>) => {
-            this._dispatch(ActionCreators.push(values));
+        this.push = onlyType(Indexed, 'push', (...values: Array<*>) => {
+            this._dispatch(ActionCreators.push(...values));
         });
 
-        this.pop = onlyType('Indexed', 'pop', () => {
+        this.pop = onlyType(Indexed, 'pop', () => {
             this._dispatch(ActionCreators.pop());
         });
 
-        this.shift = onlyType('Indexed', 'shift', () => {
+        this.shift = onlyType(Indexed, 'shift', () => {
             this._dispatch(ActionCreators.shift());
         });
 
-        this.swap = onlyType('Indexed', 'swap', (keyA: Key|Index, keyB: Key|Index) => {
-            // Types(`swap()`, `keyA`, `keyIndex`)(keyA);
-            // Types(`swap()`, `keyB`, `keyIndex`)(keyB);
+        // Types(`swap()`, `keyA`, `keyIndex`)(keyA);
+        // Types(`swap()`, `keyB`, `keyIndex`)(keyB);
+        this.swap = onlyType(Indexed, 'swap', (keyA: Key|Index, keyB: Key|Index) => {
             this._dispatch(ActionCreators.swap(keyA, keyB));
         });
 
-        this.swapNext = onlyType('Element', 'swapNext', () => {
+        this.swapNext = onlyType(Element, 'swapNext', () => {
             this._dispatch(ActionCreators.swapNextSelf());
         });
 
-        this.swapPrev = onlyType('Element', 'swapPrev', () => {
+        this.swapPrev = onlyType(Element, 'swapPrev', () => {
             this._dispatch(ActionCreators.swapPrevSelf());
         });
 
-        this.unshift = onlyType('Indexed', 'unshift', (...values: Array<*>) => {
-            this._dispatch(ActionCreators.unshift(values));
+        this.unshift = onlyType(Indexed, 'unshift', (...values: Array<*>) => {
+            this._dispatch(ActionCreators.unshift(...values));
         });
 
         // Modify methods
 
+        // Types(`modifyDown()`, `updater`, `function`)(updater);
         this.modifyDown = (updater: ParcelValueUpdater): Parcel => {
-            // Types(`modifyDown()`, `updater`, `function`)(updater);
             let parcelDataUpdater = prepUpdater(updater);
             return this._create({
                 id: this._pushModifierId('md', updater),
@@ -410,8 +413,8 @@ export default class Parcel {
             });
         };
 
+        // Types(`modifyUp()`, `updater`, `function`)(updater);
         this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
-            // Types(`modifyUp()`, `updater`, `function`)(updater);
             let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
                 let nextData = prepUpdater(updater)(parcelData, changeRequest);
                 return checkCancellation(nextData);
@@ -427,8 +430,8 @@ export default class Parcel {
             });
         };
 
+        // Types(`initialMeta()`, `initialMeta`, `object`)(initialMeta);
         this.initialMeta = (initialMeta: ParcelMeta): Parcel => {
-            // Types(`initialMeta()`, `initialMeta`, `object`)(initialMeta);
             let {meta} = this._parcelData;
 
             let parcelDataUpdater = pipeWith(
