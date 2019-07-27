@@ -8,16 +8,6 @@ import ActionCreators from '../../change/ActionCreators';
 
 export default (_this: Parcel): Object => ({
 
-    insertAfter: (key: Key|Index, value: *) => {
-        Types(`insertAfter()`, `key`, `keyIndex`)(key);
-        _this.dispatch(ActionCreators.insertAfter(key, value));
-    },
-
-    insertBefore: (key: Key|Index, value: *) => {
-        Types(`insertBefore()`, `key`, `keyIndex`)(key);
-        _this.dispatch(ActionCreators.insertBefore(key, value));
-    },
-
     move: (keyA: Key|Index, keyB: Key|Index) => {
         Types(`move()`, `keyA`, `keyIndex`)(keyA);
         Types(`move()`, `keyB`, `keyIndex`)(keyB);

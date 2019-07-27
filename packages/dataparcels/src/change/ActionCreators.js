@@ -11,29 +11,9 @@ const deleteSelf: Function = (): Action => {
     });
 };
 
-const insertAfter: Function = (key: Key|Index, value: *): Action => {
-    return new Action({
-        type: "insertAfter",
-        keyPath: [key],
-        payload: {
-            value
-        }
-    });
-};
-
 const insertAfterSelf: Function = (value: *): Action => {
     return new Action({
         type: "insertAfter",
-        payload: {
-            value
-        }
-    });
-};
-
-const insertBefore: Function = (key: Key|Index, value: *): Action => {
-    return new Action({
-        type: "insertBefore",
-        keyPath: [key],
         payload: {
             value
         }
@@ -179,9 +159,7 @@ const unshift: Function = (values: Array<*>): Action => {
 
 export default {
     deleteSelf,
-    insertAfter,
     insertAfterSelf,
-    insertBefore,
     insertBeforeSelf,
     map,
     move,

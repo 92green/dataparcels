@@ -326,14 +326,8 @@ export default class Parcel {
     dispatch = (dispatchable: Action|Action[]|ChangeRequest) => this._methods.dispatch(dispatchable);
 
     // Indexed methods
-    insertAfter = overload({
-        ["1"]: (value: any) => this._methods.insertAfterSelf(value),
-        ["2"]: (key: Key|Index, value: any) => this._methods.insertAfter(key, value)
-    });
-    insertBefore = overload({
-        ["1"]: (value: any) => this._methods.insertBeforeSelf(value),
-        ["2"]: (key: Key|Index, value: any) => this._methods.insertBefore(key, value)
-    });
+    insertAfter = (value: any) => this._methods.insertAfterSelf(value);
+    insertBefore = (value: any) => this._methods.insertBeforeSelf(value);
     move = overload({
         ["1"]: (key: Key|Index) => this._methods.moveSelf(key),
         ["2"]: (keyA: Key|Index, keyB: Key|Index) => this._methods.move(keyA, keyB)
