@@ -122,18 +122,6 @@ test('ParcelShapes.children() should make a parent data type full of parcelShape
     expect(map(ii => ii.value)(children)).toEqual({a:1,b:2,c:3});
 });
 
-test('ParcelShapes.toObject() should make an object', () => {
-    let parcelShape = ParcelShape.fromData({
-        value: {a:1,b:2,c:3},
-        meta: {
-            a: {a:4,b:5,c:6}
-        }
-    });
-
-    var expectedValue = {a:1,b:2,c:3};
-    expect(map(ii => ii.value)(parcelShape.toObject())).toEqual(expectedValue);
-});
-
 test('ParcelShapes.toArray() should make an array', () => {
     let parcelShape = ParcelShape.fromData({
         value: {a:1,b:2,c:3},

@@ -297,7 +297,6 @@ export default class Parcel {
     get = (key: Key|Index, notFoundValue: any = undefined): Parcel => this._methods.get(key, notFoundValue);
     getIn = (keyPath: Array<Key|Index>, notFoundValue: any = undefined): Parcel => this._methods.getIn(keyPath, notFoundValue);
     children = (mapper: ParcelMapper = _ => _): ParentType<Parcel> => this._methods.children(mapper);
-    toObject = (mapper: ParcelMapper = _ => _): { [key: string]: Parcel } => this._methods.toObject(mapper);
     toArray = (mapper: ParcelMapper = _ => _): Array<Parcel> => this._methods.toArray(mapper);
     metaAsParcel = (key: string): Parcel => this._methods.metaAsParcel(key);
 

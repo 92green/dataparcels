@@ -20,7 +20,6 @@ export default () => <Layout>
             'get()',
             'getIn()',
             'children()',
-            'toObject()',
             'toArray()',
             'metaAsParcel()',
             '# Input binding methods',

@@ -19,7 +19,6 @@ export default () => <Layout>
             'get()',
             'getIn()',
             'children()',
-            'toObject()',
             'toArray()',
             'has()',
             'size()',

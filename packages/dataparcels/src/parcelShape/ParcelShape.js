@@ -191,7 +191,6 @@ export default class ParcelShape {
     get = (key: Key|Index, notFoundValue: ?any = undefined): ParcelShape => this._methods.get(key, notFoundValue);
     getIn = (keyPath: Array<Key|Index>, notFoundValue: ?any = undefined): ParcelShape => this._methods.getIn(keyPath, notFoundValue);
     children = (): ParentType<ParcelShape> => this._methods.children();
-    toObject = (): { [key: string]: ParcelShape } => this._methods.toObject();
     toArray = (): Array<ParcelShape> => this._methods.toArray();
 
     // Change methods

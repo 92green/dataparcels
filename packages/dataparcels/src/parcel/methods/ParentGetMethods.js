@@ -17,7 +17,6 @@ import last from 'unmutable/lib/last';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
-import toObject from 'unmutable/lib/toObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: Parcel) => ({
@@ -101,11 +100,6 @@ export default (_this: Parcel) => ({
             clone(),
             map((value, key) => mapper(_this.get(key), key, _this))
         );
-    },
-
-    toObject: (mapper: ParcelMapper): { [key: string]: Parcel } => {
-        Types(`toObject()`, `mapper`, `function`)(mapper);
-        return toObject()(_this.children(mapper));
     },
 
     toArray: (mapper: ParcelMapper): Array<Parcel> => {

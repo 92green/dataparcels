@@ -11,7 +11,6 @@ import parcelKeyOrIndexToKey from '../../parcelData/keyOrIndexToKey';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import toArray from 'unmutable/lib/toArray';
-import toObject from 'unmutable/lib/toObject';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 export default (_this: ParcelShape) => ({
@@ -64,10 +63,6 @@ export default (_this: ParcelShape) => ({
             _this._parcelData.value,
             map((value, key) => _this.get(key))
         );
-    },
-
-    toObject: (): { [key: string]: ParcelShape } => {
-        return toObject()(_this.children());
     },
 
     toArray: (): Array<ParcelShape> => {
