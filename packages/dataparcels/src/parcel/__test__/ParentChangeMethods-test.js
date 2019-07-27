@@ -2,24 +2,6 @@
 import Parcel from '../Parcel';
 import ParcelShape from '../../parcelShape/ParcelShape';
 
-test('ParentParcel.delete(key) should delete', () => {
-    var handleChange = jest.fn();
-
-    new Parcel({
-        value: {
-            abc: 123,
-            def: 456
-        },
-        handleChange
-    }).delete("abc");
-
-    var expectedValue = {
-        def: 456
-    };
-
-    expect(handleChange.mock.calls[0][0].value).toEqual(expectedValue);
-});
-
 test('ParentParcel.setIn(keyPath) should call the Parcels handleChange function with the new parcelData', () => {
     expect.assertions(1);
 

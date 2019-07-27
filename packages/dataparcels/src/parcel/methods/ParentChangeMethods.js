@@ -14,11 +14,6 @@ export default (_this: Parcel): Object => ({
         _this.getIn(keyPath).set(value);
     },
 
-    delete: (key: Key|Index) => {
-        Types(`delete()`, `key`, `keyIndex`)(key);
-        _this.get(key).delete();
-    },
-
     deleteIn: (keyPath: Array<Key|Index>) => {
         Types(`deleteIn()`, `keyPath`, `keyIndexPath`)(keyPath);
         _this.getIn(keyPath).delete();

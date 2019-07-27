@@ -320,10 +320,7 @@ export default class Parcel {
     update = (updater: ParcelValueUpdater) => this._methods.updateSelf(updater);
     setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
     updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
-    delete = overload({
-        ["0"]: () => this._methods.deleteSelf(),
-        ["1"]: (key: Key|Index) => this._methods.delete(key)
-    });
+    delete = () => this._methods.deleteSelf();
     deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
     map = (updater: ParcelValueUpdater) => this._methods.map(updater);
 

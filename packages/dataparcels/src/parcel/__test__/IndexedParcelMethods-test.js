@@ -36,12 +36,12 @@ test('IndexedParcel.delete() should delete', () => {
     new Parcel({
         ...data,
         handleChange: indexedHandleChange
-    }).delete(0);
+    }).get(0).delete();
 
     new Parcel({
         ...data,
         handleChange: keyedHandleChange
-    }).delete("#a");
+    }).get("#a").delete();
 
     expect(indexedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
     expect(GetAction(indexedHandleChange.mock.calls[0][1])).toEqual(expectedAction);
