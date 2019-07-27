@@ -224,30 +224,6 @@ parcelShape.set(456);
 
 <IndexedKeys />
 
-
-### setIn()
-
-```flow
-setIn(keyPath: Array<string|number>, value: any): ParcelShape // only on ParentParcels
-```
-
-Calling `setIn()` will return a new ParcelShape where the value at the provided `keyPath` has been set to `value`.
-
-```js
-let value = {
-    a: {
-        b: 123,
-        c: 789
-    }
-};
-let parcelShape = new ParcelShape(value);
-parcelShape.set(['a','b'], 456);
-// returns a new ParcelShape containing {a: {b: 456, c: 789}}
-```
-
-<IndexedKeys />
-
-
 ### delete()
 
 ```flow
@@ -258,16 +234,6 @@ delete(key: string|number): ParcelShape // only on ParentParcels, will delete a 
 Calling `delete()` with no arguments will delete the current ParcelShape off of its parent. This variation of the `delete()` method only exists on ChildParcels.
 
 On ParentParcels this method can be called with a `key`, which deletes the child value at that key.
-
-<IndexedKeys />
-
-### deleteIn()
-
-```flow
-deleteIn(keyPath: Array<string|number>): ParcelShape // only on ParentParcels
-```
-
-Calling `deleteIn()` will delete the value at the provided `keyPath`.
 
 <IndexedKeys />
 
@@ -288,22 +254,6 @@ type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
 Calling `update()` with one argument will replace the current value in the ParcelShape with the result of the value updater provided to it. The value updater is passed the current value of the ParcelShape, from which you can return the intended replacement value.
 
 On ParentParcels this method can also be called with a `key`, which updates the child value at that key. The value updater is passed the current value found at the `key`, from which you can return the intended replacement value.
-
-<ValueUpdater />
-
-### updateIn()
-
-```flow
-// updates value - only to be used if shape doesn't change
-updateIn(keyPath: Array<string|number>, updater: ParcelValueUpdater): ParcelShape // only on ParentParcels
-type ParcelValueUpdater = (value: any) => any;
-
-// updates shape, including meta
-updateIn(keyPath: Array<string|number>, asShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape // only on ParentParcels
-type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
-```
-
-Calling `updateIn()` will update the value at the provided `keyPath`. The value updater is passed the current value found at the `keyPath`, from which you can return the intended replacement value.
 
 <ValueUpdater />
 

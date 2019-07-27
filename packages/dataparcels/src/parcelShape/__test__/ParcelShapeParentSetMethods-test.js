@@ -34,42 +34,6 @@ test('ParcelShapes set(key) should work', () => {
     expect(parcelShape.set('a', 456).data).toEqual(expectedData);
 });
 
-test('ParcelShapes setIn(keyPath) should work', () => {
-    let parcelShape = ParcelShape.fromData({
-        value: {
-            a: {
-                b: 123
-            },
-            c: 456
-        }
-    });
-
-    let expectedData = {
-        value: {
-            a: {
-                b: 456
-            },
-            c: 456
-        },
-        child: {
-            a: {
-                child: {
-                    b: {
-                        child: undefined,
-                        key: "b"
-                    }
-                },
-                key: "a"
-            },
-            c: {
-                key: "c"
-            }
-        }
-    };
-
-    expect(parcelShape.setIn(['a', 'b'], 456).data).toEqual(expectedData);
-});
-
 test('ParcelShapes delete(key) should work', () => {
     let parcelShape = ParcelShape.fromData({
         value: {
@@ -94,35 +58,6 @@ test('ParcelShapes delete(key) should work', () => {
     };
 
     expect(parcelShape.delete('a').data).toEqual(expectedData);
-});
-
-test('ParcelShapes deleteIn(keyPath) should work', () => {
-    let parcelShape = ParcelShape.fromData({
-        value: {
-            a: {
-                b: 123
-            },
-            c: 456
-        }
-    });
-
-    let expectedData = {
-        value: {
-            a: {},
-            c: 456
-        },
-        child: {
-            a: {
-                child: {},
-                key: "a"
-            },
-            c: {
-                key: "c"
-            }
-        }
-    };
-
-    expect(parcelShape.deleteIn(['a', 'b']).data).toEqual(expectedData);
 });
 
 test('ParcelShapes update(key) should work', () => {
@@ -188,79 +123,6 @@ test('ParcelShapes update(key, asShape()) should work', () => {
     };
 
     expect(parcelShape.update('a', asShape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
-});
-
-test('ParcelShapes updateIn(keyPath) should work', () => {
-    let parcelShape = ParcelShape.fromData({
-        value: {
-            a: {
-                b: 123
-            }
-        }
-    });
-
-    let expectedData = {
-        value: {
-            a: {
-                b: 124
-            }
-        },
-        child: {
-            a: {
-                child: {
-                    b: {
-                        child: undefined,
-                        key: "b"
-                    }
-                },
-                key: "a"
-            }
-        }
-    };
-
-    expect(parcelShape.updateIn(['a', 'b'], ii => ii + 1).data).toEqual(expectedData);
-});
-
-test('ParcelShapes updateIn(keyPath) should validate value updater', () => {
-    TestValidateValueUpdater(
-        expect,
-        (value, updater) => new ParcelShape({
-            a: {
-                b: value
-            }
-        }).updateIn(['a', 'b'], updater)
-    );
-});
-
-test('ParcelShapes updateIn(keyPath, asShape()) should work', () => {
-    let parcelShape = ParcelShape.fromData({
-        value: {
-            a: {
-                b: 123
-            }
-        }
-    });
-
-    let expectedData = {
-        value: {
-            a: {
-                b: 124
-            }
-        },
-        child: {
-            a: {
-                child: {
-                    b: {
-                        child: undefined,
-                        key: "b"
-                    }
-                },
-                key: "a"
-            }
-        }
-    };
-
-    expect(parcelShape.updateIn(['a', 'b'], asShape(parcelShape => parcelShape.update(ii => ii + 1))).data).toEqual(expectedData);
 });
 
 test('ParcelShapes map() should work', () => {

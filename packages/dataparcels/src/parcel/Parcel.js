@@ -318,10 +318,7 @@ export default class Parcel {
     onChangeDOMCheckbox = (event: *) => this._methods.onChangeDOMCheckbox(event);
     set = (value: any) => this._methods.setSelf(value);
     update = (updater: ParcelValueUpdater) => this._methods.updateSelf(updater);
-    setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
-    updateIn = (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => this._methods.updateIn(keyPath, updater);
     delete = () => this._methods.deleteSelf();
-    deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
     map = (updater: ParcelValueUpdater) => this._methods.map(updater);
 
     // Advanced change methods

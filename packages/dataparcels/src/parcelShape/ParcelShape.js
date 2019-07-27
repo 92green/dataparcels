@@ -196,17 +196,14 @@ export default class ParcelShape {
     // Change methods
     set = overload({
         ["1"]: (value: any) => this._methods.setSelf(value),
-        ["2"]: (key: Key|Index, value: any) => this.setIn([key], value)
+        ["2"]: (key: Key|Index, value: any) => this._methods.set(key, value)
     });
     setMeta = (partialMeta: ParcelShapeSetMeta) => this._methods.setMeta(partialMeta);
-    setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
-    delete = (key: Key|Index) => this.deleteIn([key]);
-    deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
+    delete = (key: Key|Index) => this._methods.delete(key);
     update = overload({
-        ["1"]: (updater: ParcelShapeValueUpdater): ParcelShape => this._methods.update(updater),
-        ["2"]: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => this.updateIn([key], updater)
+        ["1"]: (updater: ParcelShapeValueUpdater): ParcelShape => this._methods.updateSelf(updater),
+        ["2"]: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => this._methods.update(key, updater)
     });
-    updateIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateIn(keyPath, updater);
     map = (updater: ParcelShapeValueUpdater) => this._methods.map(updater);
 
     // Indexed methods
