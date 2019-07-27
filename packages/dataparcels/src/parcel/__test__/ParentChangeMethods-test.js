@@ -2,40 +2,6 @@
 import Parcel from '../Parcel';
 import ParcelShape from '../../parcelShape/ParcelShape';
 
-test('ParentParcel.update(key) should call the Parcels handleChange function with the new parcelData', () => {
-    let updater = jest.fn(ii => ii + 1);
-    let handleChange = jest.fn();
-
-    new Parcel({
-        value: {
-            abc: 123
-        },
-        handleChange
-    }).update("abc", updater);
-
-    expect(updater.mock.calls[0][0]).toBe(123);
-    expect(handleChange.mock.calls[0][0].data.value).toEqual({
-        abc: 124
-    });
-});
-
-test('ParentParcel.update(key, parcelShapeUpdater) should call the Parcels handleChange function with the new parcelData', () => {
-    let updater = jest.fn(parcelShape => parcelShape.push(4));
-    let handleChange = jest.fn();
-
-    new Parcel({
-        value: {
-            abc: [1,2,3]
-        },
-        handleChange
-    }).update("abc", ParcelShape.update(updater));
-
-    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
-    expect(handleChange.mock.calls[0][0].data.value).toEqual({
-        abc: [1,2,3,4]
-    });
-});
-
 test('ParentParcel.delete(key) should delete', () => {
     var handleChange = jest.fn();
 

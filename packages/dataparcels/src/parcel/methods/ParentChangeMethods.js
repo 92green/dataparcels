@@ -24,12 +24,6 @@ export default (_this: Parcel): Object => ({
         _this.getIn(keyPath).delete();
     },
 
-    update: (key: Key|Index, updater: ParcelValueUpdater) => {
-        Types(`update()`, `key`, `keyIndex`)(key);
-        Types(`update()`, `updater`, `function`)(updater);
-        _this.get(key).update(updater);
-    },
-
     updateIn: (keyPath: Array<Key|Index>, updater: ParcelValueUpdater) => {
         Types(`updateIn()`, `keyPath`, `keyIndexPath`)(keyPath);
         Types(`updateIn()`, `updater`, `function`)(updater);
