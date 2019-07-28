@@ -26,35 +26,21 @@ export default class ChangeRequest {
         this._actions = this._actions.concat(action);
     }
 
-    _create = (changeRequestData: Object): ChangeRequest => {
-
-        changeRequestData = {
-            actions: this._actions,
-            prevData: this._prevData,
-            nextData: this._nextData,
-            originId: this._originId,
-            originPath: this._originPath,
-            revertCallback: this._revertCallback,
-            nextFrameMeta: this._nextFrameMeta,
-            ...changeRequestData
-        };
-
+    _create = ({actions, nextFrameMeta, prevData}: any): ChangeRequest => {
+        // never copy nextData as the cache may be invalid
         let changeRequest = new ChangeRequest();
-        changeRequest._actions = changeRequestData.actions;
-        changeRequest._prevData = changeRequestData.prevData;
-        changeRequest._nextData = changeRequestData.nextData;
-        changeRequest._originId = changeRequestData.originId;
-        changeRequest._originPath = changeRequestData.originPath;
-        changeRequest._revertCallback = changeRequestData.revertCallback;
-        changeRequest._nextFrameMeta = changeRequestData.nextFrameMeta;
+        changeRequest._actions = actions || this._actions;
+        changeRequest._originId = this._originId;
+        changeRequest._originPath = this._originPath;
+        changeRequest._revertCallback = this._revertCallback;
+        changeRequest._nextFrameMeta = nextFrameMeta || this._nextFrameMeta;
+        changeRequest._prevData = prevData; // or else this is undefined
         return changeRequest;
     };
 
     _addStep = (step: ActionStep): ChangeRequest => {
         return this._create({
-            actions: this._actions.map(ii => ii._addStep(step)),
-            nextData: undefined,
-            prevData: undefined
+            actions: this._actions.map(ii => ii._addStep(step))
         });
     };
 
@@ -124,9 +110,7 @@ export default class ChangeRequest {
 
         return this._create({
             actions,
-            nextFrameMeta,
-            nextData: undefined,
-            prevData: undefined
+            nextFrameMeta
         });
     };
 

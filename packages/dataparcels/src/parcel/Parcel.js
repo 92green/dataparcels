@@ -482,10 +482,7 @@ export default class Parcel {
         }
 
         // clear changeRequest's cache
-        changeRequest = changeRequest._create({
-            prevData: undefined,
-            nextData: undefined
-        });
+        changeRequest = changeRequest._create({});
 
         if(_onHandleChange) {
             let changeRequestWithBase = changeRequest._create({
