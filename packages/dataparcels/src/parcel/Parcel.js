@@ -32,7 +32,7 @@ import parcelGet from '../parcelData/get';
 import parcelHas from '../parcelData/has';
 
 import identity from 'unmutable/identity';
-import filterNot from 'unmutable/filterNot';
+import filter from 'unmutable/filter';
 import has from 'unmutable/has';
 import pipe from 'unmutable/pipe';
 import pipeWith from 'unmutable/pipeWith';
@@ -41,7 +41,6 @@ import last from 'unmutable/last';
 import clone from 'unmutable/clone';
 import map from 'unmutable/map';
 import size from 'unmutable/size';
-import rest from 'unmutable/rest';
 import toArray from 'unmutable/toArray';
 
 import HashString from '../util/HashString';
@@ -405,7 +404,7 @@ export default class Parcel {
 
             let parcelDataUpdater = pipeWith(
                 initialMeta,
-                filterNot((value, key) => has(key)(meta)),
+                filter((value, key) => !has(key)(meta)),
                 setMetaDefault
             );
 
@@ -694,7 +693,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     get path(): Array<Key> {
-        return rest()(this._rawPath);
+        return this._rawPath.slice(1);
     }
 
     // $FlowFixMe - this doesn't have side effects

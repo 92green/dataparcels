@@ -10,12 +10,7 @@ import {ChangeRequestNoPrevDataError} from '../errors/Errors';
 import ChangeRequestReducer from '../change/ChangeRequestReducer';
 import parcelGet from '../parcelData/get';
 
-import butLast from 'unmutable/butLast';
-import identity from 'unmutable/identity';
-import last from 'unmutable/last';
 import pipe from 'unmutable/pipe';
-import pipeWith from 'unmutable/pipeWith';
-import push from 'unmutable/push';
 
 export default class ChangeRequest {
 
@@ -109,20 +104,17 @@ export default class ChangeRequest {
     merge = (other: ChangeRequest): ChangeRequest => {
 
         let actions = other._actions.reduce((actions, thisAction) => {
-            let lastAction = last()(actions);
-
-            let keyPathEquals = () => thisAction.keyPath.join(".") === lastAction.keyPath.join(".");
+            let lastAction = actions.slice(-1)[0];
 
             let shouldReplace: boolean = lastAction
                 && thisAction.type === "set"
                 && lastAction.type === "set"
-                && keyPathEquals();
+                && thisAction.keyPath.join(".") === lastAction.keyPath.join(".");
 
-            return pipeWith(
-                actions,
-                shouldReplace ? butLast() : identity(),
-                push(thisAction)
-            );
+            if(shouldReplace) {
+                actions = actions.slice(0,-1);
+            }
+            return actions.concat(thisAction);
         }, this._actions);
 
         let nextFrameMeta = {
