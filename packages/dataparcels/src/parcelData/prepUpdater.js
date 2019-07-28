@@ -3,7 +3,7 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type ChangeRequest from '../change/ChangeRequest';
 
-import setValue from './setValue';
+import {setValue} from './parcelData';
 
 const validateValueUpdater = process.env.NODE_ENV === 'production'
     ? (value, updatedValue) => {} /* eslint-disable-line no-unused-vars */

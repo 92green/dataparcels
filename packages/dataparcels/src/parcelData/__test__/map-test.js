@@ -1,5 +1,5 @@
 // @flow
-import map from '../map';
+import {map} from '../parcelData';
 
 test('map should work with objects', () => {
     let parcelData = {

@@ -4,8 +4,8 @@ import type {ParcelDataEvaluator} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
 import asRaw from '../parcelData/asRaw';
-import parcelDataMap from '../parcelData/map';
-import parcelDataSetMeta from '../parcelData/setMeta';
+import {map as parcelDataMap} from '../parcelData/parcelData';
+import {setMeta as parcelDataSetMeta} from '../parcelData/parcelData';
 import parcelDataUpdate from '../parcelData/update';
 
 import composeWith from 'unmutable/composeWith';

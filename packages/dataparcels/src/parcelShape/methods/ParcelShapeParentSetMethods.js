@@ -4,9 +4,9 @@ import type {Key} from '../../types/Types';
 import type {ParcelShapeValueUpdater} from '../../types/Types';
 import type ParcelShape from '../ParcelShape';
 
-import parcelDelete from '../../parcelData/delete';
-import parcelSetSelf from '../../parcelData/setSelf';
-import parcelMap from '../../parcelData/map';
+import {del as parcelDelete} from '../../parcelData/parcelData';
+import {setSelf as parcelSetSelf} from '../../parcelData/parcelData';
+import {map as parcelMap} from '../../parcelData/parcelData';
 import prepUpdater from '../../parcelData/prepUpdater';
 import parcelUpdate from '../../parcelData/update';
 

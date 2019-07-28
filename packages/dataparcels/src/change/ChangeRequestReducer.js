@@ -4,7 +4,6 @@ import type Action from './Action';
 import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
-import findLastIndex from 'unmutable/lib/findLastIndex';
 import identity from 'unmutable/lib/identity';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
@@ -13,22 +12,23 @@ import {ReducerInvalidActionError} from '../errors/Errors';
 import {ReducerInvalidStepError} from '../errors/Errors';
 import {isCancelledError} from './cancel';
 
-import del from '../parcelData/delete';
-import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
-import insertAfter from '../parcelData/insertAfter';
-import insertBefore from '../parcelData/insertBefore';
-import map from '../parcelData/map';
-import move from '../parcelData/move';
-import pop from '../parcelData/pop';
-import push from '../parcelData/push';
-import setMeta from '../parcelData/setMeta';
-import setSelf from '../parcelData/setSelf';
-import shift from '../parcelData/shift';
-import swap from '../parcelData/swap';
-import swapNext from '../parcelData/swapNext';
-import swapPrev from '../parcelData/swapPrev';
-import unshift from '../parcelData/unshift';
-import parcelDataUpdate from '../parcelData/update';
+import {del} from '../parcelData/parcelData';
+import {deleteSelfWithMarker} from '../parcelData/parcelData';
+import {insertAfter} from '../parcelData/parcelData';
+import {insertBefore} from '../parcelData/parcelData';
+import {map} from '../parcelData/parcelData';
+import {move} from '../parcelData/parcelData';
+import {pop} from '../parcelData/parcelData';
+import {push} from '../parcelData/parcelData';
+import {setMeta} from '../parcelData/parcelData';
+import {setSelf} from '../parcelData/parcelData';
+import {shift} from '../parcelData/parcelData';
+import {swap} from '../parcelData/parcelData';
+import {swapNext} from '../parcelData/parcelData';
+import {swapPrev} from '../parcelData/parcelData';
+import {unshift} from '../parcelData/parcelData';
+
+import update from '../parcelData/update';
 
 const actionMap = {
     delete: ({lastKey}) => del(lastKey),
@@ -59,7 +59,7 @@ const parentActionMap = {
 };
 
 const stepMap = {
-    get: ({key}, next) => parcelDataUpdate(key, next),
+    get: ({key}, next) => update(key, next),
     md: ({updater}, next) => pipe(updater, next),
     mu: ({updater, changeRequest}, next) => (prevData) => {
         let nextData = next(prevData);
@@ -92,7 +92,7 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
         if(action.keyPath.length === 0) {
             return type === "delete" ? deleteSelfWithMarker : identity();
         }
-        let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
+        let lastGetIndex = steps.lastIndexOf(step => step.type === 'get');
         steps = steps.slice(0, lastGetIndex);
     }
 

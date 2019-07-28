@@ -3,12 +3,12 @@ import type {Index} from '../../types/Types';
 import type {Key} from '../../types/Types';
 import type ParcelShape from '../ParcelShape';
 
-import insertAfter from '../../parcelData/insertAfter';
-import insertBefore from '../../parcelData/insertBefore';
-import pop from '../../parcelData/pop';
-import push from '../../parcelData/push';
-import shift from '../../parcelData/shift';
-import unshift from '../../parcelData/unshift';
+import {insertAfter} from '../../parcelData/parcelData';
+import {insertBefore} from '../../parcelData/parcelData';
+import {pop} from '../../parcelData/parcelData';
+import {push} from '../../parcelData/parcelData';
+import {shift} from '../../parcelData/parcelData';
+import {unshift} from '../../parcelData/parcelData';
 
 export default (_this: ParcelShape) => ({
 

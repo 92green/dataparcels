@@ -4,8 +4,8 @@ import type {ParcelShapeValueUpdater} from '../../types/Types';
 import type {ParcelShapeSetMeta} from '../../types/Types';
 
 import prepUpdater from '../../parcelData/prepUpdater';
-import parcelSetMeta from '../../parcelData/setMeta';
-import parcelSetSelf from '../../parcelData/setSelf';
+import {setMeta as parcelSetMeta} from '../../parcelData/parcelData';
+import {setSelf as parcelSetSelf} from '../../parcelData/parcelData';
 
 export default (_this: ParcelShape) => ({
 
