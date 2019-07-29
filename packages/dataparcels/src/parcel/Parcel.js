@@ -229,17 +229,17 @@ export default class Parcel {
 
         // Spread Methods
 
-        this.spread = (notFoundValue: ?* = undefined): any => ({
+        this.spread = (notFoundValue: any): any => ({
             value: this._getValue(notFoundValue),
             onChange: this.onChange
         });
 
-        this.spreadDOM = (notFoundValue: ?* = undefined): any => ({
+        this.spreadDOM = (notFoundValue: any): any => ({
             value: this._getValue(notFoundValue),
             onChange: this.onChangeDOM
         });
 
-        this.spreadDOMCheckbox = (notFoundValue: ?boolean = false): any => ({
+        this.spreadDOMCheckbox = (notFoundValue: ?boolean): any => ({
             checked: !!this._getValue(notFoundValue),
             onChange: this.onChangeDOMCheckbox
         });
@@ -614,7 +614,7 @@ export default class Parcel {
         return childParcel;
     };
 
-    _getValue = (notFoundValue: *): * => {
+    _getValue = (notFoundValue: any): any => {
         let {value} = this;
         return value === deleted || value === undefined
             ? notFoundValue
