@@ -331,7 +331,7 @@ export default class Parcel {
             this.set(event.currentTarget.checked);
         };
 
-        this.set = (value: any) => fireAction('set', {value});
+        this.set = (value: any) => fireAction('set', value);
 
         // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
@@ -342,15 +342,13 @@ export default class Parcel {
 
         // Types(`map()`, `updater`, `function`)(updater);
         this.map = (updater: ParcelValueUpdater) => {
-            fireActionOnlyType(Parent, 'map', {
-                updater: prepUpdater(updater)
-            });
+            fireActionOnlyType(Parent, 'map', prepUpdater(updater));
         };
 
         // Advanced change methods
 
         // Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
-        this.setMeta = (meta: ParcelMeta) => fireAction('setMeta', {meta});
+        this.setMeta = (meta: ParcelMeta) => fireAction('setMeta', meta);
 
         this.dispatch = this._dispatch;
 
@@ -360,29 +358,29 @@ export default class Parcel {
         // Types(`move()`, `keyB`, `keyIndex`)(keyB);
         // Types(`swap()`, `keyA`, `keyIndex`)(keyA);
         // Types(`swap()`, `keyB`, `keyIndex`)(keyB);
-        this.insertAfter = (value: any) => fireActionOnlyType(Element, 'insertAfter', {value});
+        this.insertAfter = (value: any) => fireActionOnlyType(Element, 'insertAfter', value);
 
-        this.insertBefore = (value: any) => fireActionOnlyType(Element, 'insertBefore', {value});
+        this.insertBefore = (value: any) => fireActionOnlyType(Element, 'insertBefore', value);
 
         this.move = (keyA: Key|Index, keyB: Key|Index) => {
-            fireActionOnlyType(Indexed, 'move', {moveKey: keyB}, [keyA]);
+            fireActionOnlyType(Indexed, 'move', keyB, [keyA]);
         };
 
-        this.push = (...values: Array<any>) => fireActionOnlyType(Indexed, 'push', {values});
+        this.push = (...values: Array<any>) => fireActionOnlyType(Indexed, 'push', values);
 
         this.pop = () => fireActionOnlyType(Indexed, 'pop');
 
         this.shift = () => fireActionOnlyType(Indexed, 'shift');
 
         this.swap = (keyA: Key|Index, keyB: Key|Index) => {
-            fireActionOnlyType(Indexed, 'swap', {swapKey: keyB}, [keyA]);
+            fireActionOnlyType(Indexed, 'swap', keyB, [keyA]);
         };
 
         this.swapNext = () => fireActionOnlyType(Element, 'swapNext');
 
         this.swapPrev = () => fireActionOnlyType(Element, 'swapPrev');
 
-        this.unshift = (...values: Array<any>) => fireActionOnlyType(Indexed, 'unshift', {values});
+        this.unshift = (...values: Array<any>) => fireActionOnlyType(Indexed, 'unshift', values);
 
         // Modify methods
 
@@ -478,6 +476,13 @@ export default class Parcel {
                 updateChangeRequestOnDispatch
             }
         );
+    };
+
+    _setData = (parcelData: ParcelData) => {
+        this._dispatch(new Action({
+            type: 'setData',
+            payload: parcelData
+        }));
     };
 
     _dispatch = (dispatchable: Action|Action[]|ChangeRequest) => {

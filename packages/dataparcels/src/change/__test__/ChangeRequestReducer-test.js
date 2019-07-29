@@ -16,42 +16,32 @@ const ActionCreators = {
     insertAfterSelf: (value: any): Action => {
         return new Action({
             type: "insertAfter",
-            payload: {
-                value
-            }
+            payload: value
         });
     },
     insertBeforeSelf: (value: any): Action => {
         return new Action({
             type: "insertBefore",
-            payload: {
-                value
-            }
+            payload: value
         });
     },
     map: (updater): Action => {
         return new Action({
             type: "map",
-            payload: {
-                updater
-            }
+            payload: updater
         });
     },
     move: (keyA, keyB): Action => {
         return new Action({
             type: "move",
             keyPath: [keyA],
-            payload: {
-                moveKey: keyB
-            }
+            payload: keyB
         });
     },
     push: (...values): Action => {
         return new Action({
             type: "push",
-            payload: {
-                values
-            }
+            payload: values
         });
     },
     pop: (): Action => {
@@ -68,17 +58,13 @@ const ActionCreators = {
     setMeta: (meta): Action => {
         return new Action({
             type: "setMeta",
-            payload: {
-                meta
-            }
+            payload: meta
         });
     },
     setSelf: (value): Action => {
         return new Action({
             type: "set",
-            payload: {
-                value
-            }
+            payload: value
         });
     },
     shift: (): Action => {
@@ -90,9 +76,7 @@ const ActionCreators = {
         return new Action({
             type: "swap",
             keyPath: [keyA],
-            payload: {
-                swapKey: keyB
-            }
+            payload: keyB
         });
     },
     swapNextSelf: (): Action => {
@@ -108,9 +92,7 @@ const ActionCreators = {
     unshift: (...values): Action => {
         return new Action({
             type: "unshift",
-            payload: {
-                values
-            }
+            payload: values
         });
     }
 };

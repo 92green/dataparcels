@@ -53,9 +53,7 @@ test('ParentParcel.get(key) should return a new child Parcel', () => {
     var expectedAction = {
         type: "set",
         keyPath: ["a"],
-        payload: {
-            value: 2
-        }
+        payload: 2
     };
 
     var childParcel = new Parcel(data).get("a");
@@ -142,9 +140,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
     var expectedAction = {
         type: "set",
         keyPath: ["a", "b"],
-        payload: {
-            value: 6
-        }
+        payload: 6
     };
 
     var childParcel = new Parcel(data).get("a").get("b");
@@ -242,9 +238,7 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => 
     var expectedAction = {
         type: "set",
         keyPath: ["a", "c", "d"],
-        payload: {
-            value: 456
-        }
+        payload: 456
     };
 
     var descendantParcel = new Parcel(data).getIn(["a", "c", "d"]);

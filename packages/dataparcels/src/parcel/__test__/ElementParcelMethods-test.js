@@ -30,9 +30,7 @@ test('ElementParcel.insertBefore() should insert', () => {
     var expectedAction = {
         type: "insertBefore",
         keyPath: ["#b"],
-        payload: {
-            value: 4
-        }
+        payload: 4
     };
 
     new Parcel({
@@ -83,9 +81,7 @@ test('ElementParcel.insertAfter() should insert', () => {
     var expectedAction = {
         type: "insertAfter",
         keyPath: ["#b"],
-        payload: {
-            value: 4
-        }
+        payload: 4
     };
 
     new Parcel({
@@ -135,7 +131,7 @@ test('ElementParcel.swapNext() should swapNext', () => {
     var expectedAction = {
         type: "swapNext",
         keyPath: ["#a"],
-        payload: {}
+        payload: undefined
     };
 
     new Parcel({
@@ -176,7 +172,7 @@ test('ElementParcel.swapPrev() should swapPrev', () => {
     var expectedAction = {
         type: "swapPrev",
         keyPath: ["#b"],
-        payload: {}
+        payload: undefined
     };
 
     new Parcel({
