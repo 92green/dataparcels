@@ -4,8 +4,6 @@ import type Action from './Action';
 import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
-import findLastIndex from 'unmutable/lib/findLastIndex';
-import identity from 'unmutable/lib/identity';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
@@ -90,9 +88,9 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
 
     if(isParentAction) {
         if(action.keyPath.length === 0) {
-            return type === "delete" ? deleteSelfWithMarker : identity();
+            return type === "delete" ? deleteSelfWithMarker : ii => ii;
         }
-        let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
+        let lastGetIndex = steps.lastIndexOf(step => step.type === 'get');
         steps = steps.slice(0, lastGetIndex);
     }
 
