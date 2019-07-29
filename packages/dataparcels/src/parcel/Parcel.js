@@ -30,7 +30,6 @@ import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
 import parcelGet from '../parcelData/get';
 import parcelHas from '../parcelData/has';
 
-import identity from 'unmutable/identity';
 import filter from 'unmutable/filter';
 import has from 'unmutable/has';
 import pipeWith from 'unmutable/pipeWith';
@@ -43,6 +42,7 @@ import toArray from 'unmutable/toArray';
 
 import HashString from '../util/HashString';
 
+const doNothing = (ii: any): any => ii;
 const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
 
 const DEFAULT_CONFIG_INTERNAL = () => ({
@@ -58,7 +58,7 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
         isChildLast: false
     },
     registry: {},
-    updateChangeRequestOnDispatch: identity()
+    updateChangeRequestOnDispatch: doNothing
 });
 
 export default class Parcel {
@@ -200,7 +200,7 @@ export default class Parcel {
         // method prep
         //
 
-        let fireAction = (type: string, {keyPath, ...payload}: {[key: string]: any} = {}) => {
+        let fireAction = (type: string, payload: any, keyPath: any) => {
             this._dispatch(new Action({type, keyPath, payload}));
         };
 
@@ -214,8 +214,8 @@ export default class Parcel {
             return fn;
         };
 
-        let fireActionOnlyType = (type: string, name: string, payload: any = {}) => {
-            return onlyType(type, name, () => fireAction(name, payload))();
+        let fireActionOnlyType = (type: string, name: string, payload: any, keyPath: any) => {
+            return onlyType(type, name, () => fireAction(name, payload, keyPath))();
         };
 
         const Parent = 'Parent';
@@ -258,7 +258,7 @@ export default class Parcel {
         });
 
         // Types(`children()`, `mapper`, `function`)(mapper);
-        this.children = onlyType(Parent, 'children', (mapper: ParcelMapper = identity()): ParentType<Parcel> => {
+        this.children = onlyType(Parent, 'children', (mapper: ParcelMapper = doNothing): ParentType<Parcel> => {
             return pipeWith(
                 this._parcelData.value,
                 clone(),
@@ -267,7 +267,7 @@ export default class Parcel {
         });
 
         // Types(`toArray()`, `mapper`, `function`)(mapper);
-        this.toArray = onlyType(Parent, 'toArray', (mapper: ParcelMapper = identity()): Array<Parcel> => {
+        this.toArray = onlyType(Parent, 'toArray', (mapper: ParcelMapper = doNothing): Array<Parcel> => {
             return toArray()(this.children(mapper));
         });
 
@@ -365,10 +365,7 @@ export default class Parcel {
         this.insertBefore = (value: any) => fireActionOnlyType(Element, 'insertBefore', {value});
 
         this.move = (keyA: Key|Index, keyB: Key|Index) => {
-            fireActionOnlyType(Indexed, 'move', {
-                keyPath: [keyA],
-                moveKey: keyB
-            });
+            fireActionOnlyType(Indexed, 'move', {moveKey: keyB}, [keyA]);
         };
 
         this.push = (...values: Array<any>) => fireActionOnlyType(Indexed, 'push', {values});
@@ -378,10 +375,7 @@ export default class Parcel {
         this.shift = () => fireActionOnlyType(Indexed, 'shift');
 
         this.swap = (keyA: Key|Index, keyB: Key|Index) => {
-            fireActionOnlyType(Indexed, 'swap', {
-                keyPath: [keyA],
-                swapKey: keyB
-            });
+            fireActionOnlyType(Indexed, 'swap', {swapKey: keyB}, [keyA]);
         };
 
         this.swapNext = () => fireActionOnlyType(Element, 'swapNext');
@@ -458,7 +452,7 @@ export default class Parcel {
             parcelData = this._parcelData,
             parent = this._parent,
             registry = this._registry,
-            updateChangeRequestOnDispatch = identity()
+            updateChangeRequestOnDispatch = doNothing
         } = createParcelConfig;
 
         let {
