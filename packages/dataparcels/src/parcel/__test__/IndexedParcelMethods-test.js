@@ -36,12 +36,12 @@ test('IndexedParcel.delete() should delete', () => {
     new Parcel({
         ...data,
         handleChange: indexedHandleChange
-    }).delete(0);
+    }).get(0).delete();
 
     new Parcel({
         ...data,
         handleChange: keyedHandleChange
-    }).delete("#a");
+    }).get("#a").delete();
 
     expect(indexedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
     expect(GetAction(indexedHandleChange.mock.calls[0][1])).toEqual(expectedAction);
@@ -71,123 +71,6 @@ test('IndexedParcel.get(hashkey) should return a new child Parcel', () => {
 
     expect(childParcel instanceof Parcel).toBe(true);
     expect(childParcel.value).toBe(expectedValue);
-});
-
-test('IndexedParcel.insertBefore() should insertBefore', () => {
-
-    var data = {
-        value: [1,2,3],
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [1,4,2,3],
-        key: '^',
-        child: [
-            {key: "#a"},
-            {key: "#d"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedAction = {
-        type: "insertBefore",
-        keyPath: [1],
-        payload: {
-            value: 4
-        }
-    };
-
-    var expectedActionWithKey = {
-        type: "insertBefore",
-        keyPath: ["#b"],
-        payload: {
-            value: 4
-        }
-    };
-
-    var indexedHandleChange = jest.fn();
-    var keyedHandleChange = jest.fn();
-
-    new Parcel({
-        ...data,
-        handleChange: indexedHandleChange
-    }).insertBefore(1, 4);
-
-    new Parcel({
-        ...data,
-        handleChange: keyedHandleChange
-    }).insertBefore("#b", 4);
-
-    expect(indexedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
-    expect(GetAction(indexedHandleChange.mock.calls[0][1])).toEqual(expectedAction);
-    expect(keyedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
-    expect(GetAction(keyedHandleChange.mock.calls[0][1])).toEqual(expectedActionWithKey);
-
-});
-
-test('IndexedParcel.insertAfter() should insertAfter', () => {
-
-    var data = {
-        value: [1,2,3],
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [1,2,4,3],
-        key: '^',
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#d"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedAction = {
-        type: "insertAfter",
-        keyPath: [1],
-        payload: {
-            value: 4
-        }
-    };
-
-    var expectedActionWithKey = {
-        type: "insertAfter",
-        keyPath: ["#b"],
-        payload: {
-            value: 4
-        }
-    };
-
-    var indexedHandleChange = jest.fn();
-    var keyedHandleChange = jest.fn();
-
-    new Parcel({
-        ...data,
-        handleChange: indexedHandleChange
-    }).insertAfter(1, 4);
-
-    new Parcel({
-        ...data,
-        handleChange: keyedHandleChange
-    }).insertAfter("#b", 4);
-
-    expect(indexedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
-    expect(GetAction(indexedHandleChange.mock.calls[0][1])).toEqual(expectedAction);
-    expect(keyedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
-    expect(GetAction(keyedHandleChange.mock.calls[0][1])).toEqual(expectedActionWithKey);
 });
 
 test('IndexedParcel.move() should move', () => {
@@ -384,111 +267,6 @@ test('IndexedParcel.swap() should swap', () => {
             expect(expectedAction).toEqual(GetAction(changeRequest));
         }
     }).swap(0,2);
-});
-
-test('IndexedParcel.swapNext() should swapNext', () => {
-    expect.assertions(4);
-
-    var data = {
-        value: [1,2,3],
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [2,1,3],
-        key: '^',
-        child: [
-            {key: "#b"},
-            {key: "#a"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedAction = {
-        type: "swapNext",
-        keyPath: [0],
-        payload: {}
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).swapNext(0);
-
-    expectedAction = {
-        type: "swapNext",
-        keyPath: ["#a"],
-        payload: {}
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).swapNext("#a");
-});
-
-
-test('IndexedParcel.swapPrev() should swapPrev', () => {
-    expect.assertions(4);
-
-    var data = {
-        value: [1,2,3],
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [2,1,3],
-        key: '^',
-        child: [
-            {key: "#b"},
-            {key: "#a"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedAction = {
-        type: "swapPrev",
-        keyPath: [1],
-        payload: {}
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).swapPrev(1);
-
-    expectedAction = {
-        type: "swapPrev",
-        keyPath: ["#b"],
-        payload: {}
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).swapPrev("#b");
 });
 
 test('IndexedParcel.unshift() should unshift', () => {

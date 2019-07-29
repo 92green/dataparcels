@@ -18,7 +18,6 @@ export default () => <Layout>
             '# Methods',
             'hasValueChanged()',
             'getDataIn()',
-            'toJS()',
             'merge()'
         ]}
     />

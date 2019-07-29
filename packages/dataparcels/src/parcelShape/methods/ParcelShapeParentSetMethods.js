@@ -8,34 +8,28 @@ import parcelDelete from '../../parcelData/delete';
 import parcelSetSelf from '../../parcelData/setSelf';
 import parcelMap from '../../parcelData/map';
 import prepUpdater from '../../parcelData/prepUpdater';
-import parcelUpdateIn from '../../parcelData/updateIn';
-
-import butLast from 'unmutable/lib/butLast';
-import last from 'unmutable/lib/last';
+import parcelUpdate from '../../parcelData/update';
 
 export default (_this: ParcelShape) => ({
 
-    setIn: (keyPath: Array<Key|Index>, value: any): ParcelShape => {
+    set: (key: Key|Index, value: any): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            parcelUpdateIn(keyPath, parcelSetSelf(value))
+            parcelUpdate(key, parcelSetSelf(value))
         );
     },
 
-    deleteIn: (keyPath: Array<Key|Index>): ParcelShape => {
+    delete: (key: Key|Index): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            parcelUpdateIn(
-                butLast()(keyPath),
-                parcelDelete(last()(keyPath))
-            )
+            parcelDelete(key)
         );
     },
 
-    updateIn: (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater): ParcelShape => {
+    update: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => {
         _this._prepareChildKeys();
         return _this._pipeSelf(
-            parcelUpdateIn(keyPath, prepUpdater(updater))
+            parcelUpdate(key, prepUpdater(updater))
         );
     },
 

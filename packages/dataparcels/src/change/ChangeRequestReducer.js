@@ -6,8 +6,6 @@ import type {ParcelDataEvaluator} from '../types/Types';
 
 import findLastIndex from 'unmutable/lib/findLastIndex';
 import identity from 'unmutable/lib/identity';
-import last from 'unmutable/lib/last';
-import take from 'unmutable/lib/take';
 import pipe from 'unmutable/lib/util/pipe';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 import composeWith from 'unmutable/lib/util/composeWith';
@@ -82,7 +80,7 @@ const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
     }
     return fn({
         ...payload,
-        lastKey: last()(keyPath)
+        lastKey: keyPath.slice(-1)[0]
     });
 };
 
@@ -95,7 +93,7 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
             return type === "delete" ? deleteSelfWithMarker : identity();
         }
         let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
-        steps = take(lastGetIndex)(steps);
+        steps = steps.slice(0, lastGetIndex);
     }
 
     return composeWith(

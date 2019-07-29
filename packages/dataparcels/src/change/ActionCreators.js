@@ -2,26 +2,18 @@
 import type {Key} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {ParcelData} from '../types/Types';
+import type {ParcelMeta} from '../types/Types';
+import type {ParcelValueUpdater} from '../types/Types';
 
 import Action from './Action';
 
-const deleteSelf: Function = (): Action => {
+const deleteSelf = (): Action => {
     return new Action({
         type: "delete"
     });
 };
 
-const insertAfter: Function = (key: Key|Index, value: *): Action => {
-    return new Action({
-        type: "insertAfter",
-        keyPath: [key],
-        payload: {
-            value
-        }
-    });
-};
-
-const insertAfterSelf: Function = (value: *): Action => {
+const insertAfterSelf = (value: any): Action => {
     return new Action({
         type: "insertAfter",
         payload: {
@@ -30,17 +22,7 @@ const insertAfterSelf: Function = (value: *): Action => {
     });
 };
 
-const insertBefore: Function = (key: Key|Index, value: *): Action => {
-    return new Action({
-        type: "insertBefore",
-        keyPath: [key],
-        payload: {
-            value
-        }
-    });
-};
-
-const insertBeforeSelf: Function = (value: *): Action => {
+const insertBeforeSelf = (value: any): Action => {
     return new Action({
         type: "insertBefore",
         payload: {
@@ -49,7 +31,7 @@ const insertBeforeSelf: Function = (value: *): Action => {
     });
 };
 
-const map: Function = (updater: Function): Action => {
+const map = (updater: ParcelValueUpdater): Action => {
     return new Action({
         type: "map",
         payload: {
@@ -58,7 +40,7 @@ const map: Function = (updater: Function): Action => {
     });
 };
 
-const move: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
+const move = (keyA: Key|Index, keyB: Key|Index): Action => {
     return new Action({
         type: "move",
         keyPath: [keyA],
@@ -68,16 +50,7 @@ const move: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
     });
 };
 
-const moveSelf: Function = (keyB: Key|Index): Action => {
-    return new Action({
-        type: "move",
-        payload: {
-            moveKey: keyB
-        }
-    });
-};
-
-const push: Function = (values: Array<*>): Action => {
+const push = (...values: Array<any>): Action => {
     return new Action({
         type: "push",
         payload: {
@@ -86,20 +59,20 @@ const push: Function = (values: Array<*>): Action => {
     });
 };
 
-const pop: Function = (): Action => {
+const pop = (): Action => {
     return new Action({
         type: "pop"
     });
 };
 
-const setData: Function = (parcelData: ParcelData): Action => {
+const setData = (parcelData: ParcelData): Action => {
     return new Action({
         type: "setData",
         payload: parcelData
     });
 };
 
-const setMeta: Function = (meta: *): Action => {
+const setMeta = (meta: ParcelMeta): Action => {
     return new Action({
         type: "setMeta",
         payload: {
@@ -108,7 +81,7 @@ const setMeta: Function = (meta: *): Action => {
     });
 };
 
-const setSelf: Function = (value: *): Action => {
+const setSelf = (value: *): Action => {
     return new Action({
         type: "set",
         payload: {
@@ -117,13 +90,13 @@ const setSelf: Function = (value: *): Action => {
     });
 };
 
-const shift: Function = (): Action => {
+const shift = (): Action => {
     return new Action({
         type: "shift"
     });
 };
 
-const swap: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
+const swap = (keyA: Key|Index, keyB: Key|Index): Action => {
     return new Action({
         type: "swap",
         keyPath: [keyA],
@@ -133,42 +106,19 @@ const swap: Function = (keyA: Key|Index, keyB: Key|Index): Action => {
     });
 };
 
-const swapNext: Function = (key: Key|Index): Action => {
-    return new Action({
-        type: "swapNext",
-        keyPath: [key]
-    });
-};
-
-const swapNextSelf: Function = (): Action => {
+const swapNextSelf = (): Action => {
     return new Action({
         type: "swapNext"
     });
 };
 
-const swapPrev: Function = (key: Key|Index): Action => {
-    return new Action({
-        type: "swapPrev",
-        keyPath: [key]
-    });
-};
-
-const swapPrevSelf: Function = (): Action => {
+const swapPrevSelf = (): Action => {
     return new Action({
         type: "swapPrev"
     });
 };
 
-const swapSelf: Function = (keyB: Key|Index): Action => {
-    return new Action({
-        type: "swap",
-        payload: {
-            swapKey: keyB
-        }
-    });
-};
-
-const unshift: Function = (values: Array<*>): Action => {
+const unshift = (...values: Array<*>): Action => {
     return new Action({
         type: "unshift",
         payload: {
@@ -179,13 +129,10 @@ const unshift: Function = (values: Array<*>): Action => {
 
 export default {
     deleteSelf,
-    insertAfter,
     insertAfterSelf,
-    insertBefore,
     insertBeforeSelf,
     map,
     move,
-    moveSelf,
     push,
     pop,
     setData,
@@ -193,10 +140,7 @@ export default {
     setSelf,
     shift,
     swap,
-    swapNext,
     swapNextSelf,
-    swapPrev,
     swapPrevSelf,
-    swapSelf,
     unshift
 };

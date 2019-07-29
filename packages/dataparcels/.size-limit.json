@@ -1,10 +1,10 @@
 [
     {
-        "limit": "14 KB",
+        "limit": "11 KB",
         "path": "lib/index.js"
     },
     {
-        "limit": "2 KB",
+        "limit": "600 B",
         "path": "Action.js"
     },
     {
@@ -12,23 +12,23 @@
         "path": "cancel.js"
     },
     {
-        "limit": "9 KB",
+        "limit": "8 KB",
         "path": "ChangeRequest.js"
     },
     {
-        "limit": "1 KB",
+        "limit": "100 B",
         "path": "deleted.js"
     },
     {
-        "limit": "15 KB",
+        "limit": "13 KB",
         "path": "ParcelShape.js"
     },
     {
-        "limit": "102 B",
+        "limit": "100 B",
         "path": "asRaw.js"
     },
     {
-        "limit": "15 KB",
+        "limit": "13 KB",
         "path": "asShape.js"
     },
     {

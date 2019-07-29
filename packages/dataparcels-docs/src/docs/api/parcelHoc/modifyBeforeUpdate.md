@@ -34,7 +34,7 @@ ParcelHoc({
 });
 
 // exampleParcel.value.isOdd equals true
-exampleParcel.set('number', 100);
+exampleParcel.get('number').set(100);
 // exampleParcel.value.isOdd now equals false
 ```
 

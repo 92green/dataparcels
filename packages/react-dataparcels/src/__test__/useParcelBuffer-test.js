@@ -110,7 +110,7 @@ describe('useParcelBuffer should use config.parcel', () => {
         let {result, rerender} = renderHookWithProps({parcel}, ({parcel}) => useParcelBuffer({parcel}));
 
         act(() => {
-            result.current[0].set('abc', 400);
+            result.current[0].get('abc').set(400);
         });
 
         // confirm that set() has worked

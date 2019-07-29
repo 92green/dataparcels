@@ -6,12 +6,9 @@ import TestTimeExecution from '../../util/__test__/TestTimeExecution-testUtil';
 import range from 'unmutable/lib/util/range';
 
 test('ChangeRequest should build an action', () => {
-    let expectedDefaultData = {
-        actions: [],
-        originId: null,
-        originPath: null,
-    };
-    expect(expectedDefaultData).toEqual(new ChangeRequest().toJS());
+    expect(new ChangeRequest().actions).toEqual([]);
+    expect(new ChangeRequest().originId).toEqual(null);
+    expect(new ChangeRequest().originPath).toEqual(null);
 });
 
 test('ChangeRequest actions should get actions', () => {

@@ -25,7 +25,7 @@ export default (_this: ParcelShape) => ({
         );
     },
 
-    update: (updater: ParcelShapeValueUpdater): ParcelShape => {
+    updateSelf: (updater: ParcelShapeValueUpdater): ParcelShape => {
         return _this._pipeSelf(prepUpdater(updater));
     }
 });

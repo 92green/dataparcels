@@ -3,16 +3,7 @@ import type {ActionStep} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 
-import unshift from 'unmutable/lib/unshift';
-
 type ActionData = {
-    type?: string,
-    payload?: Object,
-    keyPath?: Array<Key|Index>,
-    steps?: Array<ActionStep>
-};
-
-type CreateActionData = {
     type?: string,
     payload?: Object,
     keyPath?: Array<Key|Index>,
@@ -42,24 +33,15 @@ export default class Action {
         this.steps = steps;
     }
 
-    _create = (create: CreateActionData): Action => {
-        return new Action({
-            ...this.toJS(),
-            ...create
-        });
-    };
-
     _addStep = (step: ActionStep): Action => {
-        return this._create({
-            steps: unshift(step)(this.steps),
+        return new Action({
+            type: this.type,
+            payload: this.payload,
+            steps: [step, ...this.steps],
             keyPath: step.type === 'get'
-                ? unshift(step.key)(this.keyPath)
+                // $FlowFixMe - I'll make sure that step.key is defined when type is 'get'
+                ? [step.key, ...this.keyPath]
                 : this.keyPath
         });
-    };
-
-    toJS = (): ActionData => {
-        let {type, payload, keyPath, steps} = this;
-        return {type, payload, keyPath, steps};
     };
 }

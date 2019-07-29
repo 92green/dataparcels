@@ -161,7 +161,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         if(process.env.NODE_ENV !== 'production' && debugBuffer) {
             console.log(`ParcelBoundary: Add to buffer:`); // eslint-disable-line
-            console.log(changeRequest.toJS()); // eslint-disable-line
+            console.log(changeRequest); // eslint-disable-line
         }
 
         let newCachedChangeRequest = cachedChangeRequest
@@ -186,7 +186,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         if(process.env.NODE_ENV !== 'production' && debugBuffer) {
             console.log(`ParcelBoundary: Clear buffer:`); // eslint-disable-line
-            cachedChangeRequest && console.log(cachedChangeRequest.toJS()); // eslint-disable-line
+            cachedChangeRequest && console.log(cachedChangeRequest); // eslint-disable-line
         }
         if(!cachedChangeRequest) {
             return state;
@@ -211,7 +211,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
 
         if(process.env.NODE_ENV !== 'production' && debugBuffer) {
             console.log(`ParcelBoundary: Release buffer:`); // eslint-disable-line
-            cachedChangeRequest && console.log(cachedChangeRequest.toJS()); // eslint-disable-line
+            cachedChangeRequest && console.log(cachedChangeRequest); // eslint-disable-line
         }
 
         if(!cachedChangeRequest) {

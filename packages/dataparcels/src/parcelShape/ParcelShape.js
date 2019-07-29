@@ -14,8 +14,6 @@ import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
 import {ShapeUpdaterNonShapeChildError} from '../errors/Errors';
 
-import ParcelId from '../parcelId/ParcelId';
-
 import ParcelShapeParentGetMethods from './methods/ParcelShapeParentGetMethods';
 import ParcelShapeParentSetMethods from './methods/ParcelShapeParentSetMethods';
 import ParcelShapeSetMethods from './methods/ParcelShapeSetMethods';
@@ -67,7 +65,6 @@ export default class ParcelShape {
     //
 
     // from constructor
-    _id: ParcelId;
     _isChild: boolean;
     _isElement: boolean;
     _isIndexed: boolean;
@@ -191,35 +188,27 @@ export default class ParcelShape {
     get = (key: Key|Index, notFoundValue: ?any = undefined): ParcelShape => this._methods.get(key, notFoundValue);
     getIn = (keyPath: Array<Key|Index>, notFoundValue: ?any = undefined): ParcelShape => this._methods.getIn(keyPath, notFoundValue);
     children = (): ParentType<ParcelShape> => this._methods.children();
-    toObject = (): { [key: string]: ParcelShape } => this._methods.toObject();
     toArray = (): Array<ParcelShape> => this._methods.toArray();
 
     // Change methods
     set = overload({
         ["1"]: (value: any) => this._methods.setSelf(value),
-        ["2"]: (key: Key|Index, value: any) => this.setIn([key], value)
+        ["2"]: (key: Key|Index, value: any) => this._methods.set(key, value)
     });
     setMeta = (partialMeta: ParcelShapeSetMeta) => this._methods.setMeta(partialMeta);
-    setIn = (keyPath: Array<Key|Index>, value: any) => this._methods.setIn(keyPath, value);
-    delete = (key: Key|Index) => this.deleteIn([key]);
-    deleteIn = (keyPath: Array<Key|Index>) => this._methods.deleteIn(keyPath);
+    delete = (key: Key|Index) => this._methods.delete(key);
     update = overload({
-        ["1"]: (updater: ParcelShapeValueUpdater): ParcelShape => this._methods.update(updater),
-        ["2"]: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => this.updateIn([key], updater)
+        ["1"]: (updater: ParcelShapeValueUpdater): ParcelShape => this._methods.updateSelf(updater),
+        ["2"]: (key: Key|Index, updater: ParcelShapeValueUpdater): ParcelShape => this._methods.update(key, updater)
     });
-    updateIn = (keyPath: Array<Key|Index>, updater: ParcelShapeValueUpdater) => this._methods.updateIn(keyPath, updater);
     map = (updater: ParcelShapeValueUpdater) => this._methods.map(updater);
 
     // Indexed methods
     insertAfter = (key: Key|Index, value: any) => this._methods.insertAfter(key, value);
     insertBefore = (key: Key|Index, value: any) => this._methods.insertBefore(key, value);
-    move = (keyA: Key|Index, keyB: Key|Index) => this._methods.move(keyA, keyB);
     push = (...values: Array<any>) => this._methods.push(...values);
     pop = () => this._methods.pop();
     shift = () => this._methods.shift();
-    swap = (keyA: Key|Index, keyB: Key|Index) => this._methods.swap(keyA, keyB);
-    swapNext = (key: Key|Index) => this._methods.swapNext(key);
-    swapPrev = (key: Key|Index) => this._methods.swapPrev(key);
     unshift = (...values: Array<any>) => this._methods.unshift(...values);
 
     // Type methods
