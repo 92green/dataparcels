@@ -272,7 +272,7 @@ export default class Parcel {
         });
 
         this.metaAsParcel = (key: string): Parcel => {
-            return this._createNew({
+            return new Parcel({
                 value: this.meta[key],
                 handleChange: ({value}) => this.setMeta({
                     [key]: value
@@ -479,8 +479,6 @@ export default class Parcel {
             }
         );
     };
-
-    _createNew = ({value, handleChange}: any): Parcel => new Parcel({value, handleChange});
 
     _dispatch = (dispatchable: Action|Action[]|ChangeRequest) => {
         // Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
