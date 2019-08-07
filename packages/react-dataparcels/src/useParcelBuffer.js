@@ -19,12 +19,6 @@ import pipeWithFakePrevParcel from './util/pipeWithFakePrevParcel';
 import useParcelBufferInternalBuffer from './useParcelBufferInternalBuffer';
 import useParcelBufferInternalKeepValue from './useParcelBufferInternalKeepValue';
 
-const removeInternalMeta = (action) => {
-    let {_submit, _reset} = action.payload.meta || {};
-    let isInternalMeta = action.type === 'setMeta' && (_submit || _reset);
-    return !isInternalMeta;
-};
-
 type Params = {
     parcel: Parcel,
     buffer?: boolean,
@@ -144,7 +138,10 @@ export default (params: Params): Return => {
 
             // remove buffer actions meta from change request
             // and push any remaining change into the buffer
-            let actions = changeRequest._actions.filter(removeInternalMeta);
+            let actions = changeRequest._actions.filter((action) => {
+                return !(action.type === 'setMeta' && (action.payload._submit || action.payload._reset));
+            });
+
             if(actions.length > 0) {
                 internalBuffer.push(changeRequest._create({actions}));
             }
