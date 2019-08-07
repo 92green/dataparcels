@@ -212,46 +212,6 @@ describe('useParcelState should use config.beforeChange', () => {
 
 });
 
-describe('useParcelState should use config.debounce', () => {
-
-    it('should call onChange after debounce ms have elapsed between changes', () => {
-        let onChange = jest.fn();
-
-        let {result} = renderHook(() => useParcelState({
-            value: [],
-            onChange,
-            debounce: 20
-        }));
-
-        act(() => {
-            result.current[0].push("A");
-        });
-
-        act(() => {
-            jest.advanceTimersByTime(10);
-        });
-
-        act(() => {
-            result.current[0].push("B");
-        });
-
-        act(() => {
-            jest.advanceTimersByTime(40);
-        });
-
-        act(() => {
-            result.current[0].push("C");
-        });
-
-        act(() => {
-            jest.advanceTimersByTime(40);
-        });
-
-        expect(onChange.mock.calls[0][0].value).toEqual(["A", "B"]);
-        expect(onChange.mock.calls[1][0].value).toEqual(["A", "B", "C"]);
-    });
-});
-
 describe('useParcelState should use config.rebase', () => {
 
     it('should set frame meta of rebase = true', () => {

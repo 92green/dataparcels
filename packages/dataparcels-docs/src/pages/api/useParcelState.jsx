@@ -14,7 +14,6 @@ export default () => <Layout>
             'updateValue',
             'rebase',
             'onChange',
-            'debounce',
             'beforeChange',
             '# Returns',
             'parcel'
