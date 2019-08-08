@@ -5,20 +5,20 @@ import type {Key} from '../types/Types';
 
 type ActionData = {
     type?: string,
-    payload?: Object,
+    payload?: any,
     keyPath?: Array<Key|Index>,
     steps?: Array<ActionStep>
 };
 
 export default class Action {
     type: string = "";
-    payload: Object = {};
+    payload: any;
     keyPath: Array<Key|Index> = [];
     steps: Array<ActionStep> = [];
 
-    constructor({type, payload, keyPath, steps}: ActionData = {}) {
+    constructor({type, payload = this.payload, keyPath, steps}: ActionData = {}) {
         this.type = type || this.type;
-        this.payload = payload || this.payload;
+        this.payload = payload;
         this.keyPath = keyPath || this.keyPath;
 
         if(!steps) {

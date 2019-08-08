@@ -308,7 +308,7 @@ test('Frame meta should use last change requests nextFrameMeta', () => {
     });
 
     let actions = [
-        new Action({type: "set", keyPath: [], payload: {value: 456}})
+        new Action({type: "set", keyPath: [], payload: 456})
     ];
 
     let changeRequest = new ChangeRequest(actions)

@@ -46,9 +46,7 @@ test('Parcel.set() should call the Parcels handleChange function with the new pa
     var expectedAction = {
         type: "set",
         keyPath: [],
-        payload: {
-            value: 456
-        }
+        payload: 456
     };
 
     new Parcel({
@@ -173,9 +171,7 @@ test('Parcel.onChange() should work like set that only accepts a single argument
     var expectedAction = {
         type: "set",
         keyPath: [],
-        payload: {
-            value: 456
-        }
+        payload: 456
     };
 
     new Parcel({
@@ -204,9 +200,7 @@ test('Parcel.onChangeDOM() should work like onChange but take the value from eve
     var expectedAction = {
         type: "set",
         keyPath: [],
-        payload: {
-            value: 456
-        }
+        payload: 456
     };
 
     new Parcel({
@@ -260,9 +254,7 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
         type: "setMeta",
         keyPath: [],
         payload: {
-            meta: {
-                abc: 123
-            }
+            abc: 123
         }
     };
 

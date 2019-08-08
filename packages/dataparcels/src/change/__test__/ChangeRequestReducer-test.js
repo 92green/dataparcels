@@ -1,5 +1,4 @@
 // @flow
-import ActionCreators from '../ActionCreators';
 import ChangeRequest from '../ChangeRequest';
 import ChangeRequestReducer from '../ChangeRequestReducer';
 import Action from '../Action';
@@ -7,6 +6,96 @@ import Action from '../Action';
 import push from 'unmutable/lib/push';
 import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
+
+const ActionCreators = {
+    deleteSelf: (): Action => {
+        return new Action({
+            type: "delete"
+        });
+    },
+    insertAfterSelf: (value: any): Action => {
+        return new Action({
+            type: "insertAfter",
+            payload: value
+        });
+    },
+    insertBeforeSelf: (value: any): Action => {
+        return new Action({
+            type: "insertBefore",
+            payload: value
+        });
+    },
+    map: (updater): Action => {
+        return new Action({
+            type: "map",
+            payload: updater
+        });
+    },
+    move: (keyA, keyB): Action => {
+        return new Action({
+            type: "move",
+            keyPath: [keyA],
+            payload: keyB
+        });
+    },
+    push: (...values): Action => {
+        return new Action({
+            type: "push",
+            payload: values
+        });
+    },
+    pop: (): Action => {
+        return new Action({
+            type: "pop"
+        });
+    },
+    setData: (parcelData): Action => {
+        return new Action({
+            type: "setData",
+            payload: parcelData
+        });
+    },
+    setMeta: (meta): Action => {
+        return new Action({
+            type: "setMeta",
+            payload: meta
+        });
+    },
+    setSelf: (value): Action => {
+        return new Action({
+            type: "set",
+            payload: value
+        });
+    },
+    shift: (): Action => {
+        return new Action({
+            type: "shift"
+        });
+    },
+    swap: (keyA, keyB): Action => {
+        return new Action({
+            type: "swap",
+            keyPath: [keyA],
+            payload: keyB
+        });
+    },
+    swapNextSelf: (): Action => {
+        return new Action({
+            type: "swapNext"
+        });
+    },
+    swapPrevSelf: (): Action => {
+        return new Action({
+            type: "swapPrev"
+        });
+    },
+    unshift: (...values): Action => {
+        return new Action({
+            type: "unshift",
+            payload: values
+        });
+    }
+};
 
 const makeReducer = (actions) => pipeWith(
     new ChangeRequest(actions),

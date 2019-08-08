@@ -69,12 +69,12 @@ test('ChangeRequest merge() should merge other change requests nextFrameMetas', 
 
 test('ChangeRequest merge() should dedupe subsequent "set" actions with same keyPath', () => {
     let existingChangeRequest = new ChangeRequest([
-        new Action({type: "set", keyPath: ['a'], payload: {value: 1}})
+        new Action({type: "set", keyPath: ['a'], payload: 1})
     ]);
 
     let mergableChangeRequest = new ChangeRequest([
-        new Action({type: "set", keyPath: ['a'], payload: {value: 2}}),
-        new Action({type: "set", keyPath: ['a'], payload: {value: 3}})
+        new Action({type: "set", keyPath: ['a'], payload: 2}),
+        new Action({type: "set", keyPath: ['a'], payload: 3})
     ]);
 
     let mergedActions = existingChangeRequest
@@ -82,13 +82,13 @@ test('ChangeRequest merge() should dedupe subsequent "set" actions with same key
         .actions;
 
     expect(mergedActions.length).toBe(1);
-    expect(mergedActions[0].payload.value).toBe(3);
+    expect(mergedActions[0].payload).toBe(3);
 
     // merge shouldn't happen if keypaths differ
 
     let mergableChangeRequest2 = new ChangeRequest([
-        new Action({type: "set", keyPath: ['b'], payload: {value: 2}}),
-        new Action({type: "set", keyPath: ['a'], payload: {value: 3}})
+        new Action({type: "set", keyPath: ['b'], payload: 2}),
+        new Action({type: "set", keyPath: ['a'], payload: 3})
     ]);
 
     let mergedActions2 = existingChangeRequest
@@ -100,8 +100,8 @@ test('ChangeRequest merge() should dedupe subsequent "set" actions with same key
     // merge shouldn't happen if type differs
 
     let mergableChangeRequest3 = new ChangeRequest([
-        new Action({type: "floop", keyPath: ['a'], payload: {value: 2}}),
-        new Action({type: "set", keyPath: ['a'], payload: {value: 3}})
+        new Action({type: "floop", keyPath: ['a'], payload: 2}),
+        new Action({type: "set", keyPath: ['a'], payload: 3})
     ]);
 
     let mergedActions3 = existingChangeRequest
@@ -115,9 +115,7 @@ test('ChangeRequest nextData() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
         keyPath: ["b"],
-        payload: {
-            value: 3
-        }
+        payload: 3
     });
 
     var parcel = new Parcel({
@@ -145,9 +143,7 @@ test('ChangeRequest prevData should return previous data', () => {
     var action = new Action({
         type: "set",
         keyPath: ["b"],
-        payload: {
-            value: 3
-        }
+        payload: 3
     });
 
     var parcel = new Parcel({
@@ -201,9 +197,7 @@ test('ChangeRequest should cache its data after its calculated, so subsequent ca
     let actions = range(amount).map((num) => new Action({
         type: "set",
         keyPath: ["a","b","c","d","e"],
-        payload: {
-            value: num
-        }
+        payload: num
     }));
 
     var parcel = new Parcel({
@@ -285,9 +279,7 @@ test('ChangeRequest getDataIn should return previous and next value at keyPath',
     var action = new Action({
         type: "set",
         keyPath: ["a", "c", "#a"],
-        payload: {
-            value: 100
-        }
+        payload: 100
     });
 
     var parcel = new Parcel({
@@ -313,9 +305,7 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path', (
     var action = new Action({
         type: "set",
         keyPath: ["a", "c", "#a"],
-        payload: {
-            value: 100
-        }
+        payload: 100
     });
 
     var parcel = new Parcel({
@@ -371,9 +361,7 @@ test('ChangeRequest hasValueChanged should indicate if value changed in array, i
     var action = new Action({
         type: "insertBefore",
         keyPath: ["#b"],
-        payload: {
-            value: 999
-        }
+        payload: 999
     });
 
     var parcel = new Parcel({

@@ -27,7 +27,7 @@ test('IndexedParcel.delete() should delete', () => {
     var expectedAction = {
         type: "delete",
         keyPath: ["#a"],
-        payload: {}
+        payload: undefined
     };
 
     var indexedHandleChange = jest.fn();
@@ -57,15 +57,6 @@ test('IndexedParcel.get(hashkey) should return a new child Parcel', () => {
     };
 
     var expectedValue = 6;
-
-    var expectedAction = {
-        type: "set",
-        keyPath: [0],
-        payload: {
-            child: undefined,
-            value: 2
-        }
-    };
 
     var childParcel = new Parcel(data).get("#a");
 
@@ -99,9 +90,7 @@ test('IndexedParcel.move() should move', () => {
     var expectedAction = {
         type: "move",
         keyPath: [2],
-        payload: {
-            moveKey: 0
-        }
+        payload: 0
     };
 
     new Parcel({
@@ -141,9 +130,7 @@ test('IndexedParcel.push() should push', () => {
     var expectedAction = {
         type: "push",
         keyPath: [],
-        payload: {
-            values: [4,5]
-        }
+        payload: [4,5]
     };
 
     new Parcel({
@@ -180,7 +167,7 @@ test('IndexedParcel.pop() should pop', () => {
     var expectedAction = {
         type: "pop",
         keyPath: [],
-        payload: {}
+        payload: undefined
     };
 
     new Parcel({
@@ -217,7 +204,7 @@ test('IndexedParcel.shift() should shift', () => {
     var expectedAction = {
         type: "shift",
         keyPath: [],
-        payload: {}
+        payload: undefined
     };
 
     new Parcel({
@@ -255,9 +242,7 @@ test('IndexedParcel.swap() should swap', () => {
     var expectedAction = {
         type: "swap",
         keyPath: [0],
-        payload: {
-            swapKey: 2
-        }
+        payload: 2
     };
 
     new Parcel({
@@ -297,9 +282,7 @@ test('IndexedParcel.unshift() should unshift', () => {
     var expectedAction = {
         type: "unshift",
         keyPath: [],
-        payload: {
-            values: [4,5]
-        }
+        payload: [4,5]
     };
 
     new Parcel({

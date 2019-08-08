@@ -6,7 +6,6 @@ import type {ParcelValueUpdater} from 'dataparcels';
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
 import Parcel from 'dataparcels';
-import useDebouncedCallback from 'use-debounce/lib/callback';
 import ApplyBeforeChange from './util/ApplyBeforeChange';
 
 type Params = {
@@ -14,7 +13,6 @@ type Params = {
     updateValue?: boolean,
     rebase?: boolean,
     onChange?: (parcel: Parcel, changeRequest: ChangeRequest) => void,
-    debounce?: number,
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
 };
 
@@ -30,12 +28,6 @@ export default (params: Params): Return => {
     // go up through all of beforeChange's functions
 
     const applyBeforeChange = ApplyBeforeChange(params.beforeChange);
-
-    //
-    // debounce
-    //
-
-    const [debouncedOnChange] = useDebouncedCallback(params.onChange, params.debounce);
 
     // takes a parcel and sets the current params.value as its value
     // (params.value is first passed through beforeChange),
@@ -63,8 +55,7 @@ export default (params: Params): Return => {
                 setParcel(applyBeforeChange(parcel));
 
                 if(params.onChange) {
-                    let fn = params.debounce ? debouncedOnChange : params.onChange;
-                    fn(parcel, changeRequest);
+                    params.onChange(parcel, changeRequest);
                 }
             }
         })

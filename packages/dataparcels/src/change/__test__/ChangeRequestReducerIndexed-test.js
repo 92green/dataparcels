@@ -117,9 +117,7 @@ TestIndex([
     {
         action: {
             type: "insertAfter",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [0]
         },
         expectedData: {
@@ -131,9 +129,7 @@ TestIndex([
     {
         action: {
             type: "insertAfter",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [2]
         },
         expectedData: {
@@ -145,9 +141,7 @@ TestIndex([
     {
         action: {
             type: "insertAfter",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: ["#a"]
         },
         expectedData: {
@@ -159,9 +153,7 @@ TestIndex([
     {
         action: {
             type: "insertAfter",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [-3]
         },
         expectedData: {
@@ -176,9 +168,7 @@ TestIndex([
     {
         action: {
             type: "insertBefore",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [0]
         },
         expectedData: {
@@ -190,9 +180,7 @@ TestIndex([
     {
         action: {
             type: "insertBefore",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [2]
         },
         expectedData: {
@@ -204,9 +192,7 @@ TestIndex([
     {
         action: {
             type: "insertBefore",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: ["#a"]
         },
         expectedData: {
@@ -218,9 +204,7 @@ TestIndex([
     {
         action: {
             type: "insertBefore",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [-3]
         },
         expectedData: {
@@ -235,9 +219,7 @@ TestIndex([
     {
         action: {
             type: "move",
-            payload: {
-                moveKey: 0
-            },
+            payload: 0,
             keyPath: [2]
         },
         expectedData: {
@@ -267,9 +249,7 @@ TestIndex([
         action: {
             type: "push",
             keyPath: [],
-            payload: {
-                values: [3,4]
-            }
+            payload: [3,4]
         },
         expectedData: {
             value: [0,1,2,3,4],
@@ -283,9 +263,7 @@ TestIndex([
     {
         action: {
             type: "set",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [0]
         },
         expectedData: {
@@ -297,9 +275,7 @@ TestIndex([
     {
         action: {
             type: "set",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: ["#a"]
         },
         expectedData: {
@@ -311,9 +287,7 @@ TestIndex([
     {
         action: {
             type: "set",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [-3]
         },
         expectedData: {
@@ -325,9 +299,7 @@ TestIndex([
     {
         action: {
             type: "set",
-            payload: {
-                value: 3
-            },
+            payload: 3,
             keyPath: [3]
         },
         expectedData: {
@@ -356,9 +328,7 @@ TestIndex([
     {
         action: {
             type: "swap",
-            payload: {
-                swapKey: 2
-            },
+            payload: 2,
             keyPath: [0]
         },
         expectedData: {
@@ -370,9 +340,7 @@ TestIndex([
     {
         action: {
             type: "swap",
-            payload: {
-                swapKey: "#c"
-            },
+            payload: "#c",
             keyPath: ["#a"]
         },
         expectedData: {
@@ -384,9 +352,7 @@ TestIndex([
     {
         action: {
             type: "swap",
-            payload: {
-                swapKey: -1
-            },
+            payload: -1,
             keyPath: [-3]
         },
         expectedData: {
@@ -438,9 +404,7 @@ TestIndex([
         action: {
             type: "unshift",
             keyPath: [],
-            payload: {
-                values: [3,4]
-            }
+            payload: [3,4]
         },
         expectedData: {
             value: [3,4,0,1,2],

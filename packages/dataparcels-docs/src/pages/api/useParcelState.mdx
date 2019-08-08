@@ -25,7 +25,6 @@ let [parcel] = useParcelState({
     updateValue?: boolean,
     rebase?: boolean,
     onChange?: Function,
-    debounce?: number,
     beforeChange?: Function|Function[]
 });
 ```
@@ -132,30 +131,6 @@ let [parcel] = useParcelState({
     onChange: (parcel, changeRequest) => {
         // add logic here
     }
-});
-```
-
-### debounce
-
-```flow
-debounce?: number // optional
-```
-
-If set, `debounce` will debounce the calls to `onChange`. The number indicates the number of milliseconds to debounce.
-
-This can be used to limit how rapidly `onChange` may be called in quick succession.
-
-#### Debouncing explained
-
-The useParcelState hooks waits until no new changes have occured for `debounce` number of milliseconds. It then calls `onChange` with the most recent Parcel and ChangeRequest.
-
-```js
-let [parcel] = useParcelState({
-    value: receivedValue,
-    onChange: (parcel, changeRequest) => {
-        // add logic here
-    },
-    debounce: 500
 });
 ```
 
