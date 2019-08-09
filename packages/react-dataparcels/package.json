@@ -18,14 +18,16 @@
     "ParcelBoundary.js",
     "ParcelBoundaryHoc.js",
     "ParcelHoc.js",
+    "ParcelNode.js",
     "ParcelShape.js",
+    "asNodes.js",
     "asRaw.js",
     "asShape.js",
     "useParcelBuffer.js",
     "useParcelForm.js",
     "useParcelSideEffect.js",
     "useParcelState.js",
-    "Validation.js"
+    "validation.js"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"

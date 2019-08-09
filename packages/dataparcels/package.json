@@ -15,7 +15,9 @@
     "cancel.js",
     "ChangeRequest.js",
     "deleted.js",
+    "ParcelNode.js",
     "ParcelShape.js",
+    "asNodes.js",
     "asRaw.js",
     "asShape.js",
     "validation.js"

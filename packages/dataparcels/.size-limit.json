@@ -24,6 +24,14 @@
         "path": "ParcelShape.js"
     },
     {
+        "limit": "5.75 KB",
+        "path": "ParcelNode.js"
+    },
+    {
+        "limit": "5.75 KB",
+        "path": "asNodes.js"
+    },
+    {
         "limit": "100 B",
         "path": "asRaw.js"
     },

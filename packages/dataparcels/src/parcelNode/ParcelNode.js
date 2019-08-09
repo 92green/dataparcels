@@ -16,7 +16,6 @@ import updateChild from '../parcelData/updateChild';
 import updateChildKeys from '../parcelData/updateChildKeys';
 
 import map from 'unmutable/map';
-import some from 'unmutable/some';
 import pipeWith from 'unmutable/pipeWith';
 import shallowToJS from 'unmutable/shallowToJS';
 
