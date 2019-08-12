@@ -18,7 +18,7 @@ import IconParcelNode from 'assets/parcelshape.gif';
 
 The `asNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
 
-It must be passed a function, whose first argument will be youe with your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asShape()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asNodes()` function is being passed into.
+It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asShape()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asNodes()` function is being passed into.
 
 Your updater function should either return another ParcelNode, or if you return anything else, this value will be used instead.
 
