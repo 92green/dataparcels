@@ -1,6 +1,6 @@
 [
     {
-        limit: "43 KB",
-        path: "lib/index.js"
+        "limit": "43 KB",
+        "path": "lib/index.js"
     }
 ]
