@@ -664,24 +664,6 @@ parcel.get(1).insertBefore('!');
 
 <IndexedKeys />
 
-### move()
-
-```flow
-move(keyA: string|number, keyB: string|number): void // only on IndexedParcels, will move children
-```
-
-This moves the child Parcel at `keyA` to the position of `keyB`.
-Other elements will shift left to fill any gaps left and/or shift right to make room for moved values.
-
-```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
-parcel.move(2, 0);
-// this also triggers a change that sets the parcel's value to ['c','a','b'];
-```
-
-<IndexedKeys />
-
 ### push()
 
 ```flow

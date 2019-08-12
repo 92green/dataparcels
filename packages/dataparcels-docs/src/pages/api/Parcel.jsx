@@ -42,7 +42,6 @@ export default () => <Layout>
             '# Indexed and element change methods',
             'insertAfter()',
             'insertBefore()',
-            'move()',
             'push()',
             'pop()',
             'shift()',

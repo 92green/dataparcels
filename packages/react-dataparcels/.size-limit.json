@@ -20,27 +20,27 @@
         "path": "deleted.js"
     },
     {
-        "limit": "13 KB",
+        "limit": "12.3 KB",
         "path": "ParcelShape.js"
     },
     {
-        "limit": "5.75 KB",
+        "limit": "5.9 KB",
         "path": "ParcelNode.js"
+    },
+    {
+        "limit": "6 KB",
+        "path": "asNodes.js"
     },
     {
         "limit": "100 B",
         "path": "asRaw.js"
     },
     {
-        "limit": "5.75 KB",
-        "path": "asNodes.js"
-    },
-    {
-        "limit": "13 KB",
+        "limit": "12.3 KB",
         "path": "asShape.js"
     },
     {
-        "limit": "6 KB",
+        "limit": "5.3 KB",
         "path": "validation.js"
     },
     {
