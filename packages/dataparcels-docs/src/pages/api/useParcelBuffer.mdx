@@ -32,7 +32,7 @@ let [innerParcel, control] = useParcelBuffer({
     // optional
     buffer?: boolean,
     debounce?: number,
-    beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
+    beforeChange?: ParcelUpdater|ParcelUpdater[]
 });
 ```
 
@@ -88,10 +88,11 @@ The useParcelBuffer hooks waits until no new changes have occured for `debounce`
 ### beforeChange
 
 ```flow
-beforeChange?: ParcelValueUpdater|ParcelValueUpdater[] // optional
+beforeChange?: ParcelUpdater|ParcelUpdater[] // optional
 
-type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any
-type ParcelValueUpdater = asShape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+type ParcelUpdater = (value: any, changeRequest: ChangeRequest) => any
+type ParcelUpdater = asNodes((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+type ParcelUpdater = asShape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
 ```
 
 The `beforeChange` parameter accepts either a single function, or an array of functions. Whenever a new `parcel` is taken into useParcelBuffer from params, and whenever the useParcelBuffer hook recieves a change from below, the change is passed through each `beforeChange` function.

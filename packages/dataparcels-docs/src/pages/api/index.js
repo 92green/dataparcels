@@ -13,7 +13,10 @@ export default () => <Layout>
             <API />
         </>}
         pageNav={[
-            '# API'
+            '# API',
+            'Other dataparcels exports',
+            'Other React dataparcels exports',
+            'Deprecated'
         ]}
     />
 </Layout>;

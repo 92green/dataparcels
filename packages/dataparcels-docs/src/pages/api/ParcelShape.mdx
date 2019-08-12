@@ -10,23 +10,46 @@ import {Text} from 'dcme-style';
 import ApiPageIcon from 'component/ApiPageIcon';
 import IconParcelShape from 'assets/parcelshape.gif';
 
-# ParcelShape
+# ParcelShape, asShape
+
+## asShape
 
 <ApiPageIcon>{IconParcelShape}</ApiPageIcon>
 
-ParcelShape is a data container very similar to a [Parcel](/api/Parcel) but without the automatic data binding. All it does is contain data, no strings attached, and provide methods for you to alter its data.
+The `asShape` function is a kind of [parcel updater](/parcel-updaters) that allows for advanced editing of a data shape while retaining key and meta information. It returns a `ParcelShape` that contains your parcel's data.
 
-These exist to be used with updater methods, such as [Parcel.modifyDown](/api/Parcel#modifyDown), to provide a safe way to alter the shape of data in a Parcel. The page on [value updaters](/value-updaters) provides some context.
+It must be passed a function, whose first argument will be a `ParcelShape`. It will sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asShape()` function is being passed into.
+
+Your updater function should either return another ParcelShape, or if you return anything else, this value will be used instead.
+
+```js
+import asShape from 'dataparcels/asShape';
+import asShape from 'react-dataparcels/asShape';
+```
+
+```js
+let parcel = new Parcel({
+    value: [1,2,3]
+});
+
+let modifiedParcel = parcel.modifyDown(asShape(
+    shape => shape
+        .unshift(0)
+        .push(4)
+));
+
+// modifiedParcel.value is [0,1,2,3,4]
+```
+
+## ParcelShape
+
+ParcelShape is a data container very similar to a [Parcel](/api/Parcel) but without the automatic data binding. All it does is contain data, no strings attached, and provide methods for you to alter its data.
 
 ParcelShape's methods are roughly a subset of [Parcel](/api/Parcel)'s methods.
 
 ```js
 import ParcelShape from 'dataparcels/ParcelShape';
 import ParcelShape from 'react-dataparcels/ParcelShape';
-
-// it is more like you would encounter these from using shape updaters
-import asShape from 'dataparcels/asShape';
-import asShape from 'react-dataparcels/asShape';
 ```
 
 ```flow
@@ -38,16 +61,14 @@ new ParcelShape(value?: any);
 
 ```js
 // creates a Parcel that contains a value of 123
-let parcelShape = new ParcelShape(123);
+let shape = new ParcelShape(123);
 ```
-
-## Example Usage
 
 ParcelShapes are used in a very similar way to [Immutable.js Maps and Lists](https://facebook.github.io/immutable-js/docs/), by calling methods that return new and updated ParcelShapes.
 
 ```js
 let modifiedParcel = parcel.modifyDown(asShape(
-    parcelShape => parcelShape
+    shape => shape
         .unshift(0)
         .push(4)
         .update(0, value => value * 10)
@@ -114,10 +135,10 @@ let value = {
     abc: 123,
     def: 456
 };
-let parcelShape = new ParcelShape(value);
-parcelShape.get('abc').value; // returns 123
-parcelShape.get('xyz').value; // returns undefined
-parcelShape.get('xyz', 789).value; // returns 789
+let shape = new ParcelShape(value);
+shape.get('abc').value; // returns 123
+shape.get('xyz').value; // returns undefined
+shape.get('xyz', 789).value; // returns 789
 ```
 
 #### get() with indexed values
@@ -126,10 +147,10 @@ parcelShape.get('xyz', 789).value; // returns 789
 
 ```js
 let value = ['abc', 'def', 'ghi'];
-let parcelShape = new ParcelShape(value);
-parcelShape.get(0).value; // returns 'abc'
-parcelShape.get(-1).value; // returns 'ghi'
-parcelShape.get('#a').value; // returns 'abc'
+let shape = new ParcelShape(value);
+shape.get(0).value; // returns 'abc'
+shape.get(-1).value; // returns 'ghi'
+shape.get('#a').value; // returns 'abc'
 ```
 
 ### getIn()
@@ -150,10 +171,10 @@ let value = {
         b: 123
     }
 };
-let parcelShape = new ParcelShape(value);
-parcelShape.get(['a','b']).value; // returns 123
-parcelShape.get(['a','z']).value; // returns undefined
-parcelShape.get(['a','z'], 789).value; // returns 789
+let shape = new ParcelShape(value);
+shape.get(['a','b']).value; // returns 123
+shape.get(['a','z']).value; // returns undefined
+shape.get(['a','z'], 789).value; // returns 789
 ```
 
 <IndexedKeys />
@@ -172,8 +193,8 @@ let value = {
     def: 456
 };
 
-let parcelShape = new ParcelShape(value);
-parcelShape.children();
+let shape = new ParcelShape(value);
+shape.children();
 
 // returns {
 //    abc: ParcelShape, // contains a value of 123
@@ -217,8 +238,8 @@ set(value: any): ParcelShape
 Calling `set()` will return a new ParcelShape where the original value is replaced with the `value` provided.
 
 ```js
-let parcelShape = new ParcelShape(123);
-parcelShape.set(456);
+let shape = new ParcelShape(123);
+shape.set(456);
 // returns a new ParcelShape containing 456
 ```
 
@@ -240,15 +261,21 @@ On ParentParcels this method can be called with a `key`, which deletes the child
 ### update()
 
 ```flow
+type ParcelUpdater = (value: any) => any;
+
 // updates value - only to be used if shape doesn't change
-update(updater: ParcelValueUpdater): ParcelShape
-update(key: string|number, updater: ParcelValueUpdater): ParcelShape // only on ParentParcels, will update a child
-type ParcelValueUpdater = (value: any) => any;
+update(updater: ParcelUpdater): Parcel
 
 // updates shape, including meta
-update(asShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape
-update(key: string|number, asShape(updater: ParcelValueUpdater)): ParcelShape // only on ParentParcels, will update a child
-type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
+update(asNodes(updater: ParcelUpdater)): Parcel
+update(asShape(updater: ParcelUpdater)): Parcel
+
+// updates value on child - only to be used if shape doesn't change
+update(key: string|number, updater: ParcelUpdater): Parcel // only on ParentParcel
+
+// updates shape on child, including meta
+update(asNodes(key: string|number, updater: ParcelUpdater)): Parcel // only on ParentParcel
+update(asShape(key: string|number, updater: ParcelUpdater)): Parcel // only on ParentParcel
 ```
 
 Calling `update()` with one argument will replace the current value in the ParcelShape with the result of the value updater provided to it. The value updater is passed the current value of the ParcelShape, from which you can return the intended replacement value.
@@ -260,13 +287,14 @@ On ParentParcels this method can also be called with a `key`, which updates the 
 ### map()
 
 ```flow
-// updates value - only to be used if shape doesn't change
-map(updater: ParcelValueUpdater): ParcelShape // only on ParentParcels
-type ParcelValueUpdater = (value: any) => any;
+type ParcelUpdater = (value: any) => any;
 
-// updates shape, including meta
-map(asShape(shapeUpdater: ParcelShapeUpdater)): ParcelShape // only on ParentParcels
-type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
+// updates values on children - only to be used if shape doesn't change
+update(updater: ParcelUpdater): Parcel // only on ParentParcel
+
+// updates shapes on children, including meta
+update(asNodes(updater: ParcelUpdater)): Parcel // only on ParentParcel
+update(asShape(updater: ParcelUpdater)): Parcel // only on ParentParcel
 ```
 
 The `map()` function will update every child value. It is passed each child value in order, from which you can return each intended replacement value.

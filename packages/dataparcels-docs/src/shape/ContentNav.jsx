@@ -24,7 +24,7 @@ const nav = () => <NavigationList>
     <NavigationListItem><Link to="/parcel-keys">Parcel keys</Link></NavigationListItem>
     <NavigationListItem><Link to="/parcel-meta">Parcel meta</Link></NavigationListItem>
     <NavigationListItem><Link to="/parcel-types">Parcel types</Link></NavigationListItem>
-    <NavigationListItem><Link to="/value-updaters">Value updaters</Link></NavigationListItem>
+    <NavigationListItem><Link to="/parcel-updaters">Parcel updaters</Link></NavigationListItem>
 </NavigationList>;
 
 export default (props) => <ContentNav nav={nav} {...props} />;

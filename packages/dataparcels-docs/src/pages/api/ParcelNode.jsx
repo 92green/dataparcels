@@ -8,8 +8,9 @@ export default () => <Layout>
     <ContentNav
         content={() => <ParcelNodeMarkdown />}
         pageNav={[
-            '# ParcelNode',
-            'Example Usage',
+            '# ParcelNode, asNodes',
+            'asNodes',
+            'ParcelNode',
             '# Properties',
             'value',
             'meta',
