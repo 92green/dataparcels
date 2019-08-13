@@ -31,13 +31,6 @@ const ActionCreators = {
             payload: updater
         });
     },
-    move: (keyA, keyB): Action => {
-        return new Action({
-            type: "move",
-            keyPath: [keyA],
-            payload: keyB
-        });
-    },
     push: (...values): Action => {
         return new Action({
             type: "push",

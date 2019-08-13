@@ -2,15 +2,16 @@
 import React from 'react';
 import Layout from 'layout/Layout';
 import ContentNav from 'shape/ContentNav';
-import ValueUpdatersMarkdown from 'pages/value-updaters.mdx';
+import ParcelUpdatersMarkdown from 'pages/parcel-updaters.mdx';
 
 export default () => <Layout>
     <ContentNav
-        content={() => <ValueUpdatersMarkdown />}
+        content={() => <ParcelUpdatersMarkdown />}
         pageNav={[
             '# Value Updaters',
-            'Simple value updaters',
-            'Shape updaters'
+            'Simple updaters',
+            'asNodes',
+            'asShape'
         ]}
     />
 </Layout>;

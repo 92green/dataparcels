@@ -7,7 +7,9 @@ import ChangeRequest from '../ChangeRequest';
 import asRaw from '../asRaw';
 import deleted from '../deleted';
 import ParcelShape from '../ParcelShape';
+import ParcelNode from '../ParcelNode';
 import asShape from '../asShape';
+import asNodes from '../asNodes';
 import cancel from '../cancel';
 import validation from '../validation';
 
@@ -26,7 +28,9 @@ import InternalChangeRequest from 'dataparcels/ChangeRequest';
 import InternalUpdateRaw from 'dataparcels/asRaw';
 import Internaldeleted from 'dataparcels/deleted';
 import InternalParcelShape from 'dataparcels/ParcelShape';
+import InternalParcelNode from 'dataparcels/ParcelNode';
 import InternalShape from 'dataparcels/asShape';
+import InternalAsNodes from 'dataparcels/asNodes';
 import Internalcancel from 'dataparcels/cancel';
 import InternalValidation from 'dataparcels/validation';
 
@@ -62,8 +66,16 @@ test('/ParcelShape should export ParcelShape', () => {
     expect(ParcelShape).toBe(InternalParcelShape);
 });
 
+test('/ParcelNode should export ParcelNode', () => {
+    expect(ParcelNode).toBe(InternalParcelNode);
+});
+
 test('/asShape should export asShape', () => {
     expect(asShape).toBe(InternalShape);
+});
+
+test('/asNodes should export asNodes', () => {
+    expect(asNodes).toBe(InternalAsNodes);
 });
 
 test('/cancel should export cancel', () => {

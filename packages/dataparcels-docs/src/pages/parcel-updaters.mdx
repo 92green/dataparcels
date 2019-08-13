@@ -1,14 +1,9 @@
 import Link from 'component/Link';
 import {Box, Link as HtmlLink, Message} from 'dcme-style';
 
-# Value Updaters
+# Parcel Updaters
 
-```flow
-import type {ParcelValueUpdater} from 'dataparcels';
-import type {ParcelValueUpdater} from 'react-dataparcels';
-```
-
-Several of the methods on [Parcel](/api/Parcel) use callbacks known as "value updaters". These functions are used to alter a value based off an existing value. There are a few rules around how you can use these value updaters, and why you might choose one kind over another.
+Several of the methods on [Parcel](/api/Parcel) use callbacks known as "parcel updaters". These functions are used to alter a value based off an existing value. There are a few rules around how you can use these updaters, and why you might choose one kind over another.
 
 Many examples of these can be seen on **[Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI)**.
 
@@ -54,18 +49,61 @@ If the updater gives you a value that has children, please ensure you do not cha
 
 Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta). If you need to update the shape of the data or update meta, you can do so using a **shape updater**.
 
-## Shape updaters
+## asNodes
 
-Use the [asShape](/api/asShape) function to allow the shape of data to be safely altered. It will provide you with your Parcel's data wrapped in a [ParcelShape](/api/ParcelShape) which you can then manipulate and return the result.
+Use the [asNodes](/api/ParcelNode) updater if you'd like to add, remove or re-arrange child values. It will provide you with your Parcel's value, but with all child values replaced with [ParcelNode](/api/ParcelNode) instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data.
 
-Shape updaters look something like this:
+They look something like this:
 
 ```js
-.modifyUp(asShape(parcelShape => {
-     return parcelShape.setMeta({
+.modifyUp(asNodes(
+    nodes => nodes.filter(node => node.value.isCool)
+))
+```
+
+```js
+import asNodes from 'dataparcels/asNodes';
+import asNodes from 'react-dataparcels/asNodes';
+```
+
+```js
+let parcel = new Parcel({
+    value: [1,2,3]
+});
+
+// reverse the parcel's children
+let modifiedParcel = parcel.modifyDown(asNodes(
+    shape => shape.slice().reverse() // clones and reverses the shape array
+));
+
+// new value is [3,2,1]
+```
+
+```js
+let parcel = new Parcel({
+    value: {foo: 100}
+});
+
+// set a default value for a child
+let modifiedParcel = parcel.modifyDown(asNodes(
+    shape => ({bar: 200, ...shape})
+));
+
+// new value is {bar: 200, foo: 100}
+```
+
+## asShape
+
+Use the [asShape](/api/ParcelShape) updater if you need to perform deep editing of a data shape while retaining keys and meta data against parts of the data. It will provide you with your Parcel's data wrapped in a [ParcelShape](/api/ParcelShape) which you can then manipulate and return the result.
+
+They look something like this:
+
+```js
+.modifyUp(asShape(
+    shape => shape.setMeta({
         foo: "bar"
      })
-}))
+))
 ```
 
 ```js
@@ -79,7 +117,7 @@ let parcel = new Parcel({
 });
 
 let modifiedParcel = parcel.modifyDown(asShape(
-    parcelShape => parcelShape
+    shape => shape
         .unshift(0)
         .push(4)
 ));
