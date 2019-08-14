@@ -23,6 +23,12 @@ export default () => <Layout>
             'parcel',
             'parcelControl',
             '# ParcelHookControl',
+            'submit',
+            'reset',
+            'buffered',
+            'actions',
+            'valueStatus',
+            'submitStatus',
             '# Inside the hook'
         ]}
     />
