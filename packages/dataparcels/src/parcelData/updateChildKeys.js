@@ -26,7 +26,7 @@ function toIntKey(str: ?string): ?number {
     return isKey(str) ? toInt26(str.slice(1)) : undefined;
 }
 
-export default () => (parcelData: ParcelData): ParcelData => {
+export default (existingChild: any = []) => (parcelData: ParcelData): ParcelData => {
     let {value, child} = parcelData;
 
     if(!child) {
@@ -43,8 +43,7 @@ export default () => (parcelData: ParcelData): ParcelData => {
     }
 
     let keys = pipeWith(
-        child,
-        toArray(),
+        [...toArray()(child), ...toArray()(existingChild)],
         map(({key}) => toIntKey(key))
     );
 

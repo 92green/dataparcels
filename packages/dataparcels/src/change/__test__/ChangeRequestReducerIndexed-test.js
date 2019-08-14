@@ -23,7 +23,6 @@ let EXPECTED_KEY_AND_META = {
 [
     "insertAfter",
     "insertBefore",
-    "move",
     "swap",
     "swapNext",
     "swapPrev"
@@ -210,21 +209,6 @@ TestIndex([
         expectedData: {
             value: [3,0,1,2],
             child: [{key: "#d"},{key: "#a"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    }
-]);
-
-TestIndex([
-    {
-        action: {
-            type: "move",
-            payload: 0,
-            keyPath: [2]
-        },
-        expectedData: {
-            value: [2,0,1],
-            child: [{key: "#c"},{key: "#a"}, {key: "#b"}],
             ...EXPECTED_KEY_AND_META
         }
     }

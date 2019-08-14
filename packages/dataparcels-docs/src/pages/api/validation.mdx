@@ -37,7 +37,7 @@ let [parcel, parcelControl] = useParcelForm({
 ## Arguments
 
 ```flow
-validation(validationRuleMap: ValidationRuleMap) => ParcelValueUpdater;
+validation(validationRuleMap: ValidationRuleMap) => ParcelUpdater;
 
 type ValidationRuleMap = {
     [matchPath: string]: ValidationRule|ValidationRule[]
@@ -78,7 +78,7 @@ If the data is valid, `null` should be returned.
 
 ## Returns
 
-The `validation` function returns a `ParcelValueUpdater` function, which is most suitable to be passed into [useParcelForm.beforeUpdate](/api/useParcelForm#beforeUpdate), [useParcelBuffer.beforeUpdate](/api/useParcelBuffer#beforeUpdate) or [useParcelState.beforeUpdate](/api/useParcelState#beforeUpdate).
+The `validation` function returns a `ParcelUpdater` function, which is most suitable to be passed into [useParcelForm.beforeUpdate](/api/useParcelForm#beforeUpdate), [useParcelBuffer.beforeUpdate](/api/useParcelBuffer#beforeUpdate) or [useParcelState.beforeUpdate](/api/useParcelState#beforeUpdate).
 
 This returned function is often used with [useParcelForm](/api/useParcelForm#validation).
 

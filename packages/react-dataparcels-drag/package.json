@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
-    "react-sortable-hoc": "1.4.0"
+    "react-sortable-hoc": "1.4.0",
+    "unmutable": "^0.46.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
@@ -39,10 +40,10 @@
     "dataparcels": "^0.25.0-alpha.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "size-limit": "^0.21.1"
+    "size-limit": "1.0.1"
   },
   "peerDependencies": {
-    "dataparcels": "^0.20.0",
-    "react": "^16.8.0"
+    "dataparcels": "^0.25.0-alpha.1",
+    "react": "^16.8.6"
   }
 }

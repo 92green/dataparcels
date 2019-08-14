@@ -128,7 +128,6 @@ export default class Parcel {
     // Indexed methods
     insertAfter: Function;
     insertBefore: Function;
-    move: Function;
     push: Function;
     pop: Function;
     shift: Function;
@@ -354,17 +353,11 @@ export default class Parcel {
 
         // Indexed methods
 
-        // Types(`move()`, `keyA`, `keyIndex`)(keyA);
-        // Types(`move()`, `keyB`, `keyIndex`)(keyB);
         // Types(`swap()`, `keyA`, `keyIndex`)(keyA);
         // Types(`swap()`, `keyB`, `keyIndex`)(keyB);
         this.insertAfter = (value: any) => fireActionOnlyType(Element, 'insertAfter', value);
 
         this.insertBefore = (value: any) => fireActionOnlyType(Element, 'insertBefore', value);
-
-        this.move = (keyA: Key|Index, keyB: Key|Index) => {
-            fireActionOnlyType(Indexed, 'move', keyB, [keyA]);
-        };
 
         this.push = (...values: Array<any>) => fireActionOnlyType(Indexed, 'push', values);
 

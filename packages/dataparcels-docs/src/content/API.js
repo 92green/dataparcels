@@ -58,19 +58,23 @@ export default () => <Box>
         </Box>}
         image={IconParcelHoc}
     />
-    <Text element="h3" modifier="marginKilo sizeKilo">See also</Text>
-    <BulletList>
-        <BulletListItem><Link className="Link" to="/api/ParcelDrag">ParcelDrag</Link></BulletListItem>
-        <BulletListItem><Link className="Link" to="/api/validation">validation</Link></BulletListItem>
-        <BulletListItem><Link className="Link" to="/api/useParcelBuffer">useParcelBuffer</Link></BulletListItem>
-        <BulletListItem><Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link></BulletListItem>
-        <BulletListItem><Link className="Link" to="/api/cancel">cancel</Link></BulletListItem>
-        <BulletListItem><Link className="Link" to="/api/ParcelShape">ParcelShape</Link></BulletListItem>
-        <BulletListItem><Link className="Link" to="/api/asShape">asShape</Link></BulletListItem>
-    </BulletList>
-    <Text element="h3" modifier="marginKilo sizeKilo">Deprecated</Text>
-    <BulletList>
-        <BulletListItem><Link className="Link" to="/api/ParcelHoc">ParcelHoc</Link></BulletListItem>
-        <BulletListItem><Link className="Link" to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link></BulletListItem>
-    </BulletList>
+    <Box modifier="marginTopMega">
+        <Text element="h3" modifier="marginKilo sizeKilo">Other dataparcels exports</Text>
+        <BulletList>
+            <BulletListItem><Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link></BulletListItem>
+            <BulletListItem><Link className="Link" to="/api/validation">validation</Link></BulletListItem>
+            <BulletListItem><Link className="Link" to="/api/ParcelNode">ParcelNode, asNodes</Link></BulletListItem>
+            <BulletListItem><Link className="Link" to="/api/ParcelShape">ParcelShape, asShape</Link></BulletListItem>
+        </BulletList>
+        <Text element="h3" modifier="marginMega sizeKilo">Other React dataparcels exports</Text>
+        <BulletList>
+            <BulletListItem><Link className="Link" to="/api/useParcelBuffer">useParcelBuffer</Link></BulletListItem>
+            <BulletListItem><Link className="Link" to="/api/ParcelDrag">ParcelDrag</Link></BulletListItem>
+        </BulletList>
+        <Text element="h3" modifier="marginMega sizeKilo">Deprecated</Text>
+        <BulletList>
+            <BulletListItem><Link className="Link" to="/api/ParcelHoc">ParcelHoc</Link></BulletListItem>
+            <BulletListItem><Link className="Link" to="/api/ParcelBoundaryHoc">ParcelBoundaryHoc</Link></BulletListItem>
+        </BulletList>
+    </Box>
 </Box>;
