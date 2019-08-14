@@ -12,6 +12,8 @@
   "files": [
     "lib",
     "Action.js",
+    "asyncChange.js",
+    "asyncValue.js",
     "cancel.js",
     "ChangeRequest.js",
     "deleted.js",

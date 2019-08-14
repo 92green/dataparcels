@@ -20,6 +20,8 @@ import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
 import useParcelBuffer from '../useParcelBuffer';
 import useParcelForm from '../useParcelForm';
 import useParcelState from '../useParcelState';
+import asyncChange from '../asyncChange';
+import asyncValue from '../asyncValue';
 
 // internal dataparcels files
 import InternalParcel from 'dataparcels';
@@ -41,6 +43,8 @@ import InternalParcelBoundaryHoc from '../lib/deprecated/ParcelBoundaryHoc';
 import InternalUseParcelBuffer from '../lib/useParcelBuffer';
 import InternalUseParcelForm from '../lib/useParcelForm';
 import InternalUseParcelState from '../lib/useParcelState';
+import InternalAsyncChange from '../lib/asyncChange';
+import InternalAsyncValue from '../lib/asyncValue';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
@@ -108,4 +112,12 @@ test('/useParcelForm should export useParcelForm', () => {
 
 test('/useParcelState should export useParcelState', () => {
     expect(useParcelState).toBe(InternalUseParcelState);
+});
+
+test('/asyncChange should export asyncChange', () => {
+    expect(asyncChange).toBe(InternalAsyncChange);
+});
+
+test('/asyncValue should export asyncValue', () => {
+    expect(asyncValue).toBe(InternalAsyncValue);
 });

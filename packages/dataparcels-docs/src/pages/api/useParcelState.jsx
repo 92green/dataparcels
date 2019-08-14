@@ -14,9 +14,14 @@ export default () => <Layout>
             'updateValue',
             'rebase',
             'onChange',
+            'onChangeUseResult',
             'beforeChange',
             '# Returns',
-            'parcel'
+            'parcel',
+            'parcelControl',
+            '# ParcelHookControl',
+            'valueStatus',
+            'changeStatus'
         ]}
     />
 </Layout>;

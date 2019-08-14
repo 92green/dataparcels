@@ -81,6 +81,23 @@ let [parcel] = useParcelForm({
 // parcel.value is 100
 ```
 
+#### Returning promises from value
+
+```js
+import asyncValue from 'react-dataparcels/asyncValue';
+
+let [parcel] = useParcelForm({
+    value: asyncValue(async () => {
+        // add logic here
+        return theValue;
+    })
+});
+```
+
+It's possible to return a value from a promise using the `asyncValue` function. The `useParcelForm` hook's parcel has a value of `undefined` until the promise resolves. Once it has resolved, `useParcelForm` hook's parcel has a value of the result of the async function.
+
+When using `asyncValue` you will also receive its status via [valueStatus](#valueStatus).
+
 ### updateValue
 
 ```flow
@@ -134,7 +151,7 @@ This restriction will be lifted in future with the introduction of a feature kno
 onSubmit?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any> // optional
 ```
 
-If provided, this function is called after innerParcel releases the contents of its buffer and propagates its changes, but before outerParcel's state is updated. It receives the new [Parcel](/api/Parcel), and the [ChangeRequest](/api/ChangeRequest) that was responsible for the change. This function can be used to relay changes further up the React heirarchy.
+If provided, this function is called on submit. It receives the new [Parcel](/api/Parcel), and the [ChangeRequest](/api/ChangeRequest) that was responsible for the change. This function can be used to relay changes further up the React heirarchy.
 
 ```js
 let [parcel] = useParcelForm({
@@ -145,16 +162,23 @@ let [parcel] = useParcelForm({
 });
 ```
 
-#### onSubmit with promises
+#### Returning promises from onSubmit
 
-It's possible to return a promise from `onSubmit`. When doing this, the ChangeRequest's propagation is halted and is only released once the promise resolves, at which point outerParcel's state will be updated to contain the new Parcel.
+```js
+let [parcel] = useParcelForm({
+    value,
+    onSubmit: async (parcel, changeRequest) => {
+        // add logic here
+    }
+});
+```
 
-If another change arrives while a promise is pending, it will be passed through `onSubmit` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's
+It's possible to return a promise from `onSubmit`. When doing this, the change does not enter the hook's state until the promise resolves.
+
+If another change arrives while a promise is still pending, it will be passed through `onSubmit` after the first promise is resolved or rejected. This is to ensure that there is only one operation happening at a time. If the first ChangeRequest's
 promise is rejected, the changes will be merged with the next ChangeRequest when `onSubmit` is called the second time.
 
 This is discussed in more detail in [data synchronisation](/data-synchronisation).
-
-*Please keep in mind that it is possible for a change to result in the same data being contained in the Parcel, `onSubmit` will not dedupe subsequent calls whose Parcels contain the same data.*
 
 ### onSubmitUseResult
 
@@ -317,39 +341,58 @@ type ParcelHookControl {
     reset: Function,
     buffered: boolean,
     actions: Action[],
-    submitStatus: {
-        status: string
-        pending: boolean,
-        error: any
-    }
+    valueStatus?: Object,
+    submitStatus?: Object
 }
 ```
 
-* <Param name="submit" type="() => void" />
+* <a id="submit" /><Param name="submit" type="() => void" />
   When called, this function will release all changes in the buffer.
 
-* <Param name="reset" type="() => void" />
+* <a id="reset" /><Param name="reset" type="() => void" />
   When called, this function will remove all changes in the buffer, and reset the data in `parcel` to be the same as the top Parcel stored in useParcelForm's state.
 
-* <Param name="buffered" type="boolean" />
+* <a id="buffered" /><Param name="buffered" type="boolean" />
   This boolean is true when there are any changes in the buffer, or false if the buffer is empty.
 
-* <Param name="actions" type="Action[]" />
+* <a id="actions" /><Param name="actions" type="Action[]" />
   An array of actions that are currently in the buffer.
 
-* <Param name="submitStatus" type="Object" />
-  An object containing information about the current state of the execution of the `onSubmit` function. This is useful if you're using promises with `onSubmit` and want to conditionally render elements based on the state of the promise.
+* <a id="valueStatus" /><Param name="valueStatus" type="Object" optional />
+  This object will exist if `value` is passed an `asyncValue` function. It's an object containing information about the current state of the execution of the async `value` function. This is useful if you want to conditionally render elements based on the state of the promise.
+
+  * <Param name="status" type="string" />
+    Status is always one of three possible string values:
+
+    * `"pending"` - if `asyncValue`s promise is pending.
+    * `"resolved"` - if the last promise returned from `asyncValue` was resolved.
+    * `"rejected"` - if the last promise returned from `asyncValue` was rejected.
+
+  * <Param name="isPending" type="boolean" />
+    The `isPending` boolean is true if `asyncValue`s promise is pending, otherwise it is false.
+
+  * <Param name="isResolved" type="boolean" />
+    The `isResolved` boolean is true if the last promise returned from `asyncValue` was resolved.
+
+  * <Param name="isRejected" type="boolean" />
+    The `isRejected` boolean is true if the last promise returned from `asyncValue` was rejected.
+
+  * <Param name="error" type="any" />
+    If the last promise returned from `asyncValue` was rejected, this contains the rejected promise's payload.
+
+* <a id="submitStatus" /><Param name="submitStatus" type="Object" optional />
+  This is an object containing information about the current state of the async `onSubmit` function. This is useful if you want to conditionally render elements based on the state of the promise.
 
   * <Param name="status" type="string" />
     Status is always one of four possible string values:
 
     * `"idle"` - no promises have yet been returned from `onSubmit`
-    * `"pending"` - if `onSubmit` returned a promise and that promise is pending.
+    * `"pending"` - if `onSubmit`s promise is pending.
     * `"resolved"` - if the last promise returned from `onSubmit` was resolved.
     * `"rejected"` - if the last promise returned from `onSubmit` was rejected.
 
   * <Param name="isPending" type="boolean" />
-    The `isPending` boolean is true if `onSubmit` returned a promise and that promise is pending, otherwise it is false.
+    The `isPending` boolean is true if `onSubmit`s promise is pending, otherwise it is false.
 
   * <Param name="isResolved" type="boolean" />
     The `isResolved` boolean is true if the last promise returned from `onSubmit` was resolved.
@@ -376,10 +419,10 @@ useParcelForm = (hookConfig) => {
     // and sends changed data to a callback
     let [outerParcel] = useParcelState({
         value,
-        updateValue
+        updateValue,
+        onSubmit,
+        onSubmitUseResult
     });
-
-    // ...some magic related to the onSubmit function...
 
     // 2. Parcel Buffer
     //
