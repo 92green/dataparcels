@@ -12,20 +12,24 @@
   "files": [
     "lib",
     "Action.js",
+    "asyncChange.js",
+    "asyncValue.js",
     "cancel.js",
     "ChangeRequest.js",
     "deleted.js",
     "ParcelBoundary.js",
     "ParcelBoundaryHoc.js",
     "ParcelHoc.js",
+    "ParcelNode.js",
     "ParcelShape.js",
+    "asNodes.js",
     "asRaw.js",
     "asShape.js",
     "useParcelBuffer.js",
     "useParcelForm.js",
     "useParcelSideEffect.js",
     "useParcelState.js",
-    "Validation.js"
+    "validation.js"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
@@ -46,7 +50,7 @@
     "@babel/runtime": "^7.1.5",
     "dataparcels": "^0.25.0-alpha.1",
     "is-promise": "^2.1.0",
-    "unmutable": "^0.41.1",
+    "unmutable": "^0.46.0",
     "use-debounce": "^1.1.3"
   },
   "devDependencies": {

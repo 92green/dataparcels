@@ -8,14 +8,16 @@ import type ChangeRequest from 'dataparcels/ChangeRequest';
 import type {ParcelValueUpdater} from 'dataparcels';
 
 import useParcelState from './useParcelState';
-import useParcelSideEffect from './useParcelSideEffect';
 import useParcelBuffer from './useParcelBuffer';
+import asyncChange from './asyncChange';
+
+type OnChangeFunction = (parcel: Parcel, changeRequest: ChangeRequest) => any;
 
 type Params = {
     value: any,
     updateValue?: boolean,
     rebase?: boolean,
-    onSubmit?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
+    onSubmit?: OnChangeFunction,
     onSubmitUseResult?: boolean,
     buffer?: boolean,
     debounce?: number,
@@ -49,29 +51,30 @@ export default (params: Params): Return => {
         ...([].concat(beforeChange))
     ].filter(Boolean);
 
-    let [outerParcel] = useParcelState({
+    let [outerParcel, parcelStateControl] = useParcelState({
         value,
         updateValue,
-        rebase
+        rebase,
+        onChange: asyncChange(onSubmit),
+        onChangeUseResult: onSubmitUseResult
     });
 
-    let [sideEffectParcel, sideEffectControl] = useParcelSideEffect({
+    let [innerParcel, parcelBufferControl] = useParcelBuffer({
         parcel: outerParcel,
-        onSubmit,
-        onSubmitUseResult
-    });
-
-    let [innerParcel, innerParcelControl] = useParcelBuffer({
-        parcel: sideEffectParcel,
         buffer,
         debounce,
         beforeChange
     });
 
     let control = {
-        ...sideEffectControl,
-        ...innerParcelControl
+        ...parcelStateControl,
+        ...parcelBufferControl
     };
+
+    if(control.changeStatus) {
+        control.submitStatus = control.changeStatus;
+        delete control.changeStatus;
+    }
 
     return [innerParcel, control];
 };

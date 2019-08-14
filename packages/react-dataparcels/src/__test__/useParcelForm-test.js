@@ -4,11 +4,9 @@ import {renderHook} from 'react-hooks-testing-library';
 import useParcelForm from '../useParcelForm';
 import useParcelState from '../useParcelState';
 import useParcelBuffer from '../useParcelBuffer';
-import useParcelSideEffect from '../useParcelSideEffect';
 
 jest.mock('../useParcelState.js');
 jest.mock('../useParcelBuffer.js');
-jest.mock('../useParcelSideEffect.js');
 
 const getLastCall = (obj) => obj.mock.calls[obj.mock.calls.length - 1];
 const getLastResult = (obj) => obj.mock.results[obj.mock.results.length - 1].value;
@@ -45,21 +43,7 @@ describe('useParcelForm should pass config to useParcelState', () => {
         expect(getLastCall(useParcelState)[0].rebase).toBe(true);
     });
 
-});
-
-
-describe('useParcelForm should pass config to useParcelSideEffect', () => {
-
-    it('should pass result of useParcelState to useParcelSideEffect', () => {
-        renderHook(() => useParcelForm({
-            value: 123
-        }));
-
-        expect(getLastCall(useParcelSideEffect)[0].parcel).toBe(getLastResult(useParcelState)[0]);
-        expect(getLastCall(useParcelSideEffect)[0].onSubmitUseResult).toBe(false);
-    });
-
-    it('should pass onSubmit to useParcelSideEffect', () => {
+    it('should pass onSubmit to useParcelState, wrapping it in asyncChange', () => {
         let onSubmit = () => {};
 
         renderHook(() => useParcelForm({
@@ -67,29 +51,38 @@ describe('useParcelForm should pass config to useParcelSideEffect', () => {
             onSubmit
         }));
 
-        expect(getLastCall(useParcelSideEffect)[0].onSubmit).toBe(onSubmit);
+        expect(typeof getLastCall(useParcelState)[0].onChange.sideEffectHook).toBe('function');
     });
 
-    it('should pass onSubmitUseResult to useParcelSideEffect', () => {
+    it('should pass onSubmitUseResult to useParcelState', () => {
+        let onSubmitUseResult = true;
 
         renderHook(() => useParcelForm({
             value: 123,
-            onSubmitUseResult: true
+            onSubmitUseResult
         }));
 
-        expect(getLastCall(useParcelSideEffect)[0].onSubmitUseResult).toBe(true);
+        expect(getLastCall(useParcelState)[0].onChangeUseResult).toBe(onSubmitUseResult);
+    });
+
+    it('should pass useParcelState control fields out of useParcelForm', () => {
+        let {result} = renderHook(() => useParcelForm({
+            value: 123
+        }));
+
+        expect(result.current[1]).toEqual(getLastResult(useParcelBuffer)[1]);
     });
 
 });
 
 describe('useParcelForm should pass config to useParcelBuffer', () => {
 
-    it('should pass result of useParcelSideEffect to useParcelBuffer', () => {
+    it('should pass result of useParcelState to useParcelBuffer', () => {
         renderHook(() => useParcelForm({
             value: 123
         }));
 
-        expect(getLastCall(useParcelBuffer)[0].parcel).toBe(getLastResult(useParcelSideEffect)[0]);
+        expect(getLastCall(useParcelBuffer)[0].parcel).toBe(getLastResult(useParcelState)[0]);
         expect(getLastCall(useParcelBuffer)[0].buffer).toBe(true);
         expect(getLastCall(useParcelBuffer)[0].debounce).toBe(0);
     });

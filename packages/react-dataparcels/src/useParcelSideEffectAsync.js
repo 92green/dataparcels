@@ -7,7 +7,6 @@ import {useRef} from 'react';
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
 
-import isPromise from 'is-promise';
 import Parcel from 'dataparcels';
 
 type QueueItem = [Parcel, ChangeRequest];
@@ -30,11 +29,19 @@ const mergeQueue = (parcel: Parcel, queue: QueueItem[]): QueueItem[] => {
 
 type Params = {
     parcel: Parcel,
-    onSubmit?: (parcel: Parcel, changeRequest: ChangeRequest) => any|Promise<any>,
-    onSubmitUseResult?: boolean
+    onSideEffect: (parcel: Parcel, changeRequest: ChangeRequest) => Promise<any>,
+    onSideEffectUseResult: boolean
 };
 
-type Return = [Parcel, {[key: string]: any}];
+type AsyncStatus = {
+    status: string,
+    isPending: boolean,
+    isResolved: boolean,
+    isRejected: boolean,
+    error: string
+};
+
+type Return = [Parcel, AsyncStatus];
 
 export default (params: Params): Return => {
 
@@ -56,10 +63,10 @@ export default (params: Params): Return => {
     const errorRef = useRef(undefined);
 
     //
-    // submit status
+    // async status
     //
 
-    let getSubmitStatus = () => {
+    let getAsyncStatus = () => {
         let status = statusRef.current;
         let error = status === 'rejected' ? errorRef.current.error : undefined;
 
@@ -73,9 +80,9 @@ export default (params: Params): Return => {
     };
 
     // control contains the hooks control object
-    const [submitStatus, setSubmitStatus] = useState(getSubmitStatus);
+    const [asyncStatus, setAsyncStatus] = useState(getAsyncStatus);
 
-    let updateSubmitStatus = () => setSubmitStatus(getSubmitStatus());
+    let updateAsyncStatus = () => setAsyncStatus(getAsyncStatus());
 
     //
     // queue processing
@@ -88,12 +95,12 @@ export default (params: Params): Return => {
             let [newParcel, changeRequest] = queueRef.current.shift();
             onDispatch(newParcel, changeRequest, result);
         }
-        updateSubmitStatus();
+        updateAsyncStatus();
     };
 
     const processChangeSuccess = processChangeDone((newParcel: Parcel, changeRequest: ChangeRequest, result: any) => {
 
-        if(params.onSubmit && params.onSubmitUseResult) {
+        if(params.onSideEffect && params.onSideEffectUseResult) {
             let [/*parcel*/, changeRequestWithResult] = newParcel._changeAndReturn(
                 newParcel => newParcel.set(result)
             );
@@ -101,7 +108,7 @@ export default (params: Params): Return => {
             changeRequestWithResult._originPath = changeRequest._originPath;
             changeRequest = changeRequestWithResult;
         } else {
-            // when onSubmitUseResult is false, its necessary to rebase
+            // when onSideEffectUseResult is false, its necessary to rebase
             // so changes made after submit but before
             // processChangeSuccess() are not overwritten when the top
             // parcel finally updates
@@ -124,30 +131,14 @@ export default (params: Params): Return => {
     });
 
     const processChange = () => {
-        let {onSubmit} = params;
-
-        // if no onSubmit is present, success! skip to the end
-        if(!onSubmit) {
-            processChangeSuccess();
-            return;
-        }
 
         // merge remaining changes in the queue together
         queueRef.current = mergeQueue(params.parcel, queueRef.current);
-        let result = onSubmit(...queueRef.current[0]);
-
-        // if a promise isn't returned, success! skip to the end
-        if(!isPromise(result)) {
-            processChangeSuccess(result);
-            return;
-        }
-
         statusRef.current = 'pending';
-        updateSubmitStatus();
-
-        // $FlowFixMe - flow can't tell that isPromise() guarantees
-        // that this is a promise
-        result.then(processChangeSuccess, processChangeError);
+        updateAsyncStatus();
+        params
+            .onSideEffect(...queueRef.current[0])
+            .then(processChangeSuccess, processChangeError);
     };
 
     //
@@ -162,7 +153,7 @@ export default (params: Params): Return => {
             // all changes go into the queue
             queueRef.current.push([newParcel, changeRequest]);
 
-            // if nothing is pending, then call onSubmit
+            // if nothing is pending, then call onSideEffect
             if(statusRef.current !== 'pending') {
                 processChange();
             }
@@ -179,9 +170,5 @@ export default (params: Params): Return => {
     // return
     //
 
-    let control = {
-        submitStatus
-    };
-
-    return [returnedParcel, control];
+    return [returnedParcel, asyncStatus];
 };
