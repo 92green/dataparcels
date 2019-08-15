@@ -1,6 +1,6 @@
 {
   "name": "react-dataparcels",
-  "version": "0.25.0-alpha.2",
+  "version": "0.25.0-alpha.4.0",
   "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "MIT",
