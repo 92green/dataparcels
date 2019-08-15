@@ -28,10 +28,10 @@ export default (asyncValueGetter: AsyncValueGetter) => {
         }));
 
         const resolved = (newValue: any) => {
+            setParcelValue(newValue);
             setAsyncStatus(getAsyncStatus({
                 status: 'resolved'
             }));
-            setParcelValue(newValue);
         };
 
         const rejected = (error: any) => {
