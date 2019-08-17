@@ -16,7 +16,7 @@ import type {ParentType} from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
 import {ParcelTypeMethodMismatch} from '../errors/Errors';
 
-import {checkCancellation} from '../change/cancel';
+import cancel from '../change/cancel';
 import ChangeRequest from '../change/ChangeRequest';
 import Action from '../change/Action';
 
@@ -394,7 +394,10 @@ export default class Parcel {
         this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
             let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
                 let nextData = prepUpdater(updater)(parcelData, changeRequest);
-                return checkCancellation(nextData);
+                if(nextData.value === cancel) {
+                    throw new Error('CANCEL');
+                }
+                return nextData;
             };
 
             return this._create({
