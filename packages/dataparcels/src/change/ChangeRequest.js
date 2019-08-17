@@ -10,8 +10,6 @@ import {ChangeRequestNoPrevDataError} from '../errors/Errors';
 import ChangeRequestReducer from '../change/ChangeRequestReducer';
 import parcelGet from '../parcelData/get';
 
-import pipe from 'unmutable/pipe';
-
 export default class ChangeRequest {
 
     _actions: Action[] = [];
@@ -135,10 +133,7 @@ export default class ChangeRequest {
     }
 
     getDataIn = (keyPath: Array<Key|Index>): {next: *, prev: *} => {
-        let getIn = pipe(
-            ...keyPath.map(key => parcelGet(key))
-        );
-
+        let getIn = (data: ParcelData) => keyPath.reduce((data, key) => parcelGet(key)(data), data);
         return {
             next: getIn(this.nextData),
             prev: getIn(this.prevData)

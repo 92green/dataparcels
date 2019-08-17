@@ -5,8 +5,6 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
 import pipe from 'unmutable/lib/util/pipe';
-import pipeWith from 'unmutable/lib/util/pipeWith';
-import composeWith from 'unmutable/lib/util/composeWith';
 import {ReducerInvalidActionError} from '../errors/Errors';
 import {ReducerInvalidStepError} from '../errors/Errors';
 
@@ -87,38 +85,27 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
         steps = steps.slice(0, lastGetIndex);
     }
 
-    return composeWith(
-        ...steps.map((step) => (next): ParcelDataEvaluator => {
-            let fn = stepMap[step.type];
-            if(!fn) {
-                throw ReducerInvalidStepError(step.type);
-            }
-            return fn(step, next);
-        }),
-        doAction(action)
-    );
+    return steps.reduceRight((next, step) => {
+        let fn = stepMap[step.type];
+        if(!fn) {
+            throw ReducerInvalidStepError(step.type);
+        }
+        return fn(step, next);
+    }, doAction(action));
 };
 
 export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?ParcelData => {
-    let cancelled = 0;
-    let {actions} = changeRequest;
-
-    let newParcelData = pipeWith(
-        parcelData,
-        ...actions.map((action): ParcelDataEvaluator => (parcelData: ParcelData): ParcelData => {
-            try {
-                return doDeepAction(action)(parcelData);
-            } catch(e) {
-                if(e.message === 'CANCEL') {
-                    cancelled++;
-                    return parcelData;
-                }
-                throw e;
+    let someSucceeded = false;
+    return changeRequest.actions.reduce((parcelData, action) => {
+        try {
+            let newParcelData = doDeepAction(action)(parcelData);
+            someSucceeded = true;
+            return newParcelData;
+        } catch(e) {
+            if(e.message === 'CANCEL') {
+                return someSucceeded ? parcelData : undefined;
             }
-        })
-    );
-
-    return cancelled > 0 && cancelled === actions.length
-        ? undefined
-        : newParcelData;
+            throw e;
+        }
+    }, parcelData);
 };
