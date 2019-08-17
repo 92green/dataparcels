@@ -10,7 +10,6 @@ import type {ParcelValueUpdater} from '../types/Types';
 import type {ParcelShapeSetMeta} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
-import Types from '../types/Types';
 import {ReadOnlyError} from '../errors/Errors';
 import {ShapeUpdaterNonShapeChildError} from '../errors/Errors';
 
@@ -164,7 +163,6 @@ export default class ParcelShape {
     //
 
     static fromData(parcelData: ParcelData, _parent: ?ParcelParent): ParcelShape {
-        Types(`ParcelShape()`, `fromData`, `parcelData`)(parcelData);
         let parcelShape = new ParcelShape(parcelData.value, _parent);
         parcelShape._parcelData = parcelData;
         return parcelShape;
