@@ -10,7 +10,7 @@ export default () => <Layout>
         pageNav={[
             '# ParcelNode',
             'asNode',
-            'asNodes',
+            'asChildNodes',
             'ParcelNode',
             '# Properties',
             'value',

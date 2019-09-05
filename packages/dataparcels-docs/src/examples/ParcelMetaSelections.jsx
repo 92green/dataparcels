@@ -2,7 +2,7 @@ import React from 'react';
 import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
 import asNode from 'react-dataparcels/asNode';
-import asNodes from 'react-dataparcels/asNodes';
+import asChildNodes from 'react-dataparcels/asChildNodes';
 import exampleFrame from 'component/exampleFrame';
 
 export default function FruitListEditor(props) {
@@ -25,7 +25,7 @@ export default function FruitListEditor(props) {
         node => node.setMeta({selected})
     ));
 
-    let deleteSelectedFruit = () => fruitListParcel.update(asNodes(
+    let deleteSelectedFruit = () => fruitListParcel.update(asChildNodes(
         fruits => fruits.filter(fruitNode => !fruitNode.meta.selected)
     ));
 

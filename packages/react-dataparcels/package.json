@@ -22,7 +22,7 @@
     "ParcelHoc.js",
     "ParcelNode.js",
     "ParcelShape.js",
-    "asNodes.js",
+    "asChildNodes.js",
     "asRaw.js",
     "asShape.js",
     "useParcelBuffer.js",

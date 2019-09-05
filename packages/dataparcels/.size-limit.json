@@ -33,7 +33,7 @@
     },
     {
         "limit": "6 KB",
-        "path": "asNodes.js"
+        "path": "asChildNodes.js"
     },
     {
         "limit": "0.1 KB",

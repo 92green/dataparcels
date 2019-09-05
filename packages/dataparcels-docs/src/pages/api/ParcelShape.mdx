@@ -267,14 +267,14 @@ type ParcelUpdater = (value: any) => any;
 update(updater: ParcelUpdater): Parcel
 
 // updates shape, including meta
-update(asNodes(updater: ParcelUpdater)): Parcel
+update(asChildNodes(updater: ParcelUpdater)): Parcel
 update(asShape(updater: ParcelUpdater)): Parcel
 
 // updates value on child - only to be used if shape doesn't change
 update(key: string|number, updater: ParcelUpdater): Parcel // only on ParentParcel
 
 // updates shape on child, including meta
-update(asNodes(key: string|number, updater: ParcelUpdater)): Parcel // only on ParentParcel
+update(asChildNodes(key: string|number, updater: ParcelUpdater)): Parcel // only on ParentParcel
 update(asShape(key: string|number, updater: ParcelUpdater)): Parcel // only on ParentParcel
 ```
 
@@ -293,7 +293,7 @@ type ParcelUpdater = (value: any) => any;
 update(updater: ParcelUpdater): Parcel // only on ParentParcel
 
 // updates shapes on children, including meta
-update(asNodes(updater: ParcelUpdater)): Parcel // only on ParentParcel
+update(asChildNodes(updater: ParcelUpdater)): Parcel // only on ParentParcel
 update(asShape(updater: ParcelUpdater)): Parcel // only on ParentParcel
 ```
 

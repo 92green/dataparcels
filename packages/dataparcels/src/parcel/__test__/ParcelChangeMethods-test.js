@@ -5,7 +5,7 @@ import ParcelShape from '../../parcelShape/ParcelShape';
 import asShape from '../../parcelShape/asShape';
 import ParcelNode from '../../parcelNode/ParcelNode';
 import asNode from '../../parcelNode/asNode';
-import asNodes from '../../parcelNode/asNodes';
+import asChildNodes from '../../parcelNode/asChildNodes';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.dispatch() should pass handleChange to newly created parcel', () => {
@@ -173,7 +173,7 @@ test('Parcel.update(asNode()) should call the Parcels handleChange function with
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3]);
 });
 
-test('Parcel.update(asNodes()) should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.update(asChildNodes()) should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(arr => [...arr, 4]);
@@ -181,7 +181,7 @@ test('Parcel.update(asNodes()) should call the Parcels handleChange function wit
     new Parcel({
         value: [1,2,3],
         handleChange
-    }).update(asNodes(updater));
+    }).update(asChildNodes(updater));
 
     expect(updater.mock.calls[0][0][0] instanceof ParcelNode).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);

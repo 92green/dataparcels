@@ -53,7 +53,7 @@ Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta).
 
 Use the [asNode](/api/ParcelNode) updater if you'd like to set [meta](/parcel-meta) in an updater. It will provide you with your Parcel's value wrapped in a [ParcelNode](/api/ParcelNode), from which you can call `.setMeta()`.
 
-You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asNodes](#asNodes) described below.
+You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asChildNodes](#asChildNodes) described below.
 
 They look something like this:
 
@@ -68,23 +68,23 @@ import asNode from 'dataparcels/asNode';
 import asNode from 'react-dataparcels/asNode';
 ```
 
-## asNodes
+## asChildNodes
 
-Use the [asNodes](/api/ParcelNode) updater if you'd like to add, remove or re-arrange child values. It will provide you with your Parcel's value, but with all child values replaced with [ParcelNode](/api/ParcelNode) instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data.
+Use the [asChildNodes](/api/ParcelNode) updater if you'd like to add, remove or re-arrange child values. It will provide you with your Parcel's value, but with all child values replaced with [ParcelNode](/api/ParcelNode) instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data.
 
 They look something like this:
 
 ```js
-.modifyUp(asNodes(
+.modifyUp(asChildNodes(
     array => array.filter(node => node.value.isCool)
 ))
 ```
 
-The function `asNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
+The function `asChildNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
 
 ```js
-import asNodes from 'dataparcels/asNodes';
-import asNodes from 'react-dataparcels/asNodes';
+import asChildNodes from 'dataparcels/asChildNodes';
+import asChildNodes from 'react-dataparcels/asChildNodes';
 ```
 
 ```js
@@ -93,7 +93,7 @@ let parcel = new Parcel({
 });
 
 // reverse the parcel's children
-let modifiedParcel = parcel.modifyDown(asNodes(
+let modifiedParcel = parcel.modifyDown(asChildNodes(
     array => array.slice().reverse() // clones and reverses the array of nodes
 ));
 
@@ -106,7 +106,7 @@ let parcel = new Parcel({
 });
 
 // set a default value for a child
-let modifiedParcel = parcel.modifyDown(asNodes(
+let modifiedParcel = parcel.modifyDown(asChildNodes(
     object => ({bar: 200, ...object})
 ));
 

@@ -14,7 +14,7 @@ import IconParcelNode from 'assets/parcelshape.gif';
 
 <ApiPageIcon>{IconParcelNode}</ApiPageIcon>
 
-ParcelNodes are used via the [asNode](#asNode) and [asNodes](#asNodes) updater functions.
+ParcelNodes are used via the [asNode](#asNode) and [asChildNodes](#asChildNodes) updater functions.
 
 ## asNode
 
@@ -31,7 +31,7 @@ The `asNode` function is a kind of [parcel updater](/parcel-updaters) that prima
 
 Your updater function must return a ParcelNode.
 
-You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asNodes](#asNodes) described below.
+You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asChildNodes](#asChildNodes) described below.
 
 ```js
 .modifyUp(asNode(
@@ -39,22 +39,22 @@ You can also call `.update()` if you'd like to add, remove or re-arrange child v
 ))
 ```
 
-## asNodes
+## asChildNodes
 
 ```js
-import asNodes from 'dataparcels/asNodes';
-import asNodes from 'react-dataparcels/asNodes';
+import asChildNodes from 'dataparcels/asChildNodes';
+import asChildNodes from 'react-dataparcels/asChildNodes';
 ```
 
 ```flow
-asNodes((nodes: any) => any
+asChildNodes((nodes: any) => any
 ```
 
-The `asNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
+The `asChildNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
 
-It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asShape()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asNodes()` function is being passed into.
+It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asShape()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asChildNodes()` function is being passed into.
 
-The function `asNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
+The function `asChildNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
 
 ```js
 let parcel = new Parcel({
@@ -62,7 +62,7 @@ let parcel = new Parcel({
 });
 
 // reverse the parcel's children
-let modifiedParcel = parcel.modifyDown(asNodes(
+let modifiedParcel = parcel.modifyDown(asChildNodes(
     shape => shape.slice().reverse() // clones and reverses the shape array
 ));
 
@@ -75,7 +75,7 @@ let parcel = new Parcel({
 });
 
 // set a default value for a child
-let modifiedParcel = parcel.modifyDown(asNodes(
+let modifiedParcel = parcel.modifyDown(asChildNodes(
     shape => ({bar: 200, ...shape})
 ));
 ```
@@ -182,7 +182,7 @@ type ParcelUpdater = (value: any) => any;
 update(updater: ParcelUpdater): Parcel
 
 // updates shape, including meta
-update(asNodes(updater: ParcelUpdater)): Parcel
+update(asChildNodes(updater: ParcelUpdater)): Parcel
 update(asShape(updater: ParcelUpdater)): Parcel
 ```
 

@@ -550,7 +550,7 @@ update((value: any) => any): Parcel
 
 // updates shape / meta
 update(asNode((node: ParcelNode) => ParcelNode)): Parcel
-update(asNodes((nodes: any) => any): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 update(asShape((shape: ParcelShape) => any)): Parcel
 ```
 
@@ -575,7 +575,7 @@ map((value: any) => any): Parcel
 
 // updates shape / meta
 update(asNode((node: ParcelNode) => ParcelNode)): Parcel
-update(asNodes((nodes: any) => any): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 update(asShape((shape: ParcelShape) => any)): Parcel
 ```
 
@@ -852,7 +852,7 @@ modifyDown((value: any) => any): Parcel
 
 // updates shape / meta
 update(asNode((node: ParcelNode) => ParcelNode)): Parcel
-update(asNodes((nodes: any) => any): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 update(asShape((shape: ParcelShape) => any)): Parcel
 ```
 
@@ -880,7 +880,7 @@ modifyUp((value: any, changeRequest: ChangeRequest) => any): Parcel
 
 // updates shape / meta
 update(asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode)): Parcel
-update(asNodes((nodes: any, changeRequest: ChangeRequest) => any): Parcel
+update(asChildNodes((nodes: any, changeRequest: ChangeRequest) => any): Parcel
 update(asShape((shape: ParcelShape, changeRequest: ChangeRequest) => any)): Parcel
 ```
 

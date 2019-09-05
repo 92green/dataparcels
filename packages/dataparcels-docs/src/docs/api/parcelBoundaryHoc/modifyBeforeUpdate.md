@@ -11,7 +11,7 @@ type ParcelUpdater = (value: any, changeRequest: ChangeRequest) => any;
 // updating shape, including meta
 type ParcelUpdater = asShape((shape: ParcelShape, changeRequest: ChangeRequest) => any);
 type ParcelUpdater = asNode((node: any, changeRequest: ChangeRequest) => any);
-type ParcelUpdater = asNodes((nodes: any, changeRequest: ChangeRequest) => any);
+type ParcelUpdater = asChildNodes((nodes: any, changeRequest: ChangeRequest) => any);
 ```
 
 The `modifyBeforeUpdate` config option allows derived data to be set on the Parcel in the ParcelBoundaryHoc.
