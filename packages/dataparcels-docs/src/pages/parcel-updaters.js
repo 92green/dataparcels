@@ -11,8 +11,7 @@ export default () => <Layout>
             '# Value Updaters',
             'Simple updaters',
             'asNode',
-            'asChildNodes',
-            'asShape'
+            'asChildNodes'
         ]}
     />
 </Layout>;

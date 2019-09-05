@@ -8,8 +8,7 @@ modifyBeforeUpdate?: Array<ParcelUpdater>
 // updating value - only to be used if shape doesn't change
 type ParcelUpdater = (value: any, changeRequest: ChangeRequest) => any;
 
-// updating shape, including meta
-type ParcelUpdater = asShape((shape: ParcelShape, changeRequest: ChangeRequest) => any);
+// updating shape / meta
 type ParcelUpdater = asNode((node: any, changeRequest: ChangeRequest) => any);
 type ParcelUpdater = asChildNodes((nodes: any, changeRequest: ChangeRequest) => any);
 ```

@@ -551,7 +551,6 @@ update((value: any) => any): Parcel
 // updates shape / meta
 update(asNode((node: ParcelNode) => ParcelNode)): Parcel
 update(asChildNodes((nodes: any) => any): Parcel
-update(asShape((shape: ParcelShape) => any)): Parcel
 ```
 
 
@@ -576,7 +575,6 @@ map((value: any) => any): Parcel
 // updates shape / meta
 update(asNode((node: ParcelNode) => ParcelNode)): Parcel
 update(asChildNodes((nodes: any) => any): Parcel
-update(asShape((shape: ParcelShape) => any)): Parcel
 ```
 
 The `map()` function will trigger a change that will update every child value. It is passed each child value in order, from which you can return each intended replacement value.
@@ -853,7 +851,6 @@ modifyDown((value: any) => any): Parcel
 // updates shape / meta
 update(asNode((node: ParcelNode) => ParcelNode)): Parcel
 update(asChildNodes((nodes: any) => any): Parcel
-update(asShape((shape: ParcelShape) => any)): Parcel
 ```
 
 `modifyDown` lets you modify a Parcel's value so that subsequent Parcels in the chain receive and make changes against the modified value. See [Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI) for examples.
@@ -881,7 +878,6 @@ modifyUp((value: any, changeRequest: ChangeRequest) => any): Parcel
 // updates shape / meta
 update(asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode)): Parcel
 update(asChildNodes((nodes: any, changeRequest: ChangeRequest) => any): Parcel
-update(asShape((shape: ParcelShape, changeRequest: ChangeRequest) => any)): Parcel
 ```
 
 `modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward.

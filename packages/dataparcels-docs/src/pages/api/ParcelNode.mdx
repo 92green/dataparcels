@@ -52,7 +52,7 @@ asChildNodes((nodes: any) => any
 
 The `asChildNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
 
-It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asShape()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asChildNodes()` function is being passed into.
+It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asChildNodes()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asChildNodes()` function is being passed into.
 
 The function `asChildNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
 
@@ -176,14 +176,12 @@ node.get('#a').value; // returns 'abc'
 ### update()
 
 ```flow
-type ParcelUpdater = (value: any) => any;
-
 // updates value - only to be used if shape doesn't change
-update(updater: ParcelUpdater): Parcel
+update((value: any) => any): ParcelNode
 
-// updates shape, including meta
-update(asChildNodes(updater: ParcelUpdater)): Parcel
-update(asShape(updater: ParcelUpdater)): Parcel
+// updates shape / meta
+update(asNode((node: ParcelNode) => ParcelNode)): ParcelNode
+update(asChildNodes(value: any) => any): ParcelNode
 ```
 
 Calling `update()` with one argument will replace the current value in the ParcelNode with the result of the value updater provided to it. The value updater is passed the current value of the ParcelNode, from which you can return the intended replacement value.

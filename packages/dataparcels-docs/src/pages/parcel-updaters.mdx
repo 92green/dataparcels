@@ -112,36 +112,3 @@ let modifiedParcel = parcel.modifyDown(asChildNodes(
 
 // new value is {bar: 200, foo: 100}
 ```
-
-## asShape
-
-Use the [asShape](/api/ParcelShape) updater if you need to perform deep editing of a data shape while retaining keys and meta data against parts of the data. It will provide you with your Parcel's data wrapped in a [ParcelShape](/api/ParcelShape) which you can then manipulate and return the result.
-
-They look something like this:
-
-```js
-.modifyUp(asShape(
-    shape => shape.setMeta({
-        foo: "bar"
-     })
-))
-```
-
-```js
-import asShape from 'dataparcels/asShape';
-import asShape from 'react-dataparcels/asShape';
-```
-
-```js
-let parcel = new Parcel({
-    value: [1,2,3]
-});
-
-let modifiedParcel = parcel.modifyDown(asShape(
-    shape => shape
-        .unshift(0)
-        .push(4)
-));
-
-// modifiedParcel.value is [0,1,2,3,4]
-```

@@ -64,7 +64,6 @@ export default () => <Box>
             <BulletListItem><Link className="Link" to="/api/ChangeRequest">ChangeRequest</Link></BulletListItem>
             <BulletListItem><Link className="Link" to="/api/validation">validation</Link></BulletListItem>
             <BulletListItem><Link className="Link" to="/api/ParcelNode">ParcelNode, asNode, asChildNodes</Link></BulletListItem>
-            <BulletListItem><Link className="Link" to="/api/ParcelShape">ParcelShape, asShape</Link></BulletListItem>
         </BulletList>
         <Text element="h3" modifier="marginMega sizeKilo">Other React dataparcels exports</Text>
         <BulletList>
