@@ -4,7 +4,6 @@ import GetAction from '../../util/__test__/GetAction-testUtil';
 import ParcelNode from '../../parcelNode/ParcelNode';
 import asNode from '../../parcelNode/asNode';
 import asChildNodes from '../../parcelNode/asChildNodes';
-import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.dispatch() should pass handleChange to newly created parcel', () => {
     let handleChange = jest.fn();
@@ -107,13 +106,6 @@ test('Parcel.update() should call the Parcels handleChange function with the new
 
     expect(updater.mock.calls[0][0]).toBe(123);
     expect(handleChange.mock.calls[0][0].data.value).toBe(124);
-});
-
-test('Parcel.update() should validate value updater', () => {
-    TestValidateValueUpdater(
-        expect,
-        (value, updater) => new Parcel({value}).update(updater)
-    );
 });
 
 test('Parcel.update(asNode()) should call the Parcels handleChange function with the new parcelData', () => {

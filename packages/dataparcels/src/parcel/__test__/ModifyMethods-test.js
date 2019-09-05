@@ -6,7 +6,6 @@ import Parcel from '../Parcel';
 import cancel from '../../change/cancel';
 import asNode from '../../parcelNode/asNode';
 import asChildNodes from '../../parcelNode/asChildNodes';
-import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
 test('Parcel.modifyDown() should return a new parcel with updated parcelData', () => {
     let updater = jest.fn(value => value + 1);
@@ -73,13 +72,6 @@ test('Parcel.modifyDown() should allow undefined to be returned (unlike modifyUp
     expect(updatedValue).toEqual(undefined);
 });
 
-test('Parcel.modifyDown() should validate value updater', () => {
-    TestValidateValueUpdater(
-        expect,
-        (value, updater) => new Parcel({value}).modifyDown(updater).value
-    );
-});
-
 test('Parcel.modifyDown() should recognise if value changes types, and set value if type changes', () => {
     let handleChange = jest.fn();
     let parcel = new Parcel({
@@ -143,20 +135,6 @@ test('Parcel.modifyUp() should allow you to change the payload of a changed parc
     expect(changeRequest instanceof ChangeRequest).toBe(true);
     expect(changeRequest.prevData.value).toBe(123);
     expect(changeRequest.nextData.value).toBe(456);
-});
-
-test('Parcel.modifyUp() should validate value updater', () => {
-    let handleChange = () => {};
-
-    TestValidateValueUpdater(
-        expect,
-        (value, updater) => new Parcel({
-            value: undefined,
-            handleChange
-        })
-            .modifyUp(updater)
-            .onChange(value)
-    );
 });
 
 test('Parcel.modifyUp() should allow changes to meta through', () => {
