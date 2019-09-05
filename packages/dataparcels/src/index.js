@@ -15,10 +15,6 @@ export type {ParcelMeta} from './types/Types';
 export type {ParcelMapper} from './types/Types';
 export type {ParcelUpdater} from './types/Types';
 export type {ParcelValueUpdater} from './types/Types';
-export type {ParcelShapeUpdater} from './types/Types';
-
-export type {ParcelShapeSetMeta} from './types/Types';
-export type {ParcelShapeValueUpdater} from './types/Types';
 
 export type {Key} from './types/Types';
 export type {Index} from './types/Types';

@@ -16,11 +16,9 @@
     "ChangeRequest.js",
     "deleted.js",
     "ParcelNode.js",
-    "ParcelShape.js",
     "asNode.js",
     "asChildNodes.js",
     "asRaw.js",
-    "asShape.js",
     "validation.js"
   ],
   "bugs": {
