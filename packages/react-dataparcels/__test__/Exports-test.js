@@ -9,6 +9,7 @@ import deleted from '../deleted';
 import ParcelShape from '../ParcelShape';
 import ParcelNode from '../ParcelNode';
 import asShape from '../asShape';
+import asNode from '../asNode';
 import asNodes from '../asNodes';
 import cancel from '../cancel';
 import validation from '../validation';
@@ -32,6 +33,7 @@ import Internaldeleted from 'dataparcels/deleted';
 import InternalParcelShape from 'dataparcels/ParcelShape';
 import InternalParcelNode from 'dataparcels/ParcelNode';
 import InternalShape from 'dataparcels/asShape';
+import InternalAsNode from 'dataparcels/asNode';
 import InternalAsNodes from 'dataparcels/asNodes';
 import Internalcancel from 'dataparcels/cancel';
 import InternalValidation from 'dataparcels/validation';
@@ -76,6 +78,10 @@ test('/ParcelNode should export ParcelNode', () => {
 
 test('/asShape should export asShape', () => {
     expect(asShape).toBe(InternalShape);
+});
+
+test('/asNode should export asNode', () => {
+    expect(asNode).toBe(InternalAsNode);
 });
 
 test('/asNodes should export asNodes', () => {

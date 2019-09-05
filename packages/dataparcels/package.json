@@ -17,6 +17,7 @@
     "deleted.js",
     "ParcelNode.js",
     "ParcelShape.js",
+    "asNode.js",
     "asNodes.js",
     "asRaw.js",
     "asShape.js",

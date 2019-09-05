@@ -4,6 +4,7 @@ import GetAction from '../../util/__test__/GetAction-testUtil';
 import ParcelShape from '../../parcelShape/ParcelShape';
 import asShape from '../../parcelShape/asShape';
 import ParcelNode from '../../parcelNode/ParcelNode';
+import asNode from '../../parcelNode/asNode';
 import asNodes from '../../parcelNode/asNodes';
 import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
 
@@ -157,6 +158,21 @@ test('Parcel.update(asShape()) should work with a returned collection containing
     expect(handleChange.mock.calls[0][0].data.value).toEqual([3,2,1]);
 });
 
+test('Parcel.update(asNode()) should call the Parcels handleChange function with the new parcelData', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(node => node.setMeta({foo: true}));
+
+    new Parcel({
+        value: [1,2,3],
+        handleChange
+    }).update(asNode(updater));
+
+    expect(updater.mock.calls[0][0] instanceof ParcelNode).toBe(true);
+    expect(handleChange.mock.calls[0][0].data.meta).toEqual({foo: true});
+    expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3]);
+});
+
 test('Parcel.update(asNodes()) should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
@@ -170,6 +186,8 @@ test('Parcel.update(asNodes()) should call the Parcels handleChange function wit
     expect(updater.mock.calls[0][0][0] instanceof ParcelNode).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
+
+
 
 test('Parcel.onChange() should work like set that only accepts a single argument', () => {
     expect.assertions(2);
