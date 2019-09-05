@@ -10,22 +10,51 @@ import {Text} from 'dcme-style';
 import ApiPageIcon from 'component/ApiPageIcon';
 import IconParcelNode from 'assets/parcelshape.gif';
 
-# ParcelNode, asNodes
-
-## asNodes
+# ParcelNode
 
 <ApiPageIcon>{IconParcelNode}</ApiPageIcon>
 
-The `asNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
+ParcelNodes are used via the [asNode](#asNode) and [asNodes](#asNodes) updater functions.
 
-It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asShape()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asNodes()` function is being passed into.
+## asNode
 
-Your updater function should either return another ParcelNode, or if you return anything else, this value will be used instead.
+```js
+import asNode from 'dataparcels/asNode';
+import asNode from 'react-dataparcels/asNode';
+```
+
+```flow
+asNode((node: ParcelNode) => ParcelNode)
+```
+
+The `asNode` function is a kind of [parcel updater](/parcel-updaters) that primarily allows for setting [meta](/parcel-meta). It will provide you with your Parcel's value wrapped in a [ParcelNode](/api/ParcelNode), from which you can call `.setMeta()`.
+
+Your updater function must return a ParcelNode.
+
+You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asNodes](#asNodes) described below.
+
+```js
+.modifyUp(asNode(
+    node => node.setMeta({cool: true})
+))
+```
+
+## asNodes
 
 ```js
 import asNodes from 'dataparcels/asNodes';
 import asNodes from 'react-dataparcels/asNodes';
 ```
+
+```flow
+asNodes((nodes: any) => any
+```
+
+The `asNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
+
+It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asShape()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asNodes()` function is being passed into.
+
+The function `asNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
 
 ```js
 let parcel = new Parcel({

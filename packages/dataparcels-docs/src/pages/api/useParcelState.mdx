@@ -203,7 +203,8 @@ Note that it will also cause any downstream [useParcelBuffer](/api/useParcelBuff
 beforeChange?: ParcelUpdater|ParcelUpdater[] // optional
 
 type ParcelUpdater = (value: any, changeRequest: ChangeRequest) => any
-type ParcelUpdater = asNodes((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+type ParcelUpdater = asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode);
+type ParcelUpdater = asNodes((nodes: any, changeRequest: ChangeRequest) => any);
 type ParcelUpdater = asShape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
 ```
 

@@ -281,7 +281,8 @@ let [parcel] = useParcelForm({
 beforeChange?: ParcelUpdater|ParcelUpdater[] // optional
 
 type ParcelUpdater = (value: any, changeRequest: ChangeRequest) => any
-type ParcelUpdater = asNodes((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+type ParcelUpdater = asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode);
+type ParcelUpdater = asNodes((nodes: any, changeRequest: ChangeRequest) => any);
 type ParcelUpdater = asShape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
 ```
 

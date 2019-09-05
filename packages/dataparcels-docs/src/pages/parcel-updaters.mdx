@@ -47,7 +47,26 @@ If the updater gives you a value that has children, please ensure you do not cha
 .update(array => array.reverse()) // bad, shape has changed because items have moved around!
 ```
 
-Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta). If you need to update the shape of the data or update meta, you can do so using a **shape updater**.
+Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta). If you need to update the shape of the data or update meta, you can use one of the more advanced updaters below.
+
+## asNode
+
+Use the [asNode](/api/ParcelNode) updater if you'd like to set [meta](/parcel-meta) in an updater. It will provide you with your Parcel's value wrapped in a [ParcelNode](/api/ParcelNode), from which you can call `.setMeta()`.
+
+You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asNodes](#asNodes) described below.
+
+They look something like this:
+
+```js
+.modifyUp(asNode(
+    node => node.setMeta({cool: true})
+))
+```
+
+```js
+import asNode from 'dataparcels/asNode';
+import asNode from 'react-dataparcels/asNode';
+```
 
 ## asNodes
 
@@ -57,9 +76,11 @@ They look something like this:
 
 ```js
 .modifyUp(asNodes(
-    nodes => nodes.filter(node => node.value.isCool)
+    array => array.filter(node => node.value.isCool)
 ))
 ```
+
+The function `asNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
 
 ```js
 import asNodes from 'dataparcels/asNodes';
@@ -73,7 +94,7 @@ let parcel = new Parcel({
 
 // reverse the parcel's children
 let modifiedParcel = parcel.modifyDown(asNodes(
-    shape => shape.slice().reverse() // clones and reverses the shape array
+    array => array.slice().reverse() // clones and reverses the array of nodes
 ));
 
 // new value is [3,2,1]
@@ -86,7 +107,7 @@ let parcel = new Parcel({
 
 // set a default value for a child
 let modifiedParcel = parcel.modifyDown(asNodes(
-    shape => ({bar: 200, ...shape})
+    object => ({bar: 200, ...object})
 ));
 
 // new value is {bar: 200, foo: 100}
