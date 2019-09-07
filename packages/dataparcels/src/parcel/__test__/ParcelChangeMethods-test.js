@@ -1,11 +1,9 @@
 // @flow
 import Parcel from '../Parcel';
 import GetAction from '../../util/__test__/GetAction-testUtil';
-import ParcelShape from '../../parcelShape/ParcelShape';
-import asShape from '../../parcelShape/asShape';
 import ParcelNode from '../../parcelNode/ParcelNode';
-import asNodes from '../../parcelNode/asNodes';
-import TestValidateValueUpdater from '../../util/__test__/TestValidateValueUpdater-testUtil';
+import asNode from '../../parcelNode/asNode';
+import asChildNodes from '../../parcelNode/asChildNodes';
 
 test('Parcel.dispatch() should pass handleChange to newly created parcel', () => {
     let handleChange = jest.fn();
@@ -110,54 +108,30 @@ test('Parcel.update() should call the Parcels handleChange function with the new
     expect(handleChange.mock.calls[0][0].data.value).toBe(124);
 });
 
-test('Parcel.update() should validate value updater', () => {
-    TestValidateValueUpdater(
-        expect,
-        (value, updater) => new Parcel({value}).update(updater)
-    );
-});
-
-test('Parcel.update(asShape()) should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.update(asNode()) should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(parcelShape => parcelShape.push(4));
+    let updater = jest.fn(node => node.setMeta({foo: true}));
 
     new Parcel({
         value: [1,2,3],
         handleChange
-    }).update(asShape(updater));
+    }).update(asNode(updater));
 
-    expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
-    expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
+    expect(updater.mock.calls[0][0] instanceof ParcelNode).toBe(true);
+    expect(handleChange.mock.calls[0][0].data.meta).toEqual({foo: true});
+    expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3]);
 });
 
-test('Parcel.update(asShape()) should work with a returned primitive', () => {
+test('Parcel.update(asNode()) should error if a parcelNode isnt returned', () => {
+    let parcel = new Parcel({
+        value: [1,2,3]
+    });
 
-    let handleChange = jest.fn();
-    let updater = jest.fn(() => 123);
-
-    new Parcel({
-        value: [1,2,3],
-        handleChange
-    }).update(ParcelShape.update(updater));
-
-    expect(handleChange.mock.calls[0][0].data.value).toEqual(123);
+    expect(() => parcel.update(asNode(() => 'foo'))).toThrow(`The return value of an asNode() updater must be a ParcelNode`);
 });
 
-test('Parcel.update(asShape()) should work with a returned collection containing parcels for children', () => {
-
-    let handleChange = jest.fn();
-    let updater = jest.fn(parcelShape => parcelShape.children().reverse());
-
-    new Parcel({
-        value: [1,2,3],
-        handleChange
-    }).update(ParcelShape.update(updater));
-
-    expect(handleChange.mock.calls[0][0].data.value).toEqual([3,2,1]);
-});
-
-test('Parcel.update(asNodes()) should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.update(asChildNodes()) should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(arr => [...arr, 4]);
@@ -165,11 +139,13 @@ test('Parcel.update(asNodes()) should call the Parcels handleChange function wit
     new Parcel({
         value: [1,2,3],
         handleChange
-    }).update(asNodes(updater));
+    }).update(asChildNodes(updater));
 
     expect(updater.mock.calls[0][0][0] instanceof ParcelNode).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
+
+
 
 test('Parcel.onChange() should work like set that only accepts a single argument', () => {
     expect.assertions(2);

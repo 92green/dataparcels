@@ -10,8 +10,8 @@ export default () => <Layout>
         pageNav={[
             '# Value Updaters',
             'Simple updaters',
-            'asNodes',
-            'asShape'
+            'asNode',
+            'asChildNodes'
         ]}
     />
 </Layout>;

@@ -545,14 +545,12 @@ parcel.get('abc').delete();
 ### update()
 
 ```flow
-type ParcelUpdater = (value: any) => any;
-
 // updates value - only to be used if shape doesn't change
-update(updater: ParcelUpdater): Parcel
+update((value: any) => any): Parcel
 
-// updates shape, including meta
-update(asNodes(updater: ParcelUpdater)): Parcel
-update(asShape(updater: ParcelUpdater)): Parcel
+// updates shape / meta
+update(asNode((node: ParcelNode) => ParcelNode)): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 ```
 
 
@@ -571,14 +569,12 @@ parcel.update(value => value + 1);
 ### map()
 
 ```flow
-type ParcelUpdater = (value: any) => any;
-
 // updates value - only to be used if shape doesn't change
-map(updater: ParcelUpdater): Parcel
+map((value: any) => any): Parcel
 
-// updates shape, including meta
-map(asNodes(updater: ParcelUpdater)): Parcel
-map(asShape(updater: ParcelUpdater)): Parcel
+// updates shape / meta
+update(asNode((node: ParcelNode) => ParcelNode)): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 ```
 
 The `map()` function will trigger a change that will update every child value. It is passed each child value in order, from which you can return each intended replacement value.
@@ -849,14 +845,12 @@ Returns true if the parcel is a top level parcel. Read [Parcel types](/parcel-ty
 ### modifyDown()
 
 ```flow
-type ParcelUpdater = (value: any) => any;
-
 // updates value - only to be used if shape doesn't change
-modifyDown(updater: ParcelUpdater): Parcel
+modifyDown((value: any) => any): Parcel
 
-// updates shape, including meta
-modifyDown(asNodes(updater: ParcelUpdater)): Parcel
-modifyDown(asShape(updater: ParcelUpdater)): Parcel
+// updates shape / meta
+update(asNode((node: ParcelNode) => ParcelNode)): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 ```
 
 `modifyDown` lets you modify a Parcel's value so that subsequent Parcels in the chain receive and make changes against the modified value. See [Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI) for examples.
@@ -878,14 +872,12 @@ It does not trigger any changes of its own, it just modifies the values that pas
 ### modifyUp()
 
 ```flow
-type ParcelUpdater = (value: any, changeRequest: ChangeRequest) => any;
-
 // updates value - only to be used if shape doesn't change
-modifyUp(updater: ParcelUpdater): Parcel
+modifyUp((value: any, changeRequest: ChangeRequest) => any): Parcel
 
-// updates shape, including meta
-modifyUp(asNodes(updater: ParcelUpdater)): Parcel
-modifyUp(asShape(updater: ParcelUpdater)): Parcel
+// updates shape / meta
+update(asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode)): Parcel
+update(asChildNodes((nodes: any, changeRequest: ChangeRequest) => any): Parcel
 ```
 
 `modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward.

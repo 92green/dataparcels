@@ -47,23 +47,44 @@ If the updater gives you a value that has children, please ensure you do not cha
 .update(array => array.reverse()) // bad, shape has changed because items have moved around!
 ```
 
-Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta). If you need to update the shape of the data or update meta, you can do so using a **shape updater**.
+Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta). If you need to update the shape of the data or update meta, you can use one of the more advanced updaters below.
 
-## asNodes
+## asNode
 
-Use the [asNodes](/api/ParcelNode) updater if you'd like to add, remove or re-arrange child values. It will provide you with your Parcel's value, but with all child values replaced with [ParcelNode](/api/ParcelNode) instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data.
+Use the [asNode](/api/ParcelNode) updater if you'd like to set [meta](/parcel-meta) in an updater. It will provide you with your Parcel's value wrapped in a [ParcelNode](/api/ParcelNode), from which you can call `.setMeta()`.
+
+You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asChildNodes](#asChildNodes) described below.
 
 They look something like this:
 
 ```js
-.modifyUp(asNodes(
-    nodes => nodes.filter(node => node.value.isCool)
+.modifyUp(asNode(
+    node => node.setMeta({cool: true})
 ))
 ```
 
 ```js
-import asNodes from 'dataparcels/asNodes';
-import asNodes from 'react-dataparcels/asNodes';
+import asNode from 'dataparcels/asNode';
+import asNode from 'react-dataparcels/asNode';
+```
+
+## asChildNodes
+
+Use the [asChildNodes](/api/ParcelNode) updater if you'd like to add, remove or re-arrange child values. It will provide you with your Parcel's value, but with all child values replaced with [ParcelNode](/api/ParcelNode) instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data.
+
+They look something like this:
+
+```js
+.modifyUp(asChildNodes(
+    array => array.filter(node => node.value.isCool)
+))
+```
+
+The function `asChildNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
+
+```js
+import asChildNodes from 'dataparcels/asChildNodes';
+import asChildNodes from 'react-dataparcels/asChildNodes';
 ```
 
 ```js
@@ -72,8 +93,8 @@ let parcel = new Parcel({
 });
 
 // reverse the parcel's children
-let modifiedParcel = parcel.modifyDown(asNodes(
-    shape => shape.slice().reverse() // clones and reverses the shape array
+let modifiedParcel = parcel.modifyDown(asChildNodes(
+    array => array.slice().reverse() // clones and reverses the array of nodes
 ));
 
 // new value is [3,2,1]
@@ -85,42 +106,9 @@ let parcel = new Parcel({
 });
 
 // set a default value for a child
-let modifiedParcel = parcel.modifyDown(asNodes(
-    shape => ({bar: 200, ...shape})
+let modifiedParcel = parcel.modifyDown(asChildNodes(
+    object => ({bar: 200, ...object})
 ));
 
 // new value is {bar: 200, foo: 100}
-```
-
-## asShape
-
-Use the [asShape](/api/ParcelShape) updater if you need to perform deep editing of a data shape while retaining keys and meta data against parts of the data. It will provide you with your Parcel's data wrapped in a [ParcelShape](/api/ParcelShape) which you can then manipulate and return the result.
-
-They look something like this:
-
-```js
-.modifyUp(asShape(
-    shape => shape.setMeta({
-        foo: "bar"
-     })
-))
-```
-
-```js
-import asShape from 'dataparcels/asShape';
-import asShape from 'react-dataparcels/asShape';
-```
-
-```js
-let parcel = new Parcel({
-    value: [1,2,3]
-});
-
-let modifiedParcel = parcel.modifyDown(asShape(
-    shape => shape
-        .unshift(0)
-        .push(4)
-));
-
-// modifiedParcel.value is [0,1,2,3,4]
 ```

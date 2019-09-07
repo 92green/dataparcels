@@ -203,8 +203,8 @@ Note that it will also cause any downstream [useParcelBuffer](/api/useParcelBuff
 beforeChange?: ParcelUpdater|ParcelUpdater[] // optional
 
 type ParcelUpdater = (value: any, changeRequest: ChangeRequest) => any
-type ParcelUpdater = asNodes((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
-type ParcelUpdater = asShape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+type ParcelUpdater = asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode);
+type ParcelUpdater = asChildNodes((nodes: any, changeRequest: ChangeRequest) => any);
 ```
 
 The `beforeChange` parameter accepts either a single function, or an array of functions. Whenever a new `value` is taken into useParcelState from params, and whenever the useParcelState hook recieves a change from below, the change is passed through each `beforeChange` function.

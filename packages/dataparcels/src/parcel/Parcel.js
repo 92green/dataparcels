@@ -672,7 +672,7 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     get meta(): * {
-        let {meta = {}} = this._parcelData;
+        let {meta} = this._parcelData;
         return {...meta};
     }
 

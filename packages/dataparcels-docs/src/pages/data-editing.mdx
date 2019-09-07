@@ -142,7 +142,7 @@ This example derives the length of the word.
 
 A potential problem with the above example is that it stores derived data in the parcel's *value*. Perhaps the data shape you're editing can not or should not have a new field added to it. It is this reason that [Parcel meta](/parcel-meta) exists, which provides a convenient place to store extra data that pertains to parts of a data shape.
 
-This example also derives the length of the word, but this time it stores it in meta. It also uses a [shape updater](/api/ParcelShape), an advanced editing feature of dataparcels. The shape updater's syntax can look a little strange, but it allows for powerful manipulations of the shape of a value.
+This example also derives the length of the word, but this time it stores it in meta. It also uses an [asNode updater](/api/ParcelNode), an advanced editing feature of dataparcels. The shape updater's syntax can look a little strange, but it allows for powerful manipulations of the shape of a value.
 
 <DerivedMeta />
 <Code language="jsx">{DerivedMetaSource}</Code>

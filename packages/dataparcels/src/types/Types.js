@@ -1,8 +1,6 @@
 // @flow
-import type ParcelShape from '../parcelShape/ParcelShape';
-
-import Parcel from '../parcel/Parcel';
-import ChangeRequest from '../change/ChangeRequest';
+import type Parcel from '../parcel/Parcel';
+import type ChangeRequest from '../change/ChangeRequest';
 
 export type ParcelData = {
     value?: *,
@@ -55,10 +53,6 @@ export type ParcelMapper = (item: Parcel, property: string|number, parent: Parce
 export type ParcelRegistry = {[id: string]: Parcel};
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = Function;
-
-export type ParcelShapeUpdater = (parcelShape: ParcelShape, changeRequest?: ChangeRequest) => any;
-export type ParcelShapeSetMeta = ParcelMeta | (meta: ParcelMeta) => ParcelMeta;
-export type ParcelShapeValueUpdater = (value: *) => any;
 
 export type Key = string;
 export type Index = number;

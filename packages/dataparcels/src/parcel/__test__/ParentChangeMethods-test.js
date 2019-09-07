@@ -1,6 +1,6 @@
 // @flow
 import Parcel from '../Parcel';
-import ParcelShape from '../../parcelShape/ParcelShape';
+import asChildNodes from '../../parcelNode/asChildNodes';
 
 test('ParentParcel.map() should call each child Parcels handleChange function with the new parcelData', () => {
     let updater = jest.fn(ii => ii + 1);
@@ -20,8 +20,8 @@ test('ParentParcel.map() should call each child Parcels handleChange function wi
     });
 });
 
-test('ParentParcel.map(parcelShapeUpdater) should call each child Parcels handleChange function with the new parcelData', () => {
-    let updater = jest.fn(parcelShape => parcelShape.update('name', name => name + "!"));
+test('ParentParcel.map(asChildNodesUpdater) should call each child Parcels handleChange function with the new parcelData', () => {
+    let updater = jest.fn(item => ({name: item.name.update(name => name + '!')}));
     let handleChange = jest.fn();
 
     new Parcel({
@@ -30,7 +30,7 @@ test('ParentParcel.map(parcelShapeUpdater) should call each child Parcels handle
             {name: 'bar'}
         ],
         handleChange
-    }).map(ParcelShape.update(updater));
+    }).map(asChildNodes(updater));
 
     expect(handleChange.mock.calls[0][0].data.value).toEqual([
         {name: 'foo!'},

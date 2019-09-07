@@ -1,11 +1,11 @@
 import React from 'react';
 import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import asShape from 'react-dataparcels/asShape';
+import asNode from 'react-dataparcels/asNode';
 import exampleFrame from 'component/exampleFrame';
 
-const setWordLengthMeta = asShape(shape => shape.setMeta({
-    wordLength: shape.value.word.length
+const setWordLengthMeta = asNode(node => node.setMeta({
+    wordLength: node.value.word.length
 }));
 
 export default function WordEditor(props) {
