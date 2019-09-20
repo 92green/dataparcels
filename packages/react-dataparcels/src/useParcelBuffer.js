@@ -3,6 +3,8 @@
 import type ChangeRequest from 'dataparcels/ChangeRequest';
 import type {ParcelValueUpdater} from 'dataparcels';
 
+// $FlowFixMe - useRef is a named export of react
+import {useRef} from 'react';
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
 
@@ -30,6 +32,9 @@ type Params = {
 type Return = [Parcel, {[key: string]: any}];
 
 export default (params: Params): Return => {
+
+    let parcelRef = useRef();
+    parcelRef.current = params.parcel;
 
     const applyBeforeChange = ApplyBeforeChange(params.beforeChange);
 
@@ -103,7 +108,7 @@ export default (params: Params): Return => {
                 internalBuffer.unshift(changeRequest);
             };
 
-            params.parcel.dispatch(changeRequest);
+            parcelRef.current.dispatch(changeRequest);
         }
         // ^ submits by dispatching the buffered change request
     });
