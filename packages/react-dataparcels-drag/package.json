@@ -30,7 +30,7 @@
   "dependencies": {
     "@babel/runtime": "^7.1.5",
     "react-sortable-hoc": "1.4.0",
-    "unmutable": "^0.46.0"
+    "unmutable": "^0.46.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
