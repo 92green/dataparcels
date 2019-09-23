@@ -71,14 +71,31 @@ parcel.set(200);
 // parcel.value is now 200
 ```
 
-If computing `value` is a heavy operation, you can return the value from a function. The function will only be called on initial mount. However, if `updateValue` is set to true then the function will be called on every update.
+If computing `value` is a heavy operation, you can return the value from a function. The function will only be called on initial mount, and is passed the previous value. However, if `updateValue` is set to true then the function will be called on every update.
 
 ```js
+let newValue = 100;
+
 let [parcel] = useParcelForm({
-    value: () => 100
+    value: (prevValue) => newValue
 });
 
 // parcel.value is 100
+```
+
+Value can also accept [parcel updaters](/parcel-updaters). These pass the previous data held in state, and expect the new data to be returned. These can be useful for setting [parcel meta](/parcel-meta).
+
+```js
+import asNode from 'react-dataparcels/asNode';
+
+let [parcel] = useParcelForm({
+    value: asNode(node => node
+        .update(() => newValue)
+        .setMeta({
+            foo: true
+        })
+    )
+});
 ```
 
 #### Returning promises from value
