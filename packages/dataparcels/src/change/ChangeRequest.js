@@ -5,6 +5,8 @@ import type {Index} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type Action from './Action';
 
+import shallowEquals from 'unmutable/shallowEquals';
+
 import {ReadOnlyError} from '../errors/Errors';
 import {ChangeRequestNoPrevDataError} from '../errors/Errors';
 import ChangeRequestReducer from '../change/ChangeRequestReducer';
@@ -138,6 +140,12 @@ export default class ChangeRequest {
             next: getIn(this.nextData),
             prev: getIn(this.prevData)
         };
+    };
+
+    hasDataChanged = (keyPath: Array<Key|Index> = []): boolean => {
+        let {next, prev} = this.getDataIn(keyPath);
+        return !Object.is(next.value, prev.value)
+            || !shallowEquals(next.meta || {})(prev.meta || {});
     };
 
     hasValueChanged = (keyPath: Array<Key|Index> = []): boolean => {
