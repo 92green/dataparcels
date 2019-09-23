@@ -7784,10 +7784,10 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
-unmutable@^0.46.0:
-  version "0.46.0"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.46.0.tgz#c6688e002e07e7bd926a7e324509a106ef4cb414"
-  integrity sha512-2yLSQINfd8sC4tU+VKR4S6630pnXVbs5cMIQvChOYrxIDnwypqhK1T31DoZPJ6KWDZUjrrs2IdkmyR3DwcfWTw==
+unmutable@^0.46.1:
+  version "0.46.1"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.46.1.tgz#af1e4c5bec4905bd8d288be45bd215f7e4d5ccb1"
+  integrity sha512-rd1q64OKPXUWkJOt2N619zHwu7FdRNgtmyNdi3mzH/TmT52/QmoJShjvU+7X3CwIfElmlOEVl2dapxMHhJ49dw==
   dependencies:
     "@babel/runtime" "^7.1.5"
     fast-deep-equal "^1.0.0"
