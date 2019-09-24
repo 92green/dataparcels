@@ -17,6 +17,7 @@ export default () => <Layout>
             'actions',
             '# Methods',
             'hasValueChanged()',
+            'hasDataChanged()',
             'getDataIn()',
             'merge()'
         ]}

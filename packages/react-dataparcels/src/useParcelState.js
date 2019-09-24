@@ -7,8 +7,9 @@ import type {ParcelValueUpdater} from 'dataparcels';
 import {useState} from 'react';
 // $FlowFixMe - useState is a named export of react
 import {useRef} from 'react';
-import Parcel from 'dataparcels';
 import useParcelSideEffectSync from './useParcelSideEffectSync';
+import Parcel from 'dataparcels';
+import cancel from 'dataparcels/cancel';
 import ApplyBeforeChange from './util/ApplyBeforeChange';
 
 type OnChangeFunction = (parcel: Parcel, changeRequest: ChangeRequest) => any;
@@ -26,7 +27,7 @@ type Return = [Parcel, {[key: string]: any}];
 
 export default (params: Params): Return => {
 
-    let getValue = typeof params.value === "function" ? params.value : () => params.value;
+    let valueUpdater = typeof params.value === "function" ? params.value : () => params.value;
     let control = {};
 
     // takes a parcel and chains the beforeChange functions off of it
@@ -36,58 +37,53 @@ export default (params: Params): Return => {
 
     const applyBeforeChange = ApplyBeforeChange(params.beforeChange);
 
-    // takes a parcel and sets the current params.value as its value
-    // params.value is first passed through beforeChange
-
-    const updateParcelValue = (parcel: Parcel, value: any): Parcel => {
-        return parcel._changeAndReturn(
-            parcel => applyBeforeChange(parcel).set(value)
-        )[0];
-    };
-
-    // if value is asyncValue, make getValue() call the asyncValue
+    // if value is asyncValue, make valueUpdater() call the asyncValue
 
     let parcelRef = useRef();
-    if(getValue._asyncValue) {
+    if(valueUpdater._asyncValue) {
 
-        let useAsyncValue = getValue;
-        // $FlowFixMe - useAsyncValue expects different arguments than getValue
+        let useAsyncValue = valueUpdater;
+        // $FlowFixMe - useAsyncValue expects different arguments than valueUpdater
         let [asyncGetValue, valueStatus] = useAsyncValue((newValue) => {
             parcelRef.current
                 .pipe(applyBeforeChange)
                 .set(newValue);
         });
 
-        getValue = asyncGetValue;
+        valueUpdater = asyncGetValue;
         control.valueStatus = valueStatus;
     }
 
     // store parcel in state
 
-    let [parcel, setParcel] = useState(() => updateParcelValue(
-        new Parcel({
+    let [parcel, setParcel] = useState(() => {
+        let parcel = new Parcel({
             handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
                 // remember the origin of the last change
                 // useParcelBufferInternalKeepValue needs it
                 parcel._frameMeta.lastOriginId = changeRequest.originId;
                 setParcel(parcel);
             }
-        }),
-        getValue()
-    ));
+        });
+
+        return parcel._changeAndReturn(
+            parcel => parcel
+                .pipe(applyBeforeChange)
+                .update(valueUpdater)
+        )[0];
+    });
+
     parcelRef.current = parcel;
 
     // use the updateValue param to set value from props
 
-    const [prevValue, setPrevValue] = useState(() => parcel.value);
-
     if(params.updateValue) {
-        const value = getValue();
-
-        if(!Object.is(value, prevValue)) {
-            setPrevValue(value);
-            setParcel(updateParcelValue(parcel, value));
-        }
+        parcel
+            .modifyUp((value, changeRequest) => {
+                return changeRequest.hasDataChanged() ? value : cancel;
+            })
+            .pipe(applyBeforeChange)
+            .update(valueUpdater);
     }
 
     // use the rebase param

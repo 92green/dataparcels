@@ -1,6 +1,7 @@
 // @flow
 import {act} from 'react-hooks-testing-library';
 import {renderHook} from 'react-hooks-testing-library';
+import asRaw from 'dataparcels/asRaw';
 import useParcelState from '../useParcelState';
 import asyncChange from '../asyncChange';
 import asyncValue from '../asyncValue';
@@ -36,6 +37,12 @@ describe('useParcelState should use config.value', () => {
     it('should create a Parcel from value thunk', () => {
         let {result} = renderHook(() => useParcelState({value: () => 123}));
         expect(result.current[0].value).toBe(123);
+    });
+
+    it('should create a Parcel from value updater', () => {
+        let {result} = renderHook(() => useParcelState({value: asRaw(() => ({value: 123, meta: {abc: 456}}))}));
+        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].meta).toEqual({abc: 456});
     });
 
     it('should update Parcel', () => {
@@ -163,6 +170,45 @@ describe('useParcelState should use config.updateValue', () => {
         });
 
         expect(result.current[0].value).toBe(789);
+    });
+
+    it('should allow updater to be passed as value', () => {
+
+        let updater = jest.fn((prevData, foo) => {
+            return {
+                value: foo,
+                meta: {
+                    foo
+                }
+            };
+        });
+
+        let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcelState({
+            value: asRaw((prevData) => updater(prevData, props.foo)),
+            updateValue: true
+        }));
+
+        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].meta).toEqual({
+            foo: 123
+        });
+
+        expect(updater.mock.calls[0][0].value).toBe(undefined);
+        expect(updater.mock.calls[0][0].meta).toEqual({});
+
+        act(() => {
+            rerender({foo: 456});
+        });
+
+        expect(result.current[0].value).toBe(456);
+        expect(result.current[0].meta).toEqual({
+            foo: 456
+        });
+
+        expect(updater.mock.calls[1][0].value).toBe(123);
+        expect(updater.mock.calls[1][0].meta).toEqual({
+            foo: 123
+        });
     });
 });
 

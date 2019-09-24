@@ -380,6 +380,119 @@ test('ChangeRequest hasValueChanged should indicate if value changed in array, i
     expect(basedChangeRequest.hasValueChanged()).toBe(true);
 });
 
+test('ChangeRequest hasDataChanged should indicate if value changed at path', () => {
+    var action = new Action({
+        type: "set",
+        keyPath: ["a", "c", "#a"],
+        payload: 100
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                c: [0,1],
+                d: 2
+            },
+            b: 3,
+            e: NaN
+        }
+    });
+
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
+
+    expect(basedChangeRequest.hasDataChanged(['a', 'c', '#a'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged(['a', 'c', '#b'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['a', 'c'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged(['a', 'd'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['a'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged(['b'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['e'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged()).toBe(true);
+});
+
+test('ChangeRequest hasDataChanged should indicate if meta changed at path', () => {
+    var action = new Action({
+        type: "setMeta",
+        keyPath: ["a", "c", "#a"],
+        payload: {
+            abc: 123
+        }
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                c: [0,1],
+                d: 2
+            },
+            b: 3,
+            e: NaN
+        }
+    });
+
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
+
+    expect(basedChangeRequest.hasDataChanged(['a', 'c', '#a'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged(['a', 'c', '#b'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['a', 'c'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged(['a', 'd'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['a'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged(['b'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['e'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged()).toBe(true);
+});
+
+test('ChangeRequest hasDataChanged should indicate if value changed at path due to deletion', () => {
+    var action = new Action({
+        type: "delete",
+        keyPath: ["a"]
+    });
+
+    var parcel = new Parcel({
+        value: {
+            a: {
+                b: 100
+            },
+            b: 2
+        }
+    });
+
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
+
+    expect(basedChangeRequest.hasDataChanged(['a'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged(['a', 'b'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged(['b'])).toBe(false);
+});
+
+test('ChangeRequest hasDataChanged should indicate if value changed in array, identifying elements by key', () => {
+    var action = new Action({
+        type: "insertBefore",
+        keyPath: ["#b"],
+        payload: 999
+    });
+
+    var parcel = new Parcel({
+        value: [0,1,2,3]
+    });
+
+    let basedChangeRequest = new ChangeRequest(action)._create({
+        prevData: parcel.data
+    });
+
+    expect(basedChangeRequest.hasDataChanged(['#a'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['#b'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['#c'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['#d'])).toBe(false);
+    expect(basedChangeRequest.hasDataChanged(['#e'])).toBe(true);
+    expect(basedChangeRequest.hasDataChanged()).toBe(true);
+});
+
 test('ChangeRequest should throw errors when attempted to set getters', () => {
     let readOnly = 'This property is read-only';
 
