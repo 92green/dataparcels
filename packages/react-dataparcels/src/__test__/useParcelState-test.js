@@ -172,20 +172,44 @@ describe('useParcelState should use config.updateValue', () => {
         expect(result.current[0].value).toBe(789);
     });
 
-    // it('should allow updater to be passed as value', () => {
-    //     let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcelState({
-    //         value: props.foo,
-    //         updateValue: true
-    //     }));
+    it('should allow updater to be passed as value', () => {
 
-    //     expect(result.current[0].value).toBe(123);
+        let updater = jest.fn((prevData, foo) => {
+            return {
+                value: foo,
+                meta: {
+                    foo
+                }
+            };
+        });
 
-    //     act(() => {
-    //         rerender({foo: 456});
-    //     });
+        let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcelState({
+            value: asRaw((prevData) => updater(prevData, props.foo)),
+            updateValue: true
+        }));
 
-    //     expect(result.current[0].value).toBe(456);
-    // });
+        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].meta).toEqual({
+            foo: 123
+        });
+
+        expect(updater.mock.calls[0][0].value).toBe(undefined);
+        expect(updater.mock.calls[0][0].meta).toEqual({});
+
+        act(() => {
+            rerender({foo: 456});
+        });
+
+        expect(result.current[0].value).toBe(456);
+        expect(result.current[0].meta).toEqual({
+            foo: 456
+        });
+
+        expect(updater.mock.calls[1][0].value).toBe(123);
+        expect(updater.mock.calls[1][0].meta).toEqual({
+            foo: 123
+        });
+    });
 });
 
 describe('useParcelState should use config.onChange', () => {
