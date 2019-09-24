@@ -1,7 +1,7 @@
 {
   "name": "dataparcels-docs",
   "private": true,
-  "version": "0.25.0-alpha.4.0",
+  "version": "0.25.0-alpha.5.0",
   "description": "Dataparcels Documentation",
   "author": "Damien Clarke",
   "license": "MIT",
@@ -12,11 +12,11 @@
     "dedupe-react": "cd ../react-dataparcels && npm link ../dataparcels-docs/node_modules/react && cd ../react-dataparcels-drag && npm link ../dataparcels-docs/node_modules/react && cd ../dataparcels-docs"
   },
   "dependencies": {
-    "dataparcels": "^0.25.0-alpha.2",
+    "dataparcels": "^0.25.0-alpha.5.0",
     "dcme-gatsby": "^0.5.0",
     "dcme-style": "^0.27.4",
     "gatsby": "^2.0.19",
-    "react-dataparcels": "^0.25.0-alpha.4.0",
-    "react-dataparcels-drag": "^0.25.0-alpha.2"
+    "react-dataparcels": "^0.25.0-alpha.5.0",
+    "react-dataparcels-drag": "^0.25.0-alpha.5.0"
   }
 }
