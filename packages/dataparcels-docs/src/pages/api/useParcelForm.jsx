@@ -12,6 +12,7 @@ export default () => <Layout>
             '# Params',
             'value',
             'updateValue',
+            'rebase',
             'onSubmit',
             'onSubmitUseResult',
             'buffer',
@@ -22,6 +23,12 @@ export default () => <Layout>
             'parcel',
             'parcelControl',
             '# ParcelHookControl',
+            'submit',
+            'reset',
+            'buffered',
+            'actions',
+            'valueStatus',
+            'submitStatus',
             '# Inside the hook'
         ]}
     />

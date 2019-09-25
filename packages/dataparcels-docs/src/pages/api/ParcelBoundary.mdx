@@ -77,6 +77,24 @@ The return value of `childRenderer` will be rendered.
 
 ## <DocsSectionHeading>Props</DocsSectionHeading>
 
+### parcel
+
+```flow
+parcel: Parcel
+```
+
+The parcel to put into the boundary.
+
+#### Behaviour notes
+
+Whenever a ParcelBoundary receives a new Parcel via props, ParcelBoundary's default behaviour is to:
+- update to contain the new Parcel’s data
+- forget about all its buffered changes
+
+This is safe default behaviour because changes in the buffer may not be compatible with the new Parcel's data shape. However it may be user unfriendly in some cases, depending on when and how often the parcel updates from props.
+
+If you would like to keep the changes in the buffer, and you know that buffered changes will always be compatible with any new Parcel's data shape, consider using [useParcelForm.rebase](/api/useParcelForm#rebase) or [useParcelState.rebase](/api/useParcelState#rebase).
+
 ### pure
 
 ```flow

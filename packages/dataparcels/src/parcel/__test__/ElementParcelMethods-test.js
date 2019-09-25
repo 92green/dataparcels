@@ -30,9 +30,7 @@ test('ElementParcel.insertBefore() should insert', () => {
     var expectedAction = {
         type: "insertBefore",
         keyPath: ["#b"],
-        payload: {
-            value: 4
-        }
+        payload: 4
     };
 
     new Parcel({
@@ -83,9 +81,7 @@ test('ElementParcel.insertAfter() should insert', () => {
     var expectedAction = {
         type: "insertAfter",
         keyPath: ["#b"],
-        payload: {
-            value: 4
-        }
+        payload: 4
     };
 
     new Parcel({
@@ -109,92 +105,8 @@ test('ElementParcel.insertAfter() should insert', () => {
         .insertAfter(4);
 });
 
-test('ElementParcel.move() should move', () => {
-    expect.assertions(2);
-
-    var data = {
-        value: [1,2,3],
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [3,1,2],
-        key: '^',
-        child: [
-            {key: "#c"},
-            {key: "#a"},
-            {key: "#b"}
-        ]
-    };
-
-    var expectedAction = {
-        type: "move",
-        keyPath: ["#c"],
-        payload: {
-            moveKey: 0
-        }
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    })
-        .get(2)
-        .move(0);
-});
-
-test('ElementParcel.swap() should swap', () => {
-    expect.assertions(2);
-
-    var data = {
-        value: [1,2,3],
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [3,2,1],
-        key: '^',
-        child: [
-            {key: "#c"},
-            {key: "#b"},
-            {key: "#a"}
-        ]
-    };
-
-    var expectedAction = {
-        type: "swap",
-        keyPath: ["#a"],
-        payload: {
-            swapKey: 2
-        }
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    })
-        .get(0)
-        .swap(2);
-});
-
 test('ElementParcel.swapNext() should swapNext', () => {
-    expect.assertions(4);
+    expect.assertions(2);
 
     var data = {
         value: [1,2,3],
@@ -219,7 +131,7 @@ test('ElementParcel.swapNext() should swapNext', () => {
     var expectedAction = {
         type: "swapNext",
         keyPath: ["#a"],
-        payload: {}
+        payload: undefined
     };
 
     new Parcel({
@@ -231,20 +143,6 @@ test('ElementParcel.swapNext() should swapNext', () => {
     })
         .get(0)
         .swapNext();
-
-    expectedAction = {
-        type: "swapNext",
-        keyPath: ["#a"],
-        payload: {}
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).swapNext("#a");
 });
 
 
@@ -274,7 +172,7 @@ test('ElementParcel.swapPrev() should swapPrev', () => {
     var expectedAction = {
         type: "swapPrev",
         keyPath: ["#b"],
-        payload: {}
+        payload: undefined
     };
 
     new Parcel({

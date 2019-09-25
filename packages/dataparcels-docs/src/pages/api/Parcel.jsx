@@ -20,7 +20,6 @@ export default () => <Layout>
             'get()',
             'getIn()',
             'children()',
-            'toObject()',
             'toArray()',
             'metaAsParcel()',
             '# Input binding methods',
@@ -35,18 +34,14 @@ export default () => <Layout>
             'isLast()',
             '# Change methods',
             'set()',
-            'setIn()',
             'delete()',
-            'deleteIn()',
             'update()',
-            'updateIn()',
             'map()',
             'setMeta()',
             'dispatch()',
             '# Indexed and element change methods',
             'insertAfter()',
             'insertBefore()',
-            'move()',
             'push()',
             'pop()',
             'shift()',
@@ -71,9 +66,7 @@ export default () => <Layout>
             'spy()',
             'spyChange()',
             '# Composition methods',
-            'pipe()',
-            '# Debug methods',
-            'log()'
+            'pipe()'
         ]}
     />
 </Layout>;

@@ -1,5 +1,7 @@
 // @flow
 import Parcel from '../Parcel';
+import ChangeRequest from '../../change/ChangeRequest';
+import Action from '../../change/Action';
 import {Map, List} from 'immutable';
 
 test('Parcels should be able to accept no config', () => {
@@ -17,14 +19,19 @@ test('Parcels should be able to accept just value in config', () => {
 });
 
 test('Parcels should be able to accept just handleChange in config', () => {
+    let handleChange = jest.fn();
+
     let parcel = new Parcel({
-        handleChange: (parcel) => {
-            expect(456).toBe(parcel.value);
-        }
+        handleChange
     });
-    expect(undefined).toEqual(parcel.value);
+
+    expect(parcel.value).toBe(undefined);
     parcel.onChange(456);
+
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].value).toBe(456);
 });
+
 
 test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     let handleChange = jest.fn();
@@ -219,8 +226,8 @@ test('Correct methods are created for primitive values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).toThrowError(`.has() is not a function`);
     expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function`);
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
 });
 
 test('Correct methods are created for object values', () => {
@@ -230,8 +237,8 @@ test('Correct methods are created for object values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function`);
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
 });
 
 test('Correct methods are created for array values', () => {
@@ -241,8 +248,8 @@ test('Correct methods are created for array values', () => {
     expect(() => new Parcel(data).value).not.toThrow();
     expect(() => new Parcel(data).has('a')).not.toThrow();
     expect(() => new Parcel(data).pop()).not.toThrow();
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() cannot be called with 0 arguments`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
+    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
+    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
 });
 
 test('Correct methods are created for object child values', () => {
@@ -253,7 +260,7 @@ test('Correct methods are created for object child values', () => {
     expect(() => new Parcel(data).get("a").has('a')).toThrowError(`.has() is not a function`);
     expect(() => new Parcel(data).get("a").pop()).toThrowError(`.pop() is not a function`);
     expect(() => new Parcel(data).get("a").delete()).not.toThrow();
-    expect(() => new Parcel(data).get("a").swapNext()).toThrowError(`.swapNext() cannot be called with 0 arguments`);
+    expect(() => new Parcel(data).get("a").swapNext()).toThrowError(`.swapNext() is not a function.`);
 });
 
 test('Correct methods are created for array element values', () => {
@@ -292,3 +299,26 @@ test('Frame meta should not persist after change', () => {
     expect(handleChange.mock.calls[0][0]._frameMeta).toEqual({});
 });
 
+test('Frame meta should use last change requests nextFrameMeta', () => {
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: 123,
+        handleChange
+    });
+
+    let actions = [
+        new Action({type: "set", keyPath: [], payload: 456})
+    ];
+
+    let changeRequest = new ChangeRequest(actions)
+        ._create({
+            nextFrameMeta: {
+                foo: 123
+            }
+        });
+
+    parcel.dispatch(changeRequest);
+
+    expect(handleChange.mock.calls[0][0]._frameMeta).toEqual({foo: 123});
+});

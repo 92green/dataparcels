@@ -4,23 +4,15 @@ import type Action from './Action';
 import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
-import findLastIndex from 'unmutable/lib/findLastIndex';
-import identity from 'unmutable/lib/identity';
-import last from 'unmutable/lib/last';
-import take from 'unmutable/lib/take';
 import pipe from 'unmutable/lib/util/pipe';
-import pipeWith from 'unmutable/lib/util/pipeWith';
-import composeWith from 'unmutable/lib/util/composeWith';
 import {ReducerInvalidActionError} from '../errors/Errors';
 import {ReducerInvalidStepError} from '../errors/Errors';
-import {isCancelledError} from './CancelActionMarker';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
 import map from '../parcelData/map';
-import move from '../parcelData/move';
 import pop from '../parcelData/pop';
 import push from '../parcelData/push';
 import setMeta from '../parcelData/setMeta';
@@ -33,28 +25,26 @@ import unshift from '../parcelData/unshift';
 import parcelDataUpdate from '../parcelData/update';
 
 const actionMap = {
-    delete: ({lastKey}) => del(lastKey),
-    insertAfter: ({lastKey, value}) => insertAfter(lastKey, value),
-    insertBefore: ({lastKey, value}) => insertBefore(lastKey, value),
-    map: ({updater}) => map(updater),
-    move: ({lastKey, moveKey}) => move(lastKey, moveKey),
-    pop: () => pop(),
-    push: ({values}) => push(...values),
-    setData: parcelData => () => parcelData,
-    setMeta: ({meta}) => setMeta(meta),
-    set: ({value}) => setSelf(value),
-    shift: () => shift(),
-    swap: ({lastKey, swapKey}) => swap(lastKey, swapKey),
-    swapNext: ({lastKey}) => swapNext(lastKey),
-    swapPrev: ({lastKey}) => swapPrev(lastKey),
-    unshift: ({values}) => unshift(...values)
+    delete: del, //: (lastKey) => del(lastKey),
+    insertAfter, //: (lastKey, value) => insertAfter(lastKey, value),
+    insertBefore, //: (lastKey, value) => insertBefore(lastKey, value),
+    map: (lastKey, updater) => map(updater),
+    pop, //: () => pop(),
+    push: (lastKey, values) => push(...values),
+    setData: (lastKey, parcelData) => () => parcelData,
+    setMeta: (lastKey, meta) => setMeta(meta),
+    set: (lastKey, value) => setSelf(value),
+    shift, //: () => shift(),
+    swap, //: (lastKey, swapKey) => swap(lastKey, swapKey),
+    swapNext, //: (lastKey) => swapNext(lastKey),
+    swapPrev, //: (lastKey) => swapPrev(lastKey),
+    unshift: (lastKey, values) => unshift(...values)
 };
 
 const parentActionMap = {
     delete: true,
     insertAfter: true,
     insertBefore: true,
-    move: true,
     swap: true,
     swapNext: true,
     swapPrev: true
@@ -80,10 +70,7 @@ const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
     if(!fn) {
         throw ReducerInvalidActionError(type);
     }
-    return fn({
-        ...payload,
-        lastKey: last()(keyPath)
-    });
+    return fn(keyPath.slice(-1)[0], payload);
 };
 
 const doDeepAction = (action: Action): ParcelDataEvaluator => {
@@ -92,44 +79,33 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
 
     if(isParentAction) {
         if(action.keyPath.length === 0) {
-            return type === "delete" ? deleteSelfWithMarker : identity();
+            return type === "delete" ? deleteSelfWithMarker : ii => ii;
         }
-        let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
-        steps = take(lastGetIndex)(steps);
+        let lastGetIndex = steps.lastIndexOf(step => step.type === 'get');
+        steps = steps.slice(0, lastGetIndex);
     }
 
-    return composeWith(
-        ...steps.map((step) => (next): ParcelDataEvaluator => {
-            let fn = stepMap[step.type];
-            if(!fn) {
-                throw ReducerInvalidStepError(step.type);
-            }
-            return fn(step, next);
-        }),
-        doAction(action)
-    );
+    return steps.reduceRight((next, step) => {
+        let fn = stepMap[step.type];
+        if(!fn) {
+            throw ReducerInvalidStepError(step.type);
+        }
+        return fn(step, next);
+    }, doAction(action));
 };
 
 export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?ParcelData => {
-    let cancelled = 0;
-    let {actions} = changeRequest;
-
-    let newParcelData = pipeWith(
-        parcelData,
-        ...actions.map((action): ParcelDataEvaluator => (parcelData: ParcelData): ParcelData => {
-            try {
-                return doDeepAction(action)(parcelData);
-            } catch(e) {
-                if(isCancelledError(e)) {
-                    cancelled++;
-                    return parcelData;
-                }
-                throw e;
+    let someSucceeded = false;
+    return changeRequest.actions.reduce((parcelData, action) => {
+        try {
+            let newParcelData = doDeepAction(action)(parcelData);
+            someSucceeded = true;
+            return newParcelData;
+        } catch(e) {
+            if(e.message === 'CANCEL') {
+                return someSucceeded ? parcelData : undefined;
             }
-        })
-    );
-
-    return cancelled > 0 && cancelled === actions.length
-        ? undefined
-        : newParcelData;
+            throw e;
+        }
+    }, parcelData);
 };

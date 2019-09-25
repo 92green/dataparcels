@@ -3,8 +3,6 @@ import type {ParcelData} from '../types/Types';
 
 import {toString26, toInt26} from './convert26';
 
-import filter from 'unmutable/lib/filter';
-import identity from 'unmutable/lib/identity';
 import map from 'unmutable/lib/map';
 import size from 'unmutable/lib/size';
 import set from 'unmutable/lib/set';
@@ -28,7 +26,7 @@ function toIntKey(str: ?string): ?number {
     return isKey(str) ? toInt26(str.slice(1)) : undefined;
 }
 
-export default () => (parcelData: ParcelData): ParcelData => {
+export default (existingChild: any = []) => (parcelData: ParcelData): ParcelData => {
     let {value, child} = parcelData;
 
     if(!child) {
@@ -45,16 +43,11 @@ export default () => (parcelData: ParcelData): ParcelData => {
     }
 
     let keys = pipeWith(
-        child,
-        toArray(),
+        [...toArray()(child), ...toArray()(existingChild)],
         map(({key}) => toIntKey(key))
     );
 
-    let highest = pipeWith(
-        keys,
-        filter(identity()),
-        keys => Math.max(0, ...keys)
-    );
+    let highest = Math.max(0, ...keys.filter(Boolean));
 
     let updateChild = pipe(
         take(size()(value)),

@@ -1,10 +1,8 @@
 // @flow
-import type {
-    Key,
-    Index,
-    ParcelData,
-    Property
-} from '../types/Types';
+import type {Key} from '../types/Types';
+import type {Index} from '../types/Types';
+import type {ParcelData} from '../types/Types';
+import type {Property} from '../types/Types';
 
 import prepareChildKeys from './prepareChildKeys';
 

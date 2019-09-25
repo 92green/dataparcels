@@ -1,9 +1,14 @@
 // @flow
 import {act} from 'react-hooks-testing-library';
 import {renderHook} from 'react-hooks-testing-library';
+import asRaw from 'dataparcels/asRaw';
 import useParcelState from '../useParcelState';
+import asyncChange from '../asyncChange';
+import asyncValue from '../asyncValue';
 
 jest.useFakeTimers();
+
+const asyncValuePromise = (fn, index = 0) => fn.mock.results[index].value.catch(() => {});
 
 const renderHookWithProps = (initialProps, callback) => renderHook(callback, {initialProps});
 
@@ -34,6 +39,12 @@ describe('useParcelState should use config.value', () => {
         expect(result.current[0].value).toBe(123);
     });
 
+    it('should create a Parcel from value updater', () => {
+        let {result} = renderHook(() => useParcelState({value: asRaw(() => ({value: 123, meta: {abc: 456}}))}));
+        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].meta).toEqual({abc: 456});
+    });
+
     it('should update Parcel', () => {
         let {result} = renderHook(() => useParcelState({value: () => 123}));
 
@@ -42,6 +53,73 @@ describe('useParcelState should use config.value', () => {
         });
 
         expect(result.current[0].value).toBe(456);
+    });
+});
+
+describe('useParcelState should use config.value with asyncValue', () => {
+
+    it('should use asyncValue', async () => {
+        let fetcher = jest.fn(() => Promise.resolve(123));
+
+        let {result} = renderHook(() => useParcelState({
+            value: asyncValue(fetcher)
+        }));
+
+        expect(result.current[0].value).toBe(undefined);
+        expect(result.current[1].valueStatus).toEqual({
+            status: 'pending',
+            isPending: true,
+            isResolved: false,
+            isRejected: false,
+            error: undefined
+        });
+
+        await act(async () => {
+            await asyncValuePromise(fetcher);
+        });
+
+        expect(result.current[0].value).toBe(123);
+        expect(result.current[1].valueStatus).toEqual({
+            status: 'resolved',
+            isPending: false,
+            isResolved: true,
+            isRejected: false,
+            error: undefined
+        });
+    });
+
+    it('should use asyncValue and handle rejections', async () => {
+        let fetcher = jest.fn(() => Promise.reject('error message!'));
+
+        let {result} = renderHook(() => useParcelState({
+            value: asyncValue(fetcher)
+        }));
+
+        await act(async () => {
+            await asyncValuePromise(fetcher);
+        });
+
+        expect(result.current[0].value).toBe(undefined);
+        expect(result.current[1].valueStatus).toEqual({
+            status: 'rejected',
+            isPending: false,
+            isResolved: false,
+            isRejected: true,
+            error: 'error message!'
+        });
+    });
+
+    it('should pass asyncValue through beforeChange', async () => {
+        let fetcher = () => Promise.resolve(123);
+
+        let {result} = renderHook(() => useParcelState({
+            value: asyncValue(fetcher),
+            beforeChange: value => value * 2
+        }));
+
+        await act(fetcher);
+
+        expect(result.current[0].value).toBe(246);
     });
 
 });
@@ -93,6 +171,45 @@ describe('useParcelState should use config.updateValue', () => {
 
         expect(result.current[0].value).toBe(789);
     });
+
+    it('should allow updater to be passed as value', () => {
+
+        let updater = jest.fn((prevData, foo) => {
+            return {
+                value: foo,
+                meta: {
+                    foo
+                }
+            };
+        });
+
+        let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcelState({
+            value: asRaw((prevData) => updater(prevData, props.foo)),
+            updateValue: true
+        }));
+
+        expect(result.current[0].value).toBe(123);
+        expect(result.current[0].meta).toEqual({
+            foo: 123
+        });
+
+        expect(updater.mock.calls[0][0].value).toBe(undefined);
+        expect(updater.mock.calls[0][0].meta).toEqual({});
+
+        act(() => {
+            rerender({foo: 456});
+        });
+
+        expect(result.current[0].value).toBe(456);
+        expect(result.current[0].meta).toEqual({
+            foo: 456
+        });
+
+        expect(updater.mock.calls[1][0].value).toBe(123);
+        expect(updater.mock.calls[1][0].meta).toEqual({
+            foo: 123
+        });
+    });
 });
 
 describe('useParcelState should use config.onChange', () => {
@@ -112,6 +229,26 @@ describe('useParcelState should use config.onChange', () => {
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][0].value).toBe(456);
         expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
+        expect(result.current[0].value).toBe(456);
+    });
+
+    it('should call onChange with onChangeUseResult provided', () => {
+        let onChange = jest.fn(() => 333);
+
+        let {result} = renderHook(() => useParcelState({
+            value: () => 123,
+            onChange,
+            onChangeUseResult: true
+        }));
+
+        act(() => {
+            result.current[0].set(456);
+        });
+
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].value).toBe(456);
+        expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
+        expect(result.current[0].value).toBe(333);
     });
 
     it('should not call onChange as a result of updateValue', () => {
@@ -130,6 +267,65 @@ describe('useParcelState should use config.onChange', () => {
         });
 
         expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it('should call onChange with asyncChange if provided', async () => {
+
+        const onChangePromise = (onChange, index = 0) => onChange.mock.results[index].value.catch(() => {});
+
+        let onChange = jest.fn(() => Promise.resolve(333));
+
+        let {result} = renderHook(() => useParcelState({
+            value: () => 123,
+            onChange: asyncChange(onChange)
+        }));
+
+        expect(result.current[1].changeStatus.status).toBe('idle');
+
+        act(() => {
+            result.current[0].set(456);
+        });
+
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].value).toBe(456);
+        expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
+        expect(result.current[0].value).toBe(123);
+        expect(result.current[1].changeStatus.status).toBe('pending');
+
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
+
+        expect(result.current[0].value).toBe(456);
+        expect(result.current[1].changeStatus.status).toBe('resolved');
+    });
+
+    it('should call onChange with asyncChange and onChangeUseResult if provided', async () => {
+
+        const onChangePromise = (onChange, index = 0) => onChange.mock.results[index].value.catch(() => {});
+
+        let onChange = jest.fn(() => Promise.resolve(333));
+
+        let {result} = renderHook(() => useParcelState({
+            value: () => 123,
+            onChange: asyncChange(onChange),
+            onChangeUseResult: true
+        }));
+
+        act(() => {
+            result.current[0].set(456);
+        });
+
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].value).toBe(456);
+        expect(onChange.mock.calls[0][1].prevData.value).toBe(123);
+        expect(result.current[0].value).toBe(123);
+
+        await act(async () => {
+            await onChangePromise(onChange);
+        });
+
+        expect(result.current[0].value).toBe(333);
     });
 
 });
@@ -212,42 +408,22 @@ describe('useParcelState should use config.beforeChange', () => {
 
 });
 
-describe('useParcelState should use config.debounce', () => {
+describe('useParcelState should use config.rebase', () => {
 
-    it('should call onChange after debounce ms have elapsed between changes', () => {
-        let onChange = jest.fn();
-
+    it('should set frame meta of rebase = true', () => {
         let {result} = renderHook(() => useParcelState({
-            value: [],
-            onChange,
-            debounce: 20
+            value: 123,
+            rebase: true
         }));
 
-        act(() => {
-            result.current[0].push("A");
-        });
+        expect(result.current[0]._frameMeta.rebase).toBe(true);
+    });
 
-        act(() => {
-            jest.advanceTimersByTime(10);
-        });
+    it('should not normally set frame meta of rebase = true', () => {
+        let {result} = renderHook(() => useParcelState({
+            value: 123
+        }));
 
-        act(() => {
-            result.current[0].push("B");
-        });
-
-        act(() => {
-            jest.advanceTimersByTime(40);
-        });
-
-        act(() => {
-            result.current[0].push("C");
-        });
-
-        act(() => {
-            jest.advanceTimersByTime(40);
-        });
-
-        expect(onChange.mock.calls[0][0].value).toEqual(["A", "B"]);
-        expect(onChange.mock.calls[1][0].value).toEqual(["A", "B", "C"]);
+        expect(!result.current[0]._frameMeta.rebase).toBe(true);
     });
 });

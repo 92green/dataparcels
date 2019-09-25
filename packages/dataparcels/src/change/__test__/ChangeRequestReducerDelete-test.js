@@ -2,7 +2,7 @@
 import ChangeRequest from '../ChangeRequest';
 import ChangeRequestReducer from '../ChangeRequestReducer';
 import Action from '../Action';
-import DeletedParcelMarker from '../../parcelData/DeletedParcelMarker';
+import deleted from '../../parcelData/deleted';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 const makeReducer = (action) => pipeWith(
@@ -58,7 +58,7 @@ test('ChangeRequestReducer should delete deep key', () => {
     expect(makeReducer(action)(data).value).toEqual(expectedValue);
 });
 
-test('ChangeRequestReducer should set value to DeletedParcelMarker symbol if deleted with no keypath', () => {
+test('ChangeRequestReducer should set value to deleted symbol if deleted with no keypath', () => {
     var data = {
         value: {
             a: 1,
@@ -73,7 +73,7 @@ test('ChangeRequestReducer should set value to DeletedParcelMarker symbol if del
     });
 
     var expectedData = {
-        value: DeletedParcelMarker
+        value: deleted
     };
 
     expect(makeReducer(action)(data)).toEqual(expectedData);

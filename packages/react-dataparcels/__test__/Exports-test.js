@@ -4,11 +4,12 @@
 import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import dangerouslyUpdateParcelData from '../dangerouslyUpdateParcelData';
-import DeletedParcelMarker from '../DeletedParcelMarker';
-import ParcelShape from '../ParcelShape';
-import shape from '../shape';
-import CancelActionMarker from '../CancelActionMarker';
+import asRaw from '../asRaw';
+import deleted from '../deleted';
+import ParcelNode from '../ParcelNode';
+import asNode from '../asNode';
+import asChildNodes from '../asChildNodes';
+import cancel from '../cancel';
 import validation from '../validation';
 
 // react-dataparcels
@@ -17,28 +18,31 @@ import ParcelBoundary from '../ParcelBoundary';
 import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
 import useParcelBuffer from '../useParcelBuffer';
 import useParcelForm from '../useParcelForm';
-import useParcelSideEffect from '../useParcelSideEffect';
 import useParcelState from '../useParcelState';
+import asyncChange from '../asyncChange';
+import asyncValue from '../asyncValue';
 
 // internal dataparcels files
 import InternalParcel from 'dataparcels';
 import InternalAction from 'dataparcels/Action';
 import InternalChangeRequest from 'dataparcels/ChangeRequest';
-import InternalDangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
-import InternalDeletedParcelMarker from 'dataparcels/DeletedParcelMarker';
-import InternalParcelShape from 'dataparcels/ParcelShape';
-import InternalShape from 'dataparcels/shape';
-import InternalCancelActionMarker from 'dataparcels/CancelActionMarker';
+import InternalUpdateRaw from 'dataparcels/asRaw';
+import Internaldeleted from 'dataparcels/deleted';
+import InternalParcelNode from 'dataparcels/ParcelNode';
+import InternalAsNode from 'dataparcels/asNode';
+import InternalAsNodes from 'dataparcels/asChildNodes';
+import Internalcancel from 'dataparcels/cancel';
 import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
-import InternalParcelHoc from '../lib/ParcelHoc';
+import InternalParcelHoc from '../lib/deprecated/ParcelHoc';
 import InternalParcelBoundary from '../lib/ParcelBoundary';
-import InternalParcelBoundaryHoc from '../lib/ParcelBoundaryHoc';
+import InternalParcelBoundaryHoc from '../lib/deprecated/ParcelBoundaryHoc';
 import InternalUseParcelBuffer from '../lib/useParcelBuffer';
 import InternalUseParcelForm from '../lib/useParcelForm';
-import InternalUseParcelSideEffect from '../lib/useParcelSideEffect';
 import InternalUseParcelState from '../lib/useParcelState';
+import InternalAsyncChange from '../lib/asyncChange';
+import InternalAsyncValue from '../lib/asyncValue';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
@@ -52,24 +56,28 @@ test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
 });
 
-test('/dangerouslyUpdateParcelData should export dangerouslyUpdateParcelData', () => {
-    expect(dangerouslyUpdateParcelData).toBe(InternalDangerouslyUpdateParcelData);
+test('/asRaw should export asRaw', () => {
+    expect(asRaw).toBe(InternalUpdateRaw);
 });
 
-test('/DeletedParcelMarker should export DeletedParcelMarker', () => {
-    expect(DeletedParcelMarker).toBe(InternalDeletedParcelMarker);
+test('/deleted should export deleted', () => {
+    expect(deleted).toBe(Internaldeleted);
 });
 
-test('/ParcelShape should export ParcelShape', () => {
-    expect(ParcelShape).toBe(InternalParcelShape);
+test('/ParcelNode should export ParcelNode', () => {
+    expect(ParcelNode).toBe(InternalParcelNode);
 });
 
-test('/shape should export shape', () => {
-    expect(shape).toBe(InternalShape);
+test('/asNode should export asNode', () => {
+    expect(asNode).toBe(InternalAsNode);
 });
 
-test('/CancelActionMarker should export CancelActionMarker', () => {
-    expect(CancelActionMarker).toBe(InternalCancelActionMarker);
+test('/asChildNodes should export asChildNodes', () => {
+    expect(asChildNodes).toBe(InternalAsNodes);
+});
+
+test('/cancel should export cancel', () => {
+    expect(cancel).toBe(Internalcancel);
 });
 
 test('/validation should export validation', () => {
@@ -96,10 +104,14 @@ test('/useParcelForm should export useParcelForm', () => {
     expect(useParcelForm).toBe(InternalUseParcelForm);
 });
 
-test('/useParcelSideEffect should export useParcelSideEffect', () => {
-    expect(useParcelSideEffect).toBe(InternalUseParcelSideEffect);
-});
-
 test('/useParcelState should export useParcelState', () => {
     expect(useParcelState).toBe(InternalUseParcelState);
+});
+
+test('/asyncChange should export asyncChange', () => {
+    expect(asyncChange).toBe(InternalAsyncChange);
+});
+
+test('/asyncValue should export asyncValue', () => {
+    expect(asyncValue).toBe(InternalAsyncValue);
 });

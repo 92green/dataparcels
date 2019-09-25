@@ -268,38 +268,6 @@ parcel.children();
 
 ```
 
-### toObject()
-
-```flow
-toObject(mapper?: ParcelMapper): Object<Parcel> // only on ParentParcels
-
-type ParcelMapper = (
-    item: Parcel,
-    property: string|number,
-    parent: Parcel
-) => any;
-```
-
-Like [children()](#children()), expect the returned data structure is cast to an object.
-
-An optional `mapper` function can be passed, which will be called on each child.
-
-```js
-let value = {
-    abc: 123,
-    def: 456
-};
-
-let parcel = new Parcel({value});
-parcel.toObject();
-
-// returns {
-//    abc: Parcel, // contains a value of 123
-//    def: Parcel // contains a value of 456
-// }
-
-```
-
 ### toArray()
 
 ```flow
@@ -540,10 +508,9 @@ Returns true if this parcel is the last of its siblings.
 
 ```flow
 set(value: any): void
-set(key: string|number, value: any): void // only on ParentParcels, will set a child
 ```
 
-Calling `set()` with one argument will trigger a change that replaces the current value in the Parcel with the `value` provided. This is equivalent to calling [onChange()](#onChange()).
+Calling `set()` will trigger a change that replaces the current value in the Parcel with the `value` provided. This is equivalent to calling [onChange()](#onChange()).
 
 ```js
 let parcel = new Parcel({
@@ -553,55 +520,15 @@ parcel.set(456);
 // this triggers a change that sets the parcel's value to 456
 ```
 
-On ParentParcels this method can also be called with a `key`, which sets the child value at that key.
-
-```js
-let parcel = new Parcel({
-    value: {
-        abc: 123,
-        def: 789
-    }
-});
-parcel.set('abc', 456);
-// this triggers a change that sets the parcel's value to {abc: 456, def: 789}
-```
-
 <IndexedKeys />
-
-
-### setIn()
-
-```flow
-setIn(keyPath: Array<string|number>, value: any): void // only on ParentParcels
-```
-
-Calling `setIn()` will trigger a change that will set the value at the provided `keyPath`.
-
-```js
-let value = {
-    a: {
-        b: 123,
-        c: 789
-    }
-};
-let parcel = new Parcel({value});
-parcel.setIn(['a','b'], 456);
-// this triggers a change that sets the parcel's value to {a: {b: 456, c: 789}}
-```
-
-<IndexedKeys />
-
 
 ### delete()
 
 ```flow
 delete(): void // only on ChildParcels
-delete(key: string|number): void // only on ParentParcels, will delete a child
 ```
 
-Calling `delete()` with no arguments will trigger a change that will delete the current Parcel off of its parent. This variation of the `delete()` method only exists on ChildParcels.
-
-On ParentParcels this method can be called with a `key`, which deletes the child value at that key.
+Calling `delete()` will trigger a change that will delete the current Parcel off of its parent. This variation of the `delete()` method only exists on ChildParcels.
 
 ```js
 let value = {
@@ -611,30 +538,6 @@ let value = {
 let parcel = new Parcel({value});
 parcel.get('abc').delete();
 // this triggers a change that sets the parcel's value to {def: 456}
-
-parcel.delete('abc');
-// this also triggers a change that sets the parcel's value to {def: 456}
-```
-
-<IndexedKeys />
-
-### deleteIn()
-
-```flow
-deleteIn(keyPath: Array<string|number>): void // only on ParentParcels
-```
-
-Calling `deleteIn()` will trigger a change that will delete the value at the provided `keyPath`.
-
-```js
-let value = {
-    a: {
-        b: 123
-    }
-};
-let parcel = new Parcel({value});
-parcel.deleteIn(['a','b']);
-// this triggers a change that sets the parcel's value to {a: {}}
 ```
 
 <IndexedKeys />
@@ -643,17 +546,15 @@ parcel.deleteIn(['a','b']);
 
 ```flow
 // updates value - only to be used if shape doesn't change
-update(updater: ParcelValueUpdater): Parcel
-update(key: string|number, updater: ParcelValueUpdater): void // only on ParentParcels, will update a child
-type ParcelValueUpdater = (value: any) => any;
+update((value: any) => any): Parcel
 
-// updates shape, including meta
-update(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
-update(key: string|number, shape(updater: ParcelValueUpdater)): void // only on ParentParcels, will update a child
-type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
+// updates shape / meta
+update(asNode((node: ParcelNode) => ParcelNode)): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 ```
 
-Calling `update()` with one argument will trigger a change that replaces the current value in the Parcel with the result of the value updater provided to it. The value updater is passed the current value of the Parcel, from which you can return the intended replacement value.
+
+Calling `update()` will trigger a change that replaces the current value in the Parcel with the result of the value updater provided to it. The value updater is passed the current value of the Parcel, from which you can return the intended replacement value.
 
 ```js
 let parcel = new Parcel({
@@ -663,59 +564,17 @@ parcel.update(value => value + 1);
 // this triggers a change that sets the parcel's value to 124
 ```
 
-On ParentParcels this method can also be called with a `key`, which updates the child value at that key. The value updater is passed the current value found at the `key`, from which you can return the intended replacement value.
-
-```js
-let parcel = new Parcel({
-    value: {
-        abc: 123,
-        def: 789
-    }
-});
-parcel.update('abc', value => value + 1);
-// this triggers a change that sets the parcel's value to {abc: 124, def: 789}
-```
-
-<ValueUpdater />
-
-### updateIn()
-
-```flow
-// updates value - only to be used if shape doesn't change
-updateIn(keyPath: Array<string|number>, updater: ParcelValueUpdater): void // only on ParentParcels
-type ParcelValueUpdater = (value: any) => any;
-
-// updates shape, including meta
-updateIn(keyPath: Array<string|number>, shape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
-type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
-```
-
-Calling `updateIn()` will trigger a change that will update the value at the provided `keyPath`. The value updater is passed the current value found at the `keyPath`, from which you can return the intended replacement value.
-
-```js
-let value = {
-    a: {
-        b: 123,
-        c: 789
-    }
-};
-let parcel = new Parcel({value});
-parcel.updateIn(['a','b'], value => value + 1);
-// this triggers a change that sets the parcel's value to {a: {b: 124, c: 789}}
-```
-
 <ValueUpdater />
 
 ### map()
 
 ```flow
 // updates value - only to be used if shape doesn't change
-map(updater: ParcelValueUpdater): void // only on ParentParcels
-type ParcelValueUpdater = (value: any) => any;
+map((value: any) => any): Parcel
 
-// updates shape, including meta
-map(shape(shapeUpdater: ParcelShapeUpdater)): void // only on ParentParcels
-type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
+// updates shape / meta
+update(asNode((node: ParcelNode) => ParcelNode)): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 ```
 
 The `map()` function will trigger a change that will update every child value. It is passed each child value in order, from which you can return each intended replacement value.
@@ -771,21 +630,15 @@ The `dispatch()` method is used by Parcels internally to pass a [ChangeRequest](
 
 ```flow
 insertAfter(value: any): void // only on ElementParcels, will insert after self
-insertAfter(key: string|number, value: any): void // only on IndexedParcels, will insert after child
 ```
 
-When called with one argument, this inserts `value` after the current Parcel, within the current ParentParcel.
-
-When called with two arguments, this inserts `value` after the child Parcel at `key`.
+This inserts `value` after the current Parcel, within the current ParentParcel.
 
 ```js
 let value = ['a','b','c'];
 let parcel = new Parcel({value});
 parcel.get(1).insertAfter('!');
 // this triggers a change that sets the parcel's value to ['a','b','!','c'];
-
-parcel.insertAfter(1, '!');
-// this also triggers a change that sets the parcel's value to ['a','b','!','c'];
 ```
 
 <IndexedKeys />
@@ -794,44 +647,15 @@ parcel.insertAfter(1, '!');
 
 ```flow
 insertBefore(value: any): void // only on ElementParcels, will insert before self
-insertBefore(key: string|number, value: any): void // only on IndexedParcels, will insert before child
 ```
 
-When called with one argument, this inserts `value` before the current Parcel, within the current ParentParcel.
-When called with two arguments, this inserts `value` as the next sibling Parcel before the child Parcel at `key`.
+This inserts `value` before the current Parcel, within the current ParentParcel.
 
 ```js
 let value = ['a','b','c'];
 let parcel = new Parcel({value});
 parcel.get(1).insertBefore('!');
 // this triggers a change that sets the parcel's value to ['a','!','b','c'];
-
-parcel.insertBefore(1, '!');
-// this also triggers a change that sets the parcel's value to ['a','!','b','c'];
-```
-
-<IndexedKeys />
-
-### move()
-
-```flow
-move(key: string|number): void // only on ElementParcels, will move with sibling
-move(keyA: string|number, keyB: string|number): void // only on IndexedParcels, will move children
-```
-
-When called with one argument, this moves the current Parcel to the position of `key`, within the current ParentParcel.
-Other elements will shift left to fill any gaps left and/or shift right to make room for moved values.
-
-When called with two arguments, this moves the child Parcel at `keyA` to the position of `keyB`.
-
-```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
-parcel.get(2).move(0);
-// this triggers a change that sets the parcel's value to ['c','a','b'];
-
-parcel.move(2, 0);
-// this also triggers a change that sets the parcel's value to ['c','a','b'];
 ```
 
 <IndexedKeys />
@@ -884,20 +708,14 @@ parcel.shift();
 ### swap()
 
 ```flow
-swap(key: string|number): void // only on ElementParcels, will swap with sibling
 swap(keyA: string|number, keyB: string|number): void // only on IndexedParcels, will swap children
 ```
 
-When called with one argument, this swaps the current Parcel with the one at the position of `key`, within the current ParentParcel.
-
-When called with two arguments, this swaps the child Parcel at `keyA` with the one at the position of `keyB`.
+This swaps the child Parcel at `keyA` with the one at the position of `keyB`.
 
 ```js
 let value = ['a','b','c'];
 let parcel = new Parcel({value});
-parcel.get(0).swap(1);
-// this triggers a change that sets the parcel's value to ['b','a','c'];
-
 parcel.swap(0, 1);
 // this also triggers a change that sets the parcel's value to ['b','a','c'];
 ```
@@ -908,21 +726,15 @@ parcel.swap(0, 1);
 
 ```flow
 swapNext(): void // only on ElementParcels, will swap with next sibling
-swapNext(key: string|number): void // only on IndexedParcels, will swap child with next child
 ```
 
-When called with no arguments, this swaps the current Parcel with its next sibling Parcel, within the current ParentParcel. If called on the last child, it swaps with the first child.
-
-When called with one argument, this swaps the child at the position of `key` with the next sibling Parcel.
+This swaps the current Parcel with its next sibling Parcel, within the current ParentParcel. If called on the last child, it swaps with the first child.
 
 ```js
 let value = ['a','b','c'];
 let parcel = new Parcel({value});
 parcel.get(0).swapNext();
 // this triggers a change that sets the parcel's value to ['b','a','c'];
-
-parcel.swapNext(0);
-// this also triggers a change that sets the parcel's value to ['b','a','c'];
 ```
 
 <IndexedKeys />
@@ -931,21 +743,15 @@ parcel.swapNext(0);
 
 ```flow
 swapPrev(): void // only on ElementParcels, will swap with previous sibling
-swapPrev(key: string|number): void // only on IndexedParcels, will swap child with previous child
 ```
 
-When called with no arguments, this swaps the current Parcel with its previous sibling Parcel, within the current ParentParcel. If called on the first child, it swaps with the last child.
-
-When called with one argument, this swaps the child at the position of `key` with the previous sibling Parcel.
+This swaps the current Parcel with its previous sibling Parcel, within the current ParentParcel. If called on the first child, it swaps with the last child.
 
 ```js
 let value = ['a','b','c'];
 let parcel = new Parcel({value});
 parcel.get(1).swapPrev();
 // this triggers a change that sets the parcel's value to ['b','a','c'];
-
-parcel.swapPrev(1);
-// this also triggers a change that sets the parcel's value to ['b','a','c'];
 ```
 
 <IndexedKeys />
@@ -1040,12 +846,11 @@ Returns true if the parcel is a top level parcel. Read [Parcel types](/parcel-ty
 
 ```flow
 // updates value - only to be used if shape doesn't change
-modifyDown(updater: ParcelValueUpdater): Parcel
-type ParcelValueUpdater = (value: any) => any;
+modifyDown((value: any) => any): Parcel
 
-// updates shape, including meta
-modifyDown(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
-type ParcelShapeUpdater = (parcelShape: ParcelShape) => any;
+// updates shape / meta
+update(asNode((node: ParcelNode) => ParcelNode)): Parcel
+update(asChildNodes((nodes: any) => any): Parcel
 ```
 
 `modifyDown` lets you modify a Parcel's value so that subsequent Parcels in the chain receive and make changes against the modified value. See [Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI) for examples.
@@ -1068,12 +873,11 @@ It does not trigger any changes of its own, it just modifies the values that pas
 
 ```flow
 // updates value - only to be used if shape doesn't change
-modifyUp(updater: ParcelValueUpdater): Parcel
-type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any;
+modifyUp((value: any, changeRequest: ChangeRequest) => any): Parcel
 
-// updates shape, including meta
-modifyUp(shape(shapeUpdater: ParcelShapeUpdater)): Parcel
-type ParcelShapeUpdater = (parcelShape: ParcelShape, changeRequest: ChangeRequest) => any;
+// updates shape / meta
+update(asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode)): Parcel
+update(asChildNodes((nodes: any, changeRequest: ChangeRequest) => any): Parcel
 ```
 
 `modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward.
@@ -1099,18 +903,18 @@ It does not trigger any changes of its own, but awaits a change from below. Valu
 
 #### Cancelling a change
 
-You can also cancel a change by returning [CancelActionMarker](/api/CancelActionMarker) from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
+You can also cancel a change by returning [cancel](/api/cancel) from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
 
 ```js
-import CancelActionMarker from 'dataparcels/CancelActionMarker';
+import cancel from 'dataparcels/cancel';
 // or
-import CancelActionMarker from 'react-dataparcels/CancelActionMarker';
+import cancel from 'react-dataparcels/cancel';
 
 let parcel = new Parcel({
     value: 123
 })
 
-parcel = parcel.modifyUp(value => value === null ? CancelActionMarker : value);
+parcel = parcel.modifyUp(value => value === null ? cancel : value);
 
 parcel.set(456); // this would work, value becomes 123
 parcel.set(null); // this would cause no change
@@ -1223,11 +1027,3 @@ parcel
 ```
 
 ## <DocsSectionHeading>Debug methods</DocsSectionHeading>
-
-### log()
-
-```flow
-log(name: string?): Parcel
-```
-
-Output's the parcel's data to the console each time data flows downward, and outputs the ChangeRequest each time a change has propagated upward.

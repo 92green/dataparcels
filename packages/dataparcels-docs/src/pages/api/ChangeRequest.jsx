@@ -17,8 +17,8 @@ export default () => <Layout>
             'actions',
             '# Methods',
             'hasValueChanged()',
+            'hasDataChanged()',
             'getDataIn()',
-            'toJS()',
             'merge()'
         ]}
     />

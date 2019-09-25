@@ -3597,14 +3597,6 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-dataparcels@^0.24.0:
-  version "0.24.0"
-  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-0.24.0.tgz#d38e47df7724eac19aba5f26c11a2f10c2042237"
-  integrity sha512-QenwteqkSfSyLHTJfDWa6gQIOXF0jWssK/sNKuD2Iyu8LMq+/Fj35paj6kv9co4bLrHL6uLcd02PnOzs2bOCDw==
-  dependencies:
-    "@babel/runtime" "^7.1.5"
-    unmutable "^0.41.1"
-
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -9687,21 +9679,6 @@ react-cool-storage@^0.1.1:
     storage-available "^1.1.0"
     unmutable "^0.39.0"
 
-"react-dataparcels-drag@file:.yalc/react-dataparcels-drag":
-  version "0.24.0-2c04aec0"
-  dependencies:
-    "@babel/runtime" "^7.1.5"
-    react-sortable-hoc "1.4.0"
-
-"react-dataparcels@file:.yalc/react-dataparcels":
-  version "0.24.0-0c46ebfa"
-  dependencies:
-    "@babel/runtime" "^7.1.5"
-    dataparcels "^0.24.0"
-    is-promise "^2.1.0"
-    unmutable "^0.41.1"
-    use-debounce "^1.1.3"
-
 react-dev-utils@^4.2.1:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.3.tgz#5b42d9ea58d5e9e017a2f57a40a8af408a3a46fb"
@@ -9812,14 +9789,6 @@ react-side-effect@^1.1.0:
   dependencies:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
-
-react-sortable-hoc@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-1.4.0.tgz#b477ce700ba755754200a1dabd36e588e2f5608d"
-  dependencies:
-    "@babel/runtime" "^7.2.0"
-    invariant "^2.2.4"
-    prop-types "^15.5.7"
 
 react-spruce@^0.1.0, react-spruce@^0.1.1:
   version "0.1.1"
@@ -11598,15 +11567,6 @@ unmutable@^0.39.0:
     is-plain-object "^2.0.4"
     lodash.range "^3.2.0"
 
-unmutable@^0.41.1:
-  version "0.41.1"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.41.1.tgz#5d67409c6001108ab7deba236004e40d515dd2c7"
-  dependencies:
-    "@babel/runtime" "^7.1.5"
-    fast-deep-equal "^1.0.0"
-    is-plain-object "^2.0.4"
-    lodash.range "^3.2.0"
-
 unmutable@^0.43.1:
   version "0.43.1"
   resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.43.1.tgz#71f8cbca2f8dc04759b60442d9b1626cbecad7be"
@@ -11705,11 +11665,6 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
-
-use-debounce@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-1.1.3.tgz#08b76fd8cc9b107e0a6d6ee8bb6c5fe97a14732f"
-  integrity sha512-pv/8dgE66/Qfp3eltmChJl3qdTZ+aOUqDSHN+vQQgujMa5gfG8GzPATxS5jEUwv7ajv6iFXrfcSpVykmkAgIAw==
 
 use@^3.1.0:
   version "3.1.1"

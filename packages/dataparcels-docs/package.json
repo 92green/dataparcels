@@ -1,22 +1,22 @@
 {
   "name": "dataparcels-docs",
   "private": true,
-  "version": "0.24.2",
+  "version": "0.25.0-alpha.5.0",
   "description": "Dataparcels Documentation",
   "author": "Damien Clarke",
   "license": "MIT",
   "main": "n/a",
   "scripts": {
-    "preinstall": "../../node_modules/.bin/yalc update",
-    "build-docs": "gatsby build",
-    "watch": "gatsby develop"
+    "build-docs": "yarn dedupe-react && gatsby build",
+    "watch": "yarn dedupe-react && gatsby develop",
+    "dedupe-react": "cd ../react-dataparcels && npm link ../dataparcels-docs/node_modules/react && cd ../react-dataparcels-drag && npm link ../dataparcels-docs/node_modules/react && cd ../dataparcels-docs"
   },
   "dependencies": {
-    "dataparcels": "^0.24.0",
+    "dataparcels": "^0.25.0-alpha.5.0",
     "dcme-gatsby": "^0.5.0",
     "dcme-style": "^0.27.4",
     "gatsby": "^2.0.19",
-    "react-dataparcels": "file:.yalc/react-dataparcels",
-    "react-dataparcels-drag": "file:.yalc/react-dataparcels-drag"
+    "react-dataparcels": "^0.25.0-alpha.5.0",
+    "react-dataparcels-drag": "^0.25.0-alpha.5.0"
   }
 }

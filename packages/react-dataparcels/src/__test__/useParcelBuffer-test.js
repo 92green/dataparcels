@@ -98,7 +98,8 @@ describe('useParcelBuffer should use config.parcel', () => {
         expect(result.current[1].actions.length).toBe(0);
     });
 
-    it('should keep inner parcel and buffer contents if outer parcel is different and mergeMode is "rebase"', () => {
+    it('should keep inner parcel and buffer contents if outer parcel is different and frameMeta has rebase = true', () => {
+        let handleChange = jest.fn();
 
         let parcel = new Parcel({
             value: {
@@ -110,7 +111,7 @@ describe('useParcelBuffer should use config.parcel', () => {
         let {result, rerender} = renderHookWithProps({parcel}, ({parcel}) => useParcelBuffer({parcel}));
 
         act(() => {
-            result.current[0].set('abc', 400);
+            result.current[0].get('abc').set(400);
         });
 
         // confirm that set() has worked
@@ -124,10 +125,11 @@ describe('useParcelBuffer should use config.parcel', () => {
                 value: {
                     abc: 200,
                     def: 200
-                }
+                },
+                handleChange
             });
 
-            parcel._frameMeta.mergeMode = "rebase";
+            parcel._frameMeta.rebase = true;
 
             rerender({
                 parcel
@@ -143,6 +145,16 @@ describe('useParcelBuffer should use config.parcel', () => {
 
         // buffer should remain
         expect(result.current[1].actions.length).toBe(1);
+
+        act(() => {
+            result.current[1].submit();
+        });
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange.mock.calls[0][0].value).toEqual({
+            abc: 400,
+            def: 200
+        });
     });
 
 });
@@ -402,6 +414,73 @@ describe('useParcelBuffer should use config.debounce', () => {
         });
 
         expect(handleChange.mock.calls[0][0].value).toBe(456);
+    });
+
+    it('debounce should work when rebase = true', () => {
+        let handleChange = jest.fn();
+
+        let parcel = new Parcel({
+            value: {
+                abc: 100,
+                def: 100
+            },
+            handleChange
+        });
+
+        let {result, rerender} = renderHookWithProps({parcel}, ({parcel}) => useParcelBuffer({
+            parcel,
+            debounce: 20
+        }));
+
+        act(() => {
+            result.current[0].get('abc').set(400);
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(10);
+        });
+
+        // confirm that set() has worked
+        expect(result.current[0].value).toEqual({
+            abc: 400,
+            def: 100
+        });
+
+        act(() => {
+            let parcel = new Parcel({
+                value: {
+                    abc: 200,
+                    def: 200
+                },
+                handleChange
+            });
+
+            parcel._frameMeta.rebase = true;
+
+            rerender({
+                parcel
+            });
+        });
+
+        // actions should be rebased onto new parcel from props
+        // and inner parcel should contain the resulting data
+        expect(result.current[0].value).toEqual({
+            abc: 400,
+            def: 200
+        });
+
+        // buffer should remain
+        expect(result.current[1].actions.length).toBe(1);
+
+        act(() => {
+            jest.advanceTimersByTime(30);
+        });
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange.mock.calls[0][0].value).toEqual({
+            abc: 400,
+            def: 200
+        });
     });
 });
 

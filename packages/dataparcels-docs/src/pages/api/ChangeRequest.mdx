@@ -78,6 +78,14 @@ hasValueChanged(keyPath: Array<string|number>): boolean
 
 Return a boolean indicating if the value at the given `keyPath` has changed any of its data as a result of this ChangeRequest.
 
+### hasDataChanged()
+
+```flow
+hasDataChanged(keyPath: Array<string|number>): boolean
+```
+
+Return a boolean indicating if the value or meta at the given `keyPath` has changed any of its data as a result of this ChangeRequest.
+
 ### getDataIn()
 
 ```flow
@@ -118,24 +126,6 @@ parcel
 
 // ^ sets abc.def to 456
 ```
-
-### toJS()
-
-```flow
-toJS(): Object
-```
-
-Turns the ChangeRequest into a plain object with the following keys and values:
-
-```flow
-{
-    actions: Array<Object>
-    originPath: Array<string|number>,
-    originId: string
-}
-```
-
-Actions are returned as plain object representations of the original actions, by calling `toJS()` on each action.
 
 ### merge()
 

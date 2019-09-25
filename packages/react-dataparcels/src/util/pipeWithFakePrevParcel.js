@@ -3,7 +3,7 @@
 import type {ParcelUpdater} from 'dataparcels';
 
 import Parcel from 'dataparcels';
-import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
+import asRaw from 'dataparcels/asRaw';
 
 export default (prevParcel: ?Parcel, ...pipe: ParcelUpdater[]) => (parcel: Parcel): Parcel => {
     let [changedParcel] = parcel._changeAndReturn((parcel) => {
@@ -11,7 +11,7 @@ export default (prevParcel: ?Parcel, ...pipe: ParcelUpdater[]) => (parcel: Parce
         let setPrevParcel;
         if(prevParcel) {
             let prevParcelData = prevParcel.data;
-            setPrevParcel = dangerouslyUpdateParcelData(() => prevParcelData);
+            setPrevParcel = asRaw(() => prevParcelData);
         }
 
         return parcel

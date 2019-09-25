@@ -22,9 +22,7 @@ test('ChangeRequestReducer should setMeta with empty keyPath', () => {
         type: "setMeta",
         keyPath: [],
         payload: {
-            meta: {
-                abc: 123
-            }
+            abc: 123
         }
     });
     var expectedMeta = {
@@ -50,9 +48,7 @@ test('ChangeRequestReducer should setMeta merge', () => {
         type: "setMeta",
         keyPath: [],
         payload: {
-            meta: {
-                abc: 123
-            }
+            abc: 123
         }
     });
     var expectedMeta = {
@@ -76,9 +72,7 @@ test('ChangeRequestReducer should setMeta with keyPath', () => {
         type: "setMeta",
         keyPath: ["a"],
         payload: {
-            meta: {
-                abc: 123
-            }
+            abc: 123
         }
     });
     var expectedChild = {
@@ -119,9 +113,7 @@ test('ChangeRequestReducer should merge setMeta with keyPath', () => {
         type: "setMeta",
         keyPath: ["a"],
         payload: {
-            meta: {
-                def: 456
-            }
+            def: 456
         }
     });
     var expectedChild = {

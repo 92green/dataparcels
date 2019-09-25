@@ -1,0 +1,197 @@
+import IndexedKeys from 'docs/notes/IndexedKeys.md';
+import ValueUpdater from 'docs/notes/ValueUpdater.md';
+import {Box} from 'dcme-style';
+import {Break} from 'dcme-style';
+import {DocsSectionHeading} from 'dcme-style';
+import {Link} from 'dcme-style';
+import {Message} from 'dcme-style';
+import {Param} from 'dcme-style';
+import {Text} from 'dcme-style';
+import ApiPageIcon from 'component/ApiPageIcon';
+import IconParcelNode from 'assets/parcelshape.gif';
+
+# ParcelNode
+
+<ApiPageIcon>{IconParcelNode}</ApiPageIcon>
+
+ParcelNodes are used via the [asNode](#asNode) and [asChildNodes](#asChildNodes) updater functions.
+
+## asNode
+
+```js
+import asNode from 'dataparcels/asNode';
+import asNode from 'react-dataparcels/asNode';
+```
+
+```flow
+asNode((node: ParcelNode) => ParcelNode)
+```
+
+The `asNode` function is a kind of [parcel updater](/parcel-updaters) that primarily allows for setting [meta](/parcel-meta). It will provide you with your Parcel's value wrapped in a [ParcelNode](/api/ParcelNode), from which you can call `.setMeta()`.
+
+Your updater function must return a ParcelNode.
+
+You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asChildNodes](#asChildNodes) described below.
+
+```js
+.modifyUp(asNode(
+    node => node.setMeta({cool: true})
+))
+```
+
+## asChildNodes
+
+```js
+import asChildNodes from 'dataparcels/asChildNodes';
+import asChildNodes from 'react-dataparcels/asChildNodes';
+```
+
+```flow
+asChildNodes((nodes: any) => any
+```
+
+The `asChildNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
+
+It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asChildNodes()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asChildNodes()` function is being passed into.
+
+The function `asChildNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
+
+```js
+let parcel = new Parcel({
+    value: [1,2,3]
+});
+
+// reverse the parcel's children
+let modifiedParcel = parcel.modifyDown(asChildNodes(
+    shape => shape.slice().reverse() // clones and reverses the shape array
+));
+
+// new value is [3,2,1]
+```
+
+```js
+let parcel = new Parcel({
+    value: {foo: 100}
+});
+
+// set a default value for a child
+let modifiedParcel = parcel.modifyDown(asChildNodes(
+    shape => ({bar: 200, ...shape})
+));
+```
+
+## ParcelNode
+
+```js
+import ParcelNode from 'dataparcels/ParcelNode';
+import ParcelNode from 'react-dataparcels/ParcelNode';
+```
+
+```flow
+new ParcelNode(value?: any);
+```
+
+* <Param name="value" optional type="any" default="undefined" />
+  The value you want to put in the ParcelNode. This value will be changed immutably when change methods are called on the ParcelNode. The data type of the `value` will determine the type of ParcelNode that will be created, and will determine which methods you can use to change the value. Please read <Link to="/parcel-types">Parcel types</Link> for more info.
+
+```js
+// creates a Parcel that contains a value of 123
+let shape = new ParcelNode(123);
+```
+
+## <DocsSectionHeading>Properties</DocsSectionHeading>
+
+### value
+
+```flow
+value: any
+```
+
+Returns the ParcelNode's value.
+
+### meta
+
+```flow
+meta: Object
+```
+Returns an object containing the ParcelNodes's meta data.
+
+### data
+
+```flow
+data: Object
+```
+
+Returns an object containing the ParcelNodes's data, which includes:
+* `value` - The ParcelNodes's value
+* `meta` - The ParcelNodes's [meta object](/parcel-meta)
+* `key` - The ParcelNodes's [key](/parcel-keys)
+* `child` - The ParcelNodes's child information, which includes any `meta`, `key` and `child` data related to the `value`s children.
+
+### key
+
+```flow
+key: string
+```
+
+Returns the ParcelNode's `key`. Dataparcels automatically gives unique keys to all children of a parent parcel. See [parcel keys](/parcel-keys) for more info.
+
+## <DocsSectionHeading>Methods</DocsSectionHeading>
+
+### get()
+
+```flow
+get(key: string|number): ParcelNode // only on ParentParcels
+get(key: string|number, notSetValue: any): ParcelNode // only on ParentParcels
+```
+
+Returns a ParcelNode containing the value associated with the provided key / index.
+If the key / index doesn't exist, a ParcelNode with a value of `notSetValue` will be returned.
+If `notSetValue` is not provided then a ParcelNode with a value of
+ `undefined` will be returned.
+
+```js
+let value = {
+    abc: 123,
+    def: 456
+};
+let node = new ParcelNode(value);
+node.get('abc').value; // returns 123
+node.get('xyz').value; // returns undefined
+node.get('xyz', 789).value; // returns 789
+```
+
+#### get() with indexed values
+
+<IndexedKeys />
+
+```js
+let value = ['abc', 'def', 'ghi'];
+let node = new ParcelNode(value);
+node.get(0).value; // returns 'abc'
+node.get(-1).value; // returns 'ghi'
+node.get('#a').value; // returns 'abc'
+```
+
+### update()
+
+```flow
+// updates value - only to be used if shape doesn't change
+update((value: any) => any): ParcelNode
+
+// updates shape / meta
+update(asNode((node: ParcelNode) => ParcelNode)): ParcelNode
+update(asChildNodes(value: any) => any): ParcelNode
+```
+
+Calling `update()` with one argument will replace the current value in the ParcelNode with the result of the value updater provided to it. The value updater is passed the current value of the ParcelNode, from which you can return the intended replacement value.
+
+<ValueUpdater />
+
+### setMeta()
+
+```flow
+setMeta(partialMeta: Object): ParcelNode
+```
+
+Sets `meta` at the current parcel's location. Values on the `partialMeta` object are merged shallowly onto any existing `meta`. Read [Parcel meta](/parcel-meta) for more info.

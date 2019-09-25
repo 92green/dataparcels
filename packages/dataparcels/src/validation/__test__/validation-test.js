@@ -1,10 +1,8 @@
 // @flow
 import validation from '../validation';
 
-// _dangerouslyUpdate
-
-test('validation should use a dangerous updater, so it will work in beforeChange', () => {
-    expect(validation({})._dangerouslyUpdate).toBe(true);
+test('validation should use a raw updater, so it will work in beforeChange', () => {
+    expect(validation({})._asRaw).toBe(true);
 });
 
 

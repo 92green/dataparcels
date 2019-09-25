@@ -12,11 +12,16 @@ export default () => <Layout>
             '# Params',
             'value',
             'updateValue',
+            'rebase',
             'onChange',
-            'debounce',
+            'onChangeUseResult',
             'beforeChange',
             '# Returns',
-            'parcel'
+            'parcel',
+            'parcelControl',
+            '# ParcelHookControl',
+            'valueStatus',
+            'changeStatus'
         ]}
     />
 </Layout>;

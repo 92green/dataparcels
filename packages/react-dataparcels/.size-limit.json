@@ -1,0 +1,74 @@
+[
+    {
+        "limit": "10.3 KB",
+        "path": "lib/index.js"
+    },
+    {
+        "limit": "0.6 KB",
+        "path": "Action.js"
+    },
+    {
+        "limit": "0.1 KB",
+        "path": "cancel.js"
+    },
+    {
+        "limit": "7.4 KB",
+        "path": "ChangeRequest.js"
+    },
+    {
+        "limit": "0.1 KB",
+        "path": "deleted.js"
+    },
+    {
+        "limit": "5.9 KB",
+        "path": "ParcelNode.js"
+    },
+    {
+        "limit": "6 KB",
+        "path": "asNode.js"
+    },
+    {
+        "limit": "6 KB",
+        "path": "asChildNodes.js"
+    },
+    {
+        "limit": "0.1 KB",
+        "path": "asRaw.js"
+    },
+    {
+        "limit": "5.2 KB",
+        "path": "validation.js"
+    },
+    {
+        "limit": "0.5 KB",
+        "path": "asyncValue.js"
+    },
+    {
+        "limit": "10.9 KB",
+        "path": "asyncChange.js"
+    },
+    {
+        "limit": "13 KB",
+        "path": "ParcelBoundary.js"
+    },
+    {
+        "limit": "13.5 KB",
+        "path": "ParcelBoundaryHoc.js"
+    },
+    {
+        "limit": "11.5 KB",
+        "path": "ParcelHoc.js"
+    },
+    {
+        "limit": "13 KB",
+        "path": "useParcelBuffer.js"
+    },
+    {
+        "limit": "13.7 KB",
+        "path": "useParcelForm.js"
+    },
+    {
+        "limit": "11 KB",
+        "path": "useParcelState.js"
+    }
+]

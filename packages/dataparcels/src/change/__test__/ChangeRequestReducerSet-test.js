@@ -19,9 +19,7 @@ test('ChangeRequestReducer should set with empty keyPath', () => {
     };
     var action = new Action({
         type: "set",
-        payload: {
-            value: 3
-        }
+        payload: 3
     });
 
     var expectedData = {
@@ -66,9 +64,7 @@ test('ChangeRequestReducer should set with empty keyPath and clear existing chil
     };
     var action = new Action({
         type: "set",
-        payload: {
-            value: 3
-        }
+        payload: 3
     });
 
     var expectedData = {
@@ -107,9 +103,7 @@ test('ChangeRequestReducer should set with keyPath of 1 element', () => {
     var action = new Action({
         type: "set",
         keyPath: ["a"],
-        payload: {
-            value: 3
-        }
+        payload: 3
     });
 
     var expectedData = {
@@ -170,9 +164,7 @@ test('ChangeRequestReducer should clear child from set key', () => {
     var action = new Action({
         type: "set",
         keyPath: ["a"],
-        payload: {
-            value: 3
-        }
+        payload: 3
     });
 
     var expectedData = {
@@ -224,9 +216,7 @@ test('ChangeRequestReducer should set with keyPath of 2 elements', () => {
     var action = new Action({
         type: "set",
         keyPath: ["a", "b"],
-        payload: {
-            value: 3
-        }
+        payload: 3
     });
 
     var expectedData = {
@@ -275,9 +265,7 @@ test('ChangeRequestReducer should set with keyPath of 2 elements on arrays', () 
     var action = new Action({
         type: "set",
         keyPath: ["#b", "#c"],
-        payload: {
-            value: 4
-        }
+        payload: 4
     });
 
     var expectedData = {
@@ -336,9 +324,7 @@ test('ChangeRequestReducer should set with an unkeyed array and give it keys', (
     var action = new Action({
         type: "set",
         keyPath: [],
-        payload: {
-            value: [1,2,3]
-        }
+        payload: [1,2,3]
     });
 
     var expectedData = {
@@ -379,9 +365,7 @@ test('ChangeRequestReducer should set (with a keyPath) with an unkeyed array and
     var action = new Action({
         type: "set",
         keyPath: ["a"],
-        payload: {
-            value: [1,2,3]
-        }
+        payload: [1,2,3]
     });
 
     var expectedData = {

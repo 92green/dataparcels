@@ -32,7 +32,7 @@ let [innerParcel, control] = useParcelBuffer({
     // optional
     buffer?: boolean,
     debounce?: number,
-    beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
+    beforeChange?: ParcelUpdater|ParcelUpdater[]
 });
 ```
 
@@ -48,6 +48,16 @@ parcel: Parcel
 ```
 
 The useParcelBuffer hook must be passed a `parcel`, the Parcel which the buffer will apply to.
+
+#### Behaviour notes
+
+Whenever a useParcelBuffer hook receives a new Parcel via props, its default behaviour is to:
+- update to contain the new Parcel’s data
+- forget about all its buffered changes
+
+This is safe default behaviour because changes in the buffer may not be compatible with the new Parcel's data shape. However it may be user unfriendly in some cases, depending on when and how often the parcel updates.
+
+If you would like to keep the changes in the buffer, and you know that buffered changes will always be compatible with any new Parcel's data shape, consider using [useParcelForm.rebase](/api/useParcelForm#rebase) or [useParcelState.rebase](/api/useParcelState#rebase).
 
 ### buffer
 
@@ -78,10 +88,11 @@ The useParcelBuffer hooks waits until no new changes have occured for `debounce`
 ### beforeChange
 
 ```flow
-beforeChange?: ParcelValueUpdater|ParcelValueUpdater[] // optional
+beforeChange?: ParcelUpdater|ParcelUpdater[] // optional
 
-type ParcelValueUpdater = (value: any, changeRequest: ChangeRequest) => any
-type ParcelValueUpdater = shape((parcelShape: ParcelShape, changeRequest: ChangeRequest) => any);
+type ParcelUpdater = (value: any, changeRequest: ChangeRequest) => any
+type ParcelUpdater = asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode);
+type ParcelUpdater = asChildNodes((nodes: any, changeRequest: ChangeRequest) => any);
 ```
 
 The `beforeChange` parameter accepts either a single function, or an array of functions. Whenever a new `parcel` is taken into useParcelBuffer from params, and whenever the useParcelBuffer hook recieves a change from below, the change is passed through each `beforeChange` function.

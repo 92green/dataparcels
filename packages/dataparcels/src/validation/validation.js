@@ -3,12 +3,11 @@
 import type {ParcelDataEvaluator} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
-import dangerouslyUpdateParcelData from '../parcelData/dangerouslyUpdateParcelData';
+import asRaw from '../parcelData/asRaw';
 import parcelDataMap from '../parcelData/map';
 import parcelDataSetMeta from '../parcelData/setMeta';
 import parcelDataUpdate from '../parcelData/update';
 
-import composeWith from 'unmutable/composeWith';
 import map from 'unmutable/map';
 import pipeWith from 'unmutable/pipeWith';
 import toArray from 'unmutable/toArray';
@@ -25,7 +24,7 @@ type ValidationRuleMap = {
 };
 
 export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
-    return dangerouslyUpdateParcelData((parcelData) => {
+    return asRaw((parcelData) => {
         let invalidList = [];
         let topLevelValue = parcelData.value;
         let meta = parcelData.meta || {};
@@ -37,26 +36,23 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
 
         let mapValidationRuleApplier = (validator: ValidationRule|ValidationRule[], path: string): ParcelDataEvaluator => {
             let keyPath = path.split(".");
+            let initial = (parcelData) => {
+                let invalid = []
+                    .concat(validator)
+                    .reduce((invalid, validator) => invalid || validator(parcelData.value, {keyPath, topLevelValue}), "");
 
-            return composeWith(
-                ...keyPath.map((key) => key === "*"
-                    ? (next) => parcelDataMap(next)
-                    : (next) => parcelDataUpdate(key, next)
-                ),
-                (parcelData) => {
-                    let invalid = []
-                        .concat(validator)
-                        .reduce((invalid, validator) => invalid || validator(parcelData.value, {keyPath, topLevelValue}), "");
-
-                    if(invalid && showInvalid) {
-                        invalidList.push(invalid);
-                    } else {
-                        invalid = undefined;
-                    }
-
-                    return parcelDataSetMeta({invalid})(parcelData);
+                if(invalid && showInvalid) {
+                    invalidList.push(invalid);
+                } else {
+                    invalid = undefined;
                 }
-            );
+
+                return parcelDataSetMeta({invalid})(parcelData);
+            };
+
+            return keyPath.reduceRight((next, key) => {
+                return key === "*" ? parcelDataMap(next) : parcelDataUpdate(key, next);
+            }, initial);
         };
 
         let updateMeta = (parcelData) => {

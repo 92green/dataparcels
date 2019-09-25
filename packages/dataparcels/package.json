@@ -1,6 +1,6 @@
 {
   "name": "dataparcels",
-  "version": "0.24.0",
+  "version": "0.25.0-alpha.5.0",
   "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "MIT",
@@ -12,12 +12,13 @@
   "files": [
     "lib",
     "Action.js",
-    "CancelActionMarker.js",
+    "cancel.js",
     "ChangeRequest.js",
-    "dangerouslyUpdateParcelData.js",
-    "DeletedParcelMarker.js",
-    "ParcelShape.js",
-    "shape.js",
+    "deleted.js",
+    "ParcelNode.js",
+    "asNode.js",
+    "asChildNodes.js",
+    "asRaw.js",
     "validation.js"
   ],
   "bugs": {
@@ -37,7 +38,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
-    "unmutable": "^0.41.1"
+    "unmutable": "^0.46.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
@@ -47,6 +48,6 @@
     "immutable": "^4.0.0-rc.12",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "size-limit": "^0.21.1"
+    "size-limit": "1.0.1"
   }
 }

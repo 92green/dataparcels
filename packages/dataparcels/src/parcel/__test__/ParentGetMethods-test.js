@@ -53,9 +53,7 @@ test('ParentParcel.get(key) should return a new child Parcel', () => {
     var expectedAction = {
         type: "set",
         keyPath: ["a"],
-        payload: {
-            value: 2
-        }
+        payload: 2
     };
 
     var childParcel = new Parcel(data).get("a");
@@ -142,9 +140,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
     var expectedAction = {
         type: "set",
         keyPath: ["a", "b"],
-        payload: {
-            value: 6
-        }
+        payload: 6
     };
 
     var childParcel = new Parcel(data).get("a").get("b");
@@ -242,9 +238,7 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => 
     var expectedAction = {
         type: "set",
         keyPath: ["a", "c", "d"],
-        payload: {
-            value: 456
-        }
+        payload: 456
     };
 
     var descendantParcel = new Parcel(data).getIn(["a", "c", "d"]);
@@ -301,67 +295,6 @@ test('ParentParcel.children() should get child parcels in original collection wi
         b: 2,
         c: 3
     });
-});
-
-
-test('ParentParcel.toObject() should make an object', () => {
-    var data = {
-        value: {a:1,b:2,c:3},
-        meta: {
-            a: {a:4,b:5,c:6}
-        }
-    };
-
-    var expectedObject = {a:1,b:2,c:3};
-    var parcel = new Parcel(data);
-    var obj = map(ii => ii.value)(parcel.toObject());
-
-    expect(expectedObject).toEqual(obj);
-});
-
-test('ParentParcel.toObject() should make an object from an array', () => {
-    var data = {
-        value: [1,2,3],
-        meta: {
-            a: {a:4,b:5,c:6}
-        }
-    };
-
-    var expectedObject = {"0":1,"1":2,"2":3};
-    var parcel = new Parcel(data);
-    var obj = map(ii => ii.value)(parcel.toObject());
-
-    expect(obj).toEqual(expectedObject);
-
-});
-
-
-test('ParentParcel.toObject() should make an object with a mapper', () => {
-    var data = {
-        value: {a:1,b:2,c:3},
-        meta: {
-            a: {a:4,b:5,c:6}
-        }
-    };
-
-    var expectedObject = {a:2,b:3,c:4};
-    var parcel = new Parcel(data);
-    var expectedPassedArgs = [
-        {value: 1, key: "a", iter: parcel},
-        {value: 2, key: "b", iter: parcel},
-        {value: 3, key: "c", iter: parcel}
-    ];
-
-    var passedArgs = [];
-
-    var obj = parcel.toObject((pp, key, iter) => {
-        passedArgs.push({value: pp.value, key, iter});
-        return pp.value + 1;
-    });
-
-    expect(expectedObject).toEqual(obj);
-    expect(passedArgs).toEqual(passedArgs);
-
 });
 
 test('ParentParcel.toArray() should make an array', () => {

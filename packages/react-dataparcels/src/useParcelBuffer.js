@@ -3,6 +3,8 @@
 import type ChangeRequest from 'dataparcels/ChangeRequest';
 import type {ParcelValueUpdater} from 'dataparcels';
 
+// $FlowFixMe - useRef is a named export of react
+import {useRef} from 'react';
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
 
@@ -10,7 +12,7 @@ import useDebouncedCallback from 'use-debounce/lib/callback';
 import pipe from 'unmutable/pipe';
 
 import Parcel from 'dataparcels';
-import dangerouslyUpdateParcelData from 'dataparcels/dangerouslyUpdateParcelData';
+import asRaw from 'dataparcels/asRaw';
 import setMeta from 'dataparcels/lib/parcelData/setMeta';
 
 import ApplyBeforeChange from './util/ApplyBeforeChange';
@@ -18,12 +20,6 @@ import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 import pipeWithFakePrevParcel from './util/pipeWithFakePrevParcel';
 import useParcelBufferInternalBuffer from './useParcelBufferInternalBuffer';
 import useParcelBufferInternalKeepValue from './useParcelBufferInternalKeepValue';
-
-const removeInternalMeta = (action) => {
-    let {_submit, _reset} = action.payload.meta || {};
-    let isInternalMeta = action.type === 'setMeta' && (_submit || _reset);
-    return !isInternalMeta;
-};
 
 type Params = {
     parcel: Parcel,
@@ -36,6 +32,9 @@ type Params = {
 type Return = [Parcel, {[key: string]: any}];
 
 export default (params: Params): Return => {
+
+    let parcelRef = useRef();
+    parcelRef.current = params.parcel;
 
     const applyBeforeChange = ApplyBeforeChange(params.beforeChange);
 
@@ -59,7 +58,7 @@ export default (params: Params): Return => {
     // 2. always add and set buffer meta to be passed to innerParcel
 
     const applyBufferMeta = (parcel) => parcel
-        .modifyDown(dangerouslyUpdateParcelData(
+        .modifyDown(asRaw(
             setMeta({
                 _submit: false,
                 _reset: false
@@ -109,7 +108,7 @@ export default (params: Params): Return => {
                 internalBuffer.unshift(changeRequest);
             };
 
-            params.parcel.dispatch(changeRequest);
+            parcelRef.current.dispatch(changeRequest);
         }
         // ^ submits by dispatching the buffered change request
     });
@@ -140,13 +139,14 @@ export default (params: Params): Return => {
 
             // remember the origin of the last change
             // useParcelBufferInternalKeepValue needs it
-            newParcel._frameMeta = {
-                lastOriginId: changeRequest.originId
-            };
+            newParcel._frameMeta.lastOriginId = changeRequest.originId;
 
             // remove buffer actions meta from change request
             // and push any remaining change into the buffer
-            let actions = changeRequest._actions.filter(removeInternalMeta);
+            let actions = changeRequest._actions.filter((action) => {
+                return !(action.type === 'setMeta' && (action.payload._submit || action.payload._reset));
+            });
+
             if(actions.length > 0) {
                 internalBuffer.push(changeRequest._create({actions}));
             }
@@ -175,7 +175,7 @@ export default (params: Params): Return => {
         setOuterParcel(newOuterParcel);
 
         // clear buffer if it exists and if we aren't rebasing
-        if(internalBuffer.bufferState && newOuterParcel._frameMeta.mergeMode !== "rebase") {
+        if(internalBuffer.bufferState && !newOuterParcel._frameMeta.rebase) {
             internalBuffer.reset();
         }
 
