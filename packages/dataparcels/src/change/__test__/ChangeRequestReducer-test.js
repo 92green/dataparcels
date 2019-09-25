@@ -423,3 +423,37 @@ test('ChangeRequestReducer should throw error if invalid action step type is use
     })
         .toThrowError(`"wrong" is not a valid action step type`);
 });
+
+test('ChangeRequestReducer should process deep actions that are "parent actions"', () => {
+    var data = {
+        value: {
+            abc: 123,
+            def: 456
+        },
+        key: "^",
+        child: undefined
+    };
+
+    let actions = [
+        ActionCreators
+            .deleteSelf()
+            ._addStep({
+                type: 'mu',
+                updater: update('value', value => value)
+            })
+            ._addStep({
+                type: 'md',
+                updater: update('value', value => value)
+            })
+            ._addStep({
+                type: 'get',
+                key: 'abc'
+            })
+    ];
+
+    let expectedValue = {
+        def: 456
+    };
+
+    expect(makeReducer(actions)(data).value).toEqual(expectedValue);
+});

@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.3 KB",
+        "limit": "10.4 KB",
         "path": "lib/index.js"
     },
     {
@@ -12,7 +12,7 @@
         "path": "cancel.js"
     },
     {
-        "limit": "7.4 KB",
+        "limit": "7.5 KB",
         "path": "ChangeRequest.js"
     },
     {
@@ -44,7 +44,7 @@
         "path": "asyncValue.js"
     },
     {
-        "limit": "10.9 KB",
+        "limit": "11 KB",
         "path": "asyncChange.js"
     },
     {
