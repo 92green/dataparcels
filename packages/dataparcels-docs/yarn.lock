@@ -3070,9 +3070,14 @@ command-exists@^1.2.2:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/command-exists/-/command-exists-1.2.8.tgz#715acefdd1223b9c9b37110a149c6392c2852291"
 
-commander@^2.11.0, commander@^2.19.0, commander@^2.8.1, commander@^2.9.0, commander@~2.20.0:
+commander@^2.11.0, commander@^2.19.0, commander@^2.8.1, commander@^2.9.0:
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
+
+commander@~2.20.3:
+  version "2.20.3"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
+  integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
 common-tags@^1.4.0:
   version "1.8.0"
@@ -3596,6 +3601,14 @@ data-urls@^1.0.0:
     abab "^2.0.0"
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
+
+dataparcels@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-1.0.1.tgz#e0061772dffaca43c26bf6fd1c63d8341c05eeb7"
+  integrity sha512-ZFFWb3zGhLZ3nCrfQEszkuDgq8bUTno10q3AQ3AMaNlRUZhVqWWXNLXVDVYfTcJtLz2ToYCkFeRkn+VfZLK8yg==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    unmutable "^0.46.1"
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -5847,9 +5860,9 @@ handle-thing@^2.0.0:
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.0.tgz#0e039695ff50c93fc288557d696f3c1dc6776754"
 
 handlebars@^4.0.3:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.1.2.tgz#b6b37c1ced0306b221e094fc7aca3ec23b131b67"
-  integrity sha512-nvfrjqvt9xQ8Z/w0ijewdD/vvWDTOweBUm96NTr66Wfvo1mJenBLwcYmPs3TIBP5ruzYGD7Hx/DaM9RmhroGPw==
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.5.3.tgz#5cf75bd8714f7605713511a56be7c349becb0482"
+  integrity sha512-3yPecJoJHK/4c6aZhSvxOyG4vJKDshV36VHp0iVCDVh7o9w2vwi3NSnL2MMPj3YdduqaBcu7cGbggJQM0br9xA==
   dependencies:
     neo-async "^2.6.0"
     optimist "^0.6.1"
@@ -8226,11 +8239,7 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-neo-async@^2.5.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
-
-neo-async@^2.6.0:
+neo-async@^2.5.0, neo-async@^2.6.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
@@ -9679,6 +9688,26 @@ react-cool-storage@^0.1.1:
     storage-available "^1.1.0"
     unmutable "^0.39.0"
 
+react-dataparcels-drag@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-dataparcels-drag/-/react-dataparcels-drag-1.0.1.tgz#638cfa15fb4bb3c6925c8908dcb485ba251148b6"
+  integrity sha512-bByydqCl5guRA4pjYuHH+WmHAHrdUgWr7q/Txf4Qh9m88yPRyQyWt7BdY34dSmHUrpx6/0j38KSnNIJS3oWAjw==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    react-sortable-hoc "1.4.0"
+    unmutable "^0.46.1"
+
+react-dataparcels@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-dataparcels/-/react-dataparcels-1.0.1.tgz#60ace16033eae1e21322d2447de107157bbcdcf1"
+  integrity sha512-vL76ULo+Fq36iZ6Z2c3IPtXY52GtIEpaLNYz7xMmy0qpQ/rszaEItns7hA19U///esCwVhD561Qlh5RaL/VvNQ==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    dataparcels "^1.0.1"
+    is-promise "^2.1.0"
+    unmutable "^0.46.1"
+    use-debounce "^1.1.3"
+
 react-dev-utils@^4.2.1:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.3.tgz#5b42d9ea58d5e9e017a2f57a40a8af408a3a46fb"
@@ -9789,6 +9818,15 @@ react-side-effect@^1.1.0:
   dependencies:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
+
+react-sortable-hoc@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-1.4.0.tgz#b477ce700ba755754200a1dabd36e588e2f5608d"
+  integrity sha512-4++hdwMTrzpOHcqndi2M2gEsqgoGMGmmYzs3wp/xZdap/d8oT2yUR3m6STNi1d1trRyl9Ud0C54agbYH7XdQAQ==
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    invariant "^2.2.4"
+    prop-types "^15.5.7"
 
 react-spruce@^0.1.0, react-spruce@^0.1.1:
   version "0.1.1"
@@ -10793,6 +10831,7 @@ source-map@^0.4.2:
 source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
+  integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
 source-map@^0.7.3:
   version "0.7.3"
@@ -11449,11 +11488,11 @@ uc.micro@^1.0.1, uc.micro@^1.0.5:
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.6.tgz#9c411a802a409a91fc6cf74081baba34b24499ac"
 
 uglify-js@^3.1.4:
-  version "3.5.15"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.5.15.tgz#fe2b5378fd0b09e116864041437bff889105ce24"
-  integrity sha512-fe7aYFotptIddkwcm6YuA0HmknBZ52ZzOsUxZEdhhkSsz7RfjHDX2QDxwKTiv4JQ5t5NhfmpgAK+J7LiDhKSqg==
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.7.3.tgz#f918fce9182f466d5140f24bb0ff35c2d32dcc6a"
+  integrity sha512-7tINm46/3puUA4hCkKYo4Xdts+JDaVC9ZPRcG8Xw9R4nhO/gZgUM3TENq8IF4Vatk8qCig4MzP/c8G4u2BkVQg==
   dependencies:
-    commander "~2.20.0"
+    commander "~2.20.3"
     source-map "~0.6.1"
 
 unc-path-regex@^0.1.2:
@@ -11576,6 +11615,16 @@ unmutable@^0.43.1:
     is-plain-object "^2.0.4"
     lodash.range "^3.2.0"
 
+unmutable@^0.46.1:
+  version "0.46.1"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.46.1.tgz#af1e4c5bec4905bd8d288be45bd215f7e4d5ccb1"
+  integrity sha512-rd1q64OKPXUWkJOt2N619zHwu7FdRNgtmyNdi3mzH/TmT52/QmoJShjvU+7X3CwIfElmlOEVl2dapxMHhJ49dw==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    fast-deep-equal "^1.0.0"
+    is-plain-object "^2.0.4"
+    lodash.range "^3.2.0"
+
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -11665,6 +11714,11 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-debounce@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-1.1.3.tgz#08b76fd8cc9b107e0a6d6ee8bb6c5fe97a14732f"
+  integrity sha512-pv/8dgE66/Qfp3eltmChJl3qdTZ+aOUqDSHN+vQQgujMa5gfG8GzPATxS5jEUwv7ajv6iFXrfcSpVykmkAgIAw==
 
 use@^3.1.0:
   version "3.1.1"
