@@ -55,7 +55,7 @@ export default (params: Params): Return => {
         value,
         updateValue,
         rebase,
-        onChange: asyncChange(onSubmit),
+        onChange: onSubmit && asyncChange(onSubmit),
         onChangeUseResult: onSubmitUseResult
     });
 

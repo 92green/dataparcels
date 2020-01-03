@@ -18,7 +18,7 @@ type Params = {
     value: any,
     updateValue?: boolean,
     rebase?: boolean,
-    onChange?: OnChangeFunction|{sideEffectHook: Function},
+    onChange?: ?OnChangeFunction|{sideEffectHook: Function},
     onChangeUseResult?: boolean,
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
 };
