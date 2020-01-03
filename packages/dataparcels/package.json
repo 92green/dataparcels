@@ -12,13 +12,13 @@
   "files": [
     "lib",
     "Action.js",
+    "asChildNodes.js",
+    "asNode.js",
+    "asRaw.js",
     "cancel.js",
     "ChangeRequest.js",
     "deleted.js",
     "ParcelNode.js",
-    "asNode.js",
-    "asChildNodes.js",
-    "asRaw.js",
     "validation.js"
   ],
   "bugs": {
