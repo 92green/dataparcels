@@ -19,13 +19,11 @@ import ApplyBeforeChange from './util/ApplyBeforeChange';
 import ParcelBoundaryEquals from './util/ParcelBoundaryEquals';
 import pipeWithFakePrevParcel from './util/pipeWithFakePrevParcel';
 import useParcelBufferInternalBuffer from './useParcelBufferInternalBuffer';
-import useParcelBufferInternalKeepValue from './useParcelBufferInternalKeepValue';
 
 type Params = {
     parcel: Parcel,
     buffer?: boolean,
     debounce?: number,
-    keepValue?: boolean,
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
 };
 
@@ -46,8 +44,6 @@ export default (params: Params): Return => {
     const [outerParcel, setOuterParcel] = useState(null);
     // innerParcel can deviate from props
     const [innerParcel, setInnerParcel] = useState(null);
-    // shouldKeepValue
-    const shouldKeepValue = useParcelBufferInternalKeepValue(params);
 
     //
     // inner parcel prep
@@ -69,31 +65,6 @@ export default (params: Params): Return => {
         applyBeforeChange,
         applyBufferMeta
     );
-
-    const prepareKeepValue = (parcel: Parcel): Parcel => {
-        // set existing value and child on the new parcel from props
-        let data = {
-            ...parcel.data,
-            value: innerParcel.value,
-            child: innerParcel.child
-        };
-
-        let [changedParcel] = parcel._changeAndReturn(
-            parcel => parcel._setData(data)
-        );
-
-        return changedParcel;
-    };
-
-    const prepareInnerParcelFromOuter = () => {
-        // if keepValue is used, beforeChange is ignored
-        if(params.keepValue) {
-            return shouldKeepValue ? prepareKeepValue : parcel => parcel;
-        }
-        return pipeWithFakePrevParcel(outerParcel, applyBeforeChange);
-        // ^ this runs a parcel through beforeChange immediately
-        // shoving outerParcel in as a fake previous value
-    };
 
     //
     // buffer ref and functions
@@ -135,7 +106,7 @@ export default (params: Params): Return => {
     if(!outerParcel || !ParcelBoundaryEquals(params.parcel, outerParcel)) {
 
         const handleChange = (newParcel: Parcel, changeRequest: ChangeRequest) => {
-            const {debounce, buffer = true, keepValue} = params;
+            const {debounce, buffer = true} = params;
 
             // remember the origin of the last change
             // useParcelBufferInternalKeepValue needs it
@@ -160,9 +131,6 @@ export default (params: Params): Return => {
             } else {
                 // if no buffer, just propagate it immediately
                 internalBuffer.submit();
-                // if keepValue is true, the buffer is in change of its own state
-                // rather than waiting for new props containing the new value
-                keepValue && setInnerParcel(newParcel.pipe(applyModifiers));
             }
 
             // trigger buffer actions if meta says so
@@ -183,7 +151,7 @@ export default (params: Params): Return => {
         // completely isolated from outer parcels chain
         newInnerParcel = params.parcel
             ._boundarySplit({handleChange})
-            .pipe(prepareInnerParcelFromOuter())
+            .pipe(pipeWithFakePrevParcel(outerParcel, applyBeforeChange))
             ._changeAndReturn(parcel => {
                 // apply buffered changes to new parcel from props
                 let changeRequest = internalBuffer.bufferState;
