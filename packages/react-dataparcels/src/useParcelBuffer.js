@@ -108,10 +108,6 @@ export default (params: Params): Return => {
         const handleChange = (newParcel: Parcel, changeRequest: ChangeRequest) => {
             const {debounce, buffer = true} = params;
 
-            // remember the origin of the last change
-            // useParcelBufferInternalKeepValue needs it
-            newParcel._frameMeta.lastOriginId = changeRequest.originId;
-
             // remove buffer actions meta from change request
             // and push any remaining change into the buffer
             let actions = changeRequest._actions.filter((action) => {
