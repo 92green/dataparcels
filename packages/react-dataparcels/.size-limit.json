@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.4 KB",
+        "limit": "10.5 KB",
         "path": "lib/index.js"
     },
     {
@@ -44,7 +44,7 @@
         "path": "asyncValue.js"
     },
     {
-        "limit": "11 KB",
+        "limit": "11.1 KB",
         "path": "asyncChange.js"
     },
     {
@@ -56,7 +56,7 @@
         "path": "ParcelBoundaryHoc.js"
     },
     {
-        "limit": "11.5 KB",
+        "limit": "11.6 KB",
         "path": "ParcelHoc.js"
     },
     {
@@ -64,7 +64,7 @@
         "path": "useParcelBuffer.js"
     },
     {
-        "limit": "13.7 KB",
+        "limit": "13.8 KB",
         "path": "useParcelForm.js"
     },
     {
