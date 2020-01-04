@@ -19,6 +19,7 @@
     "ChangeRequest.js",
     "deleted.js",
     "ParcelNode.js",
+    "translate.js",
     "validation.js"
   ],
   "bugs": {

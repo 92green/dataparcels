@@ -36,6 +36,10 @@
         "path": "asRaw.js"
     },
     {
+        "limit": "6.1 KB",
+        "path": "translate.js"
+    },
+    {
         "limit": "5.2 KB",
         "path": "validation.js"
     }
