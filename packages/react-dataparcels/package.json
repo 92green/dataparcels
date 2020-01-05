@@ -29,6 +29,7 @@
     "useParcelBuffer.js",
     "useParcelForm.js",
     "useParcelState.js",
+    "translate.js",
     "validation.js"
   ],
   "bugs": {

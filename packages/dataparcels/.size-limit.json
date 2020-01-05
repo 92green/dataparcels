@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.4 KB",
+        "limit": "10.5 KB",
         "path": "lib/index.js"
     },
     {
@@ -34,6 +34,10 @@
     {
         "limit": "0.1 KB",
         "path": "asRaw.js"
+    },
+    {
+        "limit": "6.1 KB",
+        "path": "translate.js"
     },
     {
         "limit": "5.2 KB",

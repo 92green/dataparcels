@@ -10,6 +10,7 @@ import ParcelNode from '../ParcelNode';
 import asNode from '../asNode';
 import asChildNodes from '../asChildNodes';
 import cancel from '../cancel';
+import translate from '../translate';
 import validation from '../validation';
 
 // react-dataparcels
@@ -32,6 +33,7 @@ import InternalParcelNode from 'dataparcels/ParcelNode';
 import InternalAsNode from 'dataparcels/asNode';
 import InternalAsNodes from 'dataparcels/asChildNodes';
 import Internalcancel from 'dataparcels/cancel';
+import InternalTranslate from 'dataparcels/translate';
 import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
@@ -78,6 +80,10 @@ test('/asChildNodes should export asChildNodes', () => {
 
 test('/cancel should export cancel', () => {
     expect(cancel).toBe(Internalcancel);
+});
+
+test('/translate should export translate', () => {
+    expect(translate).toBe(InternalTranslate);
 });
 
 test('/validation should export validation', () => {
