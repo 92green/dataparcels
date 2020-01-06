@@ -1,6 +1,6 @@
 {
   "name": "react-dataparcels",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "MIT",
@@ -13,6 +13,10 @@
     "lib",
     "Action.js",
     "asyncChange.js",
+    "asChildNodes.js",
+    "asNode.js",
+    "asRaw.js",
+    "asyncChange.js",
     "asyncValue.js",
     "cancel.js",
     "ChangeRequest.js",
@@ -22,10 +26,8 @@
     "ParcelHoc.js",
     "ParcelNode.js",
     "asChildNodes.js",
-    "asRaw.js",
     "useParcelBuffer.js",
     "useParcelForm.js",
-    "useParcelSideEffect.js",
     "useParcelState.js",
     "validation.js"
   ],
@@ -46,7 +48,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
-    "dataparcels": "^1.0.1",
+    "dataparcels": "^1.0.2",
     "is-promise": "^2.1.0",
     "unmutable": "^0.46.1",
     "use-debounce": "^1.1.3"
