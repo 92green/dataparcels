@@ -5,6 +5,7 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
 import pipe from 'unmutable/lib/util/pipe';
+import findLastIndex from 'unmutable/lib/findLastIndex';
 import {ReducerInvalidActionError} from '../errors/Errors';
 import {ReducerInvalidStepError} from '../errors/Errors';
 
@@ -81,7 +82,8 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
         if(action.keyPath.length === 0) {
             return type === "delete" ? deleteSelfWithMarker : ii => ii;
         }
-        let lastGetIndex = steps.lastIndexOf(step => step.type === 'get');
+
+        let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
         steps = steps.slice(0, lastGetIndex);
     }
 

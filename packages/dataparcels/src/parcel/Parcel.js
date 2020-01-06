@@ -258,11 +258,32 @@ export default class Parcel {
         });
 
         this.metaAsParcel = (key: string): Parcel => {
-            return new Parcel({
-                value: this.meta[key],
-                handleChange: ({value}) => this.setMeta({
-                    [key]: value
-                })
+            return this._create({
+                parcelData: {
+                    value: this.meta[key],
+                    meta: this.meta
+                },
+                handleChange: (parcel, changeRequest) => {
+                    let newActions = changeRequest.actions.filter(action => action.type === 'setMeta');
+
+                    if(newActions.length !== changeRequest.actions.length) {
+                        newActions.unshift(
+                            new Action({
+                                type: 'setMeta',
+                                payload: {
+                                    [key]: parcel.value
+                                }
+                            })
+                        );
+                    }
+
+                    this.dispatch(
+                        changeRequest._create({
+                            actions: newActions
+                        })
+                    );
+                },
+                rawId: this._idPushModifier(`mp-${key}`)
             });
         };
 

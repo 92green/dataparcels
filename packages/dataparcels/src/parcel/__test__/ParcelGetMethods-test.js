@@ -160,13 +160,50 @@ test('Parcel.pipe() should pass itself in and return what pipe() returns', () =>
     expect(result).toBe(parcel2);
 });
 
-test('Parcel.metaAsParcel() shouldcreate a parcel out of meta', () => {
+test('Parcel.metaAsParcel() should create a parcel out of meta', () => {
     let handleChange = jest.fn();
 
-    var parcel = new Parcel({
+    var [parcel] = new Parcel({
         handleChange
-    });
-    parcel.metaAsParcel('cool').set('???');
+    })
+        ._changeAndReturn(parcel => {
+            parcel.setMeta({
+                cool: '???'
+            });
+        });
 
-    expect(handleChange.mock.calls[0][0].meta.cool).toBe('???');
+    let metaParcel = parcel.metaAsParcel('cool');
+    expect(metaParcel.value).toBe('???');
+    expect(metaParcel.id).toBe('^.~mp-cool');
+
+    metaParcel.set('!!!');
+
+    expect(handleChange.mock.calls[0][0].meta.cool).toBe('!!!');
+    expect(handleChange.mock.calls[0][1].actions.length).toBe(1);
+});
+
+test('Parcel.metaAsParcel() should pass meta through', () => {
+    let handleChange = jest.fn();
+
+    var [parcel] = new Parcel({
+        handleChange,
+        value: 'value'
+    })
+        ._changeAndReturn(parcel => {
+            parcel.setMeta({
+                foo: 'foo',
+                bar: 'bar'
+            });
+        });
+
+    expect(parcel.metaAsParcel('foo').meta.foo).toBe('foo');
+    expect(parcel.metaAsParcel('foo').meta.bar).toBe('bar');
+
+    parcel.metaAsParcel('foo').setMeta({
+        bar: 'BAZ'
+    });
+
+    expect(handleChange.mock.calls[0][0].value).toBe('value');
+    expect(handleChange.mock.calls[0][0].meta.bar).toBe('BAZ');
+    expect(handleChange.mock.calls[0][1].actions.length).toBe(1);
 });

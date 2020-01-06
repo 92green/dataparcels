@@ -18,7 +18,7 @@ type Params = {
     value: any,
     updateValue?: boolean,
     rebase?: boolean,
-    onChange?: OnChangeFunction|{sideEffectHook: Function},
+    onChange?: ?OnChangeFunction|{sideEffectHook: Function},
     onChangeUseResult?: boolean,
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[]
 };
@@ -58,10 +58,7 @@ export default (params: Params): Return => {
 
     let [parcel, setParcel] = useState(() => {
         let parcel = new Parcel({
-            handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
-                // remember the origin of the last change
-                // useParcelBufferInternalKeepValue needs it
-                parcel._frameMeta.lastOriginId = changeRequest.originId;
+            handleChange: (parcel: Parcel) => {
                 setParcel(parcel);
             }
         });

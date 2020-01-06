@@ -1,6 +1,6 @@
 {
   "name": "dataparcels",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",
   "license": "MIT",
@@ -12,13 +12,14 @@
   "files": [
     "lib",
     "Action.js",
+    "asChildNodes.js",
+    "asNode.js",
+    "asRaw.js",
     "cancel.js",
     "ChangeRequest.js",
     "deleted.js",
     "ParcelNode.js",
-    "asNode.js",
-    "asChildNodes.js",
-    "asRaw.js",
+    "translate.js",
     "validation.js"
   ],
   "bugs": {

@@ -10,6 +10,7 @@ import ParcelNode from '../ParcelNode';
 import asNode from '../asNode';
 import asChildNodes from '../asChildNodes';
 import cancel from '../cancel';
+import translate from '../translate';
 import validation from '../validation';
 
 // internal files
@@ -24,6 +25,7 @@ import InternalParcelNode from '../lib/parcelNode/ParcelNode';
 import InternalAsNode from '../lib/parcelNode/asNode';
 import InternalAsNodes from '../lib/parcelNode/asChildNodes';
 import Internalcancel from '../lib/change/cancel';
+import InternalTranslate from '../lib/modifiers/translate';
 import InternalValidation from '../lib/validation/validation';
 
 test('index should export Parcel', () => {
@@ -60,6 +62,10 @@ test('/asChildNodes should export asChildNodes', () => {
 
 test('/cancel should export cancel', () => {
     expect(cancel).toBe(Internalcancel);
+});
+
+test('/translate should export translate', () => {
+    expect(translate).toBe(InternalTranslate);
 });
 
 test('/validation should export validation', () => {
