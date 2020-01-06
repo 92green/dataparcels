@@ -30,7 +30,7 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
         let meta = parcelData.meta || {};
         let showInvalid = !!meta.showInvalid;
 
-        if(meta._submit) {
+        if(meta._control === 'submit') {
             showInvalid = true;
         }
 
@@ -61,9 +61,9 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
                 showInvalid,
                 invalidList,
                 valid,
-                // _submit is meta that useParcelBuffer uses to trigger a submit
-                // set this to false if a submit should not occur
-                _submit: meta._submit && valid
+                // _control is meta that useParcelBuffer uses to trigger a submit or reset
+                // set this to null if its trying to submit, and the submut should not occur
+                _control: meta._control === 'submit' && !valid ? null : meta._control
             };
             return parcelDataSetMeta(newMeta)(parcelData);
         };

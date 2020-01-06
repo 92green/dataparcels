@@ -22,8 +22,7 @@ describe('useParcelBuffer should use config.parcel', () => {
             child: undefined,
             key: '^',
             meta: {
-                _reset: false,
-                _submit: false
+                _control: null
             }
         });
     });

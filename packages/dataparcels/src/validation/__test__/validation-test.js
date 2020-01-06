@@ -15,7 +15,7 @@ test('validation should validate specified fields', () => {
             def: 456
         },
         meta: {
-            _submit: true
+            _control: 'submit'
         }
     };
 
@@ -51,7 +51,7 @@ test('validation should accept arrays of validators', () => {
             ghi: 789
         },
         meta: {
-            _submit: true
+            _control: 'submit'
         }
     };
 
@@ -77,7 +77,7 @@ test('validation should accept wildcards to check all fields at a depth', () => 
             def: [9]
         },
         meta: {
-            _submit: true
+            _control: 'submit'
         }
     };
 
@@ -103,7 +103,7 @@ test('validation should accept multiple wildcards to check all fields at a depth
             def: [9]
         },
         meta: {
-            _submit: true
+            _control: 'submit'
         }
     };
 
@@ -122,14 +122,14 @@ test('validation should accept multiple wildcards to check all fields at a depth
     expect(newParcelData.child.def.child[0].meta.invalid).toBe("Too big");
 });
 
-test('validation should set top level meta.valid and meta._submit', () => {
+test('validation should set top level meta.valid and meta._control', () => {
 
     let invalid = {
         value: {
             abc: 123
         },
         meta: {
-            _submit: false
+            _control: null
         }
     };
 
@@ -138,7 +138,7 @@ test('validation should set top level meta.valid and meta._submit', () => {
             abc: 123
         },
         meta: {
-            _submit: true
+            _control: 'submit'
         }
     };
 
@@ -147,7 +147,7 @@ test('validation should set top level meta.valid and meta._submit', () => {
             abc: 456
         },
         meta: {
-            _submit: false
+            _control: null
         }
     };
 
@@ -156,7 +156,7 @@ test('validation should set top level meta.valid and meta._submit', () => {
             abc: 456
         },
         meta: {
-            _submit: true
+            _control: 'submit'
         }
     };
 
@@ -166,19 +166,19 @@ test('validation should set top level meta.valid and meta._submit', () => {
 
     let invalidResult = myvalidation(invalid);
     expect(invalidResult.meta.valid).toBe(true);
-    expect(invalidResult.meta._submit).toBe(false);
+    expect(invalidResult.meta._control).toBe(null);
 
     let invalidSubmittedResult = myvalidation(invalidSubmitted);
     expect(invalidSubmittedResult.meta.valid).toBe(false);
-    expect(invalidSubmittedResult.meta._submit).toBe(false);
+    expect(invalidSubmittedResult.meta._control).toBe(null);
 
     let validResult = myvalidation(valid);
     expect(validResult.meta.valid).toBe(true);
-    expect(validResult.meta._submit).toBe(false);
+    expect(validResult.meta._control).toBe(null);
 
     let validSubmittedResult = myvalidation(validSubmitted);
     expect(validSubmittedResult.meta.valid).toBe(true);
-    expect(validSubmittedResult.meta._submit).toBe(true);
+    expect(validSubmittedResult.meta._control).toBe('submit');
 });
 
 test('validation should set top level meta.showInvalid to true only after attempted submit', () => {
@@ -188,7 +188,7 @@ test('validation should set top level meta.showInvalid to true only after attemp
             abc: 123
         },
         meta: {
-            _submit: false
+            _control: null
         }
     };
 
@@ -197,7 +197,7 @@ test('validation should set top level meta.showInvalid to true only after attemp
             abc: 123
         },
         meta: {
-            _submit: true,
+            _control: 'submit',
             showInvalid: false
         }
     };
@@ -207,7 +207,7 @@ test('validation should set top level meta.showInvalid to true only after attemp
             abc: 456
         },
         meta: {
-            _submit: false,
+            _control: null,
             showInvalid: true
         }
     };
