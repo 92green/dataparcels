@@ -1,6 +1,5 @@
 // @flow
 
-export const ReadOnlyError = () => new Error(`This property is read-only`);
 export const ParcelTypeMethodMismatch = (key: string, parcelType: string, path: ?string[]) => {
     let suffix = Array.isArray(path) ? `(keyPath: [${path.join(', ')}]).` : ``;
     return new Error(`.${key}() is not a function. It can only be called on parcels of type "${parcelType}". ${suffix}`);

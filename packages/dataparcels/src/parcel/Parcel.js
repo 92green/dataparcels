@@ -13,7 +13,6 @@ import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
 
-import {ReadOnlyError} from '../errors/Errors';
 import {ParcelTypeMethodMismatch} from '../errors/Errors';
 
 import cancel from '../change/cancel';
@@ -656,18 +655,8 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set data(value: any) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get value(): * {
         return this._parcelData.value;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set value(value: any) {
-        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -677,18 +666,8 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set meta(value: any) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get key(): Key {
         return this._getKeyFromRawPath(this._rawPath);
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set key(value: any) {
-        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -697,17 +676,7 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set id(value: any) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get path(): Array<Key> {
         return this._rawPath.slice(1);
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set path(value: any) {
-        throw ReadOnlyError();
     }
 }

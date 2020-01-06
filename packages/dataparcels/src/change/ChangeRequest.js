@@ -7,7 +7,6 @@ import type Action from './Action';
 
 import shallowEquals from 'unmutable/shallowEquals';
 
-import {ReadOnlyError} from '../errors/Errors';
 import {ChangeRequestNoPrevDataError} from '../errors/Errors';
 import ChangeRequestReducer from '../change/ChangeRequestReducer';
 import parcelGet from '../parcelData/get';
@@ -60,11 +59,6 @@ export default class ChangeRequest {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set nextData(value: *) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get prevData(): ParcelData {
         if(!this._prevData) {
             throw ChangeRequestNoPrevDataError();
@@ -73,18 +67,8 @@ export default class ChangeRequest {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set prevData(value: *) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get actions(): ParcelData {
         return this._actions;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set actions(value: *) {
-        throw ReadOnlyError();
     }
 
     merge = (other: ChangeRequest): ChangeRequest => {
@@ -120,18 +104,8 @@ export default class ChangeRequest {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set originId(value: *) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get originPath(): ?string[] {
         return this._originPath;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set originPath(value: *) {
-        throw ReadOnlyError();
     }
 
     getDataIn = (keyPath: Array<Key|Index>): {next: *, prev: *} => {

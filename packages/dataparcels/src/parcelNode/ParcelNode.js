@@ -4,7 +4,6 @@ import type {Key} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
 
-import {ReadOnlyError} from '../errors/Errors';
 import isParentValue from '../parcelData/isParentValue';
 import isIndexedValue from '../parcelData/isIndexedValue';
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
@@ -68,18 +67,8 @@ export default class ParcelNode {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set data(value: any) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get value(): any {
         return this.data.value;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set value(value: any) {
-        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -88,18 +77,8 @@ export default class ParcelNode {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set meta(value: any) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get key(): ?Key {
         return this.data.key;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set key(value: any) {
-        throw ReadOnlyError();
     }
 
     //
