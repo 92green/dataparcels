@@ -44,6 +44,11 @@ import HashString from '../util/HashString';
 const doNothing = (ii: any): any => ii;
 const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
 
+const Parent = 'Parent';
+const Child = 'Child';
+const Indexed = 'Indexed';
+const Element = 'Element';
+
 const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
     dispatchId: '',
@@ -53,8 +58,8 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
     rawPath: ["^"],
     parent: {
         isIndexed: false,
-        isChildFirst: false,
-        isChildLast: false
+        isFirstChild: false,
+        isLastChild: false
     },
     registry: {},
     updateChangeRequestOnDispatch: doNothing
@@ -101,11 +106,6 @@ export default class Parcel {
 
     // Parent methods
     has: Function;
-    size: Function;
-
-    // Child methods
-    isFirst: Function;
-    isLast: Function;
 
     // Side-effect methods
     spy: Function;
@@ -139,13 +139,6 @@ export default class Parcel {
     modifyDown: Function;
     modifyUp: Function;
     initialMeta: Function;
-
-    // Type methods
-    isChild = (): boolean => this._isChild;
-    isElement = (): boolean => this._isElement;
-    isIndexed = (): boolean => this._isIndexed;
-    isParent = (): boolean => this._isParent;
-    isTopLevel = (): boolean => !this._isChild;
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => pipeWith(this, ...updaters);
@@ -216,11 +209,6 @@ export default class Parcel {
             return onlyType(type, name, () => fireAction(name, payload, keyPath))();
         };
 
-        const Parent = 'Parent';
-        const Child = 'Child';
-        const Indexed = 'Indexed';
-        const Element = 'Element';
-
         //
         // public methods
         //
@@ -285,13 +273,6 @@ export default class Parcel {
             this._prepareChildKeys();
             return parcelHas(key)(this._parcelData);
         });
-
-        this.size = onlyType(Parent, 'size', (): number => size()(this.value));
-
-        // Child methods
-
-        this.isFirst = (): boolean => this._parent.isChildFirst;
-        this.isLast = (): boolean => this._parent.isChildLast;
 
         // Side-effect methods
 
@@ -590,8 +571,8 @@ export default class Parcel {
         let {child} = this._parcelData;
         let childIsNotEmpty = size()(child) > 0;
         let isIndexed = this._isIndexed;
-        let isChildFirst = childIsNotEmpty && first()(child).key === childKey;
-        let isChildLast = childIsNotEmpty && last()(child).key === childKey;
+        let isFirstChild = childIsNotEmpty && first()(child).key === childKey;
+        let isLastChild = childIsNotEmpty && last()(child).key === childKey;
 
         let rawId = [...this._rawId, isIndexed ? childKey : escapeKey(childKey)];
         let rawPath = [...this._rawPath, childKey];
@@ -603,8 +584,8 @@ export default class Parcel {
             rawPath,
             parent: {
                 isIndexed,
-                isChildFirst,
-                isChildLast
+                isFirstChild,
+                isLastChild
             }
         });
 
@@ -678,5 +659,41 @@ export default class Parcel {
     // $FlowFixMe - this doesn't have side effects
     get path(): Array<Key> {
         return this._rawPath.slice(1);
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get size(): number {
+        return this._isParent ? size()(this.value) : 0;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get isFirstChild(): boolean {
+        return this._isChild ? this._parent.isFirstChild : false;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get isLastChild(): boolean {
+        return this._isChild ? this._parent.isLastChild : false;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get isOnlyChild(): boolean {
+        return this._isChild ? (this._parent.isFirstChild && this._parent.isLastChild) : false;
+    }
+
+    get isChild(): boolean {
+        return this._isChild;
+    }
+
+    get isElement(): boolean {
+        return this._isElement;
+    }
+
+    get isIndexed(): boolean {
+        return this._isIndexed;
+    }
+
+    get isParent(): boolean {
+        return this._isParent;
     }
 }

@@ -89,22 +89,20 @@ test('Parcel types should correctly identify primitive values', () => {
     var data = {
         value: 123
     };
-    expect(new Parcel(data).isParent()).toBe(false);
-    expect(new Parcel(data).isIndexed()).toBe(false);
-    expect(new Parcel(data).isChild()).toBe(false);
-    expect(new Parcel(data).isElement()).toBe(false);
-    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data).isParent).toBe(false);
+    expect(new Parcel(data).isIndexed).toBe(false);
+    expect(new Parcel(data).isChild).toBe(false);
+    expect(new Parcel(data).isElement).toBe(false);
 });
 
 test('Parcel types should correctly identify date', () => {
     var data = {
         value: new Date()
     };
-    expect(new Parcel(data).isParent()).toBe(false);
-    expect(new Parcel(data).isIndexed()).toBe(false);
-    expect(new Parcel(data).isChild()).toBe(false);
-    expect(new Parcel(data).isElement()).toBe(false);
-    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data).isParent).toBe(false);
+    expect(new Parcel(data).isIndexed).toBe(false);
+    expect(new Parcel(data).isChild).toBe(false);
+    expect(new Parcel(data).isElement).toBe(false);
 });
 
 test('Parcel types should correctly identify object values', () => {
@@ -113,11 +111,10 @@ test('Parcel types should correctly identify object values', () => {
             a: "A"
         }
     };
-    expect(new Parcel(data).isParent()).toBe(true);
-    expect(new Parcel(data).isIndexed()).toBe(false);
-    expect(new Parcel(data).isChild()).toBe(false);
-    expect(new Parcel(data).isElement()).toBe(false);
-    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data).isParent).toBe(true);
+    expect(new Parcel(data).isIndexed).toBe(false);
+    expect(new Parcel(data).isChild).toBe(false);
+    expect(new Parcel(data).isElement).toBe(false);
 });
 
 test('Parcel types should correctly identify class instance values', () => {
@@ -127,11 +124,10 @@ test('Parcel types should correctly identify class instance values', () => {
     var data = {
         value: new Thing()
     };
-    expect(new Parcel(data).isParent()).toBe(false);
-    expect(new Parcel(data).isIndexed()).toBe(false);
-    expect(new Parcel(data).isChild()).toBe(false);
-    expect(new Parcel(data).isElement()).toBe(false);
-    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data).isParent).toBe(false);
+    expect(new Parcel(data).isIndexed).toBe(false);
+    expect(new Parcel(data).isChild).toBe(false);
+    expect(new Parcel(data).isElement).toBe(false);
 });
 
 test('Parcel types should correctly identify unmutable compatible class instance values', () => {
@@ -142,11 +138,10 @@ test('Parcel types should correctly identify unmutable compatible class instance
     var data = {
         value: new UnmutableCompatible()
     };
-    expect(new Parcel(data).isParent()).toBe(true);
-    expect(new Parcel(data).isIndexed()).toBe(false);
-    expect(new Parcel(data).isChild()).toBe(false);
-    expect(new Parcel(data).isElement()).toBe(false);
-    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data).isParent).toBe(true);
+    expect(new Parcel(data).isIndexed).toBe(false);
+    expect(new Parcel(data).isChild).toBe(false);
+    expect(new Parcel(data).isElement).toBe(false);
 });
 
 
@@ -156,11 +151,10 @@ test('Parcel types should correctly identify Immutable.js Map values', () => {
             a: "A"
         })
     };
-    expect(new Parcel(data).isParent()).toBe(true);
-    expect(new Parcel(data).isIndexed()).toBe(false);
-    expect(new Parcel(data).isChild()).toBe(false);
-    expect(new Parcel(data).isElement()).toBe(false);
-    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data).isParent).toBe(true);
+    expect(new Parcel(data).isIndexed).toBe(false);
+    expect(new Parcel(data).isChild).toBe(false);
+    expect(new Parcel(data).isElement).toBe(false);
 });
 
 
@@ -168,22 +162,20 @@ test('Parcel types should correctly identify array values', () => {
     var data = {
         value: [1,2,3]
     };
-    expect(new Parcel(data).isParent()).toBe(true);
-    expect(new Parcel(data).isIndexed()).toBe(true);
-    expect(new Parcel(data).isChild()).toBe(false);
-    expect(new Parcel(data).isElement()).toBe(false);
-    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data).isParent).toBe(true);
+    expect(new Parcel(data).isIndexed).toBe(true);
+    expect(new Parcel(data).isChild).toBe(false);
+    expect(new Parcel(data).isElement).toBe(false);
 });
 
 test('Parcel types should correctly identify Immutable.js List values', () => {
     var data = {
         value: List([1,2,3])
     };
-    expect(new Parcel(data).isParent()).toBe(true);
-    expect(new Parcel(data).isIndexed()).toBe(true);
-    expect(new Parcel(data).isChild()).toBe(false);
-    expect(new Parcel(data).isElement()).toBe(false);
-    expect(new Parcel(data).isTopLevel()).toBe(true);
+    expect(new Parcel(data).isParent).toBe(true);
+    expect(new Parcel(data).isIndexed).toBe(true);
+    expect(new Parcel(data).isChild).toBe(false);
+    expect(new Parcel(data).isElement).toBe(false);
 });
 
 test('Parcel types should correctly identify child values', () => {
@@ -192,29 +184,27 @@ test('Parcel types should correctly identify child values', () => {
             a: "A"
         }
     };
-    expect(new Parcel(data).get("a").isParent()).toBe(false);
-    expect(new Parcel(data).get("a").isIndexed()).toBe(false);
-    expect(new Parcel(data).get("a").isChild()).toBe(true);
-    expect(new Parcel(data).get("a").isElement()).toBe(false);
-    expect(new Parcel(data).get("a").isTopLevel()).toBe(false);
+    expect(new Parcel(data).get("a").isParent).toBe(false);
+    expect(new Parcel(data).get("a").isIndexed).toBe(false);
+    expect(new Parcel(data).get("a").isChild).toBe(true);
+    expect(new Parcel(data).get("a").isElement).toBe(false);
 });
 
 test('Parcel types should correctly identify element values', () => {
     var data = {
         value: [1,2,3]
     };
-    expect(new Parcel(data).get(0).isParent()).toBe(false);
-    expect(new Parcel(data).get(0).isIndexed()).toBe(false);
-    expect(new Parcel(data).get(0).isChild()).toBe(true);
-    expect(new Parcel(data).get(0).isElement()).toBe(true);
-    expect(new Parcel(data).get(0).isTopLevel()).toBe(false);
+    expect(new Parcel(data).get(0).isParent).toBe(false);
+    expect(new Parcel(data).get(0).isIndexed).toBe(false);
+    expect(new Parcel(data).get(0).isChild).toBe(true);
+    expect(new Parcel(data).get(0).isElement).toBe(true);
 });
 
-test('Parcel types should correctly identify top level values after modifiers', () => {
+test('Parcel types should correctly identify child values after modifiers', () => {
     var data = {
         value: [1,2,3]
     };
-    expect(new Parcel(data).modifyDown(ii => ii).isTopLevel()).toBe(true);
+    expect(new Parcel(data).modifyDown(ii => ii).isChild).toBe(false);
 });
 
 // method creators

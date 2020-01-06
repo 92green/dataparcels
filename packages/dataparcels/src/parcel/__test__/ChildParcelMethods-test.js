@@ -39,40 +39,87 @@ test('ChildParcel.delete() should delete self when indexed', () => {
 });
 
 
-test('ChildParcel.isFirst() should detect first child parcel', () => {
+test('ChildParcel.isFirstChild should detect first child parcel', () => {
     let parcel = new Parcel({
         value: [1,2,1,4]
     });
 
-    expect(parcel.get(0).isFirst()).toBe(true);
-    expect(parcel.get(1).isFirst()).toBe(false);
-    expect(parcel.get(2).isFirst()).toBe(false);
-    expect(parcel.get(3).isFirst()).toBe(false);
+    expect(parcel.get(0).isFirstChild).toBe(true);
+    expect(parcel.get(1).isFirstChild).toBe(false);
+    expect(parcel.get(2).isFirstChild).toBe(false);
+    expect(parcel.get(3).isFirstChild).toBe(false);
 });
 
-test('ChildParcel.isLast() should detect first child parcel', () => {
+test('ChildParcel.isLastChild should detect last child parcel', () => {
     let parcel = new Parcel({
         value: [1,2,3,4]
     });
 
-    expect(parcel.get(0).isLast()).toBe(false);
-    expect(parcel.get(1).isLast()).toBe(false);
-    expect(parcel.get(2).isLast()).toBe(false);
-    expect(parcel.get(3).isLast()).toBe(true);
+    expect(parcel.get(0).isLastChild).toBe(false);
+    expect(parcel.get(1).isLastChild).toBe(false);
+    expect(parcel.get(2).isLastChild).toBe(false);
+    expect(parcel.get(3).isLastChild).toBe(true);
 });
 
-test('ChildParcel.isFirst() should not detect first child parcel on empty parent', () => {
+test('ChildParcel.isOnlyChild should detect only child parcel', () => {
+    let parcel = new Parcel({
+        value: [1,2]
+    });
+
+    let parcel2 = new Parcel({
+        value: [3]
+    });
+
+    expect(parcel.get(0).isOnlyChild).toBe(false);
+    expect(parcel.get(1).isOnlyChild).toBe(false);
+    expect(parcel2.get(0).isOnlyChild).toBe(true);
+});
+
+
+test('ChildParcel.isFirstChild should not detect first child parcel on empty parent', () => {
     let parcel = new Parcel({
         value: {}
     });
 
-    expect(parcel.get('a').isFirst()).toBe(false);
+    expect(parcel.get('a').isFirstChild).toBe(false);
 });
 
-test('ChildParcel.isLast() should not detect first child parcel on empty parent', () => {
+test('ChildParcel.isFirstChild should not detect first child parcel on non child (top level parcel)', () => {
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    expect(parcel.isFirstChild).toBe(false);
+});
+
+test('ChildParcel.isLastChild should not detect last child parcel on empty parent', () => {
     let parcel = new Parcel({
         value: {}
     });
 
-    expect(parcel.get('a').isLast()).toBe(false);
+    expect(parcel.get('a').isLastChild).toBe(false);
+});
+
+test('ChildParcel.isLastChild should not detect last child parcel on non child (top level parcel)', () => {
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    expect(parcel.isLastChild).toBe(false);
+});
+
+test('ChildParcel.isOnlyChild should not detect only child parcel on empty parent', () => {
+    let parcel = new Parcel({
+        value: {}
+    });
+
+    expect(parcel.get('a').isOnlyChild).toBe(false);
+});
+
+test('ChildParcel.isOnlyChild should not detect only child parcel on non child (top level parcel)', () => {
+    let parcel = new Parcel({
+        value: 123
+    });
+
+    expect(parcel.isOnlyChild).toBe(false);
 });
