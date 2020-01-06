@@ -20,29 +20,6 @@ test('ParcelNodes should return empty meta object', () => {
     expect(node.meta).toEqual({});
 });
 
-test('ParcelNodes should throw errors when attempted to set getters', () => {
-    let readOnly = 'This property is read-only';
-
-    let node = new ParcelNode(123);
-
-    expect(() => {
-        node.data = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        node.value = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        node.meta = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        node.key = 123;
-    }).toThrow(readOnly);
-
-});
-
 test('ParcelNodes should get() lazily', () => {
     let node = new ParcelNode([1,2,3]);
     let result = node.get(0);
