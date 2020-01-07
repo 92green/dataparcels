@@ -7,7 +7,7 @@ import every from 'unmutable/lib/every';
 import map from 'unmutable/lib/map';
 import range from 'unmutable/lib/util/range';
 
-test('ParentParcel.size() should return size of parcel', () => {
+test('ParentParcel.size should return size of parcel', () => {
     var data = {
         value: {
             a: 1,
@@ -15,8 +15,17 @@ test('ParentParcel.size() should return size of parcel', () => {
         }
     };
 
-    expect(new Parcel(data).size()).toBe(2);
+    expect(new Parcel(data).size).toBe(2);
 });
+
+test('ParentParcel.size should return size of 0 for non parent parcels', () => {
+    var data = {
+        value: 123
+    };
+
+    expect(new Parcel(data).size).toBe(0);
+});
+
 
 test('ParentParcel.has(key) should return a boolean indicating if key exists', () => {
     var data = {

@@ -493,32 +493,6 @@ test('ChangeRequest hasDataChanged should indicate if value changed in array, id
     expect(basedChangeRequest.hasDataChanged()).toBe(true);
 });
 
-test('ChangeRequest should throw errors when attempted to set getters', () => {
-    let readOnly = 'This property is read-only';
-
-    let changeRequest = new ChangeRequest();
-
-    expect(() => {
-        changeRequest.nextData = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.prevData = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.actions = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.originId = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.originPath = 123;
-    }).toThrow(readOnly);
-});
-
 test('ChangeRequest _revert() should call _revertCallback and pass self', () => {
 
     let changeRequest = new ChangeRequest();

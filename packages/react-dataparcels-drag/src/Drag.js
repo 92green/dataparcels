@@ -33,7 +33,7 @@ type Props = {
 };
 
 export default ({children, parcel, onSortEnd, container, ...sortableElementProps}: Props) => {
-    if(!parcel.isIndexed()) {
+    if(!parcel.isIndexed) {
         throw new Error(`react-dataparcels-drag's parcel prop must be of type indexed`);
     }
 

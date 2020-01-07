@@ -56,8 +56,7 @@ export default (params: Params): Return => {
     const applyBufferMeta = (parcel) => parcel
         .modifyDown(asRaw(
             setMeta({
-                _submit: false,
-                _reset: false
+                _control: null
             })
         ));
 
@@ -111,7 +110,7 @@ export default (params: Params): Return => {
             // remove buffer actions meta from change request
             // and push any remaining change into the buffer
             let actions = changeRequest._actions.filter((action) => {
-                return !(action.type === 'setMeta' && (action.payload._submit || action.payload._reset));
+                return !(action.type === 'setMeta' && action.payload._control);
             });
 
             if(actions.length > 0) {
@@ -130,9 +129,9 @@ export default (params: Params): Return => {
             }
 
             // trigger buffer actions if meta says so
-            const {_submit, _reset} = newParcel.meta;
-            _submit && internalBuffer.submit();
-            _reset && internalBuffer.reset();
+            const {_control} = newParcel.meta;
+            _control === 'submit' && internalBuffer.submit();
+            _control === 'reset' && internalBuffer.reset();
         };
 
         const newOuterParcel = params.parcel;
@@ -169,8 +168,8 @@ export default (params: Params): Return => {
         : [];
 
     const parcelControl = {
-        submit: () => returnedParcel.setMeta({_submit: true}),
-        reset: () => returnedParcel.setMeta({_reset: true}),
+        submit: () => returnedParcel.setMeta({_control: 'submit'}),
+        reset: () => returnedParcel.setMeta({_control: 'reset'}),
         buffered: actions.length > 0,
         actions,
         _outerParcel: params.parcel

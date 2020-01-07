@@ -98,33 +98,3 @@ test('Parcel.path should return the Parcels path', () => {
     // t.is("#a", new Parcel(data).getIn(["a",?????]).path); TODO
 });
 
-
-test('Parcel should throw errors when attempted to set getters', () => {
-    let readOnly = 'This property is read-only';
-
-    let parcel = new Parcel();
-
-    expect(() => {
-        parcel.data = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        parcel.value = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        parcel.meta = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        parcel.key = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        parcel.id = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        parcel.path = 123;
-    }).toThrow(readOnly);
-});

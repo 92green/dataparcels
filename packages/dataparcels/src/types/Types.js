@@ -18,8 +18,8 @@ export type ParcelConfig = {
 
 export type ParcelParent = {
     isIndexed: boolean,
-    isChildFirst: boolean,
-    isChildLast: boolean
+    isFirstChild: boolean,
+    isLastChild: boolean
 };
 
 export type ParcelConfigInternal = {
