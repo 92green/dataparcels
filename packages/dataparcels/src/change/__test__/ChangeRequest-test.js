@@ -187,7 +187,7 @@ test('ChangeRequest should keep originId and originPath', () => {
 
     new Parcel(data)
         .get('abc')
-        .onChange(456);
+        .set(456);
 });
 
 test('ChangeRequest should cache its data after its calculated, so subsequent calls are faster', () => {

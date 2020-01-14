@@ -87,6 +87,8 @@ export default class Parcel {
     _parent: ParcelParent;
     _registry: ParcelRegistry;
     _updateChangeRequestOnDispatch: Function;
+    _setInput: Function;
+    _setCheckbox: Function;
 
     //
     // public methods
@@ -94,8 +96,8 @@ export default class Parcel {
 
     // Spread methods
     spread: Function;
-    spreadDOM: Function;
-    spreadDOMCheckbox: Function;
+    spreadInput: Function;
+    spreadCheckbox: Function;
 
     // Branch methods
     get: Function;
@@ -112,9 +114,6 @@ export default class Parcel {
     spyChange: Function;
 
     // Change methods
-    onChange: Function;
-    onChangeDOM: Function;
-    onChangeDOMCheckbox: Function;
     set: Function;
     update: Function;
     delete: Function;
@@ -187,6 +186,14 @@ export default class Parcel {
         this._registry = registry;
         this._registry[this._getIdFromRawId(rawId)] = this;
 
+        this._setInput = (event: Object) => {
+            this.set(event.currentTarget.value);
+        };
+
+        this._setCheckbox = (event: Object) => {
+            this.set(event.currentTarget.checked);
+        };
+
         //
         // method prep
         //
@@ -217,17 +224,17 @@ export default class Parcel {
 
         this.spread = (notFoundValue: any): any => ({
             value: this._getValue(notFoundValue),
-            onChange: this.onChange
+            onChange: this.set
         });
 
-        this.spreadDOM = (notFoundValue: any): any => ({
+        this.spreadInput = (notFoundValue: any): any => ({
             value: this._getValue(notFoundValue),
-            onChange: this.onChangeDOM
+            onChange: this._setInput
         });
 
-        this.spreadDOMCheckbox = (notFoundValue: ?boolean): any => ({
+        this.spreadCheckbox = (notFoundValue: ?boolean): any => ({
             checked: !!this._getValue(notFoundValue),
-            onChange: this.onChangeDOMCheckbox
+            onChange: this._setCheckbox
         });
 
         // Branch methods
@@ -318,18 +325,6 @@ export default class Parcel {
         };
 
         // Change methods
-
-        this.onChange = (value: any) => this.set(value);
-
-        // Types(`onChangeDOM()`, `event`, `event`)(event);
-        this.onChangeDOM = (event: Object) => {
-            this.set(event.currentTarget.value);
-        };
-
-        // Types(`onChangeDOMCheckbox()`, `event`, `event`)(event);
-        this.onChangeDOMCheckbox = (event: Object) => {
-            this.set(event.currentTarget.checked);
-        };
 
         this.set = (value: any) => fireAction('set', value);
 
