@@ -126,7 +126,7 @@ test('Parcel.modifyUp() should allow you to change the payload of a changed parc
         handleChange
     })
         .modifyUp(updater)
-        .onChange(456);
+        .set(456);
 
     expect(handleChange.mock.calls[0][0].value).toBe(457);
 

@@ -7,7 +7,7 @@ import {Map, List} from 'immutable';
 test('Parcels should be able to accept no config', () => {
     let parcel = new Parcel();
     expect(undefined).toEqual(parcel.value);
-    parcel.onChange(123);
+    parcel.set(123);
 });
 
 test('Parcels should be able to accept just value in config', () => {
@@ -15,7 +15,7 @@ test('Parcels should be able to accept just value in config', () => {
         value: 123
     });
     expect(123).toEqual(parcel.value);
-    parcel.onChange(456);
+    parcel.set(456);
 });
 
 test('Parcels should be able to accept just handleChange in config', () => {
@@ -26,7 +26,7 @@ test('Parcels should be able to accept just handleChange in config', () => {
     });
 
     expect(parcel.value).toBe(undefined);
-    parcel.onChange(456);
+    parcel.set(456);
 
     expect(handleChange).toHaveBeenCalledTimes(1);
     expect(handleChange.mock.calls[0][0].value).toBe(456);
@@ -45,7 +45,7 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     });
 
     let [newParcel] = parcel._changeAndReturn((parcel) => {
-        parcel.get('abc').onChange(789);
+        parcel.get('abc').set(789);
     });
 
     // expect correct parcel to be returned
@@ -58,11 +58,11 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     expect(handleChange).toHaveBeenCalledTimes(0);
 
     // now if parcel's change methods are called, handleChange should be called as usual
-    parcel.get('abc').onChange(100);
+    parcel.get('abc').set(100);
     expect(handleChange).toHaveBeenCalledTimes(1);
 
     // also if new parcel's change methods are called, handleChange should be called as usual
-    newParcel.get('abc').onChange(100);
+    newParcel.get('abc').set(100);
     expect(handleChange).toHaveBeenCalledTimes(2);
 
     // _frameMeta should be passed through

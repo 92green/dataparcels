@@ -36,7 +36,7 @@ test('ParcelBoundary should send correct changes back up when debounce = 0', () 
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
     expect(handleChange).toHaveBeenCalledTimes(1);
     let newParcel = handleChange.mock.calls[0][0];
     expect(newParcel.value).toBe(123);
@@ -156,7 +156,7 @@ test('ParcelBoundary should release changes when called', async () => {
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
     // handleChange shouldn't be called yet because hold is true
     expect(handleChange).toHaveBeenCalledTimes(0);
 
@@ -191,7 +191,7 @@ test('ParcelBoundary should use onRelease', async () => {
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
     wrapper.update();
 
     // call release, then onRelease1 should have been called but no others
@@ -229,7 +229,7 @@ test('ParcelBoundary should cancel changes when called', async () => {
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
     // handleChange shouldn't be called yet because hold is true
     expect(handleChange).toHaveBeenCalledTimes(0);
 
@@ -268,7 +268,7 @@ test('ParcelBoundary should onCancel', async () => {
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
     wrapper.update();
     let childRendererCalls = childRenderer.mock.calls.length;
 
@@ -330,7 +330,7 @@ test('ParcelBoundary should pass buffer info to childRenderer', async () => {
     </ParcelBoundary>);
 
     let [childParcel, control] = childRenderer.mock.calls[0];
-    childParcel.onChange(123);
+    childParcel.set(123);
     // handleChange shouldn't be called yet because hold is true
     expect(control.buffered).toBe(false);
     expect(control.buffer.length).toBe(0);
@@ -363,7 +363,7 @@ test('ParcelBoundary should debounce', async () => {
     let childParcel = childRenderer.mock.calls[0][0];
 
     // make a change with a value
-    childParcel.get('a').onChange(123);
+    childParcel.get('a').set(123);
 
     // handleChange shouldn't be called yet
     expect(handleChange).toHaveBeenCalledTimes(0);
@@ -381,7 +381,7 @@ test('ParcelBoundary should debounce', async () => {
     expect(childParcel2.value).toEqual({a:123, b:2});
 
     // make another change with a value
-    childParcel2.get('a').onChange(456);
+    childParcel2.get('a').set(456);
 
     // wait another 20ms
     jest.advanceTimersByTime(20);
@@ -396,8 +396,8 @@ test('ParcelBoundary should debounce', async () => {
     expect(childParcel3.value).toEqual({a:456, b:2});
 
     // make another 2 changes with a value
-    childParcel3.get('a').onChange(789);
-    childParcel3.get('b').onChange(789);
+    childParcel3.get('a').set(789);
+    childParcel3.get('b').set(789);
 
     // wait another 40ms - with an interval this big, debounce should have finally had time to kick in
     jest.advanceTimersByTime(40);
@@ -426,7 +426,7 @@ test('ParcelBoundary should cancel unreleased changes when receiving a new parce
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(789);
+    childParcel.set(789);
 
     let childParcel2 = childRenderer.mock.calls[1][0];
 
@@ -464,7 +464,7 @@ test('ParcelBoundary should not update value from props for updates caused by th
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(456);
+    childParcel.set(456);
 
     let newParcel = handleChange.mock.calls[0][0];
     newParcel._frameMeta = {
@@ -513,7 +513,7 @@ test('ParcelBoundary should update meta from props for updates caused by themsel
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(456);
+    childParcel.set(456);
 
     let newParcel = handleChange.mock.calls[0][0];
     newParcel._frameMeta = {
@@ -580,7 +580,7 @@ test('ParcelBoundary should pass changes through modifyBeforeUpdate', () => {
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
     expect(handleChange).toHaveBeenCalledTimes(1);
     let newParcel = handleChange.mock.calls[0][0];
     expect(newParcel.value).toBe(125);
@@ -652,7 +652,7 @@ test('ParcelBoundary should accept a debugParcel boolean and log about parcel ch
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
 
     expect(console.log.mock.calls[2][0]).toBe("ParcelBoundary: Parcel changed:");
     // $FlowFixMe
@@ -702,7 +702,7 @@ test('ParcelBoundary should accept a debugParcel boolean and log about cancellin
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
 
     wrapper.update();
 
@@ -728,7 +728,7 @@ test('ParcelBoundary should accept a debugBuffer boolean and log about adding to
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
 
     expect(console.log.mock.calls[0][0]).toBe("ParcelBoundary: Add to buffer:");
     // $FlowFixMe
@@ -750,7 +750,7 @@ test('ParcelBoundary should accept a debugBuffer boolean and log about releasing
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
 
     wrapper.update();
 
@@ -777,7 +777,7 @@ test('ParcelBoundary should accept a debugBuffer boolean and log about cancellin
     </ParcelBoundary>);
 
     let childParcel = childRenderer.mock.calls[0][0];
-    childParcel.onChange(123);
+    childParcel.set(123);
 
     wrapper.update();
 

@@ -39,7 +39,7 @@ test('ParcelHoc changes should be put back into ParcelHoc state', () => {
 
     let wrapper = shallow(<Hocked />);
     let {proppy} = wrapper.props();
-    proppy.onChange(456);
+    proppy.set(456);
     expect(456).toBe(wrapper.update().props().proppy.value);
 });
 
@@ -54,13 +54,13 @@ test('ParcelHoc config should accept an onChange function, and call it with the 
     let onChange = jest.fn();
     let wrapper = shallow(<Hocked onChange={onChange} />);
     let {proppy} = wrapper.props();
-    proppy.onChange(456);
+    proppy.set(456);
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange.mock.calls[0][0]).toBe(456);
 
     // dont call onChange if the value hasnt changed
-    wrapper.update().props().proppy.onChange(456);
+    wrapper.update().props().proppy.set(456);
     expect(onChange).toHaveBeenCalledTimes(1);
 });
 
@@ -204,7 +204,7 @@ test('ParcelHoc modifyBeforeUpdate should be called when change occurs', () => {
     );
 
     let childProps = wrapper.props();
-    childProps.proppy.onChange(456);
+    childProps.proppy.set(456);
 
     // child parcel should contain value after having been passed through modifyBeforeUpdate
     expect(wrapper.update().props().proppy.value).toBe(458);
@@ -224,7 +224,7 @@ test('ParcelHoc modifyBeforeUpdate should be called when relevant prop change oc
     );
 
     let childProps = wrapper.props();
-    childProps.proppy.onChange(456);
+    childProps.proppy.set(456);
 
     // child parcel should contain value after having been passed through modifyBeforeUpdate
     expect(wrapper.update().props().proppy.value).toBe(458);

@@ -13,7 +13,7 @@ test('Parcel.dispatch() should pass handleChange to newly created parcel', () =>
         handleChange
     });
 
-    parcel.onChange(456);
+    parcel.set(456);
 
     let [newParcel, changeRequest] = handleChange.mock.calls[0];
 
@@ -21,7 +21,7 @@ test('Parcel.dispatch() should pass handleChange to newly created parcel', () =>
     expect(changeRequest.nextData.value).toBe(456);
     expect(changeRequest.prevData.value).toBe(123);
 
-    newParcel.onChange(789);
+    newParcel.set(789);
 
     let [newParcel2, changeRequest2] = handleChange.mock.calls[1];
 
@@ -145,9 +145,7 @@ test('Parcel.update(asChildNodes()) should call the Parcels handleChange functio
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
 
-
-
-test('Parcel.onChange() should work like set that only accepts a single argument', () => {
+test('Parcel._setInput() should work like set but take the value from event.currentTarget.value', () => {
     expect.assertions(2);
 
     var data = {
@@ -173,43 +171,14 @@ test('Parcel.onChange() should work like set that only accepts a single argument
             expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(GetAction(changeRequest));
         }
-    }).onChange(456);
-});
-
-test('Parcel.onChangeDOM() should work like onChange but take the value from event.currentTarget.value', () => {
-    expect.assertions(2);
-
-    var data = {
-        value: 123
-    };
-
-    var expectedData = {
-        child: undefined,
-        meta: {},
-        value: 456,
-        key: '^'
-    };
-
-    var expectedAction = {
-        type: "set",
-        keyPath: [],
-        payload: 456
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).onChangeDOM({
+    })._setInput({
         currentTarget: {
             value: 456
         }
     });
 });
 
-test('Parcel.onChangeDOMCheckbox() should work like onChange but take the value from event.currentTarget.checked', () => {
+test('Parcel._setCheckbox() should work like set but take the value from event.currentTarget.checked', () => {
 
     let handleChange = jest.fn();
 
@@ -218,7 +187,7 @@ test('Parcel.onChangeDOMCheckbox() should work like onChange but take the value 
         handleChange
     });
 
-    parcel.onChangeDOMCheckbox({
+    parcel._setCheckbox({
         currentTarget: {
             checked: true
         }
