@@ -1,16 +1,29 @@
 // @flow
 
+import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
 import asRaw from '../parcelData/asRaw';
-import parcelDataMap from '../parcelData/map';
 import parcelDataSetMeta from '../parcelData/setMeta';
 import parcelDataUpdate from '../parcelData/update';
 
 import map from 'unmutable/map';
 import pipeWith from 'unmutable/pipeWith';
 import toArray from 'unmutable/toArray';
+import keyArray from 'unmutable/keyArray';
+
+// temporary, as validation will be superseded soon
+const parcelDataMap = (mapper: Function) => (parcelData: ParcelData): ParcelData => {
+    let keys = keyArray()(parcelData.value);
+    return pipeWith(
+        parcelData,
+        ...keys.map((key) => parcelDataUpdate(
+            key, // lets indexes in
+            (childParcelData) => mapper(childParcelData, key, parcelData)
+        ))
+    );
+};
 
 type ValidationRuleMeta = {
     keyPath: Array<any>,

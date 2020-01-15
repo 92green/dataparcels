@@ -25,12 +25,6 @@ const ActionCreators = {
             payload: value
         });
     },
-    map: (updater): Action => {
-        return new Action({
-            type: "map",
-            payload: updater
-        });
-    },
     push: (...values): Action => {
         return new Action({
             type: "push",

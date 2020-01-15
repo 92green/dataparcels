@@ -13,7 +13,6 @@ import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
-import map from '../parcelData/map';
 import push from '../parcelData/push';
 import setMeta from '../parcelData/setMeta';
 import setSelf from '../parcelData/setSelf';
@@ -27,7 +26,6 @@ const actionMap = {
     delete: del, //: (lastKey) => del(lastKey),
     insertAfter, //: (lastKey, value) => insertAfter(lastKey, value),
     insertBefore, //: (lastKey, value) => insertBefore(lastKey, value),
-    map: (lastKey, updater) => map(updater),
     push: (lastKey, values) => push(...values),
     setData: (lastKey, parcelData) => () => parcelData,
     setMeta: (lastKey, meta) => setMeta(meta),

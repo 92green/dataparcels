@@ -335,11 +335,6 @@ export default class Parcel {
 
         this.delete = () => fireActionOnlyType(Child, 'delete');
 
-        // Types(`map()`, `updater`, `function`)(updater);
-        this.map = (updater: ParcelValueUpdater) => {
-            fireActionOnlyType(Parent, 'map', prepUpdater(updater));
-        };
-
         // Advanced change methods
 
         // Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
