@@ -127,8 +127,8 @@ test('IndexedParcel.pop() should pop', () => {
     };
 
     var expectedAction = {
-        type: "pop",
-        keyPath: [],
+        type: "delete",
+        keyPath: ["#c"],
         payload: undefined
     };
 
@@ -137,6 +137,29 @@ test('IndexedParcel.pop() should pop', () => {
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(GetAction(changeRequest));
+        }
+    }).pop();
+});
+
+test('IndexedParcel.pop() should do nothing if there are no items', () => {
+    expect.assertions(1);
+
+    var data = {
+        value: [],
+        child: []
+    };
+
+    var expectedData = {
+        meta: {},
+        value: [],
+        key: '^',
+        child: []
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel, changeRequest) => {
+            expect(expectedData).toEqual(parcel.data);
         }
     }).pop();
 });
@@ -164,8 +187,8 @@ test('IndexedParcel.shift() should shift', () => {
     };
 
     var expectedAction = {
-        type: "shift",
-        keyPath: [],
+        type: "delete",
+        keyPath: ["#a"],
         payload: undefined
     };
 
@@ -174,6 +197,29 @@ test('IndexedParcel.shift() should shift', () => {
         handleChange: (parcel, changeRequest) => {
             expect(expectedData).toEqual(parcel.data);
             expect(expectedAction).toEqual(GetAction(changeRequest));
+        }
+    }).shift();
+});
+
+test('IndexedParcel.shift() should do nothing if there are no items', () => {
+    expect.assertions(1);
+
+    var data = {
+        value: [],
+        child: []
+    };
+
+    var expectedData = {
+        meta: {},
+        value: [],
+        key: '^',
+        child: []
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel, changeRequest) => {
+            expect(expectedData).toEqual(parcel.data);
         }
     }).shift();
 });

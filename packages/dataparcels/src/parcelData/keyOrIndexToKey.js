@@ -10,7 +10,7 @@ import prepareChildKeys from './prepareChildKeys';
 import getIn from 'unmutable/lib/getIn';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index) => (parcelData: ParcelData): Key => {
+export default (key: Key|Index) => (parcelData: ParcelData): ?Key => {
     if(typeof key === "string") {
         return key;
     }

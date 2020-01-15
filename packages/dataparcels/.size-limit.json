@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.5 KB",
+        "limit": "10.4 KB",
         "path": "lib/index.js"
     },
     {
@@ -12,7 +12,7 @@
         "path": "cancel.js"
     },
     {
-        "limit": "7.5 KB",
+        "limit": "7.4 KB",
         "path": "ChangeRequest.js"
     },
     {
@@ -20,15 +20,15 @@
         "path": "deleted.js"
     },
     {
-        "limit": "5.9 KB",
+        "limit": "5.8 KB",
         "path": "ParcelNode.js"
     },
     {
-        "limit": "6 KB",
+        "limit": "6.2 KB",
         "path": "asNode.js"
     },
     {
-        "limit": "6 KB",
+        "limit": "6.2 KB",
         "path": "asChildNodes.js"
     },
     {
@@ -36,11 +36,11 @@
         "path": "asRaw.js"
     },
     {
-        "limit": "6.1 KB",
+        "limit": "6.3 KB",
         "path": "translate.js"
     },
     {
-        "limit": "5.2 KB",
+        "limit": "5.4 KB",
         "path": "validation.js"
     }
 ]

@@ -14,11 +14,9 @@ import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
 import map from '../parcelData/map';
-import pop from '../parcelData/pop';
 import push from '../parcelData/push';
 import setMeta from '../parcelData/setMeta';
 import setSelf from '../parcelData/setSelf';
-import shift from '../parcelData/shift';
 import swap from '../parcelData/swap';
 import swapNext from '../parcelData/swapNext';
 import swapPrev from '../parcelData/swapPrev';
@@ -30,12 +28,10 @@ const actionMap = {
     insertAfter, //: (lastKey, value) => insertAfter(lastKey, value),
     insertBefore, //: (lastKey, value) => insertBefore(lastKey, value),
     map: (lastKey, updater) => map(updater),
-    pop, //: () => pop(),
     push: (lastKey, values) => push(...values),
     setData: (lastKey, parcelData) => () => parcelData,
     setMeta: (lastKey, meta) => setMeta(meta),
     set: (lastKey, value) => setSelf(value),
-    shift, //: () => shift(),
     swap, //: (lastKey, swapKey) => swap(lastKey, swapKey),
     swapNext, //: (lastKey) => swapNext(lastKey),
     swapPrev, //: (lastKey) => swapPrev(lastKey),

@@ -37,11 +37,6 @@ const ActionCreators = {
             payload: values
         });
     },
-    pop: (): Action => {
-        return new Action({
-            type: "pop"
-        });
-    },
     setData: (parcelData): Action => {
         return new Action({
             type: "setData",
@@ -58,11 +53,6 @@ const ActionCreators = {
         return new Action({
             type: "set",
             payload: value
-        });
-    },
-    shift: (): Action => {
-        return new Action({
-            type: "shift"
         });
     },
     swap: (keyA, keyB): Action => {

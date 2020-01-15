@@ -357,9 +357,9 @@ export default class Parcel {
 
         this.push = (...values: Array<any>) => fireActionOnlyType(Indexed, 'push', values);
 
-        this.pop = () => fireActionOnlyType(Indexed, 'pop');
+        this.pop = onlyType(Indexed, 'pop', () => this.get(-1).delete());
 
-        this.shift = () => fireActionOnlyType(Indexed, 'shift');
+        this.shift = onlyType(Indexed, 'shift', () => this.get(0).delete());
 
         this.swap = (keyA: Key|Index, keyB: Key|Index) => {
             fireActionOnlyType(Indexed, 'swap', keyB, [keyA]);
@@ -562,21 +562,18 @@ export default class Parcel {
     _get = (key: Key|Index, notFoundValue: any): Parcel => {
         //Types(`get()`, `key`, `keyIndex`)(key);
 
-        let stringKey: Key = keyOrIndexToKey(key)(this._parcelData);
-        let cachedChildParcel: ?Parcel = this._childParcelCache[stringKey];
-        if(cachedChildParcel) {
-            return cachedChildParcel;
+        let stringKey: ?Key = keyOrIndexToKey(key)(this._parcelData);
+
+        if(stringKey) {
+            let cachedChildParcel: ?Parcel = this._childParcelCache[stringKey];
+            if(cachedChildParcel) {
+                return cachedChildParcel;
+            }
         }
 
         this._prepareChildKeys();
         let childParcelData = parcelGet(key, notFoundValue)(this._parcelData);
-
-        // this shouldn't happen in reality, but I cant prove that to flow right now
-        // and it rightly should be an error
-        if(childParcelData.key === undefined) {
-            throw new Error();
-        }
-
+        // $FlowFixMe - childParcelData will always have a key, but internal types arent good enough to tell flow
         let childKey: Key = childParcelData.key;
 
         let childOnDispatch = (changeRequest) => changeRequest._addStep({
@@ -605,7 +602,10 @@ export default class Parcel {
             }
         });
 
-        this._childParcelCache[stringKey] = childParcel;
+        if(stringKey) {
+            this._childParcelCache[stringKey] = childParcel;
+        }
+
         return childParcel;
     };
 
