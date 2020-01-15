@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
-    "unmutable": "^0.46.1"
+    "unmutable": "^0.47.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",

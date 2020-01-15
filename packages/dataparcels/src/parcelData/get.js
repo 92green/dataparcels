@@ -6,19 +6,21 @@ import type {Property} from '../types/Types';
 
 import keyOrIndexToProperty from './keyOrIndexToProperty';
 import keyOrIndexToKey from './keyOrIndexToKey';
+import setSelf from './setSelf';
+import update from './update';
 import getIn from 'unmutable/lib/getIn';
-import pipeWith from 'unmutable/lib/util/pipeWith';
 
-export default (key: Key|Index, notFoundValue: ?*) => (parcelData: ParcelData): ParcelData => {
+export default (key: Key|Index, notFoundValue: any) => (parcelData: ParcelData): ParcelData => {
 
     let property: ?Property = keyOrIndexToProperty(key)(parcelData);
-    let stringKey: Key = keyOrIndexToKey(key)(parcelData);
+    let stringKey: ?Key = keyOrIndexToKey(key)(parcelData);
+
+    if(stringKey === undefined) {
+        parcelData = update(key, setSelf(notFoundValue))(parcelData);
+    }
 
     return {
         value: getIn(['value', property], notFoundValue)(parcelData),
-        ...pipeWith(
-            parcelData,
-            getIn(['child', property], {key: stringKey})
-        )
+        ...getIn(['child', property], {key: stringKey})(parcelData)
     };
 };

@@ -1,20 +1,19 @@
 // @flow
 import type {ActionStep} from '../types/Types';
-import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 
 type ActionData = {
     type?: string,
     payload?: any,
-    keyPath?: Array<Key|Index>,
-    steps?: Array<ActionStep>
+    keyPath?: Key[],
+    steps?: ActionStep[]
 };
 
 export default class Action {
     type: string = "";
     payload: any;
-    keyPath: Array<Key|Index> = [];
-    steps: Array<ActionStep> = [];
+    keyPath: Key[] = [];
+    steps: ActionStep[] = [];
 
     constructor({type, payload = this.payload, keyPath, steps}: ActionData = {}) {
         this.type = type || this.type;

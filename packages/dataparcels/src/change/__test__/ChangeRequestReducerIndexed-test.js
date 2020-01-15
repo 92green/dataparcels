@@ -80,29 +80,7 @@ TestIndex([
     {
         action: {
             type: "delete",
-            keyPath: [0]
-        },
-        expectedData: {
-            value: [1,2],
-            child: [{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "delete",
             keyPath: ["#a"]
-        },
-        expectedData: {
-            value: [1,2],
-            child: [{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "delete",
-            keyPath: [-3]
         },
         expectedData: {
             value: [1,2],
@@ -117,43 +95,7 @@ TestIndex([
         action: {
             type: "insertAfter",
             payload: 3,
-            keyPath: [0]
-        },
-        expectedData: {
-            value: [0,3,1,2],
-            child: [{key: "#a"},{key: "#d"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "insertAfter",
-            payload: 3,
-            keyPath: [2]
-        },
-        expectedData: {
-            value: [0,1,2,3],
-            child: [{key: "#a"},{key: "#b"}, {key: "#c"},{key: "#d"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "insertAfter",
-            payload: 3,
             keyPath: ["#a"]
-        },
-        expectedData: {
-            value: [0,3,1,2],
-            child: [{key: "#a"},{key: "#d"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "insertAfter",
-            payload: 3,
-            keyPath: [-3]
         },
         expectedData: {
             value: [0,3,1,2],
@@ -168,61 +110,11 @@ TestIndex([
         action: {
             type: "insertBefore",
             payload: 3,
-            keyPath: [0]
-        },
-        expectedData: {
-            value: [3,0,1,2],
-            child: [{key: "#d"},{key: "#a"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "insertBefore",
-            payload: 3,
-            keyPath: [2]
-        },
-        expectedData: {
-            value: [0,1,3,2],
-            child: [{key: "#a"},{key: "#b"},{key: "#d"},{key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "insertBefore",
-            payload: 3,
             keyPath: ["#a"]
         },
         expectedData: {
             value: [3,0,1,2],
             child: [{key: "#d"},{key: "#a"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "insertBefore",
-            payload: 3,
-            keyPath: [-3]
-        },
-        expectedData: {
-            value: [3,0,1,2],
-            child: [{key: "#d"},{key: "#a"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    }
-]);
-
-TestIndex([
-    {
-        action: {
-            type: "pop",
-            keyPath: []
-        },
-        expectedData: {
-            value: [0,1],
-            child: [{key: "#a"}, {key: "#b"}],
             ...EXPECTED_KEY_AND_META
         }
     }
@@ -248,18 +140,6 @@ TestIndex([
         action: {
             type: "set",
             payload: 3,
-            keyPath: [0]
-        },
-        expectedData: {
-            value: [3,1,2],
-            child: [{key: "#a"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "set",
-            payload: 3,
             keyPath: ["#a"]
         },
         expectedData: {
@@ -267,60 +147,10 @@ TestIndex([
             child: [{key: "#a"},{key: "#b"}, {key: "#c"}],
             ...EXPECTED_KEY_AND_META
         }
-    },
-    {
-        action: {
-            type: "set",
-            payload: 3,
-            keyPath: [-3]
-        },
-        expectedData: {
-            value: [3,1,2],
-            child: [{key: "#a"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-    {
-        action: {
-            type: "set",
-            payload: 3,
-            keyPath: [3]
-        },
-        expectedData: {
-            value: [0,1,2,3],
-            child: [{key: "#a"},{key: "#b"}, {key: "#c"}, {key: "#d"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-]);
-
-TestIndex([
-    {
-        action: {
-            type: "shift",
-            keyPath: []
-        },
-        expectedData: {
-            value: [1,2],
-            child: [{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
     }
 ]);
 
 TestIndex([
-    {
-        action: {
-            type: "swap",
-            payload: 2,
-            keyPath: [0]
-        },
-        expectedData: {
-            value: [2,1,0],
-            child: [{key: "#c"},{key: "#b"}, {key: "#a"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
     {
         action: {
             type: "swap",
@@ -332,33 +162,10 @@ TestIndex([
             child: [{key: "#c"},{key: "#b"}, {key: "#a"}],
             ...EXPECTED_KEY_AND_META
         }
-    },
-    {
-        action: {
-            type: "swap",
-            payload: -1,
-            keyPath: [-3]
-        },
-        expectedData: {
-            value: [2,1,0],
-            child: [{key: "#c"},{key: "#b"}, {key: "#a"}],
-            ...EXPECTED_KEY_AND_META
-        }
     }
 ]);
 
 TestIndex([
-    {
-        action: {
-            type: "swapNext",
-            keyPath: [0]
-        },
-        expectedData: {
-            value: [1,0,2],
-            child: [{key: "#b"},{key: "#a"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
     {
         action: {
             type: "swapNext",
@@ -369,31 +176,6 @@ TestIndex([
             child: [{key: "#b"},{key: "#a"}, {key: "#c"}],
             ...EXPECTED_KEY_AND_META
         }
-    },
-    {
-        action: {
-            type: "swapNext",
-            keyPath: [-3]
-        },
-        expectedData: {
-            value: [1,0,2],
-            child: [{key: "#b"},{key: "#a"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
-    },
-]);
-
-TestIndex([
-    {
-        action: {
-            type: "unshift",
-            keyPath: [],
-            payload: [3,4]
-        },
-        expectedData: {
-            value: [3,4,0,1,2],
-            child: [{key: "#d"},{key: "#e"},{key: "#a"},{key: "#b"}, {key: "#c"}],
-            ...EXPECTED_KEY_AND_META
-        }
     }
 ]);
+

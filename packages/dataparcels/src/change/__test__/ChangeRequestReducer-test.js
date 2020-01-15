@@ -25,21 +25,10 @@ const ActionCreators = {
             payload: value
         });
     },
-    map: (updater): Action => {
-        return new Action({
-            type: "map",
-            payload: updater
-        });
-    },
     push: (...values): Action => {
         return new Action({
             type: "push",
             payload: values
-        });
-    },
-    pop: (): Action => {
-        return new Action({
-            type: "pop"
         });
     },
     setData: (parcelData): Action => {
@@ -58,11 +47,6 @@ const ActionCreators = {
         return new Action({
             type: "set",
             payload: value
-        });
-    },
-    shift: (): Action => {
-        return new Action({
-            type: "shift"
         });
     },
     swap: (keyA, keyB): Action => {
