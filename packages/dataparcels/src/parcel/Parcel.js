@@ -356,9 +356,13 @@ export default class Parcel {
 
         this.shift = onlyType(Indexed, 'shift', () => this.get(0).delete());
 
-        this.swap = (keyA: Key|Index, keyB: Key|Index) => {
-            fireActionOnlyType(Indexed, 'swap', keyB, [keyA]);
-        };
+        this.swap = onlyType(Indexed, 'swap', (keyOrIndexA: Key|Index, keyOrIndexB: Key|Index) => {
+            let keyA: ?Key = keyOrIndexToKey(keyOrIndexA)(this._parcelData);
+            let keyB: ?Key = keyOrIndexToKey(keyOrIndexB)(this._parcelData);
+            if(keyA !== undefined && keyB !== undefined) {
+                fireAction('swap', keyB, [keyA]);
+            }
+        });
 
         this.swapNext = () => fireActionOnlyType(Element, 'swapNext');
 

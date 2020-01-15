@@ -249,8 +249,8 @@ test('IndexedParcel.swap() should swap', () => {
 
     var expectedAction = {
         type: "swap",
-        keyPath: [0],
-        payload: 2
+        keyPath: ['#a'],
+        payload: '#c'
     };
 
     new Parcel({
