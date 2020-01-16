@@ -15,12 +15,12 @@ export default function FoodEditor(props) {
     return exampleFrame({foodParcel}, <div>
         <label>mains (with 300ms debounce)</label>
         <ParcelBoundary parcel={foodParcel.get('mains')} debounce={300}>
-            {(mains) => <input type="text" {...mains.spreadDOM()} />}
+            {(mains) => <input type="text" {...mains.spreadInput()} />}
         </ParcelBoundary>
 
         <label>dessert (without debounce)</label>
         <ParcelBoundary parcel={foodParcel.get('dessert')}>
-            {(dessert) => <input type="text" {...dessert.spreadDOM()} />}
+            {(dessert) => <input type="text" {...dessert.spreadInput()} />}
         </ParcelBoundary>
     </div>);
 }

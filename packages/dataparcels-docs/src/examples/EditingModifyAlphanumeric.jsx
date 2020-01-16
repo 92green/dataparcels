@@ -12,7 +12,7 @@ export default function AlphanumericEditor(props) {
         {(alphanumericParcel) => {
             let parcel = alphanumericParcel.modifyUp(string => string.replace(/[^a-zA-Z0-9]/g, ""));
             // ^ remove non alpha numeric characters on the way up
-            return <input type="text" {...parcel.spreadDOM()} />;
+            return <input type="text" {...parcel.spreadInput()} />;
         }}
     </ParcelBoundary>);
 }

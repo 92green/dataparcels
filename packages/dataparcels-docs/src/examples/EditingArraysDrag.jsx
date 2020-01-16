@@ -18,7 +18,7 @@ export default function FruitListEditor(props) {
         <ParcelDrag parcel={fruitListParcel}>
             {(fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
                 {(parcel) => <div className="Box-draggable Typography">
-                    <input type="text" {...parcel.spreadDOM()} />
+                    <input type="text" {...parcel.spreadInput()} />
                     <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
                     <button onClick={() => parcel.delete()}>x</button>
                 </div>}

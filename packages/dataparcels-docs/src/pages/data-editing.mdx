@@ -58,7 +58,7 @@ This example demonstrates a pretty typical React setup to do that.
 * It stores the data in state using the [useParcelState](/api/useParcelState) hook. The parcel contains the data.
 * The `.get()` and `getIn()` methods are used on the Parcel to create smaller parcels containing just `firstname`, `lastname` and `postcode` respectively.
 * It uses the [ParcelBoundary](/api/ParcelBoundary) React component to avoid needless re-rendering. This isn't *required*, but it is very recommended.
-* Finally `.spreadDOM()` is used to provide the `value` and `onChange` props to the `input` elements.
+* Finally `.spreadInput()` is used to provide the `value` and `onChange` props to the `input` elements.
 
 For the full list of methods you can use to traverse and change Parcels, see [Branch Methods](/api/Parcel#branch_methods), [Input Binding Methods](/api/Parcel#Input-binding-methods) and [Change Methods](/api/Parcel#Change-methods) in the Parcel API reference.
 

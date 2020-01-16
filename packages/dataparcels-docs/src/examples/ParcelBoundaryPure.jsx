@@ -34,14 +34,14 @@ export default function PersonEditor(props) {
                 <label>first</label>
                 <ParcelBoundary parcel={name.get('first')}>
                     {(first) => <DebugRender>
-                        <input type="text" {...first.spreadDOM()} />
+                        <input type="text" {...first.spreadInput()} />
                     </DebugRender>}
                 </ParcelBoundary>
 
                 <label>last</label>
                 <ParcelBoundary parcel={name.get('last')}>
                     {(last) => <DebugRender>
-                        <input type="text" {...last.spreadDOM()} />
+                        <input type="text" {...last.spreadInput()} />
                     </DebugRender>}
                 </ParcelBoundary>
             </DebugRender>
@@ -51,7 +51,7 @@ export default function PersonEditor(props) {
         <label>age</label>
         <ParcelBoundary parcel={personParcel.get('age')}>
             {(age) => <DebugRender>
-                <input type="text" {...age.spreadDOM()} />
+                <input type="text" {...age.spreadInput()} />
             </DebugRender>}
         </ParcelBoundary>
     </div>);

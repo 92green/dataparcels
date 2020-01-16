@@ -70,7 +70,7 @@ The return value of `childRenderer` will be rendered.
 // personParcel is a Parcel
 <ParcelBoundary parcel={personParcel}>
     {(parcel, buffer) => {
-        return <input type="text" {...parcel.spreadDOM()} />;
+        return <input type="text" {...parcel.spreadInput()} />;
     }}
 </ParcelBoundary>
 ```
@@ -122,7 +122,7 @@ While a ParcelBoundary is using pure rendering, `forceUpdate` will force the Par
 // despite personParcel not changing
 
 <ParcelBoundary parcel={personParcel} forceUpdate={[options]}>
-    {(personParcel) => <Select {...personParcel.spreadDOM()} options={options} />}
+    {(personParcel) => <Select {...personParcel.spreadInput()} options={options} />}
 </ParcelBoundary>
 ```
 
@@ -142,7 +142,7 @@ This can be useful for building UIs that have a submit action on a particular fi
     {(personParcel, {submit, reset}) => {
         // personParcel is now inside the ParcelBoundary
         return <div>
-            <input type="text" {...personParcel.spreadDOM()} />
+            <input type="text" {...personParcel.spreadInput()} />
             <button onClick={() => submit()}>Submit</button>
             <button onClick={() => reset()}>Cancel</button>
         </div>;
@@ -171,7 +171,7 @@ Debouncing can be good for rendering performance because parcels outside the Par
 ```js
 // personParcel is a Parcel
 <ParcelBoundary parcel={personParcel} debounce={100}>
-    {(personParcel) => <input type="text" {...personParcel.spreadDOM()} />}
+    {(personParcel) => <input type="text" {...personParcel.spreadInput()} />}
 </ParcelBoundary>
 ```
 
@@ -195,7 +195,7 @@ let numberParcel = parcel
     .modifyUp(string => Number(string));
 
 return <ParcelBoundary parcel={numberParcel} keepValue>
-    {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
+    {(parcel) => <input type="text" {...parcel.spreadInput()} />}
 </ParcelBoundary>;
 
 ```

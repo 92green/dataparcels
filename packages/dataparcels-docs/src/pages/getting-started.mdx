@@ -1,4 +1,3 @@
-import EditingObjectsBeginner from 'examples/EditingObjectsBeginner';
 import EditingObjects from 'examples/EditingObjects';
 
 # Getting Started
@@ -38,58 +37,6 @@ Say we want to allow the user to edit the fields in the following data structure
 
 We could do something like this.
 
-<EditingObjectsBeginner />
-
-```js
-import React from 'react';
-import useParcelState from 'react-dataparcels/useParcelState';
-
-// PLEASE DON'T USE THIS CODE
-// THIS CODE IS FOR DEMONSTRATION PURPOSES ONLY
-// THERE'S A BETTER WAY OF DOING IT BELOW
-
-export default function PersonEditor(props) {
-
-    let [personParcel] = useParcelState({
-        value: {
-            firstname: "Robert",
-            lastname: "Clamps",
-            address: {
-                postcode: "1234"
-            }
-        }
-    });
-
-    let firstname = personParcel.get('firstname');
-    let lastname = personParcel.get('lastname');
-    let postcode = personParcel.getIn(['address', 'postcode']);
-
-    return <div>
-        <label>firstname</label>
-        <input type="text" value={firstname.value} onChange={firstname.onChangeDOM} />
-
-        <label>lastname</label>
-        <input type="text" value={lastname.value} onChange={lastname.onChangeDOM} />
-
-        <label>postcode</label>
-        <input type="text" value={postcode.value} onChange={postcode.onChangeDOM} />
-    </div>;
-};
-```
-
-### What's going on
-
-* `react-dataparcels` is imported.
-* It stores the data in state using the [useParcelState](/api/useParcelState) hook. The parcel contains the data.
-* The `.get()` method is used to branch off and create smaller parcels containing just `firstname`, `lastname` and `postcode`.
-* The `value` and the `onChangeDOM` functions aree given to each of the `input` elements to bind them to the parcel.
-
-Notice how changes to each of the fields are merged into the original data structure for you. Ths example works well, but there are a few improvements to be made.
-
-## Hello World 2
-
-This is the same example with a few improvements added: better rendering performance, and a reduction of repetitive code.
-
 <EditingObjects />
 
 ```js
@@ -112,17 +59,17 @@ export default function PersonEditor(props) {
     return <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+            {(firstname) => <input type="text" {...firstname.spreadInput()} />}
         </ParcelBoundary>
 
         <label>lastname</label>
         <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+            {(lastname) => <input type="text" {...lastname.spreadInput()} />}
         </ParcelBoundary>
 
         <label>postcode</label>
         <ParcelBoundary parcel={personParcel.getIn(['address', 'postcode'])}>
-            {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
+            {(postcode) => <input type="text" {...postcode.spreadInput()} />}
         </ParcelBoundary>
     </div>;
 };
@@ -130,10 +77,15 @@ export default function PersonEditor(props) {
 
 ```
 
-### What's better about it?
+### What's going on?
 
-* It's now using the [ParcelBoundary](/api/ParcelBoundary) React component to make sure that inputs are only re-rendered if their values have changed. This isn't *required*, but it is **very** recommended. Without this, all inputs will re-render any time any data changes.
-* `.spreadDOM()` is used to provide the `value` and `onChangeDOM` props to the `input` elements more easily.
+* `react-dataparcels` is imported.
+* It stores the data in state using the [useParcelState](/api/useParcelState) hook. The parcel contains the data.
+* The `.get()` method is used to branch off and create smaller parcels containing just `firstname`, `lastname` and `postcode`.
+* `.spreadInput()` is used to provide the `value` and `onChange` props to the `input` elements, controlling their values and handling their changes.
+* It's using the [ParcelBoundary](/api/ParcelBoundary) React component to make sure that inputs are only re-rendered if their values have changed. This isn't *required*, but it is **very** recommended. Without this, all inputs will re-render any time any data changes.
+Notice how changes to each of the fields are merged into the original data structure for you. Ths example works well, but there are a few improvements to be made.
+
 
 ## More
 

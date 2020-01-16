@@ -17,7 +17,7 @@ export default function FruitListEditor(props) {
         {fruitListParcel.toArray((fruitParcel) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => <div>
-                    <input type="text" {...parcel.spreadDOM()} />
+                    <input type="text" {...parcel.spreadInput()} />
                     {parcel.meta.confirming
                         ? <span><span className="Text Text-marginRight">Are you sure?</span>
                             <button onClick={() => parcel.delete()}>yes</button>

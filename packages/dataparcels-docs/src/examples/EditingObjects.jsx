@@ -20,17 +20,17 @@ export default function PersonEditor(props) {
         <div>
             <label>firstname</label>
             <ParcelBoundary parcel={personParcel.get('firstname')}>
-                {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+                {(firstname) => <input type="text" {...firstname.spreadInput()} />}
             </ParcelBoundary>
 
             <label>lastname</label>
             <ParcelBoundary parcel={personParcel.get('lastname')}>
-                {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+                {(lastname) => <input type="text" {...lastname.spreadInput()} />}
             </ParcelBoundary>
 
             <label>postcode</label>
             <ParcelBoundary parcel={personParcel.getIn(['address', 'postcode'])}>
-                {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
+                {(postcode) => <input type="text" {...postcode.spreadInput()} />}
             </ParcelBoundary>
         </div>
     );

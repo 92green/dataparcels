@@ -33,12 +33,12 @@ export default function SignUpForm(props) {
     return exampleFrame({personParcelState, personParcel}, <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+            {(firstname) => <input type="text" {...firstname.spreadInput()} />}
         </ParcelBoundary>
 
         <label>lastname</label>
         <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+            {(lastname) => <input type="text" {...lastname.spreadInput()} />}
         </ParcelBoundary>
 
         <button onClick={() => personParcelControl.submit()}>Submit</button>

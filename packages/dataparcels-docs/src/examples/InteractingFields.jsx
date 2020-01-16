@@ -57,17 +57,17 @@ export default function AreaEditor(props) {
     return exampleFrame({sumParcel}, <div>
         <label>a</label>
         <ParcelBoundary parcel={sumParcel.get('a').pipe(numberToString)} keepValue>
-            {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
+            {(parcel) => <input type="number" step="any" {...parcel.spreadInput()} />}
         </ParcelBoundary>
 
         <label>b</label>
         <ParcelBoundary parcel={sumParcel.get('b').pipe(numberToString)} keepValue>
-            {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
+            {(parcel) => <input type="number" step="any" {...parcel.spreadInput()} />}
         </ParcelBoundary>
 
         <label>sum</label>
         <ParcelBoundary parcel={sumParcel.get('sum').pipe(numberToString)} keepValue>
-            {(parcel) => <input type="number" step="any" {...parcel.spreadDOM()} />}
+            {(parcel) => <input type="number" step="any" {...parcel.spreadInput()} />}
         </ParcelBoundary>
     </div>);
 }

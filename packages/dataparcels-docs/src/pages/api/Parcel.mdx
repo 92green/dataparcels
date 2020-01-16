@@ -173,6 +173,78 @@ let parcel = new Parcel({value});
 parcel.get("abc").get("def").path; // returns ["abc", "def"]
 ```
 
+### isParent
+
+```flow
+isParent: boolean
+```
+
+Is true if the parcel is a parent parcel. Read [Parcel types](/parcel-types) for more info.
+
+When a parcel is a parent parcel, it allows the use of [branch methods](#Branch-methods) and [parent methods](#Parent-methods).
+
+### isChild
+
+```flow
+isChild: boolean
+```
+
+Is true if the parcel is a child parcel. Read [Parcel types](/parcel-types) for more info.
+
+When a parcel is a child parcel, it allows the use of [child methods](#Child-methods).
+
+### isIndexed
+
+```flow
+isIndexed: boolean
+```
+
+Is true if the parcel is an indexed parcel. Read [Parcel types](/parcel-types) for more info.
+
+When a parcel is an indexed parcel, it allows the use of [indexed methods](#Indexed-and-element-change-methods).
+
+### isElement
+
+```flow
+isElement: boolean
+```
+
+Is true if the parcel is an element parcel. Read [Parcel types](/parcel-types) for more info.
+
+When a parcel is an element parcel, it allows the use of [element methods](#Indexed-and-element-change-methods).
+
+### size
+
+```flow
+size: number
+```
+
+The number of children this Parcel has. If the parcel is not a parent parcel, `size` will be `0`.
+
+### isFirst
+
+```flow
+isFirst: boolean
+```
+
+Is true if this parcel is the first of its siblings.
+
+### isLast
+
+```flow
+isLast: boolean
+```
+
+Is true if this parcel is the last of its siblings.
+
+### isOnly
+
+```flow
+isOnly: boolean
+```
+
+Is true if this parcel is the only child in its parent.
+
 ## <DocsSectionHeading>Branch methods</DocsSectionHeading>
 
 ### get()
@@ -311,7 +383,7 @@ Typically [Parcel meta](/parcel-meta) is accessed and set via the [.meta](#meta)
 ```js
 let parcel = new Parcel({value: 123});
 
-<input {...parcel.metaAsValue('foo').spreadDOM()} />
+<input {...parcel.metaAsValue('foo').spreadInput()} />
 
 // if 'bar' is entered in the input, parcel.meta.foo will equal 'bar'
 ```
@@ -339,20 +411,20 @@ let parcel = new Parcel({
 <MyInputComponent {...parcel.spread()} />
 
 // ^ this is equivalent to
-// <MyInputComponent value={parcel.value} onChange={parcel.onChange} />
+// <MyInputComponent value={parcel.value} onChange={parcel.set} />
 
 ```
 
-### spreadDOM()
+### spreadInput()
 
 ```flow
-spreadDOM(): {value: *, onChange: OnChangeDOMFunction}
-spreadDOM(notFoundValue: any): {value: *, onChange: OnChangeDOMFunction}
+spreadInput(): {value: *, onChange: OnChangeFunction}
+spreadInput(notFoundValue: any): {value: *, onChange: OnChangeFunction}
 
-type OnChangeDOMFunction = (event: HTMLEvent) => void;
+type OnChangeFunction = (event: HTMLEvent) => void;
 ```
 
-This is designed to bind a Parcel with an HTML input. It returns an object with the Parcel's `value` and its `onChangeDOM` function.
+This is designed to bind a Parcel with an HTML input. It returns an object with the Parcel's `value` and an `onChange` function.
 
 If `notFoundValue` is provided, and the Parcel's value is undefined or has been marked for deletion, the returned value will be equal to `notFoundValue`.
 
@@ -361,24 +433,24 @@ let parcel = new Parcel({
     value: 123
 });
 
-<input {...parcel.spreadDOM()} />
+<input {...parcel.spreadInput()} />
 
 // ^ this is equivalent to
-// <input value={parcel.value} onChange={parcel.onChangeDOM} />
+// <input value={parcel.value} onChange={event => parcel.set(event.currentTarget.value)} />
 
 ```
 
-### spreadDOMCheckbox()
+### spreadCheckbox()
 
 ```flow
-spreadDOMCheckbox(): {value: *, onChange: OnChangeDOMCheckboxFunction}
-spreadDOMCheckbox(notFoundValue: boolean): {value: *, onChange: OnChangeDOMCheckboxFunction}
+spreadCheckbox(): {value: *, onChange: OnChangeFunction}
+spreadCheckbox(notFoundValue: boolean): {value: *, onChange: OnChangeFunction}
 
-type OnChangeDOMCheckboxFunction = (event: HTMLEvent) => void;
+type OnChangeFunction = (event: HTMLEvent) => void;
 ```
 
 This is designed to bind a Parcel with an HTML checkbox.
-It returns an object with `checked` and `onChange`, where `checked` is the Parcel's `value` cast to a boolean, and `onChange` is the Parcel's `onChangeDOMCheckbox` function.
+It returns an object with `checked` and `onChange`, where `checked` is the Parcel's `value` cast to a boolean, and an `onChange` function.
 
 If `notFoundValue` is provided, and the Parcel's value is undefined or has been marked for deletion, the returned value will be equal to `notFoundValue` cast to a boolean.
 
@@ -387,120 +459,8 @@ let parcel = new Parcel({
     value: 123
 });
 
-<input type="checkbox" {...parcel.spreadDOMCheckbox()} />
+<input type="checkbox" {...parcel.spreadCheckbox()} />
 ```
-
-### onChange()
-
-```flow
-onChange(value: any): void
-```
-
-This is designed for use with input components that call `onChange` with a new value.
-It triggers a change that replaces the current value in the Parcel with the `value` provided.
-
-If called on a ParentParcel, any child information that the Parcel had is removed, such as child keys or meta.
-
-It is equivalent to calling [set()](#set()).
-
-```js
-let parcel = new Parcel({
-    value: 123
-});
-
-<MyInputComponent
-    value={parcel.value}
-    onChange={parcel.onChange}
-/>
-
-```
-
-<Box modifier="margin">
-    <Message>See also:
-        <Text element="div">- <Link href="#spread()">spread</Link> for convenient spreading of value and onChange onto an input</Text>
-        <Text element="div">- <Link href="#onChangeDOM()">onChangeDOM</Link> for use with HTML inputs</Text>
-        <Text element="div">- <Link href="#onChangeDOMCheckbox()">onChangeDOMCheckbox</Link> for use with HTML checkboxes</Text>
-    </Message>
-</Box>
-
-### onChangeDOM()
-
-```flow
-onChangeDOM(event: HTMLEvent): void
-```
-
-This is designed for use with HTML inputs.
-It triggers a change that replaces the current value in the Parcel with the `value` of the event provided.
-
-If called on a ParentParcel, any child information that the Parcel had is removed, such as child keys or meta.
-
-```js
-let parcel = new Parcel({
-    value: 123
-});
-
-<input
-    value={parcel.value}
-    onChangeDOM={parcel.onChangeDOM}
-/>
-
-```
-
-<Box modifier="margin">
-    <Message>See also:
-        <Text element="div">- <Link href="#spreadDOM()">spreadDOM</Link> for convenient spreading of value and onChangeDOM onto an input</Text>
-        <Text element="div">- <Link href="#onChange()">onChange</Link> for use with input components that call `onChange` with a new value.</Text>
-        <Text element="div">- <Link href="#onChangeDOMCheckbox()">onChangeDOMCheckbox</Link> for use with HTML checkboxes</Text>
-    </Message>
-</Box>
-
-### onChangeDOMCheckbox()
-
-```flow
-onChangeDOMCheckbox(event: HTMLEvent): void
-```
-
-This is designed for use with HTML checkboxes.
-It triggers a change that replaces the current value in the Parcel with the checked state of the checkbox.
-
-```js
-let parcel = new Parcel({
-    value: false
-});
-
-<input
-    type="checkbox"
-    value={parcel.value}
-    onChangeDOMCheckbox={parcel.onChangeDOMCheckbox}
-/>
-
-```
-
-<Box modifier="margin">
-    <Message>See also:
-        <Text element="div">- <Link href="#spreadDOMCheckbox()">spreadDOMCheckbox</Link> for convenient spreading of value and onChange onto an input</Text>
-        <Text element="div">- <Link href="#onChangeDOM()">onChangeDOM</Link> for use with input components that call `onChange` with a new value.</Text>
-    </Message>
-</Box>
-
-
-## <DocsSectionHeading>Child methods</DocsSectionHeading>
-
-### isFirst()
-
-```flow
-isFirst(): boolean
-```
-
-Returns true if this parcel is the first of its siblings.
-
-### isLast()
-
-```flow
-isLast(): boolean
-```
-
-Returns true if this parcel is the last of its siblings.
 
 ## <DocsSectionHeading>Change methods</DocsSectionHeading>
 
@@ -562,32 +522,6 @@ let parcel = new Parcel({
 });
 parcel.update(value => value + 1);
 // this triggers a change that sets the parcel's value to 124
-```
-
-<ValueUpdater />
-
-### map()
-
-```flow
-// updates value - only to be used if shape doesn't change
-map((value: any) => any): Parcel
-
-// updates shape / meta
-update(asNode((node: ParcelNode) => ParcelNode)): Parcel
-update(asChildNodes((nodes: any) => any): Parcel
-```
-
-The `map()` function will trigger a change that will update every child value. It is passed each child value in order, from which you can return each intended replacement value.
-
-```js
-let value = {
-    a: 1,
-    b: 2,
-    c: 3
-};
-let parcel = new Parcel({value});
-parcel.map(value => value * 2);
-// this triggers a change that sets the parcel's value to {a: 2, b: 4, c: 6}
 ```
 
 <ValueUpdater />
@@ -781,65 +715,6 @@ has(key: string|number): boolean // only on ParentParcels
 
 Returns true if the Parcel has a child at the provided `key` or `index`, or false otherwise.
 
-### size()
-
-```flow
-size(): number // only on ParentParcels
-```
-
-Returns the number of children this Parcel has.
-
-## <DocsSectionHeading>Type methods</DocsSectionHeading>
-
-### isChild()
-
-```flow
-isChild(): boolean
-```
-
-Returns true if the parcel is a child parcel. Read [Parcel types](/parcel-types) for more info.
-
-When a parcel is a child parcel, it allows the use of [child methods](#Child-methods).
-
-### isElement()
-
-```flow
-isElement(): boolean
-```
-
-Returns true if the parcel is an element parcel. Read [Parcel types](/parcel-types) for more info.
-
-When a parcel is an element parcel, it allows the use of [element methods](#Indexed-and-element-change-methods).
-
-### isIndexed()
-
-```flow
-isIndexed(): boolean
-```
-
-Returns true if the parcel is an indexed parcel. Read [Parcel types](/parcel-types) for more info.
-
-When a parcel is an indexed parcel, it allows the use of [indexed methods](#Indexed-and-element-change-methods).
-
-
-### isParent()
-
-```flow
-isParent(): boolean
-```
-
-Returns true if the parcel is a parent parcel. Read [Parcel types](/parcel-types) for more info.
-
-When a parcel is a parent parcel, it allows the use of [branch methods](#Branch-methods) and [parent methods](#Parent-methods).
-
-### isTopLevel()
-
-```flow
-isTopLevel(): boolean
-```
-
-Returns true if the parcel is a top level parcel. Read [Parcel types](/parcel-types) for more info.
-
 ## <DocsSectionHeading>Modify methods</DocsSectionHeading>
 
 ### modifyDown()
@@ -989,7 +864,7 @@ parcel
     .spyChange(changeRequest => console.log(changeRequest.nextData)) // 3. logs the change request to the console (containing {abc: 456})
     .get('abc')
     .spyChange(changeRequest => console.log(changeRequest.nextData)) // 2. logs the change request to the console (containing 456)
-    .onChange(456); // 1. a change is made
+    .set(456); // 1. a change is made
 ```
 
 
