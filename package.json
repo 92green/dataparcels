@@ -5,7 +5,7 @@
     "prep": "yarn && yarn lerna bootstrap && yarn lerna run build",
     "build": "yarn lerna run build",
     "build-docs": "yarn copy-readmes && cd packages/dataparcels-docs && yarn build-docs",
-    "bump": "yarn lerna publish",
+    "bump": "yarn lerna publish --pre-dist-tag next",
     "copy-readmes": "cp README.md packages/dataparcels/README.md && cp README.md packages/react-dataparcels/README.md",
     "preversion": "yarn build",
     "reinstall": "rm -rf node_modules && rm -rf packages/*/node_modules && yarn prep",
