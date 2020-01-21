@@ -13,7 +13,7 @@
     "watch": "yarn lerna run watch --parallel"
   },
   "dependencies": {
-    "lerna": "^3.10.7"
+    "lerna": "^3.20.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
