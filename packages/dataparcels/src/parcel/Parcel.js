@@ -117,7 +117,6 @@ export default class Parcel {
     set: Function;
     update: Function;
     delete: Function;
-    map: Function;
 
     // Advanced change methods
     setMeta: Function;
