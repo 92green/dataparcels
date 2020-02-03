@@ -1,11 +1,12 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
+import type ChangeRequest from '../change/ChangeRequest';
 
 import asNode from '../parcelNode/asNode';
 
 type Config = {
-    down?: Function,
-    up?: Function,
+    down?: (value: any) => any,
+    up?: (value: any, changeRequest: ChangeRequest) => any,
     preserveInput?: boolean
 };
 
@@ -29,7 +30,7 @@ export default (config: Config) => {
             }
             return node.update(down);
         }))
-        .modifyUp(asNode(node => {
+        .modifyUp(asNode((node) => {
             return node
                 .update(up)
                 .setMeta({
