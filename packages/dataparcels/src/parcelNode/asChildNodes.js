@@ -47,16 +47,14 @@ const updateChildNodes = (node: ParcelNode, updater: Function, changeRequest: *)
     let newChild = pipeWith(
         updated,
         shallowToJS(),
-        map(node => {
-            let {child, meta, key} = node.data;
-
+        map(childNode => {
+            let {child, meta, key} = childNode.data;
             let keyExists = keyMap[key];
             keyMap[key] = true;
-            if(keyExists || node._parent !== node) {
+            if(keyExists || childNode._parent !== node) {
                 hasNewNode = true;
                 key = undefined;
             }
-
             return {child, meta, key};
         })
     );
