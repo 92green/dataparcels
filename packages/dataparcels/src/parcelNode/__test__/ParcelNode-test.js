@@ -93,55 +93,16 @@ test('ParcelNodes should update() non-parent values and keep meta and key', () =
     expect(result.key).toBe('aaa');
 });
 
-test('ParcelNodes should update() parent values to non-parent values', () => {
-    let node = new ParcelNode([1,2,3]);
-    let result = node.update(value => value.map(node => node.value).join(", "));
-    expect(result.value).toBe('1, 2, 3');
-});
+test('ParcelNodes should update() parent values without replacing children with nodes', () => {
+    let node = new ParcelNode();
+    node._parcelData = {
+        value: [1,2,3]
+    };
 
-test('ParcelNodes should update() parent values', () => {
-    let node = new ParcelNode([1,2,3]);
-    let result = node.update(reverse());
-    expect(result.value).toEqual([3,2,1]);
-    expect(result.get('#a').value).toBe(1);
-});
+    let updater = jest.fn(value => value);
 
-test('ParcelNodes should update() parent values changing type', () => {
-    let node = new ParcelNode({foo: 'bar', baz: 'qux'});
-    let result = node.update(toArray());
-    expect(result.value).toEqual(['bar', 'qux']);
-    // keys should have been recalculated
-    expect(result.get('#a').value).toBe('bar');
-});
+    let result = node.update(updater);
 
-test('ParcelNodes should update() parent values adding a new ParcelNode', () => {
-    let node = new ParcelNode([1,2,3]);
-    let result = node.update(arr => [...arr, new ParcelNode(4)]);
-    expect(result.value).toEqual([1,2,3,4]);
-    expect(result.get('#d').value).toBe(4);
-});
-
-test('ParcelNodes should update() parent values adding a new non-ParcelNode', () => {
-    let node = new ParcelNode([1,2,3]);
-    let result = node.update(arr => [...arr, 4]);
-    expect(result.value).toEqual([1,2,3,4]);
-    expect(result.get('#d').value).toBe(4);
-});
-
-test('ParcelNodes should update() parent values adding duplicated ParcelNodes', () => {
-    let node = new ParcelNode([1,2,3]);
-    let result = node.update(arr => [...arr, ...arr]);
-    expect(result.value).toEqual([1,2,3,1,2,3]);
-    expect(result.get('#d').value).toBe(1);
-    expect(result.get('#e').value).toBe(2);
-    expect(result.get('#f').value).toBe(3);
-});
-
-test('ParcelNodes should update() parent values adding ParcelNodes from other parcelnodes', () => {
-    let node = new ParcelNode([1,2,[3],4,5]);
-    let grandchild = node.get(2).get(0); // will have a value of 3
-    let result = node.update(arr => [arr[3], grandchild]);
-    expect(result.value).toEqual([4,3]);
-    expect(result.get(0).key).toBe('#d');
-    expect(result.get(1).key).toBe('#f');
+    expect(updater).toHaveBeenCalledTimes(1);
+    expect(updater.mock.calls[0][0]).toEqual([1,2,3]);
 });
