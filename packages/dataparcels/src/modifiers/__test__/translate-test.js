@@ -115,6 +115,7 @@ test('translate with preserveInput should continue to use translated value even 
 
     expect(isNaN(nextParcel.value)).toBe(true);
     expect(nextParcel.pipe(numberToStringPreserve).value).toBe('notanumber!');
+    expect(isNaN(nextParcel.pipe(numberToStringPreserve).meta.untranslated)).toBe(true);
 });
 
 test('translate with preserveInput should overwrite translated value if it changes from another source', () => {

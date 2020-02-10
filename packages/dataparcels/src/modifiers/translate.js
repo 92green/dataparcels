@@ -25,16 +25,22 @@ export default (config: Config) => {
 
     return (parcel: Parcel): Parcel => parcel
         .modifyDown(asNode(node => {
-            if('_translated' in node.meta) {
-                return node.update(() => node.meta._translated);
+            if('translated' in node.meta) {
+                return node.update(() => node.meta.translated);
             }
-            return node.update(down);
+            return node
+                .update(down)
+                .setMeta({
+                    untranslated: node.value
+                });
         }))
         .modifyUp(asNode((node) => {
-            return node
-                .update(up)
+            let updated = node.update(up);
+
+            return updated
                 .setMeta({
-                    _translated: node.value
+                    translated: node.value,
+                    untranslated: updated.value
                 });
         }));
 };
