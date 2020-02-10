@@ -60,6 +60,10 @@
         "path": "ParcelBoundaryHoc.js"
     },
     {
+        "limit": "47.3 KB",
+        "path": "ParcelDrag.js"
+    },
+    {
         "limit": "11.6 KB",
         "path": "ParcelHoc.js"
     },
