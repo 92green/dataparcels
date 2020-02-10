@@ -28,6 +28,7 @@ export default (config: Config) => {
             if('translated' in node.meta) {
                 return node.update(() => node.meta.translated);
             }
+
             return node
                 .update(down)
                 .setMeta({
