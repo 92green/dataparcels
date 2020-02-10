@@ -43,7 +43,9 @@ export default ({children, parcel, onSortEnd, container, ...sortableElementProps
         childRenderer={children}
         onSortEnd={(param) => {
             let {oldIndex, newIndex} = param;
-            parcel.update(asChildNodes(move(oldIndex, newIndex)));
+            if(oldIndex !== newIndex) {
+                parcel.update(asChildNodes(move(oldIndex, newIndex)));
+            }
             onSortEnd && onSortEnd(param);
         }}
         {...sortableElementProps}
