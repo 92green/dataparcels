@@ -17,6 +17,7 @@ import validation from '../validation';
 import ParcelHoc from '../ParcelHoc';
 import ParcelBoundary from '../ParcelBoundary';
 import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
+import ParcelDrag from '../ParcelDrag';
 import useParcelBuffer from '../useParcelBuffer';
 import useParcelForm from '../useParcelForm';
 import useParcelState from '../useParcelState';
@@ -40,6 +41,7 @@ import InternalValidation from 'dataparcels/validation';
 import InternalParcelHoc from '../lib/deprecated/ParcelHoc';
 import InternalParcelBoundary from '../lib/ParcelBoundary';
 import InternalParcelBoundaryHoc from '../lib/deprecated/ParcelBoundaryHoc';
+import InternalParcelDrag from '../lib/ParcelDrag';
 import InternalUseParcelBuffer from '../lib/useParcelBuffer';
 import InternalUseParcelForm from '../lib/useParcelForm';
 import InternalUseParcelState from '../lib/useParcelState';
@@ -100,6 +102,10 @@ test('/ParcelBoundary should export ParcelBoundary', () => {
 
 test('/ParcelBoundaryHoc should export ParcelBoundaryHoc', () => {
     expect(ParcelBoundaryHoc).toBe(InternalParcelBoundaryHoc);
+});
+
+test('/ParcelDrag should export ParcelDrag', () => {
+    expect(ParcelDrag).toBe(InternalParcelDrag);
 });
 
 test('/useParcelBuffer should export useParcelBuffer', () => {

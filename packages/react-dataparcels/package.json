@@ -23,6 +23,7 @@
     "deleted.js",
     "ParcelBoundary.js",
     "ParcelBoundaryHoc.js",
+    "ParcelDrag.js",
     "ParcelHoc.js",
     "ParcelNode.js",
     "asChildNodes.js",
@@ -51,6 +52,7 @@
     "@babel/runtime": "^7.1.5",
     "dataparcels": "^2.0.0-alpha.1",
     "is-promise": "^2.1.0",
+    "react-sortable-hoc": "1.4.0",
     "unmutable": "^0.47.1",
     "use-debounce": "^1.1.3"
   },
