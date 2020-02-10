@@ -30,6 +30,25 @@ test('ParcelDrag must pass props correctly', () => {
     expect(props3.children.length).toBe(3);
 });
 
+test('ParcelDrag must not call change if oldIndex and newIndex are the same', () => {
+
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
+        value: [1,2,3],
+        handleChange
+    });
+
+    // $FlowFixMe
+    let wrapper = shallow(<ParcelDrag parcel={parcel} children={() => <div />} />, {disableLifecycleMethods: true});
+
+    // first level in
+    let props1 = wrapper.props();
+    expect(props1.parcel).toBe(parcel);
+    props1.onSortEnd({oldIndex: 1, newIndex: 1});
+    expect(handleChange).not.toHaveBeenCalled();
+});
+
 test('ParcelDrag should throw if parcel is not indexed', () => {
 
     let parcel = new Parcel({
