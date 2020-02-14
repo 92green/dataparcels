@@ -1,7 +1,7 @@
 {
   "name": "react-dendriform-drag",
-  "private": true,
-  "version": "1.0.2",
+  "private": false,
+  "version": "1.0.3",
   "description": "A plugin for react-dataparcels that adds drag and drop re-ordering of elements.",
   "main": "lib/index.js",
   "license": "MIT",
@@ -16,7 +16,6 @@
   "bugs": {
     "url": "https://github.com/blueflag/dataparcels/issues"
   },
-  "private": false,
   "scripts": {
     "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib --ignore '**/__test__/*.js'",
     "build-all": "yarn build",
@@ -38,7 +37,7 @@
     "@babel/core": "^7.1.2",
     "babel-preset-blueflag": "^1.0.0",
     "blueflag-test": "^0.22.0",
-    "dendriform": "^1.0.2",
+    "dendriform": "^1.0.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "size-limit": "1.0.1"
