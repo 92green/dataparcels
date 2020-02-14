@@ -1,5 +1,5 @@
 {
-  "name": "dataparcels",
+  "name": "dendriform",
   "version": "1.0.2",
   "description": "A library for editing data structures that works really well with React.",
   "main": "lib/index.js",

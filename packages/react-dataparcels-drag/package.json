@@ -1,5 +1,6 @@
 {
-  "name": "react-dataparcels-drag",
+  "name": "react-dendriform-drag",
+  "private": true,
   "version": "1.0.2",
   "description": "A plugin for react-dataparcels that adds drag and drop re-ordering of elements.",
   "main": "lib/index.js",
