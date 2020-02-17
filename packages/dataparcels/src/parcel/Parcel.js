@@ -623,12 +623,7 @@ export default class Parcel {
     };
 
     _idPushModifierUpdater = (prefix: string, updater: ParcelValueUpdater): string[] => {
-        let hash = (fn: Function): string => `${HashString(fn.toString())}`;
-        let id = updater._asRaw
-            ? `s${hash(updater._updater || updater)}`
-            : hash(updater);
-
-        return this._idPushModifier(`${prefix}-${id}`);
+        return this._idPushModifier(`${prefix}-${HashString((updater._updater || updater).toString())}`);
     };
 
     // prepare child keys only once per parcel instance
