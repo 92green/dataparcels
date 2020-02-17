@@ -32,10 +32,6 @@
         "path": "asChildNodes.js"
     },
     {
-        "limit": "0.1 KB",
-        "path": "asRaw.js"
-    },
-    {
         "limit": "6.1 KB",
         "path": "translate.js"
     },

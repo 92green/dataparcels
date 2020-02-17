@@ -4,7 +4,6 @@
 import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import asRaw from '../asRaw';
 import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
 import asNode from '../asNode';
@@ -19,7 +18,6 @@ import InternalParcel from '../src/parcel/Parcel';
 // internal lib files
 import InternalAction from '../lib/change/Action';
 import InternalChangeRequest from '../lib/change/ChangeRequest';
-import InternalUpdateRaw from '../lib/parcelData/asRaw';
 import Internaldeleted from '../lib/parcelData/deleted';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
 import InternalAsNode from '../lib/parcelNode/asNode';
@@ -38,10 +36,6 @@ test('/Action should export Action', () => {
 
 test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
-});
-
-test('/asRaw should export asRaw', () => {
-    expect(asRaw).toBe(InternalUpdateRaw);
 });
 
 test('/deleted should export deleted', () => {

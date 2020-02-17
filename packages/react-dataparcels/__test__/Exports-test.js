@@ -4,7 +4,6 @@
 import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import asRaw from '../asRaw';
 import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
 import asNode from '../asNode';
@@ -28,7 +27,6 @@ import asyncValue from '../asyncValue';
 import InternalParcel from 'dataparcels';
 import InternalAction from 'dataparcels/Action';
 import InternalChangeRequest from 'dataparcels/ChangeRequest';
-import InternalUpdateRaw from 'dataparcels/asRaw';
 import Internaldeleted from 'dataparcels/deleted';
 import InternalParcelNode from 'dataparcels/ParcelNode';
 import InternalAsNode from 'dataparcels/asNode';
@@ -58,10 +56,6 @@ test('/Action should export Action', () => {
 
 test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
-});
-
-test('/asRaw should export asRaw', () => {
-    expect(asRaw).toBe(InternalUpdateRaw);
 });
 
 test('/deleted should export deleted', () => {
