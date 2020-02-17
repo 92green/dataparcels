@@ -2,7 +2,6 @@
 import type {ParcelData} from '../types/Types';
 
 import {AsNodeReturnNonParcelNodeError} from '../errors/Errors';
-import asRaw from '../parcelData/asRaw';
 import ParcelNode from './ParcelNode';
 
 export default (updater: Function): Function => {
@@ -17,5 +16,5 @@ export default (updater: Function): Function => {
         return result.data;
     };
     fn._updater = updater;
-    return asRaw(fn);
+    return fn;
 };

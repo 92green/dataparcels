@@ -1,7 +1,6 @@
 // @flow
 import {act} from 'react-hooks-testing-library';
 import {renderHook} from 'react-hooks-testing-library';
-import asRaw from 'dataparcels/asRaw';
 import useParcelState from '../useParcelState';
 import asyncChange from '../asyncChange';
 import asyncValue from '../asyncValue';
@@ -40,7 +39,7 @@ describe('useParcelState should use config.value', () => {
     });
 
     it('should create a Parcel from value updater', () => {
-        let {result} = renderHook(() => useParcelState({value: asRaw(() => ({value: 123, meta: {abc: 456}}))}));
+        let {result} = renderHook(() => useParcelState({value: () => ({value: 123, meta: {abc: 456}})}));
         expect(result.current[0].value).toBe(123);
         expect(result.current[0].meta).toEqual({abc: 456});
     });
@@ -184,7 +183,7 @@ describe('useParcelState should use config.updateValue', () => {
         });
 
         let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcelState({
-            value: asRaw((prevData) => updater(prevData, props.foo)),
+            value: (prevData) => updater(prevData, props.foo),
             updateValue: true
         }));
 

@@ -7,7 +7,6 @@ import type {ParcelValueUpdater} from 'dataparcels';
 
 import React from 'react';
 import Parcel from 'dataparcels';
-import asRaw from 'dataparcels/asRaw';
 
 import ParcelBoundaryControl from './ParcelBoundaryControlDeprecated';
 import ParcelBoundaryEquals from '../util/ParcelBoundaryEquals';
@@ -285,7 +284,7 @@ export default class ParcelBoundary extends React.Component<Props, State> { /* e
             })
             ._changeAndReturn((parcel) => parcel
                 .modifyDown(prevData
-                    ? asRaw(() => prevData)
+                    ? () => prevData
                     : identity()
                 )
                 .pipe(ApplyModifyBeforeUpdate(modifyBeforeUpdate))
