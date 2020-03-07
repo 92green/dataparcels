@@ -1,16 +1,19 @@
 // @flow
-import type {ParcelData} from '../types/Types';
-import type {ParcelValueUpdater} from '../types/Types';
 import type ChangeRequest from '../change/ChangeRequest';
+import cancel from '../change/cancel';
 
-import setValue from './setValue';
+export default (updater: Function, parcelData: any, changeRequest: ?ChangeRequest): any => {
+    let nextData = updater({...parcelData, changeRequest}) || {};
+    if(nextData === cancel || nextData.value === cancel) {
+        throw new Error('CANCEL');
+    }
 
-export default (updater: ParcelValueUpdater): Function => {
-    return updater._asRaw
-        ? updater
-        : (parcelData: ParcelData, changeRequest: ?ChangeRequest): ParcelData => {
-            let {value} = parcelData;
-            let updatedValue = updater(value, changeRequest);
-            return setValue(updatedValue)(parcelData);
-        };
+    return {
+        ...parcelData,
+        ...nextData,
+        meta: {
+            ...parcelData.meta,
+            ...(nextData.meta || {})
+        }
+    };
 };
