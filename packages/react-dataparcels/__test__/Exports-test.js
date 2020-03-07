@@ -13,9 +13,7 @@ import translate from '../translate';
 import validation from '../validation';
 
 // react-dataparcels
-import ParcelHoc from '../ParcelHoc';
 import ParcelBoundary from '../ParcelBoundary';
-import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
 import ParcelDrag from '../ParcelDrag';
 import useParcelBuffer from '../useParcelBuffer';
 import useParcelForm from '../useParcelForm';
@@ -36,9 +34,7 @@ import InternalTranslate from 'dataparcels/translate';
 import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
-import InternalParcelHoc from '../lib/deprecated/ParcelHoc';
 import InternalParcelBoundary from '../lib/ParcelBoundary';
-import InternalParcelBoundaryHoc from '../lib/deprecated/ParcelBoundaryHoc';
 import InternalParcelDrag from '../lib/ParcelDrag';
 import InternalUseParcelBuffer from '../lib/useParcelBuffer';
 import InternalUseParcelForm from '../lib/useParcelForm';
@@ -86,16 +82,8 @@ test('/validation should export validation', () => {
     expect(validation).toBe(InternalValidation);
 });
 
-test('/ParcelHoc should export ParcelHoc', () => {
-    expect(ParcelHoc).toBe(InternalParcelHoc);
-});
-
 test('/ParcelBoundary should export ParcelBoundary', () => {
     expect(ParcelBoundary).toBe(InternalParcelBoundary);
-});
-
-test('/ParcelBoundaryHoc should export ParcelBoundaryHoc', () => {
-    expect(ParcelBoundaryHoc).toBe(InternalParcelBoundaryHoc);
 });
 
 test('/ParcelDrag should export ParcelDrag', () => {
