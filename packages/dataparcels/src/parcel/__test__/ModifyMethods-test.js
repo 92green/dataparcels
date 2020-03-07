@@ -8,7 +8,10 @@ import asNode from '../../parcelNode/asNode';
 import asChildNodes from '../../parcelNode/asChildNodes';
 
 test('Parcel.modifyDown() should return a new parcel with updated parcelData', () => {
-    let updater = jest.fn(value => value + 1);
+    let updater = jest.fn(({value}) => ({
+        value: value + 1
+    }));
+
     var data = {
         value: [123]
     };
@@ -23,14 +26,43 @@ test('Parcel.modifyDown() should return a new parcel with updated parcelData', (
         value: 124,
         key: "#a"
     };
-    expect(expectedData).toEqual(updated);
-    expect(updater.mock.calls[0][0]).toBe(123);
-    expect(updater.mock.calls[0][1]).toBe(undefined);
+    expect(updated).toEqual(expectedData);
+    expect(updater.mock.calls[0][0]).toEqual(parcel.data);
+});
+
+test('Parcel.modifyDown() should merge meta', () => {
+    let handleChange = jest.fn();
+    let updater = jest.fn(({value}) => ({
+        value: value + 1
+    }));
+
+    var parcel = new Parcel({
+        value: 123,
+        handleChange
+    })
+        .setMeta({abc: 100, def: 200});
+
+    let newParcel = handleChange.mock.calls[0][0].modifyDown(({meta}) => {
+        return {
+            meta: {
+                def: 400,
+                ghi: 300
+            }
+        };
+    });
+
+    expect(newParcel.meta).toEqual({
+        abc: 100,
+        def: 400,
+        ghi: 300
+    });
 });
 
 test('Parcel.modifyDown() should not destroy child data', () => {
     let handleChange = jest.fn();
-    let updater = jest.fn(value => value + 1);
+    let updater = jest.fn(({value}) => ({
+        value: value + 1
+    }));
 
     var parcel = new Parcel({
         value: [123],
@@ -52,24 +84,9 @@ test('Parcel.modifyDown() should not destroy child data', () => {
     ]);
 });
 
-test('Parcel.modifyDown() should allow non-parent types to be returned', () => {
-    let updatedValue = new Parcel({
-        value: 123
-    })
-        .modifyDown(value => value + 1)
-        .value;
-
-    expect(updatedValue).toEqual(124);
-});
-
-test('Parcel.modifyDown() should allow undefined to be returned (unlike modifyUp(parcelShapeUpdater))', () => {
-    let updatedValue = new Parcel({
-        value: 123
-    })
-        .modifyDown(() => {})
-        .value;
-
-    expect(updatedValue).toEqual(undefined);
+test('Parcel.modifyDown() should allow undefined to be returned', () => {
+    let parcel = new Parcel({value: 123});
+    expect(parcel.modifyDown(() => {}).data).toEqual(parcel.data);
 });
 
 test('Parcel.modifyDown() should recognise if value changes types, and set value if type changes', () => {
@@ -78,7 +95,7 @@ test('Parcel.modifyDown() should recognise if value changes types, and set value
         value: 123,
         handleChange
     })
-        .modifyDown(value => [])
+        .modifyDown(({value}) => ({value: []}))
         .push(123);
 
     expect(handleChange).toHaveBeenCalledTimes(1);
@@ -86,10 +103,12 @@ test('Parcel.modifyDown() should recognise if value changes types, and set value
 });
 
 test('Parcel.modifyDown() should have id which is unique to updater', () => {
-    let updater = value => [];
+    let updater = () => ({value: []});
+    let updater2 = ({value}) => ({value: 123});
+
     let sameA1 = new Parcel().modifyDown(updater);
     let sameA2 = new Parcel().modifyDown(updater);
-    let differentA = new Parcel().modifyDown(a => 1 + 2);
+    let differentA = new Parcel().modifyDown(updater2);
 
     let sameB1 = new Parcel().modifyDown(asChildNodes(updater));
     let sameB2 = new Parcel().modifyDown(asChildNodes(updater));
@@ -102,10 +121,12 @@ test('Parcel.modifyDown() should have id which is unique to updater', () => {
 });
 
 test('Parcel.modifyUp() should have id which is unique to updater', () => {
-    let updater = value => [];
+    let updater = () => ({value: []});
+    let updater2 = ({value}) => ({value: 123});
+
     let sameA1 = new Parcel().modifyUp(updater);
     let sameA2 = new Parcel().modifyUp(updater);
-    let differentA = new Parcel().modifyUp(a => 1 + 2);
+    let differentA = new Parcel().modifyUp(updater2);
 
     let sameB1 = new Parcel().modifyUp(asChildNodes(updater));
     let sameB2 = new Parcel().modifyUp(asChildNodes(updater));
@@ -119,7 +140,7 @@ test('Parcel.modifyUp() should have id which is unique to updater', () => {
 
 test('Parcel.modifyUp() should allow you to change the payload of a changed parcel with an updater (and should allow non-parent types to be returned)', () => {
     let handleChange = jest.fn();
-    let updater = jest.fn(value => value + 1);
+    let updater = jest.fn(({value}) => ({value: value + 1}));
 
     new Parcel({
         value: 123,
@@ -130,7 +151,7 @@ test('Parcel.modifyUp() should allow you to change the payload of a changed parc
 
     expect(handleChange.mock.calls[0][0].value).toBe(457);
 
-    let [value, changeRequest] = updater.mock.calls[0];
+    let {value, changeRequest} = updater.mock.calls[0][0];
     expect(value).toBe(456);
     expect(changeRequest instanceof ChangeRequest).toBe(true);
     expect(changeRequest.prevData.value).toBe(123);
@@ -149,7 +170,7 @@ test('Parcel.modifyUp() should allow changes to meta through', () => {
     };
 
     new Parcel(data)
-        .modifyUp(value => value + 1)
+        .modifyUp(({value}) => ({value: value + 1}))
         .update(asNode(node => node.setMeta({
             abc: 123
         })));
@@ -171,192 +192,23 @@ test('Parcel.modifyUp() should cancel a change if cancel is returned', () => {
     expect(handleChange).not.toHaveBeenCalled();
 });
 
-// test('Parcel.modifyDown(parcelShapeUpdater) should be called with parcelShape and return with no change', () => {
+test('Parcel.modifyUp() should cancel a change if a value of cancel is returned', () => {
 
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(parcelShape => parcelShape);
+    let handleChange = jest.fn();
+    let updater = jest.fn(() => ({
+        value: cancel
+    }));
 
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
+    let parcel = new Parcel({
+        handleChange,
+        value: [1,2,3]
+    });
 
-//     let modifiedParcel = parcel.modifyDown(asShape(updater));
-//     modifiedParcel.push(4);
+    let parcelWithModifier = parcel.modifyUp(updater);
+    parcelWithModifier.push(4);
 
-//     expect(modifiedParcel.value).toEqual([1,2,3]);
-//     expect(updater.mock.calls[0][0] instanceof ParcelShape).toBe(true);
-//     expect(updater.mock.calls[0][0].data.value).toEqual([1,2,3]);
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
-
-//     expect(updater.mock.calls[0][1]).toBe(undefined);
-// });
-
-// test('Parcel.modifyDown(parcelShapeUpdater) should modify value', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(parcelShape => parcelShape.push(4));
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
-
-//      let modifiedParcel = parcel.modifyDown(asShape(updater));
-//     modifiedParcel.push(5);
-
-//     expect(modifiedParcel.value).toEqual([1,2,3,4]);
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4,5]);
-
-// });
-
-// test('Parcel.modifyDown(parcelShapeUpdater) should work with a returned primitive', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(() => "!!!");
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
-
-//     let modifiedParcel = parcel.modifyDown(asShape(updater));
-//     modifiedParcel.set(456)
-
-//     expect(modifiedParcel.value).toEqual("!!!");
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual(456);
-// });
-
-// test('Parcel.modifyDown(parcelShapeUpdater) should work with a returned undefined (unlike modifyUp(parcelShapeUpdater))', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(() => {});
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
-
-//     let modifiedParcel = parcel.modifyDown(asShape(updater));
-//     modifiedParcel.set(456)
-
-//     let expectedValue = undefined;
-
-//     expect(modifiedParcel.value).toEqual(expectedValue);
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual(456);
-// });
-
-// test('Parcel.modifyDown(parcelShapeUpdater) should work with a returned collection containing parcels for children', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(parcelShape => parcelShape.children().reverse());
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
-
-//     let modifiedParcel = parcel.modifyDown(asShape(updater));
-//     modifiedParcel.push(4);
-
-//     let expectedValue = [3,2,1];
-
-//     expect(modifiedParcel.value).toEqual(expectedValue);
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual([3,2,1,4]);
-// });
-
-// test('Parcel.modifyUp(parcelShapeUpdater) should be called with parcelShape and return with no change', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(parcelShape => parcelShape);
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: 123
-//     });
-
-//     let parcelWithModifier = parcel.modifyUp(asShape(updater));
-//     let {value} = parcelWithModifier.data;
-
-//     expect(value).toEqual(123);
-//     expect(updater).not.toHaveBeenCalled();
-
-//     parcelWithModifier.set(456);
-
-//     let [parcelShape, changeRequest] = updater.mock.calls[0];
-
-//     expect(parcelShape instanceof ParcelShape).toBe(true);
-//     expect(parcelShape.data.value).toEqual(456);
-//     expect(changeRequest instanceof ChangeRequest).toBe(true);
-//     expect(changeRequest.prevData.value).toBe(123);
-//     expect(changeRequest.nextData.value).toBe(456);
-
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual(456);
-// });
-
-// test('Parcel.modifyUp(parcelShapeUpdater) should modify value', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(parcelShape => parcelShape.push(5));
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
-
-//     let parcelWithModifier = parcel.modifyUp(asShape(updater));
-//     parcelWithModifier.push(4);
-
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4,5]);
-// });
-
-// test('Parcel.modifyUp(parcelShapeUpdater) should work with a returned primitive', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(() => 123);
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
-
-//     let parcelWithModifier = parcel.modifyUp(asShape(updater));
-//     parcelWithModifier.push(4);
-
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual(123);
-// });
-
-// test('Parcel.modifyUp(parcelShapeUpdater) should work with a returned collection containing parcels for children', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(parcelShape => parcelShape.children().reverse());
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
-
-//     let parcelWithModifier = parcel.modifyUp(asShape(updater));
-//     parcelWithModifier.push(4);
-
-//     expect(handleChange.mock.calls[0][0].data.value).toEqual([4,3,2,1]);
-// });
-
-// test('Parcel.modifyUp(parcelShapeUpdater) should cancel a change if cancel is returned', () => {
-
-//     let handleChange = jest.fn();
-//     let updater = jest.fn(() => cancel);
-
-//     let parcel = new Parcel({
-//         handleChange,
-//         value: [1,2,3]
-//     });
-
-//     let parcelWithModifier = parcel.modifyUp(asShape(updater));
-//     parcelWithModifier.push(4);
-
-//     expect(handleChange).not.toHaveBeenCalled();
-// });
+    expect(handleChange).not.toHaveBeenCalled();
+});
 
 test('Parcel.initialMeta() should work', () => {
     let handleChange = jest.fn();
@@ -434,24 +286,4 @@ test('Parcel.initialMeta() should do nothing to data if all meta keys are alread
     let parcel2 = parcel.initialMeta({a:1, b:2});
 
     expect(parcel2.data).toEqual(parcel.data);
-});
-
-test('Sanity check: A big strange test of a big strange chain of deep updatery stuff', () => {
-
-    let handleChange = jest.fn();
-    let updater = jest.fn(value => value + "333");
-
-    let parcel = new Parcel({
-        handleChange,
-        value: [1,2,3]
-    })
-        .modifyDown(asChildNodes(array => array.reverse())) // 1. reverse the elements in the parcel (value: [3,2,1])
-        .modifyUp(asChildNodes(array => array.reverse())) // 6. reverse the elements in the parcel (value: [3333,2,1])
-        .get(0) // 2. get the first element (value: 3)
-        .modifyDown(value => value + "") // 3. cast number to string value: "3")
-        .modifyUp(value => parseInt(value, 10)) // 5. cast string to number (value will be: 3333)
-        .update(updater); // 4. make a change to the data, append three threes (value will be: "3333")
-
-    expect(updater.mock.calls[0][0]).toBe("3");
-    expect(handleChange.mock.calls[0][0].value).toEqual([1,2,3333]);
 });

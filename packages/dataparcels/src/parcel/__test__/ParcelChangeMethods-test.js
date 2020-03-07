@@ -97,14 +97,14 @@ test('Parcel.set() should remove and replace child data when setting a deep data
 test('Parcel.update() should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(ii => ii + 1);
+    let updater = jest.fn(({value}) => ({value: value + 1}));
 
     new Parcel({
         value: 123,
         handleChange
     }).update(updater);
 
-    expect(updater.mock.calls[0][0]).toBe(123);
+    expect(updater.mock.calls[0][0].value).toBe(123);
     expect(handleChange.mock.calls[0][0].data.value).toBe(124);
 });
 

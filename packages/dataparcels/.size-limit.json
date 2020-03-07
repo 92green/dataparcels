@@ -24,11 +24,11 @@
         "path": "ParcelNode.js"
     },
     {
-        "limit": "5.9 KB",
+        "limit": "6.0 KB",
         "path": "asNode.js"
     },
     {
-        "limit": "6.2 KB",
+        "limit": "6.3 KB",
         "path": "asChildNodes.js"
     },
     {
