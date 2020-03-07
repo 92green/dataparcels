@@ -24,11 +24,11 @@
         "path": "ParcelNode.js"
     },
     {
-        "limit": "5.9 KB",
+        "limit": "6.0 KB",
         "path": "asNode.js"
     },
     {
-        "limit": "6.2 KB",
+        "limit": "6.3 KB",
         "path": "asChildNodes.js"
     },
     {
@@ -52,27 +52,19 @@
         "path": "ParcelBoundary.js"
     },
     {
-        "limit": "13.5 KB",
-        "path": "ParcelBoundaryHoc.js"
-    },
-    {
         "limit": "47.3 KB",
         "path": "ParcelDrag.js"
     },
     {
-        "limit": "11.6 KB",
-        "path": "ParcelHoc.js"
-    },
-    {
-        "limit": "12.5 KB",
+        "limit": "12.2 KB",
         "path": "useParcelBuffer.js"
     },
     {
-        "limit": "13.6 KB",
+        "limit": "13.3 KB",
         "path": "useParcelForm.js"
     },
     {
-        "limit": "11 KB",
+        "limit": "10.7 KB",
         "path": "useParcelState.js"
     }
 ]
