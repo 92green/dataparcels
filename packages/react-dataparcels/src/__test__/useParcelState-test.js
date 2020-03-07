@@ -38,12 +38,6 @@ describe('useParcelState should use config.value', () => {
         expect(result.current[0].value).toBe(123);
     });
 
-    it('should create a Parcel from value updater', () => {
-        let {result} = renderHook(() => useParcelState({value: () => ({value: 123, meta: {abc: 456}})}));
-        expect(result.current[0].value).toBe(123);
-        expect(result.current[0].meta).toEqual({abc: 456});
-    });
-
     it('should update Parcel', () => {
         let {result} = renderHook(() => useParcelState({value: () => 123}));
 
@@ -113,7 +107,7 @@ describe('useParcelState should use config.value with asyncValue', () => {
 
         let {result} = renderHook(() => useParcelState({
             value: asyncValue(fetcher),
-            beforeChange: value => value * 2
+            beforeChange: ({value}) => ({value: value * 2})
         }));
 
         await act(fetcher);
@@ -169,45 +163,6 @@ describe('useParcelState should use config.updateValue', () => {
         });
 
         expect(result.current[0].value).toBe(789);
-    });
-
-    it('should allow updater to be passed as value', () => {
-
-        let updater = jest.fn((prevData, foo) => {
-            return {
-                value: foo,
-                meta: {
-                    foo
-                }
-            };
-        });
-
-        let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcelState({
-            value: (prevData) => updater(prevData, props.foo),
-            updateValue: true
-        }));
-
-        expect(result.current[0].value).toBe(123);
-        expect(result.current[0].meta).toEqual({
-            foo: 123
-        });
-
-        expect(updater.mock.calls[0][0].value).toBe(undefined);
-        expect(updater.mock.calls[0][0].meta).toEqual({});
-
-        act(() => {
-            rerender({foo: 456});
-        });
-
-        expect(result.current[0].value).toBe(456);
-        expect(result.current[0].meta).toEqual({
-            foo: 456
-        });
-
-        expect(updater.mock.calls[1][0].value).toBe(123);
-        expect(updater.mock.calls[1][0].meta).toEqual({
-            foo: 123
-        });
     });
 });
 
@@ -334,7 +289,7 @@ describe('useParcelState should use config.beforeChange', () => {
     it('should apply single beforeChange to parcel', () => {
         let {result} = renderHook(() => useParcelState({
             value: 123,
-            beforeChange: value => value * 2
+            beforeChange: ({value}) => ({value: value * 2})
         }));
 
         expect(result.current[0].value).toBe(246);
@@ -356,8 +311,8 @@ describe('useParcelState should use config.beforeChange', () => {
         let {result} = renderHook(() => useParcelState({
             value: 123,
             beforeChange: [
-                value => value * 2,
-                value => value + 5
+                ({value}) => ({value: value * 2}),
+                ({value}) => ({value: value + 5})
             ]
         }));
 
@@ -374,7 +329,7 @@ describe('useParcelState should use config.beforeChange', () => {
         let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcelState({
             value: props.foo,
             updateValue: true,
-            beforeChange: value => value * 2
+            beforeChange: ({value}) => ({value: value * 2})
         }));
 
         expect(result.current[0].value).toBe(246);
@@ -391,8 +346,8 @@ describe('useParcelState should use config.beforeChange', () => {
             value: props.foo,
             updateValue: true,
             beforeChange: [
-                value => value * 2,
-                value => value + 5
+                ({value}) => ({value: value * 2}),
+                ({value}) => ({value: value + 5})
             ]
         }));
 
