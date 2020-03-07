@@ -108,10 +108,6 @@ export default class Parcel {
     // Parent methods
     has: Function;
 
-    // Side-effect methods
-    spy: Function;
-    spyChange: Function;
-
     // Change methods
     set: Function;
     update: Function;
@@ -299,28 +295,6 @@ export default class Parcel {
             this._prepareChildKeys();
             return parcelHas(key)(this._parcelData);
         });
-
-        // Side-effect methods
-
-        // Types(`spy()`, `sideEffect`, `function`)(sideEffect);
-        this.spy = (sideEffect: Function): Parcel => {
-            sideEffect(this);
-            return this;
-        };
-
-        // Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
-        this.spyChange = (sideEffect: Function): Parcel => {
-            return this._create({
-                rawId: this._idPushModifier('sc'),
-                updateChangeRequestOnDispatch: (changeRequest: ChangeRequest): ChangeRequest => {
-                    let basedChangeRequest = changeRequest._create({
-                        prevData: this.data
-                    });
-                    sideEffect(basedChangeRequest);
-                    return changeRequest;
-                }
-            });
-        };
 
         // Change methods
 
