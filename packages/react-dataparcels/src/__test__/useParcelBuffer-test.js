@@ -493,7 +493,7 @@ describe('useParcelBuffer should use config.beforeChange', () => {
 
         let {result} = renderHook(() => useParcelBuffer({
             parcel,
-            beforeChange: value => value * 2,
+            beforeChange: ({value}) => ({value: value * 2}),
             buffer: false
         }));
 
@@ -508,8 +508,8 @@ describe('useParcelBuffer should use config.beforeChange', () => {
         let {result} = renderHook(() => useParcelBuffer({
             parcel,
             beforeChange: [
-                value => value * 2,
-                value => value + 5
+                ({value}) => ({value: value * 2}),
+                ({value}) => ({value: value + 5})
             ],
             buffer: false
         }));
@@ -528,7 +528,7 @@ describe('useParcelBuffer should use config.beforeChange', () => {
 
         let {result} = renderHook(() => useParcelBuffer({
             parcel,
-            beforeChange: value => value * 2,
+            beforeChange: ({value}) => ({value: value * 2}),
             buffer: false
         }));
 
@@ -551,8 +551,8 @@ describe('useParcelBuffer should use config.beforeChange', () => {
         let {result} = renderHook(() => useParcelBuffer({
             parcel,
             beforeChange: [
-                value => value * 2,
-                value => value + 5
+                ({value}) => ({value: value * 2}),
+                ({value}) => ({value: value + 5})
             ],
             buffer: false
         }));
@@ -572,7 +572,7 @@ describe('useParcelBuffer should use config.beforeChange', () => {
 
         let {result, rerender} = renderHook(() => useParcelBuffer({
             parcel,
-            beforeChange: value => value * 2
+            beforeChange: ({value}) => ({value: value * 2})
         }));
 
         act(() => {
