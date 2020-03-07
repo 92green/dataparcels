@@ -176,6 +176,20 @@ test('Parcel.modifyUp() should allow changes to meta through', () => {
         })));
 });
 
+test('Parcel.modifyUp() should allow undefined to be returned', () => {
+    let handleChange = jest.fn();
+
+    new Parcel({
+        value: 123,
+        handleChange
+    })
+        .modifyUp(() => undefined)
+        .set(456);
+
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].value).toBe(456);
+});
+
 test('Parcel.modifyUp() should cancel a change if cancel is returned', () => {
 
     let handleChange = jest.fn();
