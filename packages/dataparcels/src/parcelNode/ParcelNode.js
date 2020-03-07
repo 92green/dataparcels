@@ -90,7 +90,7 @@ export default class ParcelNode {
 
     update = (updater: Function): ParcelNode => {
         let parcelNode = new ParcelNode();
-        parcelNode._parcelData = prepUpdater(updater)(this._parcelData, this._changeRequest);
+        parcelNode._parcelData = prepUpdater(updater, this._parcelData, this._changeRequest);
         return parcelNode;
     };
 

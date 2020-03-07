@@ -15,7 +15,6 @@ import type {ParentType} from '../types/Types';
 
 import {ParcelTypeMethodMismatch} from '../errors/Errors';
 
-import cancel from '../change/cancel';
 import ChangeRequest from '../change/ChangeRequest';
 import Action from '../change/Action';
 
@@ -329,7 +328,7 @@ export default class Parcel {
 
         // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
-            fireAction('setData', prepUpdater(updater)(this._parcelData));
+            fireAction('setData', prepUpdater(updater, this._parcelData));
         };
 
         this.delete = () => fireActionOnlyType(Child, 'delete');
@@ -373,32 +372,23 @@ export default class Parcel {
 
         // Types(`modifyDown()`, `updater`, `function`)(updater);
         this.modifyDown = (updater: ParcelValueUpdater): Parcel => {
-            let parcelDataUpdater = prepUpdater(updater);
             return this._create({
                 rawId: this._idPushModifierUpdater('md', updater),
-                parcelData: parcelDataUpdater(this._parcelData),
+                parcelData: prepUpdater(updater, this._parcelData),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'md',
-                    updater: parcelDataUpdater
+                    updater: parcelData => prepUpdater(updater, parcelData)
                 })
             });
         };
 
         // Types(`modifyUp()`, `updater`, `function`)(updater);
         this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
-            let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
-                let nextData = prepUpdater(updater)(parcelData, changeRequest);
-                if(nextData.value === cancel) {
-                    throw new Error('CANCEL');
-                }
-                return nextData;
-            };
-
             return this._create({
                 rawId: this._idPushModifierUpdater('mu', updater),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'mu',
-                    updater: parcelDataUpdater,
+                    updater: (parcelData, changeRequest) => prepUpdater(updater, parcelData, changeRequest),
                     changeRequest
                 })
             });

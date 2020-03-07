@@ -1,12 +1,12 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
-import type ChangeRequest from '../change/ChangeRequest';
 
 import asNode from '../parcelNode/asNode';
+import update from 'unmutable/lib/update';
 
 type Config = {
-    down?: (value: any) => any,
-    up?: (value: any, changeRequest: ChangeRequest) => any,
+    down?: (parcelData: any) => any,
+    up?: (parcelData: any) => any,
     preserveInput?: boolean
 };
 
@@ -17,26 +17,31 @@ export default (config: Config) => {
         preserveInput
     } = config;
 
+    let downValue = update('value', down);
+    let upValue = update('value', up);
+
     if(!preserveInput) {
         return (parcel: Parcel): Parcel => parcel
-            .modifyDown(down)
-            .modifyUp(up);
+            .modifyDown(downValue)
+            .modifyUp(upValue);
     }
 
     return (parcel: Parcel): Parcel => parcel
         .modifyDown(asNode(node => {
             if('translated' in node.meta) {
-                return node.update(() => node.meta.translated);
+                return node.update(() => ({
+                    value: node.meta.translated
+                }));
             }
 
             return node
-                .update(down)
+                .update(downValue)
                 .setMeta({
                     untranslated: node.value
                 });
         }))
         .modifyUp(asNode((node) => {
-            let updated = node.update(up);
+            let updated = node.update(upValue);
 
             return updated
                 .setMeta({
