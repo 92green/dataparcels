@@ -67,13 +67,6 @@ test('ParcelNodes should get() lazily with exisitng child data', () => {
     expect(result._parcelData).toEqual(expected);
 });
 
-test('ParcelNodes should setMeta()', () => {
-    let node = new ParcelNode([1,2,3]);
-    let result = node.setMeta({foo: true}).setMeta({bar: false});
-    expect(result.meta).toEqual({foo: true, bar: false});
-});
-
-
 test('ParcelNodes should update() non-parent values', () => {
     let node = new ParcelNode(100);
     let result = node.update(({value}) => ({value: value + 200}));

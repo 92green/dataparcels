@@ -2,14 +2,12 @@
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {ParcelData} from '../types/Types';
-import type {ParcelMeta} from '../types/Types';
 import type ChangeRequest from '../change/ChangeRequest';
 
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import parcelGet from '../parcelData/get';
-import setMeta from '../parcelData/setMeta';
-import prepUpdater from '../parcelData/prepUpdater';
+import createUpdater from '../parcelData/createUpdater';
 
 export default class ParcelNode {
     constructor(value: any) {
@@ -89,14 +87,12 @@ export default class ParcelNode {
     };
 
     update = (updater: Function): ParcelNode => {
+        let preparedUpdater = createUpdater(updater);
         let parcelNode = new ParcelNode();
-        parcelNode._parcelData = prepUpdater(updater, this._parcelData, this._changeRequest);
-        return parcelNode;
-    };
-
-    setMeta = (meta: ParcelMeta): ParcelNode => {
-        let parcelNode = new ParcelNode();
-        parcelNode._parcelData = setMeta(meta)(this.data);
+        parcelNode._parcelData = preparedUpdater({
+            ...this._parcelData,
+            changeRequest: this._changeRequest
+        });
         return parcelNode;
     };
 }
