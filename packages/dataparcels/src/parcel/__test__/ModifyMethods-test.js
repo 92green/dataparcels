@@ -171,9 +171,11 @@ test('Parcel.modifyUp() should allow changes to meta through', () => {
 
     new Parcel(data)
         .modifyUp(({value}) => ({value: value + 1}))
-        .update(asNode(node => node.setMeta({
-            abc: 123
-        })));
+        .update(() => ({
+            meta: {
+                abc: 123
+            }
+        }));
 });
 
 test('Parcel.modifyUp() should allow undefined to be returned', () => {

@@ -1,7 +1,7 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
 
-import asNode from '../parcelNode/asNode';
+import createUpdater from '../parcelData/createUpdater';
 import update from 'unmutable/lib/update';
 
 type Config = {
@@ -27,26 +27,30 @@ export default (config: Config) => {
     }
 
     return (parcel: Parcel): Parcel => parcel
-        .modifyDown(asNode(node => {
-            if('translated' in node.meta) {
-                return node.update(() => ({
-                    value: node.meta.translated
-                }));
+        .modifyDown((parcelData) => {
+            if('translated' in parcelData.meta) {
+                return {
+                    value: parcelData.meta.translated
+                };
             }
-
-            return node
-                .update(downValue)
-                .setMeta({
-                    untranslated: node.value
-                });
-        }))
-        .modifyUp(asNode((node) => {
-            let updated = node.update(upValue);
-
-            return updated
-                .setMeta({
-                    translated: node.value,
-                    untranslated: updated.value
-                });
-        }));
+            return createUpdater(
+                downValue,
+                () => ({
+                    meta: {
+                        untranslated: parcelData.value
+                    }
+                })
+            )(parcelData);
+        })
+        .modifyUp((parcelData) => {
+            return createUpdater(
+                upValue,
+                ({value}) => ({
+                    meta: {
+                        translated: parcelData.value,
+                        untranslated: value
+                    }
+                })
+            )(parcelData);
+        });
 };

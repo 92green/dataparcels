@@ -111,7 +111,7 @@ test('Parcel.update() should call the Parcels handleChange function with the new
 test('Parcel.update(asNode()) should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(node => node.setMeta({foo: true}));
+    let updater = jest.fn(node => node.update(() => ({meta: {foo: true}})));
 
     new Parcel({
         value: [1,2,3],
