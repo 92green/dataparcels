@@ -13,7 +13,6 @@
     "lib",
     "Action.js",
     "asChildNodes.js",
-    "asNode.js",
     "cancel.js",
     "ChangeRequest.js",
     "createUpdater.js",

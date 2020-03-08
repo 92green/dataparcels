@@ -4,7 +4,6 @@
 import ChangeRequest from '../../change/ChangeRequest';
 import Parcel from '../Parcel';
 import cancel from '../../change/cancel';
-import asNode from '../../parcelNode/asNode';
 import asChildNodes from '../../parcelNode/asChildNodes';
 
 test('Parcel.modifyDown() should return a new parcel with updated parcelData', () => {

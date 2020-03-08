@@ -7,7 +7,6 @@ import ChangeRequest from '../ChangeRequest';
 import createUpdater from '../createUpdater';
 import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
-import asNode from '../asNode';
 import asChildNodes from '../asChildNodes';
 import cancel from '../cancel';
 import translate from '../translate';
@@ -22,7 +21,6 @@ import InternalChangeRequest from '../lib/change/ChangeRequest';
 import InternalCreateUpdater from '../lib/parcelData/createUpdater';
 import Internaldeleted from '../lib/parcelData/deleted';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
-import InternalAsNode from '../lib/parcelNode/asNode';
 import InternalAsNodes from '../lib/parcelNode/asChildNodes';
 import Internalcancel from '../lib/change/cancel';
 import InternalTranslate from '../lib/modifiers/translate';
@@ -50,10 +48,6 @@ test('/deleted should export deleted', () => {
 
 test('/ParcelNode should export ParcelNode', () => {
     expect(ParcelNode).toBe(InternalParcelNode);
-});
-
-test('/asNode should export asNode', () => {
-    expect(asNode).toBe(InternalAsNode);
 });
 
 test('/asChildNodes should export asChildNodes', () => {
