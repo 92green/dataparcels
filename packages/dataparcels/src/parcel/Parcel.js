@@ -21,7 +21,7 @@ import Action from '../change/Action';
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 import deleted from '../parcelData/deleted';
-import prepUpdater from '../parcelData/prepUpdater';
+import createUpdater from '../parcelData/createUpdater';
 import setMetaDefault from '../parcelData/setMetaDefault';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
@@ -302,7 +302,8 @@ export default class Parcel {
 
         // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
-            fireAction('setData', prepUpdater(updater, this._parcelData));
+            let preparedUpdater = createUpdater(updater);
+            fireAction('setData', preparedUpdater(this._parcelData));
         };
 
         this.delete = () => fireActionOnlyType(Child, 'delete');
@@ -346,23 +347,25 @@ export default class Parcel {
 
         // Types(`modifyDown()`, `updater`, `function`)(updater);
         this.modifyDown = (updater: ParcelValueUpdater): Parcel => {
+            let preparedUpdater = createUpdater(updater);
             return this._create({
                 rawId: this._idPushModifierUpdater('md', updater),
-                parcelData: prepUpdater(updater, this._parcelData),
+                parcelData: preparedUpdater(this._parcelData),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'md',
-                    updater: parcelData => prepUpdater(updater, parcelData)
+                    updater: parcelData => preparedUpdater(parcelData)
                 })
             });
         };
 
         // Types(`modifyUp()`, `updater`, `function`)(updater);
         this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
+            let preparedUpdater = createUpdater(updater);
             return this._create({
                 rawId: this._idPushModifierUpdater('mu', updater),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'mu',
-                    updater: (parcelData, changeRequest) => prepUpdater(updater, parcelData, changeRequest),
+                    updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest}),
                     changeRequest
                 })
             });
