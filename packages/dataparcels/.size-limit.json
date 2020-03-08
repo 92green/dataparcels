@@ -16,6 +16,10 @@
         "path": "ChangeRequest.js"
     },
     {
+        "limit": "0.4 KB",
+        "path": "createUpdater.js"
+    },
+    {
         "limit": "0.1 KB",
         "path": "deleted.js"
     },
@@ -32,7 +36,7 @@
         "path": "asChildNodes.js"
     },
     {
-        "limit": "6.1 KB",
+        "limit": "2.2 KB",
         "path": "translate.js"
     },
     {

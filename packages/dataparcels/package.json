@@ -16,6 +16,7 @@
     "asNode.js",
     "cancel.js",
     "ChangeRequest.js",
+    "createUpdater.js",
     "deleted.js",
     "ParcelNode.js",
     "translate.js",
