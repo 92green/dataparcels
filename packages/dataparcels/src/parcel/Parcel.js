@@ -303,7 +303,7 @@ export default class Parcel {
         // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
             let preparedUpdater = createUpdater(updater);
-            fireAction('setData', preparedUpdater(this._parcelData));
+            fireAction('update', preparedUpdater);
         };
 
         this.delete = () => fireActionOnlyType(Child, 'delete');
