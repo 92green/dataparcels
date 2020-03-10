@@ -11,10 +11,9 @@ import ParcelNode from './ParcelNode';
 import map from 'unmutable/map';
 import pipeWith from 'unmutable/pipeWith';
 import shallowToJS from 'unmutable/shallowToJS';
-import asNode from './asNode';
 
-const updateChildNodes = (node: ParcelNode, updater: Function, changeRequest: *): ParcelNode => {
-    let {data, value} = node;
+const updateChildNodes = (node: ParcelNode, updater: Function): ParcelNode => {
+    let {data, value, _changeRequest} = node;
     if(isParentValue(value)) {
         node._prepareChildKeys();
         value = pipeWith(
@@ -23,7 +22,7 @@ const updateChildNodes = (node: ParcelNode, updater: Function, changeRequest: *)
         );
     }
 
-    let updated: any = updater(value, changeRequest);
+    let updated: any = updater(value, _changeRequest);
 
     let parcelNode = new ParcelNode();
     if(!isParentValue(updated)) {
@@ -80,7 +79,12 @@ const updateChildNodes = (node: ParcelNode, updater: Function, changeRequest: *)
 };
 
 export default (updater: Function) => {
-    let fn = asNode((node, changeRequest) => updateChildNodes(node, updater, changeRequest));
+    let fn = (parcelData: ParcelData, changeRequest: *): ParcelData => {
+        let parcelNode = new ParcelNode();
+        parcelNode._parcelData = parcelData;
+        parcelNode._changeRequest = changeRequest;
+        return updateChildNodes(parcelNode, updater).data;
+    };
     fn._updater = updater;
     return fn;
 };

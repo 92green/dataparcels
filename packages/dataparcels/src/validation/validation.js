@@ -4,7 +4,6 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
-import asRaw from '../parcelData/asRaw';
 import parcelDataSetMeta from '../parcelData/setMeta';
 import parcelDataUpdate from '../parcelData/update';
 
@@ -37,7 +36,7 @@ type ValidationRuleMap = {
 };
 
 export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
-    return asRaw((parcelData) => {
+    return (parcelData) => {
         let invalidList = [];
         let topLevelValue = parcelData.value;
         let meta = parcelData.meta || {};
@@ -90,5 +89,5 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
             ),
             updateMeta
         );
-    });
+    };
 };

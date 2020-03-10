@@ -1,12 +1,12 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
-import type ChangeRequest from '../change/ChangeRequest';
 
-import asNode from '../parcelNode/asNode';
+import createUpdater from '../parcelData/createUpdater';
+import update from 'unmutable/lib/update';
 
 type Config = {
-    down?: (value: any) => any,
-    up?: (value: any, changeRequest: ChangeRequest) => any,
+    down?: (parcelData: any) => any,
+    up?: (parcelData: any) => any,
     preserveInput?: boolean
 };
 
@@ -17,31 +17,40 @@ export default (config: Config) => {
         preserveInput
     } = config;
 
+    let downValue = update('value', down);
+    let upValue = update('value', up);
+
     if(!preserveInput) {
         return (parcel: Parcel): Parcel => parcel
-            .modifyDown(down)
-            .modifyUp(up);
+            .modifyDown(downValue)
+            .modifyUp(upValue);
     }
 
     return (parcel: Parcel): Parcel => parcel
-        .modifyDown(asNode(node => {
-            if('translated' in node.meta) {
-                return node.update(() => node.meta.translated);
+        .modifyDown((parcelData) => {
+            if('translated' in parcelData.meta) {
+                return {
+                    value: parcelData.meta.translated
+                };
             }
-
-            return node
-                .update(down)
-                .setMeta({
-                    untranslated: node.value
-                });
-        }))
-        .modifyUp(asNode((node) => {
-            let updated = node.update(up);
-
-            return updated
-                .setMeta({
-                    translated: node.value,
-                    untranslated: updated.value
-                });
-        }));
+            return createUpdater(
+                downValue,
+                () => ({
+                    meta: {
+                        untranslated: parcelData.value
+                    }
+                })
+            )(parcelData);
+        })
+        .modifyUp((parcelData) => {
+            return createUpdater(
+                upValue,
+                ({value}) => ({
+                    meta: {
+                        translated: parcelData.value,
+                        untranslated: value
+                    }
+                })
+            )(parcelData);
+        });
 };

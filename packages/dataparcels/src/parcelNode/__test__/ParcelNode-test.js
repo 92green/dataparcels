@@ -67,16 +67,9 @@ test('ParcelNodes should get() lazily with exisitng child data', () => {
     expect(result._parcelData).toEqual(expected);
 });
 
-test('ParcelNodes should setMeta()', () => {
-    let node = new ParcelNode([1,2,3]);
-    let result = node.setMeta({foo: true}).setMeta({bar: false});
-    expect(result.meta).toEqual({foo: true, bar: false});
-});
-
-
 test('ParcelNodes should update() non-parent values', () => {
     let node = new ParcelNode(100);
-    let result = node.update(value => value + 200);
+    let result = node.update(({value}) => ({value: value + 200}));
     expect(result.value).toBe(300);
 });
 
@@ -87,7 +80,7 @@ test('ParcelNodes should update() non-parent values and keep meta and key', () =
         meta: {foo: true},
         key: 'aaa'
     };
-    let result = node.update(value => value + 200);
+    let result = node.update(({value}) => ({value: value + 200}));
     expect(result.value).toBe(300);
     expect(result.meta).toEqual({foo: true});
     expect(result.key).toBe('aaa');
@@ -99,10 +92,10 @@ test('ParcelNodes should update() parent values without replacing children with 
         value: [1,2,3]
     };
 
-    let updater = jest.fn(value => value);
+    let updater = jest.fn(data => data);
 
     let result = node.update(updater);
 
     expect(updater).toHaveBeenCalledTimes(1);
-    expect(updater.mock.calls[0][0]).toEqual([1,2,3]);
+    expect(updater.mock.calls[0][0].value).toEqual([1,2,3]);
 });

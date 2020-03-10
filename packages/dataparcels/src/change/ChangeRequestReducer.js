@@ -33,7 +33,8 @@ const actionMap = {
     swap, //: (lastKey, swapKey) => swap(lastKey, swapKey),
     swapNext, //: (lastKey) => swapNext(lastKey),
     swapPrev, //: (lastKey) => swapPrev(lastKey),
-    unshift: (lastKey, values) => unshift(...values)
+    unshift: (lastKey, values) => unshift(...values),
+    update: (lastKey, updater) => updater
 };
 
 const parentActionMap = {

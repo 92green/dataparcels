@@ -15,14 +15,13 @@ import type {ParentType} from '../types/Types';
 
 import {ParcelTypeMethodMismatch} from '../errors/Errors';
 
-import cancel from '../change/cancel';
 import ChangeRequest from '../change/ChangeRequest';
 import Action from '../change/Action';
 
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 import deleted from '../parcelData/deleted';
-import prepUpdater from '../parcelData/prepUpdater';
+import createUpdater from '../parcelData/createUpdater';
 import setMetaDefault from '../parcelData/setMetaDefault';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
@@ -108,10 +107,6 @@ export default class Parcel {
 
     // Parent methods
     has: Function;
-
-    // Side-effect methods
-    spy: Function;
-    spyChange: Function;
 
     // Change methods
     set: Function;
@@ -301,35 +296,14 @@ export default class Parcel {
             return parcelHas(key)(this._parcelData);
         });
 
-        // Side-effect methods
-
-        // Types(`spy()`, `sideEffect`, `function`)(sideEffect);
-        this.spy = (sideEffect: Function): Parcel => {
-            sideEffect(this);
-            return this;
-        };
-
-        // Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
-        this.spyChange = (sideEffect: Function): Parcel => {
-            return this._create({
-                rawId: this._idPushModifier('sc'),
-                updateChangeRequestOnDispatch: (changeRequest: ChangeRequest): ChangeRequest => {
-                    let basedChangeRequest = changeRequest._create({
-                        prevData: this.data
-                    });
-                    sideEffect(basedChangeRequest);
-                    return changeRequest;
-                }
-            });
-        };
-
         // Change methods
 
         this.set = (value: any) => fireAction('set', value);
 
         // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
-            fireAction('setData', prepUpdater(updater)(this._parcelData));
+            let preparedUpdater = createUpdater(updater);
+            fireAction('update', preparedUpdater);
         };
 
         this.delete = () => fireActionOnlyType(Child, 'delete');
@@ -373,32 +347,25 @@ export default class Parcel {
 
         // Types(`modifyDown()`, `updater`, `function`)(updater);
         this.modifyDown = (updater: ParcelValueUpdater): Parcel => {
-            let parcelDataUpdater = prepUpdater(updater);
+            let preparedUpdater = createUpdater(updater);
             return this._create({
                 rawId: this._idPushModifierUpdater('md', updater),
-                parcelData: parcelDataUpdater(this._parcelData),
+                parcelData: preparedUpdater(this._parcelData),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'md',
-                    updater: parcelDataUpdater
+                    updater: parcelData => preparedUpdater(parcelData)
                 })
             });
         };
 
         // Types(`modifyUp()`, `updater`, `function`)(updater);
         this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
-            let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
-                let nextData = prepUpdater(updater)(parcelData, changeRequest);
-                if(nextData.value === cancel) {
-                    throw new Error('CANCEL');
-                }
-                return nextData;
-            };
-
+            let preparedUpdater = createUpdater(updater);
             return this._create({
                 rawId: this._idPushModifierUpdater('mu', updater),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'mu',
-                    updater: parcelDataUpdater,
+                    updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest}),
                     changeRequest
                 })
             });
@@ -623,12 +590,7 @@ export default class Parcel {
     };
 
     _idPushModifierUpdater = (prefix: string, updater: ParcelValueUpdater): string[] => {
-        let hash = (fn: Function): string => `${HashString(fn.toString())}`;
-        let id = updater._asRaw
-            ? `s${hash(updater._updater || updater)}`
-            : hash(updater);
-
-        return this._idPushModifier(`${prefix}-${id}`);
+        return this._idPushModifier(`${prefix}-${HashString((updater._updater || updater).toString())}`);
     };
 
     // prepare child keys only once per parcel instance

@@ -71,6 +71,12 @@ const ActionCreators = {
             type: "unshift",
             payload: values
         });
+    },
+    update: (updater): Action => {
+        return new Action({
+            type: "update",
+            payload: updater
+        });
     }
 };
 
@@ -440,4 +446,30 @@ test('ChangeRequestReducer should process deep actions that are "parent actions"
     };
 
     expect(makeReducer(actions)(data).value).toEqual(expectedValue);
+});
+
+test('ChangeRequestReducer should process an "update" action', () => {
+    let updater = jest.fn(parcelData => ({
+        ...parcelData,
+        value: parcelData.value * 2
+    }));
+
+    var data = {
+        value: 123,
+        key: "^",
+        child: undefined
+    };
+
+    let actions = [
+        ActionCreators.update(updater)
+    ];
+
+    let expectedData = {
+        ...data,
+        value: 246
+    };
+
+    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(updater).toHaveBeenCalledTimes(1);
+    expect(updater.mock.calls[0][0]).toEqual(data);
 });
