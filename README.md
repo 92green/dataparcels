@@ -1,7 +1,7 @@
 ![dataparcels](https://user-images.githubusercontent.com/345320/48319791-4eece200-e666-11e8-8b19-252cd1135ae2.png)
 
 <a href="https://www.npmjs.com/package/react-dataparcels"><img src="https://img.shields.io/npm/v/dataparcels.svg?style=flat-square"></a>
-![](https://github.com/92green/dataparcels/workflows/test/badge.svg?branch=master)
+![](https://github.com/92green/dataparcels/workflows/test/badge.svg?branch=master) ![Tests](https://github.com/92green/dataparcels/workflows/Test/badge.svg?branch=master)
 
 A library for editing data structures that works really well with React.
 
