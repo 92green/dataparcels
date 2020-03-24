@@ -1,14 +1,8 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import {Box, CenteredLanding, Text} from 'dcme-style';
-import Link from 'component/Link';
+import Page from 'component/Page';
+import {H1} from 'dcme-style';
 
-export default () => <Layout>
-    <CenteredLanding
-        top={() => <Text element="h1" modifier="sizeTera center">404</Text>}
-        bottom={() => <Text element="p" modifier="monospace center margin">
-            There's nothing here. Try heading back to the <Link to="/">homepage</Link>.
-        </Text>}
-    />
-</Layout>;
+export default () => <Page>
+    <H1>404</H1>
+</Page>;

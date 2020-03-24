@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import UseParcelBufferMarkdown from 'pages/api/useParcelBuffer.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import UseParcelBufferMarkdown from 'mdx/api/useParcelBuffer.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <UseParcelBufferMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# useParcelBuffer',
             '# Params',
@@ -19,5 +23,7 @@ export default () => <Layout>
             'control',
             '# ParcelHookControl'
         ]}
-    />
-</Layout>;
+    >
+        <UseParcelBufferMarkdown />
+    </ContentNav>
+</Page>;

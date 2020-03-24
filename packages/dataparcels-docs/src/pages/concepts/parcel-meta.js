@@ -2,19 +2,20 @@
 import React from 'react';
 import Page from 'component/Page';
 import {ContentNav} from 'dcme-style';
-import CancelMarkdown from 'mdx/api/cancel.mdx';
-import {apiNav} from 'nav/apiNav';
+import ParcelMetaMarkdown from 'mdx/concepts/parcel-meta.mdx';
+import {conceptsNav} from 'nav/apiNav';
 
 export default () => <Page>
     <ContentNav
         pageTop
         pageBottom
         mdxHeading
-        nav={apiNav}
+        nav={conceptsNav}
         pageNav={[
-            '# cancel'
+            '# Parcel Meta',
+            'Examples'
         ]}
     >
-        <CancelMarkdown />
+        <ParcelMetaMarkdown />
     </ContentNav>
 </Page>;

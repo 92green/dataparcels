@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import ParcelBoundaryMarkdown from 'pages/api/ParcelBoundary.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import ParcelBoundaryMarkdown from 'mdx/api/ParcelBoundary.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <ParcelBoundaryMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# ParcelBoundary',
             '# Children',
@@ -19,5 +23,7 @@ export default () => <Layout>
             'debounce',
             'keepValue'
         ]}
-    />
-</Layout>;
+    >
+        <ParcelBoundaryMarkdown />
+    </ContentNav>
+</Page>;

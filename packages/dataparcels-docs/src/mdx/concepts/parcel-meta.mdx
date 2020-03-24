@@ -1,0 +1,120 @@
+import {Code} from 'dcme-style';
+import ParcelMetaChangedValuesSource from 'examples/ParcelMetaChangedValuesSource.txt';
+
+# Parcel meta
+
+Parcel meta provides the ability to store extra data that pertains to parts of a data shape, such as validation error messages against each of the fields in a form. Each location (unique key path) in a Parcel's value has a corresponding meta object, which defaults to an empty object.
+
+```js
+let parcel = new Parcel({
+    value: {
+        abc: 123,
+        def: {
+            ghi: 456
+        }
+    }
+});
+
+// the value above has four locations where meta can be stored:
+parcel.meta // returns the meta data object on the top level parcel
+parcel.get('abc').meta // returns the meta data object at ['abc']
+parcel.get('def').meta // returns the meta data object at ['def']
+parcel.get('def').get('ghi').meta // returns the meta data object at ['def', 'ghi']
+```
+
+There are three main ways to interact with meta on a Parcel:
+* The [meta](/api/Parcel#meta) property
+* The [setMeta()](/api/Parcel#setMeta()) method
+* The [initialMeta()](/api/Parcel#initialMeta()) method
+
+Meta is set using a Parcel's [setMeta()](/api/Parcel#setMeta()) method, which triggers a change that sets `meta` at the parcel's location.
+
+```js
+let parcel = new Parcel({
+    value: "abc"
+});
+
+parcel.setMeta({
+    abc: 123
+});
+// ^ this triggers a change that sets the parcel's meta to {abc: 123}
+
+parcel.setMeta({
+    def: 456
+});
+// ^ this triggers a change that sets the parcel's meta to {abc: 123, def: 456}
+```
+
+The [initialMeta()](/api/Parcel#initialMeta()) method can also be used to set the initial meta object.
+
+```js
+let parcel = new Parcel({
+    value: "abc"
+});
+
+parcel
+    .initialMeta({
+        abc: 123
+    })
+    .meta // this returns {abc: 123} initially, but this can change after subsequent calls to setMeta()
+```
+
+## Examples
+
+See the **[confirmation](/ui-behaviour#Confirmation)** and **[selections](/ui-behaviour#Selections)** examples to see how meta can be used.
+
+### Displaying changed values
+
+Additionally, this example shows how `meta` and `initialMeta()` can be used to store information in meta for later reference.
+
+```jsx
+import React from 'react';
+import useParcelState from 'react-dataparcels/useParcelState';
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+
+const withOriginalMeta = (parcel) => parcel.initialMeta({
+    original: parcel.value
+});
+
+export default function PersonEditor(props) {
+
+    let [personParcel] = useParcelState({
+        value: {
+            firstname: "Robert",
+            lastname: "Clamps"
+        }
+    });
+
+    let firstname = personParcel
+        .get('firstname')
+        .pipe(withOriginalMeta);
+
+    let lastname = personParcel
+        .get('lastname')
+        .pipe(withOriginalMeta);
+
+    return <div>
+        <label>firstname</label>
+        <ParcelBoundary parcel={firstname}>
+            {(firstname) => <div>
+                <input type="text" {...firstname.spreadDOM()} />
+                <div>Changed? {firstname.meta.original === firstname.value ? 'No' : 'Yes'}</div>
+            </div>}
+        </ParcelBoundary>
+
+        <label>lastname</label>
+        <ParcelBoundary parcel={lastname}>
+            {(lastname) => <div>
+                <input type="text" {...lastname.spreadDOM()} />
+                <div">Changed? {lastname.meta.original === lastname.value ? 'No' : 'Yes'}</div>
+            </div>}
+        </ParcelBoundary>
+    </div>;
+}
+
+```
+
+### What's going on
+* The `firstname` and `lastname` parcels use the [pipe()](/api/Parcel#pipe) method, which simply passes each parcel through the `withOriginalMeta` function and calls the [initialMeta()](/api/Parcel#initialMeta) function on each of them.
+* `initialMeta()` gets the initial value of the parcel and stores it in `meta.original`
+* When rendering, `meta.original` is compared against the current `value` to detect changes of the value since the initial render.
