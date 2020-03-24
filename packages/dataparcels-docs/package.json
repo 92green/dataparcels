@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "dcme-gatsby": "^1.0.8",
-    "dcme-style": "^1.1.11",
+    "dcme-style": "^1.1.12",
     "gatsby": "^2.13.20",
     "dataparcels": "^1.0.2",
     "react-dataparcels": "^1.0.2",
