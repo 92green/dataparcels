@@ -2,21 +2,23 @@
   "name": "dataparcels-docs",
   "private": true,
   "version": "1.0.2",
-  "description": "Dataparcels Documentation",
+  "description": "Dataparcels docs",
   "author": "Damien Clarke",
   "license": "MIT",
   "main": "n/a",
   "scripts": {
-    "build-docs": "yarn dedupe-react && gatsby build",
-    "watch": "yarn dedupe-react && gatsby develop",
-    "dedupe-react": "cd ../react-dataparcels && npm link ../dataparcels-docs/node_modules/react && cd ../react-dataparcels-drag && npm link ../dataparcels-docs/node_modules/react && cd ../dataparcels-docs"
+    "build": "yarn gatsby build",
+    "watch": "yarn gatsby develop",
+    "build-docs": "yarn gatsby build --prefix-paths",
+    "preview": "yarn gatsby build && yarn gatsby serve"
   },
   "dependencies": {
+    "dcme-gatsby": "^1.0.8",
+    "dcme-style": "^1.1.12",
+    "gatsby": "^2.13.20",
     "dataparcels": "^1.0.2",
-    "dcme-gatsby": "^0.5.0",
-    "dcme-style": "^0.27.4",
-    "gatsby": "^2.0.19",
     "react-dataparcels": "^1.0.2",
-    "react-dataparcels-drag": "^1.0.2"
+    "react-dataparcels-drag": "^1.0.2",
+    "unmutable": "^0.46.1"
   }
 }

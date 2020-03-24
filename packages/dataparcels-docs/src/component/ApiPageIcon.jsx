@@ -1,9 +1,16 @@
 // @flow
 import React from 'react';
-import {Image} from 'dcme-style';
+import {styled} from 'dcme-style/core';
 
-type Props = {
-    children: Node
-};
+export default styled((props) => <img {...props} />)`
+    display: none !important;
+    float: right;
+    width: 30%;
+    margin-top: -2rem;
+    margin-bottom: 0;
+    margin-left: 1rem;
 
-export default ({children} :Props) => <Image src={children} modifier="apiPageIcon" />;
+    @media (min-width: ${props => props.theme.breakpoints[2]}) {
+        display: block !important;
+    }
+`;

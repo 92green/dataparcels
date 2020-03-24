@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import ValidationMarkdown from 'pages/api/validation.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import ValidationMarkdown from 'mdx/api/validation.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <ValidationMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# validation',
             'Arguments',
@@ -15,5 +19,7 @@ export default () => <Layout>
             'Returns',
             'Meta'
         ]}
-    />
-</Layout>;
+    >
+        <ValidationMarkdown />
+    </ContentNav>
+</Page>;
