@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import UseParcelStateMarkdown from 'pages/api/useParcelState.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import UseParcelStateMarkdown from 'mdx/api/useParcelState.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <UseParcelStateMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# useParcelState',
             '# Params',
@@ -23,5 +27,7 @@ export default () => <Layout>
             'valueStatus',
             'changeStatus'
         ]}
-    />
-</Layout>;
+    >
+        <UseParcelStateMarkdown />
+    </ContentNav>
+</Page>;

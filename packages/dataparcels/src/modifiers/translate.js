@@ -1,11 +1,12 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
 
-import asNode from '../parcelNode/asNode';
+import createUpdater from '../parcelData/createUpdater';
+import update from 'unmutable/lib/update';
 
 type Config = {
-    down?: Function,
-    up?: Function,
+    down?: (parcelData: any) => any,
+    up?: (parcelData: any) => any,
     preserveInput?: boolean
 };
 
@@ -16,24 +17,40 @@ export default (config: Config) => {
         preserveInput
     } = config;
 
+    let downValue = update('value', down);
+    let upValue = update('value', up);
+
     if(!preserveInput) {
         return (parcel: Parcel): Parcel => parcel
-            .modifyDown(down)
-            .modifyUp(up);
+            .modifyDown(downValue)
+            .modifyUp(upValue);
     }
 
     return (parcel: Parcel): Parcel => parcel
-        .modifyDown(asNode(node => {
-            if('_translated' in node.meta) {
-                return node.update(() => node.meta._translated);
+        .modifyDown((parcelData) => {
+            if('translated' in parcelData.meta) {
+                return {
+                    value: parcelData.meta.translated
+                };
             }
-            return node.update(down);
-        }))
-        .modifyUp(asNode(node => {
-            return node
-                .update(up)
-                .setMeta({
-                    _translated: node.value
-                });
-        }));
+            return createUpdater(
+                downValue,
+                () => ({
+                    meta: {
+                        untranslated: parcelData.value
+                    }
+                })
+            )(parcelData);
+        })
+        .modifyUp((parcelData) => {
+            return createUpdater(
+                upValue,
+                ({value}) => ({
+                    meta: {
+                        translated: parcelData.value,
+                        untranslated: value
+                    }
+                })
+            )(parcelData);
+        });
 };

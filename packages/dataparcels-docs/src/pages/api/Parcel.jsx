@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import ParcelMarkdown from 'pages/api/Parcel.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import ParcelMarkdown from 'mdx/api/Parcel.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <ParcelMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# Parcel',
             '# Properties',
@@ -63,5 +67,7 @@ export default () => <Layout>
             '# Composition methods',
             'pipe()'
         ]}
-    />
-</Layout>;
+    >
+        <ParcelMarkdown />
+    </ContentNav>
+</Page>;

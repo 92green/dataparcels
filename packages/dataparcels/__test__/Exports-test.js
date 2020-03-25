@@ -4,10 +4,9 @@
 import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import asRaw from '../asRaw';
+import createUpdater from '../createUpdater';
 import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
-import asNode from '../asNode';
 import asChildNodes from '../asChildNodes';
 import cancel from '../cancel';
 import translate from '../translate';
@@ -19,10 +18,9 @@ import InternalParcel from '../src/parcel/Parcel';
 // internal lib files
 import InternalAction from '../lib/change/Action';
 import InternalChangeRequest from '../lib/change/ChangeRequest';
-import InternalUpdateRaw from '../lib/parcelData/asRaw';
+import InternalCreateUpdater from '../lib/parcelData/createUpdater';
 import Internaldeleted from '../lib/parcelData/deleted';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
-import InternalAsNode from '../lib/parcelNode/asNode';
 import InternalAsNodes from '../lib/parcelNode/asChildNodes';
 import Internalcancel from '../lib/change/cancel';
 import InternalTranslate from '../lib/modifiers/translate';
@@ -40,8 +38,8 @@ test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
 });
 
-test('/asRaw should export asRaw', () => {
-    expect(asRaw).toBe(InternalUpdateRaw);
+test('/createUpdater should export createUpdater', () => {
+    expect(createUpdater).toBe(InternalCreateUpdater);
 });
 
 test('/deleted should export deleted', () => {
@@ -50,10 +48,6 @@ test('/deleted should export deleted', () => {
 
 test('/ParcelNode should export ParcelNode', () => {
     expect(ParcelNode).toBe(InternalParcelNode);
-});
-
-test('/asNode should export asNode', () => {
-    expect(asNode).toBe(InternalAsNode);
 });
 
 test('/asChildNodes should export asChildNodes', () => {

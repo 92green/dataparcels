@@ -1,11 +1,6 @@
 // @flow
 import validation from '../validation';
 
-test('validation should use a raw updater, so it will work in beforeChange', () => {
-    expect(validation({})._asRaw).toBe(true);
-});
-
-
 test('validation should validate specified fields', () => {
     let isValid = jest.fn(value => value > 200 ? undefined : "Error");
 

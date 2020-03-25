@@ -2,7 +2,6 @@
 import Parcel from '../Parcel';
 import GetAction from '../../util/__test__/GetAction-testUtil';
 import ParcelNode from '../../parcelNode/ParcelNode';
-import asNode from '../../parcelNode/asNode';
 import asChildNodes from '../../parcelNode/asChildNodes';
 
 test('Parcel.dispatch() should pass handleChange to newly created parcel', () => {
@@ -97,38 +96,15 @@ test('Parcel.set() should remove and replace child data when setting a deep data
 test('Parcel.update() should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
-    let updater = jest.fn(ii => ii + 1);
+    let updater = jest.fn(({value}) => ({value: value + 1}));
 
     new Parcel({
         value: 123,
         handleChange
     }).update(updater);
 
-    expect(updater.mock.calls[0][0]).toBe(123);
+    expect(updater.mock.calls[0][0].value).toBe(123);
     expect(handleChange.mock.calls[0][0].data.value).toBe(124);
-});
-
-test('Parcel.update(asNode()) should call the Parcels handleChange function with the new parcelData', () => {
-
-    let handleChange = jest.fn();
-    let updater = jest.fn(node => node.setMeta({foo: true}));
-
-    new Parcel({
-        value: [1,2,3],
-        handleChange
-    }).update(asNode(updater));
-
-    expect(updater.mock.calls[0][0] instanceof ParcelNode).toBe(true);
-    expect(handleChange.mock.calls[0][0].data.meta).toEqual({foo: true});
-    expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3]);
-});
-
-test('Parcel.update(asNode()) should error if a parcelNode isnt returned', () => {
-    let parcel = new Parcel({
-        value: [1,2,3]
-    });
-
-    expect(() => parcel.update(asNode(() => 'foo'))).toThrow(`The return value of an asNode() updater must be a ParcelNode`);
 });
 
 test('Parcel.update(asChildNodes()) should call the Parcels handleChange function with the new parcelData', () => {

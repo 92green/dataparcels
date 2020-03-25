@@ -1,9 +1,12 @@
 // @flow
-const {gatsbyConfig} = require('dcme-gatsby/lib/gatsby/gatsby-config');
+const {gatsbyConfig} = require('dcme-gatsby/src/gatsby/gatsby-config');
 
 module.exports = {
     siteMetadata: {
-        title: 'Dataparcels'
+        title: 'Dataparcels - A library for editing data structures that works really well with React.'
     },
-    ...gatsbyConfig
+    pathPrefix: '/dataparcels',
+    ...gatsbyConfig({
+        compileModules: [`dcme-gatsby`, `dcme-style`]
+    })
 };

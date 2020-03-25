@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import ParcelNodeMarkdown from 'pages/api/ParcelNode.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import ParcelNodeMarkdown from 'mdx/api/ParcelNode.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <ParcelNodeMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# ParcelNode',
             'asNode',
@@ -22,5 +26,7 @@ export default () => <Layout>
             'update()',
             'setMeta()'
         ]}
-    />
-</Layout>;
+    >
+        <ParcelNodeMarkdown />
+    </ContentNav>
+</Page>;

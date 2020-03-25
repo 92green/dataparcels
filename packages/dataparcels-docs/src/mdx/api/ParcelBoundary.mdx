@@ -1,0 +1,207 @@
+
+import Message from 'component/Message';
+import ApiPageIcon from 'component/ApiPageIcon';
+import IconParcelBoundary from 'assets/parcelboundary.gif';
+import {Link} from 'dcme-style/affordance';
+import {Text} from 'dcme-style/affordance';
+
+# ParcelBoundary
+
+<ApiPageIcon src={IconParcelBoundary} />
+
+ParcelBoundary is a React component. Its job is to optimise rendering performance, and to optionally control the flow of parcel changes.
+
+Each ParcelBoundary is passed a Parcel. By default the ParcelBoundary uses pure rendering, and will only update when the Parcel's data changes to avoid unnecessary re-rendering.
+
+ParcelBoundaries have an internal buffer that can hold onto changes as they exit the boundary. These are normally released immediately, but also allow for debouncing changes, or putting a hold on all changes so they can be released later. Internally ParcelBoundaries use a [useParcelBuffer](/api/useParcelBuffer) hook.
+
+```js
+import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+```
+
+```js
+<ParcelBoundary
+    parcel={Parcel}
+    pure={?boolean}
+    forceUpdate={?any[]}
+    buffer={?boolean}
+    debounce={?number}
+    beforeChange={?Function|Function[]}
+>
+    {(parcel, control) => Node}
+</ParcelBoundary>
+```
+
+<Message>ParcelBoundary is also available as a hook, <Link to="/api/useParcelBuffer">useParcelBuffer</Link>.</Message>
+
+## <Text textStyle="weaker">Children</Text>
+
+### childRenderer
+
+```flow
+(parcel: Parcel, buffer: ParcelHookControl) => Node
+
+type ParcelHookControl = {
+    submit: () => void,
+    reset: () => void,
+    buffered: boolean,
+    actions: Action[]
+}
+```
+
+ParcelBoundaries must be given a `childRenderer` function as children. This is called whenever the ParcelBoundary updates.
+
+It is passed a `parcel` and a ParcelHookControl object.
+- The `parcel` is on the "inside" of the parcel boundary, and is able to update independently of the parcel that was passed into the ParcelBoundary.
+- The `buffer` argument passes a ParcelHookControl which can be used to control the ParcelBoundary's action buffer and information about the current state of the action buffer.
+
+#### ParcelHookControl
+
+- The `submit()` function will submit changes in the buffer, allowing them to propagate upward out of the ParcelBoundary.
+- The `reset()` function will reset the buffer, clearing any changes in the buffer.
+- The `buffered` boolean indicates if the ParcelBoundary currently contains changes that it hasn't yet submitted.
+- The `actions` array contains the actions that are currently held in the buffer.
+
+The return value of `childRenderer` will be rendered.
+
+```js
+// personParcel is a Parcel
+<ParcelBoundary parcel={personParcel}>
+    {(parcel, buffer) => {
+        return <input type="text" {...parcel.spreadInput()} />;
+    }}
+</ParcelBoundary>
+```
+
+## <Text textStyle="weaker">Props</Text>
+
+### parcel
+
+```flow
+parcel: Parcel
+```
+
+The parcel to put into the boundary.
+
+#### Behaviour notes
+
+Whenever a ParcelBoundary receives a new Parcel via props, ParcelBoundary's default behaviour is to:
+- update to contain the new Parcel’s data
+- forget about all its buffered changes
+
+This is safe default behaviour because changes in the buffer may not be compatible with the new Parcel's data shape. However it may be user unfriendly in some cases, depending on when and how often the parcel updates from props.
+
+If you would like to keep the changes in the buffer, and you know that buffered changes will always be compatible with any new Parcel's data shape, consider using [useParcelForm.rebase](/api/useParcelForm#rebase) or [useParcelState.rebase](/api/useParcelState#rebase).
+
+### pure
+
+```flow
+pure?: boolean = true // optional
+```
+
+Enables pure rendering. When `pure` is true, ParcelBoundary will only re-render when `parcel`'s data changes. It defaults to `true`.
+
+Use `forceUpdate` if you would like ParcelBoundary to re-render in response to changes in other props.
+
+**[See an example of ParcelBoundary pure](/ui-behaviour#Pure-rendering)**
+
+### forceUpdate
+
+```flow
+forceUpdate?: any[] // optional
+```
+
+While a ParcelBoundary is using pure rendering, `forceUpdate` will force the ParcelBoundary to re-render in response to changes in other props. Each item in the `forceUpdate` array is compared using strict equality against its previous values, and if any are not strictly equal, the ParcelBoundary will re-render.
+
+```js
+// personParcel is a Parcel
+// in this example, options is an array of options that are loaded after mount
+// when options changes its value, the ParcelBoundary is forced to update
+// despite personParcel not changing
+
+<ParcelBoundary parcel={personParcel} forceUpdate={[options]}>
+    {(personParcel) => <Select {...personParcel.spreadInput()} options={options} />}
+</ParcelBoundary>
+```
+
+### buffer
+
+```flow
+buffer?: boolean = false // optional
+```
+
+When `buffer` is true, all changes made to the parcel inside the ParcelBoundary are prevented from being propagated out of the boundary. The inner parcel will continue to update as normal. You can then call `control.submit()` to release all the buffered changes at once, or `control.reset()` to cancel all the buffered changes.
+
+This can be useful for building UIs that have a submit action on a particular field. (Typically [useParcelForm](/api/useParcelForm) or [useParcelBuffer](/api/useParcelBuffer) are used for controlling the submission of an entire form.)
+
+```js
+// personParcel is a Parcel
+<ParcelBoundary parcel={personParcel}>
+    {(personParcel, {submit, reset}) => {
+        // personParcel is now inside the ParcelBoundary
+        return <div>
+            <input type="text" {...personParcel.spreadInput()} />
+            <button onClick={() => submit()}>Submit</button>
+            <button onClick={() => reset()}>Cancel</button>
+        </div>;
+    }}
+</ParcelBoundary>
+```
+
+### debounce
+
+```flow
+debounce?: number // optional
+```
+
+If set, `debounce` will debounce any changes that occur inside the ParcelBoundary. The number indicates the number of milliseconds to debounce.
+
+This can be used to increase rendering performance for parcels that change value many times in rapid succession, such as text inputs.
+
+#### Debouncing explained
+
+When the `parcel` in the ParcelBoundary sends a change, the ParcelBoundary will catch it and prevent it from being propagated out of the boundary. The parcel on the inside of the ParcelBoundary will still update as normal.
+
+The ParcelBoundary waits until no new changes have occured for `debounce` number of milliseconds. It then releases all the changes it has buffered, all together in a single change request.
+
+Debouncing can be good for rendering performance because parcels outside the ParcelBoundary don't needlessly update every time a small change occurs (e.g. each time the user presses a key), but the inside of the ParcelBoundary still updates immediately.
+
+```js
+// personParcel is a Parcel
+<ParcelBoundary parcel={personParcel} debounce={100}>
+    {(personParcel) => <input type="text" {...personParcel.spreadInput()} />}
+</ParcelBoundary>
+```
+
+**[See an example of ParcelBoundary debounce](/ui-behaviour#Debouncing-changes)**
+
+### keepValue
+
+```flow
+keepValue?: boolean = false // optional
+```
+
+Whenever a ParcelBoundary receives a new Parcel via props, its default behaviour is to update to contain the new Parcel's data. This behaviour is preferred in nearly all use cases.
+
+Occasionally you may have [modify methods](/api/Parcel#modify_methods) being used above the ParcelBoundary which change the data type on its trip up to the top level Parcel and back down again. The user may experience this as typing one thing, and the input updating to something else. So `keepValue` can be set to true to make the ParcelBoundary a temporary "master" of its own state. When `keepValue` is true on a ParcelBoundary, if that ParcelBoundary propagates a change which it then recieves again with different data, then it will *not* update its value to the data received from props.
+
+Consider this example:
+
+```js
+let numberParcel = parcel
+    .modifyDown(number => `${number}`)
+    .modifyUp(string => Number(string));
+
+return <ParcelBoundary parcel={numberParcel} keepValue>
+    {(parcel) => <input type="text" {...parcel.spreadInput()} />}
+</ParcelBoundary>;
+
+```
+
+When a non-numeric string is entered into the input (e.g. "A"), this is turned into `NaN` as it passes through `.modifyUp()`. This is correct from the point of view of the data in the `numberParcel`, it's set up so that it should only ever contain a `Number`. This triggers an update and a re-render, and `NaN` is passed back down to the ParcelBoundary. Setting `keepValue` to true allows ParcelBoundary to remember that it should still contain a string of "A".
+
+In the above example, `keepValue` also preserves values such as:
+- "0.10" - this would be turned into "0.1" by the modify functions
+- "0.0000001" - this would be turned into "1e-7"
+
+**[See an example of keepValue](/data-editing#Modifying-data-to-fit-the-UI)**

@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import UseParcelFormMarkdown from 'pages/api/useParcelForm.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import UseParcelFormMarkdown from 'mdx/api/useParcelForm.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <UseParcelFormMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# useParcelForm',
             '# Params',
@@ -31,5 +35,7 @@ export default () => <Layout>
             'submitStatus',
             '# Inside the hook'
         ]}
-    />
-</Layout>;
+    >
+        <UseParcelFormMarkdown />
+    </ContentNav>
+</Page>;

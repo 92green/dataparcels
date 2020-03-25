@@ -16,27 +16,23 @@
         "path": "ChangeRequest.js"
     },
     {
+        "limit": "0.4 KB",
+        "path": "createUpdater.js"
+    },
+    {
         "limit": "0.1 KB",
         "path": "deleted.js"
     },
     {
-        "limit": "5.8 KB",
+        "limit": "5.6 KB",
         "path": "ParcelNode.js"
     },
     {
-        "limit": "6.2 KB",
-        "path": "asNode.js"
-    },
-    {
-        "limit": "6.2 KB",
+        "limit": "5.9 KB",
         "path": "asChildNodes.js"
     },
     {
-        "limit": "0.1 KB",
-        "path": "asRaw.js"
-    },
-    {
-        "limit": "6.3 KB",
+        "limit": "2.2 KB",
         "path": "translate.js"
     },
     {

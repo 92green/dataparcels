@@ -2,21 +2,12 @@
 import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {ParcelData} from '../types/Types';
-import type {ParcelMeta} from '../types/Types';
+import type ChangeRequest from '../change/ChangeRequest';
 
-import isParentValue from '../parcelData/isParentValue';
-import isIndexedValue from '../parcelData/isIndexedValue';
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
-import parcelSetSelf from '../parcelData/setSelf';
 import parcelGet from '../parcelData/get';
-import setMeta from '../parcelData/setMeta';
-import updateChild from '../parcelData/updateChild';
-import updateChildKeys from '../parcelData/updateChildKeys';
-
-import map from 'unmutable/map';
-import pipeWith from 'unmutable/pipeWith';
-import shallowToJS from 'unmutable/shallowToJS';
+import createUpdater from '../parcelData/createUpdater';
 
 export default class ParcelNode {
     constructor(value: any) {
@@ -32,6 +23,7 @@ export default class ParcelNode {
     _parent: ?ParcelNode;
     _parcelData: ?ParcelData;
     _key: Key;
+    _changeRequest: ?ChangeRequest;
 
     //
     // private methods
@@ -95,76 +87,12 @@ export default class ParcelNode {
     };
 
     update = (updater: Function): ParcelNode => {
-        let {data, value} = this;
-        if(isParentValue(value)) {
-            this._prepareChildKeys();
-            value = pipeWith(
-                value,
-                map((value, key) => this.get(key))
-            );
-        }
-
-        let updated: any = updater(value);
-
+        let preparedUpdater = createUpdater(updater);
         let parcelNode = new ParcelNode();
-        if(!isParentValue(updated)) {
-            parcelNode._parcelData = parcelSetSelf(updated)(data);
-            return parcelNode;
-        }
-
-        updated = pipeWith(
-            updated,
-            map((maybeNode: any) => maybeNode instanceof ParcelNode
-                ? maybeNode
-                : new ParcelNode(maybeNode)
-            )
-        );
-
-        let newValue = map(node => node.value)(updated);
-
-        let hasNewNode = false;
-        let keyMap = {};
-
-        let newChild = pipeWith(
-            updated,
-            shallowToJS(),
-            map(node => {
-                let {child, meta, key} = node.data;
-
-                let keyExists = keyMap[key];
-                keyMap[key] = true;
-                if(keyExists || node._parent !== this) {
-                    hasNewNode = true;
-                    key = undefined;
-                }
-
-                return {child, meta, key};
-            })
-        );
-
-        let newParcelData: ParcelData = {
-            ...data,
-            value: newValue,
-            child: newChild
-        };
-
-        let typeChanged = () => isIndexedValue(value) !== isIndexedValue(updated);
-
-        if(hasNewNode || typeChanged()) {
-            newParcelData = pipeWith(
-                newParcelData,
-                updateChild(),
-                updateChildKeys(data.child)
-            );
-        }
-
-        parcelNode._parcelData = newParcelData;
-        return parcelNode;
-    };
-
-    setMeta = (meta: ParcelMeta): ParcelNode => {
-        let parcelNode = new ParcelNode();
-        parcelNode._parcelData = setMeta(meta)(this.data);
+        parcelNode._parcelData = preparedUpdater({
+            ...this._parcelData,
+            changeRequest: this._changeRequest
+        });
         return parcelNode;
     };
 }

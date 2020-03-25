@@ -1,0 +1,111 @@
+# Parcel updaters
+
+Several of the methods on [Parcel](/api/Parcel) use callbacks known as "parcel updaters". These functions are used to alter a value based off an existing value. There are a few rules around how you can use these updaters, and why you might choose one kind over another.
+
+Many examples of these can be seen on **[Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI)**.
+
+## Simple value updaters
+
+Simple value updaters look something like this:
+
+```js
+.update(value => value + 10);
+```
+
+They provide a value, and expect a new value to be returned.
+
+When used in [.modifyUp()](/api/Parcel#modifyUp()) they will also provide a [ChangeRequest](/api/ChangeRequest):
+
+```js
+.modifyUp((value, changeRequest) => {
+    return changeRequest.originPath()[0] === 'bar'
+        ? value + 100
+        : value;
+});
+```
+
+The simple value updater is safe to use in most simple cases, but in some cases it should not be used.
+
+- If the updater gives you a primitive value or childless value, you can return anything.
+- If the updater gives you a value that has children, you can always return a primitive value or childless value.
+- If the updater gives you a value that has children, you can return a value with children **only if the shape hasn't changed**.
+
+If the updater gives you a value that has children, please ensure you do not change the shape of the value. Changing the data shape or moving children within the data shape can cause dataparcels to misplace its keying and meta information! Dataparcels stores data against each part of a deep value's data structure, so it can only let you change the value if you promise not to alter the shape.
+
+```js
+// example updaters
+.update(string => string + "!") // good
+.update(string => [string]) // good
+.update(date => date.toString()) // good
+.update(array => array.join(".")) // good
+.update(array => array.map(number => number + 1)) // good, shape is still the same
+
+.update(array => array.slice(0,2)) // bad, shape has changed if array is longer that 2!
+.update(array => array.reverse()) // bad, shape has changed because items have moved around!
+```
+
+Simple updaters also do not give you a way to alter [parcel meta](/parcel-meta). If you need to update the shape of the data or update meta, you can use one of the more advanced updaters below.
+
+## asNode
+
+Use the [asNode](/api/ParcelNode) updater if you'd like to set [meta](/parcel-meta) in an updater. It will provide you with your Parcel's value wrapped in a [ParcelNode](/api/ParcelNode), from which you can call `.setMeta()`.
+
+You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asChildNodes](#asChildNodes) described below.
+
+They look something like this:
+
+```js
+.modifyUp(asNode(
+    node => node.setMeta({cool: true})
+))
+```
+
+```js
+import asNode from 'dataparcels/asNode';
+import asNode from 'react-dataparcels/asNode';
+```
+
+## asChildNodes
+
+Use the [asChildNodes](/api/ParcelNode) updater if you'd like to add, remove or re-arrange child values. It will provide you with your Parcel's value, but with all child values replaced with [ParcelNode](/api/ParcelNode) instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data.
+
+They look something like this:
+
+```js
+.modifyUp(asChildNodes(
+    array => array.filter(node => node.value.isCool)
+))
+```
+
+The function `asChildNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
+
+```js
+import asChildNodes from 'dataparcels/asChildNodes';
+import asChildNodes from 'react-dataparcels/asChildNodes';
+```
+
+```js
+let parcel = new Parcel({
+    value: [1,2,3]
+});
+
+// reverse the parcel's children
+let modifiedParcel = parcel.modifyDown(asChildNodes(
+    array => array.slice().reverse() // clones and reverses the array of nodes
+));
+
+// new value is [3,2,1]
+```
+
+```js
+let parcel = new Parcel({
+    value: {foo: 100}
+});
+
+// set a default value for a child
+let modifiedParcel = parcel.modifyDown(asChildNodes(
+    object => ({bar: 200, ...object})
+));
+
+// new value is {bar: 200, foo: 100}
+```
