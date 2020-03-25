@@ -35,17 +35,17 @@ export default function PersonEditor(props) {
     return <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+            {(firstname) => <input type="text" {...firstname.spreadInput()} />}
         </ParcelBoundary>
 
         <label>lastname</label>
         <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+            {(lastname) => <input type="text" {...lastname.spreadInput()} />}
         </ParcelBoundary>
 
         <label>postcode</label>
         <ParcelBoundary parcel={personParcel.getIn(['address', 'postcode'])}>
-            {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
+            {(postcode) => <input type="text" {...postcode.spreadInput()} />}
         </ParcelBoundary>
     </div>;
 };
@@ -57,7 +57,7 @@ Here's how to make a drag-and-drop editor for an array of objects:
 import React from 'react';
 import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ParcelDrag from 'react-dataparcels-drag';
+import ParcelDrag from 'react-dataparcels/ParcelDrag';
 
 export default function FruitListEditor(props) {
 
@@ -73,7 +73,7 @@ export default function FruitListEditor(props) {
         <ParcelDrag parcel={fruitListParcel}>
             {(fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
                 {(parcel) => <div>
-                    <input type="text" {...parcel.spreadDOM()} />
+                    <input type="text" {...parcel.spreadInput()} />
                     <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
                     <button onClick={() => parcel.delete()}>x</button>
                 </div>}
@@ -107,12 +107,12 @@ export default function SignUpForm(props) {
     return <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+            {(firstname) => <input type="text" {...firstname.spreadInput()} />}
         </ParcelBoundary>
 
         <label>lastname</label>
         <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+            {(lastname) => <input type="text" {...lastname.spreadInput()} />}
         </ParcelBoundary>
 
         <button onClick={() => personParcelControl.submit()}>Submit</button>
