@@ -822,53 +822,6 @@ parcel
 
 ```
 
-## <Text textStyle="weaker">Side-effect methods</Text>
-
-### spy()
-
-```flow
-spy(sideEffect: SideEffectFunction): Parcel
-
-type SideEffectFunction = (parcel: Parcel) => void;
-```
-
-When the `spy` method is called on a parcel, it immediately calls the `sideEffect` function, passing itself as the first parameter. The return value of `sideEffect` is ignored. It returns the original parcel, so it can be chained. This is useful for debugging.
-
-```js
-let value = {
-    abc: 123
-};
-let parcel = new Parcel({value});
-parcel
-    .spy(parcel => console.log(parcel.data)) // 1. logs the parcel to the console ({abc: 123})
-    .get('abc')
-    .spy(parcel => console.log(parcel.data)) // 2. logs the parcel to the console (123)
-    .value; // 3. returns 123
-```
-
-### spyChange()
-
-```flow
-spyChange(sideEffect: SideEffectFunction): Parcel
-
-type SideEffectFunction = (changeRequest: ChangeRequest) => void;
-```
-
-Once the `spyChange` method is called on a parcel, it will call the `sideEffect` function each time a change is requested from beneath, passing the associated [ChangeRequest](/api/ChangeRequest) as the first parameter. The return value of `sideEffect` is ignored. It returns a clone of the original parcel, so it can be chained. This is useful for debugging.
-
-```js
-let value = {
-    abc: 123
-};
-let parcel = new Parcel({value});
-parcel
-    .spyChange(changeRequest => console.log(changeRequest.nextData)) // 3. logs the change request to the console (containing {abc: 456})
-    .get('abc')
-    .spyChange(changeRequest => console.log(changeRequest.nextData)) // 2. logs the change request to the console (containing 456)
-    .set(456); // 1. a change is made
-```
-
-
 ## <Text textStyle="weaker">Composition methods</Text>
 
 ### pipe()

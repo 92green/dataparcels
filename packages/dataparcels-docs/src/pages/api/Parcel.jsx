@@ -38,7 +38,6 @@ export default () => <Page>
             'spread()',
             'spreadInput()',
             'spreadCheckbox()',
-            '# Child methods',
             '# Change methods',
             'set()',
             'delete()',
@@ -61,9 +60,6 @@ export default () => <Page>
             'modifyDown()',
             'modifyUp()',
             'initialMeta()',
-            '# Side-effect methods',
-            'spy()',
-            'spyChange()',
             '# Composition methods',
             'pipe()'
         ]}
