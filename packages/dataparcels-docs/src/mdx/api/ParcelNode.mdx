@@ -11,30 +11,7 @@ import {Text} from 'dcme-style/affordance';
 
 <ApiPageIcon src={IconParcelNode} />
 
-ParcelNodes are used via the [asNode](#asNode) and [asChildNodes](#asChildNodes) updater functions.
-
-## asNode
-
-```js
-import asNode from 'dataparcels/asNode';
-import asNode from 'react-dataparcels/asNode';
-```
-
-```flow
-asNode((node: ParcelNode) => ParcelNode)
-```
-
-The `asNode` function is a kind of [parcel updater](/parcel-updaters) that primarily allows for setting [meta](/parcel-meta). It will provide you with your Parcel's value wrapped in a [ParcelNode](/api/ParcelNode), from which you can call `.setMeta()`.
-
-Your updater function must return a ParcelNode.
-
-You can also call `.update()` if you'd like to add, remove or re-arrange child values, which does the same thing as [asChildNodes](#asChildNodes) described below.
-
-```js
-.modifyUp(asNode(
-    node => node.setMeta({cool: true})
-))
-```
+ParcelNodes are used via the [asChildNodes](#asChildNodes) updater function.
 
 ## asChildNodes
 
@@ -50,8 +27,6 @@ asChildNodes((nodes: any) => any
 The `asChildNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
 
 It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asChildNodes()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asChildNodes()` function is being passed into.
-
-The function `asChildNodes(updater)` is equivalent to `asNode(node => node.update(updater))`.
 
 ```js
 let parcel = new Parcel({
@@ -185,11 +160,3 @@ update(asChildNodes(value: any) => any): ParcelNode
 Calling `update()` with one argument will replace the current value in the ParcelNode with the result of the value updater provided to it. The value updater is passed the current value of the ParcelNode, from which you can return the intended replacement value.
 
 <ValueUpdater />
-
-### setMeta()
-
-```flow
-setMeta(partialMeta: Object): ParcelNode
-```
-
-Sets `meta` at the current parcel's location. Values on the `partialMeta` object are merged shallowly onto any existing `meta`. Read [Parcel meta](/parcel-meta) for more info.
