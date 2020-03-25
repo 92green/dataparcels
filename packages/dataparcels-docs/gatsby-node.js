@@ -1,7 +1,8 @@
 /* eslint-disable */
-
-const {onCreateWebpackConfig} = require('dcme-gatsby/lib/gatsby/gatsby-node');
-exports.onCreateWebpackConfig = onCreateWebpackConfig;
+const {onCreateWebpackConfig} = require('dcme-gatsby/src/gatsby/gatsby-node');
+exports.onCreateWebpackConfig = onCreateWebpackConfig({
+    dirname: __dirname
+});
 
 // kill all jest child processes that hang around after build,
 // which stop netlify from recognising that build is complete

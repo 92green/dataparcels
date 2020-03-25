@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import ChangeRequestMarkdown from 'pages/api/ChangeRequest.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import ChangeRequestMarkdown from 'mdx/api/ChangeRequest.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <ChangeRequestMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# ChangeRequest',
             '# Properties',
@@ -16,10 +20,12 @@ export default () => <Layout>
             'originPath',
             'actions',
             '# Methods',
-            'hasValueChanged()',
-            'hasDataChanged()',
-            'getDataIn()',
-            'merge()'
+            'hasValueChanged',
+            'hasDataChanged',
+            'getDataIn',
+            'merge'
         ]}
-    />
-</Layout>;
+    >
+        <ChangeRequestMarkdown />
+    </ContentNav>
+</Page>;

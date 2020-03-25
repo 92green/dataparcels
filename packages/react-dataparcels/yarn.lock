@@ -6517,13 +6517,6 @@ react-is@^16.9.0-alpha.0:
   version "16.9.0-alpha.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.9.0-alpha.0.tgz#af943642da49460f9fe98630182b0a62db3e9e6a"
 
-react-sortable-hoc@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-1.4.0.tgz#b477ce700ba755754200a1dabd36e588e2f5608d"
-  dependencies:
-    "@babel/runtime" "^7.2.0"
-    invariant "^2.2.4"
-    prop-types "^15.5.7"
 
 react-test-renderer@16.9.0-alpha.0, react-test-renderer@^16.0.0-0:
   version "16.9.0-alpha.0"
@@ -7763,9 +7756,7 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
-unmutable@^0.47.1:
-  version "0.47.1"
-  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.47.1.tgz#56b7feebb9eb6da254c8d8bfba28bb221bdad741"
+
   dependencies:
     "@babel/runtime" "^7.1.5"
     fast-deep-equal "^1.0.0"

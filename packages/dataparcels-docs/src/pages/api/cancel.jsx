@@ -1,14 +1,20 @@
 // @flow
 import React from 'react';
-import Layout from 'layout/Layout';
-import ContentNav from 'shape/ContentNav';
-import CancelMarkdown from 'pages/api/cancel.mdx';
+import Page from 'component/Page';
+import {ContentNav} from 'dcme-style';
+import CancelMarkdown from 'mdx/api/cancel.mdx';
+import {apiNav} from 'nav/apiNav';
 
-export default () => <Layout>
+export default () => <Page>
     <ContentNav
-        content={() => <CancelMarkdown />}
+        pageTop
+        pageBottom
+        mdxHeading
+        nav={apiNav}
         pageNav={[
             '# cancel'
         ]}
-    />
-</Layout>;
+    >
+        <CancelMarkdown />
+    </ContentNav>
+</Page>;

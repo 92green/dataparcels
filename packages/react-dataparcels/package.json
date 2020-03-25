@@ -7,7 +7,7 @@
   "author": "Damien Clarke",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blueflag/dataparcels.git"
+    "url": "git+https://github.com/92green/dataparcels.git"
   },
   "files": [
     "lib",
@@ -31,7 +31,7 @@
     "validation.js"
   ],
   "bugs": {
-    "url": "https://github.com/blueflag/dataparcels/issues"
+    "url": "https://github.com/92green/dataparcels/issues"
   },
   "private": false,
   "scripts": {
