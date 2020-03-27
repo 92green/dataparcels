@@ -30,7 +30,7 @@ new Parcel({
 
 * <Param name="value" optional type="any" default="undefined" />
 
-  The value you want to put in the Parcel. This value will be changed immutably when change methods are called on the Parcel. The data type of the `value` will determine the type of Parcel that will be created, and will determine which methods you can use to change the value. Please read [Parcel types](/parcel-types) for more info.
+  The value you want to put in the Parcel. This value will be changed immutably when change methods are called on the Parcel. The data type of the `value` will determine the type of Parcel that will be created, and will determine which methods you can use to change the value. Please read [Parcel types](/concepts/parcel-types) for more info.
 
 * <Param name="handleChange" optional type="(newParcel: Parcel, changeRequest: ChangeRequest) => void" />
 
@@ -73,7 +73,7 @@ parcel.value; // returns 123
 meta: Object
 ```
 
-Returns an object containing the parcel's meta data. Read [Parcel meta](/parcel-meta) for more info.
+Returns an object containing the parcel's meta data. Read [Parcel meta](/concepts/parcel-meta) for more info.
 
 ```js
 let value = 123;
@@ -94,8 +94,8 @@ data: Object
 
 Returns an object containing the Parcel's data, which includes:
 * `value` - The Parcel's value
-* `meta` - The Parcel's [meta object](/parcel-meta)
-* `key` - The Parcel's [key](/parcel-keys)
+* `meta` - The Parcel's [meta object](/concepts/parcel-meta)
+* `key` - The Parcel's [key](/concepts/parcel-keys)
 * `child` - The Parcel's child information, which includes any `meta`, `key` and `child` data related to the `value`s children.
 
 ```js
@@ -117,7 +117,7 @@ parcel.data;
 key: string
 ```
 
-Returns the Parcel's `key`. Dataparcels automatically gives unique keys to all children of a parent parcel. See [parcel keys](/parcel-keys) for more info.
+Returns the Parcel's `key`. Dataparcels automatically gives unique keys to all children of a parent parcel. See [parcel keys](/concepts/parcel-keys) for more info.
 
 Because they are unique, the can be used as keys when rendering an array of elements with React. This is demonstrated [here](/data-editing#Indexed-data-types).
 
@@ -180,7 +180,7 @@ parcel.get("abc").get("def").path; // returns ["abc", "def"]
 isParent: boolean
 ```
 
-Is true if the parcel is a parent parcel. Read [Parcel types](/parcel-types) for more info.
+Is true if the parcel is a parent parcel. Read [Parcel types](/concepts/parcel-types) for more info.
 
 When a parcel is a parent parcel, it allows the use of [branch methods](#Branch-methods) and [parent methods](#Parent-methods).
 
@@ -190,7 +190,7 @@ When a parcel is a parent parcel, it allows the use of [branch methods](#Branch-
 isChild: boolean
 ```
 
-Is true if the parcel is a child parcel. Read [Parcel types](/parcel-types) for more info.
+Is true if the parcel is a child parcel. Read [Parcel types](/concepts/parcel-types) for more info.
 
 When a parcel is a child parcel, it allows the use of [child methods](#Child-methods).
 
@@ -200,7 +200,7 @@ When a parcel is a child parcel, it allows the use of [child methods](#Child-met
 isIndexed: boolean
 ```
 
-Is true if the parcel is an indexed parcel. Read [Parcel types](/parcel-types) for more info.
+Is true if the parcel is an indexed parcel. Read [Parcel types](/concepts/parcel-types) for more info.
 
 When a parcel is an indexed parcel, it allows the use of [indexed methods](#Indexed-and-element-change-methods).
 
@@ -210,7 +210,7 @@ When a parcel is an indexed parcel, it allows the use of [indexed methods](#Inde
 isElement: boolean
 ```
 
-Is true if the parcel is an element parcel. Read [Parcel types](/parcel-types) for more info.
+Is true if the parcel is an element parcel. Read [Parcel types](/concepts/parcel-types) for more info.
 
 When a parcel is an element parcel, it allows the use of [element methods](#Indexed-and-element-change-methods).
 
@@ -379,7 +379,7 @@ parcel.toArray();
 metaAsParcel(key: string): Parcel
 ```
 
-Typically [Parcel meta](/parcel-meta) is accessed and set via the [.meta](#meta) property and the [.setMeta()](#setMeta()) method. The `metaAsParcel()` function is an alternative that creates a Parcel that controls a piece of meta data. It's useful for binding meta changes to inputs.
+Typically [Parcel meta](/concepts/parcel-meta) is accessed and set via the [.meta](#meta) property and the [.setMeta()](#setMeta()) method. The `metaAsParcel()` function is an alternative that creates a Parcel that controls a piece of meta data. It's useful for binding meta changes to inputs.
 
 ```js
 let parcel = new Parcel({value: 123});
@@ -506,26 +506,37 @@ parcel.get('abc').delete();
 ### update()
 
 ```flow
-// updates value - only to be used if shape doesn't change
-update((value: any) => any): Parcel
+update(updater: ParcelUpdater): void
 
-// updates shape / meta
-update(asNode((node: ParcelNode) => ParcelNode)): Parcel
-update(asChildNodes((nodes: any) => any): Parcel
+type ParcelUpdater = ({value, meta}) => ?({value: any, meta: Object})
 ```
 
+Calling `update()` will trigger a change that changes the current value or meta in the Parcel. If other Parcel change methods can't change what you need, the `update()` method probably can.
 
-Calling `update()` will trigger a change that replaces the current value in the Parcel with the result of the value updater provided to it. The value updater is passed the current value of the Parcel, from which you can return the intended replacement value.
+The `updater` function is passed an object containing the current `value` and `meta`. From here you can return updated data. If nothing is returned from the updater function, no change is made. If an object is returned, it can contain `value` and / or `meta`.
+
+#### Returning a value
+
+If `value` exists on the returned object, this will be the new value of the Parcel.
+
+<ValueUpdater />
 
 ```js
 let parcel = new Parcel({
     value: 123
 });
-parcel.update(value => value + 1);
+
+parcel.update(({value}) => {
+    return {
+        value: value + 1
+    };
+});
 // this triggers a change that sets the parcel's value to 124
 ```
 
-<ValueUpdater />
+#### Returning meta
+
+If a `meta` object exists on the returned object, this will be shallowly merged onto existing meta.
 
 ### setMeta()
 
@@ -533,7 +544,7 @@ parcel.update(value => value + 1);
 setMeta(partialMeta: Object): void
 ```
 
-Triggers a change that sets `meta` at the current parcel's location. Values on the `partialMeta` object are merged shallowly onto any existing `meta`. Read [Parcel meta](/parcel-meta) for more info.
+Triggers a change that sets `meta` at the current parcel's location. Values on the `partialMeta` object are merged shallowly onto any existing `meta`. Read [Parcel meta](/concepts/parcel-meta) for more info.
 
 ```js
 let parcel = new Parcel({
@@ -721,15 +732,22 @@ Returns true if the Parcel has a child at the provided `key` or `index`, or fals
 ### modifyDown()
 
 ```flow
-// updates value - only to be used if shape doesn't change
-modifyDown((value: any) => any): Parcel
+modifyDown(updater: ParcelUpdater): Parcel
 
-// updates shape / meta
-update(asNode((node: ParcelNode) => ParcelNode)): Parcel
-update(asChildNodes((nodes: any) => any): Parcel
+type ParcelUpdater = ({value, meta}) => ?({value: any, meta: Object})
 ```
 
-`modifyDown` lets you modify a Parcel's value so that subsequent Parcels in the chain receive and make changes against the modified value. See [Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI) for examples.
+`modifyDown` lets you modify a Parcel's value and / or meta so that subsequent Parcels in the chain receive and make changes against the modified value. It does not trigger any changes of its own, it just modifies the values that pass through it from above. It has no effect on changes being passed upward through it.
+
+The `updater` function is passed an object containing the current `value` and `meta`. From here you can return updated data. If nothing is returned from the updater function, no data is modified. This can be useful for debugging as you can write a `console.log()` in the `modifyDown()` to see what the value is.
+
+If an object is returned, it can contain `value` and / or `meta`.
+
+#### Returning a value
+
+If `value` exists on the returned object, this will be the value of the Parcel returned from `modifyDown()`.
+
+<ValueUpdater />
 
 ```js
 let parcel = new Parcel({
@@ -737,26 +755,40 @@ let parcel = new Parcel({
 });
 
 parcel
-    .modifyDown(value => value.toUpperCase());
+    .modifyDown(({value}) => {
+        return {
+            value: value.toUpperCase();
+        }
+    })
     .value // "ABC" (top level Parcel is still "abc")
 ```
 
-It does not trigger any changes of its own, it just modifies the values that pass through it from above. Changes fired from beneath `.modifyDown()` are passed through unchanged.
+#### Returning meta
 
-<ValueUpdater />
+If a `meta` object exists on the returned object, this will be shallowly merged onto existing meta.
+
 
 ### modifyUp()
 
 ```flow
-// updates value - only to be used if shape doesn't change
-modifyUp((value: any, changeRequest: ChangeRequest) => any): Parcel
+modifyUp(updater: ParcelUpdater): Parcel
 
-// updates shape / meta
-update(asNode((node: ParcelNode, changeRequest: ChangeRequest) => ParcelNode)): Parcel
-update(asChildNodes((nodes: any, changeRequest: ChangeRequest) => any): Parcel
+type ParcelUpdater = ({value, meta, changeRequest}) => ?({value: any, meta: Object})
 ```
 
-`modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward.
+`modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward. It does not trigger any changes of its own, but awaits a change from below. It has no effect on data being passed down through it.
+
+The `updater` function is passed an object containing the `value` and `meta` that the Parcel is about to change to, and the `changeRequest` that describes how that change is going to occur. From here you can return updated data. If nothing is returned from the updater function, no data is modified. This can be useful for debugging as you can write a `console.log()` in the `modifyUp()` to see what the changed value is.
+
+If an object is returned, it can contain `value` and / or `meta`.
+
+You can also cancel a change.
+
+#### Returning a value
+
+If `value` exists on the returned object, this will alter the value being changed.
+
+<ValueUpdater />
 
 ```js
 let parcel = new Parcel({
@@ -764,7 +796,11 @@ let parcel = new Parcel({
 });
 
 parcel
-    .modifyUp(value => value.toUpperCase());
+    .modifyUp(({value}) => {
+        return {
+            value: value.toUpperCase()
+        };
+    });
     .set("def");
 
 // this triggers a change to set the value to "def"
@@ -775,9 +811,11 @@ parcel
 // The Parcel then has a new value of "DEF"
 ```
 
-It does not trigger any changes of its own, but awaits a change from below. Values from above are passed through unchanged. See [Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI) for examples.
+#### Returning meta
 
-#### Cancelling a change
+If a `meta` object exists on the returned object, this will be shallowly merged onto existing meta.
+
+#### Returning a cancellation
 
 You can also cancel a change by returning [cancel](/api/cancel) from `modifyUp()`'s updater. This allows you to programatically prevent certain changes from being applied to the data in the top level Parcel. This example shows an input that cancels any changes that would set the value to `null`:
 
@@ -790,14 +828,16 @@ let parcel = new Parcel({
     value: 123
 })
 
-parcel = parcel.modifyUp(value => value === null ? cancel : value);
+parcel = parcel.modifyUp(({value}) => {
+    if(value === null) {
+        return cancel
+    }
+});
 
 parcel.set(456); // this would work, value becomes 123
 parcel.set(null); // this would cause no change
 
 ```
-
-<ValueUpdater />
 
 ### initialMeta()
 

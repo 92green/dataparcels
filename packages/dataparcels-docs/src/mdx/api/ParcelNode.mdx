@@ -24,7 +24,7 @@ import asChildNodes from 'react-dataparcels/asChildNodes';
 asChildNodes((nodes: any) => any
 ```
 
-The `asChildNodes` function is a kind of [parcel updater](/parcel-updaters) that allows for adding, removing and re-arranging child values.
+The `asChildNodes` function is a kind of [parcel updater](/concepts/parcel-updaters) that allows for adding, removing and re-arranging child values.
 
 It must be passed a function, whose first argument will be your Parcel’s value, but with all child values replaced with ParcelNode instances. You can move and remove these as you like. You can also insert non-ParcelNode values into the parent data shape to set new data. The function passed to `asChildNodes()` will also sometimes receive a [ChangeRequest](/api/ChangeRequest) as a second parameter depending on what the `asChildNodes()` function is being passed into.
 
@@ -35,7 +35,7 @@ let parcel = new Parcel({
 
 // reverse the parcel's children
 let modifiedParcel = parcel.modifyDown(asChildNodes(
-    shape => shape.slice().reverse() // clones and reverses the shape array
+    nodes => nodes.slice().reverse() // clones and reverses the nodes array
 ));
 
 // new value is [3,2,1]
@@ -48,7 +48,7 @@ let parcel = new Parcel({
 
 // set a default value for a child
 let modifiedParcel = parcel.modifyDown(asChildNodes(
-    shape => ({bar: 200, ...shape})
+    nodes => ({bar: 200, ...nodes})
 ));
 ```
 
@@ -65,11 +65,11 @@ new ParcelNode(value?: any);
 
 * <Param name="value" optional type="any" default="undefined" />
 
-  The value you want to put in the ParcelNode. This value will be changed immutably when change methods are called on the ParcelNode. The data type of the `value` will determine the type of ParcelNode that will be created, and will determine which methods you can use to change the value. Please read [Parcel types](/parcel-types) for more info.
+  The value you want to put in the ParcelNode. This value will be changed immutably when change methods are called on the ParcelNode. The data type of the `value` will determine the type of ParcelNode that will be created, and will determine which methods you can use to change the value. Please read [Parcel types](/concepts/parcel-types) for more info.
 
 ```js
 // creates a Parcel that contains a value of 123
-let shape = new ParcelNode(123);
+let node = new ParcelNode(123);
 ```
 
 ## <Text textStyle="weak">Properties</Text>
@@ -97,8 +97,8 @@ data: Object
 
 Returns an object containing the ParcelNodes's data, which includes:
 * `value` - The ParcelNodes's value
-* `meta` - The ParcelNodes's [meta object](/parcel-meta)
-* `key` - The ParcelNodes's [key](/parcel-keys)
+* `meta` - The ParcelNodes's [meta object](/concepts/parcel-meta)
+* `key` - The ParcelNodes's [key](/concepts/parcel-keys)
 * `child` - The ParcelNodes's child information, which includes any `meta`, `key` and `child` data related to the `value`s children.
 
 ### key
@@ -107,7 +107,7 @@ Returns an object containing the ParcelNodes's data, which includes:
 key: string
 ```
 
-Returns the ParcelNode's `key`. Dataparcels automatically gives unique keys to all children of a parent parcel. See [parcel keys](/parcel-keys) for more info.
+Returns the ParcelNode's `key`. Dataparcels automatically gives unique keys to all children of a parent parcel. See [parcel keys](/concepts/parcel-keys) for more info.
 
 ## <Text textStyle="weak">Methods</Text>
 
@@ -149,12 +149,9 @@ node.get('#a').value; // returns 'abc'
 ### update()
 
 ```flow
-// updates value - only to be used if shape doesn't change
-update((value: any) => any): ParcelNode
+modifyUp(updater: ParcelUpdater): void
 
-// updates shape / meta
-update(asNode((node: ParcelNode) => ParcelNode)): ParcelNode
-update(asChildNodes(value: any) => any): ParcelNode
+type ParcelUpdater = ({value, meta, changeRequest}) => ?({value: any, meta: Object})
 ```
 
 Calling `update()` with one argument will replace the current value in the ParcelNode with the result of the value updater provided to it. The value updater is passed the current value of the ParcelNode, from which you can return the intended replacement value.
