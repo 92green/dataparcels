@@ -174,34 +174,3 @@ Debouncing can be good for rendering performance because parcels outside the Par
 ```
 
 **[See an example of ParcelBoundary debounce](/ui-behaviour#Debouncing-changes)**
-
-### keepValue
-
-```flow
-keepValue?: boolean = false // optional
-```
-
-Whenever a ParcelBoundary receives a new Parcel via props, its default behaviour is to update to contain the new Parcel's data. This behaviour is preferred in nearly all use cases.
-
-Occasionally you may have [modify methods](/api/Parcel#modify_methods) being used above the ParcelBoundary which change the data type on its trip up to the top level Parcel and back down again. The user may experience this as typing one thing, and the input updating to something else. So `keepValue` can be set to true to make the ParcelBoundary a temporary "master" of its own state. When `keepValue` is true on a ParcelBoundary, if that ParcelBoundary propagates a change which it then recieves again with different data, then it will *not* update its value to the data received from props.
-
-Consider this example:
-
-```js
-let numberParcel = parcel
-    .modifyDown(number => `${number}`)
-    .modifyUp(string => Number(string));
-
-return <ParcelBoundary parcel={numberParcel} keepValue>
-    {(parcel) => <input type="text" {...parcel.spreadInput()} />}
-</ParcelBoundary>;
-
-```
-
-When a non-numeric string is entered into the input (e.g. "A"), this is turned into `NaN` as it passes through `.modifyUp()`. This is correct from the point of view of the data in the `numberParcel`, it's set up so that it should only ever contain a `Number`. This triggers an update and a re-render, and `NaN` is passed back down to the ParcelBoundary. Setting `keepValue` to true allows ParcelBoundary to remember that it should still contain a string of "A".
-
-In the above example, `keepValue` also preserves values such as:
-- "0.10" - this would be turned into "0.1" by the modify functions
-- "0.0000001" - this would be turned into "1e-7"
-
-**[See an example of keepValue](/data-editing#Modifying-data-to-fit-the-UI)**

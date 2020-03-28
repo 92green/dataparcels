@@ -20,8 +20,7 @@ export default () => <Page>
             'pure',
             'forceUpdate',
             'buffer',
-            'debounce',
-            'keepValue'
+            'debounce'
         ]}
     >
         <ParcelBoundaryMarkdown />
