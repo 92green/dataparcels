@@ -6,8 +6,6 @@ import type {ParcelDataEvaluator} from '../types/Types';
 
 import pipe from 'unmutable/lib/util/pipe';
 import findLastIndex from 'unmutable/lib/findLastIndex';
-import {ReducerInvalidActionError} from '../errors/Errors';
-import {ReducerInvalidStepError} from '../errors/Errors';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
@@ -63,9 +61,6 @@ const stepMap = {
 
 const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
     let fn = actionMap[type];
-    if(!fn) {
-        throw ReducerInvalidActionError(type);
-    }
     return fn(keyPath.slice(-1)[0], payload);
 };
 
@@ -84,9 +79,6 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
 
     return steps.reduceRight((next, step) => {
         let fn = stepMap[step.type];
-        if(!fn) {
-            throw ReducerInvalidStepError(step.type);
-        }
         return fn(step, next);
     }, doAction(action));
 };
