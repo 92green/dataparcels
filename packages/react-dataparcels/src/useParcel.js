@@ -9,13 +9,20 @@ import {useState} from 'react';
 const noop = () => {};
 
 type Params = {
-    source?: ParcelValueUpdater
+    source?: ParcelValueUpdater,
+    dependencies?: any[]
 };
 
 export default (params: Params): Parcel => {
+
+    // params
+
     let {
-        source = noop
+        source = noop,
+        dependencies = []
     } = params;
+
+    // source
 
     let [parcel, setParcel] = useState(() => {
         let parcel = new Parcel({
@@ -27,9 +34,24 @@ export default (params: Params): Parcel => {
         return parcel._changeAndReturn(
             parcel => parcel
                 .modifyUp(source)
-                .set(undefined)
+                .update(noop)
+            // ^ replace with parcel.update(source) once update() can return {effect}
         )[0];
     });
+
+    // dependencies
+
+    let [prevDeps, setPrevDeps] = useState(dependencies);
+
+    if(dependencies.some((dep, index) => !Object.is(dep, prevDeps[index]))) {
+        setPrevDeps(dependencies);
+        parcel
+            .modifyUp(source)
+            .update(noop);
+        // ^ replace with parcel.update(source) once update() can return {effect}
+    }
+
+    // return
 
     return parcel;
 };
