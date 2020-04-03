@@ -47,15 +47,21 @@ const parentActionMap = {
 const stepMap = {
     get: ({key}, next) => parcelDataUpdate(key, next),
     md: ({updater}, next) => pipe(updater, next),
-    mu: ({updater, changeRequest}, next) => (prevData) => {
+    mu: ({updater, changeRequest, effectUpdate}, next) => (prevData) => {
         let nextData = next(prevData);
-        return updater(
+        let {effect, ...updated} = updater(
             nextData,
             changeRequest && changeRequest._create({
                 prevData,
                 nextData
             })
         );
+
+        if(effect) {
+            effect(effectUpdate);
+        }
+
+        return updated;
     }
 };
 

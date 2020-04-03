@@ -8,7 +8,7 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelMapper} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
 import type {ParcelParent} from '../types/Types';
-import type {ParcelRegistry} from '../types/Types';
+import type {ParcelTreeShare} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
@@ -60,7 +60,10 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
         isFirstChild: false,
         isLastChild: false
     },
-    registry: {},
+    treeShare: {
+        registry: {},
+        effectRegistry: {}
+    },
     updateChangeRequestOnDispatch: doNothing
 });
 
@@ -80,11 +83,10 @@ export default class Parcel {
     _isIndexed: boolean;
     _isParent: boolean;
     _frameMeta: {[key: string]: any};
-    _methods: {[key: string]: any};
     _onHandleChange: ?Function;
     _parcelData: ParcelData;
     _parent: ParcelParent;
-    _registry: ParcelRegistry;
+    _treeShare: ParcelTreeShare;
     _updateChangeRequestOnDispatch: Function;
     _setInput: Function;
     _setCheckbox: Function;
@@ -154,7 +156,7 @@ export default class Parcel {
             rawId,
             rawPath,
             parent,
-            registry,
+            treeShare,
             updateChangeRequestOnDispatch
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
@@ -177,8 +179,8 @@ export default class Parcel {
         this._isIndexed = isIndexedValue(value);
         this._isParent = isParentValue(value);
         this._parent = parent;
-        this._registry = registry;
-        this._registry[this._getIdFromRawId(rawId)] = this;
+        this._treeShare = treeShare;
+        treeShare.registry[this._getIdFromRawId(rawId)] = this;
 
         this._setInput = (event: Object) => {
             this.set(event.currentTarget.value);
@@ -361,12 +363,14 @@ export default class Parcel {
         // Types(`modifyUp()`, `updater`, `function`)(updater);
         this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
             let preparedUpdater = createUpdater(updater);
+
             return this._create({
                 rawId: this._idPushModifierUpdater('mu', updater),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'mu',
                     updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest}),
-                    changeRequest
+                    changeRequest,
+                    effectUpdate: this._effectUpdate
                 })
             });
         };
@@ -391,6 +395,7 @@ export default class Parcel {
                 })
             });
         };
+
     }
 
     //
@@ -406,7 +411,7 @@ export default class Parcel {
             frameMeta = this._frameMeta,
             parcelData = this._parcelData,
             parent = this._parent,
-            registry = this._registry,
+            treeShare = this._treeShare,
             updateChangeRequestOnDispatch = doNothing
         } = createParcelConfig;
 
@@ -429,7 +434,7 @@ export default class Parcel {
                 rawId,
                 rawPath,
                 parent,
-                registry,
+                treeShare,
                 updateChangeRequestOnDispatch
             }
         );
@@ -486,7 +491,7 @@ export default class Parcel {
     };
 
     _dispatchToParent = (changeRequest: ChangeRequest) => {
-        let parcel = this._registry[this._dispatchId];
+        let parcel = this._treeShare.registry[this._dispatchId];
         if(parcel) {
             parcel._dispatch(changeRequest);
         }
@@ -600,6 +605,29 @@ export default class Parcel {
         if(!this._parcelData.child) {
             this._parcelData = prepareChildKeys()(this._parcelData);
         }
+    };
+
+    _effectUpdate = (effectUpdater: ParcelValueUpdater) => {
+        let {_treeShare} = this;
+        let effectId = `${this.id}-${HashString(effectUpdater.toString())}`;
+
+        // throttle effects with the same effectId
+        // the delay added by throttling is fine because these effects are async anyway
+        if(_treeShare.effectRegistry[effectId]) {
+            return;
+        }
+        _treeShare.effectRegistry[effectId] = true;
+
+        setTimeout(() => {
+            // apply the effect to the current version of the corresponding parcel
+            let parcel = _treeShare.registry[this.id];
+            if(parcel) {
+                // remember to make this action exempt from history
+                // when history is added
+                parcel.update(effectUpdater);
+            }
+            delete _treeShare.effectRegistry[effectId];
+        }, 100);
     };
 
     //
