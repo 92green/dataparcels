@@ -2,6 +2,7 @@
 import type {ParcelValueUpdater} from 'dataparcels';
 
 import Parcel from 'dataparcels';
+import createUpdater from 'dataparcels/createUpdater';
 
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
@@ -11,7 +12,8 @@ const noop = () => {};
 type Params = {
     source?: ParcelValueUpdater,
     dependencies?: any[],
-    onChange?: ParcelValueUpdater
+    onChange?: ParcelValueUpdater,
+    derive?: ParcelValueUpdater
 };
 
 export default (params: Params): Parcel => {
@@ -21,7 +23,8 @@ export default (params: Params): Parcel => {
     let {
         source = noop,
         dependencies = [],
-        onChange = noop
+        onChange = noop,
+        derive = noop
     } = params;
 
     // source
@@ -35,7 +38,7 @@ export default (params: Params): Parcel => {
 
         return parcel._changeAndReturn(
             parcel => parcel
-                .modifyUp(source)
+                .modifyUp(createUpdater(source, derive))
                 .update(noop)
             // ^ replace with parcel.update(source) once update() can return {effect}
         )[0];
@@ -48,7 +51,7 @@ export default (params: Params): Parcel => {
     if(dependencies.some((dep, index) => !Object.is(dep, prevDeps[index]))) {
         setPrevDeps(dependencies);
         parcel
-            .modifyUp(source)
+            .modifyUp(createUpdater(source, derive))
             .update(noop);
         // ^ replace with parcel.update(source) once update() can return {effect}
     }
@@ -56,5 +59,5 @@ export default (params: Params): Parcel => {
     // onChange
 
     return parcel
-        .modifyUp(onChange);
+        .modifyUp(createUpdater(derive, onChange));
 };
