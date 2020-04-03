@@ -74,3 +74,30 @@ describe('useParcel dependencies', () => {
     });
 
 });
+
+describe('useParcel onChange', () => {
+
+    it('should be called when changes occur', () => {
+
+        let onChange = jest.fn();
+
+        let {result} = renderHook(() => useParcel({
+            source: () => ({
+                value: 123
+            }),
+            onChange
+        }));
+
+        expect(result.current.value).toBe(123);
+        expect(onChange).toHaveBeenCalledTimes(0);
+
+        act(() => {
+            result.current.set(456);
+        });
+
+        expect(result.current.value).toBe(456);
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].value).toBe(456);
+    });
+
+});

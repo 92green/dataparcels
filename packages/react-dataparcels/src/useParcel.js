@@ -10,7 +10,8 @@ const noop = () => {};
 
 type Params = {
     source?: ParcelValueUpdater,
-    dependencies?: any[]
+    dependencies?: any[],
+    onChange?: ParcelValueUpdater
 };
 
 export default (params: Params): Parcel => {
@@ -19,7 +20,8 @@ export default (params: Params): Parcel => {
 
     let {
         source = noop,
-        dependencies = []
+        dependencies = [],
+        onChange = noop
     } = params;
 
     // source
@@ -51,7 +53,8 @@ export default (params: Params): Parcel => {
         // ^ replace with parcel.update(source) once update() can return {effect}
     }
 
-    // return
+    // onChange
 
-    return parcel;
+    return parcel
+        .modifyUp(onChange);
 };
