@@ -3,22 +3,22 @@ import translate from '../translate';
 import Parcel from '../../parcel/Parcel';
 
 let onlyDown = translate({
-    down: number => `${number}`
+    down: ({value}) => ({value: `${value}`})
 });
 
 let onlyUp = translate({
-    up: string => Number(string)
+    up: ({value}) => ({value: Number(value)})
 });
 
 let numberToString = translate({
-    down: number => `${number}`,
-    up: string => Number(string)
+    down: ({value}) => ({value: `${value}`}),
+    up: ({value}) => ({value: Number(value)})
 });
 
 let numberToStringPreserve = translate({
-    down: number => `${number}`,
-    up: string => Number(string),
-    preserveInput: true
+    down: ({value}) => ({value: `${value}`}),
+    up: ({value}) => ({value: Number(value)}),
+    preserve: true
 });
 
 test('translate should translate value', () => {
@@ -96,7 +96,7 @@ test('translate should use new value if original changes', () => {
     expect(isNaN(nextParcel.pipe(numberToString).value)).toBe(true);
 });
 
-test('translate with preserveInput should continue to use translated value even if original changes', () => {
+test('translate with preserve should continue to use translated value even if original changes', () => {
     let handleChange = jest.fn();
 
     let parcel = new Parcel({
@@ -118,7 +118,7 @@ test('translate with preserveInput should continue to use translated value even 
     expect(isNaN(nextParcel.pipe(numberToStringPreserve).meta.untranslated)).toBe(true);
 });
 
-test('translate with preserveInput should overwrite translated value if it changes from another source', () => {
+test('translate with preserve should overwrite translated value if it changes from another source', () => {
 
     // this works because the translated value is stored in meta
     // and meta is erased by default when setting above of the value's keypath

@@ -4,6 +4,3 @@ export const ParcelTypeMethodMismatch = (key: string, parcelType: string, path: 
     let suffix = Array.isArray(path) ? `(keyPath: [${path.join(', ')}]).` : ``;
     return new Error(`.${key}() is not a function. It can only be called on parcels of type "${parcelType}". ${suffix}`);
 };
-export const ReducerInvalidActionError = (actionType: string) => new Error(`"${actionType}" is not a valid action`);
-export const ReducerInvalidStepError = (stepType: string) => new Error(`"${stepType}" is not a valid action step type`);
-export const ChangeRequestNoPrevDataError = () =>  new Error(`ChangeRequest data cannot be accessed before setting changeRequest.prevData`);

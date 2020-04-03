@@ -382,38 +382,6 @@ test('ChangeRequestReducer should process pre and post on parentActions like "sw
     expect(processed).toEqual(expectedData);
 });
 
-test('ChangeRequestReducer should throw error if invalid action type is used', () => {
-    expect(() => {
-        let reducer = makeReducer([
-            new Action({
-                type: "wrong"
-            })
-        ]);
-
-        reducer({
-            value: 123
-        });
-    })
-        .toThrowError(`"wrong" is not a valid action`);
-});
-
-test('ChangeRequestReducer should throw error if invalid action step type is used', () => {
-    expect(() => {
-        let reducer = makeReducer([
-            ActionCreators
-                .setSelf(456)
-                ._addStep({
-                    type: 'wrong'
-                })
-        ]);
-
-        reducer({
-            value: 123
-        });
-    })
-        .toThrowError(`"wrong" is not a valid action step type`);
-});
-
 test('ChangeRequestReducer should process deep actions that are "parent actions"', () => {
     var data = {
         value: {

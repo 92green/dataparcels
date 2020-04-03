@@ -30,7 +30,7 @@ export type ParcelConfigInternal = {
     frameMeta: {[key: string]: any},
     meta: ParcelMeta,
     parent: ParcelParent,
-    registry: ParcelRegistry,
+    treeShare: ParcelTreeShare,
     updateChangeRequestOnDispatch: UpdateChangeRequestOnDispatch
 };
 
@@ -42,7 +42,7 @@ export type ParcelCreateConfigType = {
     handleChange?: Function,
     parcelData?: ParcelData,
     parent?: ParcelParent,
-    registry?: ParcelRegistry,
+    treeShare?: ParcelTreeShare,
     updateChangeRequestOnDispatch?: UpdateChangeRequestOnDispatch
 };
 
@@ -50,7 +50,11 @@ export type UpdateChangeRequestOnDispatch = (changeRequest: ChangeRequest) => Ch
 
 export type ParcelMeta = {[key: string]: *};
 export type ParcelMapper = (item: Parcel, property: string|number, parent: Parcel) => *;
-export type ParcelRegistry = {[id: string]: Parcel};
+export type ParcelTreeShare = {
+    registry: {[id: string]: Parcel},
+    effectRegistry: {[effectId: string]: boolean}
+};
+
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = Function;
 
@@ -62,7 +66,8 @@ export type ActionStep = {
     type: string,
     key?: Key|Index,
     updater?: ParcelDataEvaluator,
-    changeRequest?: ChangeRequest
+    changeRequest?: ChangeRequest,
+    effectParcel?: Parcel
 };
 
 export type ParentType = any; // should be any parent data type

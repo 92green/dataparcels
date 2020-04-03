@@ -2,28 +2,24 @@
 import type Parcel from '../parcel/Parcel';
 
 import createUpdater from '../parcelData/createUpdater';
-import update from 'unmutable/lib/update';
 
 type Config = {
-    down?: (parcelData: any) => any,
-    up?: (parcelData: any) => any,
-    preserveInput?: boolean
+    down?: Function,
+    up?: Function,
+    preserve?: boolean
 };
 
 export default (config: Config) => {
     let {
         down = ii => ii,
         up = ii => ii,
-        preserveInput
+        preserve
     } = config;
 
-    let downValue = update('value', down);
-    let upValue = update('value', up);
-
-    if(!preserveInput) {
+    if(!preserve) {
         return (parcel: Parcel): Parcel => parcel
-            .modifyDown(downValue)
-            .modifyUp(upValue);
+            .modifyDown(down)
+            .modifyUp(up);
     }
 
     return (parcel: Parcel): Parcel => parcel
@@ -34,7 +30,7 @@ export default (config: Config) => {
                 };
             }
             return createUpdater(
-                downValue,
+                down,
                 () => ({
                     meta: {
                         untranslated: parcelData.value
@@ -44,7 +40,7 @@ export default (config: Config) => {
         })
         .modifyUp((parcelData) => {
             return createUpdater(
-                upValue,
+                up,
                 ({value}) => ({
                     meta: {
                         translated: parcelData.value,

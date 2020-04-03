@@ -7,7 +7,6 @@ import type Action from './Action';
 
 import shallowEquals from 'unmutable/shallowEquals';
 
-import {ChangeRequestNoPrevDataError} from '../errors/Errors';
 import ChangeRequestReducer from '../change/ChangeRequestReducer';
 import parcelGet from '../parcelData/get';
 
@@ -60,9 +59,6 @@ export default class ChangeRequest {
 
     // $FlowFixMe - this doesn't have side effects
     get prevData(): ParcelData {
-        if(!this._prevData) {
-            throw ChangeRequestNoPrevDataError();
-        }
         return this._prevData;
     }
 

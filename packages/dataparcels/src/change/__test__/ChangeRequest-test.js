@@ -167,11 +167,6 @@ test('ChangeRequest prevData should return previous data', () => {
     expect(expectedValue).toEqual(value);
 });
 
-test('ChangeRequest should throw error if data is accessed before setting prevData()', () => {
-    expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before setting changeRequest.prevData`);
-    expect(() => new ChangeRequest().prevData).toThrowError(`ChangeRequest data cannot be accessed before setting changeRequest.prevData`);
-});
-
 test('ChangeRequest should keep originId and originPath', () => {
     expect.assertions(2);
 
