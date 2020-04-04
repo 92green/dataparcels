@@ -236,3 +236,57 @@ describe('useBuffer buffer', () => {
         expect(handleChange.mock.calls[1][0].value).toEqual(["C"]);
     });
 });
+
+describe('useBuffer derive', () => {
+
+    it('should derive from above', () => {
+        let source = new Parcel({
+            value: 100
+        });
+
+        let derive = ({value}) => ({value: value * 2});
+
+        let {result} = renderHook(() => useBuffer({source, derive}));
+
+        expect(result.current.value).toBe(200);
+    });
+
+    it('should derive from below', () => {
+        let handleChange = jest.fn();
+
+        let source = new Parcel({
+            value: 100,
+            handleChange
+        });
+
+        let derive = ({value}) => ({value: value * 2});
+
+        let {result} = renderHook(() => useBuffer({source, derive}));
+
+        act(() => {
+            result.current.set(200);
+        });
+
+        expect(result.current.value).toBe(400);
+    });
+
+    it('should derive from below and pass changes up', () => {
+        let handleChange = jest.fn();
+
+        let source = new Parcel({
+            value: 100,
+            handleChange
+        });
+
+        let derive = ({value}) => ({value: value * 2});
+
+        let {result} = renderHook(() => useBuffer({source, buffer: false, derive}));
+
+        act(() => {
+            result.current.set(200);
+        });
+
+        expect(handleChange.mock.calls[0][0].value).toBe(400);
+    });
+
+});

@@ -1,4 +1,6 @@
 // @flow
+import type {ParcelValueUpdater} from 'dataparcels';
+
 import Parcel from 'dataparcels';
 import ChangeRequest from 'dataparcels/ChangeRequest';
 
@@ -13,9 +15,12 @@ import {useMemo} from 'react';
 
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
+const noop = () => {};
+
 type Params = {
     source: Parcel,
-    buffer?: boolean|number
+    buffer?: boolean|number,
+    derive?: ParcelValueUpdater
 };
 
 export default (params: Params): Parcel => {
@@ -24,7 +29,8 @@ export default (params: Params): Parcel => {
 
     let {
         source,
-        buffer = true
+        buffer = true,
+        derive = noop
     } = params;
 
     // source
@@ -88,7 +94,9 @@ export default (params: Params): Parcel => {
             }
         };
 
-        innerParcel = source._boundarySplit({handleChange});
+        innerParcel = source
+            ._boundarySplit({handleChange})
+            .modifyDown(derive);
 
         setInnerParcel(innerParcel);
     }
@@ -106,7 +114,8 @@ export default (params: Params): Parcel => {
                     reset,
                     buffered
                 }
-            }));
+            }))
+            .modifyUp(derive);
 
     }, [innerParcel, bufferState]);
 };
