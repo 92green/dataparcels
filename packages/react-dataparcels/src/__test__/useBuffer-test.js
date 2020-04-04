@@ -196,4 +196,43 @@ describe('useBuffer buffer', () => {
         expect(result.current.meta.buffered).toBe(false);
         expect(handleChange).toHaveBeenCalledTimes(0);
     });
+
+    it('should debounce', () => {
+        let handleChange = jest.fn();
+
+        let source = new Parcel({
+            value: [],
+            handleChange
+        });
+
+        let {result} = renderHook(() => useBuffer({source, buffer: 20}));
+
+        act(() => {
+            result.current.push("A");
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(10);
+        });
+
+        act(() => {
+            result.current.push("B");
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(40);
+        });
+
+        act(() => {
+            result.current.push("C");
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(40);
+        });
+
+        expect(handleChange).toHaveBeenCalledTimes(2);
+        expect(handleChange.mock.calls[0][0].value).toEqual(["A", "B"]);
+        expect(handleChange.mock.calls[1][0].value).toEqual(["C"]);
+    });
 });
