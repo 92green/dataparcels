@@ -24,6 +24,7 @@
     "ParcelDrag.js",
     "ParcelNode.js",
     "asChildNodes.js",
+    "useBuffer.js",
     "useParcel.js",
     "useParcelBuffer.js",
     "useParcelForm.js",

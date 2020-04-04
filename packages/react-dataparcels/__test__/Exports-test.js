@@ -19,6 +19,7 @@ import useParcelBuffer from '../useParcelBuffer';
 import useParcelForm from '../useParcelForm';
 import useParcelState from '../useParcelState';
 import useParcel from '../useParcel';
+import useBuffer from '../useBuffer';
 import asyncChange from '../asyncChange';
 import asyncValue from '../asyncValue';
 
@@ -41,6 +42,7 @@ import InternalUseParcelBuffer from '../lib/useParcelBuffer';
 import InternalUseParcelForm from '../lib/useParcelForm';
 import InternalUseParcelState from '../lib/useParcelState';
 import InternalUseParcel from '../lib/useParcel';
+import InternalUseBuffer from '../lib/useBuffer';
 import InternalAsyncChange from '../lib/asyncChange';
 import InternalAsyncValue from '../lib/asyncValue';
 
@@ -106,6 +108,10 @@ test('/useParcelState should export useParcelState', () => {
 
 test('/useParcel should export useParcel', () => {
     expect(useParcel).toBe(InternalUseParcel);
+});
+
+test('/useBuffer should export useBuffer', () => {
+    expect(useBuffer).toBe(InternalUseBuffer);
 });
 
 test('/asyncChange should export asyncChange', () => {
