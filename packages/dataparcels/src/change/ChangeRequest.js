@@ -7,7 +7,7 @@ import type {ParcelData} from '../types/Types';
 import shallowEquals from 'unmutable/shallowEquals';
 
 import Action from './Action';
-import ChangeRequestReducer from '../change/ChangeRequestReducer';
+import ActionReducer from '../change/ActionReducer';
 import parcelGet from '../parcelData/get';
 
 export default class ChangeRequest {
@@ -53,7 +53,7 @@ export default class ChangeRequest {
             return _nextData;
         }
 
-        this._nextData = ChangeRequestReducer(this._actions)(this.prevData);
+        this._nextData = ActionReducer(this._actions)(this.prevData);
         return this._nextData;
     }
 

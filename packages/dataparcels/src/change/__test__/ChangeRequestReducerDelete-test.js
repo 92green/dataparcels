@@ -1,11 +1,11 @@
 // @flow
 import ChangeRequest from '../ChangeRequest';
-import ChangeRequestReducer from '../ChangeRequestReducer';
+import ActionReducer from '../ActionReducer';
 import Action from '../Action';
 import deleted from '../../parcelData/deleted';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-test('ChangeRequestReducer should delete key', () => {
+test('ActionReducer should delete key', () => {
     var data = {
         value: {
             a: 1,
@@ -23,10 +23,10 @@ test('ChangeRequestReducer should delete key', () => {
         b: 2
     };
 
-    expect(ChangeRequestReducer(action)(data).value).toEqual(expectedValue);
+    expect(ActionReducer(action)(data).value).toEqual(expectedValue);
 });
 
-test('ChangeRequestReducer should delete deep key', () => {
+test('ActionReducer should delete deep key', () => {
     var data = {
         value: {
             a: {
@@ -50,10 +50,10 @@ test('ChangeRequestReducer should delete deep key', () => {
         c: 3
     };
 
-    expect(ChangeRequestReducer(action)(data).value).toEqual(expectedValue);
+    expect(ActionReducer(action)(data).value).toEqual(expectedValue);
 });
 
-test('ChangeRequestReducer should set value to deleted symbol if deleted with no keypath', () => {
+test('ActionReducer should set value to deleted symbol if deleted with no keypath', () => {
     var data = {
         value: {
             a: 1,
@@ -71,5 +71,5 @@ test('ChangeRequestReducer should set value to deleted symbol if deleted with no
         value: deleted
     };
 
-    expect(ChangeRequestReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
