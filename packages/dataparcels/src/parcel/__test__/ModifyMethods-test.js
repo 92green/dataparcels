@@ -4,7 +4,7 @@
 import ChangeRequest from '../../change/ChangeRequest';
 import Parcel from '../Parcel';
 import cancel from '../../change/cancel';
-import asChildNodes from '../../parcelNode/asChildNodes';
+import arrange from '../../parcelNode/arrange';
 
 jest.useFakeTimers();
 
@@ -113,9 +113,9 @@ describe('Parcel.modifyDown()', () => {
         let sameA2 = new Parcel().modifyDown(updater);
         let differentA = new Parcel().modifyDown(updater2);
 
-        let sameB1 = new Parcel().modifyDown(asChildNodes(updater));
-        let sameB2 = new Parcel().modifyDown(asChildNodes(updater));
-        let differentB = new Parcel().modifyDown(asChildNodes(a => 1 + 2));
+        let sameB1 = new Parcel().modifyDown(arrange(updater));
+        let sameB2 = new Parcel().modifyDown(arrange(updater));
+        let differentB = new Parcel().modifyDown(arrange(a => 1 + 2));
 
         expect(sameA1.id).toBe(sameA2.id);
         expect(sameA1.id).not.toBe(differentA.id);
@@ -134,9 +134,9 @@ describe('Parcel.modifyUp()', () => {
         let sameA2 = new Parcel().modifyUp(updater);
         let differentA = new Parcel().modifyUp(updater2);
 
-        let sameB1 = new Parcel().modifyUp(asChildNodes(updater));
-        let sameB2 = new Parcel().modifyUp(asChildNodes(updater));
-        let differentB = new Parcel().modifyUp(asChildNodes(a => 1 + 2));
+        let sameB1 = new Parcel().modifyUp(arrange(updater));
+        let sameB2 = new Parcel().modifyUp(arrange(updater));
+        let differentB = new Parcel().modifyUp(arrange(a => 1 + 2));
 
         expect(sameA1.id).toBe(sameA2.id);
         expect(sameA1.id).not.toBe(differentA.id);

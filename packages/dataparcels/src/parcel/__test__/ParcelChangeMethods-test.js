@@ -2,7 +2,7 @@
 import Parcel from '../Parcel';
 import GetAction from '../../util/__test__/GetAction-testUtil';
 import ParcelNode from '../../parcelNode/ParcelNode';
-import asChildNodes from '../../parcelNode/asChildNodes';
+import arrange from '../../parcelNode/arrange';
 
 test('Parcel.dispatch() should pass handleChange to newly created parcel', () => {
     let handleChange = jest.fn();
@@ -107,7 +107,7 @@ test('Parcel.update() should call the Parcels handleChange function with the new
     expect(handleChange.mock.calls[0][0].data.value).toBe(124);
 });
 
-test('Parcel.update(asChildNodes()) should call the Parcels handleChange function with the new parcelData', () => {
+test('Parcel.update(arrange()) should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(arr => [...arr, 4]);
@@ -115,7 +115,7 @@ test('Parcel.update(asChildNodes()) should call the Parcels handleChange functio
     new Parcel({
         value: [1,2,3],
         handleChange
-    }).update(asChildNodes(updater));
+    }).update(arrange(updater));
 
     expect(updater.mock.calls[0][0][0] instanceof ParcelNode).toBe(true);
     expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);

@@ -1,7 +1,7 @@
 // @flow
 import type Parcel from '../parcel/Parcel';
 
-import createUpdater from '../parcelData/createUpdater';
+import combine from '../parcelData/combine';
 
 type Config = {
     down?: Function,
@@ -29,7 +29,7 @@ export default (config: Config) => {
                     value: parcelData.meta.translated
                 };
             }
-            return createUpdater(
+            return combine(
                 down,
                 () => ({
                     meta: {
@@ -39,7 +39,7 @@ export default (config: Config) => {
             )(parcelData);
         })
         .modifyUp((parcelData) => {
-            return createUpdater(
+            return combine(
                 up,
                 ({value}) => ({
                     meta: {

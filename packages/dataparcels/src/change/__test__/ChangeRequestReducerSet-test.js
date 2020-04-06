@@ -1,15 +1,10 @@
 // @flow
 import ChangeRequest from '../ChangeRequest';
-import ChangeRequestReducer from '../ChangeRequestReducer';
+import ActionReducer from '../ActionReducer';
 import Action from '../Action';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-const makeReducer = (action) => pipeWith(
-    new ChangeRequest(action),
-    ChangeRequestReducer
-);
-
-test('ChangeRequestReducer should set with empty keyPath', () => {
+test('ActionReducer should set with empty keyPath', () => {
     var data = {
         value: 123,
         meta: {
@@ -32,10 +27,10 @@ test('ChangeRequestReducer should set with empty keyPath', () => {
 
     // value should be replaced
     // key and meta should be untouched
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
 
-test('ChangeRequestReducer should set with empty keyPath and clear existing child', () => {
+test('ActionReducer should set with empty keyPath and clear existing child', () => {
     var data = {
         value: {
             a: {
@@ -78,10 +73,10 @@ test('ChangeRequestReducer should set with empty keyPath and clear existing chil
     // value should be replaced
     // key and meta should be untouched
     // child should be removed
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
 
-test('ChangeRequestReducer should set with keyPath of 1 element', () => {
+test('ActionReducer should set with keyPath of 1 element', () => {
     var data = {
         value: {
             a: 1,
@@ -128,10 +123,10 @@ test('ChangeRequestReducer should set with keyPath of 1 element', () => {
     // value should be replaced at keypath
     // key and meta should be untouched
     // top level child should be kept
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
 
-test('ChangeRequestReducer should clear child from set key', () => {
+test('ActionReducer should clear child from set key', () => {
     var data = {
         value: {
             a: {
@@ -191,10 +186,10 @@ test('ChangeRequestReducer should clear child from set key', () => {
     // child should be removed at keyPath
     // top level key and meta should be untouched
     // child.b.meta should be untouched
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
 
-test('ChangeRequestReducer should set with keyPath of 2 elements', () => {
+test('ActionReducer should set with keyPath of 2 elements', () => {
     var data = {
         value: {
             a: {},
@@ -248,10 +243,10 @@ test('ChangeRequestReducer should set with keyPath of 2 elements', () => {
     // value should be replaced at keypath
     // key and meta should be untouched
     // top level child should be kept
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
 
-test('ChangeRequestReducer should set with keyPath of 2 elements on arrays', () => {
+test('ActionReducer should set with keyPath of 2 elements on arrays', () => {
     var data = {
         value: [
             [],
@@ -302,10 +297,10 @@ test('ChangeRequestReducer should set with keyPath of 2 elements on arrays', () 
     // key and meta should be untouched
     // top level child should be kept
     // keys should be generated for existing value, and for newly set value
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
 
-test('ChangeRequestReducer should set with an unkeyed array and give it keys', () => {
+test('ActionReducer should set with an unkeyed array and give it keys', () => {
     var data = {
         value: 9,
         meta: {
@@ -344,10 +339,10 @@ test('ChangeRequestReducer should set with an unkeyed array and give it keys', (
     // key and meta should be untouched
     // top level child should be kept
     // keys should be generated for newly set value
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
 
-test('ChangeRequestReducer should set (with a keyPath) with an unkeyed array and give it keys', () => {
+test('ActionReducer should set (with a keyPath) with an unkeyed array and give it keys', () => {
     var data = {
         value: {
             a: [0,0,0]
@@ -392,5 +387,5 @@ test('ChangeRequestReducer should set (with a keyPath) with an unkeyed array and
     // key and meta should be untouched
     // top level child should be kept
     // keys should be generated for newly set value
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data)).toEqual(expectedData);
 });

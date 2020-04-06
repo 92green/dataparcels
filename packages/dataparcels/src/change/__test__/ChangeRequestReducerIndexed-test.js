@@ -1,13 +1,8 @@
 // @flow
 import ChangeRequest from '../ChangeRequest';
-import ChangeRequestReducer from '../ChangeRequestReducer';
+import ActionReducer from '../ActionReducer';
 import Action from '../Action';
 import pipeWith from 'unmutable/lib/util/pipeWith';
-
-const makeReducer = (action) => pipeWith(
-    new ChangeRequest(action),
-    ChangeRequestReducer
-);
 
 let data = {
     value: [0,1,2],
@@ -28,13 +23,13 @@ let EXPECTED_KEY_AND_META = {
     "swapPrev"
 ].forEach((type: string) => {
     test(`Reducer ${type} action should return unchanged parcelData if keyPath is empty`, () => {
-        expect(makeReducer(new Action({type}))(data)).toEqual(data);
+        expect(ActionReducer(new Action({type}))(data)).toEqual(data);
     });
 });
 
 const TestIndex = (arr) => arr.map(({action, expectedData}) => {
     test(`Reducer ${action.type} action should ${action.type} with keyPath ${JSON.stringify(action.keyPath)}`, () => {
-        expect(makeReducer(new Action(action))(data)).toEqual(expectedData);
+        expect(ActionReducer(new Action(action))(data)).toEqual(expectedData);
     });
 
     let deepAction = {
@@ -72,7 +67,7 @@ const TestIndex = (arr) => arr.map(({action, expectedData}) => {
     };
 
     test(`Reducer ${action.type} action should ${action.type} deeply with keyPath ${JSON.stringify(deepAction.keyPath)}`, () => {
-        expect(makeReducer(new Action(deepAction))(deepData)).toEqual(deepExpectedData);
+        expect(ActionReducer(new Action(deepAction))(deepData)).toEqual(deepExpectedData);
     });
 });
 

@@ -4,10 +4,10 @@
 import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import createUpdater from '../createUpdater';
+import combine from '../combine';
 import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
-import asChildNodes from '../asChildNodes';
+import arrange from '../arrange';
 import cancel from '../cancel';
 import translate from '../translate';
 import validation from '../validation';
@@ -18,10 +18,10 @@ import InternalParcel from '../src/parcel/Parcel';
 // internal lib files
 import InternalAction from '../lib/change/Action';
 import InternalChangeRequest from '../lib/change/ChangeRequest';
-import InternalCreateUpdater from '../lib/parcelData/createUpdater';
+import InternalCreateUpdater from '../lib/parcelData/combine';
 import Internaldeleted from '../lib/parcelData/deleted';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
-import InternalAsNodes from '../lib/parcelNode/asChildNodes';
+import InternalAsNodes from '../lib/parcelNode/arrange';
 import Internalcancel from '../lib/change/cancel';
 import InternalTranslate from '../lib/modifiers/translate';
 import InternalValidation from '../lib/validation/validation';
@@ -38,8 +38,8 @@ test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
 });
 
-test('/createUpdater should export createUpdater', () => {
-    expect(createUpdater).toBe(InternalCreateUpdater);
+test('/combine should export combine', () => {
+    expect(combine).toBe(InternalCreateUpdater);
 });
 
 test('/deleted should export deleted', () => {
@@ -50,8 +50,8 @@ test('/ParcelNode should export ParcelNode', () => {
     expect(ParcelNode).toBe(InternalParcelNode);
 });
 
-test('/asChildNodes should export asChildNodes', () => {
-    expect(asChildNodes).toBe(InternalAsNodes);
+test('/arrange should export arrange', () => {
+    expect(arrange).toBe(InternalAsNodes);
 });
 
 test('/cancel should export cancel', () => {

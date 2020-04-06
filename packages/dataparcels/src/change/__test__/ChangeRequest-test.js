@@ -500,3 +500,27 @@ test('ChangeRequest _revert() should call _revertCallback and pass self', () => 
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(changeRequest);
 });
+
+test('ChangeRequest squash should merge actions and squash it into a single action', () => {
+
+    let actions = [
+        new ChangeRequest(new Action({type: "???", keyPath: ['a']})),
+        new ChangeRequest(new Action({type: "!!!", keyPath: ['a']})),
+        new ChangeRequest(new Action({type: "...", keyPath: ['b']})),
+    ];
+
+    let squashed = ChangeRequest.squash(actions);
+
+    expect(squashed.actions.length).toBe(1);
+    expect(squashed.actions[0].type).toBe('batch');
+    expect(squashed.actions[0].payload.length).toBe(3);
+});
+
+
+test('ChangeRequest squash should merge 0 actions', () => {
+
+    let squashed = ChangeRequest.squash([]);
+
+    expect(squashed.actions.length).toBe(0);
+});
+

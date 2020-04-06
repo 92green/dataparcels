@@ -5,7 +5,7 @@ import type {Node} from 'react';
 import type Parcel from 'dataparcels';
 
 import React from 'react';
-import asChildNodes from 'dataparcels/asChildNodes';
+import arrange from 'dataparcels/arrange';
 import move from 'unmutable/move';
 
 import {SortableContainer} from 'react-sortable-hoc';
@@ -43,7 +43,7 @@ export default ({children, parcel, onSortEnd, container, ...sortableElementProps
         childRenderer={children}
         onSortEnd={(param) => {
             let {oldIndex, newIndex} = param;
-            parcel.update(asChildNodes(move(oldIndex, newIndex)));
+            parcel.update(arrange(move(oldIndex, newIndex)));
             onSortEnd && onSortEnd(param);
         }}
         {...sortableElementProps}

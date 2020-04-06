@@ -3,11 +3,11 @@ import type {ActionStep} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {ParcelData} from '../types/Types';
-import type Action from './Action';
 
 import shallowEquals from 'unmutable/shallowEquals';
 
-import ChangeRequestReducer from '../change/ChangeRequestReducer';
+import Action from './Action';
+import ActionReducer from '../change/ActionReducer';
 import parcelGet from '../parcelData/get';
 
 export default class ChangeRequest {
@@ -53,7 +53,7 @@ export default class ChangeRequest {
             return _nextData;
         }
 
-        this._nextData = ChangeRequestReducer(this)(this.prevData);
+        this._nextData = ActionReducer(this._actions)(this.prevData);
         return this._nextData;
     }
 
@@ -65,6 +65,24 @@ export default class ChangeRequest {
     // $FlowFixMe - this doesn't have side effects
     get actions(): ParcelData {
         return this._actions;
+    }
+
+    static squash(others: ChangeRequest[]): ChangeRequest {
+        if(others.length === 0) {
+            return new ChangeRequest();
+        }
+
+        let merged = others.reduce((prev, next) => prev.merge(next));
+
+        let changeRequest = new ChangeRequest(
+            new Action({
+                type: 'batch',
+                payload: merged.actions
+            })
+        );
+
+        changeRequest._nextFrameMeta = merged._nextFrameMeta;
+        return changeRequest;
     }
 
     merge = (other: ChangeRequest): ChangeRequest => {

@@ -17,7 +17,7 @@
     },
     {
         "limit": "0.4 KB",
-        "path": "createUpdater.js"
+        "path": "combine.js"
     },
     {
         "limit": "0.1 KB",
@@ -29,7 +29,7 @@
     },
     {
         "limit": "5.9 KB",
-        "path": "asChildNodes.js"
+        "path": "arrange.js"
     },
     {
         "limit": "6.1 KB",
@@ -48,6 +48,10 @@
         "path": "asyncChange.js"
     },
     {
+        "limit": "11.7 KB",
+        "path": "Boundary.js"
+    },
+    {
         "limit": "12.6 KB",
         "path": "ParcelBoundary.js"
     },
@@ -64,7 +68,15 @@
         "path": "useParcelForm.js"
     },
     {
-        "limit": "10.7 KB",
+        "limit": "10.8 KB",
         "path": "useParcelState.js"
+    },
+    {
+        "limit": "11.9 KB",
+        "path": "useParcel.js"
+    },
+    {
+        "limit": "11.6 KB",
+        "path": "useBuffer.js"
     }
 ]

@@ -1,5 +1,4 @@
 // @flow
-import type ChangeRequest from './ChangeRequest';
 import type Action from './Action';
 import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
@@ -21,6 +20,7 @@ import unshift from '../parcelData/unshift';
 import parcelDataUpdate from '../parcelData/update';
 
 const actionMap = {
+    batch: (lastKey, actions) => doDeepActionArray(actions),
     delete: del, //: (lastKey) => del(lastKey),
     insertAfter, //: (lastKey, value) => insertAfter(lastKey, value),
     insertBefore, //: (lastKey, value) => insertBefore(lastKey, value),
@@ -89,9 +89,13 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
     }, doAction(action));
 };
 
-export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?ParcelData => {
+const doDeepActionArray = (actions: Action|Action[]) => (parcelData: ParcelData): ?ParcelData => {
     let someSucceeded = false;
-    return changeRequest.actions.reduce((parcelData, action) => {
+    return [].concat(actions).reduce((parcelData, action) => {
+        if(!parcelData) {
+            return;
+        }
+
         try {
             let newParcelData = doDeepAction(action)(parcelData);
             someSucceeded = true;
@@ -104,3 +108,5 @@ export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?Parc
         }
     }, parcelData);
 };
+
+export default doDeepActionArray;
