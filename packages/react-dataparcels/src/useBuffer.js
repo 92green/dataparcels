@@ -47,11 +47,19 @@ export default (params: Params): Parcel => {
     bufferParamRef.current = buffer;
 
     let [bufferState, setBufferState] = useState([]);
+    let bufferStateRef = useRef();
+    bufferStateRef.current = bufferState;
+
+    let updateBufferState = (updater: Function) => {
+        bufferStateRef.current = updater(bufferStateRef.current);
+        setBufferState(bufferStateRef.current);
+    };
+
     let bufferSubmitCountRef = useRef(0);
 
     let bufferSubmit = () => {
         bufferSubmitCountRef.current++;
-        setBufferState(bufferState => {
+        updateBufferState(bufferState => {
             // future perf improvement - merge as they come in, not on submit
             // but beware of how history can affect this
 
@@ -67,7 +75,7 @@ export default (params: Params): Parcel => {
     };
 
     let bufferReset = () => {
-        setBufferState([]);
+        updateBufferState(() => []);
         setLastSource(null);
         // ^ remove last source to force innerParcel to update
     };
@@ -82,7 +90,7 @@ export default (params: Params): Parcel => {
 
         let handleChange = (parcel, changeRequest) => {
             setInnerParcel(parcel);
-            setBufferState(bufferState => bufferState.concat(changeRequest));
+            updateBufferState(bufferState => bufferState.concat(changeRequest));
 
             let buffer = bufferParamRef.current;
             if(!buffer) {
