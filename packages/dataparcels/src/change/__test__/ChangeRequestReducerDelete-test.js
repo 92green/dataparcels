@@ -5,11 +5,6 @@ import Action from '../Action';
 import deleted from '../../parcelData/deleted';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-const makeReducer = (action) => pipeWith(
-    new ChangeRequest(action),
-    ChangeRequestReducer
-);
-
 test('ChangeRequestReducer should delete key', () => {
     var data = {
         value: {
@@ -28,7 +23,7 @@ test('ChangeRequestReducer should delete key', () => {
         b: 2
     };
 
-    expect(makeReducer(action)(data).value).toEqual(expectedValue);
+    expect(ChangeRequestReducer(action)(data).value).toEqual(expectedValue);
 });
 
 test('ChangeRequestReducer should delete deep key', () => {
@@ -55,7 +50,7 @@ test('ChangeRequestReducer should delete deep key', () => {
         c: 3
     };
 
-    expect(makeReducer(action)(data).value).toEqual(expectedValue);
+    expect(ChangeRequestReducer(action)(data).value).toEqual(expectedValue);
 });
 
 test('ChangeRequestReducer should set value to deleted symbol if deleted with no keypath', () => {
@@ -76,5 +71,5 @@ test('ChangeRequestReducer should set value to deleted symbol if deleted with no
         value: deleted
     };
 
-    expect(makeReducer(action)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(action)(data)).toEqual(expectedData);
 });

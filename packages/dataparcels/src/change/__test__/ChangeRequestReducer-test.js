@@ -80,11 +80,6 @@ const ActionCreators = {
     }
 };
 
-const makeReducer = (actions) => pipeWith(
-    new ChangeRequest(actions),
-    ChangeRequestReducer
-);
-
 test('ChangeRequestReducer should pass through with no actions', () => {
     var data = {
         value: 123,
@@ -94,7 +89,7 @@ test('ChangeRequestReducer should pass through with no actions', () => {
 
     let actions = [];
 
-    expect(makeReducer(actions)(data)).toEqual(data);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(data);
 });
 
 test('ChangeRequestReducer should process a single "set" action', () => {
@@ -113,7 +108,7 @@ test('ChangeRequestReducer should process a single "set" action', () => {
         value: 456
     };
 
-    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(expectedData);
 });
 
 test('ChangeRequestReducer should process two "set" actions', () => {
@@ -133,7 +128,7 @@ test('ChangeRequestReducer should process two "set" actions', () => {
         value: 789
     };
 
-    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(expectedData);
 });
 
 test('ChangeRequestReducer should process single "push" action', () => {
@@ -153,7 +148,7 @@ test('ChangeRequestReducer should process single "push" action', () => {
         child: [{key: '#a'}, {key: '#b'}]
     };
 
-    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(expectedData);
 });
 
 test('ChangeRequestReducer should process single "push" action with pre functions', () => {
@@ -186,7 +181,7 @@ test('ChangeRequestReducer should process single "push" action with pre function
         child: [{key: '#a'}, {key: '#b'}, {key: '#c'}, {key: '#d'}]
     };
 
-    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(expectedData);
 });
 
 test('ChangeRequestReducer should process single "push" action with post functions', () => {
@@ -219,7 +214,7 @@ test('ChangeRequestReducer should process single "push" action with post functio
         child: [{key: '#a'}, {key: '#b'}]
     };
 
-    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(expectedData);
 });
 
 test('ChangeRequestReducer should process a single "set" action at a depth of 1', () => {
@@ -249,7 +244,7 @@ test('ChangeRequestReducer should process a single "set" action at a depth of 1'
         }
     };
 
-    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(expectedData);
 });
 
 test('ChangeRequestReducer should process a single "set" action at a depth of 2', () => {
@@ -296,7 +291,7 @@ test('ChangeRequestReducer should process a single "set" action at a depth of 2'
         }
     };
 
-    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(expectedData);
 });
 
 test('ChangeRequestReducer should process aa complicated bunch of pre and post functions', () => {
@@ -338,7 +333,7 @@ test('ChangeRequestReducer should process aa complicated bunch of pre and post f
         alsoAlso: 457
     };
 
-    expect(makeReducer(actions)(data).value).toEqual(expectedValue);
+    expect(ChangeRequestReducer(actions)(data).value).toEqual(expectedValue);
 });
 
 test('ChangeRequestReducer should process pre and post on parentActions like "swapNextSelf"', () => {
@@ -377,7 +372,7 @@ test('ChangeRequestReducer should process pre and post on parentActions like "sw
         // it is the reducers job to execute actions correctly, not to ensure the integrity of the data
         // or protect against the setting of invalid data shapes
         ...processed
-    } = makeReducer(actions)(data);
+    } = ChangeRequestReducer(actions)(data);
 
     expect(processed).toEqual(expectedData);
 });
@@ -413,7 +408,7 @@ test('ChangeRequestReducer should process deep actions that are "parent actions"
         def: 456
     };
 
-    expect(makeReducer(actions)(data).value).toEqual(expectedValue);
+    expect(ChangeRequestReducer(actions)(data).value).toEqual(expectedValue);
 });
 
 test('ChangeRequestReducer should process an "update" action', () => {
@@ -437,7 +432,29 @@ test('ChangeRequestReducer should process an "update" action', () => {
         value: 246
     };
 
-    expect(makeReducer(actions)(data)).toEqual(expectedData);
+    expect(ChangeRequestReducer(actions)(data)).toEqual(expectedData);
     expect(updater).toHaveBeenCalledTimes(1);
     expect(updater.mock.calls[0][0]).toEqual(data);
+});
+
+test('ChangeRequestReducer should process a "batch" action', () => {
+
+    var data = {
+        value: [],
+        key: "^",
+        child: undefined
+    };
+
+    let actions = [
+        new Action({
+            type: 'batch',
+            payload: [
+                ActionCreators.push("A"),
+                ActionCreators.push("B"),
+                ActionCreators.push("C")
+            ]
+        })
+    ];
+
+    expect(ChangeRequestReducer(actions)(data).value).toEqual(["A","B","C"]);
 });

@@ -4,11 +4,6 @@ import ChangeRequestReducer from '../ChangeRequestReducer';
 import Action from '../Action';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
-const makeReducer = (action) => pipeWith(
-    new ChangeRequest(action),
-    ChangeRequestReducer
-);
-
 test('ChangeRequestReducer should setMeta with empty keyPath', () => {
     var data = {
         value: {
@@ -29,7 +24,7 @@ test('ChangeRequestReducer should setMeta with empty keyPath', () => {
         abc: 123
     };
 
-    expect(makeReducer(action)(data).meta).toEqual(expectedMeta);
+    expect(ChangeRequestReducer(action)(data).meta).toEqual(expectedMeta);
 });
 
 test('ChangeRequestReducer should setMeta merge', () => {
@@ -56,7 +51,7 @@ test('ChangeRequestReducer should setMeta merge', () => {
         def: 456
     };
 
-    expect(makeReducer(action)(data).meta).toEqual(expectedMeta);
+    expect(ChangeRequestReducer(action)(data).meta).toEqual(expectedMeta);
 });
 
 test('ChangeRequestReducer should setMeta with keyPath', () => {
@@ -87,7 +82,7 @@ test('ChangeRequestReducer should setMeta with keyPath', () => {
         }
     };
 
-    expect(makeReducer(action)(data).child).toEqual(expectedChild);
+    expect(ChangeRequestReducer(action)(data).child).toEqual(expectedChild);
 });
 
 test('ChangeRequestReducer should merge setMeta with keyPath', () => {
@@ -129,6 +124,6 @@ test('ChangeRequestReducer should merge setMeta with keyPath', () => {
         }
     };
 
-    expect(makeReducer(action)(data).child).toEqual(expectedChild);
+    expect(ChangeRequestReducer(action)(data).child).toEqual(expectedChild);
 });
 
