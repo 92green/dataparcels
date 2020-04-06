@@ -21,7 +21,7 @@ import Action from '../change/Action';
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 import deleted from '../parcelData/deleted';
-import createUpdater from '../parcelData/createUpdater';
+import combine from '../parcelData/combine';
 import setMetaDefault from '../parcelData/setMetaDefault';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
@@ -304,7 +304,7 @@ export default class Parcel {
 
         // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
-            let preparedUpdater = createUpdater(updater);
+            let preparedUpdater = combine(updater);
             fireAction('update', preparedUpdater);
         };
 
@@ -349,7 +349,7 @@ export default class Parcel {
 
         // Types(`modifyDown()`, `updater`, `function`)(updater);
         this.modifyDown = (updater: ParcelValueUpdater): Parcel => {
-            let preparedUpdater = createUpdater(updater);
+            let preparedUpdater = combine(updater);
             return this._create({
                 rawId: this._idPushModifierUpdater('md', updater),
                 parcelData: preparedUpdater(this._parcelData),
@@ -362,7 +362,7 @@ export default class Parcel {
 
         // Types(`modifyUp()`, `updater`, `function`)(updater);
         this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
-            let preparedUpdater = createUpdater(updater);
+            let preparedUpdater = combine(updater);
 
             return this._create({
                 rawId: this._idPushModifierUpdater('mu', updater),

@@ -17,7 +17,7 @@
     },
     {
         "limit": "0.4 KB",
-        "path": "createUpdater.js"
+        "path": "combine.js"
     },
     {
         "limit": "0.1 KB",

@@ -2,7 +2,7 @@
 import type {ParcelValueUpdater} from 'dataparcels';
 
 import Parcel from 'dataparcels';
-import createUpdater from 'dataparcels/createUpdater';
+import combine from 'dataparcels/combine';
 import useBuffer from './useBuffer';
 
 // $FlowFixMe - useState is a named export of react
@@ -47,7 +47,7 @@ export default (params: Params): Parcel => {
 
         return parcel._changeAndReturn(
             parcel => parcel
-                .modifyUp(createUpdater(source, deriveSource))
+                .modifyUp(combine(source, deriveSource))
                 .update(noop)
             // ^ replace with parcel.update(source) once update() can return {effect}
         )[0];
@@ -60,14 +60,14 @@ export default (params: Params): Parcel => {
     if(dependencies.some((dep, index) => !Object.is(dep, prevDeps[index]))) {
         setPrevDeps(dependencies);
         parcel
-            .modifyUp(createUpdater(source, deriveSource))
+            .modifyUp(combine(source, deriveSource))
             .update(noop);
         // ^ replace with parcel.update(source) once update() can return {effect}
     }
 
     // onChange
 
-    let preparedParcel = parcel.modifyUp(createUpdater(deriveSource, onChange));
+    let preparedParcel = parcel.modifyUp(combine(deriveSource, onChange));
 
     // buffer
 

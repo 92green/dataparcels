@@ -7,7 +7,7 @@ import type ChangeRequest from '../change/ChangeRequest';
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import parcelGet from '../parcelData/get';
-import createUpdater from '../parcelData/createUpdater';
+import combine from '../parcelData/combine';
 
 export default class ParcelNode {
     constructor(value: any) {
@@ -87,7 +87,7 @@ export default class ParcelNode {
     };
 
     update = (updater: Function): ParcelNode => {
-        let preparedUpdater = createUpdater(updater);
+        let preparedUpdater = combine(updater);
         let parcelNode = new ParcelNode();
         parcelNode._parcelData = preparedUpdater({
             ...this._parcelData,

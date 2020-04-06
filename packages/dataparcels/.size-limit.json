@@ -17,7 +17,7 @@
     },
     {
         "limit": "0.4 KB",
-        "path": "createUpdater.js"
+        "path": "combine.js"
     },
     {
         "limit": "0.1 KB",
@@ -29,7 +29,7 @@
     },
     {
         "limit": "5.9 KB",
-        "path": "asChildNodes.js"
+        "path": "arrange.js"
     },
     {
         "limit": "2.2 KB",

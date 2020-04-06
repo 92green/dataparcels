@@ -15,7 +15,7 @@
     "arrange.js",
     "cancel.js",
     "ChangeRequest.js",
-    "createUpdater.js",
+    "combine.js",
     "deleted.js",
     "ParcelNode.js",
     "translate.js",
