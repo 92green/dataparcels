@@ -7,7 +7,7 @@ import ChangeRequest from '../ChangeRequest';
 import createUpdater from '../createUpdater';
 import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
-import asChildNodes from '../asChildNodes';
+import arrange from '../arrange';
 import cancel from '../cancel';
 import translate from '../translate';
 import validation from '../validation';
@@ -31,7 +31,7 @@ import InternalChangeRequest from 'dataparcels/ChangeRequest';
 import InternalCreateUpdater from 'dataparcels/createUpdater';
 import Internaldeleted from 'dataparcels/deleted';
 import InternalParcelNode from 'dataparcels/ParcelNode';
-import InternalAsNodes from 'dataparcels/asChildNodes';
+import InternalAsNodes from 'dataparcels/arrange';
 import Internalcancel from 'dataparcels/cancel';
 import InternalTranslate from 'dataparcels/translate';
 import InternalValidation from 'dataparcels/validation';
@@ -72,8 +72,8 @@ test('/ParcelNode should export ParcelNode', () => {
     expect(ParcelNode).toBe(InternalParcelNode);
 });
 
-test('/asChildNodes should export asChildNodes', () => {
-    expect(asChildNodes).toBe(InternalAsNodes);
+test('/arrange should export arrange', () => {
+    expect(arrange).toBe(InternalAsNodes);
 });
 
 test('/cancel should export cancel', () => {

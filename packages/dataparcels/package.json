@@ -12,7 +12,7 @@
   "files": [
     "lib",
     "Action.js",
-    "asChildNodes.js",
+    "arrange.js",
     "cancel.js",
     "ChangeRequest.js",
     "createUpdater.js",

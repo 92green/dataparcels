@@ -29,7 +29,7 @@
     },
     {
         "limit": "5.9 KB",
-        "path": "asChildNodes.js"
+        "path": "arrange.js"
     },
     {
         "limit": "6.1 KB",
@@ -72,7 +72,7 @@
         "path": "useParcelState.js"
     },
     {
-        "limit": "11.8 KB",
+        "limit": "11.9 KB",
         "path": "useParcel.js"
     },
     {
