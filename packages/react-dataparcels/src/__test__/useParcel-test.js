@@ -107,7 +107,7 @@ describe('useParcel onChange', () => {
 
 });
 
-describe('useParcel derive', () => {
+describe('useParcel derive (when buffer is not set)', () => {
 
     it('should derive from initial source and prop change', () => {
 
@@ -163,6 +163,45 @@ describe('useParcel derive', () => {
 
 });
 
+describe('useParcel derive (when buffer is set)', () => {
+
+    it('should derive from above', () => {
+
+        let derive = ({value}) => ({value: value * 2});
+
+        let {result} = renderHook(() => useParcel({
+            source: (prev) => ({
+                value: 100
+            }),
+            buffer: true,
+            derive
+        }));
+
+        expect(result.current.value).toBe(200);
+    });
+
+    it('should derive from below', () => {
+
+        let derive = ({value}) => ({value: value * 2});
+
+        let {result} = renderHook(() => useParcel({
+            source: (prev) => ({
+                value: 100
+            }),
+            buffer: true,
+            derive
+        }));
+
+        act(() => {
+            result.current.set(200);
+        });
+
+        expect(result.current.value).toBe(400);
+    });
+
+});
+
+
 
 describe('useParcel buffer', () => {
 
@@ -203,4 +242,63 @@ describe('useParcel buffer', () => {
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][0].value).toEqual(["A", "B"]);
     });
+});
+
+describe('useParcel deriveSource (only used when buffer is set)', () => {
+
+    it('should derive from initial source and prop change', () => {
+
+        let deriveSource = jest.fn(({value}) => ({value: value + 1}));
+
+        let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcel({
+            source: (prev) => ({
+                value: props.foo
+            }),
+            dependencies: [props.foo],
+            buffer: true,
+            deriveSource
+        }));
+
+        expect(deriveSource).toHaveBeenCalledTimes(1);
+        expect(deriveSource.mock.calls[0][0].value).toBe(123);
+        expect(result.current.value).toBe(124);
+
+        act(() => {
+            rerender({foo: 456});
+        });
+
+        expect(deriveSource).toHaveBeenCalledTimes(2);
+        expect(deriveSource.mock.calls[1][0].value).toBe(456);
+        expect(result.current.value).toBe(457);
+
+    });
+
+    it('should deriveSource from change', () => {
+
+        let deriveSource = jest.fn(({value}) => ({value: value + 1}));
+        let onChange = jest.fn();
+
+        let {result, rerender} = renderHookWithProps({foo: 123}, (props) => useParcel({
+            source: (prev) => ({
+                value: props.foo
+            }),
+            dependencies: [props.foo],
+            buffer: true,
+            deriveSource,
+            onChange
+        }));
+
+        act(() => {
+            result.current.set(789);
+            result.current.meta.submit();
+        });
+
+        expect(deriveSource).toHaveBeenCalledTimes(2);
+        expect(deriveSource.mock.calls[1][0].value).toBe(789);
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].value).toBe(790);
+        expect(result.current.value).toBe(790);
+
+    });
+
 });

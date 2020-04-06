@@ -15,7 +15,8 @@ type Params = {
     dependencies?: any[],
     onChange?: ParcelValueUpdater,
     derive?: ParcelValueUpdater,
-    buffer?: boolean|number
+    buffer?: boolean|number,
+    deriveSource?: ParcelValueUpdater
 };
 
 export default (params: Params): Parcel => {
@@ -27,8 +28,13 @@ export default (params: Params): Parcel => {
         dependencies = [],
         onChange = noop,
         derive = noop,
-        buffer = false
+        buffer = false,
+        deriveSource = noop
     } = params;
+
+    if(buffer === false) {
+        deriveSource = derive;
+    }
 
     // source
 
@@ -41,7 +47,7 @@ export default (params: Params): Parcel => {
 
         return parcel._changeAndReturn(
             parcel => parcel
-                .modifyUp(createUpdater(source, derive))
+                .modifyUp(createUpdater(source, deriveSource))
                 .update(noop)
             // ^ replace with parcel.update(source) once update() can return {effect}
         )[0];
@@ -54,14 +60,14 @@ export default (params: Params): Parcel => {
     if(dependencies.some((dep, index) => !Object.is(dep, prevDeps[index]))) {
         setPrevDeps(dependencies);
         parcel
-            .modifyUp(createUpdater(source, derive))
+            .modifyUp(createUpdater(source, deriveSource))
             .update(noop);
         // ^ replace with parcel.update(source) once update() can return {effect}
     }
 
     // onChange
 
-    let preparedParcel = parcel.modifyUp(createUpdater(derive, onChange));
+    let preparedParcel = parcel.modifyUp(createUpdater(deriveSource, onChange));
 
     // buffer
 
@@ -71,7 +77,8 @@ export default (params: Params): Parcel => {
 
     let bufferedParcel = useBuffer({
         source: preparedParcel,
-        buffer
+        buffer,
+        derive
     });
 
     return bufferedParcel;
