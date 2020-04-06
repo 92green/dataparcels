@@ -64,7 +64,15 @@
         "path": "useParcelForm.js"
     },
     {
-        "limit": "10.7 KB",
+        "limit": "10.8 KB",
         "path": "useParcelState.js"
+    },
+    {
+        "limit": "11.8 KB",
+        "path": "useParcel.js"
+    },
+    {
+        "limit": "11.6 KB",
+        "path": "useBuffer.js"
     }
 ]
