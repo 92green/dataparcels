@@ -54,11 +54,9 @@ export default (params: Params): Parcel => {
         setBufferState(bufferState => {
             // future perf improvement - merge as they come in, not on submit
             // but beware of how history can affect this
-            let merged = bufferState.length > 0
-                ? bufferState.reduce((prev, next) => prev.merge(next))
-                : new ChangeRequest();
 
-            sourceRef.current.dispatch(merged);
+            let squashed = ChangeRequest.squash(bufferState);
+            sourceRef.current.dispatch(squashed);
             return [];
         });
     };

@@ -235,6 +235,30 @@ describe('useBuffer buffer', () => {
         expect(handleChange.mock.calls[0][0].value).toEqual(["A", "B"]);
         expect(handleChange.mock.calls[1][0].value).toEqual(["C"]);
     });
+
+    it('should submit changes as single change request', () => {
+
+        let handleChange = jest.fn();
+        let up = jest.fn();
+
+        let source = new Parcel({
+            value: [],
+            handleChange
+        }).modifyUp(up)
+
+        let {result} = renderHook(() => useBuffer({source}));
+
+        act(() => {
+            result.current.push("A");
+            result.current.push("B");
+            result.current.meta.submit();
+        });
+
+        expect(up).toHaveBeenCalledTimes(1);
+        expect(up.mock.calls[0][0].value).toEqual(["A", "B"]);
+        expect(up.mock.calls[0][0].changeRequest.prevData.value).toEqual([]);
+        expect(up.mock.calls[0][0].changeRequest.nextData.value).toEqual(["A", "B"]);
+    });
 });
 
 describe('useBuffer derive', () => {
