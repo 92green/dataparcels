@@ -3,6 +3,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 
 import Parcel from 'dataparcels';
 import createUpdater from 'dataparcels/createUpdater';
+import useBuffer from './useBuffer';
 
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
@@ -13,7 +14,8 @@ type Params = {
     source?: ParcelValueUpdater,
     dependencies?: any[],
     onChange?: ParcelValueUpdater,
-    derive?: ParcelValueUpdater
+    derive?: ParcelValueUpdater,
+    buffer?: boolean|number
 };
 
 export default (params: Params): Parcel => {
@@ -24,7 +26,8 @@ export default (params: Params): Parcel => {
         source = noop,
         dependencies = [],
         onChange = noop,
-        derive = noop
+        derive = noop,
+        buffer = false
     } = params;
 
     // source
@@ -58,6 +61,18 @@ export default (params: Params): Parcel => {
 
     // onChange
 
-    return parcel
-        .modifyUp(createUpdater(derive, onChange));
+    let preparedParcel = parcel.modifyUp(createUpdater(derive, onChange));
+
+    // buffer
+
+    if(buffer === false) {
+        return preparedParcel;
+    }
+
+    let bufferedParcel = useBuffer({
+        source: preparedParcel,
+        buffer
+    });
+
+    return bufferedParcel;
 };

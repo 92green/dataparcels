@@ -34,6 +34,11 @@ describe('useParcel source', () => {
         expect(result.current.value).toBe(123);
     });
 
+    it('should not require source', () => {
+        let {result} = renderHook(() => useParcel({}));
+        expect(result.current.value).toBe(undefined);
+    });
+
 });
 
 describe('useParcel dependencies', () => {
@@ -156,4 +161,46 @@ describe('useParcel derive', () => {
 
     });
 
+});
+
+
+describe('useParcel buffer', () => {
+
+    it('should use useBuffer if buffer = true', () => {
+
+        let onChange = jest.fn();
+
+        let {result} = renderHook(() => useParcel({
+            source: () => ({
+                value: []
+            }),
+            onChange,
+            buffer: true
+        }));
+
+        expect(result.current.meta.buffered).toBe(false);
+        expect(onChange).toHaveBeenCalledTimes(0);
+
+        act(() => {
+            result.current.push("A");
+        });
+
+        expect(result.current.meta.buffered).toBe(true);
+        expect(onChange).toHaveBeenCalledTimes(0);
+
+        act(() => {
+            result.current.push("B");
+        });
+
+        expect(result.current.meta.buffered).toBe(true);
+        expect(onChange).toHaveBeenCalledTimes(0);
+
+        act(() => {
+            result.current.meta.submit();
+        });
+
+        expect(result.current.meta.buffered).toBe(false);
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].value).toEqual(["A", "B"]);
+    });
 });
