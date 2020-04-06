@@ -13,6 +13,7 @@ import translate from '../translate';
 import validation from '../validation';
 
 // react-dataparcels
+import Boundary from '../Boundary';
 import ParcelBoundary from '../ParcelBoundary';
 import ParcelDrag from '../ParcelDrag';
 import useParcelBuffer from '../useParcelBuffer';
@@ -36,6 +37,7 @@ import InternalTranslate from 'dataparcels/translate';
 import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
+import InternalBoundary from '../lib/Boundary';
 import InternalParcelBoundary from '../lib/ParcelBoundary';
 import InternalParcelDrag from '../lib/ParcelDrag';
 import InternalUseParcelBuffer from '../lib/useParcelBuffer';
@@ -84,6 +86,10 @@ test('/translate should export translate', () => {
 
 test('/validation should export validation', () => {
     expect(validation).toBe(InternalValidation);
+});
+
+test('/Boundary should export Boundary', () => {
+    expect(Boundary).toBe(InternalBoundary);
 });
 
 test('/ParcelBoundary should export ParcelBoundary', () => {

@@ -16,6 +16,7 @@
     "asChildNodes.js",
     "asyncChange.js",
     "asyncValue.js",
+    "Boundary.js",
     "cancel.js",
     "ChangeRequest.js",
     "createUpdater.js",

@@ -48,6 +48,10 @@
         "path": "asyncChange.js"
     },
     {
+        "limit": "11.7 KB",
+        "path": "Boundary.js"
+    },
+    {
         "limit": "12.6 KB",
         "path": "ParcelBoundary.js"
     },
