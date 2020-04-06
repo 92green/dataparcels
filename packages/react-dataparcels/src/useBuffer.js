@@ -118,7 +118,7 @@ export default (params: Params): Parcel => {
     }, [innerParcel, bufferState]);
 };
 
-const parcelEqual = (parcelA: Parcel, parcelB: Parcel): boolean => {
+export const parcelEqual = (parcelA: Parcel, parcelB: Parcel): boolean => {
     let aa = parcelA.data;
     let bb = parcelB.data;
     let isChild = parcelA.isChild && parcelB.isChild;

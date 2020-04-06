@@ -2,6 +2,7 @@
 import {act} from 'react-hooks-testing-library';
 import {renderHook} from 'react-hooks-testing-library';
 import useBuffer from '../useBuffer';
+import {parcelEqual} from '../useBuffer';
 import Parcel from 'dataparcels';
 
 jest.useFakeTimers();
@@ -313,4 +314,57 @@ describe('useBuffer derive', () => {
         expect(handleChange.mock.calls[0][0].value).toBe(400);
     });
 
+});
+
+describe('parcel equals', () => {
+    it('should test equality to see if a re-render should occur', () => {
+        var child = {};
+        var parcelCreator = (merge = {}) => {
+            let p = new Parcel();
+            // $FlowFixMe
+            p._parcelData = {
+                value: 123,
+                meta: {
+                    abc: 123,
+                    def: 456
+                },
+                key: "a",
+                child,
+                ...merge
+            };
+            return p;
+        };
+
+        expect(parcelEqual(parcelCreator(), parcelCreator())).toBe(true);
+        expect(parcelEqual(parcelCreator(), parcelCreator({value: 456}))).toBe(false);
+        expect(parcelEqual(parcelCreator(), parcelCreator({meta: {abc: 123}}))).toBe(false);
+        expect(parcelEqual(parcelCreator(), parcelCreator({child: {}}))).toBe(false);
+        expect(parcelEqual(parcelCreator(), parcelCreator({key: "b"}))).toBe(false);
+    });
+
+    it('should return false if isFirst or isLast change', () => {
+        var child = {};
+
+        let p2 = new Parcel({
+            value: [123,456]
+        });
+
+        let p = new Parcel({
+            value: [123,456],
+            handleChange: (newParcel) => {
+                p2 = newParcel;
+            }
+        });
+
+        p.push(789);
+
+        // #a should be true as it hasnt changed value and is still first and not last
+        expect(parcelEqual(p.get("#a"), p2.get("#a"))).toBe(true);
+        // #b should be false as it used to be last but now isnt (value and meta are the same)
+        expect(parcelEqual(p.get("#b"), p2.get("#b"))).toBe(false);
+
+        p.unshift(101112);
+        // #a should be false as it used to be first but now isnt (value and meta are the same)
+        expect(parcelEqual(p.get("#a"), p2.get("#a"))).toBe(false);
+    });
 });
