@@ -10,7 +10,7 @@ import useBuffer from './useBuffer';
 type RenderFunction = (parcel: Parcel) => Node;
 
 type Props = {
-    parcel: Parcel,
+    source: Parcel,
     children: RenderFunction,
     dependencies?: any[],
     buffer?: number|boolean,
@@ -20,7 +20,7 @@ type Props = {
 
 export default function Boundary(props: Props): Node {
     let {
-        parcel,
+        source,
         children,
         dependencies = [],
         buffer = false,
@@ -29,7 +29,7 @@ export default function Boundary(props: Props): Node {
     } = props;
 
     let innerParcel = useBuffer({
-        source: parcel,
+        source,
         buffer,
         derive
     });

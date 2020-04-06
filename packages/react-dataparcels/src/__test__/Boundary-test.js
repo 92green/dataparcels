@@ -8,7 +8,7 @@ test('Boundary should not rerender if parcel has not changed value and memo = tr
 
     let parcel = new Parcel();
 
-    let wrapper = shallow(<Boundary parcel={parcel}>
+    let wrapper = shallow(<Boundary source={parcel}>
         {childRenderer}
     </Boundary>);
 
@@ -27,7 +27,7 @@ test('Boundary should rerender if parcel has not changed value and memo = false'
 
     let parcel = new Parcel();
 
-    let wrapper = shallow(<Boundary parcel={parcel} memo={false}>
+    let wrapper = shallow(<Boundary source={parcel} memo={false}>
         {childRenderer}
     </Boundary>);
 
@@ -47,7 +47,7 @@ test('Boundary should rerender if parcel has not changed value but dependencies 
 
     let parcel = new Parcel();
 
-    let wrapper = shallow(<Boundary parcel={parcel} dependencies={["abc"]}>
+    let wrapper = shallow(<Boundary source={parcel} dependencies={["abc"]}>
         {childRenderer}
     </Boundary>);
 
