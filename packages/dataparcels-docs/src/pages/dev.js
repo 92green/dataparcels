@@ -1,41 +1,53 @@
 // @flow
 import React from 'react';
+import {useRef} from 'react';
 import Page from 'component/Page';
 import {H1} from 'dcme-style';
 import {ContentNav} from 'dcme-style';
 
-import useParcelState from 'react-dataparcels/useParcelState';
-import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
+import promisify from 'react-dataparcels/promisify';
+import useParcel from 'react-dataparcels/useParcel';
+import Boundary from 'react-dataparcels/Boundary';
 
 export default function PersonEditor() {
 
-    let [personParcel] = useParcelState({
-        value: {
-            firstname: "Robert",
-            lastname: "Clamps"
-        }
-    });
+    let rejectRef = useRef();
 
-    personParcel = personParcel
-        .modifyUp(({changeRequest}) => {
-            // cause the change request reducer to re-execute the same effect again
-            changeRequest.nextData;
-        })
-        .modifyUp(({value}) => {
-            let {firstname} = value;
+    let personParcel = useParcel({
+        // source: () => ({
+        //     value: {
+        //         firstname: "Robert",
+        //         lastname: "Clamps",
+        //         saves: 0
+        //     }
+        // }),
+        source: promisify('load', async () => {
+            await new Promise(resolve => setTimeout(resolve, 1000));
             return {
-                effect: async (update) => {
-                    await new Promise(resolve => setTimeout(resolve, firstname.length > 2 ? 0 : 1000));
-
-                    update(({value}) => ({
-                        value: {
-                            ...value,
-                            lastname: firstname
-                        }
-                    }));
+                value: {
+                    firstname: "Robert",
+                    lastname: "Clamps",
+                    saves: 0
                 }
             };
-        });
+        }),
+        onChange: promisify('save', async ({value}) => {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            if(rejectRef.current) {
+                rejectRef.current = false;
+                throw new Error('NO!!!');
+            }
+
+            return {
+                value: {
+                    ...value,
+                    saves: value.saves + 1
+                }
+            };
+        }),
+        buffer: true
+    });
 
     return <Page>
         <ContentNav
@@ -44,15 +56,32 @@ export default function PersonEditor() {
             mdxHeading
         >
             <H1>Dev page</H1>
-            <label>firstname</label>
-            <ParcelBoundary parcel={personParcel.get('firstname')}>
-                {(firstname) => <input type="text" {...firstname.spreadInput()} />}
-            </ParcelBoundary>
+            <div>load status {personParcel.meta.loadStatus}</div>
 
-            <label>lastname</label>
-            <ParcelBoundary parcel={personParcel.get('lastname')}>
-                {(lastname) => <input type="text" {...lastname.spreadInput()} />}
-            </ParcelBoundary>
+            {personParcel.value &&
+                <>
+                    <div>firstname</div>
+                    <Boundary source={personParcel.get('firstname')}>
+                        {(firstname) => <input type="text" {...firstname.spreadInput()} />}
+                    </Boundary>
+
+                    <div>lastname</div>
+                    <Boundary source={personParcel.get('lastname')}>
+                        {(lastname) => <input type="text" {...lastname.spreadInput()} />}
+                    </Boundary>
+
+                    <div>save status {personParcel.meta.saveStatus}</div>
+                    <div>save error {personParcel.meta.saveError && personParcel.meta.saveError.message}</div>
+                    <div>saves {personParcel.value.saves}</div>
+
+                    <div>
+                        <button onClick={personParcel.meta.submit}>submit</button>
+                    </div>
+                    <div>
+                        <button onClick={() => {rejectRef.current = true;}}>reject</button>
+                    </div>
+                </>
+            }
         </ContentNav>
     </Page>;
 }
