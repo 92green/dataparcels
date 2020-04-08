@@ -30,6 +30,7 @@
     "useParcelBuffer.js",
     "useParcelForm.js",
     "useParcelState.js",
+    "promisify.js",
     "translate.js",
     "validation.js"
   ],

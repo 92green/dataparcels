@@ -32,6 +32,10 @@
         "path": "arrange.js"
     },
     {
+        "limit": "0.5 KB",
+        "path": "promisify.js"
+    },
+    {
         "limit": "6.1 KB",
         "path": "translate.js"
     },
