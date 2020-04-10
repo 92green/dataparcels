@@ -79,6 +79,50 @@ describe('promisify', () => {
         window.setTimeout = realSetTimeout;
     });
 
+    it('should fire promise and resolve using an updater function', async () => {
+
+        // remove setTimeout because jest doesnt handle
+        // setTimeouts and promises all mixed together like this
+        let realSetTimeout = window.setTimeout;
+        window.setTimeout = (fn, ms) => fn();
+
+        let handleChange = jest.fn();
+        let updater = jest.fn(({value}) => ({
+            value: value + 1
+        }));
+
+        let parcel = new Parcel({
+            value: 123,
+            handleChange
+        });
+
+        let resolvePromise = () => {};
+        let promise = new Promise(resolve => {
+            resolvePromise = () => resolve(updater);
+        });
+
+        parcel
+            .modifyUp(promisify({
+                key: 'foo',
+                effect: ({value}) => promise
+            }))
+            .set(456);
+
+        parcel
+            .set(700);
+
+        resolvePromise();
+        await promise;
+
+        expect(handleChange).toHaveBeenCalledTimes(3);
+
+        expect(updater).toHaveBeenCalledTimes(1);
+        expect(updater.mock.calls[0][0].value).toBe(700);
+        expect(handleChange.mock.calls[2][0].value).toBe(701);
+
+        window.setTimeout = realSetTimeout;
+    });
+
     it('should fire promise and reject', async () => {
 
         // remove setTimeout because jest doesnt handle

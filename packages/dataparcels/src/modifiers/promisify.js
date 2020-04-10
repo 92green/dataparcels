@@ -1,4 +1,5 @@
 // @flow
+import combine from '../parcelData/combine';
 
 type Data = {
     value: any,
@@ -10,8 +11,9 @@ type PartialData = {
     meta?: {[key: string]: any}
 };
 
-type PromiseFunction = (data: Data) => Promise<?PartialData>;
-type Update = (updater: (data: Data) => PartialData) => void;
+type Updater = (data: Data) => PartialData;
+type Update = (updater: Updater) => void;
+type PromiseFunction = (data: Data) => Promise<?PartialData|Updater>;
 
 type Config = {
     key: string,
@@ -35,18 +37,18 @@ export default (config: Config) => {
         };
 
         let effect = (update: Update) => fn(data).then(
-            (data) => {
+            (result) => {
                 if(count !== countAtCall) return;
-                data = data || {};
-                update(() => ({
-                    ...data,
-                    meta: {
-                        // $FlowFixMe - this inference is wrong, data cannot be undefined here
-                        ...(data.meta || {}),
-                        [statusKey]: 'resolved',
-                        [errorKey]: undefined
-                    }
-                }));
+
+                update(combine(
+                    typeof result !== 'function' ? () => result : result,
+                    () => ({
+                        meta: {
+                            [statusKey]: 'resolved',
+                            [errorKey]: undefined
+                        }
+                    })
+                ));
             },
             (error) => {
                 if(count !== countAtCall) return;
