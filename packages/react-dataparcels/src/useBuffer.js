@@ -15,6 +15,16 @@ import {useMemo} from 'react';
 
 import shallowEquals from 'unmutable/lib/shallowEquals';
 
+const useRefState = (initial) => {
+    let [value, setValue] = useState(initial);
+    let valueRef = useRef();
+    valueRef.current = value;
+    return [valueRef, (value) => {
+        valueRef.current = value;
+        setValue(value);
+    }];
+};
+
 const noop = () => {};
 
 type Params = {
@@ -41,32 +51,54 @@ export default (params: Params): Parcel => {
     let [lastSource, setLastSource] = useState(null);
     let [innerParcel, setInnerParcel] = useState(null);
 
-    // buffer
+    // buffer and history
 
     let bufferParamRef = useRef();
     bufferParamRef.current = buffer;
 
-    let [bufferState, setBufferState] = useState([]);
-    let bufferStateRef = useRef();
-    bufferStateRef.current = bufferState;
+    let [bufferStateRef, setBufferState] = useRefState([]);
+    let [sentRef, setSent] = useRefState(0);
+    let [historyIndexRef, setHistoryIndex] = useRefState(0);
 
-    let updateBufferState = (updater: Function) => {
-        bufferStateRef.current = updater(bufferStateRef.current);
-        setBufferState(bufferStateRef.current);
+    let bufferPush = (parcel: Parcel, changeRequest: ?ChangeRequest) => {
+        let newBufferState = bufferStateRef.current
+            .slice(0, historyIndexRef.current + 1) // remove items ahead in history
+            .concat({
+                index: sentRef.current,
+                parcel,
+                changeRequest
+            });
+
+        setInnerParcel(parcel);
+        setBufferState(newBufferState);
+        setHistoryIndex(bufferStateRef.current.length - 1);
+    };
+
+    let moveHistoryIndex = (index: number) => {
+        let parcel = bufferStateRef.current[index].parcel;
+        parcel._treeShare.registry[parcel.id] = parcel;
+        // ^ update the registry so changes will go to
+        //   this older parcel instead of newer ones
+        setInnerParcel(parcel);
+        setHistoryIndex(index);
     };
 
     let bufferSubmitCountRef = useRef(0);
 
     let bufferSubmit = () => {
         bufferSubmitCountRef.current++;
-        updateBufferState(bufferState => {
-            // future perf improvement - merge as they come in, not on submit
-            // but beware of how history can affect this
 
-            let squashed = ChangeRequest.squash(bufferState);
-            sourceRef.current.dispatch(squashed);
-            return [];
-        });
+        let bufferState = bufferStateRef.current;
+
+        let changeRequests = bufferState
+            .slice(sentRef.current)
+            .map(ii => ii.changeRequest)
+            .filter(Boolean);
+
+        let squashed = ChangeRequest.squash(changeRequests);
+        sourceRef.current.dispatch(squashed);
+
+        setSent(bufferState.length);
     };
 
     let bufferSubmitDebounce = (ms: number) => {
@@ -75,13 +107,30 @@ export default (params: Params): Parcel => {
     };
 
     let bufferReset = () => {
-        updateBufferState(() => []);
-        setLastSource(null);
-        // ^ remove last source to force innerParcel to update
+        let bufferState = bufferStateRef.current.slice(0, sentRef.current);
+        setBufferState(bufferState);
+        moveHistoryIndex(bufferState.length - 1);
+    };
+
+    let bufferUndo = () => {
+        let index = historyIndexRef.current;
+        if(index > 0) {
+            moveHistoryIndex(index - 1);
+
+        }
+    };
+
+    let bufferRedo = () => {
+        let index = historyIndexRef.current;
+        if(index < bufferStateRef.current.length - 1) {
+            moveHistoryIndex(index + 1);
+        }
     };
 
     let submit = useCallback(bufferSubmit, []);
     let reset = useCallback(bufferReset, []);
+    let undo = useCallback(bufferUndo, []);
+    let redo = useCallback(bufferRedo, []);
 
     // state sync and handle change
 
@@ -89,8 +138,7 @@ export default (params: Params): Parcel => {
         setLastSource(source);
 
         let handleChange = (parcel, changeRequest) => {
-            setInnerParcel(parcel);
-            updateBufferState(bufferState => bufferState.concat(changeRequest));
+            bufferPush(parcel, changeRequest);
 
             let buffer = bufferParamRef.current;
             if(!buffer) {
@@ -101,32 +149,40 @@ export default (params: Params): Parcel => {
         };
 
         innerParcel = source
-            ._boundarySplit({handleChange})
             .modifyDown(derive)
+            ._boundarySplit({handleChange})
             .pipe(parcel => bufferState.reduce((accParcel, changeRequest) => {
                 return accParcel._changeAndReturn(pp => pp.dispatch(changeRequest))[0];
             }, parcel));
 
-        setInnerParcel(innerParcel);
+        bufferPush(innerParcel);
+        setSent(bufferStateRef.current.length);
     }
 
     // return
 
     return useMemo(() => {
-
-        let canSubmit = bufferState.length > 0;
-
         return innerParcel
             .modifyDown(() => ({
                 meta: {
                     submit,
                     reset,
-                    canSubmit
+                    undo,
+                    redo,
+                    canSubmit: sentRef.current < bufferStateRef.current.length,
+                    canUndo: historyIndexRef.current > 0,
+                    canRedo: historyIndexRef.current < bufferStateRef.current.length - 1,
+                    _history: bufferStateRef.current
                 }
             }))
             .modifyUp(derive);
 
-    }, [innerParcel, bufferState]);
+    }, [
+        innerParcel,
+        bufferStateRef.current,
+        historyIndexRef.current,
+        sentRef.current
+    ]);
 };
 
 export const parcelEqual = (parcelA: Parcel, parcelB: Parcel): boolean => {

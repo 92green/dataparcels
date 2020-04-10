@@ -366,6 +366,122 @@ describe('useBuffer derive', () => {
 
 });
 
+describe('useBuffer history', () => {
+
+    it('should push and undo', () => {
+        let source = new Parcel({
+            value: 100
+        });
+
+        let {result} = renderHook(() => useBuffer({source}));
+
+        expect(result.current.value).toBe(100);
+        expect(result.current.meta.canUndo).toBe(false);
+        expect(result.current.meta.canRedo).toBe(false);
+        expect(result.current.meta._history.length).toBe(1);
+
+        act(() => {
+            result.current.set(200);
+            result.current.set(300);
+        });
+
+        expect(result.current.value).toBe(300);
+        expect(result.current.meta.canUndo).toBe(true);
+        expect(result.current.meta.canRedo).toBe(false);
+        expect(result.current.meta._history.length).toBe(3);
+
+        act(() => {
+            result.current.meta.undo();
+        });
+
+        expect(result.current.value).toBe(200);
+        expect(result.current.meta.canUndo).toBe(true);
+        expect(result.current.meta.canRedo).toBe(true);
+        expect(result.current.meta._history.length).toBe(3);
+
+        act(() => {
+            result.current.meta.undo();
+            result.current.meta.undo();
+            result.current.meta.undo();
+        });
+
+        expect(result.current.value).toBe(100);
+        expect(result.current.meta.canUndo).toBe(false);
+        expect(result.current.meta.canRedo).toBe(true);
+        expect(result.current.meta._history.length).toBe(3);
+    });
+
+    it('should redo', () => {
+        let source = new Parcel({
+            value: 100
+        });
+
+        let {result} = renderHook(() => useBuffer({source}));
+
+        act(() => {
+            result.current.set(200);
+            result.current.set(300);
+            result.current.meta.undo();
+            result.current.meta.undo();
+        });
+
+        expect(result.current.value).toBe(100);
+        expect(result.current.meta.canUndo).toBe(false);
+        expect(result.current.meta.canRedo).toBe(true);
+        expect(result.current.meta._history.length).toBe(3);
+
+        act(() => {
+            result.current.meta.redo();
+        });
+
+        expect(result.current.value).toBe(200);
+        expect(result.current.meta.canUndo).toBe(true);
+        expect(result.current.meta.canRedo).toBe(true);
+        expect(result.current.meta._history.length).toBe(3);
+
+        act(() => {
+            result.current.meta.redo();
+            result.current.meta.redo();
+            result.current.meta.redo();
+        });
+
+        expect(result.current.value).toBe(300);
+        expect(result.current.meta.canUndo).toBe(true);
+        expect(result.current.meta.canRedo).toBe(false);
+        expect(result.current.meta._history.length).toBe(3);
+    });
+
+    it('should remove "newer" history items when making new changes after undoing', () => {
+        let source = new Parcel({
+            value: 100
+        });
+
+        let {result} = renderHook(() => useBuffer({source}));
+
+        act(() => {
+            result.current.set(200);
+            result.current.set(300);
+            result.current.meta.undo();
+            result.current.meta.undo();
+        });
+
+        expect(result.current.value).toBe(100);
+        expect(result.current.meta.canUndo).toBe(false);
+        expect(result.current.meta.canRedo).toBe(true);
+        expect(result.current.meta._history.length).toBe(3);
+
+        act(() => {
+            result.current.set(400);
+        });
+
+        expect(result.current.value).toBe(400);
+        expect(result.current.meta.canUndo).toBe(true);
+        expect(result.current.meta.canRedo).toBe(false);
+        expect(result.current.meta._history.length).toBe(2);
+    });
+
+});
+
 describe('parcel equals', () => {
     it('should test equality to see if a re-render should occur', () => {
         var child = {};
