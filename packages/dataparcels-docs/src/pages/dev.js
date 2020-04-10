@@ -21,30 +21,37 @@ export default function PersonEditor() {
         //         saves: 0
         //     }
         // }),
-        source: promisify('load', async () => {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            return {
-                value: {
-                    firstname: "Robert",
-                    lastname: "Clamps",
-                    saves: 0
-                }
-            };
-        }),
-        onChange: promisify('save', async ({value}) => {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            if(rejectRef.current) {
-                rejectRef.current = false;
-                throw new Error('NO!!!');
+        source: promisify({
+            key: 'load',
+            effect: async () => {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                return {
+                    value: {
+                        firstname: "Robert",
+                        lastname: "Clamps",
+                        saves: 0
+                    }
+                };
             }
+        }),
+        onChange: promisify({
+            key: 'save',
+            effect: async ({value}) => {
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
-            return {
-                value: {
-                    ...value,
-                    saves: value.saves + 1
+                if(rejectRef.current) {
+                    rejectRef.current = false;
+                    throw new Error('NO!!!');
                 }
-            };
+
+                return {
+                    value: {
+                        ...value,
+                        saves: value.saves + 1
+                    }
+                };
+            },
+            revert: true
         }),
         buffer: true
     });

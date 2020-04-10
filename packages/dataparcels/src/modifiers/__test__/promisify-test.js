@@ -18,7 +18,10 @@ describe('promisify', () => {
         });
 
         let promisifiedParcel = parcel
-            .modifyUp(promisify('foo', () => Promise.resolve()));
+            .modifyUp(promisify({
+                key: 'foo',
+                effect: () => Promise.resolve()
+            }));
 
         expect(promisifiedParcel.value).toBe(123);
         expect(promisifiedParcel.meta.fooStatus).toBe(undefined);
@@ -58,9 +61,12 @@ describe('promisify', () => {
         });
 
         parcel
-            .modifyUp(promisify('foo', ({value}) => Promise.resolve({
-                value: value + 1
-            })))
+            .modifyUp(promisify({
+                key: 'foo',
+                effect: ({value}) => Promise.resolve({
+                    value: value + 1
+                })
+            }))
             .set(456);
 
         await Promise.resolve();
@@ -88,7 +94,10 @@ describe('promisify', () => {
         });
 
         parcel
-            .modifyUp(promisify('foo', () => Promise.reject('error!')))
+            .modifyUp(promisify({
+                key: 'foo',
+                effect: () => Promise.reject('error!')
+            }))
             .set(456);
 
         await Promise.resolve();
@@ -127,16 +136,19 @@ describe('promisify', () => {
             resolveSecondPromise = () => reject('second-rejected');
         });
 
-        let promiseUpdater = promisify('foo', ({value}) => {
-            if(value === 'first') {
-                return firstPromise;
+        let promiseUpdater = promisify({
+            key: 'foo',
+            effect: ({value}) => {
+                if(value === 'first') {
+                    return firstPromise;
+                }
+                if(value === 'second') {
+                    return secondPromise;
+                }
+                return Promise.resolve({
+                    value: 'third-resolved'
+                });
             }
-            if(value === 'second') {
-                return secondPromise;
-            }
-            return Promise.resolve({
-                value: 'third-resolved'
-            });
         });
 
         parcel

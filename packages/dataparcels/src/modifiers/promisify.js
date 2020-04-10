@@ -13,7 +13,14 @@ type PartialData = {
 type PromiseFunction = (data: Data) => Promise<?PartialData>;
 type Update = (updater: (data: Data) => PartialData) => void;
 
-export default (key: string, fn: PromiseFunction) => {
+type Config = {
+    key: string,
+    effect: PromiseFunction
+};
+
+export default (config: Config) => {
+    let {key} = config;
+    let fn = config.effect;
     let count = 0;
 
     return (data: Data) => {
