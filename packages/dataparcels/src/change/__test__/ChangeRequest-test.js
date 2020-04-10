@@ -67,50 +67,6 @@ test('ChangeRequest merge() should merge other change requests nextFrameMetas', 
     });
 });
 
-test('ChangeRequest merge() should dedupe subsequent "set" actions with same keyPath', () => {
-    let existingChangeRequest = new ChangeRequest([
-        new Action({type: "set", keyPath: ['a'], payload: 1})
-    ]);
-
-    let mergableChangeRequest = new ChangeRequest([
-        new Action({type: "set", keyPath: ['a'], payload: 2}),
-        new Action({type: "set", keyPath: ['a'], payload: 3})
-    ]);
-
-    let mergedActions = existingChangeRequest
-        .merge(mergableChangeRequest)
-        .actions;
-
-    expect(mergedActions.length).toBe(1);
-    expect(mergedActions[0].payload).toBe(3);
-
-    // merge shouldn't happen if keypaths differ
-
-    let mergableChangeRequest2 = new ChangeRequest([
-        new Action({type: "set", keyPath: ['b'], payload: 2}),
-        new Action({type: "set", keyPath: ['a'], payload: 3})
-    ]);
-
-    let mergedActions2 = existingChangeRequest
-        .merge(mergableChangeRequest2)
-        .actions;
-
-    expect(mergedActions2.length).toBe(3);
-
-    // merge shouldn't happen if type differs
-
-    let mergableChangeRequest3 = new ChangeRequest([
-        new Action({type: "floop", keyPath: ['a'], payload: 2}),
-        new Action({type: "set", keyPath: ['a'], payload: 3})
-    ]);
-
-    let mergedActions3 = existingChangeRequest
-        .merge(mergableChangeRequest3)
-        .actions;
-
-    expect(mergedActions3.length).toBe(3);
-});
-
 test('ChangeRequest nextData() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
