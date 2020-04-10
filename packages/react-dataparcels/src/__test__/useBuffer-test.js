@@ -171,28 +171,28 @@ describe('useBuffer buffer', () => {
 
         let {result} = renderHook(() => useBuffer({source}));
 
-        expect(result.current.meta.buffered).toBe(false);
+        expect(result.current.meta.canSubmit).toBe(false);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.push("A");
         });
 
-        expect(result.current.meta.buffered).toBe(true);
+        expect(result.current.meta.canSubmit).toBe(true);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.push("B");
         });
 
-        expect(result.current.meta.buffered).toBe(true);
+        expect(result.current.meta.canSubmit).toBe(true);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.meta.submit();
         });
 
-        expect(result.current.meta.buffered).toBe(false);
+        expect(result.current.meta.canSubmit).toBe(false);
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange.mock.calls[0][0].value).toEqual(["A", "B"]);
     });
@@ -228,7 +228,7 @@ describe('useBuffer buffer', () => {
         let {result} = renderHook(() => useBuffer({source}));
 
         expect(result.current.value).toEqual([]);
-        expect(result.current.meta.buffered).toBe(false);
+        expect(result.current.meta.canSubmit).toBe(false);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
@@ -236,7 +236,7 @@ describe('useBuffer buffer', () => {
         });
 
         expect(result.current.value).toEqual(["A"]);
-        expect(result.current.meta.buffered).toBe(true);
+        expect(result.current.meta.canSubmit).toBe(true);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
@@ -244,7 +244,7 @@ describe('useBuffer buffer', () => {
         });
 
         expect(result.current.value).toEqual([]);
-        expect(result.current.meta.buffered).toBe(false);
+        expect(result.current.meta.canSubmit).toBe(false);
         expect(handleChange).toHaveBeenCalledTimes(0);
     });
 

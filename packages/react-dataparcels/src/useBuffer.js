@@ -114,14 +114,14 @@ export default (params: Params): Parcel => {
 
     return useMemo(() => {
 
-        let buffered = bufferState.length > 0;
+        let canSubmit = bufferState.length > 0;
 
         return innerParcel
             .modifyDown(() => ({
                 meta: {
                     submit,
                     reset,
-                    buffered
+                    canSubmit
                 }
             }))
             .modifyUp(derive);
