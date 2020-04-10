@@ -154,6 +154,38 @@ describe('promisify', () => {
         window.setTimeout = realSetTimeout;
     });
 
+    it('should fire promise and reject and revert', async () => {
+
+        // remove setTimeout because jest doesnt handle
+        // setTimeouts and promises all mixed together like this
+        let realSetTimeout = window.setTimeout;
+        window.setTimeout = (fn, ms) => fn();
+
+        let handleChange = jest.fn();
+
+        let parcel = new Parcel({
+            value: 123,
+            handleChange
+        });
+
+        parcel
+            .modifyUp(promisify({
+                key: 'foo',
+                effect: () => Promise.reject('error!'),
+                revert: true
+            }))
+            .set(456);
+
+        await Promise.resolve();
+
+        expect(handleChange).toHaveBeenCalledTimes(2);
+        expect(handleChange.mock.calls[1][0].value).toBe(123);
+        expect(handleChange.mock.calls[1][0].meta.fooStatus).toBe('rejected');
+        expect(handleChange.mock.calls[1][0].meta.fooError).toBe('error!');
+
+        window.setTimeout = realSetTimeout;
+    });
+
     it('should only allow update from most recently fired promise to enforce order', async () => {
 
         // remove setTimeout because jest doesnt handle
