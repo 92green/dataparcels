@@ -44,36 +44,26 @@ export default (config: Config) => {
 
         let effect = (update: Update) => {
             let lastChain = chain;
-            chain = fn(data).then(
-                (result) => {
+            chain = fn(data)
+                .then(result => ({result}), error => ({error}))
+                .then(data => lastChain.then((): any => data))
+                .then(({result, error}) => {
                     if(last && count !== countAtCall) return;
-                    lastChain.then(() => {
-                        update(combine(
-                            typeof result !== 'function' ? () => result : result,
-                            () => ({
-                                meta: {
-                                    [statusKey]: 'resolved',
-                                    [errorKey]: undefined
-                                }
-                            })
-                        ));
-                    });
-                },
-                (error) => {
-                    if(last && count !== countAtCall) return;
-                    lastChain.then(() => {
-                        update(combine(
-                            () => revert ? data.changeRequest.prevData : {},
-                            () => ({
-                                meta: {
-                                    [statusKey]: 'rejected',
-                                    [errorKey]: error
-                                }
-                            })
-                        ));
-                    });
-                }
-            );
+
+                    if(error) {
+                        result = revert ? data.changeRequest.prevData : {};
+                    }
+
+                    update(combine(
+                        typeof result !== 'function' ? () => result : result,
+                        () => ({
+                            meta: {
+                                [statusKey]: error ? 'rejected' : 'resolved',
+                                [errorKey]: error
+                            }
+                        })
+                    ));
+                });
         };
 
         return {

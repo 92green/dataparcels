@@ -11,6 +11,9 @@ let allResolvedPromises = async () => {
     await Promise.resolve();
     await Promise.resolve();
     await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
 };
 
 describe('promisify', () => {
@@ -270,6 +273,8 @@ describe('promisify', () => {
         resolveSecondPromise();
         await secondPromise.catch(() => {});
 
+        await allResolvedPromises();
+
         // now that 3rd has a
         expect(handleChange).toHaveBeenCalledTimes(6);
         expect(handleChange.mock.calls[3][0].value).toBe('first-resolved');
@@ -340,7 +345,6 @@ describe('promisify', () => {
 
         expect(handleChange).toHaveBeenCalledTimes(3);
 
-
         resolveThirdPromise();
         await thirdPromise;
 
@@ -349,6 +353,8 @@ describe('promisify', () => {
 
         resolveSecondPromise();
         await secondPromise.catch(() => {});
+
+        await allResolvedPromises();
 
         expect(handleChange).toHaveBeenCalledTimes(4);
         expect(handleChange.mock.calls[3][0].value).toBe('third-resolved');
