@@ -2,6 +2,17 @@
 import promisify from '../promisify';
 import Parcel from '../../parcel/Parcel';
 
+let allResolvedPromises = async () => {
+    // for jest to await Promise.resolve() that are not explicitly returned
+    // you need to call a await Promise.resolve(); for each Promise.resolve()
+    // these tests shouldnt have to care how many internl Promise.resolve()s there are
+    // so just call it heaps
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+};
+
 describe('promisify', () => {
     it('should fire promise and resolve', async () => {
 
@@ -36,7 +47,7 @@ describe('promisify', () => {
         expect(newParcel.meta.fooStatus).toBe('pending');
         expect(newParcel.meta.fooError).toBe(undefined);
 
-        await Promise.resolve();
+        await allResolvedPromises();
 
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange.mock.calls[1][0].value).toBe(456);
@@ -69,7 +80,7 @@ describe('promisify', () => {
             }))
             .set(456);
 
-        await Promise.resolve();
+        await allResolvedPromises();
 
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange.mock.calls[1][0].value).toBe(457);
@@ -114,6 +125,8 @@ describe('promisify', () => {
         resolvePromise();
         await promise;
 
+        await allResolvedPromises();
+
         expect(handleChange).toHaveBeenCalledTimes(3);
 
         expect(updater).toHaveBeenCalledTimes(1);
@@ -144,7 +157,7 @@ describe('promisify', () => {
             }))
             .set(456);
 
-        await Promise.resolve();
+        await allResolvedPromises();
 
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange.mock.calls[1][0].value).toBe(456);
@@ -176,7 +189,7 @@ describe('promisify', () => {
             }))
             .set(456);
 
-        await Promise.resolve();
+        await allResolvedPromises();
 
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange.mock.calls[1][0].value).toBe(123);
@@ -186,7 +199,87 @@ describe('promisify', () => {
         window.setTimeout = realSetTimeout;
     });
 
-    it('should only allow update from most recently fired promise to enforce order', async () => {
+    it('should process results in the same order they were fired', async () => {
+
+        // remove setTimeout because jest doesnt handle
+        // setTimeouts and promises all mixed together like this
+        let realSetTimeout = window.setTimeout;
+        window.setTimeout = (fn, ms) => fn();
+
+        let handleChange = jest.fn();
+
+        let parcel = new Parcel({
+            value: '',
+            handleChange
+        });
+
+        let resolveFirstPromise = () => {};
+        let firstPromise = new Promise(resolve => {
+            resolveFirstPromise = () => resolve({
+                value: 'first-resolved'
+            });
+        });
+
+        let resolveSecondPromise = () => {};
+        let secondPromise = new Promise(resolve => {
+            resolveSecondPromise = () => resolve({
+                value: 'second-resolved'
+            });
+        });
+
+        let resolveThirdPromise = () => {};
+        let thirdPromise = new Promise(resolve => {
+            resolveThirdPromise = () => resolve({
+                value: 'third-resolved'
+            });
+        });
+
+        let promiseUpdater = promisify({
+            key: 'foo',
+            effect: ({value}) => {
+                if(value === 'first') {
+                    return firstPromise;
+                }
+                if(value === 'second') {
+                    return secondPromise;
+                }
+                return thirdPromise;
+            }
+        });
+
+        parcel
+            .modifyUp(promiseUpdater)
+            .set('first');
+
+        handleChange.mock.calls[0][0]
+            .modifyUp(promiseUpdater)
+            .set('second');
+
+        handleChange.mock.calls[1][0]
+            .modifyUp(promiseUpdater)
+            .set('third');
+
+        expect(handleChange).toHaveBeenCalledTimes(3);
+
+        resolveThirdPromise();
+        await thirdPromise;
+
+        resolveFirstPromise();
+        await firstPromise;
+
+        resolveSecondPromise();
+        await secondPromise.catch(() => {});
+
+        // now that 3rd has a
+        expect(handleChange).toHaveBeenCalledTimes(6);
+        expect(handleChange.mock.calls[3][0].value).toBe('first-resolved');
+        expect(handleChange.mock.calls[4][0].value).toBe('second-resolved');
+        expect(handleChange.mock.calls[5][0].value).toBe('third-resolved');
+
+        window.setTimeout = realSetTimeout;
+    });
+
+    it('should only allow update from most recently fired promise if last = true', async () => {
 
         // remove setTimeout because jest doesnt handle
         // setTimeouts and promises all mixed together like this
@@ -212,6 +305,13 @@ describe('promisify', () => {
             resolveSecondPromise = () => reject('second-rejected');
         });
 
+        let resolveThirdPromise = () => {};
+        let thirdPromise = new Promise(resolve => {
+            resolveThirdPromise = () => resolve({
+                value: 'third-resolved'
+            });
+        });
+
         let promiseUpdater = promisify({
             key: 'foo',
             effect: ({value}) => {
@@ -221,10 +321,9 @@ describe('promisify', () => {
                 if(value === 'second') {
                     return secondPromise;
                 }
-                return Promise.resolve({
-                    value: 'third-resolved'
-                });
-            }
+                return thirdPromise;
+            },
+            last: true
         });
 
         parcel
@@ -241,10 +340,9 @@ describe('promisify', () => {
 
         expect(handleChange).toHaveBeenCalledTimes(3);
 
-        await Promise.resolve();
 
-        expect(handleChange).toHaveBeenCalledTimes(4);
-        expect(handleChange.mock.calls[3][0].value).toBe('third-resolved');
+        resolveThirdPromise();
+        await thirdPromise;
 
         resolveFirstPromise();
         await firstPromise;
@@ -253,6 +351,7 @@ describe('promisify', () => {
         await secondPromise.catch(() => {});
 
         expect(handleChange).toHaveBeenCalledTimes(4);
+        expect(handleChange.mock.calls[3][0].value).toBe('third-resolved');
 
         window.setTimeout = realSetTimeout;
     });

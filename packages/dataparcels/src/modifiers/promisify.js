@@ -21,13 +21,15 @@ type PromiseFunction = (data: Data) => Promise<?PartialData|Updater>;
 type Config = {
     key: string,
     effect: PromiseFunction,
-    revert?: boolean
+    revert?: boolean,
+    last?: boolean
 };
 
 export default (config: Config) => {
-    let {key, revert} = config;
+    let {key, revert, last} = config;
     let fn = config.effect;
     let count = 0;
+    let chain = Promise.resolve();
 
     return (data: Data) => {
 
@@ -40,32 +42,39 @@ export default (config: Config) => {
             [errorKey]: undefined
         };
 
-        let effect = (update: Update) => fn(data).then(
-            (result) => {
-                if(count !== countAtCall) return;
-                update(combine(
-                    typeof result !== 'function' ? () => result : result,
-                    () => ({
-                        meta: {
-                            [statusKey]: 'resolved',
-                            [errorKey]: undefined
-                        }
-                    })
-                ));
-            },
-            (error) => {
-                if(count !== countAtCall) return;
-                update(combine(
-                    () => revert ? data.changeRequest.prevData : {},
-                    () => ({
-                        meta: {
-                            [statusKey]: 'rejected',
-                            [errorKey]: error
-                        }
-                    })
-                ));
-            }
-        );
+        let effect = (update: Update) => {
+            let lastChain = chain;
+            chain = fn(data).then(
+                (result) => {
+                    if(last && count !== countAtCall) return;
+                    lastChain.then(() => {
+                        update(combine(
+                            typeof result !== 'function' ? () => result : result,
+                            () => ({
+                                meta: {
+                                    [statusKey]: 'resolved',
+                                    [errorKey]: undefined
+                                }
+                            })
+                        ));
+                    });
+                },
+                (error) => {
+                    if(last && count !== countAtCall) return;
+                    lastChain.then(() => {
+                        update(combine(
+                            () => revert ? data.changeRequest.prevData : {},
+                            () => ({
+                                meta: {
+                                    [statusKey]: 'rejected',
+                                    [errorKey]: error
+                                }
+                            })
+                        ));
+                    });
+                }
+            );
+        };
 
         return {
             meta,
