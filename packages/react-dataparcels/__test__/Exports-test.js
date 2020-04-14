@@ -9,6 +9,7 @@ import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
 import arrange from '../arrange';
 import cancel from '../cancel';
+import promisify from '../promisify';
 import translate from '../translate';
 import validation from '../validation';
 
@@ -33,6 +34,7 @@ import Internaldeleted from 'dataparcels/deleted';
 import InternalParcelNode from 'dataparcels/ParcelNode';
 import InternalAsNodes from 'dataparcels/arrange';
 import Internalcancel from 'dataparcels/cancel';
+import InternalPromisify from 'dataparcels/promisify';
 import InternalTranslate from 'dataparcels/translate';
 import InternalValidation from 'dataparcels/validation';
 
@@ -78,6 +80,10 @@ test('/arrange should export arrange', () => {
 
 test('/cancel should export cancel', () => {
     expect(cancel).toBe(Internalcancel);
+});
+
+test('/promisify should export promisify', () => {
+    expect(promisify).toBe(InternalPromisify);
 });
 
 test('/translate should export translate', () => {

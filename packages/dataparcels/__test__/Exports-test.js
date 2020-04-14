@@ -9,6 +9,7 @@ import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
 import arrange from '../arrange';
 import cancel from '../cancel';
+import promisify from '../promisify';
 import translate from '../translate';
 import validation from '../validation';
 
@@ -23,6 +24,7 @@ import Internaldeleted from '../lib/parcelData/deleted';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
 import InternalAsNodes from '../lib/parcelNode/arrange';
 import Internalcancel from '../lib/change/cancel';
+import InternalPromisify from '../lib/modifiers/promisify';
 import InternalTranslate from '../lib/modifiers/translate';
 import InternalValidation from '../lib/validation/validation';
 
@@ -56,6 +58,10 @@ test('/arrange should export arrange', () => {
 
 test('/cancel should export cancel', () => {
     expect(cancel).toBe(Internalcancel);
+});
+
+test('/promisify should export promisify', () => {
+    expect(promisify).toBe(InternalPromisify);
 });
 
 test('/translate should export translate', () => {
