@@ -4,21 +4,24 @@
 import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import asRaw from '../asRaw';
+import combine from '../combine';
 import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
-import asNode from '../asNode';
-import asChildNodes from '../asChildNodes';
+import arrange from '../arrange';
 import cancel from '../cancel';
+import promisify from '../promisify';
+import translate from '../translate';
 import validation from '../validation';
 
 // react-dataparcels
-import ParcelHoc from '../ParcelHoc';
+import Boundary from '../Boundary';
 import ParcelBoundary from '../ParcelBoundary';
-import ParcelBoundaryHoc from '../ParcelBoundaryHoc';
+import ParcelDrag from '../ParcelDrag';
 import useParcelBuffer from '../useParcelBuffer';
 import useParcelForm from '../useParcelForm';
 import useParcelState from '../useParcelState';
+import useParcel from '../useParcel';
+import useBuffer from '../useBuffer';
 import asyncChange from '../asyncChange';
 import asyncValue from '../asyncValue';
 
@@ -26,21 +29,24 @@ import asyncValue from '../asyncValue';
 import InternalParcel from 'dataparcels';
 import InternalAction from 'dataparcels/Action';
 import InternalChangeRequest from 'dataparcels/ChangeRequest';
-import InternalUpdateRaw from 'dataparcels/asRaw';
+import InternalCreateUpdater from 'dataparcels/combine';
 import Internaldeleted from 'dataparcels/deleted';
 import InternalParcelNode from 'dataparcels/ParcelNode';
-import InternalAsNode from 'dataparcels/asNode';
-import InternalAsNodes from 'dataparcels/asChildNodes';
+import InternalAsNodes from 'dataparcels/arrange';
 import Internalcancel from 'dataparcels/cancel';
+import InternalPromisify from 'dataparcels/promisify';
+import InternalTranslate from 'dataparcels/translate';
 import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
-import InternalParcelHoc from '../lib/deprecated/ParcelHoc';
+import InternalBoundary from '../lib/Boundary';
 import InternalParcelBoundary from '../lib/ParcelBoundary';
-import InternalParcelBoundaryHoc from '../lib/deprecated/ParcelBoundaryHoc';
+import InternalParcelDrag from '../lib/ParcelDrag';
 import InternalUseParcelBuffer from '../lib/useParcelBuffer';
 import InternalUseParcelForm from '../lib/useParcelForm';
 import InternalUseParcelState from '../lib/useParcelState';
+import InternalUseParcel from '../lib/useParcel';
+import InternalUseBuffer from '../lib/useBuffer';
 import InternalAsyncChange from '../lib/asyncChange';
 import InternalAsyncValue from '../lib/asyncValue';
 
@@ -56,8 +62,8 @@ test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
 });
 
-test('/asRaw should export asRaw', () => {
-    expect(asRaw).toBe(InternalUpdateRaw);
+test('/combine should export combine', () => {
+    expect(combine).toBe(InternalCreateUpdater);
 });
 
 test('/deleted should export deleted', () => {
@@ -68,32 +74,36 @@ test('/ParcelNode should export ParcelNode', () => {
     expect(ParcelNode).toBe(InternalParcelNode);
 });
 
-test('/asNode should export asNode', () => {
-    expect(asNode).toBe(InternalAsNode);
-});
-
-test('/asChildNodes should export asChildNodes', () => {
-    expect(asChildNodes).toBe(InternalAsNodes);
+test('/arrange should export arrange', () => {
+    expect(arrange).toBe(InternalAsNodes);
 });
 
 test('/cancel should export cancel', () => {
     expect(cancel).toBe(Internalcancel);
 });
 
+test('/promisify should export promisify', () => {
+    expect(promisify).toBe(InternalPromisify);
+});
+
+test('/translate should export translate', () => {
+    expect(translate).toBe(InternalTranslate);
+});
+
 test('/validation should export validation', () => {
     expect(validation).toBe(InternalValidation);
 });
 
-test('/ParcelHoc should export ParcelHoc', () => {
-    expect(ParcelHoc).toBe(InternalParcelHoc);
+test('/Boundary should export Boundary', () => {
+    expect(Boundary).toBe(InternalBoundary);
 });
 
 test('/ParcelBoundary should export ParcelBoundary', () => {
     expect(ParcelBoundary).toBe(InternalParcelBoundary);
 });
 
-test('/ParcelBoundaryHoc should export ParcelBoundaryHoc', () => {
-    expect(ParcelBoundaryHoc).toBe(InternalParcelBoundaryHoc);
+test('/ParcelDrag should export ParcelDrag', () => {
+    expect(ParcelDrag).toBe(InternalParcelDrag);
 });
 
 test('/useParcelBuffer should export useParcelBuffer', () => {
@@ -106,6 +116,14 @@ test('/useParcelForm should export useParcelForm', () => {
 
 test('/useParcelState should export useParcelState', () => {
     expect(useParcelState).toBe(InternalUseParcelState);
+});
+
+test('/useParcel should export useParcel', () => {
+    expect(useParcel).toBe(InternalUseParcel);
+});
+
+test('/useBuffer should export useBuffer', () => {
+    expect(useBuffer).toBe(InternalUseBuffer);
 });
 
 test('/asyncChange should export asyncChange', () => {

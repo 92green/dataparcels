@@ -4,12 +4,13 @@
 import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import asRaw from '../asRaw';
+import combine from '../combine';
 import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
-import asNode from '../asNode';
-import asChildNodes from '../asChildNodes';
+import arrange from '../arrange';
 import cancel from '../cancel';
+import promisify from '../promisify';
+import translate from '../translate';
 import validation from '../validation';
 
 // internal files
@@ -18,12 +19,13 @@ import InternalParcel from '../src/parcel/Parcel';
 // internal lib files
 import InternalAction from '../lib/change/Action';
 import InternalChangeRequest from '../lib/change/ChangeRequest';
-import InternalUpdateRaw from '../lib/parcelData/asRaw';
+import InternalCreateUpdater from '../lib/parcelData/combine';
 import Internaldeleted from '../lib/parcelData/deleted';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
-import InternalAsNode from '../lib/parcelNode/asNode';
-import InternalAsNodes from '../lib/parcelNode/asChildNodes';
+import InternalAsNodes from '../lib/parcelNode/arrange';
 import Internalcancel from '../lib/change/cancel';
+import InternalPromisify from '../lib/modifiers/promisify';
+import InternalTranslate from '../lib/modifiers/translate';
 import InternalValidation from '../lib/validation/validation';
 
 test('index should export Parcel', () => {
@@ -38,8 +40,8 @@ test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
 });
 
-test('/asRaw should export asRaw', () => {
-    expect(asRaw).toBe(InternalUpdateRaw);
+test('/combine should export combine', () => {
+    expect(combine).toBe(InternalCreateUpdater);
 });
 
 test('/deleted should export deleted', () => {
@@ -50,16 +52,20 @@ test('/ParcelNode should export ParcelNode', () => {
     expect(ParcelNode).toBe(InternalParcelNode);
 });
 
-test('/asNode should export asNode', () => {
-    expect(asNode).toBe(InternalAsNode);
-});
-
-test('/asChildNodes should export asChildNodes', () => {
-    expect(asChildNodes).toBe(InternalAsNodes);
+test('/arrange should export arrange', () => {
+    expect(arrange).toBe(InternalAsNodes);
 });
 
 test('/cancel should export cancel', () => {
     expect(cancel).toBe(Internalcancel);
+});
+
+test('/promisify should export promisify', () => {
+    expect(promisify).toBe(InternalPromisify);
+});
+
+test('/translate should export translate', () => {
+    expect(translate).toBe(InternalTranslate);
 });
 
 test('/validation should export validation', () => {

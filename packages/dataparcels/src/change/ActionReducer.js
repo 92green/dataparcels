@@ -1,24 +1,18 @@
 // @flow
-import type ChangeRequest from './ChangeRequest';
 import type Action from './Action';
 import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 
 import pipe from 'unmutable/lib/util/pipe';
 import findLastIndex from 'unmutable/lib/findLastIndex';
-import {ReducerInvalidActionError} from '../errors/Errors';
-import {ReducerInvalidStepError} from '../errors/Errors';
 
 import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
-import map from '../parcelData/map';
-import pop from '../parcelData/pop';
 import push from '../parcelData/push';
 import setMeta from '../parcelData/setMeta';
 import setSelf from '../parcelData/setSelf';
-import shift from '../parcelData/shift';
 import swap from '../parcelData/swap';
 import swapNext from '../parcelData/swapNext';
 import swapPrev from '../parcelData/swapPrev';
@@ -26,20 +20,19 @@ import unshift from '../parcelData/unshift';
 import parcelDataUpdate from '../parcelData/update';
 
 const actionMap = {
+    batch: (lastKey, actions) => doDeepActionArray(actions),
     delete: del, //: (lastKey) => del(lastKey),
     insertAfter, //: (lastKey, value) => insertAfter(lastKey, value),
     insertBefore, //: (lastKey, value) => insertBefore(lastKey, value),
-    map: (lastKey, updater) => map(updater),
-    pop, //: () => pop(),
     push: (lastKey, values) => push(...values),
     setData: (lastKey, parcelData) => () => parcelData,
     setMeta: (lastKey, meta) => setMeta(meta),
     set: (lastKey, value) => setSelf(value),
-    shift, //: () => shift(),
     swap, //: (lastKey, swapKey) => swap(lastKey, swapKey),
     swapNext, //: (lastKey) => swapNext(lastKey),
     swapPrev, //: (lastKey) => swapPrev(lastKey),
-    unshift: (lastKey, values) => unshift(...values)
+    unshift: (lastKey, values) => unshift(...values),
+    update: (lastKey, updater) => updater
 };
 
 const parentActionMap = {
@@ -54,23 +47,26 @@ const parentActionMap = {
 const stepMap = {
     get: ({key}, next) => parcelDataUpdate(key, next),
     md: ({updater}, next) => pipe(updater, next),
-    mu: ({updater, changeRequest}, next) => (prevData) => {
+    mu: ({updater, changeRequest, effectUpdate}, next) => (prevData) => {
         let nextData = next(prevData);
-        return updater(
+        let {effect, ...updated} = updater(
             nextData,
             changeRequest && changeRequest._create({
                 prevData,
                 nextData
             })
         );
+
+        if(effect) {
+            effect(effectUpdate);
+        }
+
+        return updated;
     }
 };
 
 const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
     let fn = actionMap[type];
-    if(!fn) {
-        throw ReducerInvalidActionError(type);
-    }
     return fn(keyPath.slice(-1)[0], payload);
 };
 
@@ -89,16 +85,17 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
 
     return steps.reduceRight((next, step) => {
         let fn = stepMap[step.type];
-        if(!fn) {
-            throw ReducerInvalidStepError(step.type);
-        }
         return fn(step, next);
     }, doAction(action));
 };
 
-export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?ParcelData => {
+const doDeepActionArray = (actions: Action|Action[]) => (parcelData: ParcelData): ?ParcelData => {
     let someSucceeded = false;
-    return changeRequest.actions.reduce((parcelData, action) => {
+    return [].concat(actions).reduce((parcelData, action) => {
+        if(!parcelData) {
+            return;
+        }
+
         try {
             let newParcelData = doDeepAction(action)(parcelData);
             someSucceeded = true;
@@ -111,3 +108,5 @@ export default (changeRequest: ChangeRequest) => (parcelData: ParcelData): ?Parc
         }
     }, parcelData);
 };
+
+export default doDeepActionArray;

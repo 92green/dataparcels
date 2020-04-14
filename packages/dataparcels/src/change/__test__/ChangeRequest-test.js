@@ -167,11 +167,6 @@ test('ChangeRequest prevData should return previous data', () => {
     expect(expectedValue).toEqual(value);
 });
 
-test('ChangeRequest should throw error if data is accessed before setting prevData()', () => {
-    expect(() => new ChangeRequest().nextData).toThrowError(`ChangeRequest data cannot be accessed before setting changeRequest.prevData`);
-    expect(() => new ChangeRequest().prevData).toThrowError(`ChangeRequest data cannot be accessed before setting changeRequest.prevData`);
-});
-
 test('ChangeRequest should keep originId and originPath', () => {
     expect.assertions(2);
 
@@ -187,7 +182,7 @@ test('ChangeRequest should keep originId and originPath', () => {
 
     new Parcel(data)
         .get('abc')
-        .onChange(456);
+        .set(456);
 });
 
 test('ChangeRequest should cache its data after its calculated, so subsequent calls are faster', () => {
@@ -493,32 +488,6 @@ test('ChangeRequest hasDataChanged should indicate if value changed in array, id
     expect(basedChangeRequest.hasDataChanged()).toBe(true);
 });
 
-test('ChangeRequest should throw errors when attempted to set getters', () => {
-    let readOnly = 'This property is read-only';
-
-    let changeRequest = new ChangeRequest();
-
-    expect(() => {
-        changeRequest.nextData = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.prevData = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.actions = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.originId = 123;
-    }).toThrow(readOnly);
-
-    expect(() => {
-        changeRequest.originPath = 123;
-    }).toThrow(readOnly);
-});
-
 test('ChangeRequest _revert() should call _revertCallback and pass self', () => {
 
     let changeRequest = new ChangeRequest();
@@ -531,3 +500,27 @@ test('ChangeRequest _revert() should call _revertCallback and pass self', () => 
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(changeRequest);
 });
+
+test('ChangeRequest squash should merge actions and squash it into a single action', () => {
+
+    let actions = [
+        new ChangeRequest(new Action({type: "???", keyPath: ['a']})),
+        new ChangeRequest(new Action({type: "!!!", keyPath: ['a']})),
+        new ChangeRequest(new Action({type: "...", keyPath: ['b']})),
+    ];
+
+    let squashed = ChangeRequest.squash(actions);
+
+    expect(squashed.actions.length).toBe(1);
+    expect(squashed.actions[0].type).toBe('batch');
+    expect(squashed.actions[0].payload.length).toBe(3);
+});
+
+
+test('ChangeRequest squash should merge 0 actions', () => {
+
+    let squashed = ChangeRequest.squash([]);
+
+    expect(squashed.actions.length).toBe(0);
+});
+

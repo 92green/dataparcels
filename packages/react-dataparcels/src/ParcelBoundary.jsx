@@ -17,8 +17,7 @@ type Props = {
     buffer?: boolean,
     debounce?: number,
     beforeChange?: ParcelValueUpdater|ParcelValueUpdater[],
-    modifyBeforeUpdate?: ParcelValueUpdater|ParcelValueUpdater[],
-    keepValue?: boolean
+    modifyBeforeUpdate?: ParcelValueUpdater|ParcelValueUpdater[]
 };
 
 export default function ParcelBoundary(props: Props): Node {
@@ -30,8 +29,7 @@ export default function ParcelBoundary(props: Props): Node {
         buffer = false,
         debounce = 0,
         beforeChange = [],
-        modifyBeforeUpdate = [],
-        keepValue = false
+        modifyBeforeUpdate = []
     } = props;
 
     // deprecation notice
@@ -44,8 +42,7 @@ export default function ParcelBoundary(props: Props): Node {
         parcel,
         debounce,
         buffer,
-        beforeChange,
-        keepValue
+        beforeChange
     });
 
     let renderChildren = () => children(innerParcel, parcelBufferControl);

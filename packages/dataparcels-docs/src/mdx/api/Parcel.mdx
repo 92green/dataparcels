@@ -402,7 +402,7 @@ It triggers a change that replaces the current value in the Parcel with the `val
 
 If called on a ParentParcel, any child information that the Parcel had is removed, such as child keys or meta.
 
-It is equivalent to calling [set()](#set()) with no key.
+It is equivalent to calling [set()](#set()).
 
 ```js
 let parcel = new Parcel({
@@ -523,7 +523,7 @@ parcel.set(456);
 delete(): void // only on ChildParcels
 ```
 
-Calling `delete()` will trigger a change that will delete the current Parcel off of its parent. This variation of the `delete()` method only exists on ChildParcels.
+Calling `delete()` will trigger a change that will delete the current Parcel off of its parent. It only exists on ChildParcels.
 
 ```js
 let value = {

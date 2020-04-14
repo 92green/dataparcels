@@ -22,8 +22,7 @@ describe('useParcelBuffer should use config.parcel', () => {
             child: undefined,
             key: '^',
             meta: {
-                _reset: false,
-                _submit: false
+                _control: null
             }
         });
     });
@@ -494,7 +493,7 @@ describe('useParcelBuffer should use config.beforeChange', () => {
 
         let {result} = renderHook(() => useParcelBuffer({
             parcel,
-            beforeChange: value => value * 2,
+            beforeChange: ({value}) => ({value: value * 2}),
             buffer: false
         }));
 
@@ -509,8 +508,8 @@ describe('useParcelBuffer should use config.beforeChange', () => {
         let {result} = renderHook(() => useParcelBuffer({
             parcel,
             beforeChange: [
-                value => value * 2,
-                value => value + 5
+                ({value}) => ({value: value * 2}),
+                ({value}) => ({value: value + 5})
             ],
             buffer: false
         }));
@@ -529,7 +528,7 @@ describe('useParcelBuffer should use config.beforeChange', () => {
 
         let {result} = renderHook(() => useParcelBuffer({
             parcel,
-            beforeChange: value => value * 2,
+            beforeChange: ({value}) => ({value: value * 2}),
             buffer: false
         }));
 
@@ -552,8 +551,8 @@ describe('useParcelBuffer should use config.beforeChange', () => {
         let {result} = renderHook(() => useParcelBuffer({
             parcel,
             beforeChange: [
-                value => value * 2,
-                value => value + 5
+                ({value}) => ({value: value * 2}),
+                ({value}) => ({value: value + 5})
             ],
             buffer: false
         }));
@@ -573,7 +572,7 @@ describe('useParcelBuffer should use config.beforeChange', () => {
 
         let {result, rerender} = renderHook(() => useParcelBuffer({
             parcel,
-            beforeChange: value => value * 2
+            beforeChange: ({value}) => ({value: value * 2})
         }));
 
         act(() => {
@@ -582,54 +581,6 @@ describe('useParcelBuffer should use config.beforeChange', () => {
         });
 
         expect(result.current[0].value).toBe(200);
-    });
-
-});
-
-describe('useParcelBuffer should use config.keepValue', () => {
-
-    it('should keep value if change originated from self and different value is passed down', () => {
-
-        let handleChange = jest.fn();
-
-        let parcel = new Parcel({
-            value: {
-                abc: 100
-            },
-            handleChange
-        });
-
-        let {result, rerender} = renderHookWithProps({parcel}, ({parcel}) => useParcelBuffer({
-            keepValue: true,
-            buffer: false,
-            parcel: parcel
-                .get('abc')
-                .modifyDown(value => `${value}`)
-                .modifyUp(value => Number(value))
-        }));
-
-        expect(result.current[0].value).toBe("100");
-
-        act(() => {
-            result.current[0].set("100!");
-        });
-
-        let newParcel = handleChange.mock.calls[0][0];
-        newParcel._frameMeta = {
-            lastOriginId: handleChange.mock.calls[0][1].originId
-        };
-
-        expect(newParcel.value).toEqual({
-            abc: NaN
-        });
-
-        act(() => {
-            rerender({
-                parcel: newParcel
-            });
-        });
-
-        expect(result.current[0].value).toBe("100!");
     });
 
 });

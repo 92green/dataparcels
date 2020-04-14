@@ -8,22 +8,20 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelMapper} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
 import type {ParcelParent} from '../types/Types';
-import type {ParcelRegistry} from '../types/Types';
+import type {ParcelTreeShare} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 import type {ParentType} from '../types/Types';
 
-import {ReadOnlyError} from '../errors/Errors';
 import {ParcelTypeMethodMismatch} from '../errors/Errors';
 
-import cancel from '../change/cancel';
 import ChangeRequest from '../change/ChangeRequest';
 import Action from '../change/Action';
 
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 import deleted from '../parcelData/deleted';
-import prepUpdater from '../parcelData/prepUpdater';
+import combine from '../parcelData/combine';
 import setMetaDefault from '../parcelData/setMetaDefault';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
@@ -45,6 +43,11 @@ import HashString from '../util/HashString';
 const doNothing = (ii: any): any => ii;
 const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
 
+const Parent = 'Parent';
+const Child = 'Child';
+const Indexed = 'Indexed';
+const Element = 'Element';
+
 const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
     dispatchId: '',
@@ -54,10 +57,13 @@ const DEFAULT_CONFIG_INTERNAL = () => ({
     rawPath: ["^"],
     parent: {
         isIndexed: false,
-        isChildFirst: false,
-        isChildLast: false
+        isFirstChild: false,
+        isLastChild: false
     },
-    registry: {},
+    treeShare: {
+        registry: {},
+        effectRegistry: {}
+    },
     updateChangeRequestOnDispatch: doNothing
 });
 
@@ -77,12 +83,13 @@ export default class Parcel {
     _isIndexed: boolean;
     _isParent: boolean;
     _frameMeta: {[key: string]: any};
-    _methods: {[key: string]: any};
     _onHandleChange: ?Function;
     _parcelData: ParcelData;
     _parent: ParcelParent;
-    _registry: ParcelRegistry;
+    _treeShare: ParcelTreeShare;
     _updateChangeRequestOnDispatch: Function;
+    _setInput: Function;
+    _setCheckbox: Function;
 
     //
     // public methods
@@ -90,8 +97,8 @@ export default class Parcel {
 
     // Spread methods
     spread: Function;
-    spreadDOM: Function;
-    spreadDOMCheckbox: Function;
+    spreadInput: Function;
+    spreadCheckbox: Function;
 
     // Branch methods
     get: Function;
@@ -102,24 +109,11 @@ export default class Parcel {
 
     // Parent methods
     has: Function;
-    size: Function;
-
-    // Child methods
-    isFirst: Function;
-    isLast: Function;
-
-    // Side-effect methods
-    spy: Function;
-    spyChange: Function;
 
     // Change methods
-    onChange: Function;
-    onChangeDOM: Function;
-    onChangeDOMCheckbox: Function;
     set: Function;
     update: Function;
     delete: Function;
-    map: Function;
 
     // Advanced change methods
     setMeta: Function;
@@ -140,13 +134,6 @@ export default class Parcel {
     modifyDown: Function;
     modifyUp: Function;
     initialMeta: Function;
-
-    // Type methods
-    isChild = (): boolean => this._isChild;
-    isElement = (): boolean => this._isElement;
-    isIndexed = (): boolean => this._isIndexed;
-    isParent = (): boolean => this._isParent;
-    isTopLevel = (): boolean => !this._isChild;
 
     // Composition methods
     pipe = (...updaters: ParcelUpdater[]): Parcel => pipeWith(this, ...updaters);
@@ -169,7 +156,7 @@ export default class Parcel {
             rawId,
             rawPath,
             parent,
-            registry,
+            treeShare,
             updateChangeRequestOnDispatch
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
@@ -192,8 +179,16 @@ export default class Parcel {
         this._isIndexed = isIndexedValue(value);
         this._isParent = isParentValue(value);
         this._parent = parent;
-        this._registry = registry;
-        this._registry[this._getIdFromRawId(rawId)] = this;
+        this._treeShare = treeShare;
+        treeShare.registry[this._getIdFromRawId(rawId)] = this;
+
+        this._setInput = (event: Object) => {
+            this.set(event.currentTarget.value);
+        };
+
+        this._setCheckbox = (event: Object) => {
+            this.set(event.currentTarget.checked);
+        };
 
         //
         // method prep
@@ -217,11 +212,6 @@ export default class Parcel {
             return onlyType(type, name, () => fireAction(name, payload, keyPath))();
         };
 
-        const Parent = 'Parent';
-        const Child = 'Child';
-        const Indexed = 'Indexed';
-        const Element = 'Element';
-
         //
         // public methods
         //
@@ -230,17 +220,17 @@ export default class Parcel {
 
         this.spread = (notFoundValue: any): any => ({
             value: this._getValue(notFoundValue),
-            onChange: this.onChange
+            onChange: this.set
         });
 
-        this.spreadDOM = (notFoundValue: any): any => ({
+        this.spreadInput = (notFoundValue: any): any => ({
             value: this._getValue(notFoundValue),
-            onChange: this.onChangeDOM
+            onChange: this._setInput
         });
 
-        this.spreadDOMCheckbox = (notFoundValue: ?boolean): any => ({
+        this.spreadCheckbox = (notFoundValue: ?boolean): any => ({
             checked: !!this._getValue(notFoundValue),
-            onChange: this.onChangeDOMCheckbox
+            onChange: this._setCheckbox
         });
 
         // Branch methods
@@ -271,11 +261,32 @@ export default class Parcel {
         });
 
         this.metaAsParcel = (key: string): Parcel => {
-            return new Parcel({
-                value: this.meta[key],
-                handleChange: ({value}) => this.setMeta({
-                    [key]: value
-                })
+            return this._create({
+                parcelData: {
+                    value: this.meta[key],
+                    meta: this.meta
+                },
+                handleChange: (parcel, changeRequest) => {
+                    let newActions = changeRequest.actions.filter(action => action.type === 'setMeta');
+
+                    if(newActions.length !== changeRequest.actions.length) {
+                        newActions.unshift(
+                            new Action({
+                                type: 'setMeta',
+                                payload: {
+                                    [key]: parcel.value
+                                }
+                            })
+                        );
+                    }
+
+                    this.dispatch(
+                        changeRequest._create({
+                            actions: newActions
+                        })
+                    );
+                },
+                rawId: this._idPushModifier(`mp-${key}`)
             });
         };
 
@@ -287,62 +298,17 @@ export default class Parcel {
             return parcelHas(key)(this._parcelData);
         });
 
-        this.size = onlyType(Parent, 'size', (): number => size()(this.value));
-
-        // Child methods
-
-        this.isFirst = (): boolean => this._parent.isChildFirst;
-        this.isLast = (): boolean => this._parent.isChildLast;
-
-        // Side-effect methods
-
-        // Types(`spy()`, `sideEffect`, `function`)(sideEffect);
-        this.spy = (sideEffect: Function): Parcel => {
-            sideEffect(this);
-            return this;
-        };
-
-        // Types(`spyChange()`, `sideEffect`, `function`)(sideEffect);
-        this.spyChange = (sideEffect: Function): Parcel => {
-            return this._create({
-                rawId: this._idPushModifier('sc'),
-                updateChangeRequestOnDispatch: (changeRequest: ChangeRequest): ChangeRequest => {
-                    let basedChangeRequest = changeRequest._create({
-                        prevData: this.data
-                    });
-                    sideEffect(basedChangeRequest);
-                    return changeRequest;
-                }
-            });
-        };
-
         // Change methods
-
-        this.onChange = (value: any) => this.set(value);
-
-        // Types(`onChangeDOM()`, `event`, `event`)(event);
-        this.onChangeDOM = (event: Object) => {
-            this.set(event.currentTarget.value);
-        };
-
-        // Types(`onChangeDOMCheckbox()`, `event`, `event`)(event);
-        this.onChangeDOMCheckbox = (event: Object) => {
-            this.set(event.currentTarget.checked);
-        };
 
         this.set = (value: any) => fireAction('set', value);
 
         // Types(`update()`, `updater`, `function`)(updater);
         this.update = (updater: ParcelValueUpdater) => {
-            fireAction('setData', prepUpdater(updater)(this._parcelData));
+            let preparedUpdater = combine(updater);
+            fireAction('update', preparedUpdater);
         };
 
         this.delete = () => fireActionOnlyType(Child, 'delete');
-
-        // Types(`map()`, `updater`, `function`)(updater);
-        this.map = (updater: ParcelValueUpdater) => {
-            fireActionOnlyType(Parent, 'map', prepUpdater(updater));
-        };
 
         // Advanced change methods
 
@@ -361,13 +327,17 @@ export default class Parcel {
 
         this.push = (...values: Array<any>) => fireActionOnlyType(Indexed, 'push', values);
 
-        this.pop = () => fireActionOnlyType(Indexed, 'pop');
+        this.pop = onlyType(Indexed, 'pop', () => this.get(-1).delete());
 
-        this.shift = () => fireActionOnlyType(Indexed, 'shift');
+        this.shift = onlyType(Indexed, 'shift', () => this.get(0).delete());
 
-        this.swap = (keyA: Key|Index, keyB: Key|Index) => {
-            fireActionOnlyType(Indexed, 'swap', keyB, [keyA]);
-        };
+        this.swap = onlyType(Indexed, 'swap', (keyOrIndexA: Key|Index, keyOrIndexB: Key|Index) => {
+            let keyA: ?Key = keyOrIndexToKey(keyOrIndexA)(this._parcelData);
+            let keyB: ?Key = keyOrIndexToKey(keyOrIndexB)(this._parcelData);
+            if(keyA !== undefined && keyB !== undefined) {
+                fireAction('swap', keyB, [keyA]);
+            }
+        });
 
         this.swapNext = () => fireActionOnlyType(Element, 'swapNext');
 
@@ -379,33 +349,28 @@ export default class Parcel {
 
         // Types(`modifyDown()`, `updater`, `function`)(updater);
         this.modifyDown = (updater: ParcelValueUpdater): Parcel => {
-            let parcelDataUpdater = prepUpdater(updater);
+            let preparedUpdater = combine(updater);
             return this._create({
                 rawId: this._idPushModifierUpdater('md', updater),
-                parcelData: parcelDataUpdater(this._parcelData),
+                parcelData: preparedUpdater(this._parcelData),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'md',
-                    updater: parcelDataUpdater
+                    updater: parcelData => preparedUpdater(parcelData)
                 })
             });
         };
 
         // Types(`modifyUp()`, `updater`, `function`)(updater);
         this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
-            let parcelDataUpdater = (parcelData: ParcelData, changeRequest: ChangeRequest): ParcelData => {
-                let nextData = prepUpdater(updater)(parcelData, changeRequest);
-                if(nextData.value === cancel) {
-                    throw new Error('CANCEL');
-                }
-                return nextData;
-            };
+            let preparedUpdater = combine(updater);
 
             return this._create({
                 rawId: this._idPushModifierUpdater('mu', updater),
                 updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
                     type: 'mu',
-                    updater: parcelDataUpdater,
-                    changeRequest
+                    updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest}),
+                    changeRequest,
+                    effectUpdate: this._effectUpdate
                 })
             });
         };
@@ -430,6 +395,7 @@ export default class Parcel {
                 })
             });
         };
+
     }
 
     //
@@ -445,7 +411,7 @@ export default class Parcel {
             frameMeta = this._frameMeta,
             parcelData = this._parcelData,
             parent = this._parent,
-            registry = this._registry,
+            treeShare = this._treeShare,
             updateChangeRequestOnDispatch = doNothing
         } = createParcelConfig;
 
@@ -468,7 +434,7 @@ export default class Parcel {
                 rawId,
                 rawPath,
                 parent,
-                registry,
+                treeShare,
                 updateChangeRequestOnDispatch
             }
         );
@@ -525,7 +491,7 @@ export default class Parcel {
     };
 
     _dispatchToParent = (changeRequest: ChangeRequest) => {
-        let parcel = this._registry[this._dispatchId];
+        let parcel = this._treeShare.registry[this._dispatchId];
         if(parcel) {
             parcel._dispatch(changeRequest);
         }
@@ -566,21 +532,18 @@ export default class Parcel {
     _get = (key: Key|Index, notFoundValue: any): Parcel => {
         //Types(`get()`, `key`, `keyIndex`)(key);
 
-        let stringKey: Key = keyOrIndexToKey(key)(this._parcelData);
-        let cachedChildParcel: ?Parcel = this._childParcelCache[stringKey];
-        if(cachedChildParcel) {
-            return cachedChildParcel;
+        let stringKey: ?Key = keyOrIndexToKey(key)(this._parcelData);
+
+        if(stringKey) {
+            let cachedChildParcel: ?Parcel = this._childParcelCache[stringKey];
+            if(cachedChildParcel) {
+                return cachedChildParcel;
+            }
         }
 
         this._prepareChildKeys();
         let childParcelData = parcelGet(key, notFoundValue)(this._parcelData);
-
-        // this shouldn't happen in reality, but I cant prove that to flow right now
-        // and it rightly should be an error
-        if(childParcelData.key === undefined) {
-            throw new Error();
-        }
-
+        // $FlowFixMe - childParcelData will always have a key, but internal types arent good enough to tell flow
         let childKey: Key = childParcelData.key;
 
         let childOnDispatch = (changeRequest) => changeRequest._addStep({
@@ -591,8 +554,8 @@ export default class Parcel {
         let {child} = this._parcelData;
         let childIsNotEmpty = size()(child) > 0;
         let isIndexed = this._isIndexed;
-        let isChildFirst = childIsNotEmpty && first()(child).key === childKey;
-        let isChildLast = childIsNotEmpty && last()(child).key === childKey;
+        let isFirstChild = childIsNotEmpty && first()(child).key === childKey;
+        let isLastChild = childIsNotEmpty && last()(child).key === childKey;
 
         let rawId = [...this._rawId, isIndexed ? childKey : escapeKey(childKey)];
         let rawPath = [...this._rawPath, childKey];
@@ -604,12 +567,15 @@ export default class Parcel {
             rawPath,
             parent: {
                 isIndexed,
-                isChildFirst,
-                isChildLast
+                isFirstChild,
+                isLastChild
             }
         });
 
-        this._childParcelCache[stringKey] = childParcel;
+        if(stringKey) {
+            this._childParcelCache[stringKey] = childParcel;
+        }
+
         return childParcel;
     };
 
@@ -629,12 +595,7 @@ export default class Parcel {
     };
 
     _idPushModifierUpdater = (prefix: string, updater: ParcelValueUpdater): string[] => {
-        let hash = (fn: Function): string => `${HashString(fn.toString())}`;
-        let id = updater._asRaw
-            ? `s${hash(updater._updater || updater)}`
-            : hash(updater);
-
-        return this._idPushModifier(`${prefix}-${id}`);
+        return this._idPushModifier(`${prefix}-${HashString((updater._updater || updater).toString())}`);
     };
 
     // prepare child keys only once per parcel instance
@@ -644,6 +605,29 @@ export default class Parcel {
         if(!this._parcelData.child) {
             this._parcelData = prepareChildKeys()(this._parcelData);
         }
+    };
+
+    _effectUpdate = (effectUpdater: ParcelValueUpdater) => {
+        let {_treeShare} = this;
+        let effectId = `${this.id}-${HashString(effectUpdater.toString())}`;
+
+        // throttle effects with the same effectId
+        // the delay added by throttling is fine because these effects are async anyway
+        if(_treeShare.effectRegistry[effectId]) {
+            return;
+        }
+        _treeShare.effectRegistry[effectId] = true;
+
+        setTimeout(() => {
+            // apply the effect to the current version of the corresponding parcel
+            let parcel = _treeShare.registry[this.id];
+            if(parcel) {
+                // remember to make this action exempt from history
+                // when history is added
+                parcel.update(effectUpdater);
+            }
+            delete _treeShare.effectRegistry[effectId];
+        }, 100);
     };
 
     //
@@ -656,18 +640,8 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set data(value: any) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get value(): * {
         return this._parcelData.value;
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set value(value: any) {
-        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -677,18 +651,8 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set meta(value: any) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get key(): Key {
         return this._getKeyFromRawPath(this._rawPath);
-    }
-
-    // $FlowFixMe - this doesn't have side effects
-    set key(value: any) {
-        throw ReadOnlyError();
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -697,17 +661,43 @@ export default class Parcel {
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set id(value: any) {
-        throw ReadOnlyError();
-    }
-
-    // $FlowFixMe - this doesn't have side effects
     get path(): Array<Key> {
         return this._rawPath.slice(1);
     }
 
     // $FlowFixMe - this doesn't have side effects
-    set path(value: any) {
-        throw ReadOnlyError();
+    get size(): number {
+        return this._isParent ? size()(this.value) : 0;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get isFirstChild(): boolean {
+        return this._isChild ? this._parent.isFirstChild : false;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get isLastChild(): boolean {
+        return this._isChild ? this._parent.isLastChild : false;
+    }
+
+    // $FlowFixMe - this doesn't have side effects
+    get isOnlyChild(): boolean {
+        return this._isChild ? (this._parent.isFirstChild && this._parent.isLastChild) : false;
+    }
+
+    get isChild(): boolean {
+        return this._isChild;
+    }
+
+    get isElement(): boolean {
+        return this._isElement;
+    }
+
+    get isIndexed(): boolean {
+        return this._isIndexed;
+    }
+
+    get isParent(): boolean {
+        return this._isParent;
     }
 }

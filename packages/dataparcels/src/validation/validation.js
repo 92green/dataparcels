@@ -1,16 +1,28 @@
 // @flow
 
+import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
 
-import asRaw from '../parcelData/asRaw';
-import parcelDataMap from '../parcelData/map';
 import parcelDataSetMeta from '../parcelData/setMeta';
 import parcelDataUpdate from '../parcelData/update';
 
 import map from 'unmutable/map';
 import pipeWith from 'unmutable/pipeWith';
 import toArray from 'unmutable/toArray';
+import keyArray from 'unmutable/keyArray';
+
+// temporary, as validation will be superseded soon
+const parcelDataMap = (mapper: Function) => (parcelData: ParcelData): ParcelData => {
+    let keys = keyArray()(parcelData.value);
+    return pipeWith(
+        parcelData,
+        ...keys.map((key) => parcelDataUpdate(
+            key, // lets indexes in
+            (childParcelData) => mapper(childParcelData, key, parcelData)
+        ))
+    );
+};
 
 type ValidationRuleMeta = {
     keyPath: Array<any>,
@@ -24,13 +36,13 @@ type ValidationRuleMap = {
 };
 
 export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
-    return asRaw((parcelData) => {
+    return (parcelData) => {
         let invalidList = [];
         let topLevelValue = parcelData.value;
         let meta = parcelData.meta || {};
         let showInvalid = !!meta.showInvalid;
 
-        if(meta._submit) {
+        if(meta._control === 'submit') {
             showInvalid = true;
         }
 
@@ -61,9 +73,9 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
                 showInvalid,
                 invalidList,
                 valid,
-                // _submit is meta that useParcelBuffer uses to trigger a submit
-                // set this to false if a submit should not occur
-                _submit: meta._submit && valid
+                // _control is meta that useParcelBuffer uses to trigger a submit or reset
+                // set this to null if its trying to submit, and the submut should not occur
+                _control: meta._control === 'submit' && !valid ? null : meta._control
             };
             return parcelDataSetMeta(newMeta)(parcelData);
         };
@@ -77,5 +89,5 @@ export default (validatorMap: ValidationRuleMap): ParcelValueUpdater => {
             ),
             updateMeta
         );
-    });
+    };
 };

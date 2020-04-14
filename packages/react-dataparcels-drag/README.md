@@ -3,6 +3,10 @@
 <a href="https://www.npmjs.com/package/react-dataparcels-drag"><img src="https://img.shields.io/npm/v/react-dataparcels-drag.svg?style=flat-square"></a>
 ![](https://github.com/92green/dataparcels/workflows/test/badge.svg?branch=master)
 
+## DEPRECATED
+
+ParcelDrag can now be imported from `react-dataparcels/ParcelDrag`.
+
 A plugin for [`react-dataparcels`](https://www.npmjs.com/package/react-dataparcels) that adds drag and drop re-ordering of elements, using the wonderful [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc). 
 
 ## Example

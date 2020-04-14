@@ -8,6 +8,7 @@ import {useState} from 'react';
 // $FlowFixMe - useState is a named export of react
 import {useRef} from 'react';
 import useParcelSideEffectSync from './useParcelSideEffectSync';
+
 import Parcel from 'dataparcels';
 import cancel from 'dataparcels/cancel';
 import ApplyBeforeChange from './util/ApplyBeforeChange';
@@ -58,10 +59,7 @@ export default (params: Params): Return => {
 
     let [parcel, setParcel] = useState(() => {
         let parcel = new Parcel({
-            handleChange: (parcel: Parcel, changeRequest: ChangeRequest) => {
-                // remember the origin of the last change
-                // useParcelBufferInternalKeepValue needs it
-                parcel._frameMeta.lastOriginId = changeRequest.originId;
+            handleChange: (parcel: Parcel) => {
                 setParcel(parcel);
             }
         });
@@ -69,7 +67,7 @@ export default (params: Params): Return => {
         return parcel._changeAndReturn(
             parcel => parcel
                 .pipe(applyBeforeChange)
-                .update(valueUpdater)
+                .set(valueUpdater())
         )[0];
     });
 
@@ -79,11 +77,11 @@ export default (params: Params): Return => {
 
     if(params.updateValue) {
         parcel
-            .modifyUp((value, changeRequest) => {
+            .modifyUp(({value, changeRequest}) => {
                 return changeRequest.hasDataChanged() ? value : cancel;
             })
             .pipe(applyBeforeChange)
-            .update(valueUpdater);
+            .set(valueUpdater());
     }
 
     // use the rebase param

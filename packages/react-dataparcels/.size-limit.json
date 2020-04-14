@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.4 KB",
+        "limit": "10.3 KB",
         "path": "lib/index.js"
     },
     {
@@ -12,31 +12,35 @@
         "path": "cancel.js"
     },
     {
-        "limit": "7.5 KB",
+        "limit": "7.3 KB",
         "path": "ChangeRequest.js"
+    },
+    {
+        "limit": "0.4 KB",
+        "path": "combine.js"
     },
     {
         "limit": "0.1 KB",
         "path": "deleted.js"
     },
     {
-        "limit": "5.9 KB",
+        "limit": "5.6 KB",
         "path": "ParcelNode.js"
     },
     {
-        "limit": "6 KB",
-        "path": "asNode.js"
+        "limit": "5.9 KB",
+        "path": "arrange.js"
     },
     {
-        "limit": "6 KB",
-        "path": "asChildNodes.js"
+        "limit": "0.7 KB",
+        "path": "promisify.js"
     },
     {
-        "limit": "0.1 KB",
-        "path": "asRaw.js"
+        "limit": "6.1 KB",
+        "path": "translate.js"
     },
     {
-        "limit": "5.2 KB",
+        "limit": "5.4 KB",
         "path": "validation.js"
     },
     {
@@ -44,31 +48,39 @@
         "path": "asyncValue.js"
     },
     {
-        "limit": "11 KB",
+        "limit": "11.1 KB",
         "path": "asyncChange.js"
     },
     {
-        "limit": "13 KB",
+        "limit": "11.7 KB",
+        "path": "Boundary.js"
+    },
+    {
+        "limit": "12.6 KB",
         "path": "ParcelBoundary.js"
     },
     {
-        "limit": "13.5 KB",
-        "path": "ParcelBoundaryHoc.js"
+        "limit": "47.3 KB",
+        "path": "ParcelDrag.js"
     },
     {
-        "limit": "11.5 KB",
-        "path": "ParcelHoc.js"
-    },
-    {
-        "limit": "13 KB",
+        "limit": "12.2 KB",
         "path": "useParcelBuffer.js"
     },
     {
-        "limit": "13.7 KB",
+        "limit": "13.3 KB",
         "path": "useParcelForm.js"
     },
     {
-        "limit": "11 KB",
+        "limit": "10.8 KB",
         "path": "useParcelState.js"
+    },
+    {
+        "limit": "11.9 KB",
+        "path": "useParcel.js"
+    },
+    {
+        "limit": "11.6 KB",
+        "path": "useBuffer.js"
     }
 ]

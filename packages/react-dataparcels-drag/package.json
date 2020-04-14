@@ -1,7 +1,7 @@
 {
   "name": "react-dataparcels-drag",
-  "version": "1.0.2",
-  "description": "A plugin for react-dataparcels that adds drag and drop re-ordering of elements.",
+  "version": "2.0.0-alpha.4",
+  "description": "DEPRECATED - ParcelDrag can now be imported from the react-dataparcels base package - A plugin for react-dataparcels that adds drag and drop re-ordering of elements.",
   "main": "lib/index.js",
   "license": "MIT",
   "author": "Damien Clarke",
@@ -30,14 +30,14 @@
   "dependencies": {
     "@babel/runtime": "^7.1.5",
     "react-sortable-hoc": "1.4.0",
-    "unmutable": "^0.46.1"
+    "unmutable": "^0.47.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "babel-preset-blueflag": "^1.0.0",
     "blueflag-test": "^0.22.0",
-    "dataparcels": "^1.0.2",
+    "dataparcels": "^2.0.0-alpha.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "size-limit": "1.0.1"

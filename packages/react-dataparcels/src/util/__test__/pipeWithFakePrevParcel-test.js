@@ -12,17 +12,17 @@ test('pipeWithFakePrevParcel should fakely set a previous', () => {
         value: 100
     });
 
-    let modifyUp = jest.fn(value => value * 2);
+    let modifyUp = jest.fn(({value}) => ({value: value * 2}));
 
     let newParcel = parcel.pipe(pipeWithFakePrevParcel(
         fakePrevParcel,
         parcel => parcel.modifyUp(modifyUp)
     ));
 
-    let [modifyUpValue, changeRequest] = modifyUp.mock.calls[0];
+    let {value, changeRequest} = modifyUp.mock.calls[0][0];
 
     expect(newParcel.value).toBe(246);
-    expect(modifyUpValue).toBe(123);
+    expect(value).toBe(123);
     expect(changeRequest.prevData.value).toBe(100);
     expect(changeRequest.nextData.value).toBe(123);
 });

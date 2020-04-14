@@ -7,7 +7,7 @@ import every from 'unmutable/lib/every';
 import map from 'unmutable/lib/map';
 import range from 'unmutable/lib/util/range';
 
-test('ParentParcel.size() should return size of parcel', () => {
+test('ParentParcel.size should return size of parcel', () => {
     var data = {
         value: {
             a: 1,
@@ -15,8 +15,17 @@ test('ParentParcel.size() should return size of parcel', () => {
         }
     };
 
-    expect(new Parcel(data).size()).toBe(2);
+    expect(new Parcel(data).size).toBe(2);
 });
+
+test('ParentParcel.size should return size of 0 for non parent parcels', () => {
+    var data = {
+        value: 123
+    };
+
+    expect(new Parcel(data).size).toBe(0);
+});
+
 
 test('ParentParcel.has(key) should return a boolean indicating if key exists', () => {
     var data = {
@@ -60,7 +69,7 @@ test('ParentParcel.get(key) should return a new child Parcel', () => {
 
     expect(childParcel instanceof Parcel).toBe(true);
     expect(childParcel.value).toBe(1);
-    childParcel.onChange(2);
+    childParcel.set(2);
 });
 
 test('ParentParcel.get(key).value should return the same instance of the nested piece of data', () => {
@@ -114,7 +123,7 @@ test('ParentParcel.get(key).key on array should return the key, not the index', 
     expect(new Parcel(data).get(0).key).toBe("#a");
 });
 
-test('ParentParcel.get(key).get(key) should return a new child Parcel and chain onChanges', () => {
+test('ParentParcel.get(key).get(key) should return a new child Parcel and chain sets', () => {
     expect.assertions(4);
 
     var data = {
@@ -147,7 +156,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
 
     expect(childParcel instanceof Parcel).toBe(true);
     expect(childParcel.value).toBe(2);
-    childParcel.onChange(6);
+    childParcel.set(6);
 });
 
 test('ParentParcel.get(keyDoesntExist) should return a parcel with value of undefined', () => {
@@ -205,7 +214,7 @@ test('ParentParcel.get() should cache its parcelData.child after its calculated,
 
     expect(ms / 10).toBeGreaterThan(ms2); // expect amazing performance boosts from having cached
 
-    parcel.get(0).onChange(123);
+    parcel.get(0).set(123);
 });
 
 test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => {
@@ -245,7 +254,7 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => 
 
     expect(descendantParcel instanceof Parcel).toBe(true);
     expect(descendantParcel.value).toBe(123);
-    descendantParcel.onChange(456);
+    descendantParcel.set(456);
 });
 
 test('ParentParcel.getIn(keyPath) should cope with non existent keypaths', () => {
