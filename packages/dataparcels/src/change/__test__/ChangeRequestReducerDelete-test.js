@@ -53,6 +53,34 @@ test('ActionReducer should delete deep key', () => {
     expect(ActionReducer(action)(data).value).toEqual(expectedValue);
 });
 
+test('ActionReducer should noop if deleting deep key does nothing', () => {
+    var data = {
+        value: {
+            a: {
+                b: 2,
+                d: 4
+            },
+            c: 3
+        },
+        key: "^",
+        child: undefined
+    };
+    var action = new Action({
+        type: "delete",
+        keyPath: ["x", "y"]
+    });
+
+    var expectedValue = {
+        a: {
+            b: 2,
+            d: 4
+        },
+        c: 3
+    };
+
+    expect(ActionReducer(action)(data).value).toEqual(expectedValue);
+});
+
 test('ActionReducer should set value to deleted symbol if deleted with no keypath', () => {
     var data = {
         value: {

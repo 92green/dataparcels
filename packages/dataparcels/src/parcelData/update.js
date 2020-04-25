@@ -25,6 +25,10 @@ export default (key: Key|Index, updater: Function) => (parcelData: ParcelData): 
         return parcelDataWithChildKeys;
     }
 
+    if(!isParentValue(parcelDataWithChildKeys.value)) {
+        return parcelData;
+    }
+
     let updatedData = has(key)(parcelDataWithChildKeys)
         ? pipeWith(
             parcelDataWithChildKeys,

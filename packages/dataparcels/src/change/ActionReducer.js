@@ -10,6 +10,7 @@ import del from '../parcelData/delete';
 import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
+import isParentValue from '../parcelData/isParentValue';
 import push from '../parcelData/push';
 import setMeta from '../parcelData/setMeta';
 import setSelf from '../parcelData/setSelf';
@@ -65,9 +66,11 @@ const stepMap = {
     }
 };
 
-const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
-    let fn = actionMap[type];
-    return fn(keyPath.slice(-1)[0], payload);
+const doAction = ({keyPath, type, payload}: Action) => (parcelData: ParcelData): ParcelData => {
+    if(parentActionMap[type] && !isParentValue(parcelData.value)) {
+        return parcelData;
+    }
+    return actionMap[type](keyPath.slice(-1)[0], payload)(parcelData);
 };
 
 const doDeepAction = (action: Action): ParcelDataEvaluator => {
