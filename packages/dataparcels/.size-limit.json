@@ -20,10 +20,6 @@
         "path": "combine.js"
     },
     {
-        "limit": "0.1 KB",
-        "path": "deleted.js"
-    },
-    {
         "limit": "5.6 KB",
         "path": "ParcelNode.js"
     },

@@ -20,7 +20,6 @@
     "cancel.js",
     "ChangeRequest.js",
     "combine.js",
-    "deleted.js",
     "ParcelBoundary.js",
     "ParcelDrag.js",
     "ParcelNode.js",

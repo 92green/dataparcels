@@ -7,7 +7,6 @@ import pipe from 'unmutable/lib/util/pipe';
 import findLastIndex from 'unmutable/lib/findLastIndex';
 
 import del from '../parcelData/delete';
-import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
 import isParentValue from '../parcelData/isParentValue';
@@ -78,10 +77,6 @@ const doDeepAction = (action: Action): ParcelDataEvaluator => {
     let isParentAction: boolean = !!(parentActionMap[type]);
 
     if(isParentAction) {
-        if(action.keyPath.length === 0) {
-            return type === "delete" ? deleteSelfWithMarker : ii => ii;
-        }
-
         let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
         steps = steps.slice(0, lastGetIndex);
     }
