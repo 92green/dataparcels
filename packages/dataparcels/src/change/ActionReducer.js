@@ -35,13 +35,24 @@ const actionMap = {
     update: (lastKey, updater) => updater
 };
 
-const parentActionMap = {
+const isProcessedFromParent = {
     delete: true,
     insertAfter: true,
     insertBefore: true,
     swap: true,
     swapNext: true,
     swapPrev: true
+};
+
+const requiresParentValue = {
+    delete: true,
+    insertAfter: true,
+    insertBefore: true,
+    push: true,
+    swap: true,
+    swapNext: true,
+    swapPrev: true,
+    unshift: true
 };
 
 const stepMap = {
@@ -66,7 +77,7 @@ const stepMap = {
 };
 
 const doAction = ({keyPath, type, payload}: Action) => (parcelData: ParcelData): ParcelData => {
-    if(parentActionMap[type] && !isParentValue(parcelData.value)) {
+    if(requiresParentValue[type] && !isParentValue(parcelData.value)) {
         return parcelData;
     }
     return actionMap[type](keyPath.slice(-1)[0], payload)(parcelData);
@@ -74,9 +85,8 @@ const doAction = ({keyPath, type, payload}: Action) => (parcelData: ParcelData):
 
 const doDeepAction = (action: Action): ParcelDataEvaluator => {
     let {steps, type} = action;
-    let isParentAction: boolean = !!(parentActionMap[type]);
 
-    if(isParentAction) {
+    if(isProcessedFromParent[type]) {
         let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
         steps = steps.slice(0, lastGetIndex);
     }
