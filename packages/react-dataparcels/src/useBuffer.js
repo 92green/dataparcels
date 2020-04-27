@@ -62,7 +62,7 @@ export default (params: Params): Parcel => {
 
     let refreshInnerParcel = () => {
         // look backward until last history parcel is found...
-        let end = historyIndexRef.current + 1;
+        let end =  bufferStateRef.current.length;
         let start = end + 1;
         let parcel;
         do {
@@ -80,11 +80,12 @@ export default (params: Params): Parcel => {
             setBufferState(newBufferState);
         }
 
-        setInnerParcel(parcel);
+        setInnerParcel(bufferStateRef.current[historyIndexRef.current].parcel);
     };
 
     let bufferReceive = (parcel: Parcel) => {
-        // for now, remove all items in buffer before this one
+
+        // for now, remove all items in buffer before base index
         let numberOfObsoleteItems = baseIndexRef.current;
         setBufferState(bufferStateRef.current.slice(numberOfObsoleteItems));
         setBaseIndex(0);
@@ -93,7 +94,8 @@ export default (params: Params): Parcel => {
         // replace buffered parcel at the base index
         // and remove all cached parcels after this in history
         let newBufferState = bufferStateRef.current.map((item, index) => {
-            if(index < baseIndexRef.current) return item;
+            // uncomment this once all items before base index are no longer deleted
+            // if(index < baseIndexRef.current) return item;
             if(index === baseIndexRef.current) return {parcel, received: true};
             return {...item, parcel: undefined};
         });
@@ -127,14 +129,11 @@ export default (params: Params): Parcel => {
         bufferSubmitCountRef.current++;
 
         let changeRequests = bufferStateRef.current
-            .slice(baseIndexRef.current + 1)
-            .map(ii => ii.changeRequest)
-            .filter(Boolean);
+            .slice(baseIndexRef.current + 1, historyIndexRef.current + 1)
+            .map(ii => ii.changeRequest);
 
-        let squashed = ChangeRequest.squash(changeRequests);
-        sourceRef.current.dispatch(squashed);
-
-        setBaseIndex(bufferStateRef.current.length - 1);
+        sourceRef.current.dispatch(ChangeRequest.squash(changeRequests));
+        setBaseIndex(historyIndexRef.current);
     };
 
     let bufferSubmitDebounce = (ms: number) => {

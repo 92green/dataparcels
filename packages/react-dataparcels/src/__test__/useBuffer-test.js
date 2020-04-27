@@ -593,6 +593,41 @@ describe('useBuffer history', () => {
         expect(result.current.value).toBe(300);
     });
 
+    it('should be able to undo, then submit, and still have redos available', () => {
+        let source = new Parcel({
+            value: ''
+        });
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source}));
+
+        act(() => {
+            result.current.set('a');
+            result.current.set('ab');
+            result.current.set('abc');
+            result.current.set('abcd');
+            result.current.meta.undo();
+            result.current.meta.undo();
+            result.current.meta.submit();
+            rerender({
+                source: new Parcel({
+                    value: 'ab'
+                })
+            });
+        });
+
+        expect(result.current.value).toBe('ab');
+        expect(result.current.meta.canRedo).toBe(true);
+        expect(result.current.meta._history.length).toBe(3);
+
+        act(() => {
+            result.current.meta.redo();
+            result.current.meta.redo();
+        });
+
+        expect(result.current.meta.canRedo).toBe(false);
+        expect(result.current.value).toBe('abcd');
+    });
+
 });
 
 describe('parcel equals', () => {
