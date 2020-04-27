@@ -107,7 +107,12 @@ export default (params: Params): Parcel => {
     let bufferPush = (parcel: Parcel, changeRequest: ChangeRequest) => {
         let newBufferState = bufferStateRef.current
             .slice(0, historyIndexRef.current + 1) // remove items ahead in history
-            .concat({parcel, changeRequest});
+            .concat({
+                parcel,
+                changeRequest: changeRequest._create({})
+                // ^ clear changeRequest cache before storing this
+                // so we dont use unnecessary memory
+            });
 
         setBufferState(newBufferState);
         setHistoryIndex(bufferStateRef.current.length - 1);
