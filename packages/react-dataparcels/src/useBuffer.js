@@ -151,9 +151,11 @@ export default (params: Params): Parcel => {
         innerParcel = source
             .modifyDown(derive)
             ._boundarySplit({handleChange})
-            .pipe(parcel => bufferStateRef.current.reduce((accParcel, {changeRequest}) => {
-                return accParcel._changeAndReturn(pp => pp.dispatch(changeRequest))[0];
-            }, parcel));
+            .pipe(parcel => bufferStateRef.current
+                .slice(baseIndexRef.current)
+                .reduce((accParcel, {changeRequest}) => {
+                    return accParcel._changeAndReturn(pp => pp.dispatch(changeRequest))[0];
+                }, parcel));
 
         bufferPush(innerParcel);
     }

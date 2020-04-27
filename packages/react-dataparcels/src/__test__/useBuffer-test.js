@@ -310,6 +310,32 @@ describe('useBuffer buffer', () => {
 
         expect(result.current.value).toEqual([null,[1]]);
     });
+
+    it('should pass new inner parcel if source is different, and only reapply buffered actions since last submit', () => {
+
+        let source = new Parcel({
+            value: [1]
+        });
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, buffer: true}));
+
+        act(() => {
+            result.current.push(2);
+            result.current.push(3);
+            result.current.meta.submit();
+            result.current.push(4);
+        });
+
+        act(() => {
+            rerender({
+                source: new Parcel({
+                    value: [10,20,30]
+                })
+            });
+        });
+
+        expect(result.current.value).toEqual([10,20,30,4]);
+    });
 });
 
 describe('useBuffer derive', () => {
