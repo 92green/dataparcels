@@ -389,7 +389,7 @@ describe('useBuffer buffer and source combinations', () => {
             });
         });
 
-        expect(result.current.meta._history.length).toBe(4);
+        expect(result.current.meta._history.length).toBe(2); // lower because of obsolete buffer items being removed
         expect(result.current.value).toEqual([300,400,500,6]);
     });
 });
@@ -560,6 +560,37 @@ describe('useBuffer history', () => {
         expect(result.current.meta.canUndo).toBe(true);
         expect(result.current.meta.canRedo).toBe(false);
         expect(result.current.meta._history.length).toBe(2);
+    });
+
+    it('should not be able to undo after submit and receive', () => {
+        let source = new Parcel({
+            value: 100
+        });
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source}));
+
+        act(() => {
+            result.current.set(200);
+            result.current.set(300);
+            result.current.meta.submit();
+            rerender({
+                source: new Parcel({
+                    value: 300
+                })
+            });
+        });
+
+        expect(result.current.value).toBe(300);
+        expect(result.current.meta.canUndo).toBe(false);
+        expect(result.current.meta._history.length).toBe(1);
+
+        act(() => {
+            result.current.meta.undo();
+            result.current.meta.undo();
+            result.current.meta.undo();
+        });
+
+        expect(result.current.value).toBe(300);
     });
 
 });

@@ -84,12 +84,17 @@ export default (params: Params): Parcel => {
     };
 
     let bufferReceive = (parcel: Parcel) => {
+        // for now, remove all items in buffer before this one
+        let numberOfObsoleteItems = baseIndexRef.current;
+        setBufferState(bufferStateRef.current.slice(numberOfObsoleteItems));
+        setBaseIndex(0);
+        setHistoryIndex(historyIndexRef.current - numberOfObsoleteItems);
+
         // replace buffered parcel at the base index
         // and remove all cached parcels after this in history
         let newBufferState = bufferStateRef.current.map((item, index) => {
             if(index < baseIndexRef.current) return item;
             if(index === baseIndexRef.current) return {parcel, received: true};
-            // DO WE NEED TO AVOID RECEIVED PARCELS YET!? THEY ARENT REGENERATABLE!
             return {...item, parcel: undefined};
         });
 
@@ -121,9 +126,7 @@ export default (params: Params): Parcel => {
     let bufferSubmit = () => {
         bufferSubmitCountRef.current++;
 
-        let bufferState = bufferStateRef.current;
-
-        let changeRequests = bufferState
+        let changeRequests = bufferStateRef.current
             .slice(baseIndexRef.current + 1)
             .map(ii => ii.changeRequest)
             .filter(Boolean);
@@ -131,7 +134,7 @@ export default (params: Params): Parcel => {
         let squashed = ChangeRequest.squash(changeRequests);
         sourceRef.current.dispatch(squashed);
 
-        setBaseIndex(bufferState.length - 1);
+        setBaseIndex(bufferStateRef.current.length - 1);
     };
 
     let bufferSubmitDebounce = (ms: number) => {

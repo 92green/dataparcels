@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {useState} from 'react';
 import {useRef} from 'react';
 import Page from 'component/Page';
 import {H1} from 'dcme-style';
@@ -13,27 +14,29 @@ export default function PersonEditor() {
 
     let rejectRef = useRef();
 
+    let [dep, setDep] = useState(0);
+
     let personParcel = useParcel({
-        // source: () => ({
-        //     value: {
-        //         firstname: "Robert",
-        //         lastname: "Clamps",
-        //         saves: 0
-        //     }
-        // }),
-        source: promisify({
-            key: 'load',
-            effect: async () => {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                return {
-                    value: {
-                        firstname: "Robert",
-                        lastname: "Clamps",
-                        saves: 0
-                    }
-                };
+        source: () => ({
+            value: {
+                firstname: "Robert",
+                lastname: `Clamps ${dep}`,
+                saves: 0
             }
         }),
+        // source: promisify({
+        //     key: 'load',
+        //     effect: async () => {
+        //         await new Promise(resolve => setTimeout(resolve, 1000));
+        //         return {
+        //             value: {
+        //                 firstname: "Robert",
+        //                 lastname: "Clamps",
+        //                 saves: 0
+        //             }
+        //         };
+        //     }
+        // }),
         onChange: promisify({
             key: 'save',
             effect: async ({value}) => {
@@ -53,6 +56,7 @@ export default function PersonEditor() {
             },
             revert: true
         }),
+        dependencies: [dep],
         buffer: true
     });
 
@@ -86,6 +90,7 @@ export default function PersonEditor() {
             <div>
                 <button onClick={personParcel.meta.undo}>undo</button>
                 <button onClick={personParcel.meta.redo}>redo</button>
+                <button onClick={() => setDep(i => i + 1)}>receive</button>
             </div>
         </ContentNav>
     </Page>;
