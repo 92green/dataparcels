@@ -126,6 +126,23 @@ test('ActionReducer should set with keyPath of 1 element', () => {
     expect(ActionReducer(action)(data)).toEqual(expectedData);
 });
 
+test('ActionReducer should noop set with keyPath of 1 element on a non parent value', () => {
+    var data = {
+        value: 123,
+        meta: {
+            abc: 123
+        },
+        key: "^"
+    };
+    var action = new Action({
+        type: "set",
+        keyPath: ["a"],
+        payload: 3
+    });
+
+    expect(ActionReducer(action)(data)).toEqual(data);
+});
+
 test('ActionReducer should clear child from set key', () => {
     var data = {
         value: {

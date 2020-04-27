@@ -5,7 +5,6 @@ import Parcel from '../src/index';
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
 import combine from '../combine';
-import deleted from '../deleted';
 import ParcelNode from '../ParcelNode';
 import arrange from '../arrange';
 import cancel from '../cancel';
@@ -20,7 +19,6 @@ import InternalParcel from '../src/parcel/Parcel';
 import InternalAction from '../lib/change/Action';
 import InternalChangeRequest from '../lib/change/ChangeRequest';
 import InternalCreateUpdater from '../lib/parcelData/combine';
-import Internaldeleted from '../lib/parcelData/deleted';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
 import InternalAsNodes from '../lib/parcelNode/arrange';
 import Internalcancel from '../lib/change/cancel';
@@ -42,10 +40,6 @@ test('/ChangeRequest should export ChangeRequest', () => {
 
 test('/combine should export combine', () => {
     expect(combine).toBe(InternalCreateUpdater);
-});
-
-test('/deleted should export deleted', () => {
-    expect(deleted).toBe(Internaldeleted);
 });
 
 test('/ParcelNode should export ParcelNode', () => {

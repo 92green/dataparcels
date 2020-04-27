@@ -102,7 +102,10 @@ export default (params: Params): Parcel => {
 
         innerParcel = source
             ._boundarySplit({handleChange})
-            .modifyDown(derive);
+            .modifyDown(derive)
+            .pipe(parcel => bufferState.reduce((accParcel, changeRequest) => {
+                return accParcel._changeAndReturn(pp => pp.dispatch(changeRequest))[0];
+            }, parcel));
 
         setInnerParcel(innerParcel);
     }

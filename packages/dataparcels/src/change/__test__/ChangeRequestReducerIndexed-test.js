@@ -15,18 +15,6 @@ let EXPECTED_KEY_AND_META = {
     meta: {abc: 123}
 };
 
-[
-    "insertAfter",
-    "insertBefore",
-    "swap",
-    "swapNext",
-    "swapPrev"
-].forEach((type: string) => {
-    test(`Reducer ${type} action should return unchanged parcelData if keyPath is empty`, () => {
-        expect(ActionReducer(new Action({type}))(data)).toEqual(data);
-    });
-});
-
 const TestIndex = (arr) => arr.map(({action, expectedData}) => {
     test(`Reducer ${action.type} action should ${action.type} with keyPath ${JSON.stringify(action.keyPath)}`, () => {
         expect(ActionReducer(new Action(action))(data)).toEqual(expectedData);

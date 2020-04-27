@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.3 KB",
+        "limit": "10.4 KB",
         "path": "lib/index.js"
     },
     {
@@ -12,7 +12,7 @@
         "path": "cancel.js"
     },
     {
-        "limit": "7.3 KB",
+        "limit": "7.4 KB",
         "path": "ChangeRequest.js"
     },
     {
@@ -20,15 +20,11 @@
         "path": "combine.js"
     },
     {
-        "limit": "0.1 KB",
-        "path": "deleted.js"
-    },
-    {
         "limit": "5.6 KB",
         "path": "ParcelNode.js"
     },
     {
-        "limit": "5.9 KB",
+        "limit": "6.0 KB",
         "path": "arrange.js"
     },
     {
@@ -68,11 +64,11 @@
         "path": "useParcelBuffer.js"
     },
     {
-        "limit": "13.3 KB",
+        "limit": "13.4 KB",
         "path": "useParcelForm.js"
     },
     {
-        "limit": "10.8 KB",
+        "limit": "10.9 KB",
         "path": "useParcelState.js"
     },
     {

@@ -20,7 +20,6 @@ import Action from '../change/Action';
 
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
-import deleted from '../parcelData/deleted';
 import combine from '../parcelData/combine';
 import setMetaDefault from '../parcelData/setMetaDefault';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
@@ -581,7 +580,7 @@ export default class Parcel {
 
     _getValue = (notFoundValue: any): any => {
         let {value} = this;
-        return value === deleted || value === undefined
+        return value === undefined
             ? notFoundValue
             : value;
     };

@@ -2,7 +2,6 @@
 import ChangeRequest from '../ChangeRequest';
 import ActionReducer from '../ActionReducer';
 import Action from '../Action';
-import deleted from '../../parcelData/deleted';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 test('ActionReducer should delete key', () => {
@@ -53,23 +52,30 @@ test('ActionReducer should delete deep key', () => {
     expect(ActionReducer(action)(data).value).toEqual(expectedValue);
 });
 
-test('ActionReducer should set value to deleted symbol if deleted with no keypath', () => {
+test('ActionReducer should noop if deleting deep key does nothing', () => {
     var data = {
         value: {
-            a: 1,
-            b: 2
+            a: {
+                b: 2,
+                d: 4
+            },
+            c: 3
         },
         key: "^",
         child: undefined
     };
     var action = new Action({
         type: "delete",
-        keyPath: []
+        keyPath: ["x", "y"]
     });
 
-    var expectedData = {
-        value: deleted
+    var expectedValue = {
+        a: {
+            b: 2,
+            d: 4
+        },
+        c: 3
     };
 
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(action)(data).value).toEqual(expectedValue);
 });

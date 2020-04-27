@@ -7,9 +7,9 @@ import pipe from 'unmutable/lib/util/pipe';
 import findLastIndex from 'unmutable/lib/findLastIndex';
 
 import del from '../parcelData/delete';
-import deleteSelfWithMarker from '../parcelData/deleteSelfWithMarker';
 import insertAfter from '../parcelData/insertAfter';
 import insertBefore from '../parcelData/insertBefore';
+import isParentValue from '../parcelData/isParentValue';
 import push from '../parcelData/push';
 import setMeta from '../parcelData/setMeta';
 import setSelf from '../parcelData/setSelf';
@@ -35,13 +35,24 @@ const actionMap = {
     update: (lastKey, updater) => updater
 };
 
-const parentActionMap = {
+const isProcessedFromParent = {
     delete: true,
     insertAfter: true,
     insertBefore: true,
     swap: true,
     swapNext: true,
     swapPrev: true
+};
+
+const requiresParentValue = {
+    delete: true,
+    insertAfter: true,
+    insertBefore: true,
+    push: true,
+    swap: true,
+    swapNext: true,
+    swapPrev: true,
+    unshift: true
 };
 
 const stepMap = {
@@ -65,20 +76,17 @@ const stepMap = {
     }
 };
 
-const doAction = ({keyPath, type, payload}: Action): ParcelDataEvaluator => {
-    let fn = actionMap[type];
-    return fn(keyPath.slice(-1)[0], payload);
+const doAction = ({keyPath, type, payload}: Action) => (parcelData: ParcelData): ParcelData => {
+    if(requiresParentValue[type] && !isParentValue(parcelData.value)) {
+        return parcelData;
+    }
+    return actionMap[type](keyPath.slice(-1)[0], payload)(parcelData);
 };
 
 const doDeepAction = (action: Action): ParcelDataEvaluator => {
     let {steps, type} = action;
-    let isParentAction: boolean = !!(parentActionMap[type]);
 
-    if(isParentAction) {
-        if(action.keyPath.length === 0) {
-            return type === "delete" ? deleteSelfWithMarker : ii => ii;
-        }
-
+    if(isProcessedFromParent[type]) {
         let lastGetIndex = findLastIndex(step => step.type === 'get')(steps);
         steps = steps.slice(0, lastGetIndex);
     }
