@@ -57,14 +57,14 @@ export default (params: Params): Parcel => {
     bufferParamRef.current = buffer;
 
     let [bufferStateRef, setBufferState] = useRefState([]);
-    let [sentRef, setSent] = useRefState(0);
+    let [baseIndexRef, setBaseIndex] = useRefState(0);
     let [historyIndexRef, setHistoryIndex] = useRefState(0);
 
     let bufferPush = (parcel: Parcel, changeRequest: ?ChangeRequest) => {
         let newBufferState = bufferStateRef.current
             .slice(0, historyIndexRef.current + 1) // remove items ahead in history
             .concat({
-                index: sentRef.current,
+                index: baseIndexRef.current,
                 parcel,
                 changeRequest
             });
@@ -91,14 +91,14 @@ export default (params: Params): Parcel => {
         let bufferState = bufferStateRef.current;
 
         let changeRequests = bufferState
-            .slice(sentRef.current)
+            .slice(baseIndexRef.current)
             .map(ii => ii.changeRequest)
             .filter(Boolean);
 
         let squashed = ChangeRequest.squash(changeRequests);
         sourceRef.current.dispatch(squashed);
 
-        setSent(bufferState.length);
+        setBaseIndex(bufferState.length);
     };
 
     let bufferSubmitDebounce = (ms: number) => {
@@ -107,7 +107,7 @@ export default (params: Params): Parcel => {
     };
 
     let bufferReset = () => {
-        let bufferState = bufferStateRef.current.slice(0, sentRef.current);
+        let bufferState = bufferStateRef.current.slice(0, baseIndexRef.current + 1);
         setBufferState(bufferState);
         moveHistoryIndex(bufferState.length - 1);
     };
@@ -156,7 +156,6 @@ export default (params: Params): Parcel => {
             }, parcel));
 
         bufferPush(innerParcel);
-        setSent(bufferStateRef.current.length);
     }
 
     // return
@@ -169,7 +168,7 @@ export default (params: Params): Parcel => {
                     reset,
                     undo,
                     redo,
-                    canSubmit: sentRef.current < bufferStateRef.current.length,
+                    canSubmit: baseIndexRef.current < bufferStateRef.current.length - 1,
                     canUndo: historyIndexRef.current > 0,
                     canRedo: historyIndexRef.current < bufferStateRef.current.length - 1,
                     _history: bufferStateRef.current
@@ -181,7 +180,7 @@ export default (params: Params): Parcel => {
         innerParcel,
         bufferStateRef.current,
         historyIndexRef.current,
-        sentRef.current
+        baseIndexRef.current
     ]);
 };
 

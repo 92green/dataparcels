@@ -65,7 +65,7 @@ describe('useBuffer source', () => {
         expect(result.current).toBe(firstResult);
     });
 
-    it('should pass new inner parcel if source is different', () => {
+    it('should pass new inner parcel if source is different and buffer = false', () => {
 
         let source = new Parcel({
             value: 123
