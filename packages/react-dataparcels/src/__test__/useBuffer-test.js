@@ -260,8 +260,11 @@ describe('useBuffer buffer', () => {
         expect(up.mock.calls[0][0].changeRequest.prevData.value).toEqual([]);
         expect(up.mock.calls[0][0].changeRequest.nextData.value).toEqual(["A", "B"]);
     });
+});
 
-    it('should pass new inner parcel if source is different, and reapply buffered actions', () => {
+describe('useBuffer buffer and source combinations', () => {
+
+    it('should reapply buffered actions onto new source', () => {
 
         let source = new Parcel({
             value: [1]
@@ -285,7 +288,7 @@ describe('useBuffer buffer', () => {
         expect(result.current.value).toEqual([0,2,3]);
     });
 
-    it('should pass new inner parcel if source is different, and only reapply buffered actions that can be applied', () => {
+    it('should only reapply buffered actions that can be applied onto new source', () => {
 
         let source = new Parcel({
             value: [[],[]]
@@ -311,7 +314,7 @@ describe('useBuffer buffer', () => {
         expect(result.current.value).toEqual([null,[1]]);
     });
 
-    it('should pass new inner parcel if source is different, and only reapply buffered actions since last submit', () => {
+    it('should only reapply buffered actions since last submit onto new source', () => {
 
         let source = new Parcel({
             value: [1]
@@ -335,6 +338,59 @@ describe('useBuffer buffer', () => {
         });
 
         expect(result.current.value).toEqual([10,20,30,4]);
+    });
+
+    it('should replace new source without creating new history items', () => {
+
+        let source = new Parcel({
+            value: [1]
+        });
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, buffer: true}));
+
+        expect(result.current.meta._history.length).toBe(1);
+
+        act(() => {
+            rerender({
+                source: new Parcel({
+                    value: [2]
+                })
+            });
+
+            rerender({
+                source: new Parcel({
+                    value: [3]
+                })
+            });
+        });
+
+        expect(result.current.meta._history.length).toBe(1);
+
+        act(() => {
+            result.current.push(4);
+            result.current.push(5);
+            result.current.meta.submit();
+            result.current.push(6);
+        });
+
+        expect(result.current.meta._history.length).toBe(4);
+
+        act(() => {
+            rerender({
+                source: new Parcel({
+                    value: [30,40,50]
+                })
+            });
+
+            rerender({
+                source: new Parcel({
+                    value: [300,400,500]
+                })
+            });
+        });
+
+        expect(result.current.meta._history.length).toBe(4);
+        expect(result.current.value).toEqual([300,400,500,6]);
     });
 });
 

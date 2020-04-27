@@ -56,22 +56,55 @@ export default (params: Params): Parcel => {
     let bufferParamRef = useRef();
     bufferParamRef.current = buffer;
 
-    let [bufferStateRef, setBufferState] = useRefState([]);
+    let [bufferStateRef, setBufferState] = useRefState([{}]);
     let [baseIndexRef, setBaseIndex] = useRefState(0);
     let [historyIndexRef, setHistoryIndex] = useRefState(0);
 
-    let bufferPush = (parcel: Parcel, changeRequest: ?ChangeRequest) => {
-        let newBufferState = bufferStateRef.current
-            .slice(0, historyIndexRef.current + 1) // remove items ahead in history
-            .concat({
-                index: baseIndexRef.current,
-                parcel,
-                changeRequest
-            });
+    let refreshInnerParcel = () => {
+        // look backward until last history parcel is found...
+        let end = historyIndexRef.current + 1;
+        let start = end + 1;
+        let parcel;
+        do {
+            parcel = bufferStateRef.current[--start - 1].parcel;
+        } while(!parcel);
+
+        // ...and regenerate subsequent parcels by replaying each change on top of the last
+        if(start < end) {
+            let newBufferState = bufferStateRef.current.slice();
+            for(let i = start; i < end; i++) {
+                let {changeRequest} = newBufferState[i];
+                parcel = parcel._changeAndReturn(pp => pp.dispatch(changeRequest))[0];
+                newBufferState[i] = {...newBufferState[i], parcel};
+            }
+            setBufferState(newBufferState);
+        }
 
         setInnerParcel(parcel);
+    };
+
+    let bufferReceive = (parcel: Parcel) => {
+        // replace buffered parcel at the base index
+        // and remove all cached parcels after this in history
+        let newBufferState = bufferStateRef.current.map((item, index) => {
+            if(index < baseIndexRef.current) return item;
+            if(index === baseIndexRef.current) return {parcel, received: true};
+            // DO WE NEED TO AVOID RECEIVED PARCELS YET!? THEY ARENT REGENERATABLE!
+            return {...item, parcel: undefined};
+        });
+
+        setBufferState(newBufferState);
+        refreshInnerParcel();
+    };
+
+    let bufferPush = (parcel: Parcel, changeRequest: ChangeRequest) => {
+        let newBufferState = bufferStateRef.current
+            .slice(0, historyIndexRef.current + 1) // remove items ahead in history
+            .concat({parcel, changeRequest});
+
         setBufferState(newBufferState);
         setHistoryIndex(bufferStateRef.current.length - 1);
+        refreshInnerParcel();
     };
 
     let moveHistoryIndex = (index: number) => {
@@ -79,8 +112,8 @@ export default (params: Params): Parcel => {
         parcel._treeShare.registry[parcel.id] = parcel;
         // ^ update the registry so changes will go to
         //   this older parcel instead of newer ones
-        setInnerParcel(parcel);
         setHistoryIndex(index);
+        refreshInnerParcel();
     };
 
     let bufferSubmitCountRef = useRef(0);
@@ -91,14 +124,14 @@ export default (params: Params): Parcel => {
         let bufferState = bufferStateRef.current;
 
         let changeRequests = bufferState
-            .slice(baseIndexRef.current)
+            .slice(baseIndexRef.current + 1)
             .map(ii => ii.changeRequest)
             .filter(Boolean);
 
         let squashed = ChangeRequest.squash(changeRequests);
         sourceRef.current.dispatch(squashed);
 
-        setBaseIndex(bufferState.length);
+        setBaseIndex(bufferState.length - 1);
     };
 
     let bufferSubmitDebounce = (ms: number) => {
@@ -116,7 +149,6 @@ export default (params: Params): Parcel => {
         let index = historyIndexRef.current;
         if(index > 0) {
             moveHistoryIndex(index - 1);
-
         }
     };
 
@@ -150,14 +182,9 @@ export default (params: Params): Parcel => {
 
         innerParcel = source
             .modifyDown(derive)
-            ._boundarySplit({handleChange})
-            .pipe(parcel => bufferStateRef.current
-                .slice(baseIndexRef.current)
-                .reduce((accParcel, {changeRequest}) => {
-                    return accParcel._changeAndReturn(pp => pp.dispatch(changeRequest))[0];
-                }, parcel));
+            ._boundarySplit({handleChange});
 
-        bufferPush(innerParcel);
+        bufferReceive(innerParcel);
     }
 
     // return
