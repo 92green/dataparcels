@@ -121,28 +121,28 @@ describe('useBuffer buffer', () => {
 
         let {result} = renderHook(() => useBuffer({source}));
 
-        expect(result.current.meta.canSubmit).toBe(false);
+        expect(result.current.meta.synced).toBe(true);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.push("A");
         });
 
-        expect(result.current.meta.canSubmit).toBe(true);
+        expect(result.current.meta.synced).toBe(false);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.push("B");
         });
 
-        expect(result.current.meta.canSubmit).toBe(true);
+        expect(result.current.meta.synced).toBe(false);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.meta.submit();
         });
 
-        expect(result.current.meta.canSubmit).toBe(false);
+        expect(result.current.meta.synced).toBe(true);
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange.mock.calls[0][0].value).toEqual(["A", "B"]);
     });
@@ -178,7 +178,7 @@ describe('useBuffer buffer', () => {
         let {result} = renderHook(() => useBuffer({source}));
 
         expect(result.current.value).toEqual([]);
-        expect(result.current.meta.canSubmit).toBe(false);
+        expect(result.current.meta.synced).toBe(true);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
@@ -186,7 +186,7 @@ describe('useBuffer buffer', () => {
         });
 
         expect(result.current.value).toEqual(["A"]);
-        expect(result.current.meta.canSubmit).toBe(true);
+        expect(result.current.meta.synced).toBe(false);
         expect(handleChange).toHaveBeenCalledTimes(0);
 
         act(() => {
@@ -194,7 +194,7 @@ describe('useBuffer buffer', () => {
         });
 
         expect(result.current.value).toEqual([]);
-        expect(result.current.meta.canSubmit).toBe(false);
+        expect(result.current.meta.synced).toBe(true);
         expect(handleChange).toHaveBeenCalledTimes(0);
     });
 
@@ -458,6 +458,7 @@ describe('useBuffer history', () => {
         let {result} = renderHook(() => useBuffer({source}));
 
         expect(result.current.value).toBe(100);
+        expect(result.current.meta.synced).toBe(true);
         expect(result.current.meta.canUndo).toBe(false);
         expect(result.current.meta.canRedo).toBe(false);
         expect(result.current.meta._history.length).toBe(1);
@@ -468,6 +469,7 @@ describe('useBuffer history', () => {
         });
 
         expect(result.current.value).toBe(300);
+        expect(result.current.meta.synced).toBe(false);
         expect(result.current.meta.canUndo).toBe(true);
         expect(result.current.meta.canRedo).toBe(false);
         expect(result.current.meta._history.length).toBe(3);
@@ -477,6 +479,7 @@ describe('useBuffer history', () => {
         });
 
         expect(result.current.value).toBe(200);
+        expect(result.current.meta.synced).toBe(false);
         expect(result.current.meta.canUndo).toBe(true);
         expect(result.current.meta.canRedo).toBe(true);
         expect(result.current.meta._history.length).toBe(3);
@@ -488,6 +491,7 @@ describe('useBuffer history', () => {
         });
 
         expect(result.current.value).toBe(100);
+        expect(result.current.meta.synced).toBe(true);
         expect(result.current.meta.canUndo).toBe(false);
         expect(result.current.meta.canRedo).toBe(true);
         expect(result.current.meta._history.length).toBe(3);
@@ -508,6 +512,7 @@ describe('useBuffer history', () => {
         });
 
         expect(result.current.value).toBe(100);
+        expect(result.current.meta.synced).toBe(true);
         expect(result.current.meta.canUndo).toBe(false);
         expect(result.current.meta.canRedo).toBe(true);
         expect(result.current.meta._history.length).toBe(3);
@@ -517,6 +522,7 @@ describe('useBuffer history', () => {
         });
 
         expect(result.current.value).toBe(200);
+        expect(result.current.meta.synced).toBe(false);
         expect(result.current.meta.canUndo).toBe(true);
         expect(result.current.meta.canRedo).toBe(true);
         expect(result.current.meta._history.length).toBe(3);
@@ -528,6 +534,7 @@ describe('useBuffer history', () => {
         });
 
         expect(result.current.value).toBe(300);
+        expect(result.current.meta.synced).toBe(false);
         expect(result.current.meta.canUndo).toBe(true);
         expect(result.current.meta.canRedo).toBe(false);
         expect(result.current.meta._history.length).toBe(3);
@@ -743,6 +750,7 @@ describe('useBuffer history', () => {
         });
 
         expect(result.current.value).toEqual([100,200,300,400]);
+        expect(result.current.meta.synced).toBe(true);
         expect(result.current.meta.canUndo).toBe(true);
         expect(result.current.meta._history.length).toBe(4);
 
@@ -756,6 +764,7 @@ describe('useBuffer history', () => {
 
         expect(result.current.value).toEqual([100,200,300,777]);
         expect(result.current.meta._history.length).toBe(4);
+        expect(result.current.meta.synced).toBe(false);
 
         act(() => {
             result.current.meta.submit();
@@ -781,7 +790,6 @@ describe('useBuffer history', () => {
                 })
             });
         });
-
         expect(handleChange).toHaveBeenCalledTimes(3);
         expect(handleChange.mock.calls[2][0].value).toEqual([100,200,300,777,444]);
         expect(handleChange.mock.calls[2][1]._actions[0].type).not.toBe('setData');

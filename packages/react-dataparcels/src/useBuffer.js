@@ -238,9 +238,9 @@ export default (params: Params): Parcel => {
                     reset,
                     undo,
                     redo,
-                    canSubmit: baseIndexRef.current < bufferStateRef.current.length - 1,
                     canUndo: historyIndexRef.current > 0,
                     canRedo: historyIndexRef.current < bufferStateRef.current.length - 1,
+                    synced: !!(baseIndexRef.current === historyIndexRef.current && !altHistoryRef.current),
                     _history: bufferStateRef.current
                 }
             }))
@@ -250,7 +250,8 @@ export default (params: Params): Parcel => {
         innerParcel,
         bufferStateRef.current,
         historyIndexRef.current,
-        baseIndexRef.current
+        baseIndexRef.current,
+        altHistoryRef.current
     ]);
 };
 

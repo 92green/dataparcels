@@ -217,28 +217,28 @@ describe('useParcel buffer', () => {
             buffer: true
         }));
 
-        expect(result.current.meta.canSubmit).toBe(false);
+        expect(result.current.meta.synced).toBe(true);
         expect(onChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.push("A");
         });
 
-        expect(result.current.meta.canSubmit).toBe(true);
+        expect(result.current.meta.synced).toBe(false);
         expect(onChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.push("B");
         });
 
-        expect(result.current.meta.canSubmit).toBe(true);
+        expect(result.current.meta.synced).toBe(false);
         expect(onChange).toHaveBeenCalledTimes(0);
 
         act(() => {
             result.current.meta.submit();
         });
 
-        expect(result.current.meta.canSubmit).toBe(false);
+        expect(result.current.meta.synced).toBe(true);
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][0].value).toEqual(["A", "B"]);
     });

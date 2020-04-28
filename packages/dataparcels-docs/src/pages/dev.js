@@ -59,7 +59,8 @@ export default function PersonEditor() {
             revert: true
         }),
         dependencies: [dep],
-        buffer: true
+        buffer: true,
+        history: 100
     });
 
     return <Page>
@@ -79,7 +80,8 @@ export default function PersonEditor() {
                     <div>lastname</div>
                     <input type="text" {...personParcel.get('lastname').spreadInput()} />
 
-                    <div>save status {personParcel.meta.saveStatus} error {personParcel.meta.saveError && personParcel.meta.saveError.message}</div>
+                    <div>save status {personParcel.meta.saveStatus} error: {personParcel.meta.saveError && personParcel.meta.saveError.message}</div>
+                    <div>synced {personParcel.meta.synced ? 'yeah' : 'nah'}</div>
 
                     <div>
                         <button onClick={personParcel.meta.submit}>submit</button>
