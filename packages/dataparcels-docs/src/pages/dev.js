@@ -39,8 +39,10 @@ export default function PersonEditor() {
         // }),
         onChange: promisify({
             key: 'save',
-            effect: async ({value}) => {
+            effect: async ({value, changeRequest}) => {
                 await new Promise(resolve => setTimeout(resolve, 1000));
+
+                console.log('value', value, changeRequest);
 
                 if(rejectRef.current) {
                     rejectRef.current = false;

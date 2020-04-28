@@ -30,6 +30,7 @@ const noop = () => {};
 type Params = {
     source: Parcel,
     buffer?: boolean|number,
+    history?: number,
     derive?: ParcelValueUpdater
 };
 
@@ -40,6 +41,7 @@ export default (params: Params): Parcel => {
     let {
         source,
         buffer = true,
+        history = 0,
         derive = noop
     } = params;
 
@@ -58,11 +60,12 @@ export default (params: Params): Parcel => {
 
     let [bufferStateRef, setBufferState] = useRefState([{}]);
     let [baseIndexRef, setBaseIndex] = useRefState(0);
+    let [altHistoryRef, setAltHistory] = useRefState(false);
     let [historyIndexRef, setHistoryIndex] = useRefState(0);
 
-    let refreshInnerParcel = () => {
-        // look backward until last history parcel is found...
-        let end =  bufferStateRef.current.length;
+    let getHistoryParcel = (index: number): Parcel => {
+        // look backward from index until cached parcel is found...
+        let end = index + 1;
         let start = end + 1;
         let parcel;
         do {
@@ -80,23 +83,36 @@ export default (params: Params): Parcel => {
             setBufferState(newBufferState);
         }
 
-        setInnerParcel(bufferStateRef.current[historyIndexRef.current].parcel);
+        return bufferStateRef.current[index].parcel;
+    };
+
+    let refreshInnerParcel = () => {
+        let parcel = getHistoryParcel(historyIndexRef.current);
+        parcel._treeShare.registry[parcel.id] = parcel;
+        // ^ update the registry so changes will go to
+        //   this parcel instead of potentially newer ones
+        setInnerParcel(parcel);
     };
 
     let bufferReceive = (parcel: Parcel) => {
 
-        // for now, remove all items in buffer before base index
-        let numberOfObsoleteItems = baseIndexRef.current;
-        setBufferState(bufferStateRef.current.slice(numberOfObsoleteItems));
-        setBaseIndex(0);
-        setHistoryIndex(historyIndexRef.current - numberOfObsoleteItems);
+        let baseIndex = baseIndexRef.current;
+        let remainingCount = bufferStateRef.current.length - baseIndex;
+        if(remainingCount > history) {
+            // remove past items
+            setBufferState(bufferStateRef.current.slice(baseIndex));
+            setBaseIndex(0);
+            setHistoryIndex(historyIndexRef.current - baseIndex);
+        }
 
         // replace buffered parcel at the base index
-        // and remove all cached parcels after this in history
+        // and clear all non-received cached parcels
+        // - future ones might be different because of this rebase
+        // - past ones are likely not going to be accessed soon
+        // - received ones are not regeneratable so must be remembered
         let newBufferState = bufferStateRef.current.map((item, index) => {
-            // uncomment this once all items before base index are no longer deleted
-            // if(index < baseIndexRef.current) return item;
-            if(index === baseIndexRef.current) return {parcel, received: true};
+            if(index === baseIndexRef.current) return {...item, parcel, received: true};
+            if(item.received) return item;
             return {...item, parcel: undefined};
         });
 
@@ -106,13 +122,20 @@ export default (params: Params): Parcel => {
 
     let bufferPush = (parcel: Parcel, changeRequest: ChangeRequest) => {
         let newBufferState = bufferStateRef.current
-            .slice(0, historyIndexRef.current + 1) // remove items ahead in history
-            .concat({
-                parcel,
-                changeRequest: changeRequest._create({})
-                // ^ clear changeRequest cache before storing this
-                // so we dont use unnecessary memory
-            });
+            .slice(0, historyIndexRef.current + 1); // remove items ahead in history
+
+        if(newBufferState.length < bufferStateRef.current.length) {
+            // if we've gone back and branched off into a new history
+            // compared with last submit, mark it as such
+            setAltHistory(true);
+        }
+
+        newBufferState = newBufferState.concat({
+            parcel,
+            changeRequest: changeRequest._create({})
+            // ^ clear changeRequest cache before storing this
+            // so we dont use unnecessary memory
+        });
 
         setBufferState(newBufferState);
         setHistoryIndex(bufferStateRef.current.length - 1);
@@ -120,10 +143,6 @@ export default (params: Params): Parcel => {
     };
 
     let moveHistoryIndex = (index: number) => {
-        let parcel = bufferStateRef.current[index].parcel;
-        parcel._treeShare.registry[parcel.id] = parcel;
-        // ^ update the registry so changes will go to
-        //   this older parcel instead of newer ones
         setHistoryIndex(index);
         refreshInnerParcel();
     };
@@ -132,13 +151,28 @@ export default (params: Params): Parcel => {
 
     let bufferSubmit = () => {
         bufferSubmitCountRef.current++;
+        let baseIndex = baseIndexRef.current;
+        let historyIndex = historyIndexRef.current;
 
-        let changeRequests = bufferStateRef.current
-            .slice(baseIndexRef.current + 1, historyIndexRef.current + 1)
-            .map(ii => ii.changeRequest);
+        if(altHistoryRef.current || historyIndex < baseIndex) {
+            // we're submitting from further into the past than the parent parcel
+            // or from an alternate branch of history
+            // and we can't derive the set of changes to make to reverse the actions that were undone
+            // so for now just set the data outright
+            let {data} = getHistoryParcel(historyIndex);
+            sourceRef.current._setData(data);
 
-        sourceRef.current.dispatch(ChangeRequest.squash(changeRequests));
-        setBaseIndex(historyIndexRef.current);
+        } else {
+            // we're submitting from further into the future than the parent parcel
+            let changeRequests = bufferStateRef.current
+                .slice(baseIndex + 1, historyIndex + 1)
+                .map(ii => ii.changeRequest);
+
+            sourceRef.current.dispatch(ChangeRequest.squash(changeRequests));
+        }
+
+        setBaseIndex(historyIndex);
+        setAltHistory(false);
     };
 
     let bufferSubmitDebounce = (ms: number) => {

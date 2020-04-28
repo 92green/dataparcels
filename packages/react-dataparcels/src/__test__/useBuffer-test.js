@@ -535,28 +535,26 @@ describe('useBuffer history', () => {
 
     it('should remove "newer" history items when making new changes after undoing', () => {
         let source = new Parcel({
-            value: 100
+            value: [1]
         });
 
         let {result} = renderHook(() => useBuffer({source}));
 
         act(() => {
-            result.current.set(200);
-            result.current.set(300);
-            result.current.meta.undo();
+            result.current.push(2);
             result.current.meta.undo();
         });
 
-        expect(result.current.value).toBe(100);
+        expect(result.current.value).toEqual([1]);
         expect(result.current.meta.canUndo).toBe(false);
         expect(result.current.meta.canRedo).toBe(true);
-        expect(result.current.meta._history.length).toBe(3);
+        expect(result.current.meta._history.length).toBe(2);
 
         act(() => {
-            result.current.set(400);
+            result.current.push(3);
         });
 
-        expect(result.current.value).toBe(400);
+        expect(result.current.value).toEqual([1,3]);
         expect(result.current.meta.canUndo).toBe(true);
         expect(result.current.meta.canRedo).toBe(false);
         expect(result.current.meta._history.length).toBe(2);
@@ -626,6 +624,167 @@ describe('useBuffer history', () => {
 
         expect(result.current.meta.canRedo).toBe(false);
         expect(result.current.value).toBe('abcd');
+    });
+
+    it('should be able to undo after submit and receive if history is large enough', () => {
+        let handleChange = jest.fn();
+
+        let source = new Parcel({
+            value: [100],
+            handleChange
+        });
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, history: 100}));
+
+        act(() => {
+            result.current.push(200);
+            result.current.push(300);
+            result.current.push(400);
+            result.current.meta.submit();
+            rerender({
+                source: new Parcel({
+                    value: [100,200,300,400],
+                    handleChange
+                })
+            });
+        });
+
+        expect(result.current.value).toEqual([100,200,300,400]);
+        expect(result.current.meta.canUndo).toBe(true);
+        expect(result.current.meta._history.length).toBe(4);
+
+        act(() => {
+            result.current.meta.undo();
+            result.current.meta.undo();
+        });
+
+        expect(result.current.value).toEqual([100,200]);
+
+        act(() => {
+            result.current.meta.submit();
+        });
+
+        expect(handleChange).toHaveBeenCalledTimes(2);
+        expect(handleChange.mock.calls[1][0].value).toEqual([100,200]);
+    });
+
+    it('should be able to undo after submit, then redo and submit if history is large enough', () => {
+        let handleChange = jest.fn();
+
+        let source = new Parcel({
+            value: [100],
+            handleChange
+        });
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, history: 100}));
+
+        act(() => {
+            result.current.push(200);
+            result.current.push(300);
+            result.current.push(400);
+            result.current.meta.submit();
+            rerender({
+                source: new Parcel({
+                    value: [100,200,300,400],
+                    handleChange
+                })
+            });
+        });
+
+        expect(result.current.value).toEqual([100,200,300,400]);
+        expect(result.current.meta.canUndo).toBe(true);
+        expect(result.current.meta._history.length).toBe(4);
+
+        act(() => {
+            result.current.meta.undo();
+        });
+
+        expect(result.current.value).toEqual([100,200,300]);
+
+        act(() => {
+            result.current.meta.submit();
+            rerender({
+                source: new Parcel({
+                    value: [100,200,300],
+                    handleChange
+                })
+            });
+        });
+
+        expect(handleChange).toHaveBeenCalledTimes(2);
+        expect(handleChange.mock.calls[1][0].value).toEqual([100,200,300]);
+        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('setData');
+
+        // if another submit occurs, right now it is also a setdata
+        // ideally this should be fixed but right noe poses no problems
+    });
+
+    it('should be able to undo and redo after submit, if history is large enough', () => {
+        let handleChange = jest.fn();
+
+        let source = new Parcel({
+            value: [100],
+            handleChange
+        });
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, history: 100}));
+
+        act(() => {
+            result.current.push(200);
+            result.current.push(300);
+            result.current.push(400);
+            result.current.meta.submit();
+            rerender({
+                source: new Parcel({
+                    value: [100,200,300,400],
+                    handleChange
+                })
+            });
+        });
+
+        expect(result.current.value).toEqual([100,200,300,400]);
+        expect(result.current.meta.canUndo).toBe(true);
+        expect(result.current.meta._history.length).toBe(4);
+
+        act(() => {
+            result.current.meta.undo();
+        });
+
+        act(() => {
+            result.current.push(777);
+        });
+
+        expect(result.current.value).toEqual([100,200,300,777]);
+        expect(result.current.meta._history.length).toBe(4);
+
+        act(() => {
+            result.current.meta.submit();
+            rerender({
+                source: new Parcel({
+                    value: [100,200,300,777],
+                    handleChange
+                })
+            });
+        });
+
+        expect(handleChange).toHaveBeenCalledTimes(2);
+        expect(handleChange.mock.calls[1][0].value).toEqual([100,200,300,777]);
+        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('setData');
+
+        act(() => {
+            result.current.push(444);
+            result.current.meta.submit();
+            rerender({
+                source: new Parcel({
+                    value: [100,200,300,777,444],
+                    handleChange
+                })
+            });
+        });
+
+        expect(handleChange).toHaveBeenCalledTimes(3);
+        expect(handleChange.mock.calls[2][0].value).toEqual([100,200,300,777,444]);
+        expect(handleChange.mock.calls[2][1]._actions[0].type).not.toBe('setData');
     });
 
 });
