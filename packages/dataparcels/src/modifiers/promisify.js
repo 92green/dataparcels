@@ -25,13 +25,13 @@ type Config = {
     last?: boolean
 };
 
-export default (config: Config) => {
+export default (config: Config): Updater => {
     let {key, revert, last} = config;
     let fn = config.effect;
     let count = 0;
     let chain = Promise.resolve();
 
-    return (data: Data) => {
+    let updater = (data: Data): PartialData => {
 
         let statusKey = `${key}Status`;
         let errorKey = `${key}Error`;
@@ -71,4 +71,7 @@ export default (config: Config) => {
             effect
         };
     };
+
+    updater.revertKey = key;
+    return updater;
 };

@@ -81,7 +81,8 @@ export default (params: Params): Parcel => {
         source: preparedParcel,
         buffer,
         history,
-        derive
+        derive,
+        revertKey: onChange.revertKey
     });
 
     return bufferedParcel;
