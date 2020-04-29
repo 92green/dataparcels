@@ -1,7 +1,7 @@
 {
   "name": "dataparcels-docs",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Dataparcels docs",
   "author": "Damien Clarke",
   "license": "MIT",
@@ -13,12 +13,12 @@
     "preview": "yarn gatsby build && yarn gatsby serve"
   },
   "dependencies": {
-    "dataparcels": "^1.0.3",
+    "dataparcels": "^1.0.4",
     "dcme-gatsby": "^1.0.8",
     "dcme-style": "^1.1.12",
     "gatsby": "^2.13.20",
-    "react-dataparcels": "^1.0.3",
-    "react-dataparcels-drag": "^1.0.3",
+    "react-dataparcels": "^1.0.4",
+    "react-dataparcels-drag": "^1.0.4",
     "unmutable": "^0.46.1"
   }
 }
