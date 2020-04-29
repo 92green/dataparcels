@@ -16,6 +16,7 @@ type Params = {
     onChange?: ParcelValueUpdater,
     derive?: ParcelValueUpdater,
     buffer?: boolean|number,
+    history?: number,
     deriveSource?: ParcelValueUpdater
 };
 
@@ -29,6 +30,7 @@ export default (params: Params): Parcel => {
         onChange = noop,
         derive = noop,
         buffer = false,
+        history = 0,
         deriveSource = noop
     } = params;
 
@@ -78,6 +80,7 @@ export default (params: Params): Parcel => {
     let bufferedParcel = useBuffer({
         source: preparedParcel,
         buffer,
+        history,
         derive
     });
 

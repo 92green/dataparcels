@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.3 KB",
+        "limit": "10.1 KB",
         "path": "lib/index.js"
     },
     {
@@ -12,7 +12,7 @@
         "path": "cancel.js"
     },
     {
-        "limit": "7.3 KB",
+        "limit": "7.2 KB",
         "path": "ChangeRequest.js"
     },
     {
@@ -32,7 +32,7 @@
         "path": "promisify.js"
     },
     {
-        "limit": "2.2 KB",
+        "limit": "0.6 KB",
         "path": "translate.js"
     },
     {

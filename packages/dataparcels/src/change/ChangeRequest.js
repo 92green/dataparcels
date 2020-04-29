@@ -86,29 +86,12 @@ export default class ChangeRequest {
     }
 
     merge = (other: ChangeRequest): ChangeRequest => {
-
-        let actions = other._actions.reduce((actions, thisAction) => {
-            let lastAction = actions.slice(-1)[0];
-
-            let shouldReplace: boolean = lastAction
-                && thisAction.type === "set"
-                && lastAction.type === "set"
-                && thisAction.keyPath.join(".") === lastAction.keyPath.join(".");
-
-            if(shouldReplace) {
-                actions = actions.slice(0,-1);
-            }
-            return actions.concat(thisAction);
-        }, this._actions);
-
-        let nextFrameMeta = {
-            ...this._nextFrameMeta,
-            ...other._nextFrameMeta
-        };
-
         return this._create({
-            actions,
-            nextFrameMeta
+            actions: this._actions.concat(other._actions),
+            nextFrameMeta: {
+                ...this._nextFrameMeta,
+                ...other._nextFrameMeta
+            }
         });
     };
 

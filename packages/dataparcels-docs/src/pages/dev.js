@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {useState} from 'react';
 import {useRef} from 'react';
 import Page from 'component/Page';
 import {H1} from 'dcme-style';
@@ -13,31 +14,35 @@ export default function PersonEditor() {
 
     let rejectRef = useRef();
 
+    let [dep, setDep] = useState(0);
+
     let personParcel = useParcel({
-        // source: () => ({
-        //     value: {
-        //         firstname: "Robert",
-        //         lastname: "Clamps",
-        //         saves: 0
-        //     }
-        // }),
-        source: promisify({
-            key: 'load',
-            effect: async () => {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                return {
-                    value: {
-                        firstname: "Robert",
-                        lastname: "Clamps",
-                        saves: 0
-                    }
-                };
+        source: () => ({
+            value: {
+                firstname: "Robert",
+                lastname: `Clamps ${dep}`,
+                saves: 0
             }
         }),
+        // source: promisify({
+        //     key: 'load',
+        //     effect: async () => {
+        //         await new Promise(resolve => setTimeout(resolve, 1000));
+        //         return {
+        //             value: {
+        //                 firstname: "Robert",
+        //                 lastname: "Clamps",
+        //                 saves: 0
+        //             }
+        //         };
+        //     }
+        // }),
         onChange: promisify({
             key: 'save',
-            effect: async ({value}) => {
+            effect: async ({value, changeRequest}) => {
                 await new Promise(resolve => setTimeout(resolve, 1000));
+
+                console.log('value', value, changeRequest);
 
                 if(rejectRef.current) {
                     rejectRef.current = false;
@@ -53,7 +58,9 @@ export default function PersonEditor() {
             },
             revert: true
         }),
-        buffer: true
+        dependencies: [dep],
+        buffer: true,
+        history: 100
     });
 
     return <Page>
@@ -68,27 +75,27 @@ export default function PersonEditor() {
             {personParcel.value &&
                 <>
                     <div>firstname</div>
-                    <Boundary source={personParcel.get('firstname')}>
-                        {(firstname) => <input type="text" {...firstname.spreadInput()} />}
-                    </Boundary>
+                    <input type="text" {...personParcel.get('firstname').spreadInput()} />
 
                     <div>lastname</div>
-                    <Boundary source={personParcel.get('lastname')}>
-                        {(lastname) => <input type="text" {...lastname.spreadInput()} />}
-                    </Boundary>
+                    <input type="text" {...personParcel.get('lastname').spreadInput()} />
 
-                    <div>save status {personParcel.meta.saveStatus}</div>
-                    <div>save error {personParcel.meta.saveError && personParcel.meta.saveError.message}</div>
-                    <div>saves {personParcel.value.saves}</div>
+                    <div>save status {personParcel.meta.saveStatus} error: {personParcel.meta.saveError && personParcel.meta.saveError.message}</div>
+                    <div>synced {personParcel.meta.synced ? 'yeah' : 'nah'}</div>
 
                     <div>
                         <button onClick={personParcel.meta.submit}>submit</button>
-                    </div>
-                    <div>
-                        <button onClick={() => {rejectRef.current = true;}}>reject</button>
+                        {personParcel.meta.saveStatus === 'pending' && <button onClick={() => {rejectRef.current = true;}}>reject</button>}
+                        <button onClick={personParcel.meta.reset}>reset</button>
                     </div>
                 </>
             }
+
+            <div>
+                <button onClick={personParcel.meta.undo}>undo</button>
+                <button onClick={personParcel.meta.redo}>redo</button>
+                <button onClick={() => setDep(i => i + 1)}>receive</button>
+            </div>
         </ContentNav>
     </Page>;
 }
