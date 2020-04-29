@@ -55,12 +55,10 @@ export default function PersonEditor() {
                         saves: value.saves + 1
                     }
                 };
-            },
-            revert: true
+            }
         }),
         dependencies: [dep],
-        buffer: true,
-        history: 100
+        buffer: true
     });
 
     return <Page>
