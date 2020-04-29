@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.4 KB",
+        "limit": "10.2 KB",
         "path": "lib/index.js"
     },
     {
@@ -12,7 +12,7 @@
         "path": "cancel.js"
     },
     {
-        "limit": "7.4 KB",
+        "limit": "7.3 KB",
         "path": "ChangeRequest.js"
     },
     {
@@ -32,7 +32,7 @@
         "path": "promisify.js"
     },
     {
-        "limit": "6.1 KB",
+        "limit": "0.6 KB",
         "path": "translate.js"
     },
     {
@@ -52,7 +52,7 @@
         "path": "Boundary.js"
     },
     {
-        "limit": "12.6 KB",
+        "limit": "12.2 KB",
         "path": "ParcelBoundary.js"
     },
     {
@@ -60,15 +60,15 @@
         "path": "ParcelDrag.js"
     },
     {
-        "limit": "12.2 KB",
+        "limit": "12.1 KB",
         "path": "useParcelBuffer.js"
     },
     {
-        "limit": "13.4 KB",
+        "limit": "13.2 KB",
         "path": "useParcelForm.js"
     },
     {
-        "limit": "10.9 KB",
+        "limit": "10.7 KB",
         "path": "useParcelState.js"
     },
     {

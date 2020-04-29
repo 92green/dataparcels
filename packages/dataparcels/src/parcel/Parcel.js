@@ -21,14 +21,11 @@ import Action from '../change/Action';
 import isIndexedValue from '../parcelData/isIndexedValue';
 import isParentValue from '../parcelData/isParentValue';
 import combine from '../parcelData/combine';
-import setMetaDefault from '../parcelData/setMetaDefault';
 import prepareChildKeys from '../parcelData/prepareChildKeys';
 import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
 import parcelGet from '../parcelData/get';
 import parcelHas from '../parcelData/has';
 
-import filter from 'unmutable/filter';
-import has from 'unmutable/has';
 import pipeWith from 'unmutable/pipeWith';
 import first from 'unmutable/first';
 import last from 'unmutable/last';
@@ -376,25 +373,8 @@ export default class Parcel {
 
         // Types(`initialMeta()`, `initialMeta`, `object`)(initialMeta);
         this.initialMeta = (initialMeta: ParcelMeta): Parcel => {
-            let {meta} = this._parcelData;
-
-            let parcelDataUpdater = pipeWith(
-                initialMeta,
-                filter((value, key) => !has(key)(meta)),
-                setMetaDefault
-            );
-
-            return this._create({
-                rawId: this._idPushModifier('im'),
-                parcelData: parcelDataUpdater(this._parcelData),
-                updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
-                    type: 'mu',
-                    updater: parcelDataUpdater,
-                    changeRequest
-                })
-            });
+            return this.modifyDown(({meta}) => ({meta: {...initialMeta, ...meta}}));
         };
-
     }
 
     //
