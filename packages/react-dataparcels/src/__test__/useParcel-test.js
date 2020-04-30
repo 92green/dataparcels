@@ -2,6 +2,7 @@
 import {act} from 'react-hooks-testing-library';
 import {renderHook} from 'react-hooks-testing-library';
 import useParcel from '../useParcel';
+import promisify from 'dataparcels/promisify';
 
 jest.useFakeTimers();
 
@@ -301,4 +302,100 @@ describe('useParcel deriveSource (only used when buffer is set)', () => {
 
     });
 
+});
+
+describe('useParcel revert', () => {
+
+    it('should revert changes if using promisify in onChange and the request fails', async () => {
+
+        // remove setTimeout because jest doesnt handle
+        // setTimeouts and promises all mixed together like this
+        let realSetTimeout = window.setTimeout;
+        window.setTimeout = (fn, ms) => fn();
+
+        let onChange = jest.fn();
+
+        let {result} = renderHook(() => useParcel({
+            source: () => ({
+                value: []
+            }),
+            onChange: promisify({
+                key: 'save',
+                effect: async () => {
+                    throw new Error('NO!');
+                }
+            }),
+            buffer: true
+        }));
+
+        act(() => {
+            result.current.push("A");
+            result.current.push("B");
+            result.current.push("C");
+            result.current.meta.submit();
+        });
+
+        expect(result.current.meta.saveStatus).toBe('pending');
+        expect(result.current.meta._history.length).toBe(4);
+
+        await act(async () => {
+            await Promise.resolve();
+        });
+
+        expect(result.current.value).toEqual(["A","B","C"]);
+        expect(result.current.meta.saveStatus).toBe('rejected');
+        expect(result.current.meta._history.length).toBe(4);
+        expect(result.current.meta._baseIndex).toBe(0);
+
+        act(() => {
+            result.current.meta.undo();
+            result.current.meta.undo();
+        });
+
+        expect(result.current.value).toEqual(["A"]);
+
+        window.setTimeout = realSetTimeout;
+    });
+
+    it('should be normal if using promisify in onChange and the request succeeds', async () => {
+
+        // remove setTimeout because jest doesnt handle
+        // setTimeouts and promises all mixed together like this
+        let realSetTimeout = window.setTimeout;
+        window.setTimeout = (fn, ms) => fn();
+
+        let onChange = jest.fn();
+
+        let {result} = renderHook(() => useParcel({
+            source: () => ({
+                value: []
+            }),
+            onChange: promisify({
+                key: 'save',
+                effect: async () => {}
+            }),
+            buffer: true
+        }));
+
+        act(() => {
+            result.current.push("A");
+            result.current.push("B");
+            result.current.push("C");
+            result.current.meta.submit();
+        });
+
+        expect(result.current.meta.saveStatus).toBe('pending');
+        expect(result.current.meta._history.length).toBe(4);
+
+        await act(async () => {
+            await Promise.resolve();
+        });
+
+        expect(result.current.value).toEqual(["A","B","C"]);
+        expect(result.current.meta.saveStatus).toBe('resolved');
+        expect(result.current.meta._history.length).toBe(1);
+        expect(result.current.meta._baseIndex).toBe(0);
+
+        window.setTimeout = realSetTimeout;
+    });
 });

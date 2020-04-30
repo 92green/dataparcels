@@ -48,7 +48,7 @@
         "path": "asyncChange.js"
     },
     {
-        "limit": "12.1 KB",
+        "limit": "12.2 KB",
         "path": "Boundary.js"
     },
     {
@@ -72,11 +72,11 @@
         "path": "useParcelState.js"
     },
     {
-        "limit": "12.3 KB",
+        "limit": "12.4 KB",
         "path": "useParcel.js"
     },
     {
-        "limit": "12.0 KB",
+        "limit": "12.1 KB",
         "path": "useBuffer.js"
     }
 ]

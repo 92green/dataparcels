@@ -21,17 +21,16 @@ type PromiseFunction = (data: Data) => Promise<?PartialData|Updater>;
 type Config = {
     key: string,
     effect: PromiseFunction,
-    revert?: boolean,
     last?: boolean
 };
 
-export default (config: Config) => {
-    let {key, revert, last} = config;
+export default (config: Config): Updater => {
+    let {key, last} = config;
     let fn = config.effect;
     let count = 0;
     let chain = Promise.resolve();
 
-    return (data: Data) => {
+    let updater = (data: Data): PartialData => {
 
         let statusKey = `${key}Status`;
         let errorKey = `${key}Error`;
@@ -49,11 +48,6 @@ export default (config: Config) => {
                 .then(data => lastChain.then((): any => data))
                 .then(({result, error}) => {
                     if(last && count !== countAtCall) return;
-
-                    if(error) {
-                        result = revert ? data.changeRequest.prevData : {};
-                    }
-
                     update(combine(
                         typeof result !== 'function' ? () => result : result,
                         () => ({
@@ -71,4 +65,7 @@ export default (config: Config) => {
             effect
         };
     };
+
+    updater.revertKey = key;
+    return updater;
 };

@@ -31,7 +31,8 @@ type Params = {
     source: Parcel,
     buffer?: boolean|number,
     history?: number,
-    derive?: ParcelValueUpdater
+    derive?: ParcelValueUpdater,
+    revertKey?: string
 };
 
 export default (params: Params): Parcel => {
@@ -42,7 +43,8 @@ export default (params: Params): Parcel => {
         source,
         buffer = true,
         history = 0,
-        derive = noop
+        derive = noop,
+        revertKey
     } = params;
 
     // source
@@ -62,6 +64,7 @@ export default (params: Params): Parcel => {
     let [baseIndexRef, setBaseIndex] = useRefState(0);
     let [altHistoryRef, setAltHistory] = useRefState(false);
     let [historyIndexRef, setHistoryIndex] = useRefState(0);
+    let [revertIndexRef, setRevertIndex] = useRefState(null);
 
     let getHistoryParcel = (index: number): Parcel => {
         // look backward from index until cached parcel is found...
@@ -96,9 +99,14 @@ export default (params: Params): Parcel => {
 
     let bufferReceive = (parcel: Parcel) => {
 
+        let revertStatus = revertKey
+            && revertIndexRef.current !== null
+            && parcel.meta[`${revertKey}Status`];
+
         let baseIndex = baseIndexRef.current;
         let remainingCount = bufferStateRef.current.length - baseIndex;
-        if(remainingCount > history) {
+
+        if(revertStatus !== 'pending' && revertStatus !== 'rejected' && remainingCount > history) {
             // remove past items
             setBufferState(bufferStateRef.current.slice(baseIndex));
             setBaseIndex(0);
@@ -115,6 +123,13 @@ export default (params: Params): Parcel => {
             if(item.received) return item;
             return {...item, parcel: undefined};
         });
+
+        if(revertStatus === 'resolved') {
+            setRevertIndex(null);
+        } else if(revertStatus === 'rejected') {
+            setBaseIndex(revertIndexRef.current);
+            setRevertIndex(null);
+        }
 
         setBufferState(newBufferState);
         refreshInnerParcel();
@@ -171,6 +186,7 @@ export default (params: Params): Parcel => {
             sourceRef.current.dispatch(ChangeRequest.squash(changeRequests));
         }
 
+        setRevertIndex(baseIndex);
         setBaseIndex(historyIndex);
         setAltHistory(false);
     };
@@ -241,7 +257,8 @@ export default (params: Params): Parcel => {
                     canUndo: historyIndexRef.current > 0,
                     canRedo: historyIndexRef.current < bufferStateRef.current.length - 1,
                     synced: !!(baseIndexRef.current === historyIndexRef.current && !altHistoryRef.current),
-                    _history: bufferStateRef.current
+                    _history: bufferStateRef.current,
+                    _baseIndex: baseIndexRef.current
                 }
             }))
             .modifyUp(derive);
