@@ -239,7 +239,7 @@ export default (params: Params): Parcel => {
 
         innerParcel = source
             .modifyDown(derive)
-            ._boundarySplit({handleChange});
+            ._boundarySplit(handleChange);
 
         bufferReceive(innerParcel);
     }

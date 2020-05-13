@@ -144,7 +144,7 @@ export default (params: Params): Return => {
         // boundary split to ensure that inner parcels chain are
         // completely isolated from outer parcels chain
         newInnerParcel = params.parcel
-            ._boundarySplit({handleChange})
+            ._boundarySplit(handleChange)
             .pipe(pipeWithFakePrevParcel(outerParcel, applyBeforeChange))
             ._changeAndReturn(parcel => {
                 // apply buffered changes to new parcel from props

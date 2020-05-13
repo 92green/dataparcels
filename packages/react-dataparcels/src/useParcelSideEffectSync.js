@@ -28,6 +28,6 @@ export default (params: Params): Return => {
         params.parcel.dispatch(changeRequest);
     };
 
-    let parcelWithSideEffect: Parcel = params.parcel._boundarySplit({handleChange});
+    let parcelWithSideEffect: Parcel = params.parcel._boundarySplit(handleChange);
     return [parcelWithSideEffect, undefined];
 };

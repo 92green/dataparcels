@@ -159,7 +159,7 @@ export default (params: Params): Return => {
             }
         };
 
-        newInnerParcel = params.parcel._boundarySplit({handleChange});
+        newInnerParcel = params.parcel._boundarySplit(handleChange);
         setOuterParcel(params.parcel);
         setInnerParcel(newInnerParcel);
     }
