@@ -10,7 +10,6 @@ import arrange from '../arrange';
 import cancel from '../cancel';
 import promisify from '../promisify';
 import translate from '../translate';
-import validation from '../validation';
 
 // internal files
 import InternalParcel from '../src/parcel/Parcel';
@@ -24,7 +23,6 @@ import InternalAsNodes from '../lib/parcelNode/arrange';
 import Internalcancel from '../lib/change/cancel';
 import InternalPromisify from '../lib/modifiers/promisify';
 import InternalTranslate from '../lib/modifiers/translate';
-import InternalValidation from '../lib/validation/validation';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
@@ -60,8 +58,4 @@ test('/promisify should export promisify', () => {
 
 test('/translate should export translate', () => {
     expect(translate).toBe(InternalTranslate);
-});
-
-test('/validation should export validation', () => {
-    expect(validation).toBe(InternalValidation);
 });

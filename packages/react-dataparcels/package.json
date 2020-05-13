@@ -30,8 +30,7 @@
     "useParcelForm.js",
     "useParcelState.js",
     "promisify.js",
-    "translate.js",
-    "validation.js"
+    "translate.js"
   ],
   "bugs": {
     "url": "https://github.com/92green/dataparcels/issues"

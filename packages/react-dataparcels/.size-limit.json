@@ -36,10 +36,6 @@
         "path": "translate.js"
     },
     {
-        "limit": "5.4 KB",
-        "path": "validation.js"
-    },
-    {
         "limit": "0.5 KB",
         "path": "asyncValue.js"
     },

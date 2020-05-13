@@ -34,9 +34,5 @@
     {
         "limit": "0.6 KB",
         "path": "translate.js"
-    },
-    {
-        "limit": "5.4 KB",
-        "path": "validation.js"
     }
 ]
