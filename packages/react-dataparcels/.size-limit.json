@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.2 KB",
+        "limit": "6.9 KB",
         "path": "lib/index.js"
     },
     {
@@ -8,7 +8,7 @@
         "path": "cancel.js"
     },
     {
-        "limit": "7.3 KB",
+        "limit": "2.9 KB",
         "path": "ChangeRequest.js"
     },
     {
@@ -32,7 +32,7 @@
         "path": "translate.js"
     },
     {
-        "limit": "12.2 KB",
+        "limit": "8.4 KB",
         "path": "Boundary.js"
     },
     {
@@ -40,11 +40,11 @@
         "path": "ParcelDrag.js"
     },
     {
-        "limit": "12.4 KB",
+        "limit": "8.6 KB",
         "path": "useParcel.js"
     },
     {
-        "limit": "12.1 KB",
+        "limit": "8.2 KB",
         "path": "useBuffer.js"
     }
 ]
