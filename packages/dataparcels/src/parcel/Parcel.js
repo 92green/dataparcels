@@ -47,7 +47,6 @@ const Element = 'Element';
 const DEFAULT_CONFIG_INTERNAL = () => ({
     child: undefined,
     dispatchId: '',
-    frameMeta: {},
     meta: {},
     rawId: ["^"],
     rawPath: ["^"],
@@ -78,7 +77,6 @@ export default class Parcel {
     _isElement: boolean;
     _isIndexed: boolean;
     _isParent: boolean;
-    _frameMeta: {[key: string]: any};
     _onHandleChange: ?Function;
     _parcelData: ParcelData;
     _parent: ParcelParent;
@@ -147,7 +145,6 @@ export default class Parcel {
         let {
             child,
             dispatchId,
-            frameMeta,
             meta,
             rawId,
             rawPath,
@@ -156,7 +153,6 @@ export default class Parcel {
             updateChangeRequestOnDispatch
         } = _configInternal || DEFAULT_CONFIG_INTERNAL();
 
-        this._frameMeta = frameMeta;
         this._onHandleChange = handleChange;
         this._updateChangeRequestOnDispatch = updateChangeRequestOnDispatch;
 
@@ -387,7 +383,6 @@ export default class Parcel {
             handleChange,
             rawId = this._rawId,
             rawPath = this._rawPath,
-            frameMeta = this._frameMeta,
             parcelData = this._parcelData,
             parent = this._parent,
             treeShare = this._treeShare,
@@ -408,7 +403,6 @@ export default class Parcel {
             {
                 child,
                 dispatchId,
-                frameMeta,
                 meta,
                 rawId,
                 rawPath,
@@ -458,8 +452,7 @@ export default class Parcel {
 
             let parcelWithChangedData = this._create({
                 handleChange: _onHandleChange,
-                parcelData,
-                frameMeta: changeRequest._nextFrameMeta
+                parcelData
             });
 
             _onHandleChange(parcelWithChangedData, changeRequestWithBase);
@@ -483,7 +476,6 @@ export default class Parcel {
         // swap out the parcels real _onHandleChange with a spy
         this._onHandleChange = (parcel, changeRequest) => {
             parcel._onHandleChange = _onHandleChange;
-            parcel._frameMeta = this._frameMeta;
             result = [parcel, changeRequest];
         };
 
