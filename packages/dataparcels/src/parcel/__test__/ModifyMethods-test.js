@@ -27,7 +27,7 @@ describe('Parcel.modifyDown()', () => {
             meta: {},
             child: undefined,
             value: 124,
-            key: "#a"
+            key: "#0"
         };
         expect(updated).toEqual(expectedData);
         expect(updater.mock.calls[0][0]).toEqual(parcel.data);
@@ -78,7 +78,7 @@ describe('Parcel.modifyDown()', () => {
 
         expect(newParcel.data.child).toEqual([
             {
-                key: '#a',
+                key: '#0',
                 child: undefined,
                 meta: {
                     def: 456
@@ -105,7 +105,7 @@ describe('Parcel.modifyDown()', () => {
         expect(handleChange.mock.calls[0][0].value).toEqual([123]);
     });
 
-    it('should have id which is unique to updater', () => {
+    it.skip('should have id which is unique to updater', () => {
         let updater = () => ({value: []});
         let updater2 = ({value}) => ({value: 123});
 
@@ -126,7 +126,7 @@ describe('Parcel.modifyDown()', () => {
 
 describe('Parcel.modifyUp()', () => {
 
-    it('should have id which is unique to updater', () => {
+    it.skip('should have id which is unique to updater', () => {
         let updater = () => ({value: []});
         let updater2 = ({value}) => ({value: 123});
 
@@ -344,36 +344,36 @@ describe('Parcel.modifyUp()', () => {
             expect(handleChange.mock.calls[2][0].value).toBe(202);
         });
 
-        // it('should allow multiple modifiers to calls effect update()', async () => {
+        it('should allow multiple modifiers to calls effect update()', async () => {
 
-        //     let handleChange = jest.fn();
-        //     let parcel = new Parcel({
-        //         handleChange,
-        //         value: 100
-        //     });
+            let handleChange = jest.fn();
+            let parcel = new Parcel({
+                handleChange,
+                value: 100
+            });
 
-        //     parcel
-        //         .modifyUp(() => ({
-        //             effect: (update) => {
-        //                 update(({value}) => ({value: value + 1}));
-        //             }
-        //         }))
-        //         .modifyUp(() => ({
-        //             effect: (update) => {
-        //                 update(({value}) => ({value: value + 1}));
-        //             }
-        //         }))
-        //         .set(200);
+            parcel
+                .modifyUp(() => ({
+                    effect: (update) => {
+                        update(({value}) => ({value: value + 1}));
+                    }
+                }))
+                .modifyUp(() => ({
+                    effect: (update) => {
+                        update(({value}) => ({value: value + 1}));
+                    }
+                }))
+                .set(200);
 
-        //     expect(handleChange).toHaveBeenCalledTimes(1);
-        //     expect(handleChange.mock.calls[0][0].value).toBe(200);
+            expect(handleChange).toHaveBeenCalledTimes(1);
+            expect(handleChange.mock.calls[0][0].value).toBe(200);
 
-        //     jest.advanceTimersByTime(500);
+            jest.advanceTimersByTime(500);
 
-        //     expect(handleChange).toHaveBeenCalledTimes(3);
-        //     expect(handleChange.mock.calls[1][0].value).toBe(201);
-        //     expect(handleChange.mock.calls[2][0].value).toBe(202);
-        // });
+            expect(handleChange).toHaveBeenCalledTimes(3);
+            expect(handleChange.mock.calls[1][0].value).toBe(201);
+            expect(handleChange.mock.calls[2][0].value).toBe(202);
+        });
     });
 });
 

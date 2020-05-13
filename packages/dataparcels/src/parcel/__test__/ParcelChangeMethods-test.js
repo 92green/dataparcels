@@ -44,7 +44,7 @@ test('Parcel.set() should call the Parcels handleChange function with the new pa
     };
 
     var expectedAction = {
-        type: "set",
+        type: "basic.set",
         keyPath: [],
         payload: 456
     };
@@ -68,8 +68,8 @@ test('Parcel.set() should remove and replace child data when setting a deep data
 
     var expectedData = {
         child: [
-            {"key": "#a"},
-            {"key": "#b"}
+            {"key": "#0"},
+            {"key": "#1"}
         ],
         key: "^",
         meta: {},
@@ -80,7 +80,7 @@ test('Parcel.set() should remove and replace child data when setting a deep data
         child: undefined,
         meta: {},
         value: 6,
-        key: '#a'
+        key: '#0'
     };
 
     new Parcel({
@@ -91,6 +91,38 @@ test('Parcel.set() should remove and replace child data when setting a deep data
             expect(deep).toEqual(expectedDeepData);
         }
     }).set([[6],[2,3,4]]);
+});
+
+test('Parcel._setData() should set all parcelData', () => {
+    expect.assertions(2);
+
+    var expectedData = {
+        child: undefined,
+        meta: {foo: true},
+        value: 444,
+        key: '^'
+    };
+
+    var expectedAction = {
+        type: "basic.setData",
+        keyPath: [],
+        payload: {
+            value: 444,
+            meta: {foo: true}
+        }
+    };
+
+    new Parcel({
+        value: 123,
+        handleChange: (parcel, changeRequest) => {
+            expect(expectedData).toEqual(parcel.data);
+            expect(expectedAction).toEqual(GetAction(changeRequest));
+        }
+    })
+        ._setData({
+            value: 444,
+            meta: {foo: true}
+        });
 });
 
 test('Parcel.update() should call the Parcels handleChange function with the new parcelData', () => {
@@ -107,7 +139,7 @@ test('Parcel.update() should call the Parcels handleChange function with the new
     expect(handleChange.mock.calls[0][0].data.value).toBe(124);
 });
 
-test('Parcel.update(arrange()) should call the Parcels handleChange function with the new parcelData', () => {
+test.skip('Parcel.update(arrange()) should call the Parcels handleChange function with the new parcelData', () => {
 
     let handleChange = jest.fn();
     let updater = jest.fn(arr => [...arr, 4]);
@@ -136,7 +168,7 @@ test('Parcel._setInput() should work like set but take the value from event.curr
     };
 
     var expectedAction = {
-        type: "set",
+        type: "basic.set",
         keyPath: [],
         payload: 456
     };
@@ -189,7 +221,7 @@ test('Parcel.setMeta() should call the Parcels handleChange function with the ne
     };
 
     var expectedAction = {
-        type: "setMeta",
+        type: "basic.setMeta",
         keyPath: [],
         payload: {
             abc: 123

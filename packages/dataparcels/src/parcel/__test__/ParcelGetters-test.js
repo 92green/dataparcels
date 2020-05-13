@@ -60,7 +60,7 @@ test('Parcel.key should return the Parcels key', () => {
     };
     expect(new Parcel(data).key).toBe("^");
     expect(new Parcel(data).get("a").key).toBe("a");
-    expect(new Parcel(data).getIn(["a",0]).key).toBe("#a");
+    expect(new Parcel(data).getIn(["a",0]).key).toBe("#0");
     expect(new Parcel(data).get("something.:@").key).toBe("something.:@");
     expect(new Parcel(data).get("b").key).toBe("b");
     // t.is("#a", new Parcel(data).getIn(["a",?????]).key); TODO
@@ -76,7 +76,7 @@ test('Parcel.id should return the Parcels id', () => {
     expect(new Parcel(data).id).toBe("^");
     expect(new Parcel(data).get("a").id).toBe("^.a");
     expect(new Parcel(data).modifyDown(ii => ii).get("a").id).toBe("^.~md-333276836.a");
-    expect(new Parcel(data).getIn(["a",0]).id).toBe("^.a.#a");
+    expect(new Parcel(data).getIn(["a",0]).id).toBe("^.a.%#0");
     expect(new Parcel(data).get("something.:@").id).toBe("^.something%.%:%@");
     expect(new Parcel(data).get("b").id).toBe("^.b");
     // t.is("#a", new Parcel(data).getIn(["a",?????]).id); TODO
@@ -92,7 +92,7 @@ test('Parcel.path should return the Parcels path', () => {
     expect(new Parcel(data).path).toEqual([]);
     expect(new Parcel(data).get("a").path).toEqual(["a"]);
     expect(new Parcel(data).modifyDown(ii => ii).get("a").path).toEqual(["a"]);
-    expect(new Parcel(data).getIn(["a",0]).path).toEqual(["a","#a"]);
+    expect(new Parcel(data).getIn(["a",0]).path).toEqual(["a","#0"]);
     expect(new Parcel(data).get("something.:@").path).toEqual(["something.:@"]);
     expect(new Parcel(data).get("b").path).toEqual(["b"]);
     // t.is("#a", new Parcel(data).getIn(["a",?????]).path); TODO
