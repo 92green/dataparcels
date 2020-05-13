@@ -495,7 +495,7 @@ export default class Parcel {
         return result;
     };
 
-    _boundarySplit = ({handleChange}: *): Parcel => {
+    _boundarySplit = (handleChange: Function): Parcel => {
         return this._create({
             rawId: this._idPushModifier('bs'),
             handleChange
