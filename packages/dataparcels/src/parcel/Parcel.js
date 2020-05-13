@@ -1,66 +1,40 @@
 // @flow
-import type {ParcelCreateConfigType} from '../types/Types';
-import type {Index} from '../types/Types';
 import type {Key} from '../types/Types';
-import type {ParcelConfigInternal} from '../types/Types';
-import type {ParcelConfig} from '../types/Types';
+import type {Type} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type {ParcelMapper} from '../types/Types';
 import type {ParcelMeta} from '../types/Types';
-import type {ParcelParent} from '../types/Types';
-import type {ParcelTreeShare} from '../types/Types';
 import type {ParcelUpdater} from '../types/Types';
 import type {ParcelValueUpdater} from '../types/Types';
-import type {ParentType} from '../types/Types';
-
-import {ParcelTypeMethodMismatch} from '../errors/Errors';
 
 import ChangeRequest from '../change/ChangeRequest';
+import ActionReducer from '../change/ActionReducer';
 import Action from '../change/Action';
-
-import isIndexedValue from '../parcelData/isIndexedValue';
-import isParentValue from '../parcelData/isParentValue';
 import combine from '../parcelData/combine';
-import prepareChildKeys from '../parcelData/prepareChildKeys';
-import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
-import parcelGet from '../parcelData/get';
-import parcelHas from '../parcelData/has';
+import TypeSet from '../typeHandlers/TypeSet';
 
-import pipeWith from 'unmutable/pipeWith';
-import first from 'unmutable/first';
-import last from 'unmutable/last';
-import clone from 'unmutable/clone';
-import map from 'unmutable/map';
-import size from 'unmutable/size';
-import toArray from 'unmutable/toArray';
-
+import pipeWith from 'unmutable/lib/util/pipeWith';
 import HashString from '../util/HashString';
+
+type Config = {
+    value?: any,
+    meta?: {[key: string]: any},
+    handleChange?: HandleChange,
+    types?: (types: Type[]) => Type[],
+    fromSelf?: boolean
+};
+
+type TreeShare = {
+    registry: {[id: string]: Parcel},
+    effectRegistry: {[effectId: string]: boolean}
+};
+
+type HandleChange = (parcel: Parcel, changeRequest: ChangeRequest) => void;
+
+type UpdateChangeRequestOnDispatch = (changeRequest: ChangeRequest) => ChangeRequest;
 
 const doNothing = (ii: any): any => ii;
 const escapeKey = (key: string): string => key.replace(/([^\w])/g, "%$1");
-
-const Parent = 'Parent';
-const Child = 'Child';
-const Indexed = 'Indexed';
-const Element = 'Element';
-
-const DEFAULT_CONFIG_INTERNAL = () => ({
-    child: undefined,
-    dispatchId: '',
-    meta: {},
-    rawId: ["^"],
-    rawPath: ["^"],
-    parent: {
-        isIndexed: false,
-        isFirstChild: false,
-        isLastChild: false
-    },
-    treeShare: {
-        registry: {},
-        effectRegistry: {}
-    },
-    updateChangeRequestOnDispatch: doNothing
-});
 
 export default class Parcel {
 
@@ -68,369 +42,121 @@ export default class Parcel {
     // private member variables
     //
 
-    // from constructor
-    _childParcelCache: {[key: string]: Parcel} = {};
-    _dispatchId: string;
-    _rawId: string[];
-    _rawPath: string[];
-    _isChild: boolean;
-    _isElement: boolean;
-    _isIndexed: boolean;
-    _isParent: boolean;
-    _onHandleChange: ?Function;
+    _childParcelCache: Map = new Map();
+    _childProperties: {[key: string]: any} = {};
+    _childPropertiesPrecomputed: {[key: string]: any} = {};
+    _dispatchId: string = '';
+    _handleChange: ?HandleChange;
+    _rawId: string[] = ['^'];
+    _rawPath: string[] = ['^'];
     _parcelData: ParcelData;
-    _parent: ParcelParent;
-    _treeShare: ParcelTreeShare;
-    _updateChangeRequestOnDispatch: Function;
-    _setInput: Function;
-    _setCheckbox: Function;
+    _treeShare: TreeShare = {
+        typeSet: undefined,
+        actionReducer: undefined,
+        registry: {},
+        effectRegistry: {}
+    };
+    _type: Type;
+    _parentTypeName: ?string;
+    _updateChangeRequestOnDispatch: UpdateChangeRequestOnDispatch = doNothing;
 
     //
-    // public methods
+    // parcel creation
     //
 
-    // Spread methods
-    spread: Function;
-    spreadInput: Function;
-    spreadCheckbox: Function;
-
-    // Branch methods
-    get: Function;
-    getIn: Function;
-    children: Function;
-    toArray: Function;
-    metaAsParcel: Function;
-
-    // Parent methods
-    has: Function;
-
-    // Change methods
-    set: Function;
-    update: Function;
-    delete: Function;
-
-    // Advanced change methods
-    setMeta: Function;
-    dispatch: Function;
-
-    // Indexed methods
-    insertAfter: Function;
-    insertBefore: Function;
-    push: Function;
-    pop: Function;
-    shift: Function;
-    swap: Function;
-    swapNext: Function;
-    swapPrev: Function;
-    unshift: Function;
-
-    // Modify methods
-    modifyDown: Function;
-    modifyUp: Function;
-    initialMeta: Function;
-
-    // Composition methods
-    pipe = (...updaters: ParcelUpdater[]): Parcel => pipeWith(this, ...updaters);
-
-    constructor(config: ParcelConfig = {}, _configInternal: ?ParcelConfigInternal) {
-        //Types(`Parcel()`, `config`, `object`)(config);
-
-        let {
-            handleChange,
-            value
-        } = config;
-
-        //handleChange && Types(`Parcel()`, `config.handleChange`, `function`)(handleChange);
-
-        let {
-            child,
-            dispatchId,
-            meta,
-            rawId,
-            rawPath,
-            parent,
-            treeShare,
-            updateChangeRequestOnDispatch
-        } = _configInternal || DEFAULT_CONFIG_INTERNAL();
-
-        this._onHandleChange = handleChange;
-        this._updateChangeRequestOnDispatch = updateChangeRequestOnDispatch;
+    constructor(config: Config = {}) {
+        if(config.fromSelf) return;
 
         this._parcelData = {
-            value,
-            child,
-            key: this._getKeyFromRawPath(rawPath),
-            meta
+            value: config.value,
+            meta: config.meta || {},
+            child: undefined
         };
 
-        this._dispatchId = dispatchId;
-        this._rawId = rawId;
-        this._rawPath = rawPath;
-        this._isChild = rawPath.length > 1;
-        this._isElement = parent.isIndexed;
-        this._isIndexed = isIndexedValue(value);
-        this._isParent = isParentValue(value);
-        this._parent = parent;
-        this._treeShare = treeShare;
-        treeShare.registry[this._getIdFromRawId(rawId)] = this;
+        this._handleChange = config.handleChange;
 
-        this._setInput = (event: Object) => {
-            this.set(event.currentTarget.value);
-        };
-
-        this._setCheckbox = (event: Object) => {
-            this.set(event.currentTarget.checked);
-        };
-
-        //
-        // method prep
-        //
-
-        let fireAction = (type: string, payload: any, keyPath: any) => {
-            this._dispatch(new Action({type, keyPath, payload}));
-        };
-
-        let onlyType = (type: string, name: string, fn: Function) => {
-            // $FlowFixMe
-            if(!this[`_is${type}`]) {
-                return () => {
-                    throw ParcelTypeMethodMismatch(name, type, this.path);
-                };
-            }
-            return fn;
-        };
-
-        let fireActionOnlyType = (type: string, name: string, payload: any, keyPath: any) => {
-            return onlyType(type, name, () => fireAction(name, payload, keyPath))();
-        };
-
-        //
-        // public methods
-        //
-
-        // Spread Methods
-
-        this.spread = (notFoundValue: any): any => ({
-            value: this._getValue(notFoundValue),
-            onChange: this.set
-        });
-
-        this.spreadInput = (notFoundValue: any): any => ({
-            value: this._getValue(notFoundValue),
-            onChange: this._setInput
-        });
-
-        this.spreadCheckbox = (notFoundValue: ?boolean): any => ({
-            checked: !!this._getValue(notFoundValue),
-            onChange: this._setCheckbox
-        });
-
-        // Branch methods
-
-        this.get = onlyType(Parent, 'get', this._get);
-
-        // Types(`getIn()`, `keyPath`, `keyIndexPath`)(keyPath);
-        this.getIn = onlyType(Parent, 'getIn', (keyPath: Array<Key|Index>, notFoundValue: any): Parcel => {
-            var parcel = this;
-            for(let i = 0; i < keyPath.length; i++) {
-                parcel = parcel.get(keyPath[i], i < keyPath.length - 1 ? {} : notFoundValue);
-            }
-            return parcel;
-        });
-
-        // Types(`children()`, `mapper`, `function`)(mapper);
-        this.children = onlyType(Parent, 'children', (mapper: ParcelMapper = doNothing): ParentType<Parcel> => {
-            return pipeWith(
-                this._parcelData.value,
-                clone(),
-                map((value, key) => mapper(this.get(key), key, this))
-            );
-        });
-
-        // Types(`toArray()`, `mapper`, `function`)(mapper);
-        this.toArray = onlyType(Parent, 'toArray', (mapper: ParcelMapper = doNothing): Array<Parcel> => {
-            return toArray()(this.children(mapper));
-        });
-
-        this.metaAsParcel = (key: string): Parcel => {
-            return this._create({
-                parcelData: {
-                    value: this.meta[key],
-                    meta: this.meta
-                },
-                handleChange: (parcel, changeRequest) => {
-                    let newActions = changeRequest.actions.filter(action => action.type === 'setMeta');
-
-                    if(newActions.length !== changeRequest.actions.length) {
-                        newActions.unshift(
-                            new Action({
-                                type: 'setMeta',
-                                payload: {
-                                    [key]: parcel.value
-                                }
-                            })
-                        );
-                    }
-
-                    this.dispatch(
-                        changeRequest._create({
-                            actions: newActions
-                        })
-                    );
-                },
-                rawId: this._idPushModifier(`mp-${key}`)
-            });
-        };
-
-        // Parent methods
-
-        //Types(`has()`, `key`, `keyIndex`)(key);
-        this.has = onlyType(Parent, 'has', (key: Key|Index): boolean => {
-            this._prepareChildKeys();
-            return parcelHas(key)(this._parcelData);
-        });
-
-        // Change methods
-
-        this.set = (value: any) => fireAction('set', value);
-
-        // Types(`update()`, `updater`, `function`)(updater);
-        this.update = (updater: ParcelValueUpdater) => {
-            let preparedUpdater = combine(updater);
-            fireAction('update', preparedUpdater);
-        };
-
-        this.delete = () => fireActionOnlyType(Child, 'delete');
-
-        // Advanced change methods
-
-        // Types(`setMeta()`, `partialMeta`, `object`)(partialMeta);
-        this.setMeta = (meta: ParcelMeta) => fireAction('setMeta', meta);
-
-        this.dispatch = this._dispatch;
-
-        // Indexed methods
-
-        // Types(`swap()`, `keyA`, `keyIndex`)(keyA);
-        // Types(`swap()`, `keyB`, `keyIndex`)(keyB);
-        this.insertAfter = (value: any) => fireActionOnlyType(Element, 'insertAfter', value);
-
-        this.insertBefore = (value: any) => fireActionOnlyType(Element, 'insertBefore', value);
-
-        this.push = (...values: Array<any>) => fireActionOnlyType(Indexed, 'push', values);
-
-        this.pop = onlyType(Indexed, 'pop', () => this.get(-1).delete());
-
-        this.shift = onlyType(Indexed, 'shift', () => this.get(0).delete());
-
-        this.swap = onlyType(Indexed, 'swap', (keyOrIndexA: Key|Index, keyOrIndexB: Key|Index) => {
-            let keyA: ?Key = keyOrIndexToKey(keyOrIndexA)(this._parcelData);
-            let keyB: ?Key = keyOrIndexToKey(keyOrIndexB)(this._parcelData);
-            if(keyA !== undefined && keyB !== undefined) {
-                fireAction('swap', keyB, [keyA]);
-            }
-        });
-
-        this.swapNext = () => fireActionOnlyType(Element, 'swapNext');
-
-        this.swapPrev = () => fireActionOnlyType(Element, 'swapPrev');
-
-        this.unshift = (...values: Array<any>) => fireActionOnlyType(Indexed, 'unshift', values);
-
-        // Modify methods
-
-        // Types(`modifyDown()`, `updater`, `function`)(updater);
-        this.modifyDown = (updater: ParcelValueUpdater): Parcel => {
-            let preparedUpdater = combine(updater);
-            return this._create({
-                rawId: this._idPushModifierUpdater('md', updater),
-                parcelData: preparedUpdater(this._parcelData),
-                updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
-                    type: 'md',
-                    updater: parcelData => preparedUpdater(parcelData)
-                })
-            });
-        };
-
-        // Types(`modifyUp()`, `updater`, `function`)(updater);
-        this.modifyUp = (updater: ParcelValueUpdater): Parcel => {
-            let preparedUpdater = combine(updater);
-
-            return this._create({
-                rawId: this._idPushModifierUpdater('mu', updater),
-                updateChangeRequestOnDispatch: (changeRequest) => changeRequest._addStep({
-                    type: 'mu',
-                    updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest}),
-                    changeRequest,
-                    effectUpdate: this._effectUpdate
-                })
-            });
-        };
-
-        // Types(`initialMeta()`, `initialMeta`, `object`)(initialMeta);
-        this.initialMeta = (initialMeta: ParcelMeta): Parcel => {
-            return this.modifyDown(({meta}) => ({meta: {...initialMeta, ...meta}}));
-        };
+        let typeSet = new TypeSet(config.types ? config.types(TypeSet.defaultTypes) : TypeSet.defaultTypes);
+        this._treeShare.typeSet = typeSet;
+        this._treeShare.actionReducer = ActionReducer(typeSet);
+        this._init();
     }
+
+    _init = () => {
+
+        this._parcelData = {
+            ...this._parcelData,
+            meta: this._parcelData.meta || {},
+            key: this._rawPath.slice(-1)[0]
+        };
+
+        this._treeShare.registry[this.id] = this;
+
+        //
+        // apply type specific methods and properties
+        //
+
+        this._type = this._treeShare.typeSet.getType(this._parcelData);
+
+        let {properties} = this._type || {};
+
+        let allProperties = {
+            ...(TypeSet.basicType.properties || {}),
+            ...(properties || {}),
+            ...(this._childProperties || {})
+        };
+
+        for(let key in allProperties) {
+            this[key] = allProperties[key](this);
+        }
+
+        for(let key in this._childPropertiesPrecomputed) {
+            this[key] = this._childPropertiesPrecomputed[key];
+        }
+
+        //
+        // public properties
+        //
+
+        this.isChild = this._rawPath.length > 1;
+        this.isParent = !!this.size;
+        this.type = this._type.name;
+        this.parentType = this._parentTypeName;
+    }
+
+    _create = (): Parcel => {
+        let parcel = new Parcel({fromSelf: true});
+        parcel._dispatchId = this.id;
+        parcel._rawId = this._rawId;
+        parcel._rawPath = this._rawPath;
+        parcel._parcelData = this._parcelData;
+        parcel._childProperties = this._childProperties;
+        parcel._childPropertiesPrecomputed = this._childPropertiesPrecomputed;
+        parcel._parentTypeName = this._parentTypeName;
+        parcel._treeShare = this._treeShare;
+        return parcel;
+    };
 
     //
     // private methods
     //
 
-    _create = (createParcelConfig: ParcelCreateConfigType): Parcel => {
-        let {
-            dispatchId = this.id,
-            handleChange,
-            rawId = this._rawId,
-            rawPath = this._rawPath,
-            parcelData = this._parcelData,
-            parent = this._parent,
-            treeShare = this._treeShare,
-            updateChangeRequestOnDispatch = doNothing
-        } = createParcelConfig;
-
-        let {
-            child,
-            value,
-            meta = {}
-        } = parcelData;
-
-        return new Parcel(
-            {
-                value,
-                handleChange
-            },
-            {
-                child,
-                dispatchId,
-                meta,
-                rawId,
-                rawPath,
-                parent,
-                treeShare,
-                updateChangeRequestOnDispatch
-            }
-        );
-    };
-
-    _setData = (parcelData: ParcelData) => {
-        this._dispatch(new Action({
-            type: 'setData',
-            payload: parcelData
-        }));
+    _fireAction = (type: string, payload: any, keyPath: any) => {
+        this._dispatch(new Action({type, keyPath, payload}));
     };
 
     _dispatch = (dispatchable: Action|Action[]|ChangeRequest) => {
-        // Types(`dispatch()`, `dispatchable`, `dispatchable`)(dispatchable);
 
         let {
             _updateChangeRequestOnDispatch,
-            _onHandleChange
+            _handleChange
         } = this;
 
         let changeRequest: ChangeRequest = dispatchable instanceof ChangeRequest
             ? dispatchable
             : new ChangeRequest(dispatchable);
+
+        changeRequest._actionReducer = this._treeShare.actionReducer;
+        changeRequest._typeSet = this._treeShare.typeSet;
 
         if(!changeRequest._originId) {
             changeRequest._originId = this.id;
@@ -440,7 +166,7 @@ export default class Parcel {
         // clear changeRequest's cache
         changeRequest = changeRequest._create({});
 
-        if(_onHandleChange) {
+        if(_handleChange) {
             let changeRequestWithBase = changeRequest._create({
                 prevData: this.data
             });
@@ -450,12 +176,12 @@ export default class Parcel {
                 return;
             }
 
-            let parcelWithChangedData = this._create({
-                handleChange: _onHandleChange,
-                parcelData
-            });
+            let parcelWithChangedData = this._create();
+            parcelWithChangedData._handleChange = _handleChange;
+            parcelWithChangedData._parcelData = parcelData;
+            parcelWithChangedData._init();
 
-            _onHandleChange(parcelWithChangedData, changeRequestWithBase);
+            _handleChange(parcelWithChangedData, changeRequestWithBase);
             return;
         }
 
@@ -471,95 +197,29 @@ export default class Parcel {
 
     _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): [Parcel, ?ChangeRequest] => {
         let result;
-        let {_onHandleChange} = this;
+        let {_handleChange} = this;
 
-        // swap out the parcels real _onHandleChange with a spy
-        this._onHandleChange = (parcel, changeRequest) => {
-            parcel._onHandleChange = _onHandleChange;
+        // swap out the parcels real _handleChange with a spy
+        this._handleChange = (parcel, changeRequest) => {
+            parcel._handleChange = _handleChange;
             result = [parcel, changeRequest];
         };
 
         changeCatcher(this);
-        this._onHandleChange = _onHandleChange;
+        this._handleChange = _handleChange;
         if(!result) {
             return [this, undefined];
         }
         return result;
     };
 
-    _boundarySplit = (handleChange: Function): Parcel => {
-        return this._create({
-            rawId: this._idPushModifier('bs'),
-            handleChange
-            // temporarily disabling boundary splitting
-            // until a more robust solution can be found
-            // dispatchId: '%',
-            // registry: {
-            //     '%': this
-            // }
-        });
+    _boundarySplit = (handleChange): Parcel => {
+        let parcel = this._create();
+        parcel._handleChange = handleChange;
+        parcel._rawId = this._idPushModifier('bs');
+        parcel._init();
+        return parcel;
     };
-
-    _get = (key: Key|Index, notFoundValue: any): Parcel => {
-        //Types(`get()`, `key`, `keyIndex`)(key);
-
-        let stringKey: ?Key = keyOrIndexToKey(key)(this._parcelData);
-
-        if(stringKey) {
-            let cachedChildParcel: ?Parcel = this._childParcelCache[stringKey];
-            if(cachedChildParcel) {
-                return cachedChildParcel;
-            }
-        }
-
-        this._prepareChildKeys();
-        let childParcelData = parcelGet(key, notFoundValue)(this._parcelData);
-        // $FlowFixMe - childParcelData will always have a key, but internal types arent good enough to tell flow
-        let childKey: Key = childParcelData.key;
-
-        let childOnDispatch = (changeRequest) => changeRequest._addStep({
-            type: 'get',
-            key: childKey
-        });
-
-        let {child} = this._parcelData;
-        let childIsNotEmpty = size()(child) > 0;
-        let isIndexed = this._isIndexed;
-        let isFirstChild = childIsNotEmpty && first()(child).key === childKey;
-        let isLastChild = childIsNotEmpty && last()(child).key === childKey;
-
-        let rawId = [...this._rawId, isIndexed ? childKey : escapeKey(childKey)];
-        let rawPath = [...this._rawPath, childKey];
-
-        let childParcel: Parcel = this._create({
-            parcelData: childParcelData,
-            updateChangeRequestOnDispatch: childOnDispatch,
-            rawId,
-            rawPath,
-            parent: {
-                isIndexed,
-                isFirstChild,
-                isLastChild
-            }
-        });
-
-        if(stringKey) {
-            this._childParcelCache[stringKey] = childParcel;
-        }
-
-        return childParcel;
-    };
-
-    _getValue = (notFoundValue: any): any => {
-        let {value} = this;
-        return value === undefined
-            ? notFoundValue
-            : value;
-    };
-
-    _getKeyFromRawPath = (rawPath: string[]): string =>  last()(rawPath);
-
-    _getIdFromRawId = (rawId: string[]): string => rawId.join('.');
 
     _idPushModifier = (name: string): string[] => {
         return [...this._rawId, `~${name}`];
@@ -567,15 +227,6 @@ export default class Parcel {
 
     _idPushModifierUpdater = (prefix: string, updater: ParcelValueUpdater): string[] => {
         return this._idPushModifier(`${prefix}-${HashString((updater._updater || updater).toString())}`);
-    };
-
-    // prepare child keys only once per parcel instance
-    // by preparing them and mutating this.parcelData
-
-    _prepareChildKeys = () => {
-        if(!this._parcelData.child) {
-            this._parcelData = prepareChildKeys()(this._parcelData);
-        }
     };
 
     _effectUpdate = (effectUpdater: ParcelValueUpdater) => {
@@ -623,12 +274,12 @@ export default class Parcel {
 
     // $FlowFixMe - this doesn't have side effects
     get key(): Key {
-        return this._getKeyFromRawPath(this._rawPath);
+        return this._parcelData.key;
     }
 
     // $FlowFixMe - this doesn't have side effects
     get id(): string {
-        return this._getIdFromRawId(this._rawId);
+        return this._rawId.join('.');
     }
 
     // $FlowFixMe - this doesn't have side effects
@@ -636,39 +287,150 @@ export default class Parcel {
         return this._rawPath.slice(1);
     }
 
-    // $FlowFixMe - this doesn't have side effects
-    get size(): number {
-        return this._isParent ? size()(this.value) : 0;
-    }
+    //
+    // public methods
+    //
 
-    // $FlowFixMe - this doesn't have side effects
-    get isFirstChild(): boolean {
-        return this._isChild ? this._parent.isFirstChild : false;
-    }
+    // Branch methods
 
-    // $FlowFixMe - this doesn't have side effects
-    get isLastChild(): boolean {
-        return this._isChild ? this._parent.isLastChild : false;
-    }
+    has = (key: any): boolean => {
+        this._parcelData = this._treeShare.typeSet.createChildKeys(this._parcelData, true);
+        return this._type.internalProperties._has(
+            this._parcelData,
+            key
+        );
+    };
 
-    // $FlowFixMe - this doesn't have side effects
-    get isOnlyChild(): boolean {
-        return this._isChild ? (this._parent.isFirstChild && this._parent.isLastChild) : false;
-    }
+    get = (key: any, notFoundValue: any): Parcel => {
+        let cachedChildParcel: ?Parcel = this._childParcelCache.get(key);
+        if(cachedChildParcel) {
+            return cachedChildParcel;
+        }
 
-    get isChild(): boolean {
-        return this._isChild;
-    }
+        this._parcelData = this._treeShare.typeSet.createChildKeys(this._parcelData, true);
+        let [childParcelData, newParcelData] = this._type.internalProperties._get(
+            this._parcelData,
+            key,
+            notFoundValue
+        );
 
-    get isElement(): boolean {
-        return this._isElement;
-    }
+        let childKey = childParcelData.key;
 
-    get isIndexed(): boolean {
-        return this._isIndexed;
-    }
+        let childOnDispatch = (changeRequest) => changeRequest._addStep({
+            type: 'get',
+            key: childKey
+        });
 
-    get isParent(): boolean {
-        return this._isParent;
-    }
+        let rawId = [...this._rawId, escapeKey(childKey)];
+        let rawPath = [...this._rawPath, childKey];
+
+        let childPropertiesPrecomputedToAdd = {};
+        let {childPropertiesPrecomputed = {}} = this._type;
+        let {childProperties = {}} = this._type;
+
+        for(let key in childPropertiesPrecomputed) {
+            childPropertiesPrecomputedToAdd[key] = childPropertiesPrecomputed[key](
+                childParcelData,
+                newParcelData || this._parcelData
+            );
+        }
+
+        let childParcel = this._create();
+        childParcel._parcelData = childParcelData,
+        childParcel._updateChangeRequestOnDispatch = childOnDispatch,
+        childParcel._rawId = rawId;
+        childParcel._rawPath = rawPath;
+        childParcel._childProperties = childProperties;
+        childParcel._childPropertiesPrecomputed = childPropertiesPrecomputedToAdd;
+        childParcel._parentTypeName = this.type;
+        childParcel._init();
+
+        this._childParcelCache.set(key, childParcel);
+        return childParcel;
+    };
+
+    getIn = (keyPath: string[], notFoundValue: any): Parcel => {
+        var parcel = this;
+        for(let i = 0; i < keyPath.length; i++) {
+            parcel = parcel.get(keyPath[i], i < keyPath.length - 1 ? {} : notFoundValue);
+        }
+        return parcel;
+    };
+
+    children = (mapper: ParcelMapper = doNothing): any => {
+        return this._type.internalProperties._mapKeys(
+            this._parcelData,
+            key => mapper(this.get(key), key, this)
+        );
+    };
+
+    metaAsParcel = (key: string): Parcel => {
+        let parcel = this._create();
+        parcel._parcelData = {
+            value: this.meta[key],
+            meta: this.meta
+        };
+        parcel._handleChange = (parcel, changeRequest) => {
+            let newActions = changeRequest.actions.filter(action => action.type === 'basic.setMeta');
+
+            if(newActions.length !== changeRequest.actions.length) {
+                newActions.unshift(
+                    new Action({
+                        type: 'basic.setMeta',
+                        payload: {
+                            [key]: parcel.value
+                        }
+                    })
+                );
+            }
+
+            this.dispatch(
+                changeRequest._create({
+                    actions: newActions
+                })
+            );
+        };
+        parcel._rawId = this._idPushModifier(`mp-${key}`);
+        parcel._init();
+        return parcel;
+    };
+
+    dispatch = this._dispatch;
+
+    // Modify methods
+
+    modifyDown = (updater: ParcelValueUpdater): Parcel => {
+        let preparedUpdater = combine(updater);
+        let parcel = this._create();
+        parcel._rawId = this._idPushModifierUpdater('md', updater);
+        parcel._parcelData = preparedUpdater(this._parcelData);
+        parcel._updateChangeRequestOnDispatch = (changeRequest) => changeRequest._addStep({
+            type: 'md',
+            updater: parcelData => preparedUpdater(parcelData)
+        });
+        parcel._init();
+        return parcel;
+    };
+
+    modifyUp = (updater: ParcelValueUpdater): Parcel => {
+        let preparedUpdater = combine(updater);
+        let parcel = this._create();
+        parcel._rawId = this._idPushModifierUpdater('mu', updater);
+        parcel._updateChangeRequestOnDispatch = (changeRequest) => changeRequest._addStep({
+            type: 'mu',
+            updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest}),
+            changeRequest,
+            effectUpdate: this._effectUpdate
+        });
+        parcel._init();
+        return parcel;
+    };
+
+    initialMeta = (initialMeta: ParcelMeta): Parcel => {
+        return this.modifyDown(({meta}) => ({meta: {...initialMeta, ...meta}}));
+    };
+
+    // Composition methods
+
+    pipe = (...updaters: ParcelUpdater[]): Parcel => pipeWith(this, ...updaters);
 }

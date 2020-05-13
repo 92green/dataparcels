@@ -11,47 +11,10 @@ export type ParcelData = {
 
 export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
 
-export type ParcelConfig = {
-    handleChange?: Function,
-    value?: *
-};
-
-export type ParcelParent = {
-    isIndexed: boolean,
-    isFirstChild: boolean,
-    isLastChild: boolean
-};
-
-export type ParcelConfigInternal = {
-    child: *,
-    dispatchId: string,
-    rawId: string[],
-    rawPath: string[],
-    meta: ParcelMeta,
-    parent: ParcelParent,
-    treeShare: ParcelTreeShare,
-    updateChangeRequestOnDispatch: UpdateChangeRequestOnDispatch
-};
-
-export type ParcelCreateConfigType = {
-    dispatchId?: string,
-    rawId?: string[],
-    rawPath?: string[],
-    handleChange?: Function,
-    parcelData?: ParcelData,
-    parent?: ParcelParent,
-    treeShare?: ParcelTreeShare,
-    updateChangeRequestOnDispatch?: UpdateChangeRequestOnDispatch
-};
-
 export type UpdateChangeRequestOnDispatch = (changeRequest: ChangeRequest) => ChangeRequest;
 
 export type ParcelMeta = {[key: string]: *};
 export type ParcelMapper = (item: Parcel, property: string|number, parent: Parcel) => *;
-export type ParcelTreeShare = {
-    registry: {[id: string]: Parcel},
-    effectRegistry: {[effectId: string]: boolean}
-};
 
 export type ParcelUpdater = (item: Parcel) => Parcel;
 export type ParcelValueUpdater = Function;
@@ -68,6 +31,22 @@ export type ActionStep = {
     effectParcel?: Parcel
 };
 
-export type ParentType = any; // should be any parent data type
-
-export type ContinueChainFunction = (continueChain: () => void, changeRequest: ?ChangeRequest) => void;
+export type Type = {
+    name: string,
+    match: (value: any) => boolean,
+    properties?: {
+        [key: string]: (parcel: Parcel) => any
+    },
+    childProperties?: {
+        [key: string]: (parcel: Parcel) => any
+    },
+    childPropertiesPrecomputed?: {
+        [key: string]: (parcel: Parcel) => any
+    },
+    internalProperties?: {
+        [key: string]: any
+    },
+    actionHandlers?: {
+        [actionType: string]: (parcelData: ParcelData, options: any) => ParcelData
+    }
+};
