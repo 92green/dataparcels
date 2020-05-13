@@ -17,7 +17,6 @@ export default class ChangeRequest {
     _nextData: ?ParcelData;
     _originId: ?string = null;
     _originPath: ?string[] = null;
-    _revertCallback: ?Function;
     _nextFrameMeta: {[key: string]: any} = {};
 
     constructor(action: Action|Action[] = []) {
@@ -30,7 +29,6 @@ export default class ChangeRequest {
         changeRequest._actions = actions || this._actions;
         changeRequest._originId = this._originId;
         changeRequest._originPath = this._originPath;
-        changeRequest._revertCallback = this._revertCallback;
         changeRequest._nextFrameMeta = nextFrameMeta || this._nextFrameMeta;
         changeRequest._prevData = prevData; // or else this is undefined
         return changeRequest;
@@ -40,10 +38,6 @@ export default class ChangeRequest {
         return this._create({
             actions: this._actions.map(ii => ii._addStep(step))
         });
-    };
-
-    _revert = () => {
-        this._revertCallback && this._revertCallback(this);
     };
 
     // $FlowFixMe - this doesn't have side effects
