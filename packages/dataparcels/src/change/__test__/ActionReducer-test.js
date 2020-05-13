@@ -2,79 +2,83 @@
 import ChangeRequest from '../ChangeRequest';
 import ActionReducer from '../ActionReducer';
 import Action from '../Action';
+import TypeSet from '../../typeHandlers/TypeSet';
+const typeSet = new TypeSet(TypeSet.defaultTypes);
 
 import push from 'unmutable/lib/push';
 import update from 'unmutable/lib/update';
 import pipeWith from 'unmutable/lib/util/pipeWith';
 
 const ActionCreators = {
-    deleteSelf: (): Action => {
+    delete: (): Action => {
         return new Action({
-            type: "delete"
+            type: "object.child.delete"
         });
     },
-    insertAfterSelf: (value: any): Action => {
+    insertAfter: (value: any): Action => {
         return new Action({
-            type: "insertAfter",
-            payload: value
+            type: "array.child.insert",
+            payload: {value, offset: 1}
         });
     },
-    insertBeforeSelf: (value: any): Action => {
+    insertBefore: (value: any): Action => {
         return new Action({
-            type: "insertBefore",
-            payload: value
+            type: "array.child.insert",
+            payload: {value, offset: 0}
         });
     },
     push: (...values): Action => {
         return new Action({
-            type: "push",
+            type: "array.push",
             payload: values
         });
     },
     setData: (parcelData): Action => {
         return new Action({
-            type: "setData",
+            type: "basic.setData",
             payload: parcelData
         });
     },
     setMeta: (meta): Action => {
         return new Action({
-            type: "setMeta",
+            type: "basic.setMeta",
             payload: meta
         });
     },
     setSelf: (value): Action => {
         return new Action({
-            type: "set",
+            type: "basic.set",
             payload: value
         });
     },
     swap: (keyA, keyB): Action => {
         return new Action({
-            type: "swap",
+            type: "array.swap",
             keyPath: [keyA],
             payload: keyB
         });
     },
-    swapNextSelf: (): Action => {
+    swapNext: (): Action => {
         return new Action({
-            type: "swapNext"
+            type: "array.child.swap",
+            payload: {offset: 1}
         });
     },
-    swapPrevSelf: (): Action => {
+    swapPrev: (): Action => {
         return new Action({
-            type: "swapPrev"
+            type: "array.child.swap",
+            payload: {offset: -1}
         });
     },
     unshift: (...values): Action => {
         return new Action({
-            type: "unshift",
+            type: "array.unshift",
             payload: values
         });
     },
     update: (updater): Action => {
         return new Action({
-            type: "update",
+            type: "basic.update",
             payload: updater
         });
     }
@@ -89,7 +93,23 @@ test('ActionReducer should pass through with no actions', () => {
 
     let actions = [];
 
-    expect(ActionReducer(actions)(data)).toEqual(data);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(data);
+});
+
+test('ActionReducer should throw error if error is thrown at reduction', () => {
+    var data = {
+        value: 123,
+        key: "^",
+        child: undefined
+    };
+
+    let actions = [
+        ActionCreators.update(() => {
+            throw new Error('???');
+        })
+    ];
+
+    expect(() => ActionReducer(typeSet)(actions, data)).toThrow('???');
 });
 
 test('ActionReducer should process a single "set" action', () => {
@@ -108,7 +128,7 @@ test('ActionReducer should process a single "set" action', () => {
         value: 456
     };
 
-    expect(ActionReducer(actions)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(expectedData);
 });
 
 test('ActionReducer should process two "set" actions', () => {
@@ -128,7 +148,7 @@ test('ActionReducer should process two "set" actions', () => {
         value: 789
     };
 
-    expect(ActionReducer(actions)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(expectedData);
 });
 
 test('ActionReducer should process single "push" action', () => {
@@ -145,10 +165,10 @@ test('ActionReducer should process single "push" action', () => {
     let expectedData = {
         ...data,
         value: ["A","B"],
-        child: [{key: '#a'}, {key: '#b'}]
+        child: [{key: '#0'}, {key: '#1'}]
     };
 
-    expect(ActionReducer(actions)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(expectedData);
 });
 
 test('ActionReducer should process single "push" action with pre functions', () => {
@@ -178,10 +198,10 @@ test('ActionReducer should process single "push" action with pre functions', () 
     let expectedData = {
         ...data,
         value: ["A","2","1","B"],
-        child: [{key: '#a'}, {key: '#b'}, {key: '#c'}, {key: '#d'}]
+        child: [{key: '#0'}, {key: '#1'}, {key: '#2'}, {key: '#3'}]
     };
 
-    expect(ActionReducer(actions)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(expectedData);
 });
 
 test('ActionReducer should process single "push" action with post functions', () => {
@@ -211,10 +231,10 @@ test('ActionReducer should process single "push" action with post functions', ()
     let expectedData = {
         ...data,
         value: ["A","B","1","2"],
-        child: [{key: '#a'}, {key: '#b'}]
+        child: [{key: '#0'}, {key: '#1'}]
     };
 
-    expect(ActionReducer(actions)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(expectedData);
 });
 
 test('ActionReducer should process a single "set" action at a depth of 1', () => {
@@ -244,7 +264,7 @@ test('ActionReducer should process a single "set" action at a depth of 1', () =>
         }
     };
 
-    expect(ActionReducer(actions)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(expectedData);
 });
 
 test('ActionReducer should process a single "set" action at a depth of 2', () => {
@@ -291,7 +311,7 @@ test('ActionReducer should process a single "set" action at a depth of 2', () =>
         }
     };
 
-    expect(ActionReducer(actions)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(expectedData);
 });
 
 test('ActionReducer should process aa complicated bunch of pre and post functions', () => {
@@ -333,10 +353,10 @@ test('ActionReducer should process aa complicated bunch of pre and post function
         alsoAlso: 457
     };
 
-    expect(ActionReducer(actions)(data).value).toEqual(expectedValue);
+    expect(ActionReducer(typeSet)(actions, data).value).toEqual(expectedValue);
 });
 
-test('ActionReducer should process pre and post on parentActions like "swapNextSelf"', () => {
+test('ActionReducer should process pre and post on parentActions', () => {
     var data = {
         value: "abc.def.ghi",
         key: "^"
@@ -347,10 +367,10 @@ test('ActionReducer should process pre and post on parentActions like "swapNextS
 
     let actions = [
         ActionCreators
-            .swapNextSelf()
+            .swapNext()
             ._addStep({
                 type: 'get',
-                key: 0
+                key: '#0'
             })
             ._addStep({
                 type: 'md',
@@ -372,7 +392,7 @@ test('ActionReducer should process pre and post on parentActions like "swapNextS
         // it is the reducers job to execute actions correctly, not to ensure the integrity of the data
         // or protect against the setting of invalid data shapes
         ...processed
-    } = ActionReducer(actions)(data);
+    } = ActionReducer(typeSet)(actions, data);
 
     expect(processed).toEqual(expectedData);
 });
@@ -389,7 +409,7 @@ test('ActionReducer should process deep actions that are "parent actions"', () =
 
     let actions = [
         ActionCreators
-            .deleteSelf()
+            .delete()
             ._addStep({
                 type: 'mu',
                 updater: update('value', value => value)
@@ -408,7 +428,7 @@ test('ActionReducer should process deep actions that are "parent actions"', () =
         def: 456
     };
 
-    expect(ActionReducer(actions)(data).value).toEqual(expectedValue);
+    expect(ActionReducer(typeSet)(actions, data).value).toEqual(expectedValue);
 });
 
 test('ActionReducer should process an "update" action', () => {
@@ -432,7 +452,7 @@ test('ActionReducer should process an "update" action', () => {
         value: 246
     };
 
-    expect(ActionReducer(actions)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(actions, data)).toEqual(expectedData);
     expect(updater).toHaveBeenCalledTimes(1);
     expect(updater.mock.calls[0][0]).toEqual(data);
 });
@@ -447,7 +467,7 @@ test('ActionReducer should process a "batch" action', () => {
 
     let actions = [
         new Action({
-            type: 'batch',
+            type: 'reducer.batch',
             payload: [
                 ActionCreators.push("A"),
                 ActionCreators.push("B"),
@@ -456,5 +476,5 @@ test('ActionReducer should process a "batch" action', () => {
         })
     ];
 
-    expect(ActionReducer(actions)(data).value).toEqual(["A","B","C"]);
+    expect(ActionReducer(typeSet)(actions, data).value).toEqual(["A","B","C"]);
 });

@@ -1,8 +1,9 @@
 // @flow
-import ChangeRequest from '../ChangeRequest';
 import ActionReducer from '../ActionReducer';
 import Action from '../Action';
-import pipeWith from 'unmutable/lib/util/pipeWith';
+
+import TypeSet from '../../typeHandlers/TypeSet';
+const typeSet = new TypeSet(TypeSet.defaultTypes);
 
 test('ActionReducer should setMeta with empty keyPath', () => {
     var data = {
@@ -14,7 +15,7 @@ test('ActionReducer should setMeta with empty keyPath', () => {
         child: undefined
     };
     var action = new Action({
-        type: "setMeta",
+        type: "basic.setMeta",
         keyPath: [],
         payload: {
             abc: 123
@@ -24,7 +25,7 @@ test('ActionReducer should setMeta with empty keyPath', () => {
         abc: 123
     };
 
-    expect(ActionReducer(action)(data).meta).toEqual(expectedMeta);
+    expect(ActionReducer(typeSet)(action,data).meta).toEqual(expectedMeta);
 });
 
 test('ActionReducer should setMeta merge', () => {
@@ -40,7 +41,7 @@ test('ActionReducer should setMeta merge', () => {
         child: undefined
     };
     var action = new Action({
-        type: "setMeta",
+        type: "basic.setMeta",
         keyPath: [],
         payload: {
             abc: 123
@@ -51,7 +52,7 @@ test('ActionReducer should setMeta merge', () => {
         def: 456
     };
 
-    expect(ActionReducer(action)(data).meta).toEqual(expectedMeta);
+    expect(ActionReducer(typeSet)(action,data).meta).toEqual(expectedMeta);
 });
 
 test('ActionReducer should setMeta with keyPath', () => {
@@ -64,7 +65,7 @@ test('ActionReducer should setMeta with keyPath', () => {
         child: undefined
     };
     var action = new Action({
-        type: "setMeta",
+        type: "basic.setMeta",
         keyPath: ["a"],
         payload: {
             abc: 123
@@ -82,7 +83,7 @@ test('ActionReducer should setMeta with keyPath', () => {
         }
     };
 
-    expect(ActionReducer(action)(data).child).toEqual(expectedChild);
+    expect(ActionReducer(typeSet)(action,data).child).toEqual(expectedChild);
 });
 
 test('ActionReducer should merge setMeta with keyPath', () => {
@@ -105,7 +106,7 @@ test('ActionReducer should merge setMeta with keyPath', () => {
         key: "^"
     };
     var action = new Action({
-        type: "setMeta",
+        type: "basic.setMeta",
         keyPath: ["a"],
         payload: {
             def: 456
@@ -124,6 +125,6 @@ test('ActionReducer should merge setMeta with keyPath', () => {
         }
     };
 
-    expect(ActionReducer(action)(data).child).toEqual(expectedChild);
+    expect(ActionReducer(typeSet)(action,data).child).toEqual(expectedChild);
 });
 

@@ -1,8 +1,9 @@
 // @flow
-import ChangeRequest from '../ChangeRequest';
 import ActionReducer from '../ActionReducer';
 import Action from '../Action';
-import pipeWith from 'unmutable/lib/util/pipeWith';
+
+import TypeSet from '../../typeHandlers/TypeSet';
+const typeSet = new TypeSet(TypeSet.defaultTypes);
 
 test('ActionReducer should set with empty keyPath', () => {
     var data = {
@@ -13,7 +14,7 @@ test('ActionReducer should set with empty keyPath', () => {
         key: "^"
     };
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         payload: 3
     });
 
@@ -27,7 +28,7 @@ test('ActionReducer should set with empty keyPath', () => {
 
     // value should be replaced
     // key and meta should be untouched
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(expectedData);
 });
 
 test('ActionReducer should set with empty keyPath and clear existing child', () => {
@@ -58,7 +59,7 @@ test('ActionReducer should set with empty keyPath and clear existing child', () 
         }
     };
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         payload: 3
     });
 
@@ -73,7 +74,7 @@ test('ActionReducer should set with empty keyPath and clear existing child', () 
     // value should be replaced
     // key and meta should be untouched
     // child should be removed
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(expectedData);
 });
 
 test('ActionReducer should set with keyPath of 1 element', () => {
@@ -96,7 +97,7 @@ test('ActionReducer should set with keyPath of 1 element', () => {
         }
     };
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         keyPath: ["a"],
         payload: 3
     });
@@ -123,7 +124,7 @@ test('ActionReducer should set with keyPath of 1 element', () => {
     // value should be replaced at keypath
     // key and meta should be untouched
     // top level child should be kept
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(expectedData);
 });
 
 test('ActionReducer should noop set with keyPath of 1 element on a non parent value', () => {
@@ -135,12 +136,12 @@ test('ActionReducer should noop set with keyPath of 1 element on a non parent va
         key: "^"
     };
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         keyPath: ["a"],
         payload: 3
     });
 
-    expect(ActionReducer(action)(data)).toEqual(data);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(data);
 });
 
 test('ActionReducer should clear child from set key', () => {
@@ -174,7 +175,7 @@ test('ActionReducer should clear child from set key', () => {
         }
     };
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         keyPath: ["a"],
         payload: 3
     });
@@ -203,7 +204,7 @@ test('ActionReducer should clear child from set key', () => {
     // child should be removed at keyPath
     // top level key and meta should be untouched
     // child.b.meta should be untouched
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(expectedData);
 });
 
 test('ActionReducer should set with keyPath of 2 elements', () => {
@@ -226,7 +227,7 @@ test('ActionReducer should set with keyPath of 2 elements', () => {
         }
     };
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         keyPath: ["a", "b"],
         payload: 3
     });
@@ -260,7 +261,7 @@ test('ActionReducer should set with keyPath of 2 elements', () => {
     // value should be replaced at keypath
     // key and meta should be untouched
     // top level child should be kept
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(expectedData);
 });
 
 test('ActionReducer should set with keyPath of 2 elements on arrays', () => {
@@ -275,8 +276,8 @@ test('ActionReducer should set with keyPath of 2 elements on arrays', () => {
         key: "^"
     };
     var action = new Action({
-        type: "set",
-        keyPath: ["#b", "#c"],
+        type: "basic.set",
+        keyPath: ["#1", "#2"],
         payload: 4
     });
 
@@ -291,19 +292,19 @@ test('ActionReducer should set with keyPath of 2 elements on arrays', () => {
         key: "^",
         child: [
             {
-                key: "#a"
+                key: "#0"
             },
             {
-                key: "#b",
+                key: "#1",
                 child: [
                     {
-                        key: "#a"
+                        key: "#0"
                     },
                     {
-                        key: "#b"
+                        key: "#1"
                     },
                     {
-                        key: "#c"
+                        key: "#2"
                     },
                 ]
             }
@@ -314,7 +315,7 @@ test('ActionReducer should set with keyPath of 2 elements on arrays', () => {
     // key and meta should be untouched
     // top level child should be kept
     // keys should be generated for existing value, and for newly set value
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(expectedData);
 });
 
 test('ActionReducer should set with an unkeyed array and give it keys', () => {
@@ -334,7 +335,7 @@ test('ActionReducer should set with an unkeyed array and give it keys', () => {
         }
     };
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         keyPath: [],
         payload: [1,2,3]
     });
@@ -346,9 +347,9 @@ test('ActionReducer should set with an unkeyed array and give it keys', () => {
         },
         key: "^",
         child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
+            {key: "#0"},
+            {key: "#1"},
+            {key: "#2"}
         ]
     };
 
@@ -356,7 +357,7 @@ test('ActionReducer should set with an unkeyed array and give it keys', () => {
     // key and meta should be untouched
     // top level child should be kept
     // keys should be generated for newly set value
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(expectedData);
 });
 
 test('ActionReducer should set (with a keyPath) with an unkeyed array and give it keys', () => {
@@ -375,7 +376,7 @@ test('ActionReducer should set (with a keyPath) with an unkeyed array and give i
         }
     };
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         keyPath: ["a"],
         payload: [1,2,3]
     });
@@ -392,9 +393,9 @@ test('ActionReducer should set (with a keyPath) with an unkeyed array and give i
             a: {
                 key: "a",
                 child: [
-                    {key: "#a"},
-                    {key: "#b"},
-                    {key: "#c"}
+                    {key: "#0"},
+                    {key: "#1"},
+                    {key: "#2"}
                 ]
             }
         }
@@ -404,5 +405,71 @@ test('ActionReducer should set (with a keyPath) with an unkeyed array and give i
     // key and meta should be untouched
     // top level child should be kept
     // keys should be generated for newly set value
-    expect(ActionReducer(action)(data)).toEqual(expectedData);
+    expect(ActionReducer(typeSet)(action,data)).toEqual(expectedData);
+});
+
+test('ActionReducer should not set if keypath doesnt exist', () => {
+    var data = {
+        value: [],
+        meta: {
+            abc: 123
+        },
+        key: "^",
+        child: {
+            a: {
+                key: "a"
+            }
+        }
+    };
+    var action = new Action({
+        type: "basic.set",
+        keyPath: ["#a"],
+        payload: 123
+    });
+
+    expect(ActionReducer(typeSet)(action,data)).toEqual(data);
+});
+
+test('ActionReducer should not insert if keypath doesnt exist', () => {
+    var data = {
+        value: [],
+        meta: {
+            abc: 123
+        },
+        key: "^",
+        child: {
+            a: {
+                key: "a"
+            }
+        }
+    };
+    var action = new Action({
+        type: "array.child.insert",
+        keyPath: ["#a"],
+        payload: {value: 123, offset: 0}
+    });
+
+    expect(ActionReducer(typeSet)(action,data)).toEqual(data);
+});
+
+test('ActionReducer should not insert if homogenous action differs type', () => {
+    var data = {
+        value: {},
+        meta: {
+            abc: 123
+        },
+        key: "^",
+        child: {
+            a: {
+                key: "a"
+            }
+        }
+    };
+    var action = new Action({
+        type: "array.child.insert",
+        keyPath: ["#a"],
+        payload: {value: 123, offset: 0}
+    });
+
+    expect(ActionReducer(typeSet)(action,data)).toEqual(data);
 });

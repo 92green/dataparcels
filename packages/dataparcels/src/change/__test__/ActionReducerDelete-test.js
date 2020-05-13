@@ -1,8 +1,9 @@
 // @flow
-import ChangeRequest from '../ChangeRequest';
 import ActionReducer from '../ActionReducer';
 import Action from '../Action';
-import pipeWith from 'unmutable/lib/util/pipeWith';
+
+import TypeSet from '../../typeHandlers/TypeSet';
+const typeSet = new TypeSet(TypeSet.defaultTypes);
 
 test('ActionReducer should delete key', () => {
     var data = {
@@ -14,7 +15,7 @@ test('ActionReducer should delete key', () => {
         child: undefined
     };
     var action = new Action({
-        type: "delete",
+        type: "object.child.delete",
         keyPath: ["a"]
     });
 
@@ -22,7 +23,7 @@ test('ActionReducer should delete key', () => {
         b: 2
     };
 
-    expect(ActionReducer(action)(data).value).toEqual(expectedValue);
+    expect(ActionReducer(typeSet)(action,data).value).toEqual(expectedValue);
 });
 
 test('ActionReducer should delete deep key', () => {
@@ -38,7 +39,7 @@ test('ActionReducer should delete deep key', () => {
         child: undefined
     };
     var action = new Action({
-        type: "delete",
+        type: "object.child.delete",
         keyPath: ["a", "b"]
     });
 
@@ -49,7 +50,7 @@ test('ActionReducer should delete deep key', () => {
         c: 3
     };
 
-    expect(ActionReducer(action)(data).value).toEqual(expectedValue);
+    expect(ActionReducer(typeSet)(action,data).value).toEqual(expectedValue);
 });
 
 test('ActionReducer should noop if deleting deep key does nothing', () => {
@@ -65,7 +66,7 @@ test('ActionReducer should noop if deleting deep key does nothing', () => {
         child: undefined
     };
     var action = new Action({
-        type: "delete",
+        type: "object.child.delete",
         keyPath: ["x", "y"]
     });
 
@@ -77,5 +78,20 @@ test('ActionReducer should noop if deleting deep key does nothing', () => {
         c: 3
     };
 
-    expect(ActionReducer(action)(data).value).toEqual(expectedValue);
+    expect(ActionReducer(typeSet)(action,data).value).toEqual(expectedValue);
+});
+
+test('ActionReducer should noop if deleting array key does nothing', () => {
+    var data = {
+        value: [1,2,3],
+        key: "^",
+        child: undefined
+    };
+
+    var action = new Action({
+        type: "array.child.delete",
+        keyPath: ["#z"]
+    });
+
+    expect(ActionReducer(typeSet)(action,data).value).toEqual(data.value);
 });
