@@ -2,7 +2,6 @@
 
 // exports
 import Parcel from '../src/index';
-import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
 import combine from '../combine';
 import ParcelNode from '../ParcelNode';
@@ -15,7 +14,6 @@ import translate from '../translate';
 import InternalParcel from '../src/parcel/Parcel';
 
 // internal lib files
-import InternalAction from '../lib/change/Action';
 import InternalChangeRequest from '../lib/change/ChangeRequest';
 import InternalCreateUpdater from '../lib/parcelData/combine';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
@@ -26,10 +24,6 @@ import InternalTranslate from '../lib/modifiers/translate';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
-});
-
-test('/Action should export Action', () => {
-    expect(Action).toBe(InternalAction);
 });
 
 test('/ChangeRequest should export ChangeRequest', () => {

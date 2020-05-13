@@ -4,10 +4,6 @@
         "path": "lib/index.js"
     },
     {
-        "limit": "0.6 KB",
-        "path": "Action.js"
-    },
-    {
         "limit": "0.1 KB",
         "path": "cancel.js"
     },

@@ -2,7 +2,6 @@
 
 // dataparcels exports
 import Parcel from '../src/index';
-import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
 import combine from '../combine';
 import ParcelNode from '../ParcelNode';
@@ -25,7 +24,6 @@ import asyncValue from '../asyncValue';
 
 // internal dataparcels files
 import InternalParcel from 'dataparcels';
-import InternalAction from 'dataparcels/Action';
 import InternalChangeRequest from 'dataparcels/ChangeRequest';
 import InternalCreateUpdater from 'dataparcels/combine';
 import InternalParcelNode from 'dataparcels/ParcelNode';
@@ -48,10 +46,6 @@ import InternalAsyncValue from '../lib/asyncValue';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
-});
-
-test('/Action should export Action', () => {
-    expect(Action).toBe(InternalAction);
 });
 
 test('/ChangeRequest should export ChangeRequest', () => {
