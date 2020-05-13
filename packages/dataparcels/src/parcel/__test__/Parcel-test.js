@@ -64,9 +64,6 @@ test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     // also if new parcel's change methods are called, handleChange should be called as usual
     newParcel.get('abc').set(100);
     expect(handleChange).toHaveBeenCalledTimes(2);
-
-    // _frameMeta should be passed through
-    expect(parcel._frameMeta).toBe(newParcel._frameMeta);
 });
 
 test('Parcel._changeAndReturn() should return [parcel, undefined] if no changes are made', () => {
@@ -262,53 +259,4 @@ test('Correct methods are created for array element values', () => {
     expect(() => new Parcel(data).get(0).pop()).toThrowError(`.pop() is not a function`);
     expect(() => new Parcel(data).get(0).delete()).not.toThrow();
     expect(() => new Parcel(data).get(0).swapNext()).not.toThrow();
-});
-
-test('Frame meta should be passed down to child parcels', () => {
-    let parcel = new Parcel({
-        value: [[123]]
-    });
-
-    parcel._frameMeta.foo = 123;
-
-    expect(parcel.get(0)._frameMeta.foo).toBe(123);
-    expect(parcel.get(0).get(0)._frameMeta.foo).toBe(123);
-});
-
-test('Frame meta should not persist after change', () => {
-    let handleChange = jest.fn();
-
-    let parcel = new Parcel({
-        value: 123,
-        handleChange
-    });
-
-    parcel._frameMeta.foo = "bar";
-    parcel.set(456);
-
-    expect(handleChange.mock.calls[0][0]._frameMeta).toEqual({});
-});
-
-test('Frame meta should use last change requests nextFrameMeta', () => {
-    let handleChange = jest.fn();
-
-    let parcel = new Parcel({
-        value: 123,
-        handleChange
-    });
-
-    let actions = [
-        new Action({type: "set", keyPath: [], payload: 456})
-    ];
-
-    let changeRequest = new ChangeRequest(actions)
-        ._create({
-            nextFrameMeta: {
-                foo: 123
-            }
-        });
-
-    parcel.dispatch(changeRequest);
-
-    expect(handleChange.mock.calls[0][0]._frameMeta).toEqual({foo: 123});
 });

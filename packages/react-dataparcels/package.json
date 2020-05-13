@@ -11,27 +11,18 @@
   },
   "files": [
     "lib",
-    "Action.js",
-    "asyncChange.js",
     "arrange.js",
-    "asyncChange.js",
-    "asyncValue.js",
     "Boundary.js",
     "cancel.js",
     "ChangeRequest.js",
     "combine.js",
-    "ParcelBoundary.js",
     "ParcelDrag.js",
     "ParcelNode.js",
     "arrange.js",
     "useBuffer.js",
     "useParcel.js",
-    "useParcelBuffer.js",
-    "useParcelForm.js",
-    "useParcelState.js",
     "promisify.js",
-    "translate.js",
-    "validation.js"
+    "translate.js"
   ],
   "bugs": {
     "url": "https://github.com/92green/dataparcels/issues"

@@ -11,15 +11,13 @@
   },
   "files": [
     "lib",
-    "Action.js",
     "arrange.js",
     "cancel.js",
     "ChangeRequest.js",
     "combine.js",
     "ParcelNode.js",
     "promisify.js",
-    "translate.js",
-    "validation.js"
+    "translate.js"
   ],
   "bugs": {
     "url": "https://github.com/92green/dataparcels/issues"

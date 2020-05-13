@@ -39,34 +39,6 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
     expect([...actionsA, ...actionsB]).toEqual(merged.actions);
 });
 
-test('ChangeRequest merge() should merge other change requests nextFrameMetas', () => {
-    let actionsA = [
-        new Action({type: "???", keyPath: ['a']}),
-        new Action({type: "!!!", keyPath: ['a']})
-    ];
-
-    let actionsB = [
-        new Action({type: "aaa", keyPath: ['b']}),
-        new Action({type: "bbb", keyPath: ['b']})
-    ];
-
-    let a = new ChangeRequest(actionsA)._create({
-        nextFrameMeta: {foo: 100, bar: 200}
-    });
-
-    let b = new ChangeRequest(actionsB)._create({
-        nextFrameMeta: {bar: 300, baz: 400}
-    });
-
-    let merged = a.merge(b);
-
-    expect(merged._nextFrameMeta).toEqual({
-        foo: 100,
-        bar: 300,
-        baz: 400
-    });
-});
-
 test('ChangeRequest nextData() and data should use Reducer', () => {
     var action = new Action({
         type: "set",
@@ -442,19 +414,6 @@ test('ChangeRequest hasDataChanged should indicate if value changed in array, id
     expect(basedChangeRequest.hasDataChanged(['#d'])).toBe(false);
     expect(basedChangeRequest.hasDataChanged(['#e'])).toBe(true);
     expect(basedChangeRequest.hasDataChanged()).toBe(true);
-});
-
-test('ChangeRequest _revert() should call _revertCallback and pass self', () => {
-
-    let changeRequest = new ChangeRequest();
-    expect(() => changeRequest._revert()).not.toThrow();
-
-    let callback = jest.fn();
-    changeRequest._revertCallback = callback;
-    changeRequest._revert();
-
-    expect(callback).toHaveBeenCalledTimes(1);
-    expect(callback.mock.calls[0][0]).toBe(changeRequest);
 });
 
 test('ChangeRequest squash should merge actions and squash it into a single action', () => {

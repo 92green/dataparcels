@@ -27,7 +27,6 @@ export type ParcelConfigInternal = {
     dispatchId: string,
     rawId: string[],
     rawPath: string[],
-    frameMeta: {[key: string]: any},
     meta: ParcelMeta,
     parent: ParcelParent,
     treeShare: ParcelTreeShare,
@@ -36,7 +35,6 @@ export type ParcelConfigInternal = {
 
 export type ParcelCreateConfigType = {
     dispatchId?: string,
-    frameMeta?: {[key: string]: any},
     rawId?: string[],
     rawPath?: string[],
     handleChange?: Function,

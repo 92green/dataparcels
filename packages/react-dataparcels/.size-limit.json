@@ -4,10 +4,6 @@
         "path": "lib/index.js"
     },
     {
-        "limit": "0.6 KB",
-        "path": "Action.js"
-    },
-    {
         "limit": "0.1 KB",
         "path": "cancel.js"
     },
@@ -36,40 +32,12 @@
         "path": "translate.js"
     },
     {
-        "limit": "5.4 KB",
-        "path": "validation.js"
-    },
-    {
-        "limit": "0.5 KB",
-        "path": "asyncValue.js"
-    },
-    {
-        "limit": "11.1 KB",
-        "path": "asyncChange.js"
-    },
-    {
         "limit": "12.2 KB",
         "path": "Boundary.js"
     },
     {
-        "limit": "12.2 KB",
-        "path": "ParcelBoundary.js"
-    },
-    {
         "limit": "47.3 KB",
         "path": "ParcelDrag.js"
-    },
-    {
-        "limit": "12.1 KB",
-        "path": "useParcelBuffer.js"
-    },
-    {
-        "limit": "13.2 KB",
-        "path": "useParcelForm.js"
-    },
-    {
-        "limit": "10.7 KB",
-        "path": "useParcelState.js"
     },
     {
         "limit": "12.4 KB",
