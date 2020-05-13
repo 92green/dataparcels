@@ -3,20 +3,20 @@ import type {ActionStep} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {ParcelData} from '../types/Types';
-
-import shallowEquals from 'unmutable/shallowEquals';
+import type TypeSet from '../typeHandlers/TypeSet';
 
 import Action from './Action';
-import ActionReducer from '../change/ActionReducer';
-import parcelGet from '../parcelData/get';
+import shallowEquals from 'unmutable/lib/shallowEquals';
 
 export default class ChangeRequest {
 
+    _actionReducer: Function;
     _actions: Action[] = [];
     _prevData: ?ParcelData;
     _nextData: ?ParcelData;
     _originId: ?string = null;
     _originPath: ?string[] = null;
+    _typeSet: TypeSet;
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
@@ -25,10 +25,12 @@ export default class ChangeRequest {
     _create = ({actions, prevData}: any): ChangeRequest => {
         // never copy nextData as the cache may be invalid
         let changeRequest = new ChangeRequest();
+        changeRequest._actionReducer = this._actionReducer;
         changeRequest._actions = actions || this._actions;
         changeRequest._originId = this._originId;
         changeRequest._originPath = this._originPath;
         changeRequest._prevData = prevData; // or else this is undefined
+        changeRequest._typeSet = this._typeSet;
         return changeRequest;
     };
 
@@ -45,7 +47,7 @@ export default class ChangeRequest {
             return _nextData;
         }
 
-        this._nextData = ActionReducer(this._actions)(this.prevData);
+        this._nextData = this._actionReducer(this._actions, this.prevData);
         return this._nextData;
     }
 
@@ -68,7 +70,7 @@ export default class ChangeRequest {
 
         let changeRequest = new ChangeRequest(
             new Action({
-                type: 'batch',
+                type: 'reducer.batch',
                 payload: merged.actions
             })
         );
@@ -93,7 +95,19 @@ export default class ChangeRequest {
     }
 
     getDataIn = (keyPath: Array<Key|Index>): {next: *, prev: *} => {
-        let getIn = (data: ParcelData) => keyPath.reduce((data, key) => parcelGet(key)(data), data);
+
+        let getIn = (data: ParcelData) => keyPath.reduce((data, key) => {
+            data = this._typeSet.createChildKeys(data, true);
+
+            let type = this._typeSet.getType(data);
+            let {_get} = type.internalProperties || {};
+            try {
+                return _get(data, key)[0];
+            } catch(e) {
+                return undefined;
+            }
+        }, data);
+
         return {
             next: getIn(this.nextData),
             prev: getIn(this.prevData)
@@ -102,12 +116,12 @@ export default class ChangeRequest {
 
     hasDataChanged = (keyPath: Array<Key|Index> = []): boolean => {
         let {next, prev} = this.getDataIn(keyPath);
-        return !Object.is(next.value, prev.value)
-            || !shallowEquals(next.meta || {})(prev.meta || {});
+        return !Object.is(next && next.value, prev && prev.value)
+            || !shallowEquals((next && next.meta) || {})((prev && prev.meta) || {});
     };
 
     hasValueChanged = (keyPath: Array<Key|Index> = []): boolean => {
         let {next, prev} = this.getDataIn(keyPath);
-        return !Object.is(next.value, prev.value);
+        return !Object.is(next && next.value, prev && prev.value);
     };
 }
