@@ -1,16 +1,26 @@
 // @flow
 import type {ParcelData} from '../types/Types';
 
-import isParentValue from '../parcelData/isParentValue';
-import isIndexedValue from '../parcelData/isIndexedValue';
-import parcelSetSelf from '../parcelData/setSelf';
-import updateChild from '../parcelData/updateChild';
-import updateChildKeys from '../parcelData/updateChildKeys';
+// import isParentValue from '../parcelData/isParentValue';
+// import isIndexedValue from '../parcelData/isIndexedValue';
+// import parcelSetSelf from '../parcelData/setSelf';
+// import updateChild from '../parcelData/updateChild';
+// import updateChildKeys from '../parcelData/updateChildKeys';
+
+let isParentValue = () => {};
+let isIndexedValue = () => {};
+let parcelSetSelf = () => {};
+let updateChild = () => {};
+let updateChildKeys = () => {};
 import ParcelNode from './ParcelNode';
 
-import map from 'unmutable/map';
-import pipeWith from 'unmutable/pipeWith';
-import shallowToJS from 'unmutable/shallowToJS';
+// import map from 'unmutable/map';
+// import pipeWith from 'unmutable/pipeWith';
+// import shallowToJS from 'unmutable/shallowToJS';
+
+let map = () => {};
+let pipeWith = () => {};
+let shallowToJS = () => {};
 
 const updateChildNodes = (node: ParcelNode, updater: Function): ParcelNode => {
     let {data, value, _changeRequest} = node;

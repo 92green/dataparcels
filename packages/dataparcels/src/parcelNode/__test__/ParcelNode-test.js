@@ -3,24 +3,24 @@ import ParcelNode from '../ParcelNode';
 import reverse from 'unmutable/reverse';
 import toArray from 'unmutable/toArray';
 
-test('ParcelNodes should accept value', () => {
+test.skip('ParcelNodes should accept value', () => {
     let node = new ParcelNode(123);
     expect(node.value).toEqual(123);
 });
 
-test('ParcelNodes should return data', () => {
+test.skip('ParcelNodes should return data', () => {
     let node = new ParcelNode(123);
     expect(node.data).toEqual({
         value: 123
     });
 });
 
-test('ParcelNodes should return empty meta object', () => {
+test.skip('ParcelNodes should return empty meta object', () => {
     let node = new ParcelNode(123);
     expect(node.meta).toEqual({});
 });
 
-test('ParcelNodes should get() lazily', () => {
+test.skip('ParcelNodes should get() lazily', () => {
     let node = new ParcelNode([1,2,3]);
     let result = node.get(0);
 
@@ -40,7 +40,7 @@ test('ParcelNodes should get() lazily', () => {
     expect(result._parcelData).toEqual(expected);
 });
 
-test('ParcelNodes should get() lazily with exisitng child data', () => {
+test.skip('ParcelNodes should get() lazily with exisitng child data', () => {
     let node = new ParcelNode();
     node._parcelData = {
         value: [1],
@@ -67,13 +67,13 @@ test('ParcelNodes should get() lazily with exisitng child data', () => {
     expect(result._parcelData).toEqual(expected);
 });
 
-test('ParcelNodes should update() non-parent values', () => {
+test.skip('ParcelNodes should update() non-parent values', () => {
     let node = new ParcelNode(100);
     let result = node.update(({value}) => ({value: value + 200}));
     expect(result.value).toBe(300);
 });
 
-test('ParcelNodes should update() non-parent values and keep meta and key', () => {
+test.skip('ParcelNodes should update() non-parent values and keep meta and key', () => {
     let node = new ParcelNode();
     node._parcelData = {
         value: 100,
@@ -86,7 +86,7 @@ test('ParcelNodes should update() non-parent values and keep meta and key', () =
     expect(result.key).toBe('aaa');
 });
 
-test('ParcelNodes should update() parent values without replacing children with nodes', () => {
+test.skip('ParcelNodes should update() parent values without replacing children with nodes', () => {
     let node = new ParcelNode();
     node._parcelData = {
         value: [1,2,3]

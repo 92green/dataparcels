@@ -4,9 +4,8 @@ import type {Key} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 import type ChangeRequest from '../change/ChangeRequest';
 
-import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
-import prepareChildKeys from '../parcelData/prepareChildKeys';
-import parcelGet from '../parcelData/get';
+// import keyOrIndexToKey from '../parcelData/keyOrIndexToKey';
+let keyOrIndexToKey = () => {};
 import combine from '../parcelData/combine';
 
 export default class ParcelNode {
@@ -34,13 +33,13 @@ export default class ParcelNode {
         // by preparing them and mutating this.parcelData
         let {data} = this;
         if(!data.child) {
-            this._parcelData = prepareChildKeys()(data);
+            // this._parcelData = prepareChildKeys()(data);
         }
     }
 
     _get = (key: Key|Index, notFoundValue: any): ParcelData => {
         this._prepareChildKeys();
-        return parcelGet(key, notFoundValue)(this.data);
+        // return parcelGet(key, notFoundValue)(this.data);
     };
 
     //

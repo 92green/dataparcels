@@ -4,7 +4,7 @@ import ParcelNode from '../ParcelNode';
 import reverse from 'unmutable/reverse';
 import toArray from 'unmutable/toArray';
 
-test('arrange should accept updater', () => {
+test.skip('arrange should accept updater', () => {
     let parcelData = {
         value: 123,
         meta: {
@@ -15,7 +15,7 @@ test('arrange should accept updater', () => {
     expect(arrange(value => value)(parcelData)).toEqual(parcelData);
 });
 
-test('arrange should update non-parent values', () => {
+test.skip('arrange should update non-parent values', () => {
     let parcelData = {
         value: 100
     };
@@ -23,7 +23,7 @@ test('arrange should update non-parent values', () => {
     expect(result.value).toBe(300);
 });
 
-test('arrange should update non-parent values and keep meta and key', () => {
+test.skip('arrange should update non-parent values and keep meta and key', () => {
     let parcelData = {
         value: 100,
         meta: {foo: true},
@@ -37,7 +37,7 @@ test('arrange should update non-parent values and keep meta and key', () => {
     expect(result.key).toBe('aaa');
 });
 
-test('arrange should update parent values to non-parent values', () => {
+test.skip('arrange should update parent values to non-parent values', () => {
     let parcelData = {
         value: [1,2,3]
     };
@@ -46,7 +46,7 @@ test('arrange should update parent values to non-parent values', () => {
     expect(result.value).toBe('1, 2, 3');
 });
 
-test('arrange should update parent values', () => {
+test.skip('arrange should update parent values', () => {
     let parcelData = {
         value: [1,2,3]
     };
@@ -57,7 +57,7 @@ test('arrange should update parent values', () => {
     expect(result.child[2].key).toBe('#a');
 });
 
-test('arrange should update parent values changing type', () => {
+test.skip('arrange should update parent values changing type', () => {
     let parcelData = {
         value: {foo: 'bar', baz: 'qux'}
     };
@@ -69,7 +69,7 @@ test('arrange should update parent values changing type', () => {
     expect(result.child[0].key).toBe('#a');
 });
 
-test('arrange should update parent values adding a new ParcelNode', () => {
+test.skip('arrange should update parent values adding a new ParcelNode', () => {
     let parcelData = {
         value: [1,2,3]
     };
@@ -79,7 +79,7 @@ test('arrange should update parent values adding a new ParcelNode', () => {
     expect(result.child[3].key).toBe('#d');
 });
 
-test('arrange should update parent values adding a new non-ParcelNode', () => {
+test.skip('arrange should update parent values adding a new non-ParcelNode', () => {
     let parcelData = {
         value: [1,2,3]
     };
@@ -89,7 +89,7 @@ test('arrange should update parent values adding a new non-ParcelNode', () => {
     expect(result.child[3].key).toBe('#d');
 });
 
-test('arrange should update parent values adding duplicated ParcelNodes', () => {
+test.skip('arrange should update parent values adding duplicated ParcelNodes', () => {
     let parcelData = {
         value: [1,2,3]
     };
