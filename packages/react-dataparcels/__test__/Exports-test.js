@@ -12,15 +12,9 @@ import translate from '../translate';
 
 // react-dataparcels
 import Boundary from '../Boundary';
-import ParcelBoundary from '../ParcelBoundary';
 import ParcelDrag from '../ParcelDrag';
-import useParcelBuffer from '../useParcelBuffer';
-import useParcelForm from '../useParcelForm';
-import useParcelState from '../useParcelState';
 import useParcel from '../useParcel';
 import useBuffer from '../useBuffer';
-import asyncChange from '../asyncChange';
-import asyncValue from '../asyncValue';
 
 // internal dataparcels files
 import InternalParcel from 'dataparcels';
@@ -34,15 +28,9 @@ import InternalTranslate from 'dataparcels/translate';
 
 // internal react-dataparcels
 import InternalBoundary from '../lib/Boundary';
-import InternalParcelBoundary from '../lib/ParcelBoundary';
 import InternalParcelDrag from '../lib/ParcelDrag';
-import InternalUseParcelBuffer from '../lib/useParcelBuffer';
-import InternalUseParcelForm from '../lib/useParcelForm';
-import InternalUseParcelState from '../lib/useParcelState';
 import InternalUseParcel from '../lib/useParcel';
 import InternalUseBuffer from '../lib/useBuffer';
-import InternalAsyncChange from '../lib/asyncChange';
-import InternalAsyncValue from '../lib/asyncValue';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
@@ -80,24 +68,8 @@ test('/Boundary should export Boundary', () => {
     expect(Boundary).toBe(InternalBoundary);
 });
 
-test('/ParcelBoundary should export ParcelBoundary', () => {
-    expect(ParcelBoundary).toBe(InternalParcelBoundary);
-});
-
 test('/ParcelDrag should export ParcelDrag', () => {
     expect(ParcelDrag).toBe(InternalParcelDrag);
-});
-
-test('/useParcelBuffer should export useParcelBuffer', () => {
-    expect(useParcelBuffer).toBe(InternalUseParcelBuffer);
-});
-
-test('/useParcelForm should export useParcelForm', () => {
-    expect(useParcelForm).toBe(InternalUseParcelForm);
-});
-
-test('/useParcelState should export useParcelState', () => {
-    expect(useParcelState).toBe(InternalUseParcelState);
 });
 
 test('/useParcel should export useParcel', () => {
@@ -106,12 +78,4 @@ test('/useParcel should export useParcel', () => {
 
 test('/useBuffer should export useBuffer', () => {
     expect(useBuffer).toBe(InternalUseBuffer);
-});
-
-test('/asyncChange should export asyncChange', () => {
-    expect(asyncChange).toBe(InternalAsyncChange);
-});
-
-test('/asyncValue should export asyncValue', () => {
-    expect(asyncValue).toBe(InternalAsyncValue);
 });
