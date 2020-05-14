@@ -15,7 +15,6 @@
     "cancel.js",
     "ChangeRequest.js",
     "combine.js",
-    "ParcelNode.js",
     "promisify.js",
     "translate.js"
   ],

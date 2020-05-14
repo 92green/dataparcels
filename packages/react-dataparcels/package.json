@@ -17,7 +17,6 @@
     "ChangeRequest.js",
     "combine.js",
     "ParcelDrag.js",
-    "ParcelNode.js",
     "arrange.js",
     "useBuffer.js",
     "useParcel.js",

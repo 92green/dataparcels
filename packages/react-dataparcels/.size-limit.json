@@ -16,10 +16,6 @@
         "path": "combine.js"
     },
     {
-        "limit": "5.6 KB",
-        "path": "ParcelNode.js"
-    },
-    {
         "limit": "6.0 KB",
         "path": "arrange.js"
     },

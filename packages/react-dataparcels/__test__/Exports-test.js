@@ -4,7 +4,6 @@
 import Parcel from '../src/index';
 import ChangeRequest from '../ChangeRequest';
 import combine from '../combine';
-import ParcelNode from '../ParcelNode';
 import arrange from '../arrange';
 import cancel from '../cancel';
 import promisify from '../promisify';
@@ -20,7 +19,6 @@ import useBuffer from '../useBuffer';
 import InternalParcel from 'dataparcels';
 import InternalChangeRequest from 'dataparcels/ChangeRequest';
 import InternalCreateUpdater from 'dataparcels/combine';
-import InternalParcelNode from 'dataparcels/ParcelNode';
 import InternalAsNodes from 'dataparcels/arrange';
 import Internalcancel from 'dataparcels/cancel';
 import InternalPromisify from 'dataparcels/promisify';
@@ -42,10 +40,6 @@ test('/ChangeRequest should export ChangeRequest', () => {
 
 test('/combine should export combine', () => {
     expect(combine).toBe(InternalCreateUpdater);
-});
-
-test('/ParcelNode should export ParcelNode', () => {
-    expect(ParcelNode).toBe(InternalParcelNode);
 });
 
 test('/arrange should export arrange', () => {
