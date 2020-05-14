@@ -1,5 +1,5 @@
 // @flow
-import cancel from './change/cancel';
+import cancel from './cancel';
 
 export default (...updaters: Function[]) => (parcelData: any): any => {
     return updaters.reduce((parcelData, updater) => {

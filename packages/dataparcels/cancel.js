@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports = require('./lib/change/cancel.js').default;
+module.exports = require('./lib/cancel.js').default;

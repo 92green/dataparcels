@@ -15,12 +15,12 @@ import InternalParcel from '../src/parcel/Parcel';
 
 // internal lib files
 import InternalChangeRequest from '../lib/change/ChangeRequest';
-import InternalCreateUpdater from '../lib/parcelData/combine';
 import InternalParcelNode from '../lib/parcelNode/ParcelNode';
+import InternalCreateUpdater from '../lib/combine';
 import InternalAsNodes from '../lib/parcelNode/arrange';
-import Internalcancel from '../lib/change/cancel';
-import InternalPromisify from '../lib/modifiers/promisify';
-import InternalTranslate from '../lib/modifiers/translate';
+import Internalcancel from '../lib/cancel';
+import InternalPromisify from '../lib/promisify';
+import InternalTranslate from '../lib/translate';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);

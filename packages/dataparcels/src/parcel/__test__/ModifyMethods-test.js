@@ -3,7 +3,7 @@
 
 import ChangeRequest from '../../change/ChangeRequest';
 import Parcel from '../Parcel';
-import cancel from '../../change/cancel';
+import cancel from '../../cancel';
 import arrange from '../../parcelNode/arrange';
 
 jest.useFakeTimers();
