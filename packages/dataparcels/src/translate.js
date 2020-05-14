@@ -1,7 +1,6 @@
 // @flow
-import type Parcel from '../parcel/Parcel';
-
-import combine from '../parcelData/combine';
+import type Parcel from './parcel/Parcel';
+import combine from './combine';
 
 type Config = {
     down?: Function,

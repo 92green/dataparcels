@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports = require('./lib/parcelData/combine.js').default;
+module.exports = require('./lib/combine.js').default;

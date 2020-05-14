@@ -1,7 +1,7 @@
 // @flow
-import type ChangeRequest from '../change/ChangeRequest';
+import type ChangeRequest from './change/ChangeRequest';
 
-import combine from '../parcelData/combine';
+import combine from './combine';
 
 type Data = {
     value: any,

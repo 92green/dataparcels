@@ -1,6 +1,6 @@
 // @flow
 import promisify from '../promisify';
-import Parcel from '../../parcel/Parcel';
+import Parcel from '../parcel/Parcel';
 
 let allResolvedPromises = async () => {
     // for jest to await Promise.resolve() that are not explicitly returned

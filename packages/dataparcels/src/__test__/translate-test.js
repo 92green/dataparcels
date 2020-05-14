@@ -1,6 +1,6 @@
 // @flow
 import translate from '../translate';
-import Parcel from '../../parcel/Parcel';
+import Parcel from '../parcel/Parcel';
 
 let onlyDown = translate({
     down: ({value}) => ({value: `${value}`})

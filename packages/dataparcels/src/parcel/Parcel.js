@@ -10,7 +10,7 @@ import type {ParcelValueUpdater} from '../types/Types';
 import ChangeRequest from '../change/ChangeRequest';
 import ActionReducer from '../change/ActionReducer';
 import Action from '../change/Action';
-import combine from '../parcelData/combine';
+import combine from '../combine';
 import TypeSet from '../typeHandlers/TypeSet';
 
 import pipeWith from 'unmutable/lib/util/pipeWith';

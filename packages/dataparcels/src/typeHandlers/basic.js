@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import combine from '../parcelData/combine';
+import combine from '../combine';
 
 export default {
     name: 'basic',
