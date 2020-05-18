@@ -331,3 +331,47 @@ test('ElementParcel.swapPrev() should swapPrev and wrap', () => {
         .get(0)
         .swapPrev();
 });
+
+test('ElementParcel.moveTo() should move item', () => {
+    expect.assertions(2);
+
+    var data = {
+        value: [1,2,3,4,5],
+        child: [
+            {key: "#0"},
+            {key: "#1"},
+            {key: "#2"},
+            {key: "#3"},
+            {key: "#4"}
+        ]
+    };
+
+    var expectedData = {
+        meta: {},
+        value: [1,5,2,3,4],
+        key: '^',
+        child: [
+            {key: "#0"},
+            {key: "#4"},
+            {key: "#1"},
+            {key: "#2"},
+            {key: "#3"}
+        ]
+    };
+
+    var expectedAction = {
+        type: "array.child.move",
+        keyPath: ["#4"],
+        payload: {newIndex: 1}
+    };
+
+    new Parcel({
+        ...data,
+        handleChange: (parcel, changeRequest) => {
+            expect(parcel.data).toEqual(expectedData);
+            expect(GetAction(changeRequest)).toEqual(expectedAction);
+        }
+    })
+        .get(4)
+        .moveTo(1);
+});

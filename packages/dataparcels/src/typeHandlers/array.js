@@ -84,6 +84,9 @@ export default {
         },
         swapPrev: (parcel) => () => {
             parcel._fireAction('array.child.swap', {offset: -1});
+        },
+        moveTo: (parcel) => (newIndex) => {
+            parcel._fireAction('array.child.move', {newIndex});
         }
     },
     childPropertiesPrecomputed: {
@@ -196,6 +199,18 @@ export default {
                     let clone = value.slice();
                     clone[index] = value[offsetIndex];
                     clone[offsetIndex] = value[index];
+                    return clone;
+                });
+            });
+        },
+        'array.child.move.homogeneous': true,
+        'array.child.move': (parcelData, {payload, updateValueAndChild, key}) => {
+            return doAtIndex(parcelData, key, index => {
+                return updateValueAndChild(parcelData, (value) => {
+                    let clone = value.slice();
+                    let toMove = clone[index];
+                    clone.splice(index, 1);
+                    clone.splice(payload.newIndex, 0, toMove);
                     return clone;
                 });
             });
