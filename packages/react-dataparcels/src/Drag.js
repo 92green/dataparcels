@@ -5,8 +5,6 @@ import type {Node} from 'react';
 import type Parcel from 'dataparcels';
 
 import React from 'react';
-import arrange from 'dataparcels/arrange';
-import move from 'unmutable/move';
 
 import {SortableContainer} from 'react-sortable-hoc';
 import {SortableElement} from 'react-sortable-hoc';
@@ -16,7 +14,7 @@ const DragElement = SortableElement(({parcel, childRenderer}) => childRenderer(p
 const DragContainer = SortableContainer(({parcel, container, childRenderer}) => {
     let Container = container || 'div';
     return <Container>
-        {parcel.toArray((elementParcel, index) => <DragElement
+        {parcel.children((elementParcel, index) => <DragElement
             key={elementParcel.key}
             index={index}
             parcel={elementParcel}
@@ -33,10 +31,6 @@ type Props = {
 };
 
 export default ({children, parcel, onSortEnd, container, ...sortableElementProps}: Props) => {
-    if(!parcel.isIndexed) {
-        throw new Error(`Drag's parcel prop must be of type indexed`);
-    }
-
     return <DragContainer
         parcel={parcel}
         container={container}
@@ -44,7 +38,7 @@ export default ({children, parcel, onSortEnd, container, ...sortableElementProps
         onSortEnd={(param) => {
             let {oldIndex, newIndex} = param;
             if(oldIndex !== newIndex) {
-                parcel.update(arrange(move(oldIndex, newIndex)));
+                parcel.get(oldIndex).moveTo(newIndex);
             }
             onSortEnd && onSortEnd(param);
         }}

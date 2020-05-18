@@ -49,18 +49,6 @@ test('Drag must not call change if oldIndex and newIndex are the same', () => {
     expect(handleChange).not.toHaveBeenCalled();
 });
 
-test('Drag should throw if parcel is not indexed', () => {
-
-    let parcel = new Parcel({
-        value: {abc: 123}
-    });
-
-    expect(() => {
-        // $FlowFixMe
-        shallow(<Drag parcel={parcel} children={() => <div />} />, {disableLifecycleMethods: true});
-    }).toThrow(`Drag's parcel prop must be of type indexed`);
-});
-
 test('Drag must accept onSortEnd and still call internal onSortEnd', () => {
 
     let handleChange = jest.fn();
