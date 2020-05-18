@@ -1,9 +1,9 @@
 // // @flow
 import React from 'react';
 import Parcel from 'dataparcels';
-import ParcelDrag from '../ParcelDrag';
+import Drag from '../Drag';
 
-test('ParcelDrag must pass props correctly', () => {
+test('Drag must pass props correctly', () => {
 
     let handleChange = jest.fn();
 
@@ -13,7 +13,7 @@ test('ParcelDrag must pass props correctly', () => {
     });
 
     // $FlowFixMe
-    let wrapper = shallow(<ParcelDrag parcel={parcel} children={() => <div />} />, {disableLifecycleMethods: true});
+    let wrapper = shallow(<Drag parcel={parcel} children={() => <div />} />, {disableLifecycleMethods: true});
 
     // first level in
     let props1 = wrapper.props();
@@ -30,7 +30,7 @@ test('ParcelDrag must pass props correctly', () => {
     expect(props3.children.length).toBe(3);
 });
 
-test('ParcelDrag must not call change if oldIndex and newIndex are the same', () => {
+test('Drag must not call change if oldIndex and newIndex are the same', () => {
 
     let handleChange = jest.fn();
 
@@ -40,7 +40,7 @@ test('ParcelDrag must not call change if oldIndex and newIndex are the same', ()
     });
 
     // $FlowFixMe
-    let wrapper = shallow(<ParcelDrag parcel={parcel} children={() => <div />} />, {disableLifecycleMethods: true});
+    let wrapper = shallow(<Drag parcel={parcel} children={() => <div />} />, {disableLifecycleMethods: true});
 
     // first level in
     let props1 = wrapper.props();
@@ -49,7 +49,7 @@ test('ParcelDrag must not call change if oldIndex and newIndex are the same', ()
     expect(handleChange).not.toHaveBeenCalled();
 });
 
-test('ParcelDrag should throw if parcel is not indexed', () => {
+test('Drag should throw if parcel is not indexed', () => {
 
     let parcel = new Parcel({
         value: {abc: 123}
@@ -57,11 +57,11 @@ test('ParcelDrag should throw if parcel is not indexed', () => {
 
     expect(() => {
         // $FlowFixMe
-        shallow(<ParcelDrag parcel={parcel} children={() => <div />} />, {disableLifecycleMethods: true});
-    }).toThrow(`ParcelDrag's parcel prop must be of type indexed`);
+        shallow(<Drag parcel={parcel} children={() => <div />} />, {disableLifecycleMethods: true});
+    }).toThrow(`Drag's parcel prop must be of type indexed`);
 });
 
-test('ParcelDrag must accept onSortEnd and still call internal onSortEnd', () => {
+test('Drag must accept onSortEnd and still call internal onSortEnd', () => {
 
     let handleChange = jest.fn();
 
@@ -73,7 +73,7 @@ test('ParcelDrag must accept onSortEnd and still call internal onSortEnd', () =>
     let onSortEnd = jest.fn();
 
     // $FlowFixMe
-    let wrapper = shallow(<ParcelDrag parcel={parcel} onSortEnd={onSortEnd} children={() => <div />} />, {disableLifecycleMethods: true});
+    let wrapper = shallow(<Drag parcel={parcel} onSortEnd={onSortEnd} children={() => <div />} />, {disableLifecycleMethods: true});
 
     let props = wrapper.props();
     let sortEndArg = {oldIndex: 0, newIndex: 2};
@@ -85,20 +85,20 @@ test('ParcelDrag must accept onSortEnd and still call internal onSortEnd', () =>
 });
 
 
-test('ParcelDrag must accept additional props and pass them to react-sortable-hoc as props', () => {
+test('Drag must accept additional props and pass them to react-sortable-hoc as props', () => {
 
     let parcel = new Parcel({
         value: [1,2,3]
     });
 
     // $FlowFixMe
-    let wrapper = shallow(<ParcelDrag parcel={parcel} woo={123} children={() => <div />} />, {disableLifecycleMethods: true});
+    let wrapper = shallow(<Drag parcel={parcel} woo={123} children={() => <div />} />, {disableLifecycleMethods: true});
 
     let props = wrapper.props();
     expect(props.woo).toBe(123);
 });
 
-test('ParcelDrag must render elements and pass parcels to them', () => {
+test('Drag must render elements and pass parcels to them', () => {
 
     let value = [1,2,3];
 
@@ -109,6 +109,6 @@ test('ParcelDrag must render elements and pass parcels to them', () => {
     let children = jest.fn(() => <div />);
 
     // $FlowFixMe
-    let wrapper = mount(<ParcelDrag parcel={parcel} children={children} />);
+    let wrapper = mount(<Drag parcel={parcel} children={children} />);
     expect(children.mock.calls.map(call => call[0].value)).toEqual([1,2,3]);
 });

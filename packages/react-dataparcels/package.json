@@ -16,7 +16,7 @@
     "cancel.js",
     "ChangeRequest.js",
     "combine.js",
-    "ParcelDrag.js",
+    "Drag.js",
     "arrange.js",
     "useBuffer.js",
     "useParcel.js",

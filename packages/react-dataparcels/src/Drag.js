@@ -34,7 +34,7 @@ type Props = {
 
 export default ({children, parcel, onSortEnd, container, ...sortableElementProps}: Props) => {
     if(!parcel.isIndexed) {
-        throw new Error(`ParcelDrag's parcel prop must be of type indexed`);
+        throw new Error(`Drag's parcel prop must be of type indexed`);
     }
 
     return <DragContainer

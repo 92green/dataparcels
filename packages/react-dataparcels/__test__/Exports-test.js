@@ -11,7 +11,7 @@ import translate from '../translate';
 
 // react-dataparcels
 import Boundary from '../Boundary';
-import ParcelDrag from '../ParcelDrag';
+import Drag from '../Drag';
 import useParcel from '../useParcel';
 import useBuffer from '../useBuffer';
 
@@ -26,7 +26,7 @@ import InternalTranslate from 'dataparcels/translate';
 
 // internal react-dataparcels
 import InternalBoundary from '../lib/Boundary';
-import InternalParcelDrag from '../lib/ParcelDrag';
+import InternalDrag from '../lib/Drag';
 import InternalUseParcel from '../lib/useParcel';
 import InternalUseBuffer from '../lib/useBuffer';
 
@@ -62,8 +62,8 @@ test('/Boundary should export Boundary', () => {
     expect(Boundary).toBe(InternalBoundary);
 });
 
-test('/ParcelDrag should export ParcelDrag', () => {
-    expect(ParcelDrag).toBe(InternalParcelDrag);
+test('/Drag should export Drag', () => {
+    expect(Drag).toBe(InternalDrag);
 });
 
 test('/useParcel should export useParcel', () => {
