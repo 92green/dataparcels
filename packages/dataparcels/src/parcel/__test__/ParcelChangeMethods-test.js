@@ -1,6 +1,8 @@
 // @flow
 import Parcel from '../Parcel';
 import GetAction from '../../util/__test__/GetAction-testUtil';
+import {Item} from '../../parcelNode/arrange';
+import arrange from '../../parcelNode/arrange';
 
 test('Parcel.dispatch() should pass handleChange to newly created parcel', () => {
     let handleChange = jest.fn();
@@ -135,6 +137,20 @@ test('Parcel.update() should call the Parcels handleChange function with the new
 
     expect(updater.mock.calls[0][0].value).toBe(123);
     expect(handleChange.mock.calls[0][0].data.value).toBe(124);
+});
+
+test.skip('Parcel.update(arrange()) should call the Parcels handleChange function with the new parcelData', () => {
+
+    let handleChange = jest.fn();
+    let updater = jest.fn(arr => [...arr, 4]);
+
+    new Parcel({
+        value: [1,2,3],
+        handleChange
+    }).update(arrange(updater));
+
+    expect(updater.mock.calls[0][0][0] instanceof Item).toBe(true);
+    expect(handleChange.mock.calls[0][0].data.value).toEqual([1,2,3,4]);
 });
 
 test('Parcel._setInput() should work like set but take the value from event.currentTarget.value', () => {
