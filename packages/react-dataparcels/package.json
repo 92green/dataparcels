@@ -11,13 +11,11 @@
   },
   "files": [
     "lib",
-    "arrange.js",
     "Boundary.js",
     "cancel.js",
     "ChangeRequest.js",
     "combine.js",
     "Drag.js",
-    "arrange.js",
     "useBuffer.js",
     "useParcel.js",
     "promisify.js",

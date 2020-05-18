@@ -4,7 +4,6 @@
 import Parcel from '../src/index';
 import ChangeRequest from '../ChangeRequest';
 import combine from '../combine';
-import arrange from '../arrange';
 import cancel from '../cancel';
 import promisify from '../promisify';
 import translate from '../translate';
@@ -15,7 +14,6 @@ import InternalParcel from '../src/parcel/Parcel';
 // internal lib files
 import InternalChangeRequest from '../lib/change/ChangeRequest';
 import InternalCreateUpdater from '../lib/combine';
-import InternalAsNodes from '../lib/parcelNode/arrange';
 import Internalcancel from '../lib/cancel';
 import InternalPromisify from '../lib/promisify';
 import InternalTranslate from '../lib/translate';
@@ -30,10 +28,6 @@ test('/ChangeRequest should export ChangeRequest', () => {
 
 test('/combine should export combine', () => {
     expect(combine).toBe(InternalCreateUpdater);
-});
-
-test('/arrange should export arrange', () => {
-    expect(arrange).toBe(InternalAsNodes);
 });
 
 test('/cancel should export cancel', () => {

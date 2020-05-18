@@ -16,10 +16,6 @@
         "path": "combine.js"
     },
     {
-        "limit": "6.0 KB",
-        "path": "arrange.js"
-    },
-    {
         "limit": "0.7 KB",
         "path": "promisify.js"
     },
@@ -28,7 +24,7 @@
         "path": "translate.js"
     },
     {
-        "limit": "8.4 KB",
+        "limit": "8.5 KB",
         "path": "Boundary.js"
     },
     {
@@ -36,11 +32,11 @@
         "path": "Drag.js"
     },
     {
-        "limit": "8.6 KB",
+        "limit": "8.7 KB",
         "path": "useParcel.js"
     },
     {
-        "limit": "8.2 KB",
+        "limit": "8.3 KB",
         "path": "useBuffer.js"
     }
 ]

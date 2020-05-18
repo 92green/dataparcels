@@ -10,10 +10,10 @@ module.exports = {
     testURL: 'http://localhost',
     coverageThreshold: {
         global: {
-            statements: 98,
-            branches: 93,
-            functions: 98,
-            lines: 98
+            statements: 100,
+            branches: 94,
+            functions: 100,
+            lines: 100
         }
     }
 };

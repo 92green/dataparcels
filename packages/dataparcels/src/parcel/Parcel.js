@@ -401,8 +401,6 @@ export default class Parcel {
 
     modifyDown = (updater: ParcelValueUpdater): Parcel => {
         let preparedUpdater = combine(updater);
-        let {typeSet} = this._treeShare;
-
         let parcel = this._create();
         parcel._rawId = this._idPushModifierUpdater('md', updater);
         parcel._parcelData = preparedUpdater(this._parcelData);
