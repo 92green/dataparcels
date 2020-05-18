@@ -839,13 +839,13 @@ describe('parcel equals', () => {
 
         p.push(789);
 
-        // #a should be true as it hasnt changed value and is still first and not last
-        expect(parcelEqual(p.get("#a"), p2.get("#a"))).toBe(true);
-        // #b should be false as it used to be last but now isnt (value and meta are the same)
-        expect(parcelEqual(p.get("#b"), p2.get("#b"))).toBe(false);
+        // #0 should be true as it hasnt changed value and is still first and not last
+        expect(parcelEqual(p.get("#0"), p2.get("#0"))).toBe(true);
+        // #1 should be false as it used to be last but now isnt (value and meta are the same)
+        expect(parcelEqual(p.get("#1"), p2.get("#1"))).toBe(false);
 
         p.unshift(101112);
-        // #a should be false as it used to be first but now isnt (value and meta are the same)
-        expect(parcelEqual(p.get("#a"), p2.get("#a"))).toBe(false);
+        // #0 should be false as it used to be first but now isnt (value and meta are the same)
+        expect(parcelEqual(p.get("#0"), p2.get("#0"))).toBe(false);
     });
 });
