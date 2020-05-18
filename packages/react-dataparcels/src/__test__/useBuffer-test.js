@@ -720,7 +720,7 @@ describe('useBuffer history', () => {
 
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange.mock.calls[1][0].value).toEqual([100,200,300]);
-        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('setData');
+        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('basic.setData');
 
         // if another submit occurs, right now it is also a setdata
         // ideally this should be fixed but right noe poses no problems
@@ -778,7 +778,7 @@ describe('useBuffer history', () => {
 
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange.mock.calls[1][0].value).toEqual([100,200,300,777]);
-        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('setData');
+        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('basic.setData');
 
         act(() => {
             result.current.push(444);
@@ -792,7 +792,7 @@ describe('useBuffer history', () => {
         });
         expect(handleChange).toHaveBeenCalledTimes(3);
         expect(handleChange.mock.calls[2][0].value).toEqual([100,200,300,777,444]);
-        expect(handleChange.mock.calls[2][1]._actions[0].type).not.toBe('setData');
+        expect(handleChange.mock.calls[2][1]._actions[0].type).not.toBe('basic.setData');
     });
 
 });
