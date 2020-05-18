@@ -13,7 +13,6 @@ import Action from '../change/Action';
 import combine from '../combine';
 import TypeSet from '../typeHandlers/TypeSet';
 
-import pipeWith from 'unmutable/lib/util/pipeWith';
 import HashString from '../util/HashString';
 
 type Config = {
@@ -59,6 +58,25 @@ export default class Parcel {
     _type: Type;
     _parentTypeName: ?string;
     _updateChangeRequestOnDispatch: UpdateChangeRequestOnDispatch = doNothing;
+
+    static metaEquals(metaA: any, metaB: any): boolean {
+        metaA = metaA || {};
+        metaB = metaB || {};
+        if(metaA === metaB) return true;
+
+        let aKeys = Object.keys(metaA);
+        let bKeys = Object.keys(metaB);
+        let len = aKeys.length;
+
+        if(bKeys.length !== len) return false;
+
+        for(let i = 0; i < len; i++) {
+            let key = aKeys[i];
+            if(!Object.is(metaA[key], metaB[key])) return false;
+        }
+
+        return true;
+    }
 
     //
     // parcel creation
@@ -434,5 +452,7 @@ export default class Parcel {
 
     // Composition methods
 
-    pipe = (...updaters: ParcelUpdater[]): Parcel => pipeWith(this, ...updaters);
+    pipe = (...updaters: ParcelUpdater[]): Parcel => {
+        return updaters.reduce((prev, updater) => updater(prev), this);
+    }
 }

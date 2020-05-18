@@ -6,7 +6,7 @@ import type {ParcelData} from '../types/Types';
 import type TypeSet from '../typeHandlers/TypeSet';
 
 import Action from './Action';
-import shallowEquals from 'unmutable/lib/shallowEquals';
+import Parcel from '../parcel/Parcel';
 
 export default class ChangeRequest {
 
@@ -117,7 +117,7 @@ export default class ChangeRequest {
     hasDataChanged = (keyPath: Array<Key|Index> = []): boolean => {
         let {next, prev} = this.getDataIn(keyPath);
         return !Object.is(next && next.value, prev && prev.value)
-            || !shallowEquals((next && next.meta) || {})((prev && prev.meta) || {});
+            || !Parcel.metaEquals(next && next.meta, prev && prev.meta);
     };
 
     hasValueChanged = (keyPath: Array<Key|Index> = []): boolean => {

@@ -4,8 +4,6 @@ import type {ParcelData} from '../types/Types';
 import type {ParcelDataEvaluator} from '../types/Types';
 import type TypeSet from '../typeHandlers/TypeSet';
 
-import pipe from 'unmutable/lib/util/pipe';
-
 export default (typeSet: TypeSet) => {
 
     let actionHandlers = typeSet.types.reduce((handlers, type) => ({
@@ -51,7 +49,7 @@ export default (typeSet: TypeSet) => {
 
     const stepMap = {
         get,
-        md: ({updater}, next) => pipe(updater, next),
+        md: ({updater}, next) => (prevData) => next(updater(prevData)),
         mu: ({updater, changeRequest, effectUpdate}, next) => (prevData) => {
             let nextData = next(prevData);
             let {effect, ...updated} = updater(

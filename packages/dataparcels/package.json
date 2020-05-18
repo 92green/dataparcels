@@ -33,17 +33,16 @@
     "watch": "yarn run build -w"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.5",
-    "unmutable": "^0.47.1"
+    "@babel/runtime": "^7.1.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "babel-preset-blueflag": "^1.0.0",
     "blueflag-test": "^0.22.0",
-    "immutable": "^4.0.0-rc.12",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "size-limit": "1.0.1"
+    "size-limit": "1.0.1",
+    "unmutable": "^0.47.1"
   }
 }

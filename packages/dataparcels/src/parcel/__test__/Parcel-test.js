@@ -143,3 +143,17 @@ test('Parcel.type should correctly identify parent type', () => {
     expect(new Parcel({value: [123]}).get(0).parentType).toBe('array');
 });
 
+test('Parcel.metaEquals should correctly identify if meta is the same', () => {
+    let same = {woo: false, gree: 123};
+    expect(Parcel.metaEquals()).toBe(true);
+    expect(Parcel.metaEquals({})).toBe(true);
+    expect(Parcel.metaEquals({}, {})).toBe(true);
+    expect(Parcel.metaEquals({foo: true}, {foo: true})).toBe(true);
+    expect(Parcel.metaEquals(same, same)).toBe(true);
+    expect(Parcel.metaEquals({grr: NaN}, {grr: NaN})).toBe(true);
+    expect(Parcel.metaEquals({foo: 12345}, {foo: 12345})).toBe(true);
+
+    expect(Parcel.metaEquals({foo: true}, {foo: true, qqq: 123})).toBe(false);
+    expect(Parcel.metaEquals({foo: ''}, {foo: false})).toBe(false);
+});
+

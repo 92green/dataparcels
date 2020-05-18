@@ -13,8 +13,6 @@ import {useCallback} from 'react';
 // $FlowFixMe - useState is a named export of react
 import {useMemo} from 'react';
 
-import shallowEquals from 'unmutable/lib/shallowEquals';
-
 const useRefState = (initial) => {
     let [value, setValue] = useState(initial);
     let valueRef = useRef();
@@ -280,7 +278,7 @@ export const parcelEqual = (parcelA: Parcel, parcelB: Parcel): boolean => {
     return aa.value === bb.value
         && aa.key === bb.key
         && aa.child === bb.child
-        && shallowEquals(aa.meta)(bb.meta)
+        && Parcel.metaEquals(aa.meta, bb.meta)
         && (!isChild || (parcelA.isFirstChild === parcelB.isFirstChild && parcelA.isLastChild === parcelB.isLastChild));
 };
 
