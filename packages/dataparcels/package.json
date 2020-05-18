@@ -30,7 +30,7 @@
     "lint": "blueflag-test lint",
     "size": "size-limit",
     "test": "yarn build && yarn jest --maxWorkers=1",
-    "test-all": "yarn build && yarn jest --maxWorkers=1 && yarn flow && yarn lint && yarn flow-coverage && yarn size",
+    "test-all": "yarn build && yarn jest --maxWorkers=1 && yarn lint && yarn size",
     "watch": "yarn run build -w"
   },
   "dependencies": {
