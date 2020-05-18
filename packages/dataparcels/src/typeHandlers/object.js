@@ -3,6 +3,7 @@
 export default {
     name: 'object',
     match: (value) => value === Object(value),
+    isParent: true,
     properties: {
         // $FlowFixMe
         size: (parcel) => Object.keys(parcel._parcelData.value).length

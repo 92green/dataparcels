@@ -118,7 +118,7 @@ export default class Parcel {
         //
 
         this.isChild = this._rawPath.length > 1;
-        this.isParent = !!this.size;
+        this.isParent = !!this._type.isParent;
         this.type = this._type.name;
         this.parentType = this._parentTypeName;
     }
@@ -401,6 +401,8 @@ export default class Parcel {
 
     modifyDown = (updater: ParcelValueUpdater): Parcel => {
         let preparedUpdater = combine(updater);
+        let {typeSet} = this._treeShare;
+
         let parcel = this._create();
         parcel._rawId = this._idPushModifierUpdater('md', updater);
         parcel._parcelData = preparedUpdater(this._parcelData);
@@ -414,11 +416,13 @@ export default class Parcel {
 
     modifyUp = (updater: ParcelValueUpdater): Parcel => {
         let preparedUpdater = combine(updater);
+        let {typeSet} = this._treeShare;
+
         let parcel = this._create();
         parcel._rawId = this._idPushModifierUpdater('mu', updater);
         parcel._updateChangeRequestOnDispatch = (changeRequest) => changeRequest._addStep({
             type: 'mu',
-            updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest}),
+            updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest, typeSet}),
             changeRequest,
             effectUpdate: this._effectUpdate
         });

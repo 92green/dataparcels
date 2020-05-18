@@ -48,6 +48,7 @@ let doAtIndex = (parcelData: ParcelData, key: string, updater: Function): Parcel
 export default {
     name: 'array',
     match: (value) => Array.isArray(value),
+    isParent: true,
     properties: {
         // $FlowFixMe
         size: (parcel) => parcel._parcelData.value.length,
