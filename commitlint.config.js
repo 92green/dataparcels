@@ -1,4 +1,3 @@
-// TODO replace once https://github.com/blueflag/blueflag-devops/pull/33 is merged and released
 module.exports = {
     rules: {
         'body-leading-blank': [1, 'always'],
@@ -13,7 +12,7 @@ module.exports = {
             'always',
             [
                 'fix',
-                'add',
+                'feat',
                 'break',
                 'amend',
                 'refactor',
