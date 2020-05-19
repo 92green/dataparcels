@@ -102,7 +102,7 @@ export default class ChangeRequest {
             let type = this._typeSet.getType(data);
             let {_get} = type.internalProperties || {};
             try {
-                return _get(data, key)[0];
+                return _get(data, key, undefined, type)[0];
             } catch(e) {
                 return undefined;
             }

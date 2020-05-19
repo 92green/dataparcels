@@ -39,12 +39,12 @@ export default (typeSet: TypeSet) => {
 
         let childParcelData;
         try {
-            childParcelData = _get(parcelData, key)[0];
+            childParcelData = _get(parcelData, key, undefined, valueType)[0];
         } catch(e) {
             return parcelData;
         }
 
-        return _set(parcelData, key, next(childParcelData));
+        return _set(parcelData, key, next(childParcelData), valueType);
     };
 
     const stepMap = {
@@ -69,18 +69,18 @@ export default (typeSet: TypeSet) => {
     };
 
     const doAction = ({keyPath, type, payload}: Action) => (parcelData: ParcelData): ParcelData => {
+        let typeHandler = typeSet.getType(parcelData);
         if(actionHandlers[`${type}.homogeneous`]) {
-            // $FlowFixMe - don't worry, last item will always return true
-            let {name} = typeSet.getType(parcelData);
             let typeName = type.split('.')[0];
-            if(name !== typeName) {
+            let compatibleTypes = [typeHandler.name].concat(typeHandler.compatibleWith || []);
+            if(!compatibleTypes.includes(typeName)) {
                 return parcelData;
             }
         }
         let key = keyPath.slice(-1)[0];
         // create child keys if not already
         parcelData = typeSet.createChildKeys(parcelData, true);
-        return actionMap[type](parcelData, {payload, createChildKeys, updateValueAndChild, key});
+        return actionMap[type](parcelData, {payload, createChildKeys, updateValueAndChild, key, type: typeHandler});
     };
 
     const doDeepAction = (action: Action): ParcelDataEvaluator => {

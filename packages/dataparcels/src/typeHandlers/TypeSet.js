@@ -3,6 +3,7 @@ import type {Type} from '../types/Types';
 import type {ParcelData} from '../types/Types';
 
 import arrayType from './array';
+import unmutable from './unmutable';
 import objectType from './object';
 import basicType from './basic';
 
@@ -14,7 +15,7 @@ export default class TypeSet {
         this.types = types;
     }
 
-    static defaultTypes = [arrayType, objectType, basicType];
+    static defaultTypes = [arrayType, unmutable, objectType, basicType];
     static basicType = basicType;
 
     // $FlowFixMe - this .find() will always find an item if types array is configured correctly
@@ -22,11 +23,12 @@ export default class TypeSet {
 
     createChildKeys = (parcelData: ParcelData, soft: ?boolean): ParcelData => {
         if(soft && parcelData.child) return parcelData;
-        let {_createChildKeys} = this.getType(parcelData).internalProperties || {};
+        let type = this.getType(parcelData);
+        let {_createChildKeys} = type.internalProperties || {};
         if(!_createChildKeys) return parcelData;
         return  {
             ...parcelData,
-            child: _createChildKeys(parcelData)
+            child: _createChildKeys(parcelData, type)
         };
     };
 }

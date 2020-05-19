@@ -39,6 +39,7 @@
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "babel-preset-blueflag": "^1.0.0",
+    "blueflag-record": "^0.4.0",
     "blueflag-test": "^0.22.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

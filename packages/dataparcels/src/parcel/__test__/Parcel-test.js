@@ -126,14 +126,17 @@ test('Parcel.type should correctly identify type', () => {
     class UnmutableCompatible {
         __UNMUTABLE_COMPATIBLE__ = true;
         foo = "123";
+        toObject() {
+            return {};
+        }
     }
 
     expect(new Parcel({value: 123}).type).toBe('basic');
     expect(new Parcel({value: {a: "A"}}).type).toBe('object');
     expect(new Parcel({value: []}).type).toBe('array');
+    expect(new Parcel({value: new UnmutableCompatible()}).type).toBe('unmutable');
     expect(new Parcel({value: new Date()}).type).toBe('object'); // wont work, but this classification is correct
     expect(new Parcel({value: new Thing()}).type).toBe('object'); // wont work, but this classification is correct
-    expect(new Parcel({value: new UnmutableCompatible()}).type).toBe('object'); // wont work, but this classification is correct
 });
 
 test('Parcel.type should correctly identify parent type', () => {

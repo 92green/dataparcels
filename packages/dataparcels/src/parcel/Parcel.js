@@ -315,7 +315,8 @@ export default class Parcel {
         this._parcelData = this._treeShare.typeSet.createChildKeys(this._parcelData, true);
         return this._type.internalProperties._has(
             this._parcelData,
-            key
+            key,
+            this._type
         );
     };
 
@@ -329,7 +330,8 @@ export default class Parcel {
         let [childParcelData, newParcelData] = this._type.internalProperties._get(
             this._parcelData,
             key,
-            notFoundValue
+            notFoundValue,
+            this._type
         );
 
         let childKey = childParcelData.key;
@@ -378,7 +380,8 @@ export default class Parcel {
     children = (mapper: ParcelMapper = doNothing): any => {
         return this._type.internalProperties._mapKeys(
             this._parcelData,
-            key => mapper(this.get(key), key, this)
+            key => mapper(this.get(key), key, this),
+            this._type
         );
     };
 
