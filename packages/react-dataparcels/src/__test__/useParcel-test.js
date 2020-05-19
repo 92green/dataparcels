@@ -399,3 +399,20 @@ describe('useParcel revert', () => {
         window.setTimeout = realSetTimeout;
     });
 });
+
+
+describe('useParcel types', () => {
+    it('should create a Parcel with types', () => {
+        let types = jest.fn(ii => ii);
+
+        let {result} = renderHook(() => useParcel({
+            source: () => ({
+                value: 123
+            }),
+            types
+        }));
+
+        expect(types).toHaveBeenCalledTimes(1);
+        expect(types.mock.calls[0][0]).toEqual(result.current._treeShare.typeSet.types);
+    });
+});
