@@ -1,6 +1,6 @@
 [
     {
-        "limit": "5.5 KB",
+        "limit": "5.8 KB",
         "path": "lib/index.js"
     },
     {
@@ -8,7 +8,7 @@
         "path": "cancel.js"
     },
     {
-        "limit": "5.5 KB",
+        "limit": "5.8 KB",
         "path": "ChangeRequest.js"
     },
     {
