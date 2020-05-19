@@ -3,65 +3,24 @@ import Parcel from '../Parcel';
 
 import GetAction from '../../util/__test__/GetAction-testUtil';
 
-test('IndexedParcel.delete() should delete', () => {
+test('IndexedParcel.has() should see if an item exists', () => {
 
-    var data = {
-        value: [1,2,3],
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
+    let p = new Parcel({
+        value: [1,2,3]
+    });
 
-    var expectedData = {
-        meta: {},
-        value: [2,3],
-        key: '^',
-        child: [
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedAction = {
-        type: "delete",
-        keyPath: ["#a"],
-        payload: undefined
-    };
-
-    var indexedHandleChange = jest.fn();
-    var keyedHandleChange = jest.fn();
-
-    new Parcel({
-        ...data,
-        handleChange: indexedHandleChange
-    }).get(0).delete();
-
-    new Parcel({
-        ...data,
-        handleChange: keyedHandleChange
-    }).get("#a").delete();
-
-    expect(indexedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
-    expect(GetAction(indexedHandleChange.mock.calls[0][1])).toEqual(expectedAction);
-    expect(keyedHandleChange.mock.calls[0][0].data).toEqual(expectedData);
-    expect(GetAction(keyedHandleChange.mock.calls[0][1])).toEqual(expectedAction);
-
-});
-
-test('IndexedParcel.get(hashkey) should return a new child Parcel', () => {
-    var data = {
-        value: [6,7,8],
-        handleChange: () => {}
-    };
-
-    var expectedValue = 6;
-
-    var childParcel = new Parcel(data).get("#a");
-
-    expect(childParcel instanceof Parcel).toBe(true);
-    expect(childParcel.value).toBe(expectedValue);
+    expect(p.has(0)).toBe(true);
+    expect(p.has(1)).toBe(true);
+    expect(p.has(2)).toBe(true);
+    expect(p.has(3)).toBe(false);
+    expect(p.has(-1)).toBe(true);
+    expect(p.has(-2)).toBe(true);
+    expect(p.has(-3)).toBe(true);
+    expect(p.has(-4)).toBe(false);
+    expect(p.has('#0')).toBe(true);
+    expect(p.has('#1')).toBe(true);
+    expect(p.has('#2')).toBe(true);
+    expect(p.has('#3')).toBe(false);
 });
 
 test('IndexedParcel.push() should push', () => {
@@ -70,9 +29,9 @@ test('IndexedParcel.push() should push', () => {
     var data = {
         value: [1,2,3],
         child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
+            {key: "#0"},
+            {key: "#1"},
+            {key: "#2"}
         ]
     };
 
@@ -81,16 +40,16 @@ test('IndexedParcel.push() should push', () => {
         value: [1,2,3,4,5],
         key: '^',
         child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"},
-            {key: "#d"},
-            {key: "#e"}
+            {key: "#0"},
+            {key: "#1"},
+            {key: "#2"},
+            {key: "#3"},
+            {key: "#4"}
         ]
     };
 
     var expectedAction = {
-        type: "push",
+        type: "array.push",
         keyPath: [],
         payload: [4,5]
     };
@@ -110,9 +69,9 @@ test('IndexedParcel.pop() should pop', () => {
     var data = {
         value: [1,2,3],
         child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
+            {key: "#0"},
+            {key: "#1"},
+            {key: "#2"}
         ]
     };
 
@@ -121,14 +80,14 @@ test('IndexedParcel.pop() should pop', () => {
         value: [1,2],
         key: '^',
         child: [
-            {key: "#a"},
-            {key: "#b"}
+            {key: "#0"},
+            {key: "#1"}
         ]
     };
 
     var expectedAction = {
-        type: "delete",
-        keyPath: ["#c"],
+        type: "array.child.delete",
+        keyPath: ["#2"],
         payload: undefined
     };
 
@@ -142,26 +101,14 @@ test('IndexedParcel.pop() should pop', () => {
 });
 
 test('IndexedParcel.pop() should do nothing if there are no items', () => {
-    expect.assertions(1);
-
-    var data = {
-        value: [],
-        child: []
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [],
-        key: '^',
-        child: []
-    };
+    let handleChange = jest.fn();
 
     new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-        }
+        value: [],
+        handleChange
     }).pop();
+
+    expect(handleChange).toHaveBeenCalledTimes(0);
 });
 
 test('IndexedParcel.shift() should shift', () => {
@@ -170,9 +117,9 @@ test('IndexedParcel.shift() should shift', () => {
     var data = {
         value: [1,2,3],
         child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
+            {key: "#0"},
+            {key: "#1"},
+            {key: "#2"}
         ]
     };
 
@@ -181,14 +128,14 @@ test('IndexedParcel.shift() should shift', () => {
         value: [2,3],
         key: '^',
         child: [
-            {key: "#b"},
-            {key: "#c"}
+            {key: "#1"},
+            {key: "#2"}
         ]
     };
 
     var expectedAction = {
-        type: "delete",
-        keyPath: ["#a"],
+        type: "array.child.delete",
+        keyPath: ["#0"],
         payload: undefined
     };
 
@@ -202,64 +149,14 @@ test('IndexedParcel.shift() should shift', () => {
 });
 
 test('IndexedParcel.shift() should do nothing if there are no items', () => {
-    expect.assertions(1);
-
-    var data = {
-        value: [],
-        child: []
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [],
-        key: '^',
-        child: []
-    };
+    let handleChange = jest.fn();
 
     new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-        }
+        value: [],
+        handleChange
     }).shift();
-});
 
-test('IndexedParcel.swap() should swap', () => {
-    expect.assertions(2);
-
-    var data = {
-        value: [1,2,3],
-        child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
-        ]
-    };
-
-    var expectedData = {
-        meta: {},
-        value: [3,2,1],
-        key: '^',
-        child: [
-            {key: "#c"},
-            {key: "#b"},
-            {key: "#a"}
-        ]
-    };
-
-    var expectedAction = {
-        type: "swap",
-        keyPath: ['#a'],
-        payload: '#c'
-    };
-
-    new Parcel({
-        ...data,
-        handleChange: (parcel, changeRequest) => {
-            expect(expectedData).toEqual(parcel.data);
-            expect(expectedAction).toEqual(GetAction(changeRequest));
-        }
-    }).swap(0,2);
+    expect(handleChange).toHaveBeenCalledTimes(0);
 });
 
 test('IndexedParcel.unshift() should unshift', () => {
@@ -268,9 +165,9 @@ test('IndexedParcel.unshift() should unshift', () => {
     var data = {
         value: [1,2,3],
         child: [
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
+            {key: "#0"},
+            {key: "#1"},
+            {key: "#2"}
         ]
     };
 
@@ -279,16 +176,16 @@ test('IndexedParcel.unshift() should unshift', () => {
         value: [4,5,1,2,3],
         key: '^',
         child: [
-            {key: "#d"},
-            {key: "#e"},
-            {key: "#a"},
-            {key: "#b"},
-            {key: "#c"}
+            {key: "#3"},
+            {key: "#4"},
+            {key: "#0"},
+            {key: "#1"},
+            {key: "#2"}
         ]
     };
 
     var expectedAction = {
-        type: "unshift",
+        type: "array.unshift",
         keyPath: [],
         payload: [4,5]
     };

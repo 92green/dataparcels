@@ -2,7 +2,7 @@
 import Parcel from '../Parcel';
 import ChangeRequest from '../../change/ChangeRequest';
 import Action from '../../change/Action';
-import {Map, List} from 'immutable';
+import TypeSet from '../../typeHandlers/TypeSet';
 
 test('Parcels should be able to accept no config', () => {
     let parcel = new Parcel();
@@ -32,6 +32,17 @@ test('Parcels should be able to accept just handleChange in config', () => {
     expect(handleChange.mock.calls[0][0].value).toBe(456);
 });
 
+test('Parcels should be able to accept types in config', () => {
+    let types = jest.fn(ii => ii);
+
+    let parcel = new Parcel({
+        types
+    });
+
+    expect(types).toHaveBeenCalledTimes(1);
+    expect(types.mock.calls[0][0]).toEqual(TypeSet.defaultTypes);
+    expect(parcel._treeShare.typeSet.types).toBe(TypeSet.defaultTypes);
+});
 
 test('Parcel._changeAndReturn() should call action and return Parcel', () => {
     let handleChange = jest.fn();
@@ -82,181 +93,70 @@ test('Parcel._changeAndReturn() should return [parcel, undefined] if no changes 
     expect(result).toEqual([parcel, undefined]);
 });
 
-test('Parcel types should correctly identify primitive values', () => {
-    var data = {
-        value: 123
-    };
-    expect(new Parcel(data).isParent).toBe(false);
-    expect(new Parcel(data).isIndexed).toBe(false);
-    expect(new Parcel(data).isChild).toBe(false);
-    expect(new Parcel(data).isElement).toBe(false);
+test('Parcel._boundarySplit should allow handleChange', () => {
+    let handleChange = jest.fn();
+    let withSplit = new Parcel({value: 1})._boundarySplit(handleChange);
+    withSplit.set(2);
+
+    expect(withSplit.value).toBe(1);
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].value).toBe(2);
 });
 
-test('Parcel types should correctly identify date', () => {
-    var data = {
-        value: new Date()
-    };
-    expect(new Parcel(data).isParent).toBe(false);
-    expect(new Parcel(data).isIndexed).toBe(false);
-    expect(new Parcel(data).isChild).toBe(false);
-    expect(new Parcel(data).isElement).toBe(false);
+test('Parcel.isChild types should correctly identify child values', () => {
+    expect(new Parcel({value: 1}).isChild).toBe(false);
+    expect(new Parcel({value: [1]}).get(0).isChild).toBe(true);
+    expect(new Parcel({value: [1]}).modifyDown(ii => ii).get(0).isChild).toBe(true);
+    expect(new Parcel({value: [[1]]}).get(0).get(0).isChild).toBe(true);
 });
 
-test('Parcel types should correctly identify object values', () => {
-    var data = {
-        value: {
-            a: "A"
-        }
-    };
-    expect(new Parcel(data).isParent).toBe(true);
-    expect(new Parcel(data).isIndexed).toBe(false);
-    expect(new Parcel(data).isChild).toBe(false);
-    expect(new Parcel(data).isElement).toBe(false);
+test('Parcel.isParent types should correctly identify parent values', () => {
+    expect(new Parcel({value: 1}).isParent).toBe(false);
+    expect(new Parcel({value: [1]}).isParent).toBe(true);
+    expect(new Parcel({value: [1]}).modifyDown(ii => ii).isParent).toBe(true);
+    expect(new Parcel({value: [[1]]}).get(0).get(0).isParent).toBe(false);
 });
 
-test('Parcel types should correctly identify class instance values', () => {
+
+test('Parcel.type should correctly identify type', () => {
     class Thing {
         foo = "123"
     }
-    var data = {
-        value: new Thing()
-    };
-    expect(new Parcel(data).isParent).toBe(false);
-    expect(new Parcel(data).isIndexed).toBe(false);
-    expect(new Parcel(data).isChild).toBe(false);
-    expect(new Parcel(data).isElement).toBe(false);
-});
 
-test('Parcel types should correctly identify unmutable compatible class instance values', () => {
     class UnmutableCompatible {
         __UNMUTABLE_COMPATIBLE__ = true;
         foo = "123";
-    }
-    var data = {
-        value: new UnmutableCompatible()
-    };
-    expect(new Parcel(data).isParent).toBe(true);
-    expect(new Parcel(data).isIndexed).toBe(false);
-    expect(new Parcel(data).isChild).toBe(false);
-    expect(new Parcel(data).isElement).toBe(false);
-});
-
-
-test('Parcel types should correctly identify Immutable.js Map values', () => {
-    var data = {
-        value: Map({
-            a: "A"
-        })
-    };
-    expect(new Parcel(data).isParent).toBe(true);
-    expect(new Parcel(data).isIndexed).toBe(false);
-    expect(new Parcel(data).isChild).toBe(false);
-    expect(new Parcel(data).isElement).toBe(false);
-});
-
-
-test('Parcel types should correctly identify array values', () => {
-    var data = {
-        value: [1,2,3]
-    };
-    expect(new Parcel(data).isParent).toBe(true);
-    expect(new Parcel(data).isIndexed).toBe(true);
-    expect(new Parcel(data).isChild).toBe(false);
-    expect(new Parcel(data).isElement).toBe(false);
-});
-
-test('Parcel types should correctly identify Immutable.js List values', () => {
-    var data = {
-        value: List([1,2,3])
-    };
-    expect(new Parcel(data).isParent).toBe(true);
-    expect(new Parcel(data).isIndexed).toBe(true);
-    expect(new Parcel(data).isChild).toBe(false);
-    expect(new Parcel(data).isElement).toBe(false);
-});
-
-test('Parcel types should correctly identify child values', () => {
-    var data = {
-        value: {
-            a: "A"
+        toObject() {
+            return {};
         }
-    };
-    expect(new Parcel(data).get("a").isParent).toBe(false);
-    expect(new Parcel(data).get("a").isIndexed).toBe(false);
-    expect(new Parcel(data).get("a").isChild).toBe(true);
-    expect(new Parcel(data).get("a").isElement).toBe(false);
+    }
+
+    expect(new Parcel({value: 123}).type).toBe('basic');
+    expect(new Parcel({value: {a: "A"}}).type).toBe('object');
+    expect(new Parcel({value: []}).type).toBe('array');
+    expect(new Parcel({value: new UnmutableCompatible()}).type).toBe('unmutable');
+    expect(new Parcel({value: new Date()}).type).toBe('object'); // wont work, but this classification is correct
+    expect(new Parcel({value: new Thing()}).type).toBe('object'); // wont work, but this classification is correct
 });
 
-test('Parcel types should correctly identify element values', () => {
-    var data = {
-        value: [1,2,3]
-    };
-    expect(new Parcel(data).get(0).isParent).toBe(false);
-    expect(new Parcel(data).get(0).isIndexed).toBe(false);
-    expect(new Parcel(data).get(0).isChild).toBe(true);
-    expect(new Parcel(data).get(0).isElement).toBe(true);
+test('Parcel.type should correctly identify parent type', () => {
+    expect(new Parcel({value: 123}).parentType).toBe(undefined);
+    expect(new Parcel({value: {a: "A"}}).parentType).toBe(undefined);
+    expect(new Parcel({value: {a: "A"}}).get('a').parentType).toBe('object');
+    expect(new Parcel({value: [123]}).get(0).parentType).toBe('array');
 });
 
-test('Parcel types should correctly identify child values after modifiers', () => {
-    var data = {
-        value: [1,2,3]
-    };
-    expect(new Parcel(data).modifyDown(ii => ii).isChild).toBe(false);
+test('Parcel.metaEquals should correctly identify if meta is the same', () => {
+    let same = {woo: false, gree: 123};
+    expect(Parcel.metaEquals()).toBe(true);
+    expect(Parcel.metaEquals({})).toBe(true);
+    expect(Parcel.metaEquals({}, {})).toBe(true);
+    expect(Parcel.metaEquals({foo: true}, {foo: true})).toBe(true);
+    expect(Parcel.metaEquals(same, same)).toBe(true);
+    expect(Parcel.metaEquals({grr: NaN}, {grr: NaN})).toBe(true);
+    expect(Parcel.metaEquals({foo: 12345}, {foo: 12345})).toBe(true);
+
+    expect(Parcel.metaEquals({foo: true}, {foo: true, qqq: 123})).toBe(false);
+    expect(Parcel.metaEquals({foo: ''}, {foo: false})).toBe(false);
 });
 
-// method creators
-
-test('Correct methods are created for primitive values', () => {
-    var data = {
-        value: 123
-    };
-    expect(() => new Parcel(data).value).not.toThrow();
-    expect(() => new Parcel(data).has('a')).toThrowError(`.has() is not a function`);
-    expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function`);
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
-});
-
-test('Correct methods are created for object values', () => {
-    var data = {
-        value: {a: 123}
-    };
-    expect(() => new Parcel(data).value).not.toThrow();
-    expect(() => new Parcel(data).has('a')).not.toThrow();
-    expect(() => new Parcel(data).pop()).toThrowError(`.pop() is not a function`);
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
-});
-
-test('Correct methods are created for array values', () => {
-    var data = {
-        value: [1,2,3]
-    };
-    expect(() => new Parcel(data).value).not.toThrow();
-    expect(() => new Parcel(data).has('a')).not.toThrow();
-    expect(() => new Parcel(data).pop()).not.toThrow();
-    expect(() => new Parcel(data).delete()).toThrowError(`.delete() is not a function.`);
-    expect(() => new Parcel(data).swapNext()).toThrowError(`.swapNext() is not a function.`);
-});
-
-test('Correct methods are created for object child values', () => {
-    var data = {
-        value: {a: 123}
-    };
-    expect(() => new Parcel(data).get("a").value).not.toThrow();
-    expect(() => new Parcel(data).get("a").has('a')).toThrowError(`.has() is not a function`);
-    expect(() => new Parcel(data).get("a").pop()).toThrowError(`.pop() is not a function`);
-    expect(() => new Parcel(data).get("a").delete()).not.toThrow();
-    expect(() => new Parcel(data).get("a").swapNext()).toThrowError(`.swapNext() is not a function.`);
-});
-
-test('Correct methods are created for array element values', () => {
-    var data = {
-        value: [1,2,3]
-    };
-    expect(() => new Parcel(data).get(0).value).not.toThrow();
-    expect(() => new Parcel(data).get(0).has('a')).toThrowError(`.has() is not a function`);
-    expect(() => new Parcel(data).get(0).pop()).toThrowError(`.pop() is not a function`);
-    expect(() => new Parcel(data).get(0).delete()).not.toThrow();
-    expect(() => new Parcel(data).get(0).swapNext()).not.toThrow();
-});

@@ -861,6 +861,12 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.1.5":
+  version "7.9.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.9.6.tgz#a9102eb5cadedf3f31d08a9ecf294af7827ea29f"
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@7.0.0-beta.44":
   version "7.0.0-beta.44"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.0.0-beta.44.tgz#f8832f4fdcee5d59bf515e595fc5106c529b394f"
@@ -10553,6 +10559,14 @@ rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-dataparcels-drag@^2.0.0-alpha.4:
+  version "2.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/react-dataparcels-drag/-/react-dataparcels-drag-2.0.0-alpha.4.tgz#a7e21d9a8f8272a48a6267669e95b970564bff78"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    react-sortable-hoc "1.4.0"
+    unmutable "^0.47.1"
+
 react-dev-utils@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.3.tgz#5b42d9ea58d5e9e017a2f57a40a8af408a3a46fb"
@@ -10726,6 +10740,14 @@ react-side-effect@^1.1.0:
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-1.2.0.tgz#0e940c78faba0c73b9b0eba9cd3dda8dfb7e7dae"
   dependencies:
     shallowequal "^1.0.1"
+
+react-sortable-hoc@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-1.4.0.tgz#b477ce700ba755754200a1dabd36e588e2f5608d"
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    invariant "^2.2.4"
+    prop-types "^15.5.7"
 
 react-spruce@^0.1.0:
   version "0.1.1"
@@ -12972,6 +12994,15 @@ unmutable@^0.34.1:
   version "0.34.1"
   resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.34.1.tgz#e417973cf11540756565fb15027402275401b311"
   dependencies:
+    fast-deep-equal "^1.0.0"
+    is-plain-object "^2.0.4"
+    lodash.range "^3.2.0"
+
+unmutable@^0.47.1:
+  version "0.47.2"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.47.2.tgz#76abc2f4c660b02b89532b04a545e0e8c6453844"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
     fast-deep-equal "^1.0.0"
     is-plain-object "^2.0.4"
     lodash.range "^3.2.0"

@@ -1573,6 +1573,12 @@ bluebird@^3.5.1, bluebird@^3.5.3:
   version "3.5.4"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.4.tgz#d6cc661595de30d5b3af5fcedd3c0b3ef6ec5714"
 
+blueflag-record@^0.4.0:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/blueflag-record/-/blueflag-record-0.4.5.tgz#7e5c877296b81529f9429e9ad6fb013dd675da59"
+  dependencies:
+    unmutable "^0.46.1"
+
 blueflag-test@^0.22.0:
   version "0.22.0"
   resolved "https://registry.yarnpkg.com/blueflag-test/-/blueflag-test-0.22.0.tgz#8f1e9188741665928bb53613c8af02ae09d404be"
@@ -3925,10 +3931,6 @@ ignore@^3.3.3:
 ignore@^4.0.3, ignore@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
-
-immutable@^4.0.0-rc.12:
-  version "4.0.0-rc.12"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.0.0-rc.12.tgz#ca59a7e4c19ae8d9bf74a97bdf0f6e2f2a5d0217"
 
 import-fresh@^2.0.0:
   version "2.0.0"
@@ -7744,6 +7746,15 @@ unique-slug@^2.0.0:
 universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
+
+unmutable@^0.46.1:
+  version "0.46.1"
+  resolved "https://registry.yarnpkg.com/unmutable/-/unmutable-0.46.1.tgz#af1e4c5bec4905bd8d288be45bd215f7e4d5ccb1"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    fast-deep-equal "^1.0.0"
+    is-plain-object "^2.0.4"
+    lodash.range "^3.2.0"
 
 unmutable@^0.47.1:
   version "0.47.1"

@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports = require('./lib/modifiers/promisify.js').default;
+module.exports = require('./lib/promisify.js').default;

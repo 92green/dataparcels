@@ -1,6 +1,6 @@
 [
     {
-        "limit": "10.1 KB",
+        "limit": "5.8 KB",
         "path": "lib/index.js"
     },
     {
@@ -8,20 +8,12 @@
         "path": "cancel.js"
     },
     {
-        "limit": "7.2 KB",
+        "limit": "5.8 KB",
         "path": "ChangeRequest.js"
     },
     {
         "limit": "0.4 KB",
         "path": "combine.js"
-    },
-    {
-        "limit": "5.6 KB",
-        "path": "ParcelNode.js"
-    },
-    {
-        "limit": "5.9 KB",
-        "path": "arrange.js"
     },
     {
         "limit": "0.7 KB",

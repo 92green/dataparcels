@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports = require('./lib/modifiers/translate.js').default;
+module.exports = require('./lib/translate.js').default;

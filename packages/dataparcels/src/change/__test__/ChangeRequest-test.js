@@ -2,8 +2,9 @@
 import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
 import Parcel from '../../parcel/Parcel';
-import TestTimeExecution from '../../util/__test__/TestTimeExecution-testUtil';
-import range from 'unmutable/lib/util/range';
+import TypeSet from '../../typeHandlers/TypeSet';
+import ActionReducer from '../ActionReducer';
+const typeSet = new TypeSet(TypeSet.defaultTypes);
 
 test('ChangeRequest should build an action', () => {
     expect(new ChangeRequest().actions).toEqual([]);
@@ -40,8 +41,9 @@ test('ChangeRequest merge() should merge other change requests actions', () => {
 });
 
 test('ChangeRequest nextData() and data should use Reducer', () => {
+
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         keyPath: ["b"],
         payload: 3
     });
@@ -53,23 +55,21 @@ test('ChangeRequest nextData() and data should use Reducer', () => {
         }
     });
 
-    let {value} = new ChangeRequest(action)
-        ._create({
-            prevData: parcel.data
-        })
-        .nextData;
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = jest.fn(() => ({value: 123}));
+    cr = cr._create({
+        prevData: parcel.data
+    });
 
-    var expectedValue = {
-        a: 1,
-        b: 3
-    };
+    let {value} = cr.nextData;
 
-    expect(expectedValue).toEqual(value);
+    expect(cr._actionReducer).toHaveBeenCalledTimes(1);
+    expect(value).toEqual(123);
 });
 
 test('ChangeRequest prevData should return previous data', () => {
     var action = new Action({
-        type: "set",
+        type: "basic.set",
         keyPath: ["b"],
         payload: 3
     });
@@ -115,93 +115,39 @@ test('ChangeRequest should keep originId and originPath', () => {
 
 test('ChangeRequest should cache its data after its calculated, so subsequent calls are faster', () => {
 
-    let amount = 1000;
-
-    let actions = range(amount).map((num) => new Action({
-        type: "set",
-        keyPath: ["a","b","c","d","e"],
-        payload: num
-    }));
+    var action = new Action({
+        type: "basic.set",
+        keyPath: ["b"],
+        payload: 3
+    });
 
     var parcel = new Parcel({
         value: {
-            a: {
-                b: {
-                    c: {
-                        d: {
-                            e: 123
-                        }
-                    }
-                }
-            }
+            a: 1,
+            b: 2
         }
     });
 
-    let changeRequest = new ChangeRequest(actions)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = jest.fn(() => ({value: 123}));
+    cr = cr._create({
         prevData: parcel.data
     });
-    let data;
 
-    let ms = TestTimeExecution(() => {
-        data = changeRequest.nextData;
-    });
+    let {value} = cr.nextData;
+    cr.nextData;
+    cr.nextData;
+    cr.nextData;
 
-    var expectedData = {
-        value: {
-            a: {
-                b: {
-                    c: {
-                        d: {
-                            e: amount - 1
-                        }
-                    }
-                }
-            }
-        },
-        key: "^",
-        meta: {},
-        child: {
-            a: {
-                key: "a",
-                child: {
-                    b: {
-                        key: "b",
-                        child: {
-                            c: {
-                                key: "c",
-                                child: {
-                                    d: {
-                                        key: "d",
-                                        child: {
-                                            e: {
-                                                key: "e"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    expect(expectedData).toEqual(data);
-
-    let ms2 = TestTimeExecution(() => {
-        data = changeRequest.nextData;
-    });
-
-    expect(expectedData).toEqual(data);
-
-    expect(ms2).toBeLessThan(ms / 100); // expect amazing performance boosts from having cached
+    expect(cr._actionReducer).toHaveBeenCalledTimes(1);
+    expect(value).toEqual(123);
 });
 
 test('ChangeRequest getDataIn should return previous and next value at keyPath', () => {
+
     var action = new Action({
-        type: "set",
-        keyPath: ["a", "c", "#a"],
+        type: "basic.set",
+        keyPath: ["a", "c", "#0"],
         payload: 100
     });
 
@@ -215,10 +161,14 @@ test('ChangeRequest getDataIn should return previous and next value at keyPath',
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = ActionReducer(typeSet);
+    cr._typeSet = typeSet;
+    cr = cr._create({
         prevData: parcel.data
     });
-    let {next, prev} = basedChangeRequest.getDataIn(['a', 'c', '#a']);
+
+    let {next, prev} = cr.getDataIn(['a', 'c', '#0']);
 
     expect(next.value).toBe(100);
     expect(prev.value).toBe(0);
@@ -226,8 +176,8 @@ test('ChangeRequest getDataIn should return previous and next value at keyPath',
 
 test('ChangeRequest hasValueChanged should indicate if value changed at path', () => {
     var action = new Action({
-        type: "set",
-        keyPath: ["a", "c", "#a"],
+        type: "basic.set",
+        keyPath: ["a", "c", "#0"],
         payload: 100
     });
 
@@ -242,23 +192,26 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path', (
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = ActionReducer(typeSet);
+    cr._typeSet = typeSet;
+    cr = cr._create({
         prevData: parcel.data
     });
 
-    expect(basedChangeRequest.hasValueChanged(['a', 'c', '#a'])).toBe(true);
-    expect(basedChangeRequest.hasValueChanged(['a', 'c', '#b'])).toBe(false);
-    expect(basedChangeRequest.hasValueChanged(['a', 'c'])).toBe(true);
-    expect(basedChangeRequest.hasValueChanged(['a', 'd'])).toBe(false);
-    expect(basedChangeRequest.hasValueChanged(['a'])).toBe(true);
-    expect(basedChangeRequest.hasValueChanged(['b'])).toBe(false);
-    expect(basedChangeRequest.hasValueChanged(['e'])).toBe(false);
-    expect(basedChangeRequest.hasValueChanged()).toBe(true);
+    expect(cr.hasValueChanged(['a', 'c', '#0'])).toBe(true);
+    expect(cr.hasValueChanged(['a', 'c', '#1'])).toBe(false);
+    expect(cr.hasValueChanged(['a', 'c'])).toBe(true);
+    expect(cr.hasValueChanged(['a', 'd'])).toBe(false);
+    expect(cr.hasValueChanged(['a'])).toBe(true);
+    expect(cr.hasValueChanged(['b'])).toBe(false);
+    expect(cr.hasValueChanged(['e'])).toBe(false);
+    expect(cr.hasValueChanged()).toBe(true);
 });
 
 test('ChangeRequest hasValueChanged should indicate if value changed at path due to deletion', () => {
     var action = new Action({
-        type: "delete",
+        type: "object.child.delete",
         keyPath: ["a"]
     });
 
@@ -271,42 +224,48 @@ test('ChangeRequest hasValueChanged should indicate if value changed at path due
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = ActionReducer(typeSet);
+    cr._typeSet = typeSet;
+    cr = cr._create({
         prevData: parcel.data
     });
 
-    expect(basedChangeRequest.hasValueChanged(['a'])).toBe(true);
-    expect(basedChangeRequest.hasValueChanged(['a', 'b'])).toBe(true);
-    expect(basedChangeRequest.hasValueChanged(['b'])).toBe(false);
+    expect(cr.hasValueChanged(['a'])).toBe(true);
+    expect(cr.hasValueChanged(['a', 'b'])).toBe(true);
+    expect(cr.hasValueChanged(['b'])).toBe(false);
 });
 
 test('ChangeRequest hasValueChanged should indicate if value changed in array, identifying elements by key', () => {
     var action = new Action({
-        type: "insertBefore",
-        keyPath: ["#b"],
-        payload: 999
+        type: "array.child.insert",
+        keyPath: ["#1"],
+        payload: {value: 999, offset: 0}
     });
 
     var parcel = new Parcel({
         value: [0,1,2,3]
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = ActionReducer(typeSet);
+    cr._typeSet = typeSet;
+    cr = cr._create({
         prevData: parcel.data
     });
 
-    expect(basedChangeRequest.hasValueChanged(['#a'])).toBe(false);
-    expect(basedChangeRequest.hasValueChanged(['#b'])).toBe(false);
-    expect(basedChangeRequest.hasValueChanged(['#c'])).toBe(false);
-    expect(basedChangeRequest.hasValueChanged(['#d'])).toBe(false);
-    expect(basedChangeRequest.hasValueChanged(['#e'])).toBe(true);
-    expect(basedChangeRequest.hasValueChanged()).toBe(true);
+    expect(cr.hasValueChanged(['#0'])).toBe(false);
+    expect(cr.hasValueChanged(['#1'])).toBe(false);
+    expect(cr.hasValueChanged(['#2'])).toBe(false);
+    expect(cr.hasValueChanged(['#3'])).toBe(false);
+    expect(cr.hasValueChanged(['#4'])).toBe(true);
+    expect(cr.hasValueChanged()).toBe(true);
 });
 
-test('ChangeRequest hasDataChanged should indicate if value changed at path', () => {
+test('ChangeRequest hasDataChanged should indicate if data changed at path', () => {
     var action = new Action({
-        type: "set",
-        keyPath: ["a", "c", "#a"],
+        type: "basic.set",
+        keyPath: ["a", "c", "#0"],
         payload: 100
     });
 
@@ -321,24 +280,27 @@ test('ChangeRequest hasDataChanged should indicate if value changed at path', ()
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = ActionReducer(typeSet);
+    cr._typeSet = typeSet;
+    cr = cr._create({
         prevData: parcel.data
     });
 
-    expect(basedChangeRequest.hasDataChanged(['a', 'c', '#a'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged(['a', 'c', '#b'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['a', 'c'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged(['a', 'd'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['a'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged(['b'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['e'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged()).toBe(true);
+    expect(cr.hasDataChanged(['a', 'c', '#0'])).toBe(true);
+    expect(cr.hasDataChanged(['a', 'c', '#1'])).toBe(false);
+    expect(cr.hasDataChanged(['a', 'c'])).toBe(true);
+    expect(cr.hasDataChanged(['a', 'd'])).toBe(false);
+    expect(cr.hasDataChanged(['a'])).toBe(true);
+    expect(cr.hasDataChanged(['b'])).toBe(false);
+    expect(cr.hasDataChanged(['e'])).toBe(false);
+    expect(cr.hasDataChanged()).toBe(true);
 });
 
 test('ChangeRequest hasDataChanged should indicate if meta changed at path', () => {
     var action = new Action({
-        type: "setMeta",
-        keyPath: ["a", "c", "#a"],
+        type: "basic.setMeta",
+        keyPath: ["a", "c", "#0"],
         payload: {
             abc: 123
         }
@@ -355,23 +317,26 @@ test('ChangeRequest hasDataChanged should indicate if meta changed at path', () 
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = ActionReducer(typeSet);
+    cr._typeSet = typeSet;
+    cr = cr._create({
         prevData: parcel.data
     });
 
-    expect(basedChangeRequest.hasDataChanged(['a', 'c', '#a'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged(['a', 'c', '#b'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['a', 'c'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged(['a', 'd'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['a'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged(['b'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['e'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged()).toBe(true);
+    expect(cr.hasDataChanged(['a', 'c', '#0'])).toBe(true);
+    expect(cr.hasDataChanged(['a', 'c', '#1'])).toBe(false);
+    expect(cr.hasDataChanged(['a', 'c'])).toBe(true);
+    expect(cr.hasDataChanged(['a', 'd'])).toBe(false);
+    expect(cr.hasDataChanged(['a'])).toBe(true);
+    expect(cr.hasDataChanged(['b'])).toBe(false);
+    expect(cr.hasDataChanged(['e'])).toBe(false);
+    expect(cr.hasDataChanged()).toBe(true);
 });
 
 test('ChangeRequest hasDataChanged should indicate if value changed at path due to deletion', () => {
     var action = new Action({
-        type: "delete",
+        type: "object.child.delete",
         keyPath: ["a"]
     });
 
@@ -384,36 +349,42 @@ test('ChangeRequest hasDataChanged should indicate if value changed at path due 
         }
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = ActionReducer(typeSet);
+    cr._typeSet = typeSet;
+    cr = cr._create({
         prevData: parcel.data
     });
 
-    expect(basedChangeRequest.hasDataChanged(['a'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged(['a', 'b'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged(['b'])).toBe(false);
+    expect(cr.hasDataChanged(['a'])).toBe(true);
+    expect(cr.hasDataChanged(['a', 'b'])).toBe(true);
+    expect(cr.hasDataChanged(['b'])).toBe(false);
 });
 
 test('ChangeRequest hasDataChanged should indicate if value changed in array, identifying elements by key', () => {
     var action = new Action({
-        type: "insertBefore",
-        keyPath: ["#b"],
-        payload: 999
+        type: "array.child.insert",
+        keyPath: ["#1"],
+        payload: {value: 999, offset: 0}
     });
 
     var parcel = new Parcel({
         value: [0,1,2,3]
     });
 
-    let basedChangeRequest = new ChangeRequest(action)._create({
+    let cr = new ChangeRequest(action);
+    cr._actionReducer = ActionReducer(typeSet);
+    cr._typeSet = typeSet;
+    cr = cr._create({
         prevData: parcel.data
     });
 
-    expect(basedChangeRequest.hasDataChanged(['#a'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['#b'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['#c'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['#d'])).toBe(false);
-    expect(basedChangeRequest.hasDataChanged(['#e'])).toBe(true);
-    expect(basedChangeRequest.hasDataChanged()).toBe(true);
+    expect(cr.hasDataChanged(['#0'])).toBe(false);
+    expect(cr.hasDataChanged(['#1'])).toBe(false);
+    expect(cr.hasDataChanged(['#2'])).toBe(false);
+    expect(cr.hasDataChanged(['#3'])).toBe(false);
+    expect(cr.hasDataChanged(['#4'])).toBe(true);
+    expect(cr.hasDataChanged()).toBe(true);
 });
 
 test('ChangeRequest squash should merge actions and squash it into a single action', () => {
@@ -427,7 +398,7 @@ test('ChangeRequest squash should merge actions and squash it into a single acti
     let squashed = ChangeRequest.squash(actions);
 
     expect(squashed.actions.length).toBe(1);
-    expect(squashed.actions[0].type).toBe('batch');
+    expect(squashed.actions[0].type).toBe('reducer.batch');
     expect(squashed.actions[0].payload.length).toBe(3);
 });
 

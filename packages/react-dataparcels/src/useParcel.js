@@ -1,5 +1,6 @@
 // @flow
 import type {ParcelValueUpdater} from 'dataparcels';
+import type {Type} from 'dataparcels/src/types/Types';
 
 import Parcel from 'dataparcels';
 import combine from 'dataparcels/combine';
@@ -17,7 +18,8 @@ type Params = {
     derive?: ParcelValueUpdater,
     buffer?: boolean|number,
     history?: number,
-    deriveSource?: ParcelValueUpdater
+    deriveSource?: ParcelValueUpdater,
+    types?: (types: Type[]) => Type[]
 };
 
 export default (params: Params): Parcel => {
@@ -31,7 +33,8 @@ export default (params: Params): Parcel => {
         derive = noop,
         buffer = false,
         history = 0,
-        deriveSource = noop
+        deriveSource = noop,
+        types
     } = params;
 
     if(buffer === false) {
@@ -44,7 +47,8 @@ export default (params: Params): Parcel => {
         let parcel = new Parcel({
             handleChange: (parcel: Parcel) => {
                 setParcel(parcel);
-            }
+            },
+            types
         });
 
         return parcel._changeAndReturn(

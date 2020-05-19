@@ -3,8 +3,8 @@
 
 import ChangeRequest from '../../change/ChangeRequest';
 import Parcel from '../Parcel';
-import cancel from '../../change/cancel';
-import arrange from '../../parcelNode/arrange';
+import cancel from '../../cancel';
+// import arrange from '../../parcelNode/arrange';
 
 jest.useFakeTimers();
 
@@ -27,7 +27,7 @@ describe('Parcel.modifyDown()', () => {
             meta: {},
             child: undefined,
             value: 124,
-            key: "#a"
+            key: "#0"
         };
         expect(updated).toEqual(expectedData);
         expect(updater.mock.calls[0][0]).toEqual(parcel.data);
@@ -78,7 +78,7 @@ describe('Parcel.modifyDown()', () => {
 
         expect(newParcel.data.child).toEqual([
             {
-                key: '#a',
+                key: '#0',
                 child: undefined,
                 meta: {
                     def: 456
@@ -113,14 +113,14 @@ describe('Parcel.modifyDown()', () => {
         let sameA2 = new Parcel().modifyDown(updater);
         let differentA = new Parcel().modifyDown(updater2);
 
-        let sameB1 = new Parcel().modifyDown(arrange(updater));
-        let sameB2 = new Parcel().modifyDown(arrange(updater));
-        let differentB = new Parcel().modifyDown(arrange(a => 1 + 2));
+        // let sameB1 = new Parcel().modifyDown(arrange(updater));
+        // let sameB2 = new Parcel().modifyDown(arrange(updater));
+        // let differentB = new Parcel().modifyDown(arrange(a => 1 + 2));
 
         expect(sameA1.id).toBe(sameA2.id);
         expect(sameA1.id).not.toBe(differentA.id);
-        expect(sameB1.id).toBe(sameB2.id);
-        expect(sameB1.id).not.toBe(differentB.id);
+        // expect(sameB1.id).toBe(sameB2.id);
+        // expect(sameB1.id).not.toBe(differentB.id);
     });
 });
 
@@ -134,14 +134,14 @@ describe('Parcel.modifyUp()', () => {
         let sameA2 = new Parcel().modifyUp(updater);
         let differentA = new Parcel().modifyUp(updater2);
 
-        let sameB1 = new Parcel().modifyUp(arrange(updater));
-        let sameB2 = new Parcel().modifyUp(arrange(updater));
-        let differentB = new Parcel().modifyUp(arrange(a => 1 + 2));
+        // let sameB1 = new Parcel().modifyUp(arrange(updater));
+        // let sameB2 = new Parcel().modifyUp(arrange(updater));
+        // let differentB = new Parcel().modifyUp(arrange(a => 1 + 2));
 
         expect(sameA1.id).toBe(sameA2.id);
         expect(sameA1.id).not.toBe(differentA.id);
-        expect(sameB1.id).toBe(sameB2.id);
-        expect(sameB1.id).not.toBe(differentB.id);
+        // expect(sameB1.id).toBe(sameB2.id);
+        // expect(sameB1.id).not.toBe(differentB.id);
     });
 
     it('should allow you to change the payload of a changed parcel with an updater (and should allow non-parent types to be returned)', () => {
@@ -344,36 +344,36 @@ describe('Parcel.modifyUp()', () => {
             expect(handleChange.mock.calls[2][0].value).toBe(202);
         });
 
-        // it('should allow multiple modifiers to calls effect update()', async () => {
+        it('should allow multiple modifiers to calls effect update()', async () => {
 
-        //     let handleChange = jest.fn();
-        //     let parcel = new Parcel({
-        //         handleChange,
-        //         value: 100
-        //     });
+            let handleChange = jest.fn();
+            let parcel = new Parcel({
+                handleChange,
+                value: 100
+            });
 
-        //     parcel
-        //         .modifyUp(() => ({
-        //             effect: (update) => {
-        //                 update(({value}) => ({value: value + 1}));
-        //             }
-        //         }))
-        //         .modifyUp(() => ({
-        //             effect: (update) => {
-        //                 update(({value}) => ({value: value + 1}));
-        //             }
-        //         }))
-        //         .set(200);
+            parcel
+                .modifyUp(() => ({
+                    effect: (update) => {
+                        update(({value}) => ({value: value + 1}));
+                    }
+                }))
+                .modifyUp(() => ({
+                    effect: (update) => {
+                        update(({value}) => ({value: value + 1}));
+                    }
+                }))
+                .set(200);
 
-        //     expect(handleChange).toHaveBeenCalledTimes(1);
-        //     expect(handleChange.mock.calls[0][0].value).toBe(200);
+            expect(handleChange).toHaveBeenCalledTimes(1);
+            expect(handleChange.mock.calls[0][0].value).toBe(200);
 
-        //     jest.advanceTimersByTime(500);
+            jest.advanceTimersByTime(500);
 
-        //     expect(handleChange).toHaveBeenCalledTimes(3);
-        //     expect(handleChange.mock.calls[1][0].value).toBe(201);
-        //     expect(handleChange.mock.calls[2][0].value).toBe(202);
-        // });
+            expect(handleChange).toHaveBeenCalledTimes(3);
+            expect(handleChange.mock.calls[1][0].value).toBe(201);
+            expect(handleChange.mock.calls[2][0].value).toBe(202);
+        });
     });
 });
 

@@ -720,7 +720,7 @@ describe('useBuffer history', () => {
 
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange.mock.calls[1][0].value).toEqual([100,200,300]);
-        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('setData');
+        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('basic.setData');
 
         // if another submit occurs, right now it is also a setdata
         // ideally this should be fixed but right noe poses no problems
@@ -778,7 +778,7 @@ describe('useBuffer history', () => {
 
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange.mock.calls[1][0].value).toEqual([100,200,300,777]);
-        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('setData');
+        expect(handleChange.mock.calls[1][1]._actions[0].type).toBe('basic.setData');
 
         act(() => {
             result.current.push(444);
@@ -792,7 +792,7 @@ describe('useBuffer history', () => {
         });
         expect(handleChange).toHaveBeenCalledTimes(3);
         expect(handleChange.mock.calls[2][0].value).toEqual([100,200,300,777,444]);
-        expect(handleChange.mock.calls[2][1]._actions[0].type).not.toBe('setData');
+        expect(handleChange.mock.calls[2][1]._actions[0].type).not.toBe('basic.setData');
     });
 
 });
@@ -839,13 +839,13 @@ describe('parcel equals', () => {
 
         p.push(789);
 
-        // #a should be true as it hasnt changed value and is still first and not last
-        expect(parcelEqual(p.get("#a"), p2.get("#a"))).toBe(true);
-        // #b should be false as it used to be last but now isnt (value and meta are the same)
-        expect(parcelEqual(p.get("#b"), p2.get("#b"))).toBe(false);
+        // #0 should be true as it hasnt changed value and is still first and not last
+        expect(parcelEqual(p.get("#0"), p2.get("#0"))).toBe(true);
+        // #1 should be false as it used to be last but now isnt (value and meta are the same)
+        expect(parcelEqual(p.get("#1"), p2.get("#1"))).toBe(false);
 
         p.unshift(101112);
-        // #a should be false as it used to be first but now isnt (value and meta are the same)
-        expect(parcelEqual(p.get("#a"), p2.get("#a"))).toBe(false);
+        // #0 should be false as it used to be first but now isnt (value and meta are the same)
+        expect(parcelEqual(p.get("#0"), p2.get("#0"))).toBe(false);
     });
 });

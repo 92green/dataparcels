@@ -11,14 +11,11 @@
   },
   "files": [
     "lib",
-    "arrange.js",
     "Boundary.js",
     "cancel.js",
     "ChangeRequest.js",
     "combine.js",
-    "ParcelDrag.js",
-    "ParcelNode.js",
-    "arrange.js",
+    "Drag.js",
     "useBuffer.js",
     "useParcel.js",
     "promisify.js",
@@ -36,16 +33,13 @@
     "lint": "blueflag-test lint",
     "size": "size-limit",
     "test": "yarn build && yarn jest --maxWorkers=1",
-    "test-all": "yarn build && yarn jest --maxWorkers=1 && yarn flow && yarn lint && yarn flow-coverage && yarn size",
+    "test-all": "yarn build && yarn jest --maxWorkers=1 && yarn lint && yarn size",
     "watch": "yarn run build -w"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
     "dataparcels": "^2.0.0-alpha.4",
-    "is-promise": "^2.1.0",
-    "react-sortable-hoc": "1.4.0",
-    "unmutable": "^0.47.1",
-    "use-debounce": "^1.1.3"
+    "react-sortable-hoc": "1.4.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
