@@ -1,42 +1,26 @@
 [
     {
-        "limit": "10.3 KB",
+        "limit": "5.8 KB",
         "path": "lib/index.js"
-    },
-    {
-        "limit": "0.6 KB",
-        "path": "Action.js"
     },
     {
         "limit": "0.1 KB",
         "path": "cancel.js"
     },
     {
-        "limit": "7.3 KB",
+        "limit": "5.8 KB",
         "path": "ChangeRequest.js"
     },
     {
         "limit": "0.4 KB",
-        "path": "createUpdater.js"
+        "path": "combine.js"
     },
     {
-        "limit": "0.1 KB",
-        "path": "deleted.js"
+        "limit": "0.7 KB",
+        "path": "promisify.js"
     },
     {
-        "limit": "5.6 KB",
-        "path": "ParcelNode.js"
-    },
-    {
-        "limit": "5.9 KB",
-        "path": "asChildNodes.js"
-    },
-    {
-        "limit": "2.2 KB",
+        "limit": "0.6 KB",
         "path": "translate.js"
-    },
-    {
-        "limit": "5.4 KB",
-        "path": "validation.js"
     }
 ]

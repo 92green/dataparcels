@@ -35,7 +35,7 @@ test('ChildParcel.delete() should delete self when indexed', () => {
         }
     };
 
-    new Parcel(data).get('#b').delete();
+    new Parcel(data).get('#1').delete();
 });
 
 
@@ -81,7 +81,7 @@ test('ChildParcel.isFirstChild should not detect first child parcel on empty par
         value: {}
     });
 
-    expect(parcel.get('a').isFirstChild).toBe(false);
+    expect(parcel.get('a').isFirstChild).toBe(undefined);
 });
 
 test('ChildParcel.isFirstChild should not detect first child parcel on non child (top level parcel)', () => {
@@ -89,7 +89,7 @@ test('ChildParcel.isFirstChild should not detect first child parcel on non child
         value: 123
     });
 
-    expect(parcel.isFirstChild).toBe(false);
+    expect(parcel.isFirstChild).toBe(undefined);
 });
 
 test('ChildParcel.isLastChild should not detect last child parcel on empty parent', () => {
@@ -97,7 +97,7 @@ test('ChildParcel.isLastChild should not detect last child parcel on empty paren
         value: {}
     });
 
-    expect(parcel.get('a').isLastChild).toBe(false);
+    expect(parcel.get('a').isLastChild).toBe(undefined);
 });
 
 test('ChildParcel.isLastChild should not detect last child parcel on non child (top level parcel)', () => {
@@ -105,7 +105,7 @@ test('ChildParcel.isLastChild should not detect last child parcel on non child (
         value: 123
     });
 
-    expect(parcel.isLastChild).toBe(false);
+    expect(parcel.isLastChild).toBe(undefined);
 });
 
 test('ChildParcel.isOnlyChild should not detect only child parcel on empty parent', () => {
@@ -113,7 +113,7 @@ test('ChildParcel.isOnlyChild should not detect only child parcel on empty paren
         value: {}
     });
 
-    expect(parcel.get('a').isOnlyChild).toBe(false);
+    expect(parcel.get('a').isOnlyChild).toBe(undefined);
 });
 
 test('ChildParcel.isOnlyChild should not detect only child parcel on non child (top level parcel)', () => {
@@ -121,5 +121,5 @@ test('ChildParcel.isOnlyChild should not detect only child parcel on non child (
         value: 123
     });
 
-    expect(parcel.isOnlyChild).toBe(false);
+    expect(parcel.isOnlyChild).toBe(undefined);
 });

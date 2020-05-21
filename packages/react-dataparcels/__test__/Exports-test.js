@@ -2,110 +2,68 @@
 
 // dataparcels exports
 import Parcel from '../src/index';
-import Action from '../Action';
 import ChangeRequest from '../ChangeRequest';
-import createUpdater from '../createUpdater';
-import deleted from '../deleted';
-import ParcelNode from '../ParcelNode';
-import asChildNodes from '../asChildNodes';
+import combine from '../combine';
 import cancel from '../cancel';
+import promisify from '../promisify';
 import translate from '../translate';
-import validation from '../validation';
 
 // react-dataparcels
-import ParcelBoundary from '../ParcelBoundary';
-import ParcelDrag from '../ParcelDrag';
-import useParcelBuffer from '../useParcelBuffer';
-import useParcelForm from '../useParcelForm';
-import useParcelState from '../useParcelState';
-import asyncChange from '../asyncChange';
-import asyncValue from '../asyncValue';
+import Boundary from '../Boundary';
+import Drag from '../Drag';
+import useParcel from '../useParcel';
+import useBuffer from '../useBuffer';
 
 // internal dataparcels files
 import InternalParcel from 'dataparcels';
-import InternalAction from 'dataparcels/Action';
 import InternalChangeRequest from 'dataparcels/ChangeRequest';
-import InternalCreateUpdater from 'dataparcels/createUpdater';
-import Internaldeleted from 'dataparcels/deleted';
-import InternalParcelNode from 'dataparcels/ParcelNode';
-import InternalAsNodes from 'dataparcels/asChildNodes';
+import InternalCreateUpdater from 'dataparcels/combine';
 import Internalcancel from 'dataparcels/cancel';
+import InternalPromisify from 'dataparcels/promisify';
 import InternalTranslate from 'dataparcels/translate';
-import InternalValidation from 'dataparcels/validation';
 
 // internal react-dataparcels
-import InternalParcelBoundary from '../lib/ParcelBoundary';
-import InternalParcelDrag from '../lib/ParcelDrag';
-import InternalUseParcelBuffer from '../lib/useParcelBuffer';
-import InternalUseParcelForm from '../lib/useParcelForm';
-import InternalUseParcelState from '../lib/useParcelState';
-import InternalAsyncChange from '../lib/asyncChange';
-import InternalAsyncValue from '../lib/asyncValue';
+import InternalBoundary from '../lib/Boundary';
+import InternalDrag from '../lib/Drag';
+import InternalUseParcel from '../lib/useParcel';
+import InternalUseBuffer from '../lib/useBuffer';
 
 test('index should export Parcel', () => {
     expect(Parcel).toBe(InternalParcel);
-});
-
-test('/Action should export Action', () => {
-    expect(Action).toBe(InternalAction);
 });
 
 test('/ChangeRequest should export ChangeRequest', () => {
     expect(ChangeRequest).toBe(InternalChangeRequest);
 });
 
-test('/createUpdater should export createUpdater', () => {
-    expect(createUpdater).toBe(InternalCreateUpdater);
-});
-
-test('/deleted should export deleted', () => {
-    expect(deleted).toBe(Internaldeleted);
-});
-
-test('/ParcelNode should export ParcelNode', () => {
-    expect(ParcelNode).toBe(InternalParcelNode);
-});
-
-test('/asChildNodes should export asChildNodes', () => {
-    expect(asChildNodes).toBe(InternalAsNodes);
+test('/combine should export combine', () => {
+    expect(combine).toBe(InternalCreateUpdater);
 });
 
 test('/cancel should export cancel', () => {
     expect(cancel).toBe(Internalcancel);
 });
 
+test('/promisify should export promisify', () => {
+    expect(promisify).toBe(InternalPromisify);
+});
+
 test('/translate should export translate', () => {
     expect(translate).toBe(InternalTranslate);
 });
 
-test('/validation should export validation', () => {
-    expect(validation).toBe(InternalValidation);
+test('/Boundary should export Boundary', () => {
+    expect(Boundary).toBe(InternalBoundary);
 });
 
-test('/ParcelBoundary should export ParcelBoundary', () => {
-    expect(ParcelBoundary).toBe(InternalParcelBoundary);
+test('/Drag should export Drag', () => {
+    expect(Drag).toBe(InternalDrag);
 });
 
-test('/ParcelDrag should export ParcelDrag', () => {
-    expect(ParcelDrag).toBe(InternalParcelDrag);
+test('/useParcel should export useParcel', () => {
+    expect(useParcel).toBe(InternalUseParcel);
 });
 
-test('/useParcelBuffer should export useParcelBuffer', () => {
-    expect(useParcelBuffer).toBe(InternalUseParcelBuffer);
-});
-
-test('/useParcelForm should export useParcelForm', () => {
-    expect(useParcelForm).toBe(InternalUseParcelForm);
-});
-
-test('/useParcelState should export useParcelState', () => {
-    expect(useParcelState).toBe(InternalUseParcelState);
-});
-
-test('/asyncChange should export asyncChange', () => {
-    expect(asyncChange).toBe(InternalAsyncChange);
-});
-
-test('/asyncValue should export asyncValue', () => {
-    expect(asyncValue).toBe(InternalAsyncValue);
+test('/useBuffer should export useBuffer', () => {
+    expect(useBuffer).toBe(InternalUseBuffer);
 });

@@ -1,6 +1,5 @@
 // @flow
 import Parcel from '../Parcel';
-import deleted from '../../parcelData/deleted';
 
 test('Parcel.spread() returns an object with value and set', () => {
     var data = {
@@ -27,16 +26,11 @@ test('Parcel.spread(notFoundValue) returns an object with notFoundValue', () => 
         value: undefined
     });
 
-    var parcel2 = new Parcel({
-        value: deleted
-    });
-
     var parcel3 = new Parcel({
         value: "123"
     });
 
     expect(parcel.spread("???").value).toBe("???");
-    expect(parcel2.spread("???").value).toBe("???");
     expect(parcel3.spread("???").value).toBe("123");
 });
 
@@ -65,16 +59,11 @@ test('Parcel.spreadInput(notFoundValue) returns an object with notFoundValue', (
         value: undefined
     });
 
-    var parcel2 = new Parcel({
-        value: deleted
-    });
-
     var parcel3 = new Parcel({
         value: "123"
     });
 
     expect(parcel.spreadInput("???").value).toBe("???");
-    expect(parcel2.spreadInput("???").value).toBe("???");
     expect(parcel3.spreadInput("???").value).toBe("123");
 });
 

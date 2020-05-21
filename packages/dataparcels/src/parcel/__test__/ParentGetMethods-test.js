@@ -18,12 +18,12 @@ test('ParentParcel.size should return size of parcel', () => {
     expect(new Parcel(data).size).toBe(2);
 });
 
-test('ParentParcel.size should return size of 0 for non parent parcels', () => {
+test('ParentParcel.size should return size of undefined for non parent parcels', () => {
     var data = {
         value: 123
     };
 
-    expect(new Parcel(data).size).toBe(0);
+    expect(new Parcel(data).size).toBe(undefined);
 });
 
 
@@ -60,7 +60,7 @@ test('ParentParcel.get(key) should return a new child Parcel', () => {
     };
 
     var expectedAction = {
-        type: "set",
+        type: "basic.set",
         keyPath: ["a"],
         payload: 2
     };
@@ -107,12 +107,12 @@ test('ParentParcel.get(index).value on array should return the first element', (
     expect(new Parcel(data).get(0).value).toBe(1);
 });
 
-test('ParentParcel.get(key).value on array should return the first element', () => {
+test('ParentParcel.get(key).value on array should return the correct element', () => {
     var data = {
         value: [1,2,3]
     };
 
-    expect(new Parcel(data).get("#a").value).toBe(1);
+    expect(new Parcel(data).get("#2").value).toBe(3);
 });
 
 test('ParentParcel.get(key).key on array should return the key, not the index', () => {
@@ -120,7 +120,7 @@ test('ParentParcel.get(key).key on array should return the key, not the index', 
         value: [1,2,3]
     };
 
-    expect(new Parcel(data).get(0).key).toBe("#a");
+    expect(new Parcel(data).get(0).key).toBe("#0");
 });
 
 test('ParentParcel.get(key).get(key) should return a new child Parcel and chain sets', () => {
@@ -147,7 +147,7 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
     };
 
     var expectedAction = {
-        type: "set",
+        type: "basic.set",
         keyPath: ["a", "b"],
         payload: 6
     };
@@ -160,32 +160,70 @@ test('ParentParcel.get(key).get(key) should return a new child Parcel and chain 
 });
 
 test('ParentParcel.get(keyDoesntExist) should return a parcel with value of undefined', () => {
-    var data = {
-        value: {
-            a: {
-                b: 2
-            },
-            c: 4
-        }
-    };
+    let handleChange = jest.fn();
 
-    expect(typeof new Parcel(data).get("z").value === "undefined").toBe(true);
+    let parcel = new Parcel({
+        value: {
+            a: 2,
+            c: 4
+        },
+        handleChange
+    });
+
+    expect(parcel.get("z").value).toBe(undefined);
+
+    parcel.get("z").set('!!!');
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].value).toEqual({
+        a: 2,
+        c: 4,
+        z: '!!!'
+    });
 });
 
 test('ParentParcel.get(keyDoesntExist, "notset") should return a parcel with value of "notset"', () => {
-    var data = {
+    let handleChange = jest.fn();
+
+    let parcel = new Parcel({
         value: {
-            a: {
-                b: 2
-            },
+            a: 2,
             c: 4
-        }
+        },
+        handleChange
+    });
+
+    expect(parcel.get("z", "notset").value).toBe("notset");
+
+    parcel.get("z", "notset").set('!!!');
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].value).toEqual({
+        a: 2,
+        c: 4,
+        z: '!!!'
+    });
+});
+
+test('ParentParcel.get(keyDoesntExist) on array should error', () => {
+    let handleChange = jest.fn();
+
+    var data = {
+        value: [0],
+        handleChange
     };
 
-    expect(new Parcel(data).get("z", "notset").value).toBe("notset");
+    expect(() => new Parcel(data).get(1)).toThrow();
 });
 
 test('ParentParcel.get() should be memoized per key', () => {
+    let parcel = new Parcel({
+        value: {a:123, b:456}
+    });
+
+    expect(parcel.get('a')).toBe(parcel.get('a'));
+    expect(parcel.get('b').value).toBe(456);
+});
+
+test('ParentParcel.get() should be memoized per key on array', () => {
     let parcel = new Parcel({
         value: [123,456]
     });
@@ -245,7 +283,7 @@ test('ParentParcel.getIn(keyPath) should return a new descendant Parcel', () => 
     };
 
     var expectedAction = {
-        type: "set",
+        type: "basic.set",
         keyPath: ["a", "c", "d"],
         payload: 456
     };
@@ -293,60 +331,37 @@ test('ParentParcel.children() should get child parcels in original collection', 
 });
 
 test('ParentParcel.children() should get child parcels in original collection with a mapper', () => {
-    let mapper = jest.fn(parcel => parcel.value);
+    let mapper = jest.fn(parcel => parcel.value * 10);
     let children = new Parcel({
         value: {a:1,b:2,c:3}
     }).children(mapper);
 
     // test if child parcel contents are good
     expect(children).toEqual({
-        a: 1,
-        b: 2,
-        c: 3
+        a: 10,
+        b: 20,
+        c: 30
     });
 });
 
-test('ParentParcel.toArray() should make an array', () => {
-    var data = {
-        value: [1,2,3],
-        meta: {
-            a: [4,5,6]
-        }
-    };
+test('ParentParcel.children() should get child parcels in original array', () => {
+    let children = new Parcel({
+        value: [1,2,3]
+    }).children();
 
-    var expectedArray = [1,2,3];
-    var parcel = new Parcel(data);
-    var array = map(ii => ii.value)(parcel.toArray());
+    // test if child parcels are made
+    expect(every(parcel => parcel instanceof Parcel)(children)).toBe(true);
 
-    expect(expectedArray).toEqual(array);
-
+    // test if child parcel contents are good
+    expect(map(parcel => parcel.value)(children)).toEqual([1,2,3]);
 });
 
+test('ParentParcel.children() should get child parcels in original array with a mapper', () => {
+    let mapper = jest.fn(parcel => parcel.value * 10);
+    let children = new Parcel({
+        value: [1,2,3]
+    }).children(mapper);
 
-test('ParentParcel.toArray() should make an array with a mapper', () => {
-    var data = {
-        value: [1,2,3],
-        meta: {
-            a: [4,5,6]
-        }
-    };
-
-    var expectedArray = [2,3,4];
-    var parcel = new Parcel(data);
-    var expectedPassedArgs = [
-        {value: 1, key: 0, iter: parcel},
-        {value: 2, key: 1, iter: parcel},
-        {value: 3, key: 2, iter: parcel}
-    ];
-
-    var passedArgs = [];
-
-    var array = parcel.toArray((pp, key, iter) => {
-        passedArgs.push({value: pp.value, key, iter});
-        return pp.value + 1;
-    });
-
-    expect(expectedArray).toEqual(array);
-    expect(passedArgs).toEqual(passedArgs);
-
+    // test if child parcel contents are good
+    expect(children).toEqual([10, 20, 30]);
 });

@@ -3,37 +3,34 @@ import type {ActionStep} from '../types/Types';
 import type {Key} from '../types/Types';
 import type {Index} from '../types/Types';
 import type {ParcelData} from '../types/Types';
-import type Action from './Action';
+import type TypeSet from '../typeHandlers/TypeSet';
 
-import shallowEquals from 'unmutable/shallowEquals';
-
-import {ChangeRequestNoPrevDataError} from '../errors/Errors';
-import ChangeRequestReducer from '../change/ChangeRequestReducer';
-import parcelGet from '../parcelData/get';
+import Action from './Action';
+import Parcel from '../parcel/Parcel';
 
 export default class ChangeRequest {
 
+    _actionReducer: Function;
     _actions: Action[] = [];
     _prevData: ?ParcelData;
     _nextData: ?ParcelData;
     _originId: ?string = null;
     _originPath: ?string[] = null;
-    _revertCallback: ?Function;
-    _nextFrameMeta: {[key: string]: any} = {};
+    _typeSet: TypeSet;
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
     }
 
-    _create = ({actions, nextFrameMeta, prevData}: any): ChangeRequest => {
+    _create = ({actions, prevData}: any): ChangeRequest => {
         // never copy nextData as the cache may be invalid
         let changeRequest = new ChangeRequest();
+        changeRequest._actionReducer = this._actionReducer;
         changeRequest._actions = actions || this._actions;
         changeRequest._originId = this._originId;
         changeRequest._originPath = this._originPath;
-        changeRequest._revertCallback = this._revertCallback;
-        changeRequest._nextFrameMeta = nextFrameMeta || this._nextFrameMeta;
         changeRequest._prevData = prevData; // or else this is undefined
+        changeRequest._typeSet = this._typeSet;
         return changeRequest;
     };
 
@@ -43,10 +40,6 @@ export default class ChangeRequest {
         });
     };
 
-    _revert = () => {
-        this._revertCallback && this._revertCallback(this);
-    };
-
     // $FlowFixMe - this doesn't have side effects
     get nextData(): ?ParcelData {
         let {_nextData} = this;
@@ -54,15 +47,12 @@ export default class ChangeRequest {
             return _nextData;
         }
 
-        this._nextData = ChangeRequestReducer(this)(this.prevData);
+        this._nextData = this._actionReducer(this._actions, this.prevData);
         return this._nextData;
     }
 
     // $FlowFixMe - this doesn't have side effects
     get prevData(): ParcelData {
-        if(!this._prevData) {
-            throw ChangeRequestNoPrevDataError();
-        }
         return this._prevData;
     }
 
@@ -71,30 +61,26 @@ export default class ChangeRequest {
         return this._actions;
     }
 
+    static squash(others: ChangeRequest[]): ChangeRequest {
+        if(others.length === 0) {
+            return new ChangeRequest();
+        }
+
+        let merged = others.reduce((prev, next) => prev.merge(next));
+
+        let changeRequest = new ChangeRequest(
+            new Action({
+                type: 'reducer.batch',
+                payload: merged.actions
+            })
+        );
+
+        return changeRequest;
+    }
+
     merge = (other: ChangeRequest): ChangeRequest => {
-
-        let actions = other._actions.reduce((actions, thisAction) => {
-            let lastAction = actions.slice(-1)[0];
-
-            let shouldReplace: boolean = lastAction
-                && thisAction.type === "set"
-                && lastAction.type === "set"
-                && thisAction.keyPath.join(".") === lastAction.keyPath.join(".");
-
-            if(shouldReplace) {
-                actions = actions.slice(0,-1);
-            }
-            return actions.concat(thisAction);
-        }, this._actions);
-
-        let nextFrameMeta = {
-            ...this._nextFrameMeta,
-            ...other._nextFrameMeta
-        };
-
         return this._create({
-            actions,
-            nextFrameMeta
+            actions: this._actions.concat(other._actions)
         });
     };
 
@@ -109,7 +95,19 @@ export default class ChangeRequest {
     }
 
     getDataIn = (keyPath: Array<Key|Index>): {next: *, prev: *} => {
-        let getIn = (data: ParcelData) => keyPath.reduce((data, key) => parcelGet(key)(data), data);
+
+        let getIn = (data: ParcelData) => keyPath.reduce((data, key) => {
+            data = this._typeSet.createChildKeys(data, true);
+
+            let type = this._typeSet.getType(data);
+            let {_get} = type.internalProperties || {};
+            try {
+                return _get(data, key, undefined, type)[0];
+            } catch(e) {
+                return undefined;
+            }
+        }, data);
+
         return {
             next: getIn(this.nextData),
             prev: getIn(this.prevData)
@@ -118,12 +116,12 @@ export default class ChangeRequest {
 
     hasDataChanged = (keyPath: Array<Key|Index> = []): boolean => {
         let {next, prev} = this.getDataIn(keyPath);
-        return !Object.is(next.value, prev.value)
-            || !shallowEquals(next.meta || {})(prev.meta || {});
+        return !Object.is(next && next.value, prev && prev.value)
+            || !Parcel.metaEquals(next && next.meta, prev && prev.meta);
     };
 
     hasValueChanged = (keyPath: Array<Key|Index> = []): boolean => {
         let {next, prev} = this.getDataIn(keyPath);
-        return !Object.is(next.value, prev.value);
+        return !Object.is(next && next.value, prev && prev.value);
     };
 }
