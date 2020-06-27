@@ -2,7 +2,7 @@
 import React from 'react';
 import Page from 'component/Page';
 import {ContentNav} from 'dcme-style';
-import ParcelBoundaryMarkdown from 'mdx/api/ParcelBoundary.mdx';
+import UseParcelMarkdown from 'mdx/api/useParcel.mdx';
 import {apiNav} from 'nav/apiNav';
 
 export default () => <Page>
@@ -12,17 +12,20 @@ export default () => <Page>
         mdxHeading
         nav={apiNav}
         pageNav={[
-            '# ParcelBoundary',
-            '# Children',
-            'childRenderer',
-            '# Props',
-            'parcel',
-            'pure',
-            'forceUpdate',
+            '# useParcel',
+            '# Params',
+            'source',
+            'dependencies',
+            'onChange',
+            'derive',
             'buffer',
-            'debounce'
+            'history',
+            'deriveSource',
+            'types',
+            '# Returns',
+            'parcel'
         ]}
     >
-        <ParcelBoundaryMarkdown />
+        <UseParcelMarkdown />
     </ContentNav>
 </Page>;

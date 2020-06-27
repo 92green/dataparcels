@@ -49,8 +49,6 @@ let parcel = new Parcel({
 });
 ```
 
-Examples can be found on the **[data editing](/data-editing)** page.
-
 ## <Text textStyle="weaker">Properties</Text>
 
 ### value
@@ -62,8 +60,10 @@ value: any
 Returns the Parcel's value.
 
 ```js
-let value = 123;
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: 123
+});
+
 parcel.value; // returns 123
 ```
 
@@ -76,8 +76,10 @@ meta: Object
 Returns an object containing the parcel's meta data. Read [Parcel meta](/concepts/parcel-meta) for more info.
 
 ```js
-let value = 123;
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: 123
+});
+
 parcel.meta; // returns {}
 
 // set initial meta and check again
@@ -99,8 +101,9 @@ Returns an object containing the Parcel's data, which includes:
 * `child` - The Parcel's child information, which includes any `meta`, `key` and `child` data related to the `value`s children.
 
 ```js
-let value = 123;
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: 123
+});
 parcel.data;
 
 // return {
@@ -122,21 +125,67 @@ Returns the Parcel's `key`. Dataparcels automatically gives unique keys to all c
 Because they are unique, the can be used as keys when rendering an array of elements with React. This is demonstrated [here](/data-editing#Indexed-data-types).
 
 ```js
-let value = {
-    abc: 123,
-    def: 456
-};
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: {
+        abc: 123,
+        def: 456
+    }
+});
+
 parcel.get("abc").key; // returns "abc"
 ```
 
 ```js
-let value = [
-    123,
-    456
-];
-let parcel = new Parcel({value});
-parcel.get(0).key; // returns "#a"
+let parcel = new Parcel({
+    value: [
+        123,
+        456
+    ]
+});
+
+parcel.get(0).key; // returns "#0"
+```
+
+### type
+
+```flow
+type: string
+```
+
+Returns a string of the type of data that Parcel.value contains.
+
+By default this is `"basic"`, `"object"` or `"array"`, but can have other values if custom types are being used.
+
+```js
+let parcel = new Parcel({
+    value: [
+        123,
+        456
+    ]
+});
+
+parcel.type; // returns "array"
+```
+
+### parentType
+
+```flow
+parentType: string
+```
+
+Returns a string of the type of data that the parent Parcel.value contains. So a parcel containing the element of an array would have a `parentType` of `"array"`.
+
+By default this is `"object"` or `"array"`, but can have other values if custom types are being used.
+
+```js
+let parcel = new Parcel({
+    value: [
+        123,
+        456
+    ]
+});
+
+parcel.get(0).parentType; // returns "array"
 ```
 
 ### id
@@ -147,15 +196,6 @@ id: string
 
 Returns the Parcel's `id`. Under most circumstances, `id`s are unique among all Parcels that are descendants of a single original Parcel. You won't often need to use this, but it can sometimes be useful for debugging.
 
-```js
-let value = {
-    abc: 123,
-    def: 456
-};
-let parcel = new Parcel({value});
-parcel.get("abc").id; // returns "^.abc"
-```
-
 ### path
 
 ```flow
@@ -165,12 +205,14 @@ path: string[]
 Returns the Parcel's `path`, an array of strings indicating how to access the current Parcel's value.
 
 ```js
-let value = {
-    abc: {
-        def: 123
+let parcel = new Parcel({
+    value: {
+        abc: {
+            def: 123
+        }
     }
-};
-let parcel = new Parcel({value});
+});
+
 parcel.get("abc").get("def").path; // returns ["abc", "def"]
 ```
 
@@ -194,26 +236,6 @@ Is true if the parcel is a child parcel. Read [Parcel types](/concepts/parcel-ty
 
 When a parcel is a child parcel, it allows the use of [child methods](#Child-methods).
 
-### isIndexed
-
-```flow
-isIndexed: boolean
-```
-
-Is true if the parcel is an indexed parcel. Read [Parcel types](/concepts/parcel-types) for more info.
-
-When a parcel is an indexed parcel, it allows the use of [indexed methods](#Indexed-and-element-change-methods).
-
-### isElement
-
-```flow
-isElement: boolean
-```
-
-Is true if the parcel is an element parcel. Read [Parcel types](/concepts/parcel-types) for more info.
-
-When a parcel is an element parcel, it allows the use of [element methods](#Indexed-and-element-change-methods).
-
 ### size
 
 ```flow
@@ -222,29 +244,15 @@ size: number
 
 The number of children this Parcel has. If the parcel is not a parent parcel, `size` will be `0`.
 
-### isFirst
+## <Text textStyle="weaker">Parent-type methods</Text>
+
+### has()
 
 ```flow
-isFirst: boolean
+has(key: string|number): boolean // only on ParentParcels
 ```
 
-Is true if this parcel is the first of its siblings.
-
-### isLast
-
-```flow
-isLast: boolean
-```
-
-Is true if this parcel is the last of its siblings.
-
-### isOnly
-
-```flow
-isOnly: boolean
-```
-
-Is true if this parcel is the only child in its parent.
+Returns true if the Parcel has a child at the provided `key` or `index`, or false otherwise.
 
 ## <Text textStyle="weaker">Branch methods</Text>
 
@@ -280,7 +288,7 @@ let value = ['abc', 'def', 'ghi'];
 let parcel = new Parcel({value});
 parcel.get(0).value; // returns 'abc'
 parcel.get(-1).value; // returns 'ghi'
-parcel.get('#a').value; // returns 'abc'
+parcel.get('#0').value; // returns 'abc'
 ```
 
 ### getIn()
@@ -338,38 +346,6 @@ parcel.children();
 //    abc: Parcel, // contains a value of 123
 //    def: Parcel // contains a value of 456
 // }
-
-```
-
-### toArray()
-
-```flow
-toArray(mapper?: ParcelMapper): Array<Parcel> // only on ParentParcels
-
-type ParcelMapper = (
-    item: Parcel,
-    property: string|number,
-    parent: Parcel
-) => any;
-```
-
-Like [children()](#children()), expect the returned data structure is cast to an array.
-
-An optional `mapper` function can be passed, which will be called on each child.
-
-```js
-let value = {
-    abc: 123,
-    def: 456
-};
-
-let parcel = new Parcel({value});
-parcel.toArray();
-
-// returns [
-//    Parcel, // contains a value of 123
-//    Parcel // contains a value of 456
-// ]
 
 ```
 
@@ -508,7 +484,7 @@ parcel.get('abc').delete();
 ```flow
 update(updater: ParcelUpdater): void
 
-type ParcelUpdater = ({value, meta}) => ?({value: any, meta: Object})
+type ParcelUpdater = ({value, meta}) => ?({value?: any, meta?: Object})
 ```
 
 Calling `update()` will trigger a change that changes the current value or meta in the Parcel. If other Parcel change methods can't change what you need, the `update()` method probably can.
@@ -570,19 +546,47 @@ dispatch(dispatchable: Action|Action[]|ChangeRequest): void
 
 The `dispatch()` method is used by Parcels internally to pass a [ChangeRequest](/api/ChangeRequest) upward to the next Parcel in the chain.
 
-## <Text textStyle="weaker">Indexed and element change methods</Text>
+## <Text textStyle="weaker">Array-type properties</Text>
+
+### isFirstChild
+
+```flow
+isFirstChild: boolean
+```
+
+Is true if this parcel is the first of its siblings.
+
+### isLastChild
+
+```flow
+isLastChild: boolean
+```
+
+Is true if this parcel is the last of its siblings.
+
+### isOnlyChild
+
+```flow
+isOnlyChild: boolean
+```
+
+Is true if this parcel is the only child in its parent.
+
+## <Text textStyle="weaker">Array-type change methods</Text>
 
 ### insertAfter()
 
 ```flow
-insertAfter(value: any): void // only on ElementParcels, will insert after self
+insertAfter(value: any): void // only on children of array-type parcels, will insert after self
 ```
 
 This inserts `value` after the current Parcel, within the current ParentParcel.
 
 ```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: ['a','b','c']
+});
+
 parcel.get(1).insertAfter('!');
 // this triggers a change that sets the parcel's value to ['a','b','!','c'];
 ```
@@ -592,16 +596,37 @@ parcel.get(1).insertAfter('!');
 ### insertBefore()
 
 ```flow
-insertBefore(value: any): void // only on ElementParcels, will insert before self
+insertBefore(value: any): void // only on children of array-type parcels, will insert before self
 ```
 
 This inserts `value` before the current Parcel, within the current ParentParcel.
 
 ```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: ['a','b','c']
+});
+
 parcel.get(1).insertBefore('!');
 // this triggers a change that sets the parcel's value to ['a','!','b','c'];
+```
+
+<IndexedKeys />
+
+### moveTo()
+
+```flow
+moveTo(newIndex: number): void // only on children of array-type parcels, will move item
+```
+
+This takes the parcel from its current position in its parent array, and moves it to `newIndex`.
+
+```js
+let parcel = new Parcel({
+    value: ['a','b','c','d']
+});
+
+parcel.get(3).moveTo(1);
+// this triggers a change that sets the parcel's value to ['a','d','b','c'];
 ```
 
 <IndexedKeys />
@@ -609,14 +634,16 @@ parcel.get(1).insertBefore('!');
 ### push()
 
 ```flow
-push(...values: Array<*>): void // only on IndexedParcels
+push(...values: Array<*>): void // only on array-type parcels
 ```
 
 This triggers a change that pushes all provided values to the end of the current ParentParcel.
 
 ```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: ['a','b','c']
+});
+
 parcel.push('d','e');
 // this triggers a change that sets the parcel's value to ['a','b','c','d','e'];
 ```
@@ -624,14 +651,16 @@ parcel.push('d','e');
 ### pop()
 
 ```flow
-pop(): void // only on IndexedParcels
+pop(): void // only on array-type parcels
 ```
 
 This triggers a change that pops the last value off of the end of the current ParentParcel.
 
 ```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: ['a','b','c']
+});
+
 parcel.pop();
 // this triggers a change that sets the parcel's value to ['a','b'];
 ```
@@ -639,46 +668,33 @@ parcel.pop();
 ### shift()
 
 ```flow
-shift(): void // only on IndexedParcels
+shift(): void // only on array-type parcels
 ```
 
 This triggers a change that pops the first value off of the start of the current ParentParcel.
 
 ```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: ['a','b','c']
+});
+
 parcel.shift();
 // this triggers a change that sets the parcel's value to ['b','c'];
 ```
 
-### swap()
-
-```flow
-swap(keyA: string|number, keyB: string|number): void // only on IndexedParcels, will swap children
-```
-
-This swaps the child Parcel at `keyA` with the one at the position of `keyB`.
-
-```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
-parcel.swap(0, 1);
-// this also triggers a change that sets the parcel's value to ['b','a','c'];
-```
-
-<IndexedKeys />
-
 ### swapNext()
 
 ```flow
-swapNext(): void // only on ElementParcels, will swap with next sibling
+swapNext(): void // only on children of array-type parcels, will swap with next sibling
 ```
 
 This swaps the current Parcel with its next sibling Parcel, within the current ParentParcel. If called on the last child, it swaps with the first child.
 
 ```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: ['a','b','c']
+});
+
 parcel.get(0).swapNext();
 // this triggers a change that sets the parcel's value to ['b','a','c'];
 ```
@@ -688,14 +704,16 @@ parcel.get(0).swapNext();
 ### swapPrev()
 
 ```flow
-swapPrev(): void // only on ElementParcels, will swap with previous sibling
+swapPrev(): void // only on children of array-type parcels, will swap with previous sibling
 ```
 
 This swaps the current Parcel with its previous sibling Parcel, within the current ParentParcel. If called on the first child, it swaps with the last child.
 
 ```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: ['a','b','c']
+});
+
 parcel.get(1).swapPrev();
 // this triggers a change that sets the parcel's value to ['b','a','c'];
 ```
@@ -705,27 +723,19 @@ parcel.get(1).swapPrev();
 ### unshift()
 
 ```flow
-unshift(...values: Array<*>): void // only on IndexedParcels
+unshift(...values: Array<*>): void // only on array-type parcels
 ```
 
 This triggers a change that unshifts all provided values to the start of the current ParentParcel.
 
 ```js
-let value = ['a','b','c'];
-let parcel = new Parcel({value});
+let parcel = new Parcel({
+    value: ['a','b','c']
+});
+
 parcel.unshift('d','e');
 // this triggers a change that sets the parcel's value to ['d','e','a','b','c'];
 ```
-
-## <Text textStyle="weaker">Parent methods</Text>
-
-### has()
-
-```flow
-has(key: string|number): boolean // only on ParentParcels
-```
-
-Returns true if the Parcel has a child at the provided `key` or `index`, or false otherwise.
 
 ## <Text textStyle="weaker">Modify methods</Text>
 
@@ -734,7 +744,7 @@ Returns true if the Parcel has a child at the provided `key` or `index`, or fals
 ```flow
 modifyDown(updater: ParcelUpdater): Parcel
 
-type ParcelUpdater = ({value, meta}) => ?({value: any, meta: Object})
+type ParcelUpdater = ({value, meta}) => ?({value?: any, meta?: Object})
 ```
 
 `modifyDown` lets you modify a Parcel's value and / or meta so that subsequent Parcels in the chain receive and make changes against the modified value. It does not trigger any changes of its own, it just modifies the values that pass through it from above. It has no effect on changes being passed upward through it.
@@ -773,7 +783,7 @@ If a `meta` object exists on the returned object, this will be shallowly merged 
 ```flow
 modifyUp(updater: ParcelUpdater): Parcel
 
-type ParcelUpdater = ({value, meta, changeRequest}) => ?({value: any, meta: Object})
+type ParcelUpdater = ({value, meta, changeRequest}) => ?({value?: any, meta?: Object})
 ```
 
 `modifyUp()` lets you modify a Parcel's new value when a change is being propagated upward. It does not trigger any changes of its own, but awaits a change from below. It has no effect on data being passed down through it.
@@ -838,6 +848,39 @@ parcel.set(456); // this would work, value becomes 123
 parcel.set(null); // this would cause no change
 
 ```
+
+#### Returning an effect
+
+The `modifyUp` function has the ability to have an effect returned. Effect functions are called after running the updater, and allow for one or more subsequent asynchronous updates to be made to the parcel.
+
+```js
+let parcel = new Parcel({
+    value: {
+        username: ""
+    }
+})
+
+usernameParcel = parcel
+    .get("username")
+    .modifyUp(({value}) => {
+        return {
+            effect: async (update) => {
+                let isValid = await validateUsername(value);
+                update({
+                    meta: {
+                        isValid
+                    }
+                });
+            };
+        };
+    });
+
+usernameParcel.set("myusername");
+```
+
+The `effect` function is passed an `update` function that works just like [parcel.update()](#update). In this example, when a username is set the effect will be called and the async function `validateUsername` is called with the new value. Once this resolves, parcel meta is set, indicating if the username is valid.
+
+Please refer to the [promisify](/api/promisify) utility, which simplifies this process when working with promises.
 
 ### initialMeta()
 

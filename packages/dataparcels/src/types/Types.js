@@ -9,8 +9,6 @@ export type ParcelData = {
     meta?: ParcelMeta
 };
 
-export type ParcelDataEvaluator = (parcelData: ParcelData) => ParcelData;
-
 export type UpdateChangeRequestOnDispatch = (changeRequest: ChangeRequest) => ChangeRequest;
 
 export type ParcelMeta = {[key: string]: *};
@@ -26,7 +24,7 @@ export type Property = number|string;
 export type ActionStep = {
     type: string,
     key?: Key|Index,
-    updater?: ParcelDataEvaluator,
+    updater?: (parcelData: ParcelData) => ParcelData,
     changeRequest?: ChangeRequest,
     effectParcel?: Parcel
 };

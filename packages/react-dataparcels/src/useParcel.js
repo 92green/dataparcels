@@ -8,6 +8,8 @@ import useBuffer from './useBuffer';
 
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
+// $FlowFixMe - useState is a named export of react
+import {useRef} from 'react';
 
 const noop = () => {};
 
@@ -43,13 +45,19 @@ export default (params: Params): Parcel => {
 
     // source
 
+    let frameRef = useRef(1);
+
     let [parcel, setParcel] = useState(() => {
         let parcel = new Parcel({
             handleChange: (parcel: Parcel) => {
+                frameRef.current++;
+                parcel._frameMeta.frame = frameRef.current;
                 setParcel(parcel);
             },
             types
         });
+
+        parcel._frameMeta.frame = frameRef.current;
 
         return parcel._changeAndReturn(
             parcel => parcel

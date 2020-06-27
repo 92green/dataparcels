@@ -40,6 +40,15 @@ describe('useParcel source', () => {
         expect(result.current.value).toBe(undefined);
     });
 
+    it('should initially have a frame of 1', () => {
+        let {result} = renderHook(() => useParcel({
+            source: () => ({
+                value: 123
+            })
+        }));
+        expect(result.current._frameMeta.frame).toBe(1);
+    });
+
 });
 
 describe('useParcel dependencies', () => {
@@ -104,6 +113,24 @@ describe('useParcel onChange', () => {
         expect(result.current.value).toBe(456);
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][0].value).toBe(456);
+    });
+
+    it('should increment frame', () => {
+
+        let onChange = jest.fn();
+
+        let {result} = renderHook(() => useParcel({
+            source: () => ({
+                value: 123
+            }),
+            onChange
+        }));
+
+        act(() => {
+            result.current.set(456);
+        });
+
+        expect(result.current._frameMeta.frame).toBe(2);
     });
 
 });

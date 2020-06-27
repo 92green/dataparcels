@@ -14,7 +14,9 @@ type Props = {
     children: *
 };
 
-const theme = LightTheme({});
+const theme = LightTheme({
+    bgInvert: '#0b2033'
+});
 
 export default ({children}: Props): Node => <Box height="100%">
     <Helmet>

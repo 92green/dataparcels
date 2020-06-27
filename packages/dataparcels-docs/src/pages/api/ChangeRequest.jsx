@@ -18,12 +18,10 @@ export default () => <Page>
             'nextData',
             'originId',
             'originPath',
-            'actions',
             '# Methods',
             'hasValueChanged',
             'hasDataChanged',
-            'getDataIn',
-            'merge'
+            'getDataIn'
         ]}
     >
         <ChangeRequestMarkdown />

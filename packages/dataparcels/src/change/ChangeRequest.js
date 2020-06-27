@@ -17,12 +17,13 @@ export default class ChangeRequest {
     _originId: ?string = null;
     _originPath: ?string[] = null;
     _typeSet: TypeSet;
+    _nextFrameMeta: {[key: string]: any} = {};
 
     constructor(action: Action|Action[] = []) {
         this._actions = this._actions.concat(action);
     }
 
-    _create = ({actions, prevData}: any): ChangeRequest => {
+    _create = ({actions, prevData, nextFrameMeta}: any): ChangeRequest => {
         // never copy nextData as the cache may be invalid
         let changeRequest = new ChangeRequest();
         changeRequest._actionReducer = this._actionReducer;
@@ -31,6 +32,7 @@ export default class ChangeRequest {
         changeRequest._originPath = this._originPath;
         changeRequest._prevData = prevData; // or else this is undefined
         changeRequest._typeSet = this._typeSet;
+        changeRequest._nextFrameMeta = nextFrameMeta || this._nextFrameMeta;
         return changeRequest;
     };
 
@@ -74,13 +76,17 @@ export default class ChangeRequest {
                 payload: merged.actions
             })
         );
-
+        changeRequest._nextFrameMeta = merged._nextFrameMeta;
         return changeRequest;
     }
 
     merge = (other: ChangeRequest): ChangeRequest => {
         return this._create({
-            actions: this._actions.concat(other._actions)
+            actions: this._actions.concat(other._actions),
+            nextFrameMeta: {
+                ...this._nextFrameMeta,
+                ...other._nextFrameMeta
+            }
         });
     };
 

@@ -478,3 +478,31 @@ test('ActionReducer should process a "batch" action', () => {
 
     expect(ActionReducer(typeSet)(actions, data).value).toEqual(["A","B","C"]);
 });
+
+test('ActionReducer should process a "batch" action that needs to be done from the parent', () => {
+
+    var data = {
+        value: {
+            a: "A",
+            b: "B"
+        },
+        key: "^",
+        child: undefined
+    };
+
+    let actions = [
+        new Action({
+            type: 'reducer.batch',
+            keyPath: ["a"],
+            payload: [
+                ActionCreators.delete()
+            ]
+        })
+    ];
+
+    expect(ActionReducer(typeSet)(actions, data).value).toEqual({b: "B"});
+});
+
+
+
+

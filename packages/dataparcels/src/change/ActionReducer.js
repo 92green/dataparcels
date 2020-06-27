@@ -1,8 +1,9 @@
 // @flow
-import type Action from './Action';
 import type {ParcelData} from '../types/Types';
-import type {ParcelDataEvaluator} from '../types/Types';
 import type TypeSet from '../typeHandlers/TypeSet';
+import Action from './Action';
+
+type ParcelDataEvaluator = (parcelData: ParcelData) => ?ParcelData;
 
 export default (typeSet: TypeSet) => {
 
@@ -23,7 +24,17 @@ export default (typeSet: TypeSet) => {
 
     const actionMap = {
         ...actionHandlers,
-        'reducer.batch': (parcelData, {payload}) => doDeepActionArray(payload, parcelData)
+        'reducer.batch': (parcelData, {payload, key, actFromParent}) => {
+            console.log('actFromParent', actFromParent);
+            if(actFromParent) {
+                payload = payload.map(action => new Action({
+                    type: action.type,
+                    payload: action.payload,
+                    keyPath: [key, ...action.keyPath]
+                }));
+            }
+            return doDeepActionArray(payload, parcelData);
+        }
     };
 
     let get = ({key}, next) => (parcelData: ParcelData) => {
@@ -68,7 +79,7 @@ export default (typeSet: TypeSet) => {
         }
     };
 
-    const doAction = ({keyPath, type, payload}: Action) => (parcelData: ParcelData): ParcelData => {
+    const doAction = ({keyPath, type, payload}: Action, actFromParent: boolean) => (parcelData: ParcelData): ParcelData => {
         let typeHandler = typeSet.getType(parcelData);
         if(actionHandlers[`${type}.homogeneous`]) {
             let typeName = type.split('.')[0];
@@ -80,28 +91,48 @@ export default (typeSet: TypeSet) => {
         let key = keyPath.slice(-1)[0];
         // create child keys if not already
         parcelData = typeSet.createChildKeys(parcelData, true);
-        return actionMap[type](parcelData, {payload, createChildKeys, updateValueAndChild, key, type: typeHandler});
+        return actionMap[type](parcelData, {
+            payload,
+            createChildKeys,
+            updateValueAndChild,
+            key,
+            type: typeHandler,
+            actFromParent
+        });
     };
 
     const doDeepAction = (action: Action): ParcelDataEvaluator => {
         let {steps, type} = action;
 
-        if(type.split('.')[1] === 'child') {
+        let isChildAction = type.split('.')[1] === 'child';
+        let isBatch = type === 'reducer.batch';
+        let actFromParent = false;
+
+        if(isChildAction || isBatch) {
             let lastGetIndex = steps.map(step => step.type === 'get').lastIndexOf(true);
-            steps = steps.slice(0, lastGetIndex);
+            if(lastGetIndex !== -1) {
+                actFromParent = true;
+                steps = steps.slice(0, lastGetIndex);
+            } else if(isChildAction) {
+                // child actions cannot be performed from the point of view of the child,
+                // so just pass through
+                return data => data;
+            }
         }
 
         return steps.reduceRight((next, step) => {
             let fn = stepMap[step.type];
             return fn(step, next);
-        }, doAction(action));
+        }, doAction(action, actFromParent));
     };
 
     const doDeepActionArray = (actions: Action|Action[], parcelData: ParcelData): ?ParcelData => {
         try {
-            return [].concat(actions).reduce((parcelData, action) => {
+            let result = [].concat(actions).reduce((parcelData, action) => {
                 return doDeepAction(action)(parcelData);
             }, parcelData);
+            // delete result.changeRequest;
+            return result;
         } catch(e) {
             if(e.message === 'CANCEL') {
                 return;

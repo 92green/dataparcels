@@ -1,0 +1,89 @@
+# translate
+
+```js
+import translate from 'dataparcels/translate';
+import translate from 'react-dataparcels/translate';
+```
+
+The translate function is a convenient way to modify a parcel's value on the way down, and modify it back again on the way up.
+It's usually used to translate values from their real data into a shape or format that is more suitable for editing, such as translating a number to a string and giving the string to an `<input>` component.
+
+```flow
+translate({
+    down?: Function,
+    up?: Function,
+    preserve?: boolean
+});
+```
+
+### Example
+
+```jsx
+let numberToString = translate({
+    down: number => `${number}`,
+    up: string => Number(string),
+    preserve: true
+});
+
+let parcel = new Parcel({
+    value: 123,
+});
+
+let translatedParcel = parcel.pipe(numberToString);
+
+// translatedParcel.value is "123"
+// if translatedParcel.set("456") is called
+// parcel will contain 456, and translatedParcel will contain "456" when it is re-rendered
+```
+
+## <Text textStyle="weak">Params</Text>
+
+```flow
+down?: (value) => newValue;
+```
+
+A function that translates the value from it's original shape / format to another.
+
+```flow
+up?: (value) => newValue;
+```
+
+A function that translates a translated value back into the original shape / format.
+
+```flow
+preserve?: boolean = false;
+```
+
+If `preserve` is set to `true`, the translated state of the value will be preserved if the value that is passed down after re-rendering has changed. This is used in situations where it's important to keep the translated value as the user entered it.
+
+For example, a translate function that turns numbers into strings might looks like this. Notice how in this example we aren't using `preserve`:
+
+```jsx
+let numberToString = translate({
+    down: number => `${number}`,
+    up: string => Number(string)
+});
+
+let parcel = new Parcel({
+    value: 123,
+});
+
+<input type="text" {...parcel.pipe(numberToString).spreadInput()} />;
+```
+
+At first `"123"` will be passed to the input. If the user were to type a leading zero like "0123", this would be changed to `123` as the change moves up through the `translate` function, and then changed to `"123"` as it is re-rendered and passed back down through `translate` again. This would be confusing to the user.
+
+If the user were to type "abc" in the input, this would be changed to `NaN` as the change moves up through the `translate` function, and then changed to `"NaN"` as it is re-rendered and passed back down through `translate` again. This is clearly bad for the user.
+
+If `preserve` is set to `true` and "abc" is typed into the input, it would be changed to `NaN` on the way up as expected, but when re-rendering occurs "abc" will still remain in the input. This is the desired behaviour for the user.
+
+### translate() vs alternatives
+
+There are 2 other main alternatives for choosing where to translate values:
+
+- Alternative #1: Store the data already translated in the parcel, and do the translation before the value gets into the parcel
+- Alternative #2: Translate the data in the input component itself
+
+Alternative #1 can work, but it means that the decision of what format is required for editing is pre-decided and input components have no choice in how they would like to receive the value.
+
+Alternative #2 can work, but the input component would also need to cope with changes in value that originate from places other than the component itself. If the input component is uncontrolled, then this is not possible. This may or many not be a problem depending on your use case. The `translate` function takes this into account automatically.

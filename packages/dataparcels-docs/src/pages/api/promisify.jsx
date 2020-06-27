@@ -2,7 +2,7 @@
 import React from 'react';
 import Page from 'component/Page';
 import {ContentNav} from 'dcme-style';
-import DragMarkdown from 'mdx/api/ParcelDrag.mdx';
+import PromisifyMarkdown from 'mdx/api/promisify.mdx';
 import {apiNav} from 'nav/apiNav';
 
 export default () => <Page>
@@ -12,15 +12,15 @@ export default () => <Page>
         mdxHeading
         nav={apiNav}
         pageNav={[
-            '# ParcelDrag',
-            '# Children',
-            'childRenderer',
-            '# Props',
-            'parcel',
-            'container',
-            '...sortableElementProps'
+            '# promisify',
+            'Example',
+            '# Params',
+            'key',
+            'effect',
+            'last',
+            '# Result meta'
         ]}
     >
-        <DragMarkdown />
+        <PromisifyMarkdown />
     </ContentNav>
 </Page>;

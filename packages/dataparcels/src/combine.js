@@ -12,6 +12,7 @@ const runUpdater = (updater: Function, parcelData: any): any => {
     if(nextData === cancel || nextData.value === cancel) {
         throw new Error('CANCEL');
     }
+    delete parcelData.changeRequest;
 
     return {
         ...parcelData,

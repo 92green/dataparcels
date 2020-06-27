@@ -1,0 +1,49 @@
+import {Link} from 'dcme-style/affordance';
+import Message from 'component/Message';
+import Param from 'component/Param';
+import ApiPageIcon from 'component/ApiPageIcon';
+import Icon from 'assets/parcelhoc.gif';
+import ValueUpdater from 'mdx/api/notes/ValueUpdater.md';
+import {Text} from 'dcme-style/affordance';
+
+# useParcel
+
+<ApiPageIcon src={Icon} />
+
+The useParcel function is a React hook. Its job is to provide you with a [Parcel](/api/Parcel) stored in React state, and to handle how the parcel responds to changes in React props.
+
+```js
+import useParcel from 'react-dataparcels/useParcel';
+```
+
+```flow
+let innerParcel = useParcel({
+    // optional
+    source?: Function,
+    dependencies?: any[],
+    onChange?: Function,
+    derive?: Function,
+    buffer?: boolean|number,
+    history?: number,
+    deriveSource?: Function,
+    types?: (types: Type[]) => Type[]
+});
+```
+
+## <Text textStyle="weak">Params</Text>
+
+### source
+
+```flow
+source: ParcelUpdater // optional
+
+type ParcelUpdater = ({value, meta, changeRequest?}) => ?({value?: any, meta?: Object})
+```
+
+The `source` param is how the useParcel hook gets its initial value.
+
+By default, useParcel operates in a similar way to an [uncontrolled component](https://reactjs.org/docs/uncontrolled-components.html), accepting an initial value once on first mount, and then becoming the master of its own state from then on. Alternatively the useParcel hook can also be instructed to update in response to changes in props, using the [dependencies](#dependencies) parameter.
+
+If `source` is not provided, the default parcel value is `undefined`.
+
+...TODO...

@@ -1,10 +1,6 @@
 # Parcel updaters
 
-Several of the methods on [Parcel](/api/Parcel) use callbacks known as "parcel updaters". These functions are used to alter a value based off an existing value. There are a few rules around how you can use these updaters.
-
-Many examples of these can be seen on **[Modifying data to fit the UI](/data-editing#Modifying-data-to-fit-the-UI)**.
-
-## Parcel updaters
+Several of the methods on [Parcel](/api/Parcel) use callbacks known as "parcel updaters". These functions are used to alter a value based off an existing value. There are a couple of rules around how you can use these updaters.
 
 Parcel updaters are callback functions that are given `value` and `meta` (and sometimes other data), from which you can return updated data. For example, Parcel's `update()` function accepts an updater:
 
@@ -16,83 +12,135 @@ Parcel updaters are callback functions that are given `value` and `meta` (and so
 });
 ```
 
-You can choose to return `value` and / or `meta` from parcel updaters. Please refer to the documentation on the specific functions that accept parcel updaters to get a definite list of data that is provided and returned. These include [parcel.update()](/api/Parcel#update), [parcel.modifyUp()](/api/Parcel#modifyUp) and [parcel.modifyDown()](/api/Parcel#modifyDown).
+You can choose to return `value`, `meta` and sometimes other keys from parcel updaters. You can also usually return nothing or `undefined`, which will mean that the updater has no effect.
 
-Changing and returning `value` is safe to use in most simple cases, but in some cases it should not be used.
+Please refer to the documentation on the specific functions that accept parcel updaters to get a definite list of data that is provided and returned.
 
-- If the updater gives you a primitive value or childless value, you can return anything.
-- If the updater gives you a value that has children, you can always return a primitive value or childless value.
-- If the updater gives you a value that has children, you can return a value with children **only if the shape of your data hasn't changed**.
+- [parcel.update()](/api/Parcel#update),
+- [parcel.modifyUp()](/api/Parcel#modifyUp)
+- [parcel.modifyDown()](/api/Parcel#modifyDown)
+- [useParcel source, derive and onChange](/api/useParcel)
+- [useBuffer derive](/api/useBuffer#derive)
+- [Boundary derive](/api/Boundary#derive).
 
-If the updater gives you a value that has children, please ensure you do not change the shape of the value! The reason for this restriction is that dataparcels stores intenral keying and meta information against each part of a deep value's data structure, and it knows where each part of the data is by the keys of objects and the indexes of arrays. If these keys and indexes were to change, dataparcels has no way of knowing how each piece of data moved into their new positions, so it can only let you change the value if you promise not to alter the shape.
+## Limitations
 
-Some examples can hopefully clear up this restriction:
+While most updates are effective and harmless, some ways of changing a value can cause adverse effects.
 
-```js
-// example updaters
-.update(string => string + "!") // good
-.update(string => [string]) // good
-.update(date => date.toString()) // good
-.update(array => array.join(".")) // good
-.update(array => array.map(number => number + 1)) // good, shape is still the same
+### Safe
 
-.update(array => array.slice(2)) // bad, shape has changed because array elements have moved over by 2!
-.update(array => array.reverse()) // bad, shape has changed because array elements have moved around!
-```
-
-You might very well still find yourself in a situation where you need to change keys - for this you can use `asChildNodes`.
-
-## asChildNodes
-
-Use the [asChildNodes](/api/ParcelNode) updater if you'd like to add, remove or re-arrange child values. It will provide you with your Parcel's value, but with all child values replaced with [ParcelNode](/api/ParcelNode) instances. You can move and remove these ParcelNodes like you would if they were just regular elements elements. You can also insert non-ParcelNode values into the parent data shape to set new data.
-
-You can mutate
-
-They look something like this:
+- The updater gives you a primitive value or childless value
 
 ```js
-let parcel = new Parcel({
-    value: [10,30,20]
-});
+stringParcel.update(({value}) => {
+    // value is a string
+    return {
+        value: value + "!"
+    };
+})
 
-parcel.update(asChildNodes(
-    // remove any children higher than 25
-    array => array.filter(node => node.value > 25)
-))
+stringParcel.update(({value}) => {
+    // value is a string
+    return {
+        value: [value]
+    };
+})
 
-// the value is now [10,20]
+dateParcel.update(({value}) => {
+    // value is a date
+    return {
+        value: value.toString()
+    };
+})
 ```
+
+- The updater gives you a value that has children, and you return a primitive value or childless value
 
 ```js
-import asChildNodes from 'dataparcels/asChildNodes';
-import asChildNodes from 'react-dataparcels/asChildNodes';
+arrayParcel.update(({value}) => {
+    // value is an array of strings
+    return {
+        value: value.join(".")
+    };
+})
 ```
+
+- The updater gives you a value that has children, and you return a value where child items / elements have not changed their keys or indexes
 
 ```js
-let parcel = new Parcel({
-    value: [1,2,3]
-});
+arrayParcel.update(({value}) => {
+    // value is an array of numbers
+    return {
+        value: value.map(number => number + 1)
+    };
+})
+// ^ safe because the shape is still the same
 
-// reverse the parcel's children
-let modifiedParcel = parcel.modifyDown(asChildNodes(
-    array => array.reverse() // reverses the array of nodes (mutating array has no effect)
-));
-
-// new value is [3,2,1]
+arrayParcel.update(({value}) => {
+    // value is an array of numbers
+    return {
+        value: value.slice(0,3)
+    };
+})
+// ^ safe because elements that remain are still at the same indexes
 ```
+
+- The updater gives you a value that has children, you can return anything if you don't intend to ever use [branch methods](/api/Parcel#branch-methods) on the parcel you are updating, and therefore never intend to store [Parcel meta](/concepts/parcel-meta) on those child values, or access the children of those child values.
+
+```
+arrayParcel.update(({value}) => {
+    // value is an array of strings
+    return {
+        value: ["hello", ...value]
+    };
+})
+// ^ safe ONLY if you never want to call arrayParcel.get(), arrayParcel.children() etc.
+```
+
+### Unsafe
+
+- If the updater gives you a value that has children, and you return a value with children whose keys or indexes have changed, *and* you intend to use [branch methods](/api/Parcel#branch-methods) to get those individual children.
 
 ```js
-let parcel = new Parcel({
-    value: {foo: 100, bar: 200}
-});
+arrayParcel.update(({value}) => {
+    // value is an array of strings
+    return {
+        value: value.slice(2)
+    };
+})
+// potentially unsafe, shape has changed because array elements have moved over by 2
 
-// rename a key
-let modifiedParcel = parcel.modifyDown(asChildNodes(
-    object => ({
-        foo: object.foo,
-        baz: object.bar
-    })
-));
-
-// new value is {foo: 100, baz: 200}
+arrayParcel.update(({value}) => {
+    // value is an array of strings
+    return {
+        value: value.reverse()
+    };
+})
+// potentially unsafe, shape has changed because array elements have moved around
 ```
+
+## Why
+
+Dataparcels stores internal keying and meta information against each part of a deep value's data structure. It knows where each part of the data is by remembering the keys of objects and the indexes of arrays. If these keys and indexes were to change in an updater, dataparcels has no way of knowing how each piece of data moved into their new positions. So it can only let you change the value if you promise not to alter the shape.
+
+## Example
+
+```js
+// arrayParcel contains a value of [1,2,3]
+
+arrayParcel.get(0).setMeta({cool: true});
+// arrayParcel.get(0).meta is now {cool: true}
+
+arrayParcel.update(({value}) => {
+    return {
+        value: value.slice(1)
+    };
+})
+// arrayParcel.value is now [2,3]
+
+arrayParcel.get(0).meta
+// returns {cool: true}
+// but {cool: true} should belong to the element that was deleted!
+```
+
+You might very well still find yourself in a situation where you need to change keys - this will be solved with the `arrange` utility, to be released soon.
