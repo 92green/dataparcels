@@ -1,7 +1,6 @@
 import React from 'react';
 import useParcelState from 'react-dataparcels/useParcelState';
 import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import asNode from 'react-dataparcels/asNode';
 import asChildNodes from 'react-dataparcels/asChildNodes';
 import exampleFrame from 'component/exampleFrame';
 
@@ -21,8 +20,8 @@ export default function FruitListEditor(props) {
 
     let allSelected = fruitListParcel.value.length === selectedFruit.length;
 
-    let selectAll = (selected) => fruitListParcel.map(asNode(
-        node => node.setMeta({selected})
+    let selectAll = (selected) => fruitListParcel.update(asChildNodes(
+        nodes => nodes.map(node => node.setMeta({selected}))
     ));
 
     let deleteSelectedFruit = () => fruitListParcel.update(asChildNodes(
@@ -35,8 +34,8 @@ export default function FruitListEditor(props) {
                 {(parcel) => {
                     let selectedParcel = parcel.metaAsParcel('selected');
                     return <div>
-                        <input type="text" {...parcel.spreadDOM()} />
-                        <input type="checkbox" style={{width: '2rem'}} {...selectedParcel.spreadDOMCheckbox()} />
+                        <input type="text" {...parcel.spreadInput()} />
+                        <input type="checkbox" style={{width: '2rem'}} {...selectedParcel.spreadCheckbox()} />
                         <button onClick={() => parcel.swapPrev()}>^</button>
                         <button onClick={() => parcel.swapNext()}>v</button>
                         <button onClick={() => parcel.delete()}>x</button>

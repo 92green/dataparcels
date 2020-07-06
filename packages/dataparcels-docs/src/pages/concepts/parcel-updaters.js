@@ -12,10 +12,12 @@ export default () => <Page>
         mdxHeading
         nav={conceptsNav}
         pageNav={[
-            '# Value Updaters',
-            'Simple updaters',
-            'asNode',
-            'asChildNodes'
+            '# Parcel Updaters',
+            'Limitations',
+            'Safe',
+            'Unsafe',
+            'Why',
+            'Example'
         ]}
     >
         <ParcelUpdatersMarkdown />

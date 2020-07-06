@@ -19,6 +19,6 @@ export default function NumberEditor(props) {
     // *the keepValue prop is necessary here, see note above
 
     return exampleFrame({numberParcel}, <ParcelBoundary parcel={numberParcelAsString} keepValue>
-        {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
+        {(parcel) => <input type="text" {...parcel.spreadInput()} />}
     </ParcelBoundary>);
 }

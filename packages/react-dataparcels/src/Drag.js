@@ -11,10 +11,10 @@ import {SortableElement} from 'react-sortable-hoc';
 
 const DragElement = SortableElement(({parcel, childRenderer}) => childRenderer(parcel));
 
-const DragContainer = SortableContainer(({parcel, container, childRenderer}) => {
+const DragContainer = SortableContainer(({source, container, childRenderer}) => {
     let Container = container || 'div';
     return <Container>
-        {parcel.children((elementParcel, index) => <DragElement
+        {source.children((elementParcel, index) => <DragElement
             key={elementParcel.key}
             index={index}
             parcel={elementParcel}
@@ -25,20 +25,20 @@ const DragContainer = SortableContainer(({parcel, container, childRenderer}) => 
 
 type Props = {
     children: (parcel: Parcel) => Node,
-    parcel: Parcel,
+    source: Parcel,
     onSortEnd?: ({oldIndex: number, newIndex: number}) => void,
     container?: ComponentType<*>
 };
 
-export default ({children, parcel, onSortEnd, container, ...sortableElementProps}: Props) => {
+export default ({children, source, onSortEnd, container, ...sortableElementProps}: Props) => {
     return <DragContainer
-        parcel={parcel}
+        source={source}
         container={container}
         childRenderer={children}
         onSortEnd={(param) => {
             let {oldIndex, newIndex} = param;
             if(oldIndex !== newIndex) {
-                parcel.get(oldIndex).moveTo(newIndex);
+                source.get(oldIndex).moveTo(newIndex);
             }
             onSortEnd && onSortEnd(param);
         }}

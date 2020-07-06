@@ -1,0 +1,175 @@
+
+import Message from 'component/Message';
+import ApiPageIcon from 'component/ApiPageIcon';
+import IconBoundary from 'assets/parcelboundary.gif';
+import {Link} from 'dcme-style/affordance';
+import {Text} from 'dcme-style/affordance';
+
+# Boundary
+
+<ApiPageIcon src={IconBoundary} />
+
+Boundary is a React component. Its job is to optimise rendering performance, and to optionally control the flow of parcel changes.
+
+Each Boundary is passed a Parcel. By default the Boundary memoizes what it renders, and will only update when the Parcel's data changes to avoid unnecessary re-rendering.
+
+Boundaries have an internal buffer that can hold onto changes as they exit the boundary. These are normally released immediately, but also allow for debouncing changes, or putting a hold on all changes so they can be released later.
+
+Internally, Boundaries use the [useBuffer](/api/useBuffer) hook.
+
+```js
+import Boundary from 'react-dataparcels/Boundary';
+```
+
+```js
+<Boundary
+    source={Parcel}
+    dependencies={?any[]}
+    buffer={?boolean|number}
+    derive={?Function}
+    memo={?boolean}
+>
+    {parcel => Node}
+</Boundary>
+```
+
+## <Text textStyle="weaker">Children</Text>
+
+### childRenderer
+
+```flow
+(innerParcel: Parcel) => Node
+```
+
+ParcelBoundaries must be given a `childRenderer` function as children. This is called whenever the Boundary updates.
+
+It is passed a `innerParcel`. The `innerParcel` is on the "inside" of the parcel boundary, and is able to update independently of the `source` parcel.
+
+The return value of `childRenderer` will be rendered.
+
+```js
+// sourceParcel is a Parcel
+<Boundary source={sourceParcel}>
+    {innerParcel => <input type="text" {...innerParcel.spreadInput()} />}
+</Boundary>
+```
+
+## <Text textStyle="weaker">Props</Text>
+
+### source
+
+```flow
+source: Parcel
+```
+
+The source parcel to put into the boundary.
+
+Whenever a Boundary receives a new Parcel via props, and the Boundary contains buffered changes, the Boundary will attempt to replay the buffered changes onto the new source data. If any existing changes in the buffer are not compatible with the new source data, then the buffer is emptied and the new source data is retained.
+
+### dependencies
+
+```flow
+dependencies?: any[] // optional
+```
+
+The `dependencies` prop will force the Boundary to re-render in response to changes in other props. Each item in the `dependencies` array is compared using `Object.is()` against its previous values, and if any are not strictly equal, the Boundary will re-render.
+
+```js
+// sourceParcel is a Parcel
+// in this example, options is an array of options that are loaded after mount
+// when options changes its value, the Boundary is forced to update
+// despite sourceParcel not changing
+
+<Boundary source={sourceParcel} dependencies={[options]}>
+    {innerParcel => <Select {...innerParcel.spreadInput()} options={options} />}
+</Boundary>
+```
+
+### buffer
+
+```flow
+buffer?: boolean|number = false // optional
+```
+
+#### Buffering changes with buffer = true
+
+When `buffer` is `true`, all changes made to the parcel inside the Boundary are prevented from being immediately propagated out of the boundary. The inner parcel will continue to update as normal. You can then call `innerParcel.meta.submit()` to release all the buffered changes at once, or `innerParcel.meta.reset()` to cancel all the buffered changes.
+
+This can be useful for building UIs that have a submit action on a particular field. Please note that typically [useParcel](/api/useParcel) or [useBuffer](/api/useBuffer) are used for controlling the submission of an entire form.
+
+```js
+// sourceParcel is a Parcel
+<Boundary source={sourceParcel} buffer>
+    {innerParcel => {
+        // initially innerParcel is equivalent to sourceParcel
+        // but it will deviate from sourceParcel as changes are made to it
+        // until submit or reset are called
+        return <div>
+            <input type="text" {...innerParcel.spreadInput()} />
+            <button onClick={innerParcel.meta.submit}>Submit</button>
+            <button onClick={innerParcel.meta.reset}>Cancel</button>
+        </div>;
+    }}
+</Boundary>
+```
+
+#### Debouncing changes with buffer = number
+
+When `buffer` is a number, the Boundary will debounce any changes that occur inside the Boundary. The number indicates the number of milliseconds to debounce.
+
+This can be used to increase rendering performance for parcels that change value many times in rapid succession, such as text inputs.
+
+#### Debouncing explained
+
+When the inner parcel in the Boundary sends a change, the Boundary will catch it and prevent it from being propagated out via the source parcel. The parcel on the inside of the Boundary will still update as normal.
+
+The Boundary waits until no new changes have occured for `debounce` number of milliseconds. It then releases all the changes it has buffered, all together in a single change request.
+
+Debouncing can be good for rendering performance because parcels outside the Boundary don't needlessly update every time a small change occurs (e.g. each time the user presses a key), but the inside of the Boundary still updates immediately.
+
+```js
+// sourceParcel is a Parcel
+<Boundary source={sourceParcel} buffer={100}>
+    {innerParcel => <input type="text" {...innerParcel.spreadInput()} />}
+</Boundary>
+```
+
+### derive
+
+```flow
+derive?: ParcelUpdater // optional
+
+type ParcelUpdater = ({value, meta, changeRequest?}) => ?({value?: any, meta?: Object})
+```
+
+The `derive` function can be used to calculate and store derived data in the Parcel. It's called whenever the inner parcel changes, either as a result of the source parcel changing, or because the inner parcel received a change request. This makes it perfect for deriving data that is guaranteed to be up to date.
+
+Its usage is the same as [Parcel.modifyUp](/api/Parcel#modifyup).
+
+```js
+// sourceParcel is a Parcel
+
+let countChars = ({value}) => ({
+   meta: {
+       chars: value.length
+    }
+});
+
+<Boundary source={sourceParcel} derive={countChars}>
+    {innerParcel => <>
+        <input type="text" {...innerParcel.spreadInput()} />
+        Name is {innerParcel.meta.chars} characters long
+    </>}
+</Boundary>
+```
+
+### memo
+
+```flow
+memo?: boolean = true // optional
+```
+
+Enables rendering to be memoized. When `memo` is true, Boundary will only re-render when `parcel`'s data changes. It defaults to `true`.
+
+Use `dependencies` if you would like Boundary to re-render in response to changes in other props.
+

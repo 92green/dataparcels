@@ -9,116 +9,22 @@ import ApiPageIcon from 'component/ApiPageIcon';
 
 <ApiPageIcon src={IconParcel} />
 
-New docs and examples are being built, and will be ready for version 2.0.0.
+Dataparcels is a bunch of stuff.
 
-Until then there'll be very few examples and quite of lot of broken links. It'll all be fixed soon.
+- If you just want a simple form, something like [formik](https://github.com/jaredpalmer/formik) will suit your needs.
+- Build user interfaces backed by the shape of your data. As the shape of your data changes, the shape of your UI changes too.
+- Undo and redo
+- Buffering and debouncing
+- No schemas or top-level object definitions, unless you want them
+- Async fetching, submitting and validation
+- Can coordinate prop changes blah blah
+- Can rebase buffered changes onto new data
+- Drag and drop arrays
+- Can store metadata against parts of your data shape
 
-For now, here's how to edit a piece of data in React state:
 
-```jsx
-import React from 'react';
-import useParcelState from 'react-dataparcels/useParcelState';
-import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-
-export default function PersonEditor(props) {
-
-    let [personParcel] = useParcelState({
-        value: {
-            firstname: "Robert",
-            lastname: "Clamps",
-            address: {
-                postcode: "1234"
-            }
-        }
-    });
-
-    return <div>
-        <label>firstname</label>
-        <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
-        </ParcelBoundary>
-
-        <label>lastname</label>
-        <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
-        </ParcelBoundary>
-
-        <label>postcode</label>
-        <ParcelBoundary parcel={personParcel.getIn(['address', 'postcode'])}>
-            {(postcode) => <input type="text" {...postcode.spreadDOM()} />}
-        </ParcelBoundary>
-    </div>;
-};
-```
-
-Here's how to make a drag-and-drop editor for an array of objects:
-
-```jsx
-import React from 'react';
-import useParcelState from 'react-dataparcels/useParcelState';
-import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ParcelDrag from 'react-dataparcels-drag';
-
-export default function FruitListEditor(props) {
-
-    let [fruitListParcel] = useParcelState({
-        value: [
-            "Apple",
-            "Banana",
-            "Crumpets"
-        ]
-    });
-
-    return <div>
-        <ParcelDrag parcel={fruitListParcel}>
-            {(fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
-                {(parcel) => <div>
-                    <input type="text" {...parcel.spreadDOM()} />
-                    <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
-                    <button onClick={() => parcel.delete()}>x</button>
-                </div>}
-            </ParcelBoundary>}
-        </ParcelDrag>
-        <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
-    </div>;
-}
-```
-
-And here's how to make a form that can submit:
-
-```jsx
-import React from 'react';
-import useParcelForm from 'react-dataparcels/useParcelForm';
-import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-
-const initialValue = {
-    firstname: '',
-    lastname: ''
-};
-
-export default function SignUpForm(props) {
-
-    let [personParcel, personParcelControl] = useParcelForm({
-        value: initialValue,
-        onSubmit: (parcel) => saveMyData(parcel.value)
-        // ^ returns a promise
-    });
-
-    return <div>
-        <label>firstname</label>
-        <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
-        </ParcelBoundary>
-
-        <label>lastname</label>
-        <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
-        </ParcelBoundary>
-
-        <button onClick={() => personParcelControl.submit()}>Submit</button>
-    </div>;
-}
-```
+"Forms" have too much baggage, too many opinions.
+Solve the underlying problem.
 
 ## Installation
 

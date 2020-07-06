@@ -95,3 +95,18 @@ test('ActionReducer should noop if deleting array key does nothing', () => {
 
     expect(ActionReducer(typeSet)(action,data).value).toEqual(data.value);
 });
+
+test('ActionReducer should noop if deleting not from parent', () => {
+    var data = {
+        value: 1,
+        key: "^",
+        child: undefined
+    };
+
+    var action = new Action({
+        type: "array.child.delete",
+        keyPath: []
+    });
+
+    expect(ActionReducer(typeSet)(action,data).value).toEqual(data.value);
+});

@@ -8,7 +8,7 @@ const numberToString = (parcel) => parcel
     .modifyUp(string => Number(string));
 
 const InputWithError = (parcel) => <div>
-    <input type="text" {...parcel.spreadDOM()} />
+    <input type="text" {...parcel.spreadInput()} />
     {parcel.meta.invalid && <div>Error: {parcel.meta.invalid}</div>}
 </div>;
 

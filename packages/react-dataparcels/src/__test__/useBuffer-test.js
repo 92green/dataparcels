@@ -286,6 +286,7 @@ describe('useBuffer buffer and source combinations', () => {
         });
 
         expect(result.current.value).toEqual([0,2,3]);
+        expect(result.current.meta._history.length).toBe(4);
     });
 
     it('should only reapply buffered actions that can be applied onto new source', () => {
@@ -340,57 +341,226 @@ describe('useBuffer buffer and source combinations', () => {
         expect(result.current.value).toEqual([10,20,30,4]);
     });
 
-    it('should replace new source without creating new history items', () => {
+    it('should receive a new item at the end of the buffer', () => {
 
         let source = new Parcel({
             value: [1]
         });
+        source._frameMeta = {frame: 1};
 
         let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, buffer: true}));
 
-        expect(result.current.meta._history.length).toBe(1);
+        act(() => {
+            result.current.push(2);
+            result.current.push(3);
+        });
 
         act(() => {
-            rerender({
-                source: new Parcel({
-                    value: [2]
-                })
+            let newSource = new Parcel({
+                value: [0]
             });
-
+            newSource._frameMeta = {frame: 2};
             rerender({
-                source: new Parcel({
-                    value: [3]
-                })
+                source: newSource
             });
         });
 
-        expect(result.current.meta._history.length).toBe(1);
-
-        act(() => {
-            result.current.push(4);
-            result.current.push(5);
-            result.current.meta.submit();
-            result.current.push(6);
-        });
-
+        expect(result.current.value).toEqual([0,2,3]);
         expect(result.current.meta._history.length).toBe(4);
 
-        act(() => {
-            rerender({
-                source: new Parcel({
-                    value: [30,40,50]
-                })
-            });
+        act(() => result.current.meta.undo());
+        expect(result.current.value).toEqual([0,2]);
 
+        act(() => result.current.meta.undo());
+        expect(result.current.value).toEqual([0]);
+
+        act(() => result.current.meta.undo());
+        expect(result.current.value).toEqual([1]);
+    });
+
+    it('should receive a new item at the start of the buffer', () => {
+
+        let source = new Parcel({
+            value: [1]
+        });
+        source._frameMeta = {frame: 2};
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, buffer: true}));
+
+        act(() => {
+            result.current.push(2);
+            result.current.push(3);
+        });
+
+        act(() => {
+            let newSource = new Parcel({
+                value: [0]
+            });
+            newSource._frameMeta = {frame: 1};
             rerender({
-                source: new Parcel({
-                    value: [300,400,500]
-                })
+                source: newSource
             });
         });
 
-        expect(result.current.meta._history.length).toBe(2); // lower because of obsolete buffer items being removed
-        expect(result.current.value).toEqual([300,400,500,6]);
+        expect(result.current.value).toEqual([1,2,3]);
+        expect(result.current.meta._history.length).toBe(4);
+
+        act(() => result.current.meta.undo());
+        act(() => result.current.meta.undo());
+        expect(result.current.value).toEqual([1]);
+
+        act(() => result.current.meta.undo());
+        expect(result.current.value).toEqual([0]);
+    });
+
+    it('should receive an existing item in the buffer and move to it', () => {
+
+        let source = new Parcel({
+            value: [1]
+        });
+        source._frameMeta = {frame: 1};
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, buffer: true}));
+
+        act(() => {
+            result.current.push(2);
+            result.current.push(3);
+        });
+
+        act(() => {
+            let newSource = new Parcel({
+                value: [1]
+            });
+            newSource._frameMeta = {frame: 1};
+            rerender({
+                source: newSource
+            });
+        });
+
+        expect(result.current.value).toEqual([1]);
+        expect(result.current.meta._history.length).toBe(3);
+
+        act(() => result.current.meta.redo());
+        act(() => result.current.meta.redo());
+        expect(result.current.value).toEqual([1,2,3]);
+    });
+
+    it('should receive an existing item between two others in the buffer and move to it', () => {
+
+        let source = new Parcel({
+            value: [1]
+        });
+        source._frameMeta = {frame: 1};
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, buffer: true}));
+
+        act(() => {
+            result.current.push(2);
+            result.current.push(3);
+        });
+
+        act(() => {
+            let newSource = new Parcel({
+                value: [11]
+            });
+            newSource._frameMeta = {frame: 4};
+            rerender({
+                source: newSource
+            });
+        });
+
+        act(() => {
+            let newSource2 = new Parcel({
+                value: [11]
+            });
+            newSource2._frameMeta = {frame: 4};
+            rerender({
+                source: newSource2
+            });
+        });
+
+        act(() => {
+            let newSource3 = new Parcel({
+                value: [1]
+            });
+            newSource3._frameMeta = {frame: 3};
+            rerender({
+                source: newSource3
+            });
+        });
+
+        expect(result.current.value).toEqual([1]);
+        expect(result.current.meta._history.length).toBe(4);
+
+        act(() => result.current.meta.redo());
+        expect(result.current.value).toEqual([11]);
+
+        act(() => result.current.meta.redo());
+        act(() => result.current.meta.redo());
+        expect(result.current.value).toEqual([11,2,3]);
+    });
+
+    it('should receive an existing item that originated from itself', () => {
+
+        let handleChange = jest.fn();
+
+        let source = new Parcel({
+            value: [1],
+            handleChange
+        });
+        source._frameMeta = {frame: 1};
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, buffer: true}));
+
+        act(() => {
+            result.current.push(2);
+            result.current.meta.submit();
+        });
+
+        act(() => {
+            let newSource = handleChange.mock.calls[0][0];
+            rerender({
+                source: newSource
+            });
+        });
+
+        expect(result.current.value).toEqual([1,2]);
+        expect(result.current.meta._history.length).toBe(2);
+
+        act(() => result.current.meta.undo());
+        expect(result.current.value).toEqual([1]);
+    });
+
+    it('should receive an existing but altered item that originated from itself', () => {
+
+        let handleChange = jest.fn();
+
+        let source = new Parcel({
+            value: [1],
+            handleChange
+        });
+        source._frameMeta = {frame: 1};
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, buffer: true}));
+
+        act(() => {
+            result.current.push(2);
+            result.current.meta.submit();
+        });
+
+        act(() => {
+            let newSource = handleChange.mock.calls[0][0];
+            newSource._parcelData.value = [1,222];
+            rerender({
+                source: newSource
+            });
+        });
+
+        expect(result.current.value).toEqual([1,222]);
+        expect(result.current.meta._history.length).toBe(2);
+
+        act(() => result.current.meta.undo());
+        expect(result.current.value).toEqual([1]);
     });
 });
 
@@ -567,10 +737,11 @@ describe('useBuffer history', () => {
         expect(result.current.meta._history.length).toBe(2);
     });
 
-    it('should not be able to undo after submit and receive', () => {
+    it.skip('should clear history after submit and receive', () => {
         let source = new Parcel({
             value: 100
         });
+        source._frameMeta = {frame: 1};
 
         let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source}));
 
@@ -599,11 +770,15 @@ describe('useBuffer history', () => {
     });
 
     it('should be able to undo, then submit, and still have redos available', () => {
-        let source = new Parcel({
-            value: ''
-        });
+        let handleChange = jest.fn();
 
-        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source}));
+        let source = new Parcel({
+            value: '',
+            handleChange
+        });
+        source._frameMeta = {frame: 1};
+
+        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, history: 999}));
 
         act(() => {
             result.current.set('a');
@@ -613,16 +788,17 @@ describe('useBuffer history', () => {
             result.current.meta.undo();
             result.current.meta.undo();
             result.current.meta.submit();
+
+            let newSource = handleChange.mock.calls[0][0];
+
             rerender({
-                source: new Parcel({
-                    value: 'ab'
-                })
+                source: newSource
             });
         });
 
         expect(result.current.value).toBe('ab');
         expect(result.current.meta.canRedo).toBe(true);
-        expect(result.current.meta._history.length).toBe(3);
+        expect(result.current.meta._history.length).toBe(5);
 
         act(() => {
             result.current.meta.redo();
@@ -633,48 +809,6 @@ describe('useBuffer history', () => {
         expect(result.current.value).toBe('abcd');
     });
 
-    it('should be able to undo after submit and receive if history is large enough', () => {
-        let handleChange = jest.fn();
-
-        let source = new Parcel({
-            value: [100],
-            handleChange
-        });
-
-        let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, history: 100}));
-
-        act(() => {
-            result.current.push(200);
-            result.current.push(300);
-            result.current.push(400);
-            result.current.meta.submit();
-            rerender({
-                source: new Parcel({
-                    value: [100,200,300,400],
-                    handleChange
-                })
-            });
-        });
-
-        expect(result.current.value).toEqual([100,200,300,400]);
-        expect(result.current.meta.canUndo).toBe(true);
-        expect(result.current.meta._history.length).toBe(4);
-
-        act(() => {
-            result.current.meta.undo();
-            result.current.meta.undo();
-        });
-
-        expect(result.current.value).toEqual([100,200]);
-
-        act(() => {
-            result.current.meta.submit();
-        });
-
-        expect(handleChange).toHaveBeenCalledTimes(2);
-        expect(handleChange.mock.calls[1][0].value).toEqual([100,200]);
-    });
-
     it('should be able to undo after submit, then redo and submit if history is large enough', () => {
         let handleChange = jest.fn();
 
@@ -682,6 +816,7 @@ describe('useBuffer history', () => {
             value: [100],
             handleChange
         });
+        source._frameMeta = {frame: 1};
 
         let {result, rerender} = renderHookWithProps({source}, ({source}) => useBuffer({source, history: 100}));
 
@@ -690,11 +825,11 @@ describe('useBuffer history', () => {
             result.current.push(300);
             result.current.push(400);
             result.current.meta.submit();
+
+            let newSource = handleChange.mock.calls[0][0];
+
             rerender({
-                source: new Parcel({
-                    value: [100,200,300,400],
-                    handleChange
-                })
+                source: newSource
             });
         });
 
@@ -710,11 +845,11 @@ describe('useBuffer history', () => {
 
         act(() => {
             result.current.meta.submit();
+
+            let newSource = handleChange.mock.calls[1][0];
+
             rerender({
-                source: new Parcel({
-                    value: [100,200,300],
-                    handleChange
-                })
+                source: newSource
             });
         });
 
@@ -741,11 +876,11 @@ describe('useBuffer history', () => {
             result.current.push(300);
             result.current.push(400);
             result.current.meta.submit();
+
+            let newSource = handleChange.mock.calls[0][0];
+
             rerender({
-                source: new Parcel({
-                    value: [100,200,300,400],
-                    handleChange
-                })
+                source: newSource
             });
         });
 

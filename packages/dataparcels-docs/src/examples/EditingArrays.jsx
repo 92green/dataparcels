@@ -17,7 +17,7 @@ export default function FruitListEditor(props) {
         {fruitListParcel.toArray((fruitParcel) => {
             return <ParcelBoundary parcel={fruitParcel} key={fruitParcel.key}>
                 {(parcel) => <div>
-                    <input type="text" {...parcel.spreadDOM()} />
+                    <input type="text" {...parcel.spreadInput()} />
                     <button onClick={() => parcel.swapPrev()}>^</button>
                     <button onClick={() => parcel.swapNext()}>v</button>
                     <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>

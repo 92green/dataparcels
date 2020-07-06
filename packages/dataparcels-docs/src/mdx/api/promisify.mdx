@@ -1,0 +1,117 @@
+# promisify
+
+```js
+import promisify from 'dataparcels/promisify';
+import promisify from 'react-dataparcels/promisify';
+```
+
+The promisify function is a [parcel updater](/concepts/parcel-updaters). It's a convenient way to set parcel data from the result of a promise, and keep track of the state of the promise.
+
+```flow
+promisify({
+    key: string,
+    effect: PromiseFunction,
+    last?: boolean
+});
+```
+
+### Example
+
+When `personParcel` changes, `validateName()` is called and the result of the returned promise is set in `personParcel.meta.isValid`.
+
+```jsx
+let personParcel = useParcel({
+    source: () => ({
+        value: {
+            name: "Robert"
+        }
+    }),
+    onChange: promisify({
+        key: 'save',
+        effect: async ({value}) => {
+            return {
+                meta: {
+                    isValid: await validateName(value.name)
+                }
+            };
+        }
+    })
+});
+
+// set the name to trigger the onChange
+personParcel.get('name').set('Bob');
+
+// the status of the promise is available in meta
+personParcel.meta.saveStatus
+```
+
+## <Text textStyle="weak">Params</Text>
+
+### key
+
+```flow
+key: string;
+```
+
+The `key` is used to prefix promisify's status information in meta. So if `key: 'foo'`, then the status of the promise can be found under `parcel.meta.fooStatus`, and the promise error can be found under `parcel.meta.fooError`.
+
+### effect
+
+```flow
+effect: ({value, meta, changeRequest}) => Promise<?PartialData|Updater>;
+```
+
+The `effect` function must return a promise. When the promise resolves, it must resolve with one of the following:
+
+- An object with optional `value` and `meta` keys.
+  - If `value` exists on the returned object, this will alter the value being changed.
+  - If a `meta` object exists on the returned object, this will be shallowly merged onto existing meta.
+- Nothing or `undefined`, which will cause no subsequent change to parcel data.
+- A function, which will be passed the value and meta of the parcel *at the time the promise is resolved*, and must return an object with optional `value` and `meta` keys as described above.
+
+```js
+// example showing how to return an updater function from effect
+promisify({
+    key: 'save',
+    effect: async ({value}) => {
+        let points = await getPoints(value);
+        return ({meta}) => ({
+            meta: {
+                count: meta.count + points
+            }
+        });
+    }
+})
+```
+
+If the promise rejects, the payload of the rejected promise will become available via `parcel.meta.${key}Error`.
+
+As `promisify` is a [parcel updater](/concepts/parcel-updaters), the timing of when `effect` is called is controlled by whatever method `promisify` is passed into.
+
+Calls to `effect` are queued behind each other, so if `effect` is meant to be called a second time before the promise returned from the first call has resolved, the second call will wait until after the first call has resolved.
+
+### last
+
+```flow
+last?: boolean;
+```
+
+As mentioned above, calls to `effect` are queued behind each other. If `last` is set to true, then only the last result of `effect` will be applied to the parcel.
+
+## <Text textStyle="weak">Result meta</Text>
+
+### parcel.meta.${key}Status
+
+```flow
+parcel.meta.${key}Status: ?string
+```
+
+A string denoting the current status of the promise. Will be `"pending"`, `"resolved"`, `"rejected"` or `undefined`.
+
+### parcel.meta.${key}Error
+
+```flow
+parcel.meta.${key}Error: ?any
+```
+
+If the current status of the promise is `"rejected"`, this contains the payload of the rejected promise.

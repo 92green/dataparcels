@@ -1,0 +1,32 @@
+# combine
+
+```js
+import combine from 'dataparcels/combine';
+import combine from 'react-dataparcels/combine';
+```
+
+The combine function lets you combine multiple updater functions into a single function.
+
+```flow
+combine(...Function[]);
+```
+
+### Example
+
+```jsx
+let parcel = new Parcel({
+    value: 123,
+});
+
+parcel
+    .modifyUp(combine(
+        toUpperCase,
+        trim
+    ));
+
+// is equivalent to
+
+parcel
+    .modifyUp(toUpperCase)
+    .modifyUp(trim)
+```

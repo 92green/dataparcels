@@ -15,6 +15,7 @@ import {ContentNav} from 'dcme-style';
 
 import {nav} from 'nav/apiNav';
 import Description from 'mdx/description.mdx';
+import HomeDemo from 'component/HomeDemo.jsx';
 
 const SuperDuper = styled(H1)`
     color: #000;
@@ -56,9 +57,13 @@ export default () => <Page>
                         </Box>
                     </Flex>
                 </Flex>
+                <Box mt={3}>
+                    <Text textStyle="quote">Flexible and powerful data-editing user interfaces with React.</Text>
+                </Box>
             </Text>
         </Box>
     </HeaderWrapper>
+    <HomeDemo />
     <ContentNav
         pageTop
         pageBottom

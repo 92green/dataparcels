@@ -5,17 +5,15 @@ import {CodeHighlight} from 'dcme-style';
 import {Pre} from 'dcme-style/affordance';
 import {Text} from 'dcme-style/affordance';
 
-# ParcelDrag
+# Drag
 
 ```js
-import ParcelDrag from 'react-dataparcels-drag';
+import Drag from 'react-dataparcels/Drag';
 ```
 
-Dataparcels' drag plugin provides an easy way to add drag and drop sorting to arrays of items. It uses [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc) to perform the dragging and sorting, and all of `react-sortable-hoc`s API is accessible to use via ParcelDrag.
+The Drag component provides an easy way to add drag and drop sorting to arrays of items. It uses [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc) to perform the dragging and sorting, and all of `react-sortable-hoc`s API is accessible to use via Drag.
 
 ### Example usage
-
-Please refer to the UI Behaviour page to see [a full example](/ui-behaviour/#Drag-and-drop-sorting).
 
 <Pre bounded>
     <CodeHighlight language="jsx">{EditingArraysDragSource}</CodeHighlight>
@@ -28,7 +26,7 @@ Please refer to the UI Behaviour page to see [a full example](/ui-behaviour/#Dra
 ```flow
 (parcel: Parcel) => Node
 ```
-ParcelDrag must be given a `childRenderer` function as children. This is called when rendering each child element, passing the Parcel for each element.
+Drag must be given a `childRenderer` function as children. This is called when rendering each child element, passing the Parcel for each element.
 
 * <Param name="parcel" type="Parcel" />
 
@@ -36,13 +34,13 @@ ParcelDrag must be given a `childRenderer` function as children. This is called 
 
 ## <Text textStyle="weaker">Props</Text>
 
-### parcel
+### source
 
 ```flow
-parcel: Parcel
+source: Parcel
 ```
 
-The Parcel that will be sortable. This Parcel must be of type [IndexedParcel](/parcel-types#IndexedParcel), and an error will be thrown if it is not.
+The parcel that will be sorted. The parcel's value must be an array.
 
 ### container
 
@@ -61,7 +59,7 @@ The container element to render around the children. Defaults to `'div'`.
 ```
 Any additional props will be passed onto [react-sortable-hoc's SortableContainer hoc](https://github.com/clauderic/react-sortable-hoc#sortableelement-hoc), to allow configuration of how the dragging behaves.
 
-Note that `SortableContainer`'s `onSortEnd` prop is not required, as it's provided by ParcelDrag. If you pass an `onSortEnd` prop to ParcelDrag, it will fire immediately after the Parcel triggers its change request.
+Note that `SortableContainer`'s `onSortEnd` prop is not required, as it's provided by Drag. If you pass an `onSortEnd` prop to Drag, it will fire immediately after the Parcel triggers its change request.
 
 
 

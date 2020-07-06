@@ -56,14 +56,6 @@ originPath: Array<number|string>
 
 Returns the path of the Parcel that initiated the change request.
 
-### actions
-
-```flow
-actions: Array<Action>
-```
-
-Returns the array of actions that this ChangeRequest contains. These actions are reduced onto `prevData` to produce `nextData`.
-
 ## <Text textStyle="weaker">Methods</Text>
 
 ### hasValueChanged()
@@ -122,11 +114,3 @@ parcel
 
 // ^ sets abc.def to 456
 ```
-
-### merge()
-
-```flow
-merge(other: ChangeRequest): ChangeRequest
-```
-
-Merges the `other` ChangeRequest onto this ChangeRequest. Actions from `other` are appended to the current ChangeRequest. As a performance boost, if two subsequent `set` actions with the same `keyPath` are merged into each other, the first will be removed.

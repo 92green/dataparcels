@@ -43,12 +43,12 @@ export default function PersonEditor(props) {
     return exampleFrame({personParcelState, personParcel}, <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+            {(firstname) => <input type="text" {...firstname.spreadInput()} />}
         </ParcelBoundary>
 
         <label>lastname</label>
         <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+            {(lastname) => <input type="text" {...lastname.spreadInput()} />}
         </ParcelBoundary>
 
         <p>Time updated: {timeUpdated && timeUpdated.toLocaleString()}</p>

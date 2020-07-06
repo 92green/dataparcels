@@ -55,6 +55,7 @@ export default class Parcel {
         registry: {},
         effectRegistry: {}
     };
+    _frameMeta: {[key: string]: any} = {};
     _type: Type;
     _parentTypeName: ?string;
     _updateChangeRequestOnDispatch: UpdateChangeRequestOnDispatch = doNothing;
@@ -151,6 +152,7 @@ export default class Parcel {
         parcel._childPropertiesPrecomputed = this._childPropertiesPrecomputed;
         parcel._parentTypeName = this._parentTypeName;
         parcel._treeShare = this._treeShare;
+        parcel._frameMeta = {...this._frameMeta};
         return parcel;
     };
 
@@ -197,6 +199,7 @@ export default class Parcel {
             let parcelWithChangedData = this._create();
             parcelWithChangedData._handleChange = _handleChange;
             parcelWithChangedData._parcelData = parcelData;
+            parcelWithChangedData._frameMeta = changeRequest._nextFrameMeta;
             parcelWithChangedData._init();
 
             _handleChange(parcelWithChangedData, changeRequestWithBase);
@@ -215,11 +218,12 @@ export default class Parcel {
 
     _changeAndReturn = (changeCatcher: (parcel: Parcel) => void): [Parcel, ?ChangeRequest] => {
         let result;
-        let {_handleChange} = this;
+        let {_handleChange, _frameMeta} = this;
 
         // swap out the parcels real _handleChange with a spy
         this._handleChange = (parcel, changeRequest) => {
             parcel._handleChange = _handleChange;
+            parcel._frameMeta = _frameMeta;
             result = [parcel, changeRequest];
         };
 
@@ -231,10 +235,10 @@ export default class Parcel {
         return result;
     };
 
-    _boundarySplit = (handleChange): Parcel => {
+    _boundarySplit = (handleChange, key = ''): Parcel => {
         let parcel = this._create();
         parcel._handleChange = handleChange;
-        parcel._rawId = this._idPushModifier('bs');
+        parcel._rawId = this._idPushModifier(`bs-${key}`);
         parcel._init();
         return parcel;
     };
@@ -435,13 +439,12 @@ export default class Parcel {
 
     modifyUp = (updater: ParcelValueUpdater): Parcel => {
         let preparedUpdater = combine(updater);
-        let {typeSet} = this._treeShare;
 
         let parcel = this._create();
         parcel._rawId = this._idPushModifierUpdater('mu', updater);
         parcel._updateChangeRequestOnDispatch = (changeRequest) => changeRequest._addStep({
             type: 'mu',
-            updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest, typeSet}),
+            updater: (parcelData, changeRequest) => preparedUpdater({...parcelData, changeRequest}),
             changeRequest,
             effectUpdate: this._effectUpdate
         });

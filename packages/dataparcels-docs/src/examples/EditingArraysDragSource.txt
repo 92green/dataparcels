@@ -1,28 +1,30 @@
 import React from 'react';
-import useParcelState from 'react-dataparcels/useParcelState';
-import ParcelBoundary from 'react-dataparcels/ParcelBoundary';
-import ParcelDrag from 'react-dataparcels-drag';
+import useParcel from 'react-dataparcels/useParcel';
+import Boundary from 'react-dataparcels/Boundary';
+import Drag from 'react-dataparcels/Drag';
 
 export default function FruitListEditor(props) {
 
-    let [fruitListParcel] = useParcelState({
-        value: [
-            "Apple",
-            "Banana",
-            "Crumpets"
-        ]
+    let fruitListParcel = useParcel({
+        source: () => ({
+            value: [
+                "Apple",
+                "Banana",
+                "Crumpets"
+            ]
+        })
     });
 
-    return <div>
-        <ParcelDrag parcel={fruitListParcel}>
-            {(fruitParcel) => <ParcelBoundary parcel={fruitParcel}>
+    return <>
+        <Drag source={fruitListParcel}>
+            {(fruitParcel) => <Boundary parcel={fruitParcel}>
                 {(parcel) => <div>
-                    <input type="text" {...parcel.spreadDOM()} />
+                    <input type="text" {...parcel.spreadInput()} />
                     <button onClick={() => parcel.insertAfter(`${parcel.value} copy`)}>+</button>
                     <button onClick={() => parcel.delete()}>x</button>
                 </div>}
-            </ParcelBoundary>}
-        </ParcelDrag>
+            </Boundary>}
+        </Drag>
         <button onClick={() => fruitListParcel.push("New fruit")}>Add new fruit</button>
-    </div>;
+    </>;
 }

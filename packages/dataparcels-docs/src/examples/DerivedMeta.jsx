@@ -21,7 +21,7 @@ export default function WordEditor(props) {
     return exampleFrame({wordParcel}, <div>
         <label>word</label>
         <ParcelBoundary parcel={wordParcel.get('word')}>
-            {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
+            {(parcel) => <input type="text" {...parcel.spreadInput()} />}
         </ParcelBoundary>
         <p>word length is {wordParcel.meta.wordLength}</p>
     </div>);

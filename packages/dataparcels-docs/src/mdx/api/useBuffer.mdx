@@ -1,0 +1,236 @@
+import {Link} from 'dcme-style/affordance';
+import Message from 'component/Message';
+import Param from 'component/Param';
+import ApiPageIcon from 'component/ApiPageIcon';
+import Icon from 'assets/parcelboundaryhoc.gif';
+import ValueUpdater from 'mdx/api/notes/ValueUpdater.md';
+import {Text} from 'dcme-style/affordance';
+
+# useBuffer
+
+<ApiPageIcon src={Icon} />
+
+The useBuffer function is a React hook. Its job is to control the flow of parcel changes by providing a buffer.
+
+It receives a parcel (via [source](#source)) and provides a parcel of its own, referred to as [innerParcel](#innerParcel). The `innerParcel` initially has the same contents as `parcel`. Changes made to `innerParcel` will affect `innerParcel` immediately, like normal.
+
+When buffering is enabled, these changes will **not** be immediately propagated up to `source`, and are instead held as change requests in an internal buffer. These can be released later, either explicitly by calling [innerParcel.meta.submit()](#submit), or automatically if debounce is enabled, by supplying a number for the [buffer](#buffer) parameter.
+
+#### useParcel
+
+In most cases you'll probably want to use the [useParcel](/api/useParcel) hook instead.
+
+```js
+import useBuffer from 'react-dataparcels/useBuffer';
+```
+
+```flow
+let innerParcel = useBuffer({
+    source: Parcel,
+    // optional
+    buffer?: boolean|number,
+    history?: number,
+    derive?: Function,
+    revertKey?: string
+});
+```
+
+## <Text textStyle="weak">Params</Text>
+
+### source
+
+```flow
+source: Parcel
+```
+
+The useBuffer hook must be passed a `source`, which is the Parcel which the buffer will apply to.
+
+Whenever a useBuffer hook receives a new `source` parcel via props, and the useBuffer hook contains buffered changes, the useBuffer hook will attempt to replay the buffered changes onto the new source data. If any existing changes in the buffer are not compatible with the new source data, then the buffer is emptied and the new source data is retained.
+
+### buffer
+
+```flow
+buffer?: boolean|number = true // optional
+```
+
+#### Buffering changes with buffer = true
+
+When `buffer` is `true`, all changes made to the parcel returned from useBuffer are prevented from being immediately propagated out via the source parcel. The inner parcel will continue to update as normal. You can then call `innerParcel.meta.submit()` to release all the buffered changes at once, or `innerParcel.meta.reset()` to cancel all the buffered changes.
+
+```js
+// sourceParcel is a Parcel
+
+let innerParcel = useBuffer({
+    source: sourceParcel
+    // buffer is true by default
+});
+
+// innerParcel will deviate from sourceParcel as changes are made
+// until submit or reset are called
+return <div>
+    <input type="text" {...innerParcel.spreadInput()} />
+    <button onClick={innerParcel.meta.submit}>Submit</button>
+    <button onClick={innerParcel.meta.reset}>Cancel</button>
+</div>;
+```
+
+#### Debouncing changes with buffer = number
+
+When `buffer` is a number, the hook will debounce any changes that occur to the inner parcel. The number indicates the number of milliseconds to debounce.
+
+This can be used to increase rendering performance for parcels that change value many times in rapid succession, such as text inputs.
+
+#### Debouncing explained
+
+When the inner parcel sends a change, the hook will catch it and prevent it from being propagated out via the source parcel. The parcel on the inside of the Boundary will still update as normal.
+
+The Boundary waits until no new changes have occured for `debounce` number of milliseconds. It then releases all the changes it has buffered, all together in a single change request.
+
+```js
+// sourceParcel is a Parcel
+
+let innerParcel = useBuffer({
+    source: sourceParcel,
+    buffer: 100
+});
+
+// innerParcel will deviate from sourceParcel as changes are made
+// until the debounce occurs
+return <input type="text" {...nameParcel.spreadInput()} />;
+```
+
+### history
+
+```flow
+history?: number = 0 // optional
+```
+
+When the useBuffer hook is buffering changes, it stores each of the changes as separate change requests in an internal array. This allows the useBuffer hook to have history functions like `undo()` and `redo()`. Normally once the hook has submitted its changes, the internal buffer array is cleared, and therefore `undo()`s can no longer be performed.
+
+The `history` value determines the minimum number of change requests that will be remembered by the useBuffer hook, even after the hook submits. Setting this to a larger number allows the user to `undo()` more history items, but will tend to use more memory.
+
+
+### derive
+
+```flow
+derive?: ParcelUpdater // optional
+
+type ParcelUpdater = ({value, meta, changeRequest?}) => ?({value?: any, meta?: Object})
+```
+
+The `derive` function can be used to calculate and store derived data in the parcel. It's called whenever the inner parcel changes, either as a result of the source parcel changing, or because the inner parcel received a change request. This makes it perfect for deriving data that is guaranteed to be up to date.
+
+Its usage is the same as [Parcel.modifyUp](/api/Parcel#modifyup).
+
+```js
+// sourceParcel is a Parcel
+
+let countChars = ({value}) => ({
+   meta: {
+       chars: value.length
+    }
+});
+
+let innerParcel = useBuffer({
+    source: sourceParcel,
+    derive: countChars
+});
+
+return <>
+    <input type="text" {...innerParcel.spreadInput()} />
+    Name is {innerParcel.meta.chars} characters long
+</>;
+```
+
+### revertKey
+
+```flow
+revertKey?: string // optional
+```
+
+The `revertKey` string is an advanced option to prevent the useBuffer hook from clearing its buffer when an upstream [promisify](/api/promisify) function encounters an error. It is used internally by [useParcel](/api/useParcel). From the users point of view, it allows them to re-submit a form that failed to submit correctly.
+
+It's unlikely you'll need to use this directly.
+
+## <Text textStyle="weak">Returns</Text>
+
+
+```flow
+innerParcel: Parcel
+```
+
+### innerParcel
+
+```flow
+innerParcel: Parcel
+```
+
+The `innerParcel` initially has the same contents as `parcel`. Changes made to `innerParcel` will affect `innerParcel` immediately, like normal.
+
+When buffering is enabled, these changes will **not** be immediately propagated up to `source`, and are instead held as change requests in an internal buffer. These can be released later, either explicitly by calling [innerParcel.meta.submit()](#submit), or automatically if debounce is enabled, by supplying a number for the [buffer](#buffer) parameter.
+
+### innerParcel.meta.submit
+
+```flow
+innerParcel.meta.submit: () => void
+```
+
+This function will release all changes in the buffer, out via the source parcel. Unless [history](#history) is set to number greater than zero, it will also empty the internal buffer.
+
+If there are no changes to submit, this function does nothing.
+
+### innerParcel.meta.reset
+
+```flow
+innerParcel.meta.reset: () => void
+```
+
+This function will reset all changes in the buffer. The inner parcel will once again become equivalent to the source parcel.
+
+If there are no changes to reset, this function does nothing.
+
+### innerParcel.meta.synced
+
+```flow
+innerParcel.meta.synced: boolean
+```
+
+This boolean indicates if the inner parcel and source parcel are in sync - if they are equivalent.
+
+If `innerParcel.meta.synced` is false, then both `innerParcel.meta.submit()` and `innerParcel.meta.reset()` will not do anything.
+
+### innerParcel.meta.undo
+
+```flow
+innerParcel.meta.undo: () => void
+```
+
+This function will undo the last change. It does not affect the source parcel.
+
+If there is nothing to undo, this function does nothing.
+
+### innerParcel.meta.redo
+
+```flow
+innerParcel.meta.redo: () => void
+```
+
+This function will redo the last change that was undone. It does not affect the source parcel.
+
+If there is nothing to redo, this function does nothing.
+
+### innerParcel.meta.canUndo
+
+```flow
+innerParcel.meta.canUndo: boolean
+```
+
+This boolean indicates if there is anything to undo.
+
+### innerParcel.meta.canRedo
+
+```flow
+innerParcel.meta.canRedo: boolean
+```
+
+This boolean indicates if there is anything to redo.

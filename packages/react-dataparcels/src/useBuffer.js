@@ -3,6 +3,7 @@ import type {ParcelValueUpdater} from 'dataparcels';
 
 import Parcel from 'dataparcels';
 import ChangeRequest from 'dataparcels/ChangeRequest';
+import Action from 'dataparcels/lib/change/Action';
 
 // $FlowFixMe - useState is a named export of react
 import {useState} from 'react';
@@ -33,6 +34,8 @@ type Params = {
     revertKey?: string
 };
 
+let globalBufferCount = 0;
+
 export default (params: Params): Parcel => {
 
     // params
@@ -53,16 +56,36 @@ export default (params: Params): Parcel => {
     let [lastSource, setLastSource] = useState(null);
     let [innerParcel, setInnerParcel] = useState(null);
 
+    // unique keying
+
+    let [bufferId] = useState(() => globalBufferCount++);
+    let originKey = () => `buffer-${sourceRef.current.id}`;
+
     // buffer and history
 
     let bufferParamRef = useRef();
     bufferParamRef.current = buffer;
 
-    let [bufferStateRef, setBufferState] = useRefState([{}]);
+    let frameRef = useRef(0);
+    let [bufferStateRef, setBufferState] = useRefState([]);
     let [baseIndexRef, setBaseIndex] = useRefState(0);
-    let [altHistoryRef, setAltHistory] = useRefState(false);
     let [historyIndexRef, setHistoryIndex] = useRefState(0);
+    let [altHistoryRef, setAltHistory] = useRefState(false);
     let [revertIndexRef, setRevertIndex] = useRefState(null);
+
+    let logBuffer = () => {
+        params.log && console.log(
+            bufferStateRef.current
+                .map(({parcel, frameOuter, frameInner}, index) => {
+                    let h = historyIndexRef.current === index ? '>' : ' ';
+                    let b = baseIndexRef.current === index ? 'b' : ' ';
+                    let fu = frameOuter ? `^${frameOuter}` : '  ';
+                    let fd = frameInner ? `v${frameInner}` : '  ';
+                    return `${b}${h} [${index}] ${fu} ${fd} ${JSON.stringify(parcel.value)}`;
+                })
+                .join('\n')
+        );
+    };
 
     let getHistoryParcel = (index: number): Parcel => {
         // look backward from index until cached parcel is found...
@@ -88,39 +111,96 @@ export default (params: Params): Parcel => {
     };
 
     let refreshInnerParcel = () => {
-        let parcel = getHistoryParcel(historyIndexRef.current);
+        let historyIndex = historyIndexRef.current;
+        let parcel = getHistoryParcel(historyIndex);
+        let {frameInner} = bufferStateRef.current[historyIndex];
+
         parcel._treeShare.registry[parcel.id] = parcel;
         // ^ update the registry so changes will go to
         //   this parcel instead of potentially newer ones
+        parcel._frameMeta.frame = frameInner;
+        logBuffer();
         setInnerParcel(parcel);
     };
 
+    let moveHistoryIndex = (index: number) => {
+        setHistoryIndex(index);
+        refreshInnerParcel();
+    };
+
     let bufferReceive = (parcel: Parcel) => {
+        let frameOuter = parcel._frameMeta.frame;
+
+        let bufferState = bufferStateRef.current;
+        let baseIndex = baseIndexRef.current;
+        let historyIndex = historyIndexRef.current;
 
         let revertStatus = revertKey
             && revertIndexRef.current !== null
             && parcel.meta[`${revertKey}Status`];
 
-        let baseIndex = baseIndexRef.current;
-        let remainingCount = bufferStateRef.current.length - baseIndex;
+        let max = -1;
+        let frameOuterIndex = bufferState.reduceRight((result, item, index) => {
+            if(result !== -1) return result;
+            if(max === -1 && item.frameOuter) {
+                max = item.frameOuter;
+            }
+            if(item.frameOuter <= frameOuter && frameOuter <= max) return index;
+            return result;
+        }, -1);
 
-        if(revertStatus !== 'pending' && revertStatus !== 'rejected' && remainingCount > history) {
-            // remove past items
-            setBufferState(bufferStateRef.current.slice(baseIndex));
-            setBaseIndex(0);
-            setHistoryIndex(historyIndexRef.current - baseIndex);
+        if(frameOuterIndex !== -1) {
+            moveHistoryIndex(frameOuterIndex);
+            return;
         }
 
-        // replace buffered parcel at the base index
-        // and clear all non-received cached parcels
-        // - future ones might be different because of this rebase
-        // - past ones are likely not going to be accessed soon
-        // - received ones are not regeneratable so must be remembered
-        let newBufferState = bufferStateRef.current.map((item, index) => {
-            if(index === baseIndexRef.current) return {...item, parcel, received: true};
-            if(item.received) return item;
-            return {...item, parcel: undefined};
-        });
+        let origin = parcel._frameMeta[originKey()];
+        let frameInnerIndex = bufferState.findIndex(item => origin && item.frameInner === origin);
+        if(frameInnerIndex !== -1) {
+            let newBufferState = bufferState.slice();
+            newBufferState[frameInnerIndex] = {...newBufferState[frameInnerIndex], parcel, frameOuter};
+            setBufferState(newBufferState);
+            refreshInnerParcel();
+            return;
+        }
+
+        let beforeBase = bufferState.slice(0, baseIndex + 1);
+        let afterBase = bufferState.slice(baseIndex + 1);
+
+        let newBufferState = beforeBase
+            // add the new item
+            .concat({
+                parcel,
+                frameOuter,
+                frameInner: ++frameRef.current
+            })
+            // sort so the new item appears in the right order
+            .sort((a, b) => {
+                if(a.frameOuter < b.frameOuter) return -1;
+                if(a.frameOuter > b.frameOuter) return 1;
+                return 0;
+            })
+            .concat(
+                // reset parcels after the new one because their data might be different now
+                afterBase.map(item => ({...item, parcel: undefined}))
+            );
+
+        if(bufferState.length > 0 && baseIndex >= beforeBase.length - 1) {
+            baseIndex++;
+        }
+
+        if(bufferState.length > 0 && historyIndex >= beforeBase.length - 1) {
+            historyIndex++;
+        }
+
+        //
+        // let remainingCount = bufferStateRef.current.length - baseIndex;
+        // if(revertStatus !== 'pending' && revertStatus !== 'rejected' && remainingCount > history) {
+        //     // remove past items
+        //     setBufferState(bufferStateRef.current.slice(baseIndex));
+        //     setBaseIndex(0);
+        //     setHistoryIndex(historyIndexRef.current - baseIndex);
+        // }
 
         if(revertStatus === 'resolved') {
             setRevertIndex(null);
@@ -130,10 +210,14 @@ export default (params: Params): Parcel => {
         }
 
         setBufferState(newBufferState);
+        setBaseIndex(baseIndex);
+        setHistoryIndex(historyIndex);
+
         refreshInnerParcel();
     };
 
     let bufferPush = (parcel: Parcel, changeRequest: ChangeRequest) => {
+
         let newBufferState = bufferStateRef.current
             .slice(0, historyIndexRef.current + 1); // remove items ahead in history
 
@@ -141,10 +225,12 @@ export default (params: Params): Parcel => {
             // if we've gone back and branched off into a new history
             // compared with last submit, mark it as such
             setAltHistory(true);
+            setBaseIndex(historyIndexRef.current);
         }
 
         newBufferState = newBufferState.concat({
             parcel,
+            frameInner: ++frameRef.current,
             changeRequest: changeRequest._create({})
             // ^ clear changeRequest cache before storing this
             // so we dont use unnecessary memory
@@ -155,38 +241,47 @@ export default (params: Params): Parcel => {
         refreshInnerParcel();
     };
 
-    let moveHistoryIndex = (index: number) => {
-        setHistoryIndex(index);
-        refreshInnerParcel();
-    };
-
     let bufferSubmitCountRef = useRef(0);
 
     let bufferSubmit = () => {
         bufferSubmitCountRef.current++;
+
+        let bufferState = bufferStateRef.current;
         let baseIndex = baseIndexRef.current;
         let historyIndex = historyIndexRef.current;
+
+        let changeRequest;
 
         if(altHistoryRef.current || historyIndex < baseIndex) {
             // we're submitting from further into the past than the parent parcel
             // or from an alternate branch of history
             // and we can't derive the set of changes to make to reverse the actions that were undone
             // so for now just set the data outright
-            let {data} = getHistoryParcel(historyIndex);
-            sourceRef.current._setData(data);
+            let payload = getHistoryParcel(historyIndex).data;
+            changeRequest = new ChangeRequest(
+                new Action(({
+                    type: 'basic.setData',
+                    payload
+                }))
+            );
 
         } else {
             // we're submitting from further into the future than the parent parcel
-            let changeRequests = bufferStateRef.current
-                .slice(baseIndex + 1, historyIndex + 1)
-                .map(ii => ii.changeRequest);
-
-            sourceRef.current.dispatch(ChangeRequest.squash(changeRequests));
+            changeRequest = ChangeRequest.squash(
+                bufferState
+                    .slice(baseIndex + 1, historyIndex + 1)
+                    .map(ii => ii.changeRequest)
+            );
         }
+
+        changeRequest._nextFrameMeta[originKey()] = bufferState[historyIndex].frameInner;
+        sourceRef.current.dispatch(changeRequest);
 
         setRevertIndex(baseIndex);
         setBaseIndex(historyIndex);
         setAltHistory(false);
+
+        logBuffer();
     };
 
     let bufferSubmitDebounce = (ms: number) => {
@@ -237,7 +332,7 @@ export default (params: Params): Parcel => {
 
         innerParcel = source
             .modifyDown(derive)
-            ._boundarySplit(handleChange);
+            ._boundarySplit(handleChange, bufferId);
 
         bufferReceive(innerParcel);
     }

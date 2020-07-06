@@ -16,7 +16,7 @@ export default function MaybeArrayEditor(props) {
     return exampleFrame({maybeArrayParcel}, <div>
         {maybeArrayParcel.toArray((segmentParcel) => {
             return <ParcelBoundary parcel={segmentParcel} key={segmentParcel.key}>
-                {(parcel) => <input type="text" {...parcel.spreadDOM()} />}
+                {(parcel) => <input type="text" {...parcel.spreadInput()} />}
             </ParcelBoundary>;
         })}
         <button onClick={() => maybeArrayParcel.push("")}>Add new element</button>

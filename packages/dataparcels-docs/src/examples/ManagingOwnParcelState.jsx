@@ -18,12 +18,12 @@ export default function ManagingOwnParcelState(props) {
     return <div>
         <label>firstname</label>
         <ParcelBoundary parcel={personParcel.get('firstname')}>
-            {(firstname) => <input type="text" {...firstname.spreadDOM()} />}
+            {(firstname) => <input type="text" {...firstname.spreadInput()} />}
         </ParcelBoundary>
 
         <label>lastname</label>
         <ParcelBoundary parcel={personParcel.get('lastname')}>
-            {(lastname) => <input type="text" {...lastname.spreadDOM()} />}
+            {(lastname) => <input type="text" {...lastname.spreadInput()} />}
         </ParcelBoundary>
     </div>;
 }

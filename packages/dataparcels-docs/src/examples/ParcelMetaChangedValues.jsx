@@ -28,7 +28,7 @@ export default function PersonEditor(props) {
         <label>firstname</label>
         <ParcelBoundary parcel={firstname}>
             {(firstname) => <div>
-                <input type="text" {...firstname.spreadDOM()} />
+                <input type="text" {...firstname.spreadInput()} />
                 <div className="Text Text-right">Changed? {firstname.meta.original === firstname.value ? 'No' : 'Yes'}</div>
             </div>}
         </ParcelBoundary>
@@ -36,7 +36,7 @@ export default function PersonEditor(props) {
         <label>lastname</label>
         <ParcelBoundary parcel={lastname}>
             {(lastname) => <div>
-                <input type="text" {...lastname.spreadDOM()} />
+                <input type="text" {...lastname.spreadInput()} />
                 <div className="Text Text-right">Changed? {lastname.meta.original === lastname.value ? 'No' : 'Yes'}</div>
             </div>}
         </ParcelBoundary>

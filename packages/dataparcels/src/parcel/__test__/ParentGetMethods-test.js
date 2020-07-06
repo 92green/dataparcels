@@ -99,6 +99,23 @@ test('ParentParcel.get(key).key on object should return the key', () => {
     expect(new Parcel(data).get("a").key).toBe("a");
 });
 
+test('ParentParcel.get(key) framemeta should be passed', () => {
+    let parcel = new Parcel({
+        value: {
+            a: {
+                a:1,
+                b:2
+            },
+            b: 2
+        }
+    });
+
+    parcel._frameMeta = {foo: 'bar'};
+
+    expect(parcel.get("a")._frameMeta).toEqual(parcel._frameMeta);
+    expect(parcel.get("a")._frameMeta).not.toBe(parcel._frameMeta);
+});
+
 test('ParentParcel.get(index).value on array should return the first element', () => {
     var data = {
         value: [1,2,3]

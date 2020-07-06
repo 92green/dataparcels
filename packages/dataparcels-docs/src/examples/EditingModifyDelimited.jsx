@@ -19,7 +19,7 @@ export default function DelimitedStringEditor(props) {
         {delimitedArrayParcel.toArray((segmentParcel) => {
             return <ParcelBoundary parcel={segmentParcel} key={segmentParcel.key}>
                 {(parcel) => <div>
-                    <input type="text" {...parcel.spreadDOM()} />
+                    <input type="text" {...parcel.spreadInput()} />
                     <button onClick={() => parcel.swapPrev()}>^</button>
                     <button onClick={() => parcel.swapNext()}>v</button>
                     <button onClick={() => parcel.delete()}>x</button>

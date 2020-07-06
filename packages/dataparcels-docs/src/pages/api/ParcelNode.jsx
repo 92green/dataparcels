@@ -23,8 +23,7 @@ export default () => <Page>
             'key',
             '# Methods',
             'get()',
-            'update()',
-            'setMeta()'
+            'update()'
         ]}
     >
         <ParcelNodeMarkdown />

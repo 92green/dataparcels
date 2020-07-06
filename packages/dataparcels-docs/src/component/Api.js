@@ -13,9 +13,8 @@ export const Api = (): Node => {
             <Box mb={2}>
                 <Text textStyle="s1">Hooks</Text>
             </Box>
-            <Text as="div" textStyle="monospace"><Link to="/api/useParcelForm">useParcelForm</Link></Text>
-            <Text as="div" textStyle="monospace"><Link to="/api/useParcelState">useParcelState</Link></Text>
-            <Text as="div" textStyle="monospace"><Link to="/api/useParcelBuffer">useParcelBuffer</Link></Text>
+            <Text as="div" textStyle="monospace"><Link to="/api/useParcel">useParcel</Link></Text>
+            <Text as="div" textStyle="monospace"><Link to="/api/useBuffer">useBuffer</Link></Text>
         </Box>
         <Box pr={3} pb={4} width={[1,1/2,1/3,1/4]} minWidth="10rem">
             <Box mb={2}>
@@ -23,21 +22,22 @@ export const Api = (): Node => {
             </Box>
             <Text as="div" textStyle="monospace"><Link to="/api/Parcel">Parcel</Link></Text>
             <Text as="div" textStyle="monospace"><Link to="/api/ChangeRequest">ChangeRequest</Link></Text>
-            <Text as="div" textStyle="monospace"><Link to="/api/ParcelNode">ParcelNode</Link></Text>
         </Box>
         <Box pr={3} pb={4} width={[1,1/2,1/3,1/4]} minWidth="10rem">
             <Box mb={2}>
                 <Text textStyle="s1">Components</Text>
             </Box>
-            <Text as="div" textStyle="monospace"><Link to="/api/ParcelBoundary">ParcelBoundary</Link></Text>
-            <Text as="div" textStyle="monospace"><Link to="/api/ParcelDrag">ParcelDrag</Link></Text>
+            <Text as="div" textStyle="monospace"><Link to="/api/Boundary">Boundary</Link></Text>
+            <Text as="div" textStyle="monospace"><Link to="/api/Drag">Drag</Link></Text>
         </Box>
         <Box pr={3} pb={4} width={[1,1/2,1/3,1/4]} minWidth="10rem">
             <Box mb={2}>
                 <Text textStyle="s1">Plugins & utils</Text>
             </Box>
-            <Text as="div" textStyle="monospace"><Link to="/api/validation">validation</Link></Text>
             <Text as="div" textStyle="monospace"><Link to="/api/cancel">cancel</Link></Text>
+            <Text as="div" textStyle="monospace"><Link to="/api/combine">combine</Link></Text>
+            <Text as="div" textStyle="monospace"><Link to="/api/promisify">promisify</Link></Text>
+            <Text as="div" textStyle="monospace"><Link to="/api/translate">translate</Link></Text>
         </Box>
     </Flex>;
 };
