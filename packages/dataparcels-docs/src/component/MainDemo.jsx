@@ -243,6 +243,7 @@ export function TagsEditor() {
     return <div>
         tags:
         {tagsParcel.children(tagParcel => {
+            // tagParcel.key provides a unique key for React
             return <Boundary source={tagParcel} key={tagParcel.key}>
                 {tagParcel => <TagInput tagParcel={tagParcel} />}
             <Boundary>;
@@ -276,8 +277,8 @@ function TagInput(props) {
         return <Box p={3}>
             <Box mr={3} width="10rem">tags:</Box>
             {parcel.children(tagParcel => {
-                return <Boundary source={tagParcel} buffer={200}>
-                    {tagParcel => <Flex key={tagParcel.key} alignItems="center">
+                return <Boundary key={tagParcel.key} source={tagParcel}>
+                    {tagParcel => <Flex alignItems="center">
                         <Box>
                             <Input invert width="100%" {...tagParcel.spreadInput()} />
                         </Box>
@@ -319,6 +320,7 @@ export function TagsEditor() {
     return <div>
         tags:
         {tagsParcel.children(tagParcel => {
+
             return <Boundary source={tagParcel} key={tagParcel.key}>
                 {tagParcel => <TagInput tagParcel={tagParcel} />}
             <Boundary>;
@@ -349,15 +351,15 @@ function TagInput(props) {
             })
         });
     },
-    lines: '37-39',
+    lines: '38-40',
     Component: (props) => {
         let {parcel} = props;
 
         return <Box p={3}>
             <Box mr={3} width="10rem">tags:</Box>
             {parcel.children(tagParcel => {
-                return <Boundary source={tagParcel} buffer={200}>
-                    {tagParcel => <Flex key={tagParcel.key} alignItems="center">
+                return <Boundary key={tagParcel.key} source={tagParcel}>
+                    {tagParcel => <Flex alignItems="center">
                         <Box>
                             <Input invert width="100%" {...tagParcel.spreadInput()} />
                         </Box>

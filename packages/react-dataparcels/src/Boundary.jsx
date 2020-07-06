@@ -41,5 +41,5 @@ export default function Boundary(props: Props): Node {
         [innerParcel, ...dependencies]
     );
 
-    return memo ? memoed :renderChildren();
+    return memo ? memoed : renderChildren();
 }

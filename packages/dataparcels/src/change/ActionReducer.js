@@ -25,7 +25,6 @@ export default (typeSet: TypeSet) => {
     const actionMap = {
         ...actionHandlers,
         'reducer.batch': (parcelData, {payload, key, actFromParent}) => {
-            console.log('actFromParent', actFromParent);
             if(actFromParent) {
                 payload = payload.map(action => new Action({
                     type: action.type,

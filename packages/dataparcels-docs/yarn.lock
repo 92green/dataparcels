@@ -4120,11 +4120,12 @@ dcme-gatsby@^1.0.8:
     rehype-slug "^2.0.3"
     remark-external-links "^5.0.0"
 
-dcme-style@^1.1.14:
-  version "1.1.14"
-  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-1.1.14.tgz#3114cabb4704bd590eee6e420636f7a8d93fd859"
+dcme-style@^1.1.15:
+  version "1.1.15"
+  resolved "https://registry.yarnpkg.com/dcme-style/-/dcme-style-1.1.15.tgz#48ba95746d9ff90934a1aa001a0edb175b9ac430"
+  integrity sha512-YbB9gJLh4kPRWSMXE/N08uur7xww29BTWAu/qsmpxFisv8TFfLo8SAKcBI95VqaXaH1TAQfmQ9F1AKohxYwu8A==
   dependencies:
-    prismjs "1.15.0"
+    prismjs "1.20.0"
     react "^16.8.6"
     react-dom "^16.8.6"
     react-goose "^0.6.1"
@@ -10775,13 +10776,7 @@ pretty-format@^25.5.0:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
-prismjs@1.15.0:
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.15.0.tgz#8801d332e472091ba8def94976c8877ad60398d9"
-  optionalDependencies:
-    clipboard "^2.0.0"
-
-prismjs@^1.17.1:
+prismjs@1.20.0, prismjs@^1.17.1:
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.20.0.tgz#9b685fc480a3514ee7198eac6a3bf5024319ff03"
   optionalDependencies:
