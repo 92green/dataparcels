@@ -4553,6 +4553,13 @@ dataloader@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-1.4.0.tgz#bca11d867f5d3f1b9ed9f737bd15970c65dff5c8"
 
+dataparcels@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/dataparcels/-/dataparcels-1.0.4.tgz#de0fa2c211b8507ec1b9ccd40d74b62382be339d"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    unmutable "^0.46.1"
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -10549,8 +10556,8 @@ object-keys@^1.0.11, object-keys@^1.0.12, object-keys@^1.1.1:
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
 
 object-path@^0.11.2, object-path@^0.11.4:
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/object-path/-/object-path-0.11.4.tgz#370ae752fbf37de3ea70a861c23bba8915691949"
+  version "0.11.5"
+  resolved "https://registry.yarnpkg.com/object-path/-/object-path-0.11.5.tgz#d4e3cf19601a5140a55a16ad712019a9c50b577a"
 
 object-visit@^1.0.0:
   version "1.0.1"
@@ -11840,6 +11847,24 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-dataparcels-drag@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-dataparcels-drag/-/react-dataparcels-drag-1.0.4.tgz#be23e31f6f3de2fc14d37d4d9f7164979ebb42d2"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    react-sortable-hoc "1.4.0"
+    unmutable "^0.46.1"
+
+react-dataparcels@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-dataparcels/-/react-dataparcels-1.0.4.tgz#b831ae0bcd5a6db3b9faeb3da3f81f2a116475e8"
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+    dataparcels "^1.0.4"
+    is-promise "^2.1.0"
+    unmutable "^0.46.1"
+    use-debounce "^1.1.3"
+
 react-dev-utils@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.3.tgz#5b42d9ea58d5e9e017a2f57a40a8af408a3a46fb"
@@ -12008,6 +12033,14 @@ react-side-effect@^1.1.0:
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-1.2.0.tgz#0e940c78faba0c73b9b0eba9cd3dda8dfb7e7dae"
   dependencies:
     shallowequal "^1.0.1"
+
+react-sortable-hoc@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-1.4.0.tgz#b477ce700ba755754200a1dabd36e588e2f5608d"
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    invariant "^2.2.4"
+    prop-types "^15.5.7"
 
 react-spruce@^0.1.0:
   version "0.1.1"
@@ -14502,6 +14535,10 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-debounce@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-1.1.3.tgz#08b76fd8cc9b107e0a6d6ee8bb6c5fe97a14732f"
 
 use@^3.1.0:
   version "3.1.1"
